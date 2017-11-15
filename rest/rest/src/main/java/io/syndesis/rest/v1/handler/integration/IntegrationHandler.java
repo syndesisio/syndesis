@@ -18,11 +18,13 @@ package io.syndesis.rest.v1.handler.integration;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.core.Json;
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
+import io.syndesis.model.ModelExport;
+import io.syndesis.model.Schema;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.DataShape;
@@ -149,7 +151,8 @@ public class IntegrationHandler extends BaseHandler
 
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
-                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.mapper().writeValueAsBytes(models));
+                ModelExport exportObject = ModelExport.of(Schema.VERSION, models);
+                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.mapper().writeValueAsBytes(exportObject));
                 // Eventually we might need to add things like tech extensions too..
             }
         };

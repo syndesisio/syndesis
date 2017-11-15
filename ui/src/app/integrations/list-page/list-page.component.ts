@@ -48,7 +48,6 @@ export class IntegrationsListPage implements OnInit {
     private modalService: ModalService,
     private integrationSupportService: IntegrationSupportService,
     public notificationService: NotificationService,
-    public application: ApplicationRef
   ) {
     this.integrations = this.store.list;
     this.loading = this.store.loading;
@@ -68,6 +67,15 @@ export class IntegrationsListPage implements OnInit {
           NotificationType.SUCCESS,
           'Imported!',
           'Your integration has been imported',
+          false,
+          null,
+          []
+        );
+      } else if (status === 400) {
+        this.notificationService.message(
+          NotificationType.DANGER,
+          'Import Failed!',
+          JSON.parse(response).userMsg,
           false,
           null,
           []
@@ -93,8 +101,7 @@ export class IntegrationsListPage implements OnInit {
    * Function that displays a modal for importing a database.
    */
   showImportDialog() {
-    this.modalService.show('importIntegration').then(modal => {
-      this.uploader.clearQueue();
-    });
+    this.uploader.clearQueue();
+    this.modalService.show('importIntegration');
   }
 }

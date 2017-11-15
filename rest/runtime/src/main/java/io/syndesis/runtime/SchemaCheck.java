@@ -15,13 +15,13 @@
  */
 package io.syndesis.runtime;
 
-import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Json;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.jsondb.impl.SqlJsonDB;
+import io.syndesis.model.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -34,9 +34,6 @@ import java.io.IOException;
 public class SchemaCheck {
     private static final Logger LOG = LoggerFactory.getLogger(SchemaCheck.class);
 
-    @Value("${dao.schema.version}")
-    private String daoSchemaVersion;
-
     private final SqlJsonDB jsondb;
     private final DataManager manager;
 
@@ -48,8 +45,7 @@ public class SchemaCheck {
     @PostConstruct
     public void schemaCheck() {
         String versionInDB = getClusterProperty(jsondb, "dao_schema_version");
-        if (daoSchemaVersion != null &&
-            (versionInDB == null || !daoSchemaVersion.equals(versionInDB))) {
+        if ( versionInDB == null || !Schema.VERSION.equals(versionInDB) ) {
 
             LOG.info("DB schema changed.  Resetting the DB.");
             // really silly migration strategy for now, reset the DB:
@@ -57,7 +53,7 @@ public class SchemaCheck {
             jsondb.createTables();
             manager.resetDeploymentData();
 
-            setClusterProperty(jsondb, "dao_schema_version", daoSchemaVersion);
+            setClusterProperty(jsondb, "dao_schema_version", Schema.VERSION);
         } else {
             LOG.info("DB schema has not changed.");
         }

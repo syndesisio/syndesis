@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.model.ModelData;
 
 public class ReadApiClientData {
 

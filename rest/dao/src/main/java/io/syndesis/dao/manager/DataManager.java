@@ -31,7 +31,7 @@ import javax.persistence.EntityNotFoundException;
 import io.syndesis.core.EventBus;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
