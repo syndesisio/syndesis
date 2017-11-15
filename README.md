@@ -55,10 +55,9 @@ Profile:    minishift
 OpenShift:  Running (openshift v3.6.0+c4dd4cf)
 DiskUsage:  11% of 17.9G
 
-# Log into OpenShift
-# Username: developer
+# Log into OpenShift with developer account
 # Password: whatever you like
-$ oc login
+$ oc login -u developer
 
 # Set environment variables to point to Minishift resources:
 $ eval $(minishift oc-env)
@@ -106,10 +105,9 @@ In a separate tab, you might want to run unit tests and lint checks as you code.
 # Start up Minishift
 $ minishift start
 
-# Log into OpenShift
-# Username: developer
+# Log into OpenShift with developer account
 # Password: whatever you like
-$ oc login
+$ oc login -u developer
 
 # Set environment variables to point to Minishift resources:
 $ eval $(minishift oc-env)
@@ -130,14 +128,13 @@ At the end of the day you might want to stop Minishift:
 Included in this stack are the following technologies:
 
 * Language: [TypeScript](http://www.typescriptlang.org) (JavaScript with @Types)
-* Framework: [Angular 2](https://angular.io/)
+* Framework: [Angular](https://angular.io/)
 * Module Bundler: [Angular CLI](https://cli.angular.io)
-* Design Patterns: [PatternFly](https://www.patternfly.org/)
+* Design Patterns: [PatternFly Angular](https://github.com/patternfly/patternfly-ng) (Design Consistency)
 * Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
 * Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
 * Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
-* Charts: [ng2-charts](https://github.com/valor-software/ng2-charts) (Data Visualization)
 
 ### File Structure
 
@@ -196,7 +193,13 @@ What you need to run this app:
 
 You do *not* need to install Angular CLI globally, but we recommend it if you'd like to use the [convenient commands](https://cli.angular.io/reference.pdf) it provides, or any of the `ng` commands we reference below.
 
-### Committing changes
+### Formatting
+
+To make sure your code is formatted consistently with the rest of the team's, you can run the following command to prettify it:
+
+`yarn format`
+
+### Committing Changes
 
 The repo is commitizen friendly, after making some changes:
 
