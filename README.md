@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis-ui.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis-ui) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages open source technologies like Apache Camel, OpenShift and Kubernetes to provide a rock-solid user experience.
+The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages open source technologies like Apache Camel and OpenShift to provide a rock-solid user experience.
 
 For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis-rest) repo.
 
