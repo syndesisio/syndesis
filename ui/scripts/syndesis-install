@@ -1,0 +1,59 @@
+#!/bin/bash
+
+NAMESPACE="syndesis"
+FROM="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master"
+ROUTE_HOSTNAME="syndesis.$(minishift ip).nip.io"
+
+while [ $# -gt 0 ]; do
+case $1 in
+    --pull) 
+        docker pull syndesis/syndesis-ui && docker pull syndesis/syndesis-rest && docker pull syndesis/syndesis-verifier && docker pull atlasmap/atlasmap || exit 1
+        shift 1
+    ;;
+    --clean) 
+        echo "Deleting project ${NAMESPACE}"
+        oc delete project ${NAMESPACE} 2> /dev/null > /dev/null
+        while : ; do 
+            oc new-project ${NAMESPACE} 2> /dev/null > /dev/null
+            [[ $? != 0 ]] || break ;
+            echo "Waiting for project ${NAMESPACE} to be deleted."
+            sleep 2
+        done
+        shift 1     
+    ;;
+    --from) 
+        FROM=$2 
+        shift 2
+    ;;
+    --namespace) 
+        NAMESPACE=$2 
+        shift 2
+    ;;
+    --hostname) 
+        ROUTE_HOSTNAME=$2 
+        shift 2
+    ;;
+    *)
+        echo "Invalid Syntax. Unsupported arg: $1"
+        exit 1
+    ;;
+esac
+done
+
+set -euo pipefail
+
+echo
+echo "Installing templates from: ${FROM}"
+oc create -f ${FROM}/support/serviceaccount-as-oauthclient-restricted.yml
+oc create -f ${FROM}/syndesis-dev-restricted.yml
+oc new-app syndesis-dev-restricted \
+    -p ROUTE_HOSTNAME=${ROUTE_HOSTNAME} \
+    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+    -p OPENSHIFT_PROJECT=$(oc project -q) \
+    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
+    -p TEST_SUPPORT_ENABLED=true \
+    # -p INSECURE_SKIP_VERIFY=true
+
+echo "Syndesis will be available at https://${ROUTE_HOSTNAME}"
+
+

@@ -1,0 +1,14 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": false,
+  "prettier.trailingComma": "all",
+  "tslint.enable": true,
+  "tslint.autoFixOnSave": true,
+  "html.format.endWithNewline": true,
+  "html.suggest.angular1": false,
+  "html.format.indentInnerHtml": true,
+  "html.format.indentHandlebars": true,
+  "html.format.wrapAttributes": "force-aligned"
+}

@@ -1,0 +1,13 @@
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
+.syndesis-integration-status {
+  display: inline-block;
+  .not-pending {
+    .label {
+      &.label-inactive {
+        background: $color-pf-black-300;
+        color: #000000;
+      }
+    }
+  }
+}

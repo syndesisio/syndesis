@@ -1,0 +1,64 @@
+.list-actions {
+  background-color: #ffffff;
+  color: #656565;
+  cursor: default;
+  height: 100%;
+  margin: 25px 0;
+  overflow: auto;
+
+  .action {
+    padding: 20px;
+    margin: 0;
+
+    &:hover {
+      background: rgba(214, 238, 250, 0.36);
+      cursor: pointer;
+    }
+
+    .active-inactive {
+      padding: 5px;
+
+      .btn.btn-primary {
+        background: #199bd1;
+        border: none;
+        font-family: inherit;
+        font-weight: 100;
+        padding: 1px 10px;
+      }
+    }
+
+    .description {
+      padding: 5px;
+    }
+
+    .icons {
+      padding: 1px;
+
+      .fa {
+        margin-right: 15px;
+
+        &.fa-angle-right {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .modal {
+      .modal-footer {
+        .btn {
+          border: 0;
+          margin: 5px 10px 5px 0;
+
+          &.btn-cancel {
+            background: #dadada;
+          }
+        }
+      }
+    }
+
+    .name {
+      font-weight: 700;
+      padding: 7px;
+    }
+  }
+}

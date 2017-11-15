@@ -1,0 +1,41 @@
+#!/bin/bash
+
+pass=true
+LINTEMOJI="🔬"
+BLUE="\033[1;34m"
+RED="\033[1;31m"
+GREEN="\033[0;32m"
+RESET="\033[0m"
+
+INCLUDED='(\.ts|\.css|\.scss|\.js|\.json)'
+EXCLUDED='(package\.json)'
+
+# Let's format the code first
+echo "\nRunning formatters on Syndesis UI...\n"
+FILES=`git diff --cached --name-only | grep -E $INCLUDED | grep -E -v $EXCLUDED`
+echo "On files: \n\n$FILES"
+for EACH in $FILES; do
+  yarn prettier --write --no-color --single-quote --trailing-comma all --write $EACH
+  git add $EACH
+done
+
+echo "\n${LINTEMOJI} ${BLUE} Running Linters on Syndesis UI...${RESET}\n"
+# Run the lint command and get the output and return code
+tslint=$(yarn lint)
+ret_code=$?
+
+# If it didn't pass, announce it failed and print the output
+if [ $ret_code != 0 ]; then
+	printf "\n${RED}Syndesis UI linting failed:${RESET}"
+	echo "$tslint\n"
+	pass=false
+else
+	printf "${GREEN}Syndesis UI linting passed.${RESET}\n"
+fi
+
+# If there were no failures, it is good to commit
+if $pass; then
+	exit 0
+fi
+
+exit 1

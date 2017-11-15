@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.syndesis</groupId>
+  <artifactId>syndesis-ui</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Syndesis UI</name>
+  <description>syndesis :: ${project.artifactId}</description>
+  <url>https://syndesis.io/</url>
+  <scm>
+    <connection>scm:git:https://github.com/syndesisio/syndesis-ui.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis-ui.git</developerConnection>
+    <url>http://github.com/syndesisio/syndesis-ui</url>
+  </scm>
+  <organization>
+    <name>JBoss by Red Hat</name>
+    <url>http://jboss.org</url>
+  </organization>
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/syndesisio/syndesis.io/issues</url>
+  </issueManagement>
+  <developers>
+    <developer>
+      <name>Syndesis committers</name>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <properties>
+    <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
+    <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
+    <node.version>v6.11.5</node.version>
+    <yarn.version>v1.2.1</yarn.version>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin-version}</version>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>${node.version}</nodeVersion>
+            </configuration> 
+          </execution>
+          <execution>
+            <id>install yarn</id>
+            <goals>
+              <goal>install-node-and-yarn</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>${node.version}</nodeVersion>
+              <yarnVersion>${yarn.version}</yarnVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>angular-cli install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install --no-optional -g angular-cli</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>yarn install</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>install --no-progress</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>yarn ng build</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>ng build -- --aot --prod --progress=false</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+            <execution>
+                <id>dist</id>
+                <phase>package</phase>
+                <goals>
+                    <goal>single</goal>
+                </goals>
+                <configuration>
+                    <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
+                    <descriptors>
+                        <descriptor>src/assembly/unix-dist.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${clean-maven-plugin-version}</version>
+        <configuration>
+            <followSymLinks>false</followSymLinks>
+            <filesets>
+                <fileset>
+                    <directory>node_modules</directory>
+                    <includes>
+                        <include>**/*</include>
+                    </includes>
+                </fileset>
+            </filesets>
+        </configuration>
+    </plugin>
+    </plugins>
+  </build>
+
+</project>
