@@ -1,0 +1,133 @@
+---
+---
+
+@import "{{ site.theme }}";
+$font-size-base: 14;
+
+body {
+  background-color: #292e34;
+  color: #363636;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: $font-size-base;
+  line-height: 1.66666667;
+}
+a {
+  color: #0088ce;
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: #00659c;
+  text-decoration: underline;
+}
+a:focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+h1, h2, h3, h4, h5, h6 {
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+}
+h1, h2, h3 {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+h4, h5, h6 {
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+h1 {
+  font-size: floor(($font-size-base * 2.6));
+}
+h2 {
+  font-size: floor(($font-size-base * 2.15));
+}
+h3 {
+  font-size: ceil(($font-size-base * 1.7));
+}
+h4 {
+  font-size: ceil(($font-size-base * 1.25));
+}
+h5 {
+  font-size: $font-size-base;
+}
+h6 {
+  font-size: ceil(($font-size-base * 0.85));
+}
+p {
+  margin: 0 0 10px;
+}
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+ul ul, ol ul, ul ol, ol ol {
+  margin-bottom: 0;
+}
+code, kbd, pre, samp {
+  font-family: Menlo, Monaco, Consolas, monospace;
+}
+code {
+  background-color: #def3ff;
+  border-radius: 1px;
+  color: #004368;
+  font-size: 90%;
+  padding: 2px 4px;
+}
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.66666667;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #363636;
+  background-color: #fafafa;
+  border: 1px solid #ccc;
+  border-radius: 1px;
+}
+pre code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border-radius: 0;
+}
+img {
+  max-width: 1000px;
+
+  @media screen and (max-width: 1000px) {
+    max-width: 100%;
+  }
+}
+#main_content_wrap {
+  background: #fafafa;
+}
+#header_wrap {
+  background-color: #030303;
+  background-image: none;
+}
+#footer_wrap {
+  background-color: #292e34;
+}
+
+#header_wrap .inner {
+  max-width: 100%;
+  padding: 10px;
+}
+
+#project_title a {
+  color: #fff;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 36px;
+  font-weight: 300;
+}
+
+.inner {
+  max-width: 1000px;
+}
