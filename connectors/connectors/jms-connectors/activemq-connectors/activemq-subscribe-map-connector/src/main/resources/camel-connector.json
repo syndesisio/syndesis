@@ -1,0 +1,59 @@
+{
+  "baseScheme" : "sjms2",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-sjms2",
+  "baseVersion" : "2.20.0",
+  "baseJavaType" : "org.apache.camel.component.sjms2.Sjms2Component",
+  "name" : "ActiveMQSubscribeMap",
+  "scheme" : "activemq-subscribe-map",
+  "javaType" : "io.syndesis.connector.jms.ActiveMQSubscribeMapComponent",
+  "groupId" : "io.syndesis",
+  "artifactId" : "activemq-subscribe-map-connector",
+  "version" : "0.5-SNAPSHOT",
+  "description" : "Subscribe to JMS Destination",
+  "labels" : [ "jms" ],
+  "pattern" : "From",
+  "inputDataType" : "none",
+  "outputDataType" : "java:io.syndesis.connector.jms.JmsMapMessage",
+  "globalOptions" : [ "brokerUrl", "username", "password" ],
+  "componentOptions" : [ "connectionCount" ],
+  "endpointOptions" : [ "destinationType", "destinationName", "synchronous", "includeAllJMSXProperties", "transacted", "sharedJMSSession", "namedReplyTo", "sessionCount", "producerCount", "consumerCount", "ttl", "persistent", "durableSubscriptionId", "responseTimeOut", "messageSelector", "transactionBatchCount", "transactionBatchTimeout", "asyncStartListener", "asyncStopListener", "prefillPool", "allowNullBody", "subscriptionId", "durable", "shared" ],
+  "connectorProperties" : {
+    "brokerUrl": {
+      "kind" : "parameter",
+      "displayName" : "Broker URL",
+      "group" : "filter",
+      "label" : "producer,filter",
+      "required" : true,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Broker URL"
+    },
+    "username": {
+      "kind" : "parameter",
+      "displayName" : "User Name",
+      "group" : "filter",
+      "label" : "producer,filter",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Authorization credential user name"
+    },
+    "password": {
+      "kind" : "parameter",
+      "displayName" : "Password",
+      "group" : "filter",
+      "label" : "producer,filter",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Authorization credential password"
+    }
+  }
+}

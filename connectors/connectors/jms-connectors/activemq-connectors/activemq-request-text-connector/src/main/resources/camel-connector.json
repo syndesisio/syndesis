@@ -1,0 +1,59 @@
+{
+  "baseScheme" : "sjms2",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-sjms2",
+  "baseVersion" : "2.20.0",
+  "baseJavaType" : "org.apache.camel.component.sjms2.Sjms2Component",
+  "name" : "ActiveMQRequestText",
+  "scheme" : "activemq-request-text",
+  "javaType" : "io.syndesis.connector.jms.ActiveMQRequestTextComponent",
+  "groupId" : "io.syndesis",
+  "artifactId" : "activemq-request-text-connector",
+  "version" : "0.5-SNAPSHOT",
+  "description" : "Request JMS Message",
+  "labels" : [ "jms" ],
+  "pattern" : "To",
+  "inputDataType" : "java:io.syndesis.connector.jms.JmsTextMessage",
+  "outputDataType" : "java:io.syndesis.connector.jms.JmsTextMessage",
+  "globalOptions" : [ "brokerUrl", "username", "password" ],
+  "componentOptions" : [ "connectionCount" ],
+  "endpointOptions" : [ "destinationType", "destinationName", "synchronous", "includeAllJMSXProperties", "transacted", "sharedJMSSession", "namedReplyTo", "sessionCount", "producerCount", "consumerCount", "ttl", "persistent", "durableSubscriptionId", "responseTimeOut", "messageSelector", "transactionBatchCount", "transactionBatchTimeout", "asyncStartListener", "asyncStopListener", "prefillPool", "allowNullBody" ],
+  "connectorProperties" : {
+    "brokerUrl": {
+      "kind" : "parameter",
+      "displayName" : "Broker URL",
+      "group" : "filter",
+      "label" : "producer,filter",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Broker URL"
+    },
+    "username": {
+      "kind" : "parameter",
+      "displayName" : "User Name",
+      "group" : "filter",
+      "label" : "producer,filter",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Authorization credential user name"
+    },
+    "password": {
+      "kind" : "parameter",
+      "displayName" : "Password",
+      "group" : "filter",
+      "label" : "producer,filter",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Authorization credential password"
+    }
+  }
+}
