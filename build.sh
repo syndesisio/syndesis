@@ -79,6 +79,11 @@ function init_options() {
   MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
   MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
+  # If  we are running in cicleci lets configure thigs to avoid running out of memory:
+  if [ $CIRCLECI == "true" ] ; then
+    MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2"
+  fi
+
   # Apply options
   if [ -n "$(hasflag --batch-mode $ARGS 2> /dev/null)" ]; then
     MAVEN_PARAMS="$MAVEN_PARAMS --batch-mode"
