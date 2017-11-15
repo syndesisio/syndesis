@@ -4,10 +4,10 @@
     "plugins": [
       { 
         "name": "tslint-language-service",
-        "alwaysShowRuleFailuresAsWarnings": false,
+        "alwaysShowRuleFailuresAsWarnings": true,
         "ignoreDefinitionFiles": true,
         "configFile": "../tslint.json",
-        "disableNoUnusedVariableRule": false,
+        "disableNoUnusedVariableRule": true,
         "supressWhileTypeErrorsPresent": false
       }
     ],
@@ -23,8 +23,8 @@
     "mapRoot": "./",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
     "noFallthroughCasesInSwitch": true,
     "outDir": "../dist/out-tsc",
     "sourceMap": true,

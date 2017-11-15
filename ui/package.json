@@ -21,9 +21,7 @@
     "test:cc": "yarn ng test --watch=false --cc",
     "test:ci": "npm rebuild && yarn ng test --watch=false --progress=false",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
-    "precommit": "yarn run lint",
-    "commit": "yarn git-cz"
+    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest"
   },
   "private": true,
   "dependencies": {
@@ -79,11 +77,9 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "codelyzer": "~4.0.1",
-    "commitizen": "^2.9.6",
     "cucumber": "^1.3.1",
     "cucumber-html-reporter": "^0.3.7",
     "cucumber-tsflow": "^1.1.2",
-    "cz-conventional-changelog": "^2.0.0",
     "fs-extra": "^2.0.0",
     "jasmine-core": "2.5.2",
     "karma": "1.4.1",
@@ -105,10 +101,5 @@
     "tslint": "^5.0.0",
     "typescript": "~2.4.0",
     "webdriver-manager": "12.0.2"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
