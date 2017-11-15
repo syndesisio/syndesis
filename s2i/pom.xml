@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.syndesis</groupId>
+  <artifactId>helper</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Helper</name>
+
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>sonatype-snapshots</id>
+      <name>sonatype</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <docker-image-name>syndesis/syndesis-s2i</docker-image-name>
+
+    <docker.maven.plugin.fabric8.version>0.22.1</docker.maven.plugin.fabric8.version>
+    <maven.dependency.plugin.version>3.0.2</maven.dependency.plugin.version>
+    <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
+    <syndesis.rest.version>0.1-SNAPSHOT</syndesis.rest.version>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven.dependency.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-builder-image-generator</artifactId>
+              <version>${syndesis.rest.version}</version>
+              <type>jar</type>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <destFileName>syndesis-builder-image-generator.jar</destFileName>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${maven.exec.plugin.version}</version>
+        <configuration>
+          <executable>java</executable>
+          <arguments>
+            <argument>-jar</argument>
+            <argument>${project.build.directory}/syndesis-builder-image-generator.jar</argument>
+            <argument>--to=${basedir}/src/main/docker/project</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${docker.maven.plugin.fabric8.version}</version>
+        <configuration>
+          <id>copy</id>
+          <phase>package</phase>
+          <goals>
+            <goal>build</goal>
+          </goals>
+          <images>
+            <image>
+              <name>${docker-image-name}</name>
+              <build>
+                <dockerFile>Dockerfile</dockerFile>
+              </build>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
