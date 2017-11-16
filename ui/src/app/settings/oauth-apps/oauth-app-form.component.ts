@@ -4,7 +4,6 @@ import {
   EventEmitter,
   Input,
   Output,
-  ChangeDetectorRef
 } from '@angular/core';
 import { OAuthApp, OAuthApps } from '../../model';
 import { FormFactoryService } from '../../common/forms.service';
@@ -47,7 +46,6 @@ export class OAuthAppFormComponent implements OnInit {
     private formFactory: FormFactoryService,
     private formService: DynamicFormService,
     private store: OAuthAppStore,
-    public detector: ChangeDetectorRef
   ) {}
 
   save() {
@@ -62,7 +60,6 @@ export class OAuthAppFormComponent implements OnInit {
         this.message = 'success';
         sub.unsubscribe();
         this.item.client = app;
-        this.detector.detectChanges();
       },
       (error: any) => {
         this.loading = false;
@@ -70,7 +67,6 @@ export class OAuthAppFormComponent implements OnInit {
         this.message = null;
         this.error = error;
         sub.unsubscribe();
-        this.detector.detectChanges();
       }
     );
   }

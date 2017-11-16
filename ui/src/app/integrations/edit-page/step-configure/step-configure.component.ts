@@ -3,15 +3,10 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import {
-  DynamicFormControlModel,
-  DynamicFormService
-} from '@ng-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
 import { FlowPage } from '../flow-page';
 import {
@@ -32,9 +27,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss']
 })
-export class IntegrationsStepConfigureComponent extends FlowPage
-  implements OnInit, OnDestroy {
-  routeSubscription: Subscription;
+export class IntegrationsStepConfigureComponent extends FlowPage implements OnInit, OnDestroy {
   position: number;
   step: Step = undefined;
   formModel: DynamicFormControlModel[] = undefined;
@@ -56,11 +49,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public detector: ChangeDetectorRef,
     public stepStore: StepStore,
     public integrationSupport: IntegrationSupportService
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
   }
 
   goBack() {
@@ -135,11 +127,6 @@ export class IntegrationsStepConfigureComponent extends FlowPage
 
   postEvent() {
     this.loading = false;
-    try {
-      this.detector.detectChanges();
-    } catch (err) {
-      // @TODO: Remove this try/catch once ChangeDetection is restored
-    }
     this.currentFlow.events.emit({
       kind: 'integration-action-configure',
       position: this.position
@@ -149,9 +136,9 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   fetchDataShapesFor(step: Step, output = true) {
     return this.integrationSupport
       .fetchMetadata(
-        step.connection,
-        step.action,
-        step.configuredProperties || {}
+      step.connection,
+      step.action,
+      step.configuredProperties || {}
       )
       .toPromise()
       .then(response => {
@@ -174,11 +161,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage
         };
         log.info(
           'Error fetching data shape for ' +
-            JSON.stringify(step) +
-            ' : ' +
-            JSON.stringify(response)
+          JSON.stringify(step) +
+          ' : ' +
+          JSON.stringify(response)
         );
-        this.detector.detectChanges();
       });
   }
 
@@ -255,18 +241,14 @@ export class IntegrationsStepConfigureComponent extends FlowPage
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.paramMap.subscribe(
-      (paramMap: ParamMap) => {
-        this.position = +paramMap.get('position');
+    this.route.paramMap.first(params => params.has('position'))
+      .subscribe(params => {
+        this.position = +params.get('position');
         this.loadForm();
-      }
-    );
+      });
   }
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
   }
 }

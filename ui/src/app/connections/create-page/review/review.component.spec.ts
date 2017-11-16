@@ -22,7 +22,6 @@ describe('ConnectionsReviewComponent', () => {
       current,
       modalService,
       connectionService,
-      detector,
       router,
       tourService,
       userService

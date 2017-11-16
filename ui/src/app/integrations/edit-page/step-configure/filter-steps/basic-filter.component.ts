@@ -5,7 +5,6 @@ import {
   Output,
   ViewEncapsulation,
   OnChanges,
-  ChangeDetectorRef
 } from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import {
@@ -66,8 +65,7 @@ export class BasicFilterComponent implements OnChanges {
   constructor(
     public currentFlow: CurrentFlow,
     public integrationSupport: IntegrationSupportService,
-    private formService: DynamicFormService,
-    private detector: ChangeDetectorRef
+    private formService: DynamicFormService
   ) {}
 
   ngOnChanges(changes: any) {
@@ -100,7 +98,6 @@ export class BasicFilterComponent implements OnChanges {
         self.basicFilterModel
       ) as DynamicFormArrayModel;
       self.loading = false;
-      self.detector.detectChanges();
       self.valid = self.formGroup.valid;
       self.validChange.emit(self.formGroup.valid);
     }

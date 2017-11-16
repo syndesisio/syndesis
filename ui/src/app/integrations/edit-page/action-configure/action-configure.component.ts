@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -43,12 +43,11 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
-    public detector: ChangeDetectorRef,
     public integrationSupport: IntegrationSupportService,
     public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
   }
 
   goBack() {
@@ -198,7 +197,6 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       this.error.message = error.message || error.userMsg || error.developerMsg;
       this.error.class = 'alert alert-warning';
       this.loading = false;
-      this.detector.detectChanges();
       return;
     }
     if (!definition || definition === undefined) {
@@ -208,7 +206,6 @@ export class IntegrationsConfigureActionComponent extends FlowPage
         class: 'alert alert-info',
         message: 'There are no properties to configure for this action'
       };
-      this.detector.detectChanges();
       setTimeout(() => {
         this.continue({});
       }, 1500);
@@ -235,16 +232,11 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
     setTimeout(() => {
-      try {
-        this.currentFlow.events.emit({
-          kind: 'integration-action-configure',
-          position: this.position
-        });
-        this.loading = false;
-        this.detector.detectChanges();
-      } catch (err) {
-        // @TODO: Remove this try/catch once ChangeDetection is restored
-      }
+      this.currentFlow.events.emit({
+        kind: 'integration-action-configure',
+        position: this.position
+      });
+      this.loading = false;
     }, 30);
   }
 
@@ -274,7 +266,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     this.routeSubscription = this.route.paramMap.subscribe(
       (params: ParamMap) => {
         if (!params.has('page')) {
-          this.router.navigate([ '0' ], { relativeTo: this.route });
+          this.router.navigate(['0'], { relativeTo: this.route });
           return;
         }
         const page = (this.page = Number.parseInt(params.get('page')));

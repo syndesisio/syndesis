@@ -1,4 +1,4 @@
-import { OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
@@ -13,8 +13,7 @@ export abstract class FlowPage implements OnDestroy {
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
-    public router: Router,
-    public detector: ChangeDetectorRef
+    public router: Router
   ) {
     this.flowSubscription = this.currentFlow.events.subscribe(
       (event: FlowEvent) => {
@@ -79,7 +78,6 @@ export abstract class FlowPage implements OnDestroy {
           this.errorMessage = error;
           this.saveInProgress = false;
           this.publishInProgress = false;
-          this.detector.detectChanges();
         }, 10);
       }
     });

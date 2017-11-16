@@ -4,7 +4,6 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -31,7 +30,6 @@ export class FlowViewComponent extends ChildAwarePage
   implements OnInit, OnDestroy {
   i: Integration;
   flowSubscription: Subscription;
-  routeSubscription: Subscription;
   urls: UrlSegment[];
   selectedKind: string | boolean = false;
   editingName = false;
@@ -43,7 +41,6 @@ export class FlowViewComponent extends ChildAwarePage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
     public tourService: TourService,
     private userService: UserService
   ) {
@@ -118,20 +115,15 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   insertStepAfter(position: number) {
-    this.popovers.forEach(popover => {
-      popover.hide();
-    });
+    this.popovers.forEach(popover => popover.hide());
+
     this.selectedKind = undefined;
+
     this.currentFlow.events.emit({
       kind: 'integration-insert-step',
       position: position,
       onSave: () => {
         setTimeout(() => {
-          try {
-            this.detector.detectChanges();
-          } catch (err) {
-            // @TODO: Remove this try/catch once ChangeDetection is restored
-          }
           this.router.navigate(['step-select', position + 1], {
             relativeTo: this.route
           });
@@ -141,19 +133,13 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   insertConnectionAfter(position: number) {
-    this.popovers.forEach(popover => {
-      popover.hide();
-    });
+    this.popovers.forEach(popover => popover.hide());
+
     this.currentFlow.events.emit({
       kind: 'integration-insert-connection',
       position: position,
       onSave: () => {
         setTimeout(() => {
-          try {
-            this.detector.detectChanges();
-          } catch (err) {
-            // @TODO: Remove this try/catch once ChangeDetection is restored
-          }
           this.router.navigate(['connection-select', position + 1], {
             relativeTo: this.route
           });
@@ -183,7 +169,6 @@ export class FlowViewComponent extends ChildAwarePage
     ) {
       setTimeout(() => {
         popover.show();
-        this.detector.detectChanges();
       }, 10);
     }
   }
@@ -215,43 +200,25 @@ export class FlowViewComponent extends ChildAwarePage
       default:
         break;
     }
-    try {
-      this.detector.detectChanges();
-    } catch (err) {
-      // @TODO: Remove this try/catch once ChangeDetection is restored
-    }
   }
 
   ngOnInit() {
-    /*
-    this.routeSubscription = this.router.events.subscribe(event => {
-      try {
-        this.detector.detectChanges();
-      } catch (err) {
-        // @TODO: Remove this try/catch once ChangeDetection is restored
-      }
-    });
-    */
-
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
+      this.tourService.initialize([{
         anchorId: 'integrations.step',
         title: 'Operate On Data',
         content: 'Clicking the plus sign lets you add an operation that the integration performs between the start and finish connections.',
         placement: 'right',
-        } ],
+      }],
       );
       setTimeout(() => this.tourService.start());
     }
   }
 
   ngOnDestroy() {
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -24,7 +24,6 @@ export class IntegrationsEditPage extends ChildAwarePage
 
   integrationSubscription: Subscription;
   routeSubscription: Subscription;
-  routerEventsSubscription: Subscription;
   childRouteSubscription: Subscription;
   flowSubscription: Subscription;
   urls: UrlSegment[];
@@ -36,7 +35,6 @@ export class IntegrationsEditPage extends ChildAwarePage
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
     public nav: NavigationService
   ) {
     super(currentFlow, route, router);
@@ -99,11 +97,7 @@ export class IntegrationsEditPage extends ChildAwarePage
       default:
         break;
     }
-    try {
-      this.detector.detectChanges();
-    } catch (err) {
-      // @TODO: Remove this try/catch once ChangeDetection is restored
-    }
+
     if (validate) {
       this.router.navigate(['save-or-add-step'], {
         queryParams: { validate: true },
@@ -113,13 +107,6 @@ export class IntegrationsEditPage extends ChildAwarePage
   }
 
   ngOnInit() {
-    this.routerEventsSubscription = this.router.events.subscribe(event => {
-      try {
-        this.detector.detectChanges();
-      } catch (err) {
-        // @TODO: Remove this try/catch once ChangeDetection is restored
-      }
-    });
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {
         if (i) {
@@ -127,12 +114,11 @@ export class IntegrationsEditPage extends ChildAwarePage
         }
       }
     );
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('integrationId')
-      .map((integrationId: string) => {
-        this.store.loadOrCreate(integrationId);
-      })
-      .subscribe();
+
+    this.routeSubscription = this.route.paramMap
+      .map(params => params.get('integrationId'))
+      .subscribe(integrationId => this.store.loadOrCreate(integrationId));
+
     this.nav.hide();
   }
 
@@ -146,9 +132,6 @@ export class IntegrationsEditPage extends ChildAwarePage
     }
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
-    }
-    if (this.routerEventsSubscription) {
-      this.routerEventsSubscription.unsubscribe();
     }
   }
 }
