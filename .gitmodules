@@ -22,3 +22,6 @@
 [submodule "connectors"]
 	path = connectors
 	url = https://github.com/syndesisio/connectors.git
+[submodule "ci"]
+	path = ci
+	url = https://github.com/syndesisio/syndesis-ci.git
