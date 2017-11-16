@@ -11,24 +11,23 @@ export interface IntegrationTemplate extends BaseEntity {}
 export type IntegrationTemplates = Array<IntegrationTemplate>;
 
 export interface Action extends BaseEntity {
-  definition: ActionDefinition;
-  camelConnectorPrefix: string;
+  actionType: string;
+  pattern: "From" | "To";
+  descriptor: ActionDefinition;
   connectorId: string;
   description: string;
-  camelConnectorGAV: string;
   id: string;
   name: string;
   tags: Array<string>;
-  // TODO DEPRECATED?
-  outputDataShape: DataShape;
-  inputDataShape: DataShape;
 }
 export type Actions = Array<Action>;
 
 export interface ActionDefinition extends BaseEntity {
+  camelConnectorGAV: string;
+  camelConnectorPrefix: string;
   outputDataShape: DataShape;
-  propertyDefinitionSteps: Array<ActionDefinitionStep>;
   inputDataShape: DataShape;
+  propertyDefinitionSteps: Array<ActionDefinitionStep>;
 }
 export type ActionDefinitions = Array<ActionDefinition>;
 
@@ -298,11 +297,9 @@ export type ListResultStrings = Array<ListResultString>;
 class TypeFactoryClass {
   createAction() {
     return <Action>{
-      definition: undefined,
-      camelConnectorPrefix: undefined,
+      descriptor: undefined,
       connectorId: undefined,
       description: undefined,
-      camelConnectorGAV: undefined,
       id: undefined,
       name: undefined,
       tags: undefined

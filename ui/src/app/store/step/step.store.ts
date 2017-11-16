@@ -187,8 +187,8 @@ export class StepStore {
       steps.filter(
         s =>
           s.action &&
-          s.action.outputDataShape &&
-          s.action.outputDataShape.kind !== 'none'
+          s.action.descriptor.outputDataShape &&
+          s.action.descriptor.outputDataShape.kind !== 'none'
       ).length > 0
     );
   }
@@ -198,8 +198,8 @@ export class StepStore {
       steps.filter(
         s =>
           s.action &&
-          s.action.inputDataShape &&
-          s.action.inputDataShape.kind !== 'none'
+          s.action.descriptor.inputDataShape &&
+          s.action.descriptor.inputDataShape.kind !== 'none'
       ).length > 0
     );
   }

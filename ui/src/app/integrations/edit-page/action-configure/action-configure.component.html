@@ -20,7 +20,7 @@
             class="btn btn-primary"
             (click)="continue()"
             tourAnchor="integrations.done">
-      <ng-container *ngIf="page >= lastPage || !definition">
+      <ng-container *ngIf="page >= lastPage || !descriptor">
         Done
       </ng-container>
       <ng-container *ngIf="page < lastPage">
@@ -68,8 +68,8 @@
                [innerHtml]="error.message">
           </div>
         </ng-container>
-        <ng-container *ngIf="definition">
-          <p>{{ definition.description }}</p>
+        <ng-container *ngIf="descriptor">
+          <p>{{ descriptor.description }}</p>
           <div>
             <form class="form-horizontal"
                   [formGroup]="formGroup">

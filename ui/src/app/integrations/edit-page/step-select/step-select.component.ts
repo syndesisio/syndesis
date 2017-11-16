@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
@@ -12,7 +12,8 @@ import { log, getCategory } from '../../../logging';
   templateUrl: './step-select.component.html',
   styleUrls: ['./step-select.component.scss']
 })
-export class IntegrationsStepSelectComponent extends FlowPage implements OnInit {
+export class IntegrationsStepSelectComponent extends FlowPage
+  implements OnInit, OnDestroy {
   steps: Steps;
   position: number;
 
@@ -23,7 +24,6 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
     public stepStore: StepStore,
   ) {
     super(currentFlow, route, router);
-    this.steps = stepStore.getSteps();
   }
 
   goBack() {
@@ -89,6 +89,7 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
   }
 
   ngOnInit() {
+    this.steps = this.stepStore.getSteps();
     this.route.paramMap.first(params => params.has('position'))
       .subscribe(params => {
         this.position = +params.get('position');
@@ -97,5 +98,9 @@ export class IntegrationsStepSelectComponent extends FlowPage implements OnInit 
           position: this.position
         });
       });
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }
