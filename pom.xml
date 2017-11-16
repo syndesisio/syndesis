@@ -46,6 +46,7 @@
       <module>ui</module>
       <module>runtime</module>
       <module>rest</module>
+      <module>s2i</module>
       <module>tests</module>
       <module>verifier</module>
   </modules>

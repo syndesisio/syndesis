@@ -134,7 +134,7 @@ Included in this stack are the following technologies:
 * Testing: [Cucumber.js](https://cucumber.io/) (BDD Unit Test Framework), [Karma](https://karma-runner.github.io/1.0/index.html) (Unit Test Runner), [Istanbul](https://github.com/gotwarlost/istanbul) (Code Coverage)
 * Linting: [TsLint](https://github.com/palantir/tslint) (Linting for TypeScript)
 * Logging: [typescript-logging](https://github.com/mreuvers/typescript-logging) (TypeScript Logging)
-* Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular 2 TypeScript projects)
+* Code Analysis: [Codelyzer](https://github.com/mgechev/codelyzer) (TsLint rules for static code analysis of Angular TypeScript projects)
 
 ### File Structure
 
@@ -201,14 +201,7 @@ To make sure your code is formatted consistently with the rest of the team's, yo
 
 ### Committing Changes
 
-The repo is commitizen friendly, after making some changes:
-
-`yarn commit`
-
-to commit them. `yarn commit` is the same as running `git cz` in this case. So, you can use all the git commit options, 
-for example: `yarn commit -am 'Blah blah blah''`.
-
-Don't forget to add your files to staging first with `git add -A`. This is a `git commit` tool, not a total `git` replacement.
+The versioning workflow is under redesign at this moment, same as the different automated checks involved. Please keep an eye on this section for more up-to-date information to be released soon.
 
 ### Documentation
 
