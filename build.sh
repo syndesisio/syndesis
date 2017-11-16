@@ -80,7 +80,7 @@ function init_options() {
   MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
   # If  we are running in cicleci lets configure thigs to avoid running out of memory:
-  if [ $CIRCLECI == "true" ] ; then
+  if [ "$CIRCLECI" == "true" ] ; then
     MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2"
   fi
 
