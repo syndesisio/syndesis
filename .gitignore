@@ -30,6 +30,17 @@ hs_err_pid*
 .settings/
 .vscode/
 
+<<<<<<< HEAD
 # System Files
 .DS_Store
 Thumbs.db
+=======
+# IDEA files
+.idea
+*.iml
+
+# vscode files
+.project
+.settings/
+.vscode/
+>>>>>>> Add vscode stuff to gitignore
