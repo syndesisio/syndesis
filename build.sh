@@ -74,19 +74,24 @@ function init_options() {
 
   # Internal variable default values
   OC_OPTS=""
-  MAVEN_OPTS=""
+  MAVEN_PARAMS=""
   MAVEN_CLEAN_GOAL="clean"
   MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
   MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
+  # If  we are running in cicleci lets configure thigs to avoid running out of memory:
+  if [ $CIRCLECI == "true" ] ; then
+    MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2"
+  fi
+
   # Apply options
   if [ -n "$(hasflag --batch-mode $ARGS 2> /dev/null)" ]; then
-    MAVEN_OPTS="$MAVEN_OPTS --batch-mode"
+    MAVEN_PARAMS="$MAVEN_PARAMS --batch-mode"
   fi
 
   if [ -n "$SKIP_TESTS" ]; then
       echo "Skipping tests ..."
-      MAVEN_OPTS="$MAVEN_OPTS -DskipTests"
+      MAVEN_PARAMS="$MAVEN_PARAMS -DskipTests"
   fi
 
   if [ -n "$SKIP_IMAGE_BUILDS" ]; then
@@ -96,7 +101,7 @@ function init_options() {
 
   if [ -n "$NAMESPACE" ]; then
       echo "Namespace: $NAMESPACE"
-      MAVEN_OPTS="$MAVEN_OPTS -Dfabric8.namespace=$NAMESPACE"
+      MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.namespace=$NAMESPACE"
       OC_OPTS=" -n $NAMESPACE"
   fi
 
@@ -106,34 +111,34 @@ function init_options() {
 
   if [ -n "$WITH_IMAGE_STREAMS" ]; then
     echo "With image streams ..."
-    MAVEN_OPTS=" -Dfabric8.mode=openshift"
+    MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.mode=openshift"
   else
-    MAVEN_OPTS=" -Dfabric8.mode=kubernetes"
+    MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.mode=kubernetes"
   fi
 }
 
 function connectors() {
   pushd connectors
   # We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
-  "${MAVEN_CMD}" clean install $MAVEN_OPTS
+  "${MAVEN_CMD}" clean install $MAVEN_PARAMS
   popd
 }
 
 function verifier() {
   pushd verifier
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
   popd
 }
 
 function runtime() {
   pushd runtime
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
   popd  
 }
 
 function rest() {
   pushd rest
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_OPTS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_PARAMS
   popd
 }
 

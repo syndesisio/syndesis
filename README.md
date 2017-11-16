@@ -5,7 +5,7 @@ Currently this repo just pulls in all the other syndesis project repos as submod
 
 git clone --recursive https://github.com/syndesisio/syndesis.git
 
-## building everything
+### Building everything
 
     ./build.sh
     
@@ -13,12 +13,12 @@ To see all the available options:
 
     ./build.sh --help
     
-### resumme from module    
+### Resume from module    
 To resume from a particular module:
 
     ./build.sh --resume-from ui
     
-### using the image streams    
+### Using the image streams    
 To build everything using image streams (instead of directly talking to docker):
 
     ./build.sh --with-image-streams

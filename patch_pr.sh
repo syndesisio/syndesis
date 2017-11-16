@@ -54,9 +54,9 @@ fi
 patch_file=/tmp/pr_${module_dir}_${pr}.patch
 curl -L $url.patch > $patch_file
 cd $module_dir
-git co -b "pr/${module_dir}-$pr"
+git checkout -b "pr/${module_dir}-$pr"
 patch -p1 < $patch_file
-git status -s | grep -v -e '^ M ' | sed -e 's/^?? //' | xargs git add
+git status -s | grep -v -e '^ M ' | grep -v -e '^ D ' | sed -e 's/^?? //' | xargs git add
 git commit -a -m "Applied PR $url (Module: $module_dir, PR: $pr)"
 
 cat - <<EOT
