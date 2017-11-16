@@ -30,6 +30,12 @@
 
   <dependencies>
 
+    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>dao</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.jdbi</groupId>
       <artifactId>jdbi</artifactId>

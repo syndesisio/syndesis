@@ -15,32 +15,6 @@
  */
 package io.syndesis.image;
 
-import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.connector.catalog.ConnectorCatalogConfiguration;
-import io.syndesis.connector.catalog.ConnectorCatalogProperties;
-import io.syndesis.core.MavenProperties;
-import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.dao.init.ModelData;
-import io.syndesis.dao.init.ReadApiClientData;
-import io.syndesis.dao.manager.DaoConfiguration;
-import io.syndesis.model.Kind;
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.SimpleStep;
-import io.syndesis.model.integration.Step;
-import io.syndesis.project.converter.DefaultProjectGenerator;
-import io.syndesis.project.converter.GenerateProjectRequest;
-import io.syndesis.project.converter.ProjectGeneratorConfiguration;
-import io.syndesis.project.converter.ProjectGeneratorProperties;
-import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +26,33 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.connector.catalog.ConnectorCatalogConfiguration;
+import io.syndesis.connector.catalog.ConnectorCatalogProperties;
+import io.syndesis.core.MavenProperties;
+import io.syndesis.core.SuppressFBWarnings;
+import io.syndesis.dao.init.ModelData;
+import io.syndesis.dao.init.ReadApiClientData;
+import io.syndesis.dao.manager.DaoConfiguration;
+import io.syndesis.model.Kind;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
+import io.syndesis.project.converter.DefaultProjectGenerator;
+import io.syndesis.project.converter.ProjectGenerator;
+import io.syndesis.project.converter.ProjectGeneratorConfiguration;
+import io.syndesis.project.converter.ProjectGeneratorProperties;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(exclude = {DaoConfiguration.class, ConnectorCatalogConfiguration.class, ProjectGeneratorConfiguration.class})
 public class Application implements ApplicationRunner {
@@ -79,7 +80,6 @@ public class Application implements ApplicationRunner {
     private static void generateIntegrationProject(File project) throws IOException {
         final ReadApiClientData reader = new ReadApiClientData();
         ArrayList<Step> steps = new ArrayList<>();
-        HashMap<String, Connector> connectors = new HashMap<String, Connector>();
 
         String deploymentText;
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("io/syndesis/dao/deployment.json")) {
@@ -90,7 +90,6 @@ public class Application implements ApplicationRunner {
         for (final ModelData<?> model : modelList) {
             if (model.getKind() == Kind.Connector) {
                 final Connector connector = (Connector) model.getData();
-                connectors.put(connector.getId().get(), connector);
                 for (final Action action : connector.getActions()) {
                     steps.add(
                         new SimpleStep.Builder()
@@ -107,30 +106,28 @@ public class Application implements ApplicationRunner {
             }
         }
 
-        GenerateProjectRequest request = new GenerateProjectRequest.Builder()
-            .integration(new Integration.Builder()
-                .id("integration")
-                .name("Integration")
-                .description("This integration is used to prime the .m2 repo")
-                .steps( steps )
-                .build())
-            .connectors(connectors)
+        Integration integration = new Integration.Builder()
+            .id("integration")
+            .name("Integration")
+            .description("This integration is used to prime the .m2 repo")
+            .steps( steps )
             .build();
-        generate(request, project);
+
+        generate(integration, project);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(GenerateProjectRequest request, File targetDir) throws IOException {
-
+    private static void generate(Integration integration, File targetDir) throws IOException {
         MavenProperties mavenProperties = new MavenProperties();
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         ConnectorCatalogProperties catalogProperties = new ConnectorCatalogProperties(mavenProperties);
+        ConnectorCatalog connectorCatalog = new ConnectorCatalog(catalogProperties);
         StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Arrays.asList());
-        DefaultProjectGenerator generator = new DefaultProjectGenerator(new ConnectorCatalog(catalogProperties), generatorProperties, registry);
+        ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, connectorCatalog, registry, null, Optional.empty());
 
         Path dir =targetDir.toPath();
         Files.createDirectories( dir);
-        Files.write(dir.resolve("pom.xml"), generator.generatePom(request.getIntegration()));
+        Files.write(dir.resolve("pom.xml"), generator.generatePom(integration));
 
         dir = dir.resolve("src/main/java/io/syndesis/example");
         Files.createDirectories( dir);

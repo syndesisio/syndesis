@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -35,19 +35,18 @@ import javax.ws.rs.core.MediaType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.ActionDefinition;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.DataShape;
 import io.syndesis.model.connection.DynamicActionMetadata;
 import io.syndesis.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
 import io.syndesis.verifier.VerificationConfigurationProperties;
@@ -57,7 +56,7 @@ public class ConnectionActionHandler {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private final List<Action> actions;
+    private final List<ConnectorAction> actions;
 
     private final VerificationConfigurationProperties config;
     private final EncryptionComponent encryptionComponent;
@@ -75,34 +74,39 @@ public class ConnectionActionHandler {
         connector = maybeConnector.orElseThrow(() -> new EntityNotFoundException(
             "Connection with id `" + connection.getId() + "` does not have a Connector defined"));
 
-        actions = connector.getActions();
+        actions = connector.getActions().stream()
+            .filter(ConnectorAction.class::isInstance)
+            .map(ConnectorAction.class::cast)
+            .collect(Collectors.toList());
     }
 
     @POST
     @Path(value = "/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation("Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties")
-    @ApiResponses(@ApiResponse(code = 200, response = ActionDefinition.class,
+    @ApiResponses(@ApiResponse(code = 200, response = ConnectorDescriptor.class,
         message = "A map of zero or more action property suggestions keyed by the property name"))
-    public ActionDefinition enrichWithMetadata(
+    public ConnectorDescriptor enrichWithMetadata(
         @PathParam("id") @ApiParam(required = true,
             example = "io.syndesis:salesforce-create-or-update:latest") final String id,
         final Map<String, String> properties) {
 
-        final Action action = actions.stream().filter(a -> a.idEquals(id)).findAny()
+        final ConnectorAction action = actions.stream()
+            .filter(a -> a.idEquals(id))
+            .findAny()
             .orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
 
-        final ActionDefinition defaultDefinition = action.getDefinition();
+        final ConnectorDescriptor defaultDescriptor = action.getDescriptor();
 
         if (!action.getTags().contains("dynamic")) {
-            return defaultDefinition;
+            return defaultDescriptor;
         }
 
         final String connectorId = connector.getId().get();
 
         final Map<String, String> parameters = encryptionComponent.decrypt(new HashMap<>(Optional.ofNullable(properties).orElseGet(HashMap::new)));
         // put all action parameters with `null` values
-        defaultDefinition.getPropertyDefinitionSteps()
+        defaultDescriptor.getPropertyDefinitionSteps()
             .forEach(step -> step.getProperties().forEach((k, v) -> parameters.putIfAbsent(k, null)));
 
         // lastly put all connection properties
@@ -112,7 +116,7 @@ public class ConnectionActionHandler {
         final WebTarget target = client
             .target(String.format("http://%s/api/v1/connectors/%s/actions/%s", config.getService(), connectorId, id));
 
-        final ActionDefinition.Builder enriched = new ActionDefinition.Builder().createFrom(defaultDefinition);
+        final ConnectorDescriptor.Builder enriched = new ConnectorDescriptor.Builder().createFrom(defaultDescriptor);
         final DynamicActionMetadata dynamicActionMetadata = target.request(MediaType.APPLICATION_JSON)
             .post(Entity.entity(parameters, MediaType.APPLICATION_JSON), DynamicActionMetadata.class);
 
@@ -131,13 +135,13 @@ public class ConnectionActionHandler {
         }
 
         final Object input = dynamicActionMetadata.inputSchema();
-        if (shouldEnrichDataShape(defaultDefinition.getInputDataShape(), input)) {
+        if (shouldEnrichDataShape(defaultDescriptor.getInputDataShape(), input)) {
             enriched.inputDataShape(new DataShape.Builder().type(typeFrom(input)).kind("json-schema")
                 .specification(specificationFrom(input)).build());
         }
 
         final Object output = dynamicActionMetadata.outputSchema();
-        if (shouldEnrichDataShape(defaultDefinition.getOutputDataShape(), output)) {
+        if (shouldEnrichDataShape(defaultDescriptor.getOutputDataShape(), output)) {
             enriched.outputDataShape(new DataShape.Builder().type(typeFrom(output)).kind("json-schema")
                 .specification(specificationFrom(output)).build());
         }

@@ -15,16 +15,17 @@
  */
 package io.syndesis.rest.v1beta1.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.model.extension.Extension;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import javax.annotation.Nonnull;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.core.Json;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.model.extension.Extension;
+import org.springframework.stereotype.Component;
 
 /**
  * Tools to analyze binary extensions.
@@ -33,8 +34,7 @@ import java.util.jar.JarInputStream;
 public class ExtensionAnalyzer {
 
     private static final String MANIFEST_LOCATION = "META-INF/syndesis/extension-definition.json";
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = Json.mapper();
 
     /**
      * Analyze a binary extension to obtain the embedded {@link Extension} object.

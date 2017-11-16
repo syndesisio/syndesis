@@ -37,9 +37,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -55,8 +53,6 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     public static final String SYNDESIS_ANNOTATION_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisExtensionAction";
     public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisStepExtension";
     public static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.context.annotation.Bean";
-    public static final String ROUTE_BUILDER_CLASS_NAME = "org.apache.camel.builder.RouteBuilder";
-    public static final String ROUTE_DEFINITION_CLASS_NAME = "org.apache.camel.model.RouteDefinition";
 
     private Class<? extends Annotation> annotationClass ;
     private Class<? extends Annotation> beanAnnotationClass;
@@ -127,25 +123,13 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
     protected void augmentProperties(ExecutableElement element, Properties props) {
-        final Elements elements = processingEnv.getElementUtils();
-        final Types types = processingEnv.getTypeUtils();
         final TypeElement typedElement = (TypeElement) element.getEnclosingElement();
-        final TypeMirror returnType = element.getReturnType();
-        final TypeElement routeBuilderElement = elements.getTypeElement(ROUTE_BUILDER_CLASS_NAME);
-        final TypeElement routeDefinitionElement = elements.getTypeElement(ROUTE_DEFINITION_CLASS_NAME);
 
         if (beanAnnotationClass != null && element.getAnnotation(beanAnnotationClass) != null) {
-            if (types.isAssignable(returnType, routeBuilderElement.asType()) || types.isAssignable(returnType, routeDefinitionElement.asType())) {
-                props.put("kind", "ROUTE");
-            }
+            props.put("kind", "ENDPOINT");
         } else {
-            if (routeBuilderElement == null || routeDefinitionElement == null) {
-                props.put("kind", "BEAN");
-                props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
-            } else if (!types.isAssignable(returnType, routeBuilderElement.asType()) && !types.isAssignable(returnType, routeDefinitionElement.asType())) {
-                props.put("kind", "BEAN");
-                props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
-            }
+            props.put("kind", "BEAN");
+            props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
         }
     }
 

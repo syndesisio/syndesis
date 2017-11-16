@@ -17,14 +17,18 @@ package io.syndesis.project.converter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.manager.DataManager;
 import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
 import io.syndesis.project.converter.visitor.EndpointStepVisitor;
 import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +36,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(ProjectGeneratorProperties.class)
 public class ProjectGeneratorConfiguration {
+    @Autowired
+    private ProjectGeneratorProperties properties;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired(required = false)
+    private ExtensionDataManager extensionDataManager;
 
     @Bean
-    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties properties, StepVisitorFactoryRegistry registry) throws IOException {
-        return new DefaultProjectGenerator(connectorCatalog, properties, registry);
+    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog, StepVisitorFactoryRegistry registry) throws IOException {
+        return new DefaultProjectGenerator(
+            properties,
+            connectorCatalog,
+            registry,
+            dataManager,
+            Optional.ofNullable(extensionDataManager)
+        );
     }
 
     @Bean

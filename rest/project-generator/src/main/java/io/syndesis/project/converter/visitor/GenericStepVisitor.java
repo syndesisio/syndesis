@@ -17,6 +17,8 @@
 package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,32 +28,32 @@ import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.model.integration.Step;
 
 public class GenericStepVisitor implements StepVisitor {
-
     private static final ObjectMapper OBJECT_MAPPER = YamlHelpers.createObjectMapper();
-
     public static final String GENERIC = "generic";
 
     public static class Factory implements StepVisitorFactory<GenericStepVisitor> {
-
         @Override
         public String getStepKind() {
             return GENERIC;
         }
 
         @Override
-        public GenericStepVisitor create(GeneratorContext generatorContext) {
+        public GenericStepVisitor create() {
             return new GenericStepVisitor();
         }
     }
 
     @Override
-    public io.syndesis.integration.model.steps.Step visit(StepVisitorContext stepContext) {
+    public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext stepContext) {
         try {
             Step step = stepContext.getStep();
             Map<String, Object> stepMap = new HashMap<>(step.getConfiguredProperties());
             stepMap.put("kind", step.getStepKind());
             String json = OBJECT_MAPPER.writeValueAsString(stepMap);
-            return OBJECT_MAPPER.readValue(json, io.syndesis.integration.model.steps.Step.class);
+
+            return Collections.singletonList(
+                OBJECT_MAPPER.readValue(json, io.syndesis.integration.model.steps.Step.class)
+            );
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.syndesis.integrations</groupId>
+  <artifactId>project</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>Syndesis Integrations :: Test Integration</name>
+  <description>This is a test integration!</description>
+  <packaging>jar</packaging>
+
+  <properties>
+    <spring-boot.version>@spring-boot.version@</spring-boot.version>
+    <fabric8.version>@fabric8.version@</fabric8.version>
+    <fabric8.maven.plugin.version>@fabric8.maven.plugin.version@</fabric8.maven.plugin.version>
+    <maven-surefire-plugin.version>@maven-surefire-plugin.version@</maven-surefire-plugin.version>
+    <syndesis-integration-runtime.version>@syndesis-integration-runtime.version@</syndesis-integration-runtime.version>
+    <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-project-bom-camel-spring-boot</artifactId>
+        <version>\${fabric8.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- atlasmap runtime -->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>camel-atlasmap</artifactId>
+      <version>\${camel-atlasmap.version}</version>
+    </dependency>
+
+    <!-- connectors used in this integration -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>timer-connector</artifactId>
+      <version>@syndesis-connectors.version@</version>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>http-get-connector</artifactId>
+      <version>@syndesis-connectors.version@</version>
+    </dependency>
+
+    <!-- extensions used in this integration -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.11</version>
+    </dependency>
+
+    <!-- spring-boot as runtime -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-undertow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Integration runtime -->
+    <dependency>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>model</artifactId>
+      <version>\${syndesis-integration-runtime.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>runtime</artifactId>
+      <version>\${syndesis-integration-runtime.version}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>\${maven-surefire-plugin.version}</version>
+        <inherited>true</inherited>
+        <configuration>
+          <excludes>
+            <exclude>**/*KT.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>\${spring-boot.version}</version>
+        <configuration>
+          <layout>ZIP</layout>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <version>\${fabric8.maven.plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resource</goal>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

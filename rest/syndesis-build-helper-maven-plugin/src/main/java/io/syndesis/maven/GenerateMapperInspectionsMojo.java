@@ -25,12 +25,11 @@ import java.util.Set;
 import io.atlasmap.maven.GenerateInspectionsMojo;
 import io.syndesis.dao.init.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.Kind;
-import io.syndesis.model.connection.Action;
+import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.DataShape;
-import io.syndesis.model.connection.DataShapeKinds;
-
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -81,13 +80,10 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
                 if (model.getKind() == Kind.Connector) {
                     final Connector connector = (Connector) model.getData();
 
-                    for (final Action action : connector.getActions()) {
-
+                    for (final ConnectorAction action : connector.getActions()) {
                         process(generated, connector, action, action.getInputDataShape());
                         process(generated, connector, action, action.getOutputDataShape());
-
                     }
-
                 }
             }
         } catch (final IOException e) {
@@ -95,7 +91,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
         }
     }
 
-    private void process(final Set<File> generated, final Connector connector, final Action action,
+    private void process(final Set<File> generated, final Connector connector, final ConnectorAction action,
         final Optional<DataShape> maybeShape) throws MojoFailureException, MojoExecutionException {
         if (!maybeShape.isPresent()) {
             return;
@@ -126,7 +122,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
         generateInspectionsMojo.setSystem(system);
         generateInspectionsMojo.setRemoteRepos(remoteRepos);
         generateInspectionsMojo.setRepoSession(repoSession);
-        generateInspectionsMojo.setGav(action.getCamelConnectorGAV());
+        generateInspectionsMojo.setGav(action.getDescriptor().getCamelConnectorGAV());
         generateInspectionsMojo.setClassName(shape.getType());
         generateInspectionsMojo.setOutputFile(outputFile);
         generateInspectionsMojo.execute();

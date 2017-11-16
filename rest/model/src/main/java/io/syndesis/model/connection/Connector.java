@@ -16,7 +16,6 @@
 package io.syndesis.model.connection;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,12 +24,13 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
-
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.WithActions;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
-public interface Connector extends WithId<Connector>, WithName, WithProperties, Serializable {
+public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, Serializable {
 
     @Override
     @Value.Default
@@ -48,8 +48,6 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
     Map<String, ConfigurationProperty> getProperties();
 
     String getDescription();
-
-    List<Action> getActions();
 
     @Override
     Map<String, String> getConfiguredProperties();
@@ -69,7 +67,7 @@ public interface Connector extends WithId<Connector>, WithName, WithProperties, 
         }
     }
 
-    default Optional<Action> actionById(String id) {
+    default Optional<ConnectorAction> actionById(String id) {
         return getActions().stream().filter(a -> a.idEquals(id)).findFirst();
     }
 

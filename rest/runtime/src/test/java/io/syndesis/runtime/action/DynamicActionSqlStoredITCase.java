@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
+import io.syndesis.model.action.ConnectorDescriptor;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,7 +46,6 @@ import org.springframework.test.context.ContextConfiguration;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import io.syndesis.model.connection.ActionDefinition;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.runtime.BaseITCase;
@@ -102,18 +102,18 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        final ResponseEntity<ActionDefinition> firstResponse = http(HttpMethod.POST,
+        final ResponseEntity<ConnectorDescriptor> firstResponse = http(HttpMethod.POST,
             "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest", null,
-            ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
+            ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         ConfigurationProperty procedureNames = firstResponse.getBody().getPropertyDefinitionSteps().iterator().next().getProperties().get("procedureName");
         assertThat(procedureNames.getEnum().size() == 2);
         assertThat(procedureNames.getEnum().iterator().next().getLabel().startsWith("DEMO_ADD"));
 
-        final ResponseEntity<ActionDefinition> secondResponse = http(HttpMethod.POST,
+        final ResponseEntity<ConnectorDescriptor> secondResponse = http(HttpMethod.POST,
                 "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest",
                 Collections.singletonMap("procedureName", "DEMO_ADD"),
-                ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
+                ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         final Map<String, ConfigurationProperty> secondRequestProperties = secondResponse.getBody().getPropertyDefinitionSteps().get(0).getProperties();
         assertThat(secondRequestProperties.get("template").getDefaultValue()).isEqualTo("DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, INTEGER ${body[C]})");

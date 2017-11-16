@@ -18,12 +18,15 @@
           "id": "4"
         },
         "action": {
-          "connectorId": "http",
           "description": "Set a timer that fires at intervals that you specify",
           "name": "PeriodicTimer",
           "id": "io.syndesis_timer-connector_@syndesis-connectors.version@",
-          "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "periodic-timer-connector"
+          "actionType" : "connector",
+          "descriptor": {
+            "connectorId": "http",
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer-connector"
+          }
         },
         "configuredProperties": {
           "period": "5000"
@@ -41,12 +44,15 @@
           "id": "3"
         },
         "action": {
-          "connectorId": "http",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "name": "HTTP GET",
           "id": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-get-connector"
+          "actionType" : "connector",
+          "descriptor": {
+            "connectorId": "http",
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get-connector"
+          }
         },
         "configuredProperties": {
           "httpUri": "http://localhost:8080/hello"
@@ -72,12 +78,15 @@
           "id": "3"
         },
         "action": {
-          "connectorId": "http",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
           "name": "HTTP POST",
           "id": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-post-connector"
+          "actionType" : "connector",
+          "descriptor": {
+            "connectorId": "http",
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post-connector"
+          }
         },
         "configuredProperties": {
           "httpUri": "http://localhost:8080/bye"

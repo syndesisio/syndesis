@@ -45,11 +45,6 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>filestore</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis</groupId>
       <artifactId>openshift</artifactId>
     </dependency>
 
@@ -141,12 +136,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
       <scope>test</scope>
     </dependency>
 

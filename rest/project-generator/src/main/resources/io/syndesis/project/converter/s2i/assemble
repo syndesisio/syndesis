@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Run the original assemble script.
+/usr/local/s2i/assemble
+
+# Load global S2I variable setup
+source /usr/local/s2i/s2i-setup
+
+if [ -d $S2I_SOURCE_DIR/extensions ]; then
+    echo "copy $S2I_SOURCE_DIR/extensions to $JAVA_DATA_DIR"
+    cp -rv $S2I_SOURCE_DIR/extensions $JAVA_DATA_DIR"
+fi
+
+
+

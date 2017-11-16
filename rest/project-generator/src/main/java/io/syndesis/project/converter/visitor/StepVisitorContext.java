@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.syndesis.project.converter.visitor;
 
 import java.util.Iterator;
@@ -28,6 +27,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = StepVisitorContext.Builder.class)
 public interface StepVisitorContext extends Iterator<StepVisitorContext> {
+
+    GeneratorContext getGeneratorContext();
 
     int getIndex();
 

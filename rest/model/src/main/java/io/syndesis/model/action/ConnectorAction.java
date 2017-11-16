@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.connection;
+package io.syndesis.model.action;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import java.io.Serializable;
-import java.util.Optional;
-
+import io.syndesis.model.WithId;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = DataShape.Builder.class)
-public interface DataShape extends Serializable {
-
-    String getKind();
-
-    String getType();
-
-    String getSpecification();
-
-    Optional<byte[]> getExemplar();
-
-    class Builder extends ImmutableDataShape.Builder {
+@JsonDeserialize(builder = ConnectorAction.Builder.class)
+public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction> {
+    @Override
+    default ConnectorAction withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
     }
 
-
+    class Builder extends ImmutableConnectorAction.Builder {
+    }
 }

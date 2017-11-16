@@ -19,16 +19,14 @@ package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import io.syndesis.integration.model.steps.Endpoint;
-import io.syndesis.integration.model.steps.Step;
 
 public class DataMapperStepVisitor implements StepVisitor {
-
     public static final String MAPPER = "mapper";
-
-    private final GeneratorContext generatorContext;
 
     public static class Factory implements StepVisitorFactory<DataMapperStepVisitor> {
 
@@ -38,25 +36,21 @@ public class DataMapperStepVisitor implements StepVisitor {
         }
 
         @Override
-        public DataMapperStepVisitor create(GeneratorContext generatorContext) {
-            return new DataMapperStepVisitor(generatorContext);
+        public DataMapperStepVisitor create() {
+            return new DataMapperStepVisitor();
         }
     }
 
-    public DataMapperStepVisitor(GeneratorContext generatorContext) {
-        this.generatorContext = generatorContext;
-    }
-
     @Override
-    public Step visit(StepVisitorContext stepContext) {
+    public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext stepContext) {
         Map<String, String> configuredProperties = stepContext.getStep().getConfiguredProperties();
 
         String resourceName = "mapping-step-" + stepContext.getIndex() + ".json";
         try {
             byte[] resourceData = utf8(configuredProperties.get("atlasmapping"));
 
-            generatorContext.addTarEntry("src/main/resources/" + resourceName, resourceData);
-            return new Endpoint("atlas:" + resourceName);
+            stepContext.getGeneratorContext().addTarEntry("src/main/resources/" + resourceName, resourceData);
+            return Collections.singletonList(new Endpoint("atlas:" + resourceName));
         } catch (IOException e) {
             throw new IllegalStateException("Cannot write " + resourceName + ":" + e,e);
         }

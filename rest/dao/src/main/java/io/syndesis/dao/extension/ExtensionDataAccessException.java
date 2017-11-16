@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.filestore;
+package io.syndesis.dao.extension;
 
 /**
- * These runtime exceptions are thrown by the methods of the FileStore
+ * These runtime exceptions are thrown by the methods of the {@link ExtensionDataAccessObject}
  */
-public class FileStoreException extends RuntimeException {
+public class ExtensionDataAccessException extends RuntimeException {
 
-    public FileStoreException(String message) {
+    public ExtensionDataAccessException(String message) {
         super(message);
     }
 
-    public FileStoreException(String message, Throwable cause) {
+    public ExtensionDataAccessException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -38,7 +38,7 @@ public class FileStoreException extends RuntimeException {
         } else if (cause instanceof Error) {
             throw ((Error) cause);
         } else {
-            throw new FileStoreException(message, cause);
+            throw new ExtensionDataAccessException(message, cause);
         }
     }
 }

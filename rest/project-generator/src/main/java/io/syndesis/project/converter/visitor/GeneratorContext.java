@@ -17,11 +17,14 @@
 package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.connector.catalog.ConnectorCatalog;
+import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.Flow;
-import io.syndesis.project.converter.GenerateProjectRequest;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -31,12 +34,14 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = GeneratorContext.Builder.class)
 public interface GeneratorContext {
 
-    GenerateProjectRequest getRequest();
+    Integration getIntegration();
     Flow getFlow();
     ConnectorCatalog getConnectorCatalog();
     ProjectGeneratorProperties getGeneratorProperties();
     StepVisitorFactoryRegistry getVisitorFactoryRegistry();
     TarArchiveOutputStream getTarArchiveOutputStream();
+    DataManager getDataManager();
+    Optional<ExtensionDataManager> getExtensionDataManager();
 
     default void addTarEntry(String path, byte[] content) throws IOException {
         TarArchiveOutputStream tos = getTarArchiveOutputStream();

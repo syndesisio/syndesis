@@ -22,12 +22,6 @@ import io.syndesis.model.filter.RuleFilterStep;
  * @since 01.08.17
  */
 public class RuleFilterStepVisitor extends FilterStepVisitor {
-
-
-    RuleFilterStepVisitor(GeneratorContext generatorContext) {
-        super(generatorContext);
-    }
-
     public static class Factory implements StepVisitorFactory<RuleFilterStepVisitor> {
         @Override
         public String getStepKind() {
@@ -35,8 +29,8 @@ public class RuleFilterStepVisitor extends FilterStepVisitor {
         }
 
         @Override
-        public RuleFilterStepVisitor create(GeneratorContext generatorContext) {
-            return new RuleFilterStepVisitor(generatorContext);
+        public RuleFilterStepVisitor create() {
+            return new RuleFilterStepVisitor();
         }
     }
 

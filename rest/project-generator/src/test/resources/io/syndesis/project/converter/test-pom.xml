@@ -62,6 +62,8 @@
       <version>@syndesis-connectors.version@</version>
     </dependency>
 
+    <!-- extensions used in this integration -->
+
     <!-- spring-boot as runtime -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -95,12 +97,14 @@
   </dependencies>
 
   <build>
-
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>\${spring-boot.version}</version>
+        <configuration>
+          <layout>ZIP</layout>
+        </configuration>
         <executions>
           <execution>
             <goals>

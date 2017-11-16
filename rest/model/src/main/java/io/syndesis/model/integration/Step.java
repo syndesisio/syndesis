@@ -23,7 +23,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
-import io.syndesis.model.connection.Action;
+import io.syndesis.model.action.Action;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
 import org.immutables.value.Value;

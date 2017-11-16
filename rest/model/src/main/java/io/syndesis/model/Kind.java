@@ -23,15 +23,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum Kind {
+    Action(io.syndesis.model.action.Action.class),
 
-    Action(io.syndesis.model.connection.Action.class),
     Connection(io.syndesis.model.connection.Connection.class),
     Connector(io.syndesis.model.connection.Connector.class),
+    ConnectorAction(io.syndesis.model.action.ConnectorAction.class),
     ConnectorGroup(io.syndesis.model.connection.ConnectorGroup.class),
 
     Environment(io.syndesis.model.environment.Environment.class),
     EnvironmentType(io.syndesis.model.environment.EnvironmentType.class),
+
     Extension(io.syndesis.model.extension.Extension.class),
+    ExtensionAction(io.syndesis.model.action.ExtensionAction.class),
+
     Organization(io.syndesis.model.environment.Organization.class),
 
     Integration(io.syndesis.model.integration.Integration.class),
@@ -40,14 +44,11 @@ public enum Kind {
 
     Permission(io.syndesis.model.user.Permission.class),
     Role(io.syndesis.model.user.Role.class),
-    User(io.syndesis.model.user.User.class),
-
-    TechExtension(io.syndesis.model.techextension.TechExtension.class),
-    TechExtensionAction(io.syndesis.model.techextension.TechExtensionAction.class),
+    User(io.syndesis.model.user.User.class)
     ;
 
     public final String modelName;
-    public final Class<? extends WithId<?>> modelClass;
+    public final Class<? extends WithKind> modelClass;
 
     private static final Map<String, Kind> NAME_MAP;
     private static final Map<Class<?>, Kind> MODEL_MAP;
@@ -64,11 +65,11 @@ public enum Kind {
         MODEL_MAP = Collections.unmodifiableMap(kindByType);
     }
 
-    Kind(Class<? extends WithId<?>> model) {
+    Kind(Class<? extends WithKind> model) {
         this(name(model.getSimpleName()), model);
     }
 
-    Kind(String name, Class<? extends WithId<?>> model) {
+    Kind(String name, Class<? extends WithKind> model) {
         this.modelName = name;
         this.modelClass = model;
     }

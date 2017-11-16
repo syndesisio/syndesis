@@ -21,5 +21,5 @@ public interface StepVisitorFactory<V extends StepVisitor> {
 
     String getStepKind();
 
-    V create(GeneratorContext generatorContext);
+    V create();
 }

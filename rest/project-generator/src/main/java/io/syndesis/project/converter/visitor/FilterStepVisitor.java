@@ -16,37 +16,34 @@
 
 package io.syndesis.project.converter.visitor;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.model.filter.FilterStep;
 import io.syndesis.model.integration.Step;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public abstract class FilterStepVisitor implements StepVisitor {
-
-    private final GeneratorContext generatorContext;
-
-    FilterStepVisitor(GeneratorContext generatorContext) {
-        this.generatorContext = generatorContext;
-    }
-
     @Override
-    public io.syndesis.integration.model.steps.Step visit(StepVisitorContext stepContext) {
+    public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext stepContext) {
         Step step = stepContext.getStep();
         if (step instanceof FilterStep && step.getStepKind().equals(getStepKind())) {
             Filter filter = createFilter((FilterStep) step);
             List<io.syndesis.integration.model.steps.Step> steps = new ArrayList<>();
             while (stepContext.hasNext()) {
-                steps.add(visit(stepContext.next()));
+                steps.addAll(visit(stepContext.next()));
             }
             filter.setSteps(steps);
-            return filter;
+            return Collections.singletonList(filter);
         }
 
+        GeneratorContext generatorContext = stepContext.getGeneratorContext();
         StepVisitorFactory<?> factory = generatorContext.getVisitorFactoryRegistry().get(stepContext.getStep().getStepKind());
-        StepVisitor visitor = factory.create(generatorContext);
+        StepVisitor visitor = factory.create();
+
         return visitor.visit(stepContext);
     }
 

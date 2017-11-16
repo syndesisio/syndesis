@@ -15,13 +15,35 @@
  */
 package io.syndesis.rest.v1beta1.handler.extension;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
+import io.syndesis.dao.extension.ExtensionDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.filestore.FileStore;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
@@ -37,44 +59,27 @@ import io.syndesis.rest.v1.operations.Violation;
 import io.syndesis.rest.v1beta1.util.ExtensionAnalyzer;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.Default;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Path("/extensions")
 @Api(value = "extensions")
 @Component
+@ConditionalOnBean(ExtensionDataAccessObject.class)
 public class ExtensionHandler extends BaseHandler implements Lister<Extension>, Getter<Extension>, Deleter<Extension> {
 
-    private final FileStore fileStore;
+    private final ExtensionDataAccessObject fileStore;
 
     private final ExtensionAnalyzer extensionAnalyzer;
 
     private final Validator validator;
 
-    public ExtensionHandler(final DataManager dataMgr, final FileStore fileStore,
-                            final ExtensionAnalyzer extensionAnalyzer, final Validator validator) {
+    public ExtensionHandler(final DataManager dataMgr,
+                            final ExtensionDataAccessObject fileStore,
+                            final ExtensionAnalyzer extensionAnalyzer,
+                            final Validator validator) {
         super(dataMgr);
+
         this.fileStore = fileStore;
         this.extensionAnalyzer = extensionAnalyzer;
         this.validator = validator;

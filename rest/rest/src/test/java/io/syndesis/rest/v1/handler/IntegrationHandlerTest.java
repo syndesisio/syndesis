@@ -23,8 +23,8 @@ import javax.validation.Validator;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
-import io.syndesis.model.connection.DataShape;
-import io.syndesis.model.connection.DataShapeKinds;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 

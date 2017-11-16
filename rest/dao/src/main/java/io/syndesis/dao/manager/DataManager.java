@@ -160,7 +160,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
         T value = cache.get(id);
         if ( value == null) {
-            value = this.<T, T>doWithDataAccessObject(model, d -> d.fetch(id));
+            value = doWithDataAccessObject(model, d -> d.fetch(id));
             if (value != null) {
                 cache.put(id, value);
             }

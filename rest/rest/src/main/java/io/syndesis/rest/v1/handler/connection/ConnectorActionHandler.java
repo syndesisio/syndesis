@@ -15,10 +15,15 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import io.swagger.annotations.Api;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
-import io.syndesis.model.connection.Action;
+import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
 import io.syndesis.rest.v1.handler.BaseHandler;
@@ -27,14 +32,9 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.util.PredicateFilter;
-import io.swagger.annotations.Api;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 @Api(value = "actions")
-public class ConnectorActionHandler extends BaseHandler implements Lister<Action>, Getter<Action> {
+public class ConnectorActionHandler extends BaseHandler implements Lister<ConnectorAction>, Getter<ConnectorAction> {
 
     private final String connectorId;
 
@@ -45,16 +45,16 @@ public class ConnectorActionHandler extends BaseHandler implements Lister<Action
 
     @Override
     public Kind resourceKind() {
-        return Kind.Action;
+        return Kind.ConnectorAction;
     }
 
     @Override
-    public Action get(String id) {
-        Action result = Getter.super.get(id);
+    public ConnectorAction get(String id) {
+        ConnectorAction result = Getter.super.get(id);
         if (result == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        if (result.getConnectorId().equals(connectorId)){
+        if (result.getDescriptor().getConnectorId().equals(connectorId)){
             return result;
         }
 
@@ -62,11 +62,11 @@ public class ConnectorActionHandler extends BaseHandler implements Lister<Action
     }
 
     @Override
-    public ListResult<Action> list(UriInfo uriInfo) {
+    public ListResult<ConnectorAction> list(UriInfo uriInfo) {
         return getDataManager().fetchAll(
-            Action.class,
-            new PredicateFilter<>((o) -> o.getConnectorId().equals(connectorId)),
-            new ReflectiveSorter<>(Action.class, new SortOptionsFromQueryParams(uriInfo)),
+            ConnectorAction.class,
+            new PredicateFilter<>(o -> o.getDescriptor().getConnectorId().equals(connectorId)),
+            new ReflectiveSorter<>(ConnectorAction.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
     }
