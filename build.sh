@@ -172,9 +172,6 @@ if [ -n "$HELP" ]; then
    exit 0
 fi
 
-git submodule init
-git submodule update
-
 for module in $(modules_to_build)
 do
   echo "=========================================================="
