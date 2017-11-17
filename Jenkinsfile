@@ -14,9 +14,6 @@ node {
                         withYarn {
                             inside {
                                 checkout scm
-                                stage ('update submodules') {
-                                    sh 'git submodule update --init --recursive'
-                                }
                                 stage ('build connectors') {
                                     container('maven') {
                                         sh """
