@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigService } from '../config.service';
 
 @Component({
   selector: 'syndesis-customizations',

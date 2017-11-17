@@ -1,3 +1,5 @@
+@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+
 :host {
   flex: 1 1 auto;
   height: 100%;
@@ -14,5 +16,11 @@
 
   .col-xs-12 {
     height: 100%;
+  }
+
+  & /deep/ .toolbar-pf {
+    background: inherit;
+    box-shadow: none;
+    border-bottom-color: transparent;
   }
 }
