@@ -8,5 +8,5 @@ To build this project use
 
 For more help see the Sydnesis documentsion:
 
-    hhttps://syndesis.io/
+    https://syndesis.io/
 
