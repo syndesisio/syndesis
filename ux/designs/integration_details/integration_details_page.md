@@ -10,11 +10,9 @@ The designs covers the following user interactions:
   - Having notifications in place for publish action
   - Modal for confirming user actions
 
-## Overview
+## Integration Details Page
 
-### Integration Details Page
-
-#### No Draft  
+### No Draft  
 
 ![no draft section](img/integration_details_page_rework_11.16_no_draft.png)
 
@@ -22,7 +20,7 @@ The designs covers the following user interactions:
 
 2. Users would be able to “Create Draft” from the current version.
 
-#### Basic layout
+### Basic layout
 
 ![basic layout](img/integration_details_page_rework_11.16_genericlayout.png)
 
@@ -30,13 +28,13 @@ The designs covers the following user interactions:
 
 2. Moving Draft out of the integration history. Users would be able to “Publish” and “Edit” the draft.
 
-3. Added row indicator (green bar) and checkmark icon to indicate active and running version. For active version, users would only be able to perform “Replace Draft” with the active version.
+3. Added row indicator (green bar) and checkmark icon to indicate active and running version.
 
 ![many steps and connections](img/integration_details_page_rework_11.16_many_stepsconnections.png)
 
 1. Showing an integration that has many connections and steps.
 
-#### Expanding a row
+### Expanding a row
 
 ![expandable row and scrolling](img/integration_details_page_rework_11.16_expand_scroll.png)
 
@@ -50,9 +48,9 @@ The designs covers the following user interactions:
 2. Users are able to scroll on this page. When scrolling, the whole page scrolls.
 
 
-### Interacting with the page
+## Interacting with the page
 
-#### Kebab menu
+### Kebab menu
 
 ![kebab menu](img/integration_details_page_rework_11.16_kebab.png)
 
@@ -65,13 +63,19 @@ The designs covers the following user interactions:
 
   When selecting View Logs, users would be directed to the Logs page.  
 
-2. Row level kebab menu includes:
+2. For the active row, kebab menu includes:
+
+  - Replace Draft
+  - Stop Integration
+
+
+3. Row level kebab menu includes:
 
   - Replace Draft
   - Publish
 
 
-#### Modal for confirming actions
+### Modal for confirming actions
 
 ![replace draft modal](img/integration_details_page_rework_11.16_replaceadraft.png)
 
@@ -83,7 +87,7 @@ Once users click on “Replace Draft”, display a modal to notify users and to 
 If users click on “Publish”, display a modal to notify users what would happen and ask them to confirm their action.
 
 
-#### Status indicators
+### Status indicators
 
 ![spinning up](img/integration_details_page_rework_11.16_spinning_up.png)
 
@@ -100,7 +104,7 @@ In this case, the published version is being “decommissioned” and the new ve
 2. Show spinners for both the “decommissioning” version and the being published version.
 
 
-#### Notifications (alerts)
+### Notifications (alerts)
 
 ![warning message](img/integration_details_page_rework_11.16_warning.png)
 
@@ -112,4 +116,4 @@ In this case, the published version is being “decommissioned” and the new ve
 
 ![error message](img/integration_details_page_rework_11.16_error.png)
 
-1. When an integration is not running, display an error message and change indicators accordingly. 
+1. When an integration is not running, display an error message and change indicators accordingly.
