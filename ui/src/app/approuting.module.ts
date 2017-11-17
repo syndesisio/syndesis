@@ -23,6 +23,10 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: './settings/settings.module#SettingsModule'
+  },
+  {
+    path: 'customizations',
+    loadChildren: './customizations/customizations.module#CustomizationsModule'
   }
 ];
 
