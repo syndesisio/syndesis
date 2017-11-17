@@ -61,6 +61,7 @@
             <exclude>mvnw*</exclude>
             <exclude>**/spring.factories</exclude>
             <exclude>**/*.adoc</exclude>
+            <exclude>**/test/resources/logback.xml</exclude>
           </excludes>
         </configuration>
       </plugin>

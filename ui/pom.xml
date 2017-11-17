@@ -18,12 +18,20 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-ui</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
   <name>Syndesis UI</name>
   <description>syndesis :: ${project.artifactId}</description>
+
   <url>https://syndesis.io/</url>
   <scm>
     <connection>scm:git:https://github.com/syndesisio/syndesis-ui.git</connection>
@@ -70,6 +78,26 @@
   </properties>
 
   <build>
+    <pluginManagement>
+      <plugins>
+         <!--Disable some of these checks until we get the code base in basepom shape-->
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.hubspot.maven.plugins</groupId>
+          <artifactId>dependency-management-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>com.github.eirslett</groupId>
@@ -124,42 +152,41 @@
           </execution>
         </executions>
       </plugin>
-    <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
-            <execution>
-                <id>dist</id>
-                <phase>package</phase>
-                <goals>
-                    <goal>single</goal>
-                </goals>
-                <configuration>
-                    <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
-                    <descriptors>
-                        <descriptor>src/assembly/unix-dist.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </execution>
+          <execution>
+            <id>dist</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
+              <descriptors>
+                <descriptor>src/assembly/unix-dist.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
         </executions>
-    </plugin>
-    <plugin>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
         <version>${clean-maven-plugin-version}</version>
         <configuration>
-            <followSymLinks>false</followSymLinks>
-            <filesets>
-                <fileset>
-                    <directory>node_modules</directory>
-                    <includes>
-                        <include>**/*</include>
-                    </includes>
-                </fileset>
-            </filesets>
+          <followSymLinks>false</followSymLinks>
+          <filesets>
+            <fileset>
+              <directory>node_modules</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </fileset>
+          </filesets>
         </configuration>
-    </plugin>
+      </plugin>
     </plugins>
   </build>
-
 </project>
