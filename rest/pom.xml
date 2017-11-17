@@ -876,30 +876,6 @@
       </plugin>
 
       <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <configuration>
-          <header>${syndesis.basedir}/header.txt</header>
-          <properties>
-            <owner>Red Hat, Inc.</owner>
-          </properties>
-          <excludes>
-            <exclude>.editorconfig</exclude>
-            <exclude>license.txt</exclude>
-            <exclude>.mention-bot</exclude>
-            <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
-            <exclude>mvnw*</exclude>
-            <exclude>**/resources/**/test-*</exclude>
-            <exclude>**/*.mustache</exclude>
-            <exclude>**/test/resources/**</exclude>
-            <exclude>**/spring.factories</exclude>
-            <exclude>**/*.adoc</exclude>
-            <exclude>archetypes/**/src/main/resources/archetype-resources/**</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-
-      <plugin>
         <groupId>org.basepom.maven</groupId>
         <artifactId>duplicate-finder-maven-plugin</artifactId>
         <configuration>
