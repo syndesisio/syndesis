@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
@@ -18,8 +18,7 @@ const category = getCategory('Connections');
   selector: 'syndesis-connections-review',
   templateUrl: 'review.component.html'
 })
-export class ConnectionsReviewComponent
-  implements CanComponentDeactivate, OnInit, OnDestroy {
+export class ConnectionsReviewComponent implements CanComponentDeactivate, OnInit, OnDestroy {
   saved = false;
   reviewForm: FormGroup;
   sub: Subscription = undefined;
@@ -28,7 +27,6 @@ export class ConnectionsReviewComponent
     private current: CurrentConnectionService,
     private modalService: ModalService,
     private connectionService: ConnectionService,
-    private detector: ChangeDetectorRef,
     private router: Router,
     public tourService: TourService,
     private userService: UserService
@@ -50,7 +48,6 @@ export class ConnectionsReviewComponent
         control.value
       );
       control.setErrors(validationErrors);
-      this.detector.markForCheck();
     }
   }
 

@@ -3,7 +3,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef
 } from '@angular/core';
 
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
@@ -136,7 +135,6 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     public stepStore: StepStore,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
@@ -392,13 +390,6 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
               return row;
             });
         }
-        setTimeout(() => {
-          try {
-            this.detector.detectChanges();
-          } catch (err) {
-            // @TODO: Remove this try/catch once ChangeDetection is restored
-          }
-        }, 50);
       }
     );
     this.routeSubscription = this.route.params

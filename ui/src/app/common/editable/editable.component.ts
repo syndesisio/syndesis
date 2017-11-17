@@ -3,7 +3,6 @@ import {
   EventEmitter,
   Input,
   Output,
-  ChangeDetectorRef
 } from '@angular/core';
 
 export abstract class EditableComponent {
@@ -14,14 +13,11 @@ export abstract class EditableComponent {
   editing = false;
   errorMessage: string;
 
-  constructor(private detector: ChangeDetectorRef) {}
-
   async submit(value) {
     this.errorMessage = await this.validate(value);
     if (!this.errorMessage) {
       this.save(value);
     }
-    this.detector.detectChanges();
   }
 
   validate(value): Promise<string> {

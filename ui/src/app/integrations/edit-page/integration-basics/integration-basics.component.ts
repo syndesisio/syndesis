@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { CurrentFlow } from '../current-flow.service';
@@ -16,30 +16,26 @@ export class IntegrationBasicsComponent extends FlowPage implements OnInit {
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
     public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
   }
 
   canContinue() {
-    return (
-      this.currentFlow.integration.name &&
-      this.currentFlow.integration.name !== ''
-    );
+    const integrationName = this.currentFlow.integration.name;
+    return integrationName && integrationName !== '';
   }
 
   continue() {
-    this.router.navigate([ 'save-or-add-step' ], {
+    this.router.navigate(['save-or-add-step'], {
       queryParams: { validate: true },
       relativeTo: this.route.parent
     });
   }
 
   get name(): string {
-    const name = this.currentFlow.integration.name || '';
-    return name;
+    return this.currentFlow.integration.name || '';
   }
 
   set name(name: string) {
@@ -84,13 +80,13 @@ export class IntegrationBasicsComponent extends FlowPage implements OnInit {
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
+      this.tourService.initialize([{
           anchorId: 'integrations.publish',
           title: 'Publish',
-          content: 'Click Publish to start running the integration, which will take a moment or two. ' +
-          'Click Save as Draft to save the integration without deploying it.',
+          content: `Click Publish to start running the integration, which will take a moment or two. 
+                    Click Save as Draft to save the integration without deploying it.`,
           placement: 'left',
-        } ],
+        }],
       );
       setTimeout(() => this.tourService.start());
     }

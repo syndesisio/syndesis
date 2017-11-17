@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -37,11 +37,10 @@ export class IntegrationsSelectActionComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
     public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
     this.connector = connectorStore.resource;
     this.loading = connectorStore.loading;
     connectorStore.clear();

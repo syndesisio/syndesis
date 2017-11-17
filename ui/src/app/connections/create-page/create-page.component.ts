@@ -1,12 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { NavigationService } from '../../common/navigation.service';
-import {
-  CurrentConnectionService,
-  ConnectionEvent
-} from './current-connection';
+import { CurrentConnectionService, ConnectionEvent } from './current-connection';
 import { Connection, TypeFactory } from '../../model';
 import { log, getCategory } from '../../logging';
 
@@ -18,14 +15,11 @@ const category = getCategory('Connections');
   styleUrls: ['./create-page.component.scss']
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
-  private routerEventsSubscription: Subscription;
-
   constructor(
     private current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
-    private nav: NavigationService,
-    private detector: ChangeDetectorRef
+    private nav: NavigationService
   ) {}
 
   get connection(): Connection {
@@ -176,11 +170,6 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       default:
         break;
     }
-    try {
-      this.detector.detectChanges();
-    } catch (err) {
-      // @TODO: Remove this try/catch once ChangeDetection is restored
-    }
   }
 
   ngOnInit() {
@@ -204,14 +193,10 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       this.current.connection = connection;
     });
     this.nav.hide();
-    this.routerEventsSubscription = this.router.events.subscribe(event => {
-      this.detector.detectChanges();
-    });
   }
 
   ngOnDestroy() {
     this.current.dispose();
     this.nav.show();
-    this.routerEventsSubscription.unsubscribe();
   }
 }

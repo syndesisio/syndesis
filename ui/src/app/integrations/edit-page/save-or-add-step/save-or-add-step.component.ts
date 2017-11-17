@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -18,8 +18,7 @@ import { UserService } from '../../../common/user.service';
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: ['./save-or-add-step.component.scss']
 })
-export class IntegrationsSaveOrAddStepComponent extends FlowPage
-  implements OnInit, OnDestroy {
+export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnInit, OnDestroy {
   integration: Integration;
   errorMessage: any = undefined;
 
@@ -28,11 +27,10 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
-    public detector: ChangeDetectorRef,
     public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
   }
 
   get currentStep() {
@@ -158,11 +156,6 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage
     );
     if (validate) {
       this.validateFlow();
-      try {
-        this.detector.detectChanges();
-      } catch (err) {
-        // @TODO: Remove this try/catch once ChangeDetection is restored
-      }
     }
 
     /**

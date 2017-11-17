@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NotificationType } from 'patternfly-ng';
 
 import { OAuthAppListItem } from './oauth-apps.component';
@@ -16,7 +16,6 @@ export class OAuthAppModalComponent {
   item: OAuthAppListItem;
   constructor(
     public store: OAuthAppStore,
-    public detector: ChangeDetectorRef,
     private modalService: ModalService,
     private notificationService: NotificationService
   ) {}
@@ -42,7 +41,6 @@ export class OAuthAppModalComponent {
                   message: `Failed to delete settings: ${error}`
                 })
               )
-              .then(_ => this.detector.markForCheck())
           : undefined
     );
   }

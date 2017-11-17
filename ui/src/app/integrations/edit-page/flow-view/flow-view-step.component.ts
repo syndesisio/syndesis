@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -38,8 +38,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public route: ActivatedRoute,
     public router: Router,
     private stepStore: StepStore,
-    private modalService: ModalService,
-    private detector: ChangeDetectorRef
+    private modalService: ModalService
   ) {
     super(currentFlow, route, router);
   }
@@ -112,11 +111,6 @@ export class FlowViewStepComponent extends ChildAwarePage {
       position: position,
       onSave: () => {
         setTimeout(() => {
-          try {
-            this.detector.detectChanges();
-          } catch (err) {
-            // @TODO: Remove this try/catch once ChangeDetection is restored
-          }
           if (isFirst || isLast) {
             this.router.navigate(['connection-select', position], {
               relativeTo: this.route

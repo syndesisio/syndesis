@@ -1,6 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
 
 import { StepStore, StepKind, StepKinds } from '../../../store/step/step.store';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
@@ -13,10 +12,8 @@ import { log, getCategory } from '../../../logging';
   templateUrl: './step-select.component.html',
   styleUrls: ['./step-select.component.scss']
 })
-export class IntegrationsStepSelectComponent extends FlowPage
-  implements OnInit {
+export class IntegrationsStepSelectComponent extends FlowPage implements OnInit {
   steps: Steps;
-  routeSubscription: Subscription;
   position: number;
 
   constructor(
@@ -24,9 +21,8 @@ export class IntegrationsStepSelectComponent extends FlowPage
     public route: ActivatedRoute,
     public router: Router,
     public stepStore: StepStore,
-    public detector: ChangeDetectorRef
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
     this.steps = stepStore.getSteps();
   }
 
@@ -72,11 +68,6 @@ export class IntegrationsStepSelectComponent extends FlowPage
       default:
         break;
     }
-    try {
-      this.detector.detectChanges();
-    } catch (err) {
-      // @TODO: Remove this try/catch once ChangeDetection is restored
-    }
   }
 
   onSelect(step: Step) {
@@ -98,15 +89,13 @@ export class IntegrationsStepSelectComponent extends FlowPage
   }
 
   ngOnInit() {
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('position')
-      .map((position: string) => {
-        this.position = Number.parseInt(position);
+    this.route.paramMap.first(params => params.has('position'))
+      .subscribe(params => {
+        this.position = +params.get('position');
         this.currentFlow.events.emit({
           kind: 'integration-step-select',
           position: this.position
         });
-      })
-      .subscribe();
+      });
   }
 }

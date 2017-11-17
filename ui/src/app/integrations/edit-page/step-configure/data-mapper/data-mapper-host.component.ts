@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   ViewChild,
   OnInit,
@@ -88,9 +87,8 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     public configService: ConfigService,
     public initializationService: InitializationService,
     public support: IntegrationSupportService,
-    public detector: ChangeDetectorRef
   ) {
-    super(currentFlow, route, router, detector);
+    super(currentFlow, route, router);
     this.resetConfig();
   }
 
@@ -266,42 +264,8 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
   }
 
   initializeMapper() {
-    this.cfg.mappingService.mappingUpdated$.subscribe(() => {
-      this.detector.detectChanges();
-    });
-    this.cfg.initializationService.systemInitialized$.subscribe(() => {
-      this.detector.detectChanges();
-    });
     this.initialized = true;
     this.initializationService.initialize();
-    this.detector.detectChanges();
-    /*
-    log.debugc(() => 'Fetching POM for integration', category);
-    this.support.requestPom(this.currentFlow.getIntegrationClone()).subscribe(
-      data => {
-        const pom = data['_body'];
-        log.debugc(() => 'Fetched POM for integration: ' + pom, category);
-        this.cfg.initCfg.classPath = null;
-        this.cfg.initCfg.pomPayload = pom;
-        this.initializationService.initialize();
-        this.detector.detectChanges();
-      },
-      err => {
-        // do our best I guess
-        try {
-          log.warnc(
-            () => 'failed to fetch pom: ' + JSON.parse(err['_body']),
-            category,
-          );
-        } catch (err) {
-          log.warnc(() => 'failed to fetch pom: ' + err['_body'], category);
-        }
-        this.cfg.initCfg.classPath = '';
-        this.initializationService.initialize();
-        this.detector.detectChanges();
-      },
-    );
-    */
   }
 
   ngOnInit() {
@@ -312,6 +276,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     this.initializationService.resetConfig();
     this.cfg = this.initializationService.cfg;
 
+    // TODO: Move hardcoded values to data service
     const baseUrl =
       'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com/v2/atlas/';
     this.cfg.initCfg.baseJavaInspectionServiceUrl = this.fetchServiceUrl(
