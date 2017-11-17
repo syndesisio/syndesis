@@ -21,7 +21,15 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-
-# IDEA files
-.idea
+# IDEs and editors
+/.idea
 *.iml
+.project
+.classpath
+*.launch
+.settings/
+.vscode/
+
+# System Files
+.DS_Store
+Thumbs.db

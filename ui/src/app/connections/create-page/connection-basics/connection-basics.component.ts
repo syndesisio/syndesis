@@ -35,13 +35,13 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
     if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
+      this.tourService.initialize([{
           anchorId: 'connections.type',
           title: 'Connection',
           content:
             'A connection represents a specific application that you want to obtain data from or send data to.',
           placement: 'top',
-        } ]
+        }]
       );
       setTimeout(() => this.tourService.start());
     }

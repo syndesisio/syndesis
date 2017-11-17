@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
 import { Observable } from 'rxjs/Observable';
@@ -69,7 +69,6 @@ export class OAuthAppsComponent implements OnInit {
 
   constructor(
     public store: OAuthAppStore,
-    public detector: ChangeDetectorRef,
     public config: ConfigService,
     public tourService: TourService,
     private userService: UserService

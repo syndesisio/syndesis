@@ -4,8 +4,7 @@ import {
   Output,
   OnInit,
   EventEmitter,
-  ViewChild,
-  ChangeDetectorRef
+  ViewChild
 } from '@angular/core';
 
 import { NotificationType } from 'patternfly-ng';
@@ -33,14 +32,23 @@ export class ConnectionsListComponent implements OnInit {
   @Input() showKebab = true;
   @Input() isConnectors = false;
   @Input() showNewConnection = false;
-  @Output() onSelected: EventEmitter<Connection> = new EventEmitter();
+  @Output() onSelected = new EventEmitter<Connection>();
 
   constructor(
     public store: ConnectionStore,
-    public detector: ChangeDetectorRef,
     private notificationService: NotificationService,
     private modalService: ModalService
   ) {}
+
+  //----- Initialization ------------------->>
+
+  ngOnInit() {
+    log.debugc(
+      () =>
+        'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
+      category
+    );
+  }
 
   //-----  Delete ------------------->>
 
@@ -95,16 +103,6 @@ export class ConnectionsListComponent implements OnInit {
 
   isSelected(connection: Connection) {
     return connection.id === this.selectedId;
-  }
-
-  //----- Initialization ------------------->>
-
-  ngOnInit() {
-    log.debugc(
-      () =>
-        'Got connections: ' + JSON.stringify(this.connections, undefined, 2),
-      category
-    );
   }
 
   //-----  Toast ------------------->>

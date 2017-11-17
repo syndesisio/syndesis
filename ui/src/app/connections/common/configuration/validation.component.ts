@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Connection, Connector } from '../../../model';
@@ -8,11 +8,9 @@ import { ConnectorStore } from '../../../store/connector/connector.store';
 @Component({
   selector: 'syndesis-connection-configuration-validation',
   templateUrl: './validation.component.html',
-  styles: [
-    `
+  styles: [`
     .alert { margin-top: 15px; margin-bottom: 0; }
-  `
-  ]
+  `]
 })
 export class ConnectionConfigurationValidationComponent {
   @Input() connection: Connection;
@@ -25,8 +23,7 @@ export class ConnectionConfigurationValidationComponent {
 
   constructor(
     private configurationService: ConnectionConfigurationService,
-    private connectorStore: ConnectorStore,
-    private detector: ChangeDetectorRef
+    private connectorStore: ConnectorStore
   ) {}
 
   showValidateButton(id: string) {
@@ -58,14 +55,12 @@ export class ConnectionConfigurationValidationComponent {
           if (!errorHit) {
             this.validateSuccess = true;
           }
-          this.detector.detectChanges();
         }, 10);
       },
       err => {
         setTimeout(() => {
           this.validateError = err.message ? err.message : err;
           this.validating = false;
-          this.detector.detectChanges();
         }, 10);
       }
     );

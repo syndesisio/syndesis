@@ -28,6 +28,6 @@ Access UX design resource and documentation for Syndesis.
 ## Customizations
 * ### [Technical Extension](designs/technical_extensions/tech_ext.md)
 
-
 ## Archives
 * ### [Integration Summary Page](designs/integrationsummary/integrationsummary.md)
+* ### [API Client Connector](designs/apiconnector/apiconnector.md)
