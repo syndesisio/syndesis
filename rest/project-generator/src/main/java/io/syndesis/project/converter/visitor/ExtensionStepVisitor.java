@@ -26,6 +26,7 @@ import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Extension;
 import io.syndesis.integration.model.steps.Function;
 import io.syndesis.integration.model.steps.SetHeaders;
+import io.syndesis.integration.model.steps.Step;
 import io.syndesis.model.action.ExtensionAction;
 
 public final class ExtensionStepVisitor implements StepVisitor {
@@ -42,19 +43,21 @@ public final class ExtensionStepVisitor implements StepVisitor {
     }
 
     @Override
-    public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext visitorContext) {
+    public Collection<Step> visit(StepVisitorContext visitorContext) {
         return visitorContext.getStep().getAction()
             .map(ExtensionAction.class::cast)
             .map(action -> createExtension(visitorContext, action))
             .orElseGet(Collections::emptyList);
     }
 
-    private Collection<io.syndesis.integration.model.steps.Step> createExtension(StepVisitorContext visitorContext, ExtensionAction action) {
-        final List<io.syndesis.integration.model.steps.Step> steps = new ArrayList<>();
+    private Collection<Step> createExtension(StepVisitorContext visitorContext, ExtensionAction action) {
+        final List<Step> steps = new ArrayList<>();
 
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        Map<String, Object> configuredProperties = (Map) visitorContext.getStep().getConfiguredProperties();
         if (action.getDescriptor().getKind() == ExtensionAction.Kind.ENDPOINT) {
             SetHeaders headers = new SetHeaders();
-            headers.setHeaders(Map.class.cast(visitorContext.getStep().getConfiguredProperties()));
+            headers.setHeaders(configuredProperties);
 
             Endpoint endpoint = new Endpoint();
             endpoint.setUri(action.getDescriptor().getEntrypoint());
@@ -64,13 +67,13 @@ public final class ExtensionStepVisitor implements StepVisitor {
         } else if (action.getDescriptor().getKind() == ExtensionAction.Kind.BEAN) {
             Function function = new Function();
             function.setName(action.getDescriptor().getEntrypoint());
-            function.setProperties(Map.class.cast(visitorContext.getStep().getConfiguredProperties()));
+            function.setProperties(configuredProperties);
 
             steps.add(function);
         } else if (action.getDescriptor().getKind() == ExtensionAction.Kind.STEP) {
             Extension extension = new Extension();
             extension.setName(action.getDescriptor().getEntrypoint());
-            extension.setProperties(Map.class.cast(visitorContext.getStep().getConfiguredProperties()));
+            extension.setProperties(configuredProperties);
 
             steps.add(extension);
         }

@@ -16,21 +16,28 @@
 
 package io.syndesis.model.integration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.syndesis.model.filter.*;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import io.syndesis.model.filter.ExpressionFilterStep;
+import io.syndesis.model.filter.FilterPredicate;
+import io.syndesis.model.filter.RuleFilterStep;
 
 public class StepDeserializerTest {
 
     @Test
-    public void shouldDeserializeRuleFilterStep() throws Exception {
-        RuleFilterStep step = readTestFilter("/rule-filter-step.json");
+    public void shouldDeserializeRuleFilterStep() throws IOException {
+        RuleFilterStep step = readTestFilter("/rule-filter-step.json", RuleFilterStep.class);
         assertEquals("1", step.getId().get());
         assertFalse(step.getConfiguredProperties().isEmpty());
         Map<String, String> props = step.getConfiguredProperties();
@@ -41,8 +48,8 @@ public class StepDeserializerTest {
     }
 
     @Test
-    public void shouldDeserializeExpressionFilterStep() throws Exception {
-        ExpressionFilterStep step = readTestFilter("/filter-step.json");
+    public void shouldDeserializeExpressionFilterStep() throws IOException {
+        ExpressionFilterStep step = readTestFilter("/filter-step.json", ExpressionFilterStep.class);
         ExpressionFilterStep exprFilterStep = step;
         String expr = "${body.text} contains '#RHSummit'";
         assertEquals("2", exprFilterStep.getId().get());
@@ -52,8 +59,9 @@ public class StepDeserializerTest {
         assertEquals(expr, exprFilterStep.getConfiguredProperties().get("filter"));
     }
 
-    private <T extends Step> T readTestFilter(String resource) throws java.io.IOException {
-        return (T) new ObjectMapper().registerModule(new Jdk8Module()).readValue(this.getClass().getResourceAsStream(resource), Step.class);
+    private <T extends Step> T readTestFilter(String resource, Class<T> stepType) throws IOException {
+        return new ObjectMapper().registerModule(new Jdk8Module())
+                .readValue(this.getClass().getResourceAsStream(resource), stepType);
     }
 
 }

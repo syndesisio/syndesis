@@ -21,6 +21,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
+@SuppressWarnings("immutables")
 public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction> {
     @Override
     default ConnectorAction withId(String id) {

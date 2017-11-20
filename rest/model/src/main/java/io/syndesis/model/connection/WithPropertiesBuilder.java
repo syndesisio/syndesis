@@ -20,7 +20,7 @@ import java.util.Map;
 
 import io.syndesis.model.WithProperties;
 
-public interface WithPropertiesBuilder<T extends WithPropertiesBuilder> {
+public interface WithPropertiesBuilder<T extends WithPropertiesBuilder<T>> {
 
     WithProperties build();
 

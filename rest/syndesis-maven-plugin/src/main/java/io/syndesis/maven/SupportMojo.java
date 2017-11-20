@@ -15,21 +15,22 @@
  */
 package io.syndesis.maven;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.artifact.filter.collection.ArtifactFilterException;
-import org.apache.maven.shared.artifact.filter.collection.FilterArtifacts;
-import org.springframework.boot.maven.RepackageMojo;
-
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.artifact.filter.collection.ArtifactFilterException;
+import org.apache.maven.shared.artifact.filter.collection.ArtifactsFilter;
+import org.apache.maven.shared.artifact.filter.collection.FilterArtifacts;
+import org.springframework.boot.maven.RepackageMojo;
 
 /**
  * Base Mojo Support class to provide helper methods from the specialized Mojos
@@ -93,7 +94,9 @@ public abstract class SupportMojo extends RepackageMojo {
         try {
             Set<Artifact> filtered = new LinkedHashSet<Artifact>(dependencies);
 
-            filters.getFilters().addAll(getAdditionalFilters());
+            @SuppressWarnings("unchecked")
+            Collection<ArtifactsFilter> filtersToUse = filters.getFilters();
+            filtersToUse.addAll(getAdditionalFilters());
 
             filtered.retainAll(filters.filter(dependencies));
             return filtered;
@@ -107,8 +110,8 @@ public abstract class SupportMojo extends RepackageMojo {
      * Defines the defualt set of artifacts to exclude from the repackaged module
      * @return
      */
-    protected Collection getAdditionalFilters() {
-        return new ArrayList();
+    protected Collection<ArtifactsFilter> getAdditionalFilters() {
+        return new ArrayList<>();
     }
 
     /**
@@ -118,7 +121,7 @@ public abstract class SupportMojo extends RepackageMojo {
      * @throws NoSuchFieldException
      */
     protected Field obtainAccessibleFieldInAncestors(String fieldName) throws NoSuchFieldException {
-        Class clazz = SupportMojo.class.getSuperclass();
+        Class<?> clazz = SupportMojo.class.getSuperclass();
         while(clazz != null){
             for (Field field : clazz.getDeclaredFields()) {
                 if(fieldName.equals(field.getName())){
@@ -135,9 +138,5 @@ public abstract class SupportMojo extends RepackageMojo {
         Field field = obtainAccessibleFieldInAncestors(fieldName);
         field.set(this, value);
     }
-
-
-
-
 
 }

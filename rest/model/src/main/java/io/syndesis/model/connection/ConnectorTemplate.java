@@ -30,6 +30,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorTemplate.Builder.class)
+@SuppressWarnings("immutables")
 public interface ConnectorTemplate extends WithId<ConnectorTemplate>, WithName, WithProperties, Serializable {
 
     class Builder extends ImmutableConnectorTemplate.Builder implements WithPropertiesBuilder<Builder> {

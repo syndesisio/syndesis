@@ -25,16 +25,12 @@ import java.io.Serializable;
 
 @Value.Immutable
 @JsonDeserialize(builder = EnvironmentType.Builder.class)
+@SuppressWarnings("immutables")
 public interface EnvironmentType extends WithId<EnvironmentType>, WithName, Serializable {
 
     @Override
     default Kind getKind() {
         return Kind.EnvironmentType;
-    }
-
-    @Override
-    default EnvironmentType withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
     }
 
     class Builder extends ImmutableEnvironmentType.Builder {

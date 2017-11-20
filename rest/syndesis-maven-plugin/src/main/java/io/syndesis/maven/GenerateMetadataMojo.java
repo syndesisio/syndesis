@@ -16,18 +16,18 @@
 package io.syndesis.maven;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -131,7 +131,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.properties");
 
                 Files.find(dir, Integer.MAX_VALUE, (path, attributes) -> matcher.matches(path)).sorted().forEach(path -> {
-                    try (Reader reader = new FileReader(path.toFile())) {
+                    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                         getLog().info("Loading annotations properties from: " + path);
                         p.clear();
                         p.load(reader);
@@ -217,7 +217,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     protected List<ActionDescriptor.ActionDescriptorStep> createPropertiesDefinitionSteps(Properties p) {
-        List<ActionDescriptor.ActionDescriptorStep> propertyDefinitionSteps = new LinkedList<>();
+        List<ActionDescriptor.ActionDescriptorStep> propertyDefinitionSteps = new ArrayList<>();
         int idx = 0;
         while (getPropertyValue(p, idx, "name") != null) {
             String name = getPropertyValue(p, idx, "name");
@@ -235,7 +235,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
             String type = getPropertyValue(p, idx, "type");
 
             String pTags = getPropertyValue(p, idx, "tags");
-            List<String> propTagList = new LinkedList<>();
+            List<String> propTagList = new ArrayList<>();
             if(StringUtils.isNotEmpty(pTags)){
                 for (String tag : pTags.trim().split(",")) {
                     propTagList.add(tag);
@@ -243,7 +243,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
             }
 
             int idy = 0;
-            List<ConfigurationProperty.PropertyValue> propertyValues = new LinkedList<>();
+            List<ConfigurationProperty.PropertyValue> propertyValues = new ArrayList<>();
             while (getPropertyValue(p, idx, "enums", idy, "value") != null) {
                 String enumValue = getPropertyValue(p, idx, "enums", idy, "value");
                 String enumLabel = getPropertyValue(p, idx, "enums", idy, "label");

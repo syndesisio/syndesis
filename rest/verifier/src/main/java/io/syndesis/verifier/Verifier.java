@@ -51,8 +51,8 @@ public interface Verifier {
 
     // Detailed error object
     @Value.Immutable
-    @JsonDeserialize(builder = ImmutableError.Builder.class)
-    interface Error {
+    @JsonDeserialize(builder = ImmutableVerifierError.Builder.class)
+    interface VerifierError {
         // Connector specific error code
         String getCode();
 
@@ -75,7 +75,7 @@ public interface Verifier {
         // scope with which the verifier has been called
         Scope getScope();
         // list of errors or an empty list if
-        List<Error> getErrors();
+        List<VerifierError> getErrors();
 
         // Status of the result
         enum Status {

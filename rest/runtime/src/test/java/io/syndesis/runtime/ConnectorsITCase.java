@@ -15,22 +15,25 @@
  */
 package io.syndesis.runtime;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.model.ListResult;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.verifier.AlwaysOkVerifier;
-import io.syndesis.verifier.Verifier;
-import org.junit.Assume;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import org.junit.Assume;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import io.syndesis.model.ListResult;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.verifier.AlwaysOkVerifier;
+import io.syndesis.verifier.Verifier;
 
 public class ConnectorsITCase extends BaseITCase {
 
@@ -64,7 +67,8 @@ public class ConnectorsITCase extends BaseITCase {
     }
 
     // Disabled as it works only for the LocalProcessVerifier which would needs some update
-    //@Test
+    @Test
+    @Ignore
     public void verifyGoodTwitterConnectionSettings() throws IOException {
         Properties credentials = new Properties();
         try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
@@ -79,7 +83,8 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(result.getErrors()).isEmpty();
     }
 
-    //@Test
+    @Test
+    @Ignore
     public void verifyBadTwitterConnectionSettings() throws IOException {
 
         // AlwaysOkVerifier never fails.. do don't try this test case, if that's whats being used.

@@ -26,14 +26,15 @@ import java.util.List;
  */
 @Value.Immutable
 @JsonDeserialize(builder = ImmutableModelExport.Builder.class)
+@SuppressWarnings("varargs")
 public interface ModelExport {
 
     String schemaVersion();
 
     @SkipNulls
-    List<ModelData> models();
+    List<ModelData<?>> models();
 
-    static ModelExport of(String version, List<ModelData> models) {
+    static ModelExport of(String version, List<ModelData<?>> models) {
         return ImmutableModelExport.builder().schemaVersion(version).models(models).build();
     }
 

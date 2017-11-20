@@ -99,6 +99,13 @@
       <artifactId>jsr305</artifactId>
     </dependency>
 
+    <dependency>
+      <!-- We need the net.jcip.annotations.GuardedBy for Infinispan (at compile time only) -->
+      <groupId>net.jcip</groupId>
+      <artifactId>jcip-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- === Test ============================================================================ -->
 
     <dependency>

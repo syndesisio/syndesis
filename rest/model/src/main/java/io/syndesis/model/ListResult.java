@@ -30,6 +30,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = ListResult.Builder.class)
+@SuppressWarnings({"rawtypes", "varargs"})
 public interface ListResult<T> {
 
     /**

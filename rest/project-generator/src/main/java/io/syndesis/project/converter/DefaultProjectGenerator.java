@@ -28,11 +28,11 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,7 +146,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
 
-        executor.submit(generateAddProjectTarEntries(integration, os));
+        executor.execute(generateAddProjectTarEntries(integration, os));
 
         return is;
     }
@@ -316,7 +316,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     }
                 );
 
-            Queue<Step> remaining = new LinkedList<>(steps);
+            Queue<Step> remaining = new ArrayDeque<>(steps);
             Step first = remaining.remove();
             if (first != null) {
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()

@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Organization.Builder.class)
+@SuppressWarnings("immutables")
 public interface Organization extends WithId<Organization>, WithName, Serializable {
 
     @Override
@@ -37,11 +38,6 @@ public interface Organization extends WithId<Organization>, WithName, Serializab
     List<Environment> getEnvironments();
 
     List<User> getUsers();
-
-    @Override
-    default Organization withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
 
     class Builder extends ImmutableOrganization.Builder {
     }

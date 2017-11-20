@@ -77,6 +77,7 @@ public class UrlsTest {
         }
     }
 
+    @SuppressWarnings("JdkObsolete")
     public static class UnitTests {
         @Test
         public void shouldAbsolutizeReturnUrl() {

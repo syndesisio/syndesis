@@ -33,7 +33,8 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = RuleFilterStep.Builder.class)
-@JsonIgnoreProperties({"filterExpression"})
+@JsonIgnoreProperties("filterExpression")
+@SuppressWarnings("immutables")
 public interface RuleFilterStep extends FilterStep {
 
     String STEP_KIND = "rule-filter";
@@ -41,6 +42,7 @@ public interface RuleFilterStep extends FilterStep {
     /**
      * Filter in the simple expression language.
      */
+    @Override
     default String getFilterExpression() {
         final Map<String, String> props = getConfiguredProperties();
 

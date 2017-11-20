@@ -90,7 +90,7 @@ public class Application implements ApplicationRunner {
         for (final ModelData<?> model : modelList) {
             if (model.getKind() == Kind.Connector) {
                 final Connector connector = (Connector) model.getData();
-                for (final Action action : connector.getActions()) {
+                for (final Action<?> action : connector.getActions()) {
                     steps.add(
                         new SimpleStep.Builder()
                             .stepKind("endpoint").

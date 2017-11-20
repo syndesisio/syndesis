@@ -379,4 +379,38 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>non-m2e</id>
+      <activation>
+        <!-- active only when not running under M2E in Eclipse -->
+        <property>
+          <name>!m2e.version</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs combine.children="append">
+                <!-- no way to influence generated HelpMojo.java to contain
+                the required @Override, or to be marked as @Generated, next
+                errorprone version will add exclusions by path:
+                -XepExcludedPaths:.*/generated-sources/.*
+                -->
+                <arg>-Xep:MissingOverride:OFF</arg>
+                <!-- no way to influence generated HelpMojo.java not to throw
+                from finally block, or to be marked as @Generated, next
+                errorprone version will add exclusions by path:
+                -XepExcludedPaths:.*/generated-sources/.* -->
+                <arg>-Xep:Finally:OFF</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>

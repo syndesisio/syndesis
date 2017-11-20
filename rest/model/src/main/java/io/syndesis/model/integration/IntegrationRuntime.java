@@ -25,6 +25,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationRuntime.Builder.class)
+@SuppressWarnings("immutables")
 public interface IntegrationRuntime extends WithId<IntegrationRuntime>, Serializable {
 
     @Override
@@ -37,11 +38,6 @@ public interface IntegrationRuntime extends WithId<IntegrationRuntime>, Serializ
     Integration getIntegration();
 
     Environment getEnvironment();
-
-    @Override
-    default IntegrationRuntime withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
 
     class Builder extends ImmutableIntegrationRuntime.Builder {
         // allow access to ImmutableIntegrationRuntime.Builder

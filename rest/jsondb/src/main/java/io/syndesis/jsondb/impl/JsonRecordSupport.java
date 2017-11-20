@@ -233,6 +233,7 @@ public final class JsonRecordSupport {
         private final JsonGenerator jg;
         private final OutputStream output;
         private final GetOptions options;
+        @SuppressWarnings("JdkObsolete")
         private final LinkedList<PathPart> currentPath = new LinkedList<>();
         private final Set<String> shallowObjects = new LinkedHashSet<>();
 

@@ -53,10 +53,12 @@ public class TestCredentialProviderFactory implements CredentialProviderFactory 
         final CredentialProvider credentialProvider = new OAuth2CredentialProvider<>("test-provider", connectionFactory,
             applicator);
 
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        final Class<MultiValueMap<String, String>> additionalParametersType = (Class) MultiValueMap.class;
         final OAuth2Operations operations = spy(new OAuth2Template("testClientId", "testClientSecret",
             "https://test/oauth2/authorize", "https://test/oauth2/token"));
         doReturn(new AccessGrant("token")).when(operations).exchangeForAccess(Matchers.anyString(),
-            Matchers.anyString(), Matchers.any(MultiValueMap.class));
+            Matchers.anyString(), Matchers.any(additionalParametersType));
 
         when(connectionFactory.getOAuthOperations()).thenReturn(operations);
 

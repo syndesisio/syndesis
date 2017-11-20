@@ -21,6 +21,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ExtensionAction.Builder.class)
+@SuppressWarnings("immutables")
 public interface ExtensionAction extends Action<ExtensionDescriptor>, WithId<ExtensionAction> {
     @Override
     default ExtensionAction withId(String id) {

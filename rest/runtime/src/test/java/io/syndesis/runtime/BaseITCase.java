@@ -229,12 +229,12 @@ public abstract class BaseITCase {
         headers.set("X-Forwarded-Access-Token", token);
     }
 
-    final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
+    /* default */ static final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
         YamlJackson2HttpMessageConverter() {
             super(new YAMLMapper(), MediaType.parseMediaType("application/yaml"));
         }
     }
-    final class JsonJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
+    /* default */ static final class JsonJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
         JsonJackson2HttpMessageConverter() {
             super(Json.mapper(), MediaType.parseMediaType("application/json"));
         }

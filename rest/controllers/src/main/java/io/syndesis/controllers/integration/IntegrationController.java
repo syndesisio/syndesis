@@ -124,7 +124,7 @@ public class IntegrationController {
     }
 
     private void scanIntegrationsForWork() {
-        executor.submit(() -> {
+        executor.execute(() -> {
             dataManager.fetchAll(Integration.class).getItems().forEach(integration -> {
                 LOG.info("Checking integrations for their status.");
                 checkIntegrationStatus(integration);
@@ -144,7 +144,7 @@ public class IntegrationController {
                     StatusChangeHandlerProvider.StatusChangeHandler statusChangeHandler = handlers.get(desiredStatus);
                     if (statusChangeHandler != null) {
                         LOG.info("Integration {} : Desired status \"{}\" != current status \"{}\" --> calling status change handler",
-                                               integrationId, desiredStatus.toString(), current.map(Enum::toString).orElse("[none]"));
+                                               integrationId, desiredStatus.toString(), current.map(Object::toString).orElse("[none]"));
                         callStatusChangeHandler(statusChangeHandler, integrationId);
                     }
                 }));
@@ -160,7 +160,7 @@ public class IntegrationController {
     }
 
     /* default */ void callStatusChangeHandler(StatusChangeHandlerProvider.StatusChangeHandler handler, String integrationId) {
-        executor.submit(() -> {
+        executor.execute(() -> {
             Integration integration = dataManager.fetch(Integration.class, integrationId);
             String checkKey = getIntegrationMarkerKey(integration);
             scheduledChecks.add(checkKey);
@@ -233,6 +233,7 @@ public class IntegrationController {
         });
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
     private void reschedule(String integrationId) {
         scheduler.schedule(() -> {
             Integration i = dataManager.fetch(Integration.class, integrationId);

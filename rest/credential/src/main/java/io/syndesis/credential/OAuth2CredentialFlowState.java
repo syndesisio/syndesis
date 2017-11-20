@@ -33,6 +33,7 @@ import org.springframework.social.oauth2.AccessGrant;
 
 @Value.Immutable
 @JsonDeserialize(builder = OAuth2CredentialFlowState.Builder.class)
+@SuppressWarnings("immutables")
 public interface OAuth2CredentialFlowState extends CredentialFlowState {
 
     final class AccessGrantConverter implements Converter<Map<String, String>, AccessGrant> {

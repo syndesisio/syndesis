@@ -30,6 +30,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
+@SuppressWarnings("immutables")
 public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, Serializable {
 
     @Override
@@ -51,11 +52,6 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
 
     @Override
     Map<String, String> getConfiguredProperties();
-
-    @Override
-    default Connector withId(String id) {
-        return builder().id(id).build();
-    }
 
     default Builder builder() {
         return new Builder().createFrom(this);

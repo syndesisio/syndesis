@@ -31,6 +31,7 @@ import org.springframework.social.oauth1.OAuthToken;
 
 @Value.Immutable
 @JsonDeserialize(builder = OAuth1CredentialFlowState.Builder.class)
+@SuppressWarnings("immutables")
 public interface OAuth1CredentialFlowState extends CredentialFlowState {
 
     final class Builder extends ImmutableOAuth1CredentialFlowState.Builder implements CredentialFlowState.Builder {

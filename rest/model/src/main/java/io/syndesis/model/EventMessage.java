@@ -30,10 +30,8 @@ import org.immutables.value.Value;
 public interface EventMessage extends ToJson, Serializable {
 
     Optional<String> getEvent();
-    EventMessage withEvent(String kind);
 
     Optional<Object> getData();
-    EventMessage withData(Object kind);
 
     static EventMessage of(String event, Object data) {
         return ImmutableEventMessage.builder().event(event).data(data).build();

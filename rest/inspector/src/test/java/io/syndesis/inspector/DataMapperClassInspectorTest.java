@@ -16,6 +16,7 @@
 
 package io.syndesis.inspector;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class DataMapperClassInspectorTest {
 
     @Rule
     public InfinispanCache infinispan = new InfinispanCache();
+
     private DefaultMockServer mockServer = new DefaultMockServer();
+
     private ClassInspectorConfigurationProperties config = new ClassInspectorConfigurationProperties(mockServer.getHostName(), mockServer.getPort(), false);
 
-
-
     @Test
-    public void shouldHandleNesting() throws Exception {
+    public void shouldHandleNesting() throws IOException {
         DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
 
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.StatusJSONImpl").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.StatusJSONImpl.json"), Charset.defaultCharset())).always();
@@ -50,7 +51,7 @@ public class DataMapperClassInspectorTest {
     }
 
     @Test
-    public void shouldHandleInterfaces() throws Exception {
+    public void shouldHandleInterfaces() throws IOException {
         DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Status").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Status.json"), Charset.defaultCharset())).always();
 
@@ -61,10 +62,9 @@ public class DataMapperClassInspectorTest {
     }
 
     @Test
-    public void shouldExtractClassName() throws Exception {
-        DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
-        Assert.assertEquals("Status", dataMapperClassInspector.getClassName("Status"));
-        Assert.assertEquals("Status", dataMapperClassInspector.getClassName("twitter4j.Status"));
-        Assert.assertEquals("Status", dataMapperClassInspector.getClassName("more.twitter4j.Status"));
+    public void shouldExtractClassName() {
+        Assert.assertEquals("Status", DataMapperClassInspector.getClassName("Status"));
+        Assert.assertEquals("Status", DataMapperClassInspector.getClassName("twitter4j.Status"));
+        Assert.assertEquals("Status", DataMapperClassInspector.getClassName("more.twitter4j.Status"));
     }
 }

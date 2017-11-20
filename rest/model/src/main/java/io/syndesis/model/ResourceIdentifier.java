@@ -26,6 +26,7 @@ import java.util.Optional;
  */
 @Value.Immutable
 @JsonDeserialize(builder = ResourceIdentifier.Builder.class)
+@SuppressWarnings("immutables")
 public interface ResourceIdentifier extends WithId<ResourceIdentifier>, WithKind, Serializable {
 
     Optional<String> name();

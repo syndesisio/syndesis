@@ -39,6 +39,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Connection.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
+@SuppressWarnings("immutables")
 public interface Connection extends WithId<Connection>, WithTags, WithName, Serializable {
 
     @Override
@@ -79,11 +80,6 @@ public interface Connection extends WithId<Connection>, WithTags, WithName, Seri
      * and reconnect OAuth views.
      */
     boolean isDerived();
-
-    @Override
-    default Connection withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
 
     class Builder extends ImmutableConnection.Builder {
     }

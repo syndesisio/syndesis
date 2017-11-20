@@ -36,7 +36,7 @@ public interface IntegrationRevisionSpec {
     }
 
     @Value.Default
-    default List<? extends Step> getSteps() {
+    default List<Step> getSteps() {
         return Collections.emptyList();
     }
 

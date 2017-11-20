@@ -47,6 +47,7 @@ public class DemoHandlerProvider implements StatusChangeHandlerProvider {
             this.waitMillis = waitMillis;
         }
 
+        @Override
         public Set<Integration.Status> getTriggerStatuses() {
             return Collections.singleton(status);
         }

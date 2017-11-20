@@ -34,6 +34,7 @@ import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -68,10 +69,10 @@ public class IntegrationControllerTest {
         final AtomicReference<Integration> currentIntegration = new AtomicReference<>(integration);
         when(dataManager.fetch(Integration.class, INTEGRATION_ID)).thenAnswer(invocation -> currentIntegration.get());
 
-        when(integrationController.executor.submit(any(Runnable.class))).then(invocation -> {
+        doAnswer(invocation -> {
             invocation.getArgumentAt(0, Runnable.class).run();
             return null;
-        });
+        }).when(integrationController.executor).execute(any(Runnable.class));
 
         final ArgumentCaptor<Integration> updatedIntegrations = ArgumentCaptor.forClass(Integration.class);
         doNothing().when(dataManager).update(updatedIntegrations.capture());

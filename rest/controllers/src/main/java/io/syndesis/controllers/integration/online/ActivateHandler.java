@@ -35,6 +35,7 @@ import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationRevisionState;
 import io.syndesis.openshift.DeploymentData;
 import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.project.converter.ProjectGenerator;
@@ -185,7 +186,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             .stream()
             .filter(i -> !i.idEquals(id)) //The "current" integration will already be in the database.
             .filter(i -> i.getUserId().map(username::equals).orElse(Boolean.FALSE))
-            .filter(i -> Integration.Status.Activated.equals(i.getStatus()))
+            .filter(i -> IntegrationRevisionState.Active == i.getStatus())
             .count();
     }
 
