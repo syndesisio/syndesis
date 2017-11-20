@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+# Script for checking out "syndesis" and add all repos into the module
+# This is a one-shot script, to be run only once.
+# It works directly on the upstream repo, so be carefule
+
 # Repos map: key == dir name, value == GitHub repo name
 repos=( 
   "rest:syndesis-rest"
@@ -12,7 +16,8 @@ repos=(
   "tests:syndesis-system-tests"
   "connectors:connectors"
   "runtime:syndesis-integration-runtime"
-  "s2i-image:syndesis-s2i-image"
+  "s2i:syndesis-s2i-image"
+  "deploy:syndesis-openshift-templates"
   )
 
 # Clone syndesis in a fresh repository
@@ -24,7 +29,7 @@ for repo in "${repos[@]}" ; do
     dir="${repo%%:*}"
     [ -d $dir ] && rm -rf $dir
 done
-git commit -m "Removed modules" -a
+git commit -m "Removed git submodules" -a
 
 # Merge an individual project
 merge_project() {
@@ -42,7 +47,7 @@ merge_project() {
   
   [ -d $project ] && git mv $project ${project}.orig
   mkdir $project
-  git mv $(ls -A . | grep -v -e "^${project}\$" | grep -v -e '^.git$') $project
+  git mv $(ls -A . | grep -v -e "^${project}\(.orig\)*\$" | grep -v -e '^.git$') $project
   [ -d ${project}.orig ] && git mv ${project}.orig ${project}/${project}
   
 	git commit -am "Move files from $repo into the $project subdirectory"

@@ -14,7 +14,7 @@ proper tag numbers
 
 Run with 
 
-  migrate-images.pl [--source=brew|pipeline]
+  import-images.pl [--source=brew|pipeline]
 
 where C<--brew> speci specifies to pull from brew for productised images,
 C<--pipeline> for pipeline builds. C<--brew> is the default.
