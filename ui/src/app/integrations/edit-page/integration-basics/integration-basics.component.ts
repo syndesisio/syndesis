@@ -83,8 +83,9 @@ export class IntegrationBasicsComponent extends FlowPage implements OnInit {
       this.tourService.initialize([{
           anchorId: 'integrations.publish',
           title: 'Publish',
-          content: `Click Publish to start running the integration, which will take a moment or two. 
-                    Click Save as Draft to save the integration without deploying it.`,
+          content: `Click Publish to start running the integration, which will
+            take a moment or two.  Click Save as Draft to save the integration
+            without deploying it.`,
           placement: 'left',
         }],
       );

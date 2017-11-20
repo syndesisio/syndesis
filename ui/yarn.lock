@@ -196,9 +196,9 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@atlasmap/atlasmap.data.mapper@^1.32.0-SNAPSHOT.20171018190510":
-  version "1.32.0-SNAPSHOT.20171018190510"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.32.0-SNAPSHOT.20171018190510.tgz#c62a6726aff0bb7db8565d3c84b91c27dee4d91e"
+"@atlasmap/atlasmap.data.mapper@^1.32.0-SNAPSHOT":
+  version "1.32.0-SNAPSHOT.20171114015036"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.32.0-SNAPSHOT.20171114015036.tgz#d0c46edc506798241dc8a94f4d6bf33dcc364760"
   dependencies:
     "@angular/common" "4.4.5"
     "@angular/compiler" "4.4.5"

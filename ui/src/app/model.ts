@@ -1,5 +1,3 @@
-/* tslint:disable */
-
 export interface BaseEntity {
   readonly id?: string;
   // TODO we'll make this optional for now
@@ -7,12 +5,50 @@ export interface BaseEntity {
 }
 
 // TODO local hack to avoid deleting all the related code
+/* tslint:disable */
 export interface IntegrationTemplate extends BaseEntity {}
+/* tslint:enable */
 export type IntegrationTemplates = Array<IntegrationTemplate>;
+
+export interface Extension extends BaseEntity {
+  name: string;
+  description: string;
+  icon: string;
+  extensionId: string;
+  version: string;
+  tags: Array<string>;
+  actions: Array<ExtensionAction>;
+  dependencies: Array<string>;
+  status: 'Draft' | 'Installed' | 'Deleted';
+  id: string;
+  properties: {};
+}
+export type Extensions = Array<Extension>;
+
+export interface ExtensionAction extends BaseEntity {
+  id: string;
+  name: string;
+  description: string;
+  descriptor: ExtensionDescriptor;
+  tags: Array<string>;
+  actionType: string;
+  pattern: 'From' | 'To';
+}
+export type ExtensionActions = Array<ExtensionAction>;
+
+export interface ExtensionDescriptor extends BaseEntity {
+  kind: 'STEP' | 'BEAN' | 'ENDPOINT';
+  entrypoint: string;
+  propertyDefinitionSteps: Array<ActionDescriptorStep>;
+  inputDataShape: DataShape;
+  outputDataShape: DataShape;
+}
+export type ExtensionDescriptors = Array<ExtensionDescriptor>;
 
 export interface Action extends BaseEntity {
   actionType: string;
-  pattern: "From" | "To";
+  pattern: 'From' | 'To';
+  // TODO migrate this to ActionDescriptor
   descriptor: ActionDefinition;
   connectorId: string;
   description: string;
@@ -22,6 +58,22 @@ export interface Action extends BaseEntity {
 }
 export type Actions = Array<Action>;
 
+export interface ActionDescriptor extends BaseEntity {
+  propertyDefinitionSteps: Array<ActionDescriptorStep>;
+  inputDataShape: DataShape;
+  outputDataShape: DataShape;
+}
+export type ActionDescriptors = Array<ActionDescriptor>;
+
+export interface ActionDescriptorStep extends BaseEntity {
+  description: string;
+  name: string;
+  configuredProperties: {};
+  properties: {};
+}
+export type ActionDescriptorSteps = Array<ActionDescriptorStep>;
+
+// TODO deprecate should be ActionDescriptor
 export interface ActionDefinition extends BaseEntity {
   camelConnectorGAV: string;
   camelConnectorPrefix: string;
@@ -31,6 +83,7 @@ export interface ActionDefinition extends BaseEntity {
 }
 export type ActionDefinitions = Array<ActionDefinition>;
 
+// TODO deprecate should be ActionDescriptorStep
 export interface ActionDefinitionStep extends BaseEntity {
   description: string;
   name: string;
@@ -224,7 +277,9 @@ export interface WithIdObject extends BaseEntity {
 }
 export type WithIdObjects = Array<WithIdObject>;
 
+/* tslint:disable */
 export interface Violation extends BaseEntity {}
+/* tslint:enable */
 export type Violations = Array<Violation>;
 
 export interface ListResultAction extends BaseEntity {
@@ -396,6 +451,44 @@ class TypeFactoryClass {
     return <Environment>{
       id: undefined,
       name: undefined
+    };
+  }
+
+  createExtension() {
+    return <Extension>{
+      name: undefined,
+      description: undefined,
+      icon: undefined,
+      extensionId: undefined,
+      version: undefined,
+      tags: undefined,
+      actions: undefined,
+      dependencies: undefined,
+      status: undefined,
+      id: undefined,
+      properties: undefined
+    };
+  }
+
+  createExtensionAction() {
+    return <ExtensionAction>{
+      id: undefined,
+      name: undefined,
+      description: undefined,
+      descriptor: undefined,
+      tags: undefined,
+      actionType: undefined,
+      pattern: undefined
+    };
+  }
+
+  createExtensionDescriptor() {
+    return <ExtensionDescriptor>{
+      kind: undefined,
+      entrypoint: undefined,
+      propertyDefinitionSteps: undefined,
+      inputDataShape: undefined,
+      outputDataShape: undefined
     };
   }
 
@@ -595,4 +688,6 @@ class TypeFactoryClass {
   }
 }
 
+/* tslint:disable */
+// TODO change this to suit lint
 export const TypeFactory = new TypeFactoryClass();
