@@ -23,7 +23,7 @@ for my $k (keys %$REPOS) {
     $REPO_REVERSE_MAP->{$REPOS->{$k}} = $k;
 }
 
-my $token = "f5b072bd3d4267cef4a10939b5fc363979235c272bfe1d12c37fe8fbd72ef792221eb581e8bb2598";
+my $token = "insert your token from https://dashboard.zenhub.io/#/settings here";
 my $headers = {
               "X-Authentication-Token" => $token
               };
