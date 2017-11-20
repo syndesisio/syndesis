@@ -44,3 +44,5 @@ Thumbs.db
 src/config.json
 src/config.json.bak
 users.json
+scripts/swagger.json
+src/app/_model.ts
