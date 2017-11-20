@@ -26,8 +26,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ProjectGeneratorProperties {
 
     private Boolean secretMaskingEnabled = false;
-
-    private String extensionLoaderHome = "${JAVA_DATA_DIR}/extensions";
+    private String syndesisExtensionPath = "extensions";
 
     /**
      * Templates configuration.
@@ -52,12 +51,12 @@ public class ProjectGeneratorProperties {
         return secretMaskingEnabled;
     }
 
-    public String getExtensionLoaderHome() {
-        return extensionLoaderHome;
+    public String getSyndesisExtensionPath() {
+        return syndesisExtensionPath;
     }
 
-    public void setExtensionLoaderHome(String extensionLoaderHome) {
-        this.extensionLoaderHome = extensionLoaderHome;
+    public void setSyndesisExtensionPath(String syndesisExtensionPath) {
+        this.syndesisExtensionPath = syndesisExtensionPath;
     }
 
     public Templates getTemplates() {

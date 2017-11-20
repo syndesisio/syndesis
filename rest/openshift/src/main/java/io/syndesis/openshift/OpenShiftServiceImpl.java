@@ -15,6 +15,11 @@
  */
 package io.syndesis.openshift;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
@@ -25,11 +30,6 @@ import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -194,6 +194,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewSpec()
             .addNewContainer()
             .withImage(" ").withImagePullPolicy("Always").withName(name)
+            .withEnv(new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null))
             .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")

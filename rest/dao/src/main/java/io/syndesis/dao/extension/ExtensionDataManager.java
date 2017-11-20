@@ -21,11 +21,7 @@ import javax.annotation.Nonnull;
 
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.extension.Extension;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 
-@Service
-@ConditionalOnProperty(name = "features.filestore.enabled")
 public class ExtensionDataManager {
     private final DataManager dataManager;
     private final ExtensionDataAccessObject extensionDataAccess;
