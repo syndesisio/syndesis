@@ -111,6 +111,23 @@ public class ExtensionsITCase extends BaseITCase {
     }
 
     @Test
+    public void testReimportExtensionFailure() throws IOException {
+        ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(created.getBody().getId().isPresent());
+        String id = created.getBody().getId().get();
+
+        // Install it
+        post("/api/v1beta1/extensions/" + id + "/install", null, Void.class,
+            tokenRule.validToken(), HttpStatus.NO_CONTENT);
+
+        // Using same extension without setting extensionId
+        post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+            Void.class, tokenRule.validToken(), HttpStatus.BAD_REQUEST, multipartHeaders());
+    }
+
+    @Test
     public void testValidateExtension() throws IOException {
         // Create one extension
         ResponseEntity<Extension> created1 = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
@@ -124,7 +141,7 @@ public class ExtensionsITCase extends BaseITCase {
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Create another extension with same extension-id
-        ResponseEntity<Extension> created2 = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+        ResponseEntity<Extension> created2 = post("/api/v1beta1/extensions?updatedId=" + id1, multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
         assertThat(created2.getBody().getId().isPresent());
@@ -173,7 +190,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(got2.getBody().getStatus()).contains(Extension.Status.Installed);
 
         // Create another extension with same extension-id
-        ResponseEntity<Extension> createdCopy1 = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+        ResponseEntity<Extension> createdCopy1 = post("/api/v1beta1/extensions?updatedId=" + id1, multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
         assertThat(createdCopy1.getBody().getId().isPresent());
