@@ -17,6 +17,10 @@ if [ -z "${SYNDESIS_TEMPLATE_TYPE}" ]; then
     SYNDESIS_TEMPLATE_TYPE="syndesis-ci"
 fi
 
+if [ -z "${KUBERNETES_NAMESPACE}" ]; then
+    KUBERNETES_NAMESPACE="$(oc project -q)"
+fi
+
 #Configure the SYNDESIS_TEMPLATE_URL
 if [ -n "${SYNDESIS_TEMPLATE_URL}" ]; then
     true
