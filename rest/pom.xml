@@ -847,9 +847,9 @@
         <plugin>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <configuration>
-            <configLocation>${basedir}/../checkstyle.xml</configLocation>
+            <configLocation>${syndesis.basedir}/checkstyle.xml</configLocation>
             <propertyExpansion>
-              checkstyle.suppression.file=${basedir}/../checkstyle-suppressions.xml
+              checkstyle.suppression.file=${syndesis.basedir}/checkstyle-suppressions.xml
             </propertyExpansion>
           </configuration>
         </plugin>
