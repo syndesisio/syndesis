@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use Getopt::Long;
 use Term::ANSIColor qw(:constants);
 use strict;
