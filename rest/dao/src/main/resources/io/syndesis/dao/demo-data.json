@@ -100,12 +100,13 @@
           },
           "action": {
             "id": "1",
-            "connectorId": "io.syndesis:twitter-mention-connector:latest",
             "description": "Connection from twitter when anyone mention you",
             "name": "Twitter Mention",
-            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "twitter-mention",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "connectorId": "io.syndesis:twitter-mention-connector:latest",
+              "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "twitter-mention",
               "inputDataShape": {
                   "kind" : "none"
               },
@@ -149,10 +150,11 @@
             "id": "2",
             "name": "Salesforce Upsert Contact",
             "description": "Connection to Create or Update Salesforce Contact SObject",
-            "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "salesforce-upsert-contact",
-            "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:salesforce-upsert-contact-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "salesforce-upsert-contact",
+              "connectorId": "io.syndesis:salesforce-upsert-contact-connector:latest",
               "inputDataShape": {
                  "kind" : "java",
                  "type" : "io.syndesis.connector.salesforce.Contact"
@@ -198,9 +200,10 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "periodic-timer",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -235,9 +238,10 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-post",
               "inputDataShape": {
                  "kind" : "any"
               },
@@ -264,9 +268,10 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-get",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -311,9 +316,10 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "periodic-timer",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -348,9 +354,10 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-post",
               "inputDataShape": {
                  "kind" : "any"
               },
@@ -377,9 +384,10 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-get",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -424,9 +432,10 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "periodic-timer",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -461,9 +470,10 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-post",
               "inputDataShape": {
                  "kind" : "any"
               },
@@ -490,9 +500,10 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-get",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -537,9 +548,10 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "periodic-timer",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -574,9 +586,10 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-post",
               "inputDataShape": {
                  "kind" : "any"
               },
@@ -603,9 +616,10 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-get",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -650,9 +664,10 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "periodic-timer",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -687,9 +702,10 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-post",
               "inputDataShape": {
                  "kind" : "any"
               },
@@ -716,9 +732,10 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-get",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -763,9 +780,10 @@
             "id": "io.syndesis_timer-connector:latest",
             "name": "PeriodicTimer",
             "description": "Set a timer that fires at intervals that you specify",
-            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "periodic-timer",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "periodic-timer",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -800,9 +818,10 @@
             "id": "io.syndesis:http-post-connector:latest",
             "name": "HTTP POST",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-post",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-post",
               "inputDataShape": {
                  "kind" : "any"
               },
@@ -829,9 +848,10 @@
             "id": "io.syndesis:http-get-connector:latest",
             "name": "HTTP GET",
             "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "http-get",
-            "definition": {
+            "actionType": "connector",
+            "descriptor": {
+              "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+              "camelConnectorPrefix": "http-get",
               "inputDataShape": {
                  "kind" : "none"
               },
@@ -861,9 +881,10 @@
           "id": "io.syndesis:linkedin-get-connections-connector:latest",
           "name": "Get Connections",
           "description": "Get all LinkedIn connections",
-          "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "linkedin-connections",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:linkedin-connections-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "linkedin-connections",
             "inputDataShape": {
                "kind" : "none"
             },
@@ -877,9 +898,10 @@
           "id": "io.syndesis:linkedin-add-invite-connector:latest",
           "name": "Send Invite",
           "description": "Send out a LinkedIn Invite",
-          "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "linkedin-invite",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:linkedin-invite-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "linkedin-invite",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -906,9 +928,10 @@
           "id": "io.syndesis:servicenow-connector:latest",
           "name": "service-now",
           "description": "Provides access to all of ServiceNow REST API",
-          "camelConnectorGAV": "io.syndesis:servicenow-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "servicenow",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:servicenow-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "servicenow",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -935,9 +958,10 @@
           "id": "io.syndesis:github-pullrequest-connector:latest",
           "name": "github-pullrequest",
           "description": "Create a GitHub PullRequest",
-          "camelConnectorGAV": "io.syndesis:github-pullrequest-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-pullrequest",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:github-pullrequest-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "github-pullrequest",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -950,9 +974,10 @@
           "id": "io.syndesis:github-tag-connector:latest",
           "name": "github-tag",
           "description": "Create a GitHub Tag",
-          "camelConnectorGAV": "io.syndesis:github-tag-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-tag",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:github-tag-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "github-tag",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -965,9 +990,10 @@
           "id": "io.syndesis:github-commit-connector:latest",
           "name": "github-commit",
           "description": "Performs a GitHub Commit",
-          "camelConnectorGAV": "io.syndesis:github-commit-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "github-commit",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:github-commit-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "github-commit",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -994,9 +1020,10 @@
           "id": "io.syndesis:gmail-send:latest",
           "name": "GMail Send",
           "description": "Send an email",
-          "camelConnectorGAV": "io.syndesis:gmail-send-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-send",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:gmail-send-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "gmail-send",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1010,9 +1037,10 @@
           "id": "io.syndesis:gmail-list:latest",
           "name": "GMail List",
           "description": "List incoming messages",
-          "camelConnectorGAV": "io.syndesis:gmail-list-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-list",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:gmail-list-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "gmail-list",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1026,9 +1054,10 @@
           "id": "io.syndesis:gmail-get:latest",
           "name": "GMail Get",
           "description": "Get email message",
-          "camelConnectorGAV": "io.syndesis:gmail-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-get",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:gmail-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "gmail-get",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1042,9 +1071,10 @@
           "id": "io.syndesis:gmail-delete:latest",
           "name": "GMail Delete",
           "description": "Delete email message",
-          "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "gmail-delete",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:gmail-delete-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "gmail-delete",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1071,9 +1101,10 @@
           "id": "io.syndesis:facebook-post-connector:latest",
           "name": "Post",
           "description": "Creates a post to Facebook",
-          "camelConnectorGAV": "io.syndesis:facebook-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "facebook-post",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:facebook-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "facebook-post",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1087,9 +1118,10 @@
           "id": "io.syndesis:facebook-like-connector:latest",
           "name": "Like",
           "description": "Like something on Facebook",
-          "camelConnectorGAV": "io.syndesis:facebook-like-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "facebook-like",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:facebook-like-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "facebook-like",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1116,9 +1148,10 @@
           "id": "io.syndesis:jms-producer-connector:latest",
           "name": "Message Producer",
           "description": "Drop a message on a Queue",
-          "camelConnectorGAV": "io.syndesis:jms-producer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "jms-producer",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:jms-producer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "jms-producer",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1131,9 +1164,10 @@
           "id": "io.syndesis:jms-consumer-connector:latest",
           "name": "Message Consumer",
           "description": "Takes a message off a Queue",
-          "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "jms-consumer",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:jms-consumer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "jms-consumer",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1160,9 +1194,10 @@
           "id": "io.syndesis:ftp-connector:latest",
           "name": "File Transport",
           "description": "FTP/SFTP/FPTS file transfer",
-          "camelConnectorGAV": "io.syndesis:ftp-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "ftp",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:ftp-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "ftp",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1218,9 +1253,10 @@
           "name": "Place Trade",
           "description": "Place trade on Day Trade API server",
           "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "day-trade-place",
             "inputDataShape": {
               "kind": "java",
               "type": "io.syndesis.connector.daytrade.Trade"
@@ -1235,9 +1271,10 @@
           "name": "Retrieve Trade",
           "description": "Retrieve a trade on Day Trade API server",
           "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "day-trade-place",
             "inputDataShape": {
               "kind": "java",
               "type": "io.syndesis.connector.daytrade.Trade"
@@ -1253,9 +1290,10 @@
           "name": "Get Latest Trade",
           "description": "Get the latest trade on Day Trade API server",
           "id": "io.syndesis:day-trade-place-connector:latest",
-          "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "day-trade-place",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:day-trade-place-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "day-trade-place",
             "inputDataShape": {
               "kind": "none"
             },
@@ -1283,9 +1321,10 @@
           "id": "io.syndesis:http-get-connector:latest",
           "name": "HTTP GET",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-get-connector",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:http-get-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-get-connector",
             "inputDataShape": {
                "kind" : "none"
             },
@@ -1318,9 +1357,10 @@
           "id": "io.syndesis:http-post-connector:latest",
           "name": "HTTP POST",
           "description": "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL",
-          "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "http-post-connector",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:http-post-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "http-post-connector",
             "inputDataShape": {
                "kind" : "any"
             },
@@ -1352,7 +1392,7 @@
       ]
     }
   },
-  
+
   {
     "kind": "connector",
     "data": {
@@ -1367,9 +1407,10 @@
           "id": "io.syndesis_timer-connector:latest",
           "name": "Periodic Timer",
           "description": "Set a timer that fires at intervals that you specify",
-          "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "periodic-timer-connector",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "periodic-timer-connector",
             "inputDataShape": {
                "kind" : "none"
             },
@@ -1430,9 +1471,10 @@
           "name": "Buy Recommendation",
           "description": "Fetches buy recommendation from Trade Insight API server",
           "id": "io.syndesis:trade-insight-buy-connector:latest",
-          "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "trade-insight-buy",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:trade-insight-buy-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "trade-insight-buy",
             "inputDataShape": {
               "kind": "none"
             },
@@ -1447,9 +1489,10 @@
           "name": "Sell Recommendation",
           "description": "Fetches sell recommendation from Trade Insight API server",
           "id": "io.syndesis:trade-insight-sell-connector:latest",
-          "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "trade-insight-sell",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:trade-insight-sell-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "trade-insight-sell",
             "inputDataShape": {
               "kind": "none"
             },
@@ -1464,9 +1507,10 @@
           "name": "Top Recommendation",
           "description": "Fetches top recommendation from Trade Insight API server",
           "id": "io.syndesis:trade-insight-top-connector:latest",
-          "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "trade-insight-top",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:trade-insight-top-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "trade-insight-top",
             "inputDataShape": {
               "kind": "none"
             },

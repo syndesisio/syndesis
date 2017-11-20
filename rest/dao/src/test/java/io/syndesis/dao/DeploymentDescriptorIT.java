@@ -78,7 +78,7 @@ public class DeploymentDescriptorIT {
                 final JsonNode actions = connectorData.get("actions");
                 StreamSupport.stream(actions.spliterator(), true).forEach(action -> {
                     final String actionName = action.get("name").asText();
-                    final String gav = action.get("camelConnectorGAV").asText();
+                    final String gav = action.get("descriptor").get("camelConnectorGAV").asText();
 
                     assertThat(gav).as("Action `%s` does not have `camelConnectorGAV` property", actionName)
                         .isNotEmpty();
@@ -91,7 +91,7 @@ public class DeploymentDescriptorIT {
                         .as("Could not resolve artifact for Camel catalog with GAV: %s:%s:%s", (Object[]) coordinates)
                         .isNotEmpty();
 
-                    final String scheme = action.get("camelConnectorPrefix").asText();
+                    final String scheme = action.get("descriptor").get("camelConnectorPrefix").asText();
 
                     try {
                         camelCatalog.asEndpointUri(scheme, new HashMap<>(), false);
@@ -134,7 +134,7 @@ public class DeploymentDescriptorIT {
         final Map<String, Long> coordinatesWithCount = StreamSupport.stream(deployment.spliterator(), true)
             .filter(data -> "connector".equals(data.get("kind").asText()))
             .flatMap(connector -> StreamSupport.stream(connector.get("data").get("actions").spliterator(), true))
-            .map(action -> action.get("camelConnectorGAV").asText())
+            .map(action -> action.get("descriptor").get("camelConnectorGAV").asText())
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream()
@@ -172,8 +172,8 @@ public class DeploymentDescriptorIT {
         final String connectorInputDataType = connectorJson.get("inputDataType").asText();
         final String connectorOutputDataType = connectorJson.get("outputDataType").asText();
 
-        final JsonNode actionDefinition = action.get("definition");
-        final JsonNode inputDataShape = actionDefinition.get("inputDataShape");
+        final JsonNode actionDescriptor = action.get("descriptor");
+        final JsonNode inputDataShape = actionDescriptor.get("inputDataShape");
         if ("json".equals(connectorInputDataType)) {
             assertThat(inputDataShape.get("kind").asText())
                 .as("Connector defines input data shape for action %s as JSON, deployment descriptor does not",
@@ -184,7 +184,7 @@ public class DeploymentDescriptorIT {
                 .isNull();
         }
 
-        final JsonNode outputDataShape = actionDefinition.get("outputDataShape");
+        final JsonNode outputDataShape = actionDescriptor.get("outputDataShape");
         if ("json".equals(connectorOutputDataType)) {
             assertThat(outputDataShape.get("kind").asText())
                 .as("Connector defines output data shape for action %s as JSON, deployment descriptor does not",
@@ -236,13 +236,12 @@ public class DeploymentDescriptorIT {
 
     private static void assertActionProperties(final String connectorId, final JsonNode action, final String actionName,
         final JsonNode catalogedJsonSchema) {
-        final JsonNode actionDefinition = action.get("definition");
-
+        final JsonNode actionDescriptor = action.get("descriptor");
         final JsonNode propertiesFromCatalog = catalogedJsonSchema.get("properties");
 
         // make sure that all action properties are as defined in
         // the connector
-        StreamSupport.stream(actionDefinition.get("propertyDefinitionSteps").spliterator(), true)
+        StreamSupport.stream(actionDescriptor.get("propertyDefinitionSteps").spliterator(), true)
             .flatMap(step -> StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(step.get("properties").fields(), Spliterator.CONCURRENT), true))
             .forEach(property -> {

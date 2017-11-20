@@ -15,39 +15,54 @@
  */
 package io.syndesis.model.extension;
 
+import java.io.Serializable;
+import java.util.Optional;
+import java.util.SortedSet;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.core.immutable.SkipNulls;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
+import io.syndesis.model.action.ExtensionAction;
+import io.syndesis.model.action.WithActions;
 import io.syndesis.model.validation.NonBlockingValidations;
 import io.syndesis.model.validation.extension.NoDuplicateExtension;
 import org.immutables.value.Value;
 
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.Optional;
-
 @Value.Immutable
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
-public interface Extension extends WithId<Extension>, WithName, WithTags, WithConfigurationProperties, Serializable {
+@JsonPropertyOrder({ "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
+public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, Serializable {
 
-    enum Status { Draft, Installed, Deleted}
+    enum Status {
+        Draft,
+        Installed,
+        Deleted
+    }
 
     @Override
     default Kind getKind() {
         return Kind.Extension;
     }
 
-    Optional<Status> getStatus();
+    String getVersion();
 
-    @NotNull
     String getExtensionId();
 
-    @NotNull
+    Optional<Status> getStatus();
+
+    String getIcon();
+
     String getDescription();
+
+    @Value.NaturalOrder
+    @SkipNulls
+    SortedSet<String> getDependencies();
 
     @Override
     default Extension withId(String id) {

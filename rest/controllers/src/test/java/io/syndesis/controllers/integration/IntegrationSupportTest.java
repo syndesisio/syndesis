@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.model.connection.Action;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -76,9 +77,11 @@ public class IntegrationSupportTest {
                 .build())
             .putConfiguredProperty("keys", "test")
             .putConfiguredProperty("accessToken", "myAccessToken")
-            .action(new Action.Builder()
-                .connectorId("twitter")
-                .camelConnectorPrefix("twitter-search-connector")
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("twitter")
+                    .camelConnectorPrefix("twitter-search-connector")
+                    .build())
                 .build())
             .build();
         Step s2 = new SimpleStep.Builder()
@@ -90,9 +93,11 @@ public class IntegrationSupportTest {
             .putConfiguredProperty("username", "admin1")
             .putConfiguredProperty("password", "password1")
             .putConfiguredProperty("token", "mytoken1")
-            .action(new Action.Builder()
-                .connectorId("http")
-                .camelConnectorPrefix("http-get-connector")
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("http")
+                    .camelConnectorPrefix("http-get-connector")
+                    .build())
                 .build())
             .build();
         Step s3 = new SimpleStep.Builder()
@@ -104,9 +109,11 @@ public class IntegrationSupportTest {
             .putConfiguredProperty("username", "admin2")
             .putConfiguredProperty("password", "password2")
             .putConfiguredProperty("token", "mytoken2")
-            .action(new Action.Builder()
-                .connectorId("http")
-                .camelConnectorPrefix("http-get-connector")
+            .action(new ConnectorAction.Builder()
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("http")
+                    .camelConnectorPrefix("http-get-connector")
+                    .build())
                 .build())
             .build();
 

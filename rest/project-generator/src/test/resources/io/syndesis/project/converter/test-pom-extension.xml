@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.syndesis.integrations</groupId>
+  <artifactId>project</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>Syndesis Integrations :: Test Integration</name>
+  <description>This is a test integration!</description>
+  <packaging>jar</packaging>
+
+  <properties>
+    <spring-boot.version>@spring-boot.version@</spring-boot.version>
+    <camel.version>@camel.runtime.version@</camel.version>
+    <syndesis-integration-runtime.version>@syndesis-integration-runtime.version@</syndesis-integration-runtime.version>
+    <camel-atlasmap.version>@camel-atlasmap.version@</camel-atlasmap.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>jboss.ea</id>
+      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
+    <repository>
+      <id>maven.central</id>
+      <url>https://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <id>redhat.ga</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </repository>
+  </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>\${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>\${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- atlasmap runtime -->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>camel-atlasmap</artifactId>
+      <version>\${camel-atlasmap.version}</version>
+    </dependency>
+
+    <!-- connectors used in this integration -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>timer-connector</artifactId>
+      <version>@syndesis-connectors.version@</version>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>http-get-connector</artifactId>
+      <version>@syndesis-connectors.version@</version>
+    </dependency>
+
+    <!-- extensions used in this integration -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.11</version>
+    </dependency>
+
+    <!-- spring-boot as runtime -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-undertow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Integration runtime -->
+    <dependency>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>model</artifactId>
+      <version>\${syndesis-integration-runtime.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.integration-runtime</groupId>
+      <artifactId>runtime</artifactId>
+      <version>\${syndesis-integration-runtime.version}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>\${spring-boot.version}</version>
+        <configuration>
+          <layout>ZIP</layout>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

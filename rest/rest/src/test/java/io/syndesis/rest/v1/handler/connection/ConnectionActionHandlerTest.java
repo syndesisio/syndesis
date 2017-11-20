@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
@@ -27,14 +26,13 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
 import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.ActionDefinition;
-import io.syndesis.model.connection.DynamicActionMetadata;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.DynamicActionMetadata;
 import io.syndesis.verifier.VerificationConfigurationProperties;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -54,14 +52,14 @@ public class ConnectionActionHandlerTest {
 
     private final Client client = mock(Client.class);
 
-    private final ActionDefinition createOrUpdateSalesforceObjectDefinition;
+    private final ConnectorDescriptor createOrUpdateSalesforceObjectDescriptor;
 
     private final ConnectionActionHandler handler;
 
     private Builder invocationBuilder;
 
     public ConnectionActionHandlerTest() {
-        createOrUpdateSalesforceObjectDefinition = new ActionDefinition.Builder()
+        createOrUpdateSalesforceObjectDescriptor = new ConnectorDescriptor.Builder()
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName",
                     new ConfigurationProperty.Builder()//
@@ -90,10 +88,15 @@ public class ConnectionActionHandlerTest {
             .build();
 
         final Connector connector = new Connector.Builder().id("salesforce")
-            .addAction(new Action.Builder().id(SALESFORCE_CREATE_OR_UPDATE).addTag("dynamic")
-                .definition(createOrUpdateSalesforceObjectDefinition).build())
-            .addAction(
-                new Action.Builder().id(SALESFORCE_LIMITS).definition(new ActionDefinition.Builder().build()).build())
+            .addAction(new ConnectorAction.Builder()
+                .id(SALESFORCE_CREATE_OR_UPDATE)
+                .addTag("dynamic")
+                .descriptor(createOrUpdateSalesforceObjectDescriptor)
+                .build())
+            .addAction(new ConnectorAction.Builder()
+                .id(SALESFORCE_LIMITS)
+                .descriptor(new ConnectorDescriptor.Builder().build())
+                .build())
             .build();
 
         final Connection connection = new Connection.Builder().connector(connector)
@@ -134,8 +137,8 @@ public class ConnectionActionHandlerTest {
             .build();
         when(invocationBuilder.post(entity.capture(), eq(DynamicActionMetadata.class))).thenReturn(suggestions);
 
-        final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
-            .createFrom(createOrUpdateSalesforceObjectDefinition)
+        final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
+            .createFrom(createOrUpdateSalesforceObjectDescriptor)
             .replaceConfigurationProperty("sObjectName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
             .replaceConfigurationProperty("sObjectIdName",
@@ -158,7 +161,7 @@ public class ConnectionActionHandlerTest {
 
     @Test
     public void shouldNotContactVerifierForNonDynamicActions() {
-        final ActionDefinition defaultDefinition = new ActionDefinition.Builder().build();
+        final ConnectorDescriptor defaultDefinition = new ConnectorDescriptor.Builder().build();
         assertThat(handler.enrichWithMetadata(SALESFORCE_LIMITS, null)).isEqualTo(defaultDefinition);
     }
 
@@ -174,11 +177,11 @@ public class ConnectionActionHandlerTest {
             .build();
         when(invocationBuilder.post(entity.capture(), eq(DynamicActionMetadata.class))).thenReturn(suggestions);
 
-        final ActionDefinition definition = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE,
+        final ConnectorDescriptor definition = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE,
             Collections.emptyMap());
 
-        final ActionDefinition enrichedDefinitioin = new ActionDefinition.Builder()
-            .createFrom(createOrUpdateSalesforceObjectDefinition)
+        final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
+            .createFrom(createOrUpdateSalesforceObjectDescriptor)
             .replaceConfigurationProperty("sObjectName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
                     ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))

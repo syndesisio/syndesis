@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.connection;
+package io.syndesis.model.action;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -22,21 +22,38 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.syndesis.model.DataShape;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfigurationProperties;
-import io.syndesis.model.WithId;
+import io.syndesis.model.WithKind;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
+import io.syndesis.model.connection.ConfigurationProperty;
 
-import org.immutables.value.Value;
-
-@Value.Immutable
-@JsonDeserialize(builder = Action.Builder.class)
+@JsonTypeInfo(
+    use      = JsonTypeInfo.Id.NAME,
+    include  = JsonTypeInfo.As.PROPERTY,
+    property = "actionType"
+)
+@JsonSubTypes({
+    @JsonSubTypes.Type(
+        value = ImmutableConnectorAction.class,
+        name  = Action.TYPE_CONNECTOR),
+    @JsonSubTypes.Type(
+        value = ImmutableExtensionAction.class,
+        name  = Action.TYPE_EXTENSION)
+})
+@JsonPropertyOrder({ "id", "name", "description", "descriptor", "tags", "actionType" })
 @JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
-public interface Action extends WithId<Action>, WithName, WithTags, WithConfigurationProperties, Serializable {
+public interface Action<D extends ActionDescriptor> extends WithKind, WithName, WithTags, WithConfigurationProperties, Serializable {
+    String TYPE_CONNECTOR = "connector";
+    String TYPE_EXTENSION = "extension";
 
     enum Pattern { From, To }
 
@@ -45,44 +62,43 @@ public interface Action extends WithId<Action>, WithName, WithTags, WithConfigur
         return Kind.Action;
     }
 
-    String getConnectorId();
+    String getActionType();
 
     String getDescription();
 
-    String getCamelConnectorGAV();
-
-    String getCamelConnectorPrefix();
-
-    ActionDefinition getDefinition();
+    D getDescriptor();
 
     Pattern getPattern();
 
+    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     default Optional<DataShape> getInputDataShape() {
-        return Optional.ofNullable(getDefinition()).flatMap(ActionDefinition::getInputDataShape);
+        ActionDescriptor descriptor = getDescriptor();
+
+        return descriptor != null
+            ? descriptor.getInputDataShape()
+            : Optional.empty();
     }
 
+    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     default Optional<DataShape> getOutputDataShape() {
-        return Optional.ofNullable(getDefinition()).flatMap(ActionDefinition::getOutputDataShape);
+        ActionDescriptor descriptor = getDescriptor();
+
+        return descriptor != null
+            ? descriptor.getOutputDataShape()
+            : Optional.empty();
     }
 
-    @Override
-    default Action withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
-
+    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     default Map<String, ConfigurationProperty> getProperties() {
-        ActionDefinition definition = getDefinition();
+        ActionDescriptor descriptor = getDescriptor();
 
-        return definition != null
-            ? definition.getPropertyDefinitionSteps().stream()
+        return descriptor != null
+            ? descriptor.getPropertyDefinitionSteps().stream()
                 .flatMap(step -> step.getProperties().entrySet().stream())
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue))
             : Collections.emptyMap();
-    }
-
-    class Builder extends ImmutableAction.Builder {
     }
 }

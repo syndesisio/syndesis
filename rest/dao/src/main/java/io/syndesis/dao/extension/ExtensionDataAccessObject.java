@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.filestore;
+package io.syndesis.dao.extension;
 
 import java.io.InputStream;
 
-public interface FileStore {
-
+public interface ExtensionDataAccessObject {
     /**
      * Initialize the file store.
      */
@@ -81,5 +80,4 @@ public interface FileStore {
      * @return true if the source file existed before moving it
      */
     boolean move(String fromPath, String toPath);
-
 }

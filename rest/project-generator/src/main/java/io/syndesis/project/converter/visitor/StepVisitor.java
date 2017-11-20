@@ -17,9 +17,8 @@
 package io.syndesis.project.converter.visitor;
 
 
-import io.syndesis.integration.model.steps.Step;
+import java.util.Collection;
 
 public interface StepVisitor {
-
-     Step visit(StepVisitorContext stepContext);
+     Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext stepContext);
 }

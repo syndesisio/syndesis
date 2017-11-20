@@ -27,6 +27,8 @@ public class ProjectGeneratorProperties {
 
     private Boolean secretMaskingEnabled = false;
 
+    private String extensionLoaderHome = "${JAVA_DATA_DIR}/extensions";
+
     /**
      * Templates configuration.
      */
@@ -44,6 +46,18 @@ public class ProjectGeneratorProperties {
 
     public void setSecretMaskingEnabled(Boolean secretMaskingEnabled) {
         this.secretMaskingEnabled = secretMaskingEnabled;
+    }
+
+    public Boolean getSecretMaskingEnabled() {
+        return secretMaskingEnabled;
+    }
+
+    public String getExtensionLoaderHome() {
+        return extensionLoaderHome;
+    }
+
+    public void setExtensionLoaderHome(String extensionLoaderHome) {
+        this.extensionLoaderHome = extensionLoaderHome;
     }
 
     public Templates getTemplates() {

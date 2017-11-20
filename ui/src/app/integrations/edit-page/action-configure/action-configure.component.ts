@@ -28,7 +28,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   position: number;
   page: number;
   lastPage: number;
-  definition: any;
+  descriptor: any;
   action: Action = <Action>{};
   step: Step = <Step>{};
   formModel: DynamicFormControlModel[];
@@ -106,14 +106,14 @@ export class IntegrationsConfigureActionComponent extends FlowPage
                 log.debug(
                   'Response: ' + JSON.stringify(response, undefined, 2)
                 );
-                const definition: any = response['_body']
+                const descriptor: any = response['_body']
                   ? JSON.parse(response['_body'])
                   : undefined;
                 for (const actionProperty of Object.keys(data)) {
                   if (data[actionProperty] == null) {
                     this.step.configuredProperties[
                       actionProperty
-                    ] = definition.propertyDefinitionSteps.map(
+                    ] = descriptor.propertyDefinitionSteps.map(
                       actionDefinitionStep => {
                         return actionDefinitionStep.properties[actionProperty]
                           .defaultValue;
@@ -160,7 +160,6 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     this.action = step.action;
     this.step = step;
 
-    // TODO use this for the form data instead...
     this.integrationSupport
       .fetchMetadata(
         this.step.connection,
@@ -170,12 +169,10 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       .toPromise()
       .then(response => {
         log.debug('Response: ' + JSON.stringify(response, undefined, 2));
-        const definition: any = response[ '_body' ]
+        const descriptor: any = response[ '_body' ]
           ? JSON.parse(response[ '_body' ])
           : undefined;
-        this.initForm(position, page, definition);
-        this.step.action.inputDataShape = definition.inputDataShape;
-        this.step.action.outputDataShape = definition.outputDataShape;
+        this.initForm(position, page, descriptor);
       })
       .catch(response => {
         log.debug('Error response: ' + JSON.stringify(response, undefined, 2));
@@ -191,7 +188,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       });
   }
 
-  initForm(position: number, page: number, definition: any, error?: any) {
+  initForm(position: number, page: number, descriptor: any, error?: any) {
     if (error) {
       this.error = error;
       this.error.message = error.message || error.userMsg || error.developerMsg;
@@ -199,7 +196,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       this.loading = false;
       return;
     }
-    if (!definition || definition === undefined) {
+    if (!descriptor || descriptor === undefined) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {
@@ -212,12 +209,12 @@ export class IntegrationsConfigureActionComponent extends FlowPage
       return;
     }
     const lastPage = (this.lastPage =
-      definition.propertyDefinitionSteps.length - 1);
-    if (definition.propertyDefinitionSteps && page <= lastPage) {
-      this.definition = JSON.parse(
-        JSON.stringify(definition.propertyDefinitionSteps[page])
+      descriptor.propertyDefinitionSteps.length - 1);
+    if (descriptor.propertyDefinitionSteps && page <= lastPage) {
+      this.descriptor = JSON.parse(
+        JSON.stringify(descriptor.propertyDefinitionSteps[page])
       );
-      this.formConfig = this.definition.properties;
+      this.formConfig = this.descriptor.properties;
     } else {
       this.formConfig = {};
     }
@@ -249,7 +246,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
      * value is selected by the user
      */
     const props = {};
-    const stepDefinitions = this.step.action.definition.propertyDefinitionSteps;
+    const stepDefinitions = this.step.action.descriptor.propertyDefinitionSteps;
     for (let p = 0; p < this.page; p++) {
       for (const prop in stepDefinitions[ p ].properties) {
         /* We don't want null or undefined values here */

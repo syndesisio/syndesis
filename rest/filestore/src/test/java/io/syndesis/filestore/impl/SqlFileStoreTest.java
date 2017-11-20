@@ -15,7 +15,7 @@
  */
 package io.syndesis.filestore.impl;
 
-import io.syndesis.filestore.FileStoreException;
+import io.syndesis.dao.extension.ExtensionDataAccessException;
 import org.apache.commons.io.IOUtils;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.h2.jdbcx.JdbcDataSource;
@@ -259,7 +259,7 @@ public class SqlFileStoreTest {
         try {
             callable.call();
             Assert.fail("Expected exception");
-        } catch (FileStoreException ex) {
+        } catch (ExtensionDataAccessException ex) {
             assertTrue(ex.getMessage().startsWith("Invalid path"));
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
             Assert.fail("Got generic exception");

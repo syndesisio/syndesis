@@ -23,10 +23,6 @@ import io.syndesis.model.filter.ExpressionFilterStep;
  */
 public class ExpressionFilterStepVisitor extends FilterStepVisitor {
 
-    ExpressionFilterStepVisitor(GeneratorContext generatorContext) {
-        super(generatorContext);
-    }
-
     public static class Factory implements StepVisitorFactory<ExpressionFilterStepVisitor> {
         @Override
         public String getStepKind() {
@@ -34,8 +30,8 @@ public class ExpressionFilterStepVisitor extends FilterStepVisitor {
         }
 
         @Override
-        public ExpressionFilterStepVisitor create(GeneratorContext generatorContext) {
-            return new ExpressionFilterStepVisitor(generatorContext);
+        public ExpressionFilterStepVisitor create() {
+            return new ExpressionFilterStepVisitor();
         }
     }
 

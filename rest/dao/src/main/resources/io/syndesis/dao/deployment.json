@@ -70,10 +70,11 @@
           "name": "Mention",
           "description": "Search for tweets that mention you",
           "id": "io.syndesis:twitter-mention-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-mention-connector",
           "pattern": "From",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "twitter-mention-connector",
             "inputDataShape": {
                "kind": "none"
             },
@@ -88,10 +89,11 @@
           "name": "Search",
           "description": "Search tweets based one or more keywords",
           "id": "io.syndesis:twitter-search-connector:latest",
-          "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "twitter-search-connector",
           "pattern": "From",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "twitter-search-connector",
             "inputDataShape": {
                "kind" : "none"
             },
@@ -253,11 +255,12 @@
           "id": "io.syndesis:salesforce-create-sobject-connector:latest",
           "name": "New record",
           "description": "Create a new record like Account, Contact or Order on Salesforce.",
-          "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-create-sobject",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-create-sobject",
             "inputDataShape": {
                "kind": "json-schema"
             },
@@ -290,11 +293,12 @@
           "id": "io.syndesis:salesforce-delete-sobject-connector:latest",
           "name": "Delete record",
           "description": "Delete a record from Salesforce.",
-          "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-delete-sobject",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-delete-sobject",
             "inputDataShape": {
                "kind": "java",
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
@@ -327,11 +331,12 @@
           "id": "io.syndesis:salesforce-delete-sobject-with-id-connector:latest",
           "name": "Delete record by external identifier",
           "description": "Delete a record from Salesforce based on the value of an external identifier.",
-          "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
             "inputDataShape": {
                "kind": "java",
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
@@ -383,11 +388,12 @@
           "id": "io.syndesis:salesforce-get-sobject-connector:latest",
           "name": "Fetch record",
           "description": "Fetches a record from Salesforce by its identifier value.",
-          "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-get-sobject",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-get-sobject",
             "inputDataShape": {
                "kind": "java",
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
@@ -420,11 +426,12 @@
           "id": "io.syndesis:salesforce-get-sobject-with-id-connector:latest",
           "name": "Fetch record by external identifier",
           "description": "Fetches a record from Salesforce by the value of an external identifier.",
-          "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-get-sobject-with-id",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-get-sobject-with-id",
             "inputDataShape": {
                "kind": "java",
                "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
@@ -476,11 +483,12 @@
           "id": "io.syndesis:salesforce-update-sobject-connector:latest",
           "name": "Update record",
           "description": "Update a record on Salesforce.",
-          "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-update-sobject",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-update-sobject",
             "inputDataShape": {
                "kind": "json-schema"
             },
@@ -512,11 +520,12 @@
           "id": "io.syndesis:salesforce-upsert-sobject-connector:latest",
           "name": "Create or update record",
           "description": "Create or update a record on Salesforce.",
-          "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-upsert-sobject",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-upsert-sobject",
             "inputDataShape": {
                "kind": "json-schema"
             },
@@ -568,11 +577,12 @@
           "id": "io.syndesis:salesforce-on-create-connector:latest",
           "name": "On create",
           "description": "Get notified when an Salesforce record is created.",
-          "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-on-create",
           "tags": [ "dynamic" ],
           "pattern": "From",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-on-create",
             "inputDataShape": {
                "kind": "none"
             },
@@ -604,11 +614,12 @@
           "id": "io.syndesis:salesforce-on-update-connector:latest",
           "name": "On update",
           "description": "Get notified when an Salesforce record is updated.",
-          "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-on-update",
           "tags": [ "dynamic" ],
           "pattern": "From",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-on-update",
             "inputDataShape": {
                "kind": "none"
             },
@@ -640,11 +651,12 @@
           "id": "io.syndesis:salesforce-on-delete-connector:latest",
           "name": "On delete",
           "description": "Get notified when an Salesforce record is deleted.",
-          "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "salesforce-on-delete",
           "tags": [ "dynamic" ],
           "pattern": "From",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "salesforce-on-delete",
             "inputDataShape": {
                "kind": "none"
             },
@@ -765,11 +777,12 @@
           "id": "io.syndesis:sql-stored-connector:latest",
           "name": "Invoke SQL stored procedure",
           "description": "Invoke SQL stored procedure to get data in and/or out",
-          "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis-connectors.version@",
-          "camelConnectorPrefix": "sql-stored-connector",
           "tags": [ "dynamic" ],
           "pattern": "To",
-          "definition": {
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "sql-stored-connector",
             "inputDataShape": {
                "kind" : "json-schema"
             },

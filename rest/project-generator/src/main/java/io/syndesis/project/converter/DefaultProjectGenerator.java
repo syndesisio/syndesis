@@ -25,15 +25,16 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -41,24 +42,26 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.core.MavenProperties;
 import io.syndesis.core.Names;
+import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.YamlHelpers;
-import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.support.Strings;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
+import io.syndesis.project.converter.mvn.MavenGav;
+import io.syndesis.project.converter.mvn.PomContext;
 import io.syndesis.project.converter.visitor.GeneratorContext;
 import io.syndesis.project.converter.visitor.StepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorContext;
@@ -66,6 +69,7 @@ import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,27 +78,29 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelpers.createObjectMapper();
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
-
-    /*
-    Not required for the moment, needed for local forking of a maven process
-    private Mustache connectorPomMustache = mf.compile(
-        new InputStreamReader(getClass().getResourceAsStream("templates/connector/pom.xml.mustache")),
-        "pom.xml"
-    );
-    */
-    private final ConnectorCatalog connectorCatalog;
     private final ProjectGeneratorProperties generatorProperties;
+    private final ConnectorCatalog connectorCatalog;
     private final StepVisitorFactoryRegistry registry;
+    private final DataManager dataManager;
+    private final Optional<ExtensionDataManager> extensionDataManager;
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
     private final Mustache pomMustache;
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultProjectGenerator.class);
 
-    public DefaultProjectGenerator(ConnectorCatalog connectorCatalog, ProjectGeneratorProperties generatorProperties, StepVisitorFactoryRegistry registry) throws IOException {
-        this.connectorCatalog = connectorCatalog;
+    public DefaultProjectGenerator(
+            ProjectGeneratorProperties generatorProperties,
+            ConnectorCatalog connectorCatalog,
+            StepVisitorFactoryRegistry registry,
+            DataManager dataManager,
+            Optional<ExtensionDataManager> extensionDataManager) throws IOException {
+
         this.generatorProperties = generatorProperties;
+        this.connectorCatalog = connectorCatalog;
         this.registry = registry;
+        this.dataManager = dataManager;
+        this.extensionDataManager = extensionDataManager;
         this.applicationJavaMustache = compile(generatorProperties, "Application.java.mustache", "Application.java");
         this.applicationPropertiesMustache = compile(generatorProperties, "application.properties.mustache", "application.properties");
         this.pomMustache = compile(generatorProperties, "pom.xml.mustache", "pom.xml");
@@ -120,22 +126,30 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         }
 
         try (InputStream stream = resource.openStream()) {
-            return mf.compile(new InputStreamReader(stream, UTF_8), name);
+            return mf.compile(new InputStreamReader(stream, StandardCharsets.UTF_8), name);
         }
     }
 
     @Override
-    public InputStream generate(GenerateProjectRequest request) throws IOException {
-        Integration integration = request.getIntegration();
-
+    public InputStream generate(Integration integration) throws IOException {
         for (Step step : integration.getSteps()) {
             LOG.debug("Integration [{}]: Adding step {} ",
                 Names.sanitize(integration.getName()),
                 step.getId().orElse(""));
-            step.getAction().ifPresent(action -> connectorCatalog.addConnector(action.getCamelConnectorGAV()));
+
+            step.getAction()
+                .filter(ConnectorAction.class::isInstance)
+                .map(ConnectorAction.class::cast)
+                .ifPresent(action -> connectorCatalog.addConnector(action.getDescriptor().getCamelConnectorGAV()));
         }
 
-        return createTarInputStream(request);
+        final PipedInputStream is = new PipedInputStream();
+        final ExecutorService executor = Executors.newSingleThreadExecutor();
+        final PipedOutputStream os = new PipedOutputStream(is);
+
+        executor.submit(generateAddProjectTarEntries(integration, os));
+
+        return is;
     }
 
     private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
@@ -166,40 +180,46 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         }
     }
 
-
-    private InputStream createTarInputStream(GenerateProjectRequest request) throws IOException {
-        PipedInputStream is = new PipedInputStream();
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        PipedOutputStream os = new PipedOutputStream(is);
-        executor.submit(generateAddProjectTarEntries(request, os));
-
-        return is;
-    }
-
-    private Runnable generateAddProjectTarEntries(GenerateProjectRequest request, OutputStream os) {
+    @SuppressWarnings("PMD.DoNotUseThreads")
+    private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os) {
         return () -> {
             try (
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
-                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generateFromRequest(request, applicationJavaMustache));
-                addTarEntry(tos, "src/main/resources/application.properties", generateFromRequest(request, applicationPropertiesMustache));
-                addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlowYaml(tos, request));
-                addTarEntry(tos, "pom.xml", generatePom(request.getIntegration()));
+                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generate(integration, applicationJavaMustache));
+                addTarEntry(tos, "src/main/resources/application.properties", generate(integration, applicationPropertiesMustache));
+                addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlow(tos, integration));
+                addTarEntry(tos, "pom.xml", generatePom(integration));
+
+                List<Extension> extensions = integration.getSteps().stream().map(Step::getExtension).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+                if (!extensions.isEmpty() && extensionDataManager.isPresent()) {
+                    addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(integration));
+                    addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
+
+                    for (Extension extension: extensions) {
+                        addTarEntry(
+                            tos,
+                            "extensions/" + Names.sanitize(extension.getExtensionId()) + ".jar",
+                            IOUtils.toByteArray(
+                                extensionDataManager.get().getExtensionBinaryFile(extension.getExtensionId())
+                            )
+                        );
+                    }
+                }
 
                 addAdditionalResources(tos);
-                LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(request.getIntegration().getName()));
-            } catch (IOException e) {
+                LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(integration.getName()));
+            } catch (IOException|URISyntaxException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",
-                                            request.getIntegration().getName(), e.toString()), e);
+                        integration.getName(), e.toString()), e);
                 }
             }
         };
     }
 
     private void addTarEntry(TarArchiveOutputStream tos, String path, byte[] content) throws IOException {
-
         TarArchiveEntry entry = new TarArchiveEntry(path);
         entry.setSize(content.length);
         tos.putArchiveEntry(entry);
@@ -207,47 +227,80 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         tos.closeArchiveEntry();
     }
 
-    @Override
-    public byte[] generatePom(Integration integration) throws IOException {
-        Set<MavenGav> connectors = new LinkedHashSet<>();
-        Set<String> gavsSeen = new HashSet<>();
-        for (Step step : integration.getSteps()) {
-            if (!step.getStepKind().equals(Endpoint.KIND)) {
-                continue;
-            }
-            step.getAction().ifPresent(action -> {
-                String gav = action.getCamelConnectorGAV();
-                if (gavsSeen.contains(gav)) {
-                    return;
-                }
-                String[] splitGav = gav.split(":");
-                if (splitGav.length == 3) {
-                    connectors.add(new MavenGav(splitGav[0], splitGav[1], splitGav[2]));
-                }
-                gavsSeen.add(gav);
-            });
-        }
-        return generateFromPomContext(new PomContext(integration.getId().orElse(""),
-                                                    integration.getName(),
-                                                    integration.getDescription().orElse(null),
-                                                    connectors,
-                                                    generatorProperties.getMavenProperties()),
-                                        pomMustache);
+    private void addResource(TarArchiveOutputStream tos, String destination, String resource) throws IOException, URISyntaxException {
+        addTarEntry(tos, destination, Files.readAllBytes(Paths.get(getClass().getResource(resource).toURI())));
     }
 
-    @SuppressWarnings("PMD.UnusedPrivateMethod") // PMD false positive
-    private byte[] generateFlowYaml(TarArchiveOutputStream tos, GenerateProjectRequest request) throws JsonProcessingException {
+    @Override
+    public byte[] generatePom(Integration integration) throws IOException {
+        final Set<MavenGav> connectors = new LinkedHashSet<>();
+        final Set<MavenGav> extensions = new LinkedHashSet<>();
+
+        for (Step step : integration.getSteps()) {
+            if (step.getStepKind().equals(io.syndesis.integration.model.steps.Endpoint.KIND)) {
+                step.getAction()
+                    .filter(ConnectorAction.class::isInstance)
+                    .map(ConnectorAction.class::cast)
+                    .map(action -> action.getDescriptor().getCamelConnectorGAV())
+                    .map(MavenGav::new)
+                    .ifPresent(connectors::add);
+            }
+            if (step.getStepKind().equals(io.syndesis.integration.model.steps.Extension.KIND)) {
+                step.getExtension()
+                    .map(Extension::getDependencies)
+                    .orElseGet(Collections::emptySortedSet)
+                    .stream()
+                        .map(MavenGav::new)
+                        .forEach(extensions::add);
+            }
+        }
+
+        return generate(
+            new PomContext(
+                integration.getId().orElse(""),
+                integration.getName(),
+                integration.getDescription().orElse(null),
+                connectors,
+                extensions,
+                generatorProperties.getMavenProperties()),
+            pomMustache
+        );
+    }
+
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    private byte[] generateExtensionLoader(Integration integration) {
+        final Set<String> extensions = new LinkedHashSet<>();
+
+        for (Step step : integration.getSteps()) {
+            if (step.getStepKind().equals(io.syndesis.integration.model.steps.Extension.KIND)) {
+                step.getExtension().map(Extension::getExtensionId).map(Names::sanitize).map(id -> id + ".jar").ifPresent(extensions::add);
+            }
+        }
+
+        if (!extensions.isEmpty()) {
+            return new StringBuilder()
+                .append("loader.home").append('=').append(generatorProperties.getExtensionLoaderHome()).append('\n')
+                .append("loader.path").append('=').append(String.join(",", extensions)).append('\n')
+                .toString()
+                    .getBytes(StandardCharsets.UTF_8);
+        }
+
+        return new byte[] {};
+    }
+
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    private byte[] generateFlow(TarArchiveOutputStream tos, Integration integration) throws JsonProcessingException {
         final Map<Step, String> connectorIdMap = new HashMap<>();
-        final List<? extends Step> steps =  request.getIntegration().getSteps();
+        final List<? extends Step> steps =  integration.getSteps();
         final Flow flow = new Flow();
 
         if (!steps.isEmpty()) {
             // Determine connector prefix
-            request.getIntegration().getSteps().stream()
-                .filter(s -> s.getStepKind().equals(Endpoint.KIND))
-                .filter(s -> s.getAction().isPresent())
+            integration.getSteps().stream()
+                .filter(s -> s.getStepKind().equals(io.syndesis.integration.model.steps.Endpoint.KIND))
+                .filter(s -> s.getAction().filter(ConnectorAction.class::isInstance).isPresent())
                 .filter(s -> s.getConnection().isPresent())
-                .collect(Collectors.groupingBy(s -> s.getAction().get().getCamelConnectorPrefix()))
+                .collect(Collectors.groupingBy(s -> s.getAction().map(ConnectorAction.class::cast).get().getDescriptor().getCamelConnectorPrefix()))
                 .forEach(
                     (prefix, stepList) -> {
                         if (stepList.size() > 1) {
@@ -261,23 +314,24 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             Queue<Step> remaining = new LinkedList<>(steps);
             Step first = remaining.remove();
             if (first != null) {
-                GeneratorContext generatorContext = new GeneratorContext.Builder()
-                    .connectorCatalog(connectorCatalog)
-                    .generatorProperties(generatorProperties)
-                    .request(request)
-                    .tarArchiveOutputStream(tos)
-                    .flow(flow)
-                    .visitorFactoryRegistry(registry)
-                    .build();
-
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()
+                    .generatorContext(new GeneratorContext.Builder()
+                        .connectorCatalog(connectorCatalog)
+                        .generatorProperties(generatorProperties)
+                        .integration(integration)
+                        .tarArchiveOutputStream(tos)
+                        .flow(flow)
+                        .visitorFactoryRegistry(registry)
+                        .dataManager(dataManager)
+                        .extensionDataManager(extensionDataManager)
+                        .build())
                     .index(1)
                     .step(first)
                     .remaining(remaining)
                     .connectorIdSupplier(step -> Optional.ofNullable(connectorIdMap.get(step)))
                     .build();
 
-                visitStep(generatorContext, stepContext);
+                visitStep(stepContext);
             }
         }
 
@@ -287,96 +341,22 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         return YAML_OBJECT_MAPPER.writeValueAsBytes(syndesisModel);
     }
 
-    private void visitStep(GeneratorContext generatorContext, StepVisitorContext stepContext) {
+    private void visitStep(StepVisitorContext stepContext) {
         StepVisitorFactory<?> factory = registry.get(stepContext.getStep().getStepKind());
+        StepVisitor visitor = factory.create();
+        Collection<io.syndesis.integration.model.steps.Step> steps = visitor.visit(stepContext);
 
-        StepVisitor visitor = factory.create(generatorContext);
-        generatorContext.getFlow().addStep(visitor.visit(stepContext));
-        if (stepContext.hasNext()) {
-             visitStep(generatorContext, stepContext.next());
+        if (steps != null) {
+            steps.forEach(stepContext.getGeneratorContext().getFlow()::addStep);
         }
-    }
-
-    private byte[] generateFromRequest(GenerateProjectRequest request, Mustache template) throws IOException {
-        return generate(request, template);
-    }
-
-    private byte[] generateFromPomContext(PomContext integration, Mustache template) throws IOException {
-        return generate(integration, template);
+        if (stepContext.hasNext()) {
+             visitStep(stepContext.next());
+        }
     }
 
     private byte[] generate(Object scope, Mustache template) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        template.execute(new OutputStreamWriter(bos, UTF_8), scope).flush();
+        template.execute(new OutputStreamWriter(bos, StandardCharsets.UTF_8), scope).flush();
         return bos.toByteArray();
-    }
-
-
-
-    /* default */ static class MavenGav {
-        private final String groupId;
-
-        private final String artifactId;
-
-        private final String version;
-
-        /* default */ MavenGav(String groupId, String artifactId, String version) {
-            this.groupId = groupId;
-            this.artifactId = artifactId;
-            this.version = version;
-        }
-
-        public String getGroupId() {
-            return groupId;
-        }
-
-        public String getArtifactId() {
-            return artifactId;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-    }
-
-    /* default */ static class PomContext {
-
-        private final String id;
-
-        private final String name;
-
-        private final String description;
-
-        private final Set<MavenGav> connectors;
-
-        private final MavenProperties mavenProperties;
-
-        /* default */ PomContext(String id, String name, String description, Set<MavenGav> connectors, MavenProperties mavenProperties) {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.connectors = connectors;
-            this.mavenProperties = mavenProperties;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public Set<MavenGav> getConnectors() {
-            return connectors;
-        }
-
-        public Set<Entry<String, String>> getMavenRepositories() {
-            return mavenProperties.getRepositories().entrySet();
-        }
     }
 }

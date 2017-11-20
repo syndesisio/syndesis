@@ -23,6 +23,7 @@ hs_err_pid*
 
 # IDEs and editors
 /.idea
+.idea
 *.iml
 .project
 .classpath

@@ -13,32 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.controllers.extension;
+package io.syndesis.dao.extension;
 
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.filestore.FileStore;
-import io.syndesis.model.extension.Extension;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
-/**
- * Provide information on installed tech extensions.
- */
-@Component
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.extension.Extension;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+
+@Service
 @ConditionalOnProperty(name = "features.filestore.enabled")
-public class ExtensionDataProvider {
-
+public class ExtensionDataManager {
     private final DataManager dataManager;
+    private final ExtensionDataAccessObject extensionDataAccess;
 
-    private final FileStore fileStore;
-
-    public ExtensionDataProvider(DataManager dataManager, FileStore fileStore) {
+    public ExtensionDataManager(DataManager dataManager, ExtensionDataAccessObject extensionDataAccess) {
         this.dataManager = dataManager;
-        this.fileStore = fileStore;
+        this.extensionDataAccess = extensionDataAccess;
     }
 
     public Extension getExtensionMetadata(String extensionId) {
@@ -48,15 +42,18 @@ public class ExtensionDataProvider {
 
     public InputStream getExtensionBinaryFile(String extensionId) {
         String id = getInstalledPhysicalId(extensionId);
-        return fileStore.read("/extensions/" + id);
+        return extensionDataAccess.read("/extensions/" + id);
     }
 
     // ==========================================================
 
     @Nonnull
     private String getInstalledPhysicalId(String extensionId) {
-        Set<String> ids = dataManager.fetchIdsByPropertyValue(Extension.class, "extensionId", extensionId,
-            "status", Extension.Status.Installed.name());
+        Set<String> ids = dataManager.fetchIdsByPropertyValue(
+            Extension.class,
+            "extensionId", extensionId,
+            "status", Extension.Status.Installed.name()
+        );
 
         if (ids.isEmpty()) {
             throw new IllegalStateException("Installed extension for extensionId=" + extensionId + " not found");
@@ -66,5 +63,4 @@ public class ExtensionDataProvider {
 
         return ids.iterator().next();
     }
-
 }

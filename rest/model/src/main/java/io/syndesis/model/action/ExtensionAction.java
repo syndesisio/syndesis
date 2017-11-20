@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.project.converter;
+package io.syndesis.model.action;
 
-import java.util.Map;
-
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Integration;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.WithId;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface GenerateProjectRequest {
-
-    Integration getIntegration();
-    Map<String, Connector> getConnectors();
-
-    class Builder extends ImmutableGenerateProjectRequest.Builder {
+@JsonDeserialize(builder = ExtensionAction.Builder.class)
+public interface ExtensionAction extends Action<ExtensionDescriptor>, WithId<ExtensionAction> {
+    @Override
+    default ExtensionAction withId(String id) {
+        return new Builder().createFrom(this).id(id).build();
     }
 
+    class Builder extends ImmutableExtensionAction.Builder {
+    }
+
+
+    enum Kind {
+        STEP,
+        BEAN,
+        ENDPOINT
+    }
 }

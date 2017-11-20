@@ -147,8 +147,8 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   getPropertyDefinitions(action: Action) {
-    const definition: any = action.definition || {};
-    const answer = definition.propertyDefinitionSteps || [];
+    const descriptor: any = action.descriptor || {};
+    const answer = descriptor.propertyDefinitionSteps || [];
     return answer;
   }
 

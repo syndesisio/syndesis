@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ImmutablesStyle
-package io.syndesis.model.techextension;
+package io.syndesis.model.action;
 
-import io.syndesis.core.immutable.ImmutablesStyle;
+import java.util.List;
+import javax.validation.constraints.NotNull;
+
+import io.syndesis.model.validation.AllValidations;
+
+public interface WithActions<T extends Action<? extends ActionDescriptor>> {
+
+    @NotNull(groups = AllValidations.class)
+    List<T> getActions();
+}

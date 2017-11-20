@@ -22,6 +22,7 @@ import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
+import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
@@ -100,11 +101,15 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             return builder.build();
         }
 
-        connector.actionById(actionId).ifPresent(a -> {
-            a.getOutputDataShape().ifPresent(dataShape -> {
-                final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
-                builder.addAllPaths(paths);
-            });
+        connector.actionById(actionId)
+            .filter(ConnectorAction.class::isInstance)
+            .map(ConnectorAction.class::cast)
+            .ifPresent(action -> {
+                action.getOutputDataShape().ifPresent(dataShape -> {
+                    final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
+                    builder.addAllPaths(paths);
+                }
+            );
         });
         return builder.build();
     }

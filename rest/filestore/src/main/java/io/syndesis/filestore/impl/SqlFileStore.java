@@ -15,16 +15,6 @@
  */
 package io.syndesis.filestore.impl;
 
-import io.syndesis.filestore.FileStore;
-import io.syndesis.filestore.FileStoreException;
-import org.apache.commons.io.IOUtils;
-import org.postgresql.PGConnection;
-import org.postgresql.largeobject.LargeObject;
-import org.postgresql.largeobject.LargeObjectManager;
-import org.skife.jdbi.v2.DBI;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.exceptions.CallbackFailedException;
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,11 +33,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.syndesis.dao.extension.ExtensionDataAccessObject;
+import io.syndesis.dao.extension.ExtensionDataAccessException;
+import org.apache.commons.io.IOUtils;
+import org.postgresql.PGConnection;
+import org.postgresql.largeobject.LargeObject;
+import org.postgresql.largeobject.LargeObjectManager;
+import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.exceptions.CallbackFailedException;
+
 /**
- * Implementation of a {@code FileStore} backed by a SQL database.
+ * Implementation of a {@code ExtensionDataAccessObject} backed by a SQL database.
  */
 @SuppressWarnings("PMD.GodClass")
-public class SqlFileStore implements FileStore {
+public class SqlFileStore implements ExtensionDataAccessObject {
 
     enum DatabaseKind {
         PostgreSQL, H2, Apache_Derby
@@ -80,11 +80,11 @@ public class SqlFileStore implements FileStore {
                     } else if (databaseKind == DatabaseKind.Apache_Derby) {
                         h.execute("CREATE TABLE filestore (path VARCHAR(1000), data BLOB, PRIMARY KEY (path))");
                     } else {
-                        throw new FileStoreException("Unsupported database kind: " + databaseKind);
+                        throw new ExtensionDataAccessException("Unsupported database kind: " + databaseKind);
                     }
                 });
             } catch (CallbackFailedException ex) {
-                throw new FileStoreException("Unable to initialize the filestore", ex);
+                throw new ExtensionDataAccessException("Unable to initialize the filestore", ex);
             }
         }
     }
@@ -109,7 +109,7 @@ public class SqlFileStore implements FileStore {
                 return true;
             });
         } catch (CallbackFailedException ex) {
-            throw new FileStoreException("Unable to write on path " + path, ex);
+            throw new ExtensionDataAccessException("Unable to write on path " + path, ex);
         }
     }
 
@@ -124,7 +124,7 @@ public class SqlFileStore implements FileStore {
                 return path;
             });
         } catch (CallbackFailedException ex) {
-            throw new FileStoreException("Unable to write on temporary path", ex);
+            throw new ExtensionDataAccessException("Unable to write on temporary path", ex);
         }
     }
 
@@ -141,7 +141,7 @@ public class SqlFileStore implements FileStore {
                 return dbi.inTransaction((h, status) -> doReadStandard(h, path));
             }
         } catch (CallbackFailedException ex) {
-            throw new FileStoreException("Unable to read data from path " + path, ex);
+            throw new ExtensionDataAccessException("Unable to read data from path " + path, ex);
         }
     }
 
@@ -152,7 +152,7 @@ public class SqlFileStore implements FileStore {
         try {
             return dbi.inTransaction((h, status) -> doDelete(h, path));
         } catch (CallbackFailedException ex) {
-            throw new FileStoreException("Unable to delete path " + path, ex);
+            throw new ExtensionDataAccessException("Unable to delete path " + path, ex);
         }
     }
 
@@ -172,7 +172,7 @@ public class SqlFileStore implements FileStore {
                 return existed;
             });
         } catch (CallbackFailedException ex) {
-            throw new FileStoreException("Unable to move file from path " + fromPath + " to path " + toPath, ex);
+            throw new ExtensionDataAccessException("Unable to move file from path " + fromPath + " to path " + toPath, ex);
         }
     }
 
@@ -205,7 +205,7 @@ public class SqlFileStore implements FileStore {
 
             h.insert("INSERT INTO filestore(path, data) values (?,?)", path, oid);
         } catch (IOException | SQLException ex) {
-            throw FileStoreException.launderThrowable(ex);
+            throw ExtensionDataAccessException.launderThrowable(ex);
         }
     }
 
@@ -219,7 +219,7 @@ public class SqlFileStore implements FileStore {
 
             h.insert("INSERT INTO filestore(path, data) values (?,?)", path, blob);
         } catch (IOException | SQLException ex) {
-            throw FileStoreException.launderThrowable(ex);
+            throw ExtensionDataAccessException.launderThrowable(ex);
         }
     }
 
@@ -235,7 +235,7 @@ public class SqlFileStore implements FileStore {
             try {
                 return blob.get().getBinaryStream();
             } catch (SQLException ex) {
-                throw new FileStoreException("Unable to read from BLOB", ex);
+                throw new ExtensionDataAccessException("Unable to read from BLOB", ex);
             }
         }
 
@@ -276,7 +276,7 @@ public class SqlFileStore implements FileStore {
             }
             IOUtils.closeQuietly(h);
 
-            throw FileStoreException.launderThrowable(e);
+            throw ExtensionDataAccessException.launderThrowable(e);
         }
     }
 
@@ -306,7 +306,7 @@ public class SqlFileStore implements FileStore {
 
         } catch (SQLException e) {
             IOUtils.closeQuietly(h);
-            throw FileStoreException.launderThrowable(e);
+            throw ExtensionDataAccessException.launderThrowable(e);
         }
     }
 
@@ -345,7 +345,7 @@ public class SqlFileStore implements FileStore {
             }
             return false;
         } catch (SQLException ex) {
-            throw FileStoreException.launderThrowable("Cannot check if the table " + tableName + " already exists", ex);
+            throw ExtensionDataAccessException.launderThrowable("Cannot check if the table " + tableName + " already exists", ex);
         }
     }
 

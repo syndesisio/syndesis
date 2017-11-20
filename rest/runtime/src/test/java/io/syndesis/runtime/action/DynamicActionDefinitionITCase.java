@@ -24,15 +24,13 @@ import java.util.UUID;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import io.syndesis.model.connection.Action;
-import io.syndesis.model.connection.ActionDefinition;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.DataShape;
 import io.syndesis.runtime.BaseITCase;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,20 +47,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(initializers = BaseITCase.TestConfigurationInitializer.class)
 @SuppressWarnings({"PMD.TooManyStaticImports", "PMD.ExcessiveImports"})
 public class DynamicActionDefinitionITCase extends BaseITCase {
-
-    @BeforeClass
-    public static void startMockIfNeeded() {
-        if (wireMock==null || !wireMock.isRunning()) {
-            wireMock = new WireMockRule(wireMockConfig().dynamicPort());
-            wireMock.start();
-        }
-    }
+    private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
 
     private static final ConfigurationProperty _DEFAULT_SALESFORCE_IDENTIFIER = new ConfigurationProperty.Builder()//
         .kind("parameter")//
@@ -86,21 +76,19 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
         .description("Salesforce object type to create")//
         .build();
 
-    private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
-
-    private static final Action DEFAULT_CREATE_OR_UPDATE_ACTION = new Action.Builder()
+    private static final ConnectorAction DEFAULT_CREATE_OR_UPDATE_ACTION = new ConnectorAction.Builder()//
         .id(DynamicActionDefinitionITCase.CREATE_OR_UPDATE_ACTION_ID)//
         .addTag("dynamic")//
-        .definition(new ActionDefinition.Builder()//
-            .inputDataShape(new DataShape.Builder().kind("json-schema").build())
-            .outputDataShape(new DataShape.Builder().kind("java")
-                .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
-            .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
-                b -> b.putProperty("sObjectName", _DEFAULT_SALESFORCE_OBJECT_NAME))
-            .withActionDefinitionStep("Select Identifier property",
-                "Select Salesforce property that will hold the uniquely identifying value of this object",
-                b -> b.putProperty("sObjectIdName", _DEFAULT_SALESFORCE_IDENTIFIER))
-            .build())
+        .descriptor(new ConnectorDescriptor.Builder()//
+            .inputDataShape(new DataShape.Builder().kind("json-schema").build())//
+            .outputDataShape(new DataShape.Builder().kind("java")//
+                .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())//
+            .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",//
+                b -> b.putProperty("sObjectName", _DEFAULT_SALESFORCE_OBJECT_NAME))//
+            .withActionDefinitionStep("Select Identifier property",//
+                "Select Salesforce property that will hold the uniquely identifying value of this object",//
+                b -> b.putProperty("sObjectIdName", _DEFAULT_SALESFORCE_IDENTIFIER))//
+            .build())//
         .build();
 
     private final String connectionId = UUID.randomUUID().toString();
@@ -122,6 +110,14 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
             ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contacts"))
         .build();
 
+    @BeforeClass
+    public static void startMockIfNeeded() {
+        if (wireMock==null || !wireMock.isRunning()) {
+            wireMock = new WireMockRule(wireMockConfig().dynamicPort());
+            wireMock.start();
+        }
+    }
+
     @Before
     public void setupConnection() {
         dataManager.create(new Connection.Builder().id(connectionId).connectorId("salesforce")
@@ -129,7 +125,8 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
 
         final Connector existingSalesforceConnector = dataManager.fetch(Connector.class, "salesforce");
 
-        final Connector withCreateOrUpdateAction = new Connector.Builder().createFrom(existingSalesforceConnector)
+        final Connector withCreateOrUpdateAction = new Connector.Builder()
+            .createFrom(existingSalesforceConnector)
             .addAction(DEFAULT_CREATE_OR_UPDATE_ACTION).build();
 
         dataManager.update(withCreateOrUpdateAction);
@@ -139,7 +136,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
     public void setupMocks() {
         WireMock.configureFor(wireMock.port());
         stubFor(WireMock
-            
+
             .post(urlEqualTo(
                 "/api/v1/connectors/salesforce/actions/io.syndesis:salesforce-create-or-update-connector:latest"))//
             .withHeader("Accept", equalTo("application/json"))//
@@ -166,11 +163,11 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
         final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        final ResponseEntity<ActionDefinition> firstResponse = http(HttpMethod.POST,
+        final ResponseEntity<ConnectorDescriptor> firstResponse = http(HttpMethod.POST,
             "/api/v1/connections/" + connectionId + "/actions/" + CREATE_OR_UPDATE_ACTION_ID, null,
-            ActionDefinition.class, tokenRule.validToken(), headers, HttpStatus.OK);
+            ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
-        final ActionDefinition firstEnrichment = new ActionDefinition.Builder()//
+        final ConnectorDescriptor firstEnrichment = new ConnectorDescriptor.Builder()//
             .inputDataShape(new DataShape.Builder().kind("json-schema").build())
             .outputDataShape(new DataShape.Builder().kind("java")
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
@@ -182,12 +179,12 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
             .build();
         assertThat(firstResponse.getBody()).isEqualTo(firstEnrichment);
 
-        final ResponseEntity<ActionDefinition> secondResponse = http(HttpMethod.POST,
+        final ResponseEntity<ConnectorDescriptor> secondResponse = http(HttpMethod.POST,
             "/api/v1/connections/" + connectionId + "/actions/" + CREATE_OR_UPDATE_ACTION_ID,
-            Collections.singletonMap("sObjectName", "Contact"), ActionDefinition.class, tokenRule.validToken(), headers,
+            Collections.singletonMap("sObjectName", "Contact"), ConnectorDescriptor.class, tokenRule.validToken(), headers,
             HttpStatus.OK);
 
-        final ActionDefinition secondEnrichment = new ActionDefinition.Builder()//
+        final ConnectorDescriptor secondEnrichment = new ConnectorDescriptor.Builder()//
             .outputDataShape(new DataShape.Builder().kind("java")
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
@@ -196,7 +193,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
                 "Select Salesforce property that will hold the uniquely identifying value of this object",
                 b -> b.putProperty("sObjectIdName", suggestedSalesforceIdNames))
             .build();
-        final ActionDefinition secondResponseBody = secondResponse.getBody();
+        final ConnectorDescriptor secondResponseBody = secondResponse.getBody();
         assertThat(secondResponseBody).isEqualToIgnoringGivenFields(secondEnrichment, "inputDataShape");
         assertThat(secondResponseBody.getInputDataShape()).hasValueSatisfying(input -> {
             assertThat(input.getKind()).isEqualTo("json-schema");

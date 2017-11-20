@@ -49,11 +49,6 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>filestore</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis</groupId>
       <artifactId>project-generator</artifactId>
     </dependency>
 

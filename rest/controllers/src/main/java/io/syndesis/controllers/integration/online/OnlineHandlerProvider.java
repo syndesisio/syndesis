@@ -32,16 +32,21 @@ import org.springframework.stereotype.Component;
 public class OnlineHandlerProvider extends BaseHandler implements StatusChangeHandlerProvider {
 
     private final DataManager dataManager;
-    private final ProjectGenerator projectConverter;
+    private final ProjectGenerator projectGenerator;
     private final ControllersConfigurationProperties properties;
     private final EncryptionComponent encryptionComponent;
 
-    public OnlineHandlerProvider(DataManager dataManager, OpenShiftService openShiftService,
-                                 ProjectGenerator projectConverter, ControllersConfigurationProperties properties,
-                                 EncryptionComponent encryptionComponent) {
+    public OnlineHandlerProvider(
+            DataManager dataManager,
+            OpenShiftService openShiftService,
+            ProjectGenerator projectGenerator,
+            ControllersConfigurationProperties properties,
+            EncryptionComponent encryptionComponent) {
+
         super(openShiftService);
+
         this.dataManager = dataManager;
-        this.projectConverter = projectConverter;
+        this.projectGenerator = projectGenerator;
         this.properties = properties;
         this.encryptionComponent = encryptionComponent;
     }
@@ -49,7 +54,13 @@ public class OnlineHandlerProvider extends BaseHandler implements StatusChangeHa
     @Override
     public List<StatusChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new ActivateHandler(dataManager, openShiftService(), projectConverter, properties, encryptionComponent),
+            new ActivateHandler(
+                dataManager,
+                openShiftService(),
+                projectGenerator,
+                properties,
+                encryptionComponent
+            ),
             new DeactivateHandler(openShiftService()),
             new DeleteHandler(openShiftService()));
     }

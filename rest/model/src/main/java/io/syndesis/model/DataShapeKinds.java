@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.techextension;
+package io.syndesis.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
-
-import java.io.Serializable;
-
-@Value.Immutable
-@JsonDeserialize(builder = TechExtensionDataShape.Builder.class)
-public interface TechExtensionDataShape extends Serializable {
-
-    String getKind();
-
-    class Builder extends ImmutableTechExtensionDataShape.Builder {
-    }
-
+/**
+ */
+public class DataShapeKinds {
+    public static final String ANY = "any";
+    public static final String JAVA = "java";
+    public static final String JSON_SCHEMA = "json-schema";
+    public static final String NONE = "none";
 }

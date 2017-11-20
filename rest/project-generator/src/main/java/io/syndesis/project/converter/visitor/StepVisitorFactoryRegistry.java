@@ -16,37 +16,37 @@
 
 package io.syndesis.project.converter.visitor;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-public class StepVisitorFactoryRegistry {
+public final class StepVisitorFactoryRegistry {
+    private final ConcurrentMap<String, StepVisitorFactory> MAP = new ConcurrentHashMap<>();
+    private final StepVisitorFactory FALLBACK_STEP_FACTORY = new GenericStepVisitor.Factory();
 
-  private final Map<String, StepVisitorFactory> MAP = new HashMap<>();
-
-  private final StepVisitorFactory FALLBACK_STEP_FACTORY = new GenericStepVisitor.Factory();
-
-  public StepVisitorFactoryRegistry(List<StepVisitorFactory> factories) {
-    factories.forEach(this::register);
-  }
-
-  public void register(StepVisitorFactory factory) {
-    MAP.put(factory.getStepKind(), factory);
-  }
-
-
-  public StepVisitorFactory get(String kind) {
-    if (MAP.containsKey(kind)) {
-      return MAP.get(kind);
-    } else {
-      for (StepVisitorFactory factory : ServiceLoader.load(StepVisitorFactory.class, Thread.currentThread().getContextClassLoader())) {
-        if (factory.getStepKind().equals(kind)) {
-          return factory;
+    public StepVisitorFactoryRegistry(StepVisitorFactory... factories) {
+        for (StepVisitorFactory factory:  factories) {
+            register(factory);
         }
-      }
-      return FALLBACK_STEP_FACTORY;
     }
-  }
 
+    public StepVisitorFactoryRegistry(List<StepVisitorFactory> factories) {
+        factories.forEach(this::register);
+    }
+
+    public void register(StepVisitorFactory factory) {
+        MAP.put(factory.getStepKind(), factory);
+    }
+
+    public StepVisitorFactory get(String kind) {
+        return MAP.computeIfAbsent(kind, k -> {
+            for (StepVisitorFactory factory : ServiceLoader.load(StepVisitorFactory.class, Thread.currentThread().getContextClassLoader())) {
+                if (factory.getStepKind().equals(k)) {
+                    return factory;
+                }
+            }
+            return FALLBACK_STEP_FACTORY;
+        });
+    }
 }

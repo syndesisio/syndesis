@@ -18,6 +18,8 @@ package io.syndesis.project.converter.visitor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -26,15 +28,12 @@ import java.util.stream.Stream;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.WithConfigurationProperties;
-import io.syndesis.model.connection.Action;
+import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
-import io.syndesis.project.converter.GenerateProjectRequest;
 
 public class EndpointStepVisitor implements StepVisitor {
-    private final GeneratorContext generatorContext;
-
     public static class Factory implements StepVisitorFactory<EndpointStepVisitor> {
 
         @Override
@@ -43,43 +42,45 @@ public class EndpointStepVisitor implements StepVisitor {
         }
 
         @Override
-        public EndpointStepVisitor create(GeneratorContext generatorContext) {
-            return new EndpointStepVisitor(generatorContext);
+        public EndpointStepVisitor create() {
+            return new EndpointStepVisitor();
         }
-    }
-
-    public EndpointStepVisitor(GeneratorContext generatorContext) {
-        this.generatorContext = generatorContext;
     }
 
     @Override
-    public io.syndesis.integration.model.steps.Step visit(StepVisitorContext visitorContext) {
+    public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext visitorContext) {
         Step step = visitorContext.getStep();
         if (!step.getAction().isPresent() || !step.getConnection().isPresent()) {
-            return null;
+            return Collections.emptyList();
+        }
+
+        if (!(step.getAction().get() instanceof ConnectorAction)) {
+            return Collections.emptyList();
         }
 
         try {
-            return createEndpoint(
-                visitorContext,
-                generatorContext.getRequest(),
-                step,
-                step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present")),
-                step.getAction().orElseThrow(() -> new IllegalStateException("Action is not present"))
+            return Collections.singletonList(
+                createEndpoint(
+                    visitorContext,
+                    step,
+                    step.getConnection().orElseThrow(() -> new IllegalStateException("Action is not present")),
+                    step.getAction().map(ConnectorAction.class::cast).orElseThrow(() -> new IllegalStateException("Action is not present"))
+                )
             );
         } catch (IOException | URISyntaxException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
     }
 
-    private Endpoint createEndpoint(StepVisitorContext visitorContext, GenerateProjectRequest request, Step step, Connection connection, Action action) throws URISyntaxException, IOException {
-        String connectorId = step.getConnection().get().getConnectorId().orElse(action.getConnectorId());
-        if (!request.getConnectors().containsKey(connectorId)) {
+    private Endpoint createEndpoint(StepVisitorContext visitorContext, Step step, Connection connection, ConnectorAction action) throws URISyntaxException, IOException {
+        final String connectorId = step.getConnection().get().getConnectorId().orElse(action.getDescriptor().getConnectorId());
+        final Connector connector = visitorContext.getGeneratorContext().getDataManager().fetch(Connector.class, connectorId);
+
+        if (connector == null) {
             throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
         }
 
-        final String camelConnectorPrefix = action.getCamelConnectorPrefix();
-        final Connector connector = request.getConnectors().get(connectorId);
+        final String camelConnectorPrefix = action.getDescriptor().getCamelConnectorPrefix();
         final Map<String, String> configuredProperties = aggregate(connector.getConfiguredProperties(), connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, String> properties = aggregate(connector.filterProperties(configuredProperties, connector::isEndpointProperty), action.filterProperties(configuredProperties, action::isEndpointProperty));
         final boolean hasComponentOptions = hasComponentProperties(configuredProperties, connector, action);
@@ -112,7 +113,7 @@ public class EndpointStepVisitor implements StepVisitor {
 
         // if the option is marked as secret use property placeholder as the
         // value is added to the integration secret.
-        if (generatorContext.getGeneratorProperties().isSecretMaskingEnabled()) {
+        if (visitorContext.getGeneratorContext().getGeneratorProperties().isSecretMaskingEnabled()) {
             properties.entrySet()
                 .stream()
                 .filter(or(connector::isSecret, action::isSecret))
@@ -124,10 +125,10 @@ public class EndpointStepVisitor implements StepVisitor {
             properties.put("timerName", "every");
         }
 
-        return createEndpoint(camelConnectorPrefix, connectorScheme, properties);
+        return createEndpoint(visitorContext.getGeneratorContext(), camelConnectorPrefix, connectorScheme, properties);
     }
 
-    private Endpoint createEndpoint(String camelConnectorPrefix, String connectorScheme, Map<String, String> endpointOptions) throws URISyntaxException {
+    private Endpoint createEndpoint(GeneratorContext generatorContext, String camelConnectorPrefix, String connectorScheme, Map<String, String> endpointOptions) throws URISyntaxException {
         String endpointUri = generatorContext.getConnectorCatalog().buildEndpointUri(camelConnectorPrefix, endpointOptions);
 
         if (endpointUri.startsWith(camelConnectorPrefix) && !camelConnectorPrefix.equals(connectorScheme)) {

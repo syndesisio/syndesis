@@ -1,0 +1,23 @@
+---
+flows:
+- steps:
+  - kind: endpoint
+    uri: periodic-timer-connector?period=5000
+  - kind: setHeaders
+    headers:
+      key-1: val-1
+      key-2: val-2
+  - kind: endpoint
+    uri: direct:extension
+  - kind: function
+    name: com.example.MyExtension::action
+    properties:
+      key-1: val-1
+      key-2: val-2
+  - kind: extension
+    name: com.example.MyStep
+    properties:
+      key-1: val-1
+      key-2: val-2
+  - kind: endpoint
+    uri: http-get-connector?httpUri=http://localhost:8080/bye&password={{http-get-connector.password}}&username={{http-get-connector.username}}

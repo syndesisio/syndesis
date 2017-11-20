@@ -27,7 +27,8 @@ import java.util.stream.Stream;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.model.WithConfigurationProperties;
-import io.syndesis.model.connection.Action;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
@@ -68,9 +69,9 @@ public final class IntegrationSupport {
 
         integration.getSteps().stream()
             .filter(s -> s.getStepKind().equals(Endpoint.KIND))
-            .filter(s -> s.getAction().isPresent())
+            .filter(s -> s.getAction().filter(ConnectorAction.class::isInstance).isPresent())
             .filter(s -> s.getConnection().isPresent())
-            .collect(Collectors.groupingBy(s -> s.getAction().get().getCamelConnectorPrefix()))
+            .collect(Collectors.groupingBy(s -> s.getAction().map(ConnectorAction.class::cast).get().getDescriptor().getCamelConnectorPrefix()))
             .forEach(
                 (prefix, stepList) -> {
                     if (stepList.size() > 1) {
@@ -90,18 +91,19 @@ public final class IntegrationSupport {
 
         integration.getSteps().stream()
             .filter(step -> step.getStepKind().equals(Endpoint.KIND))
-            .filter(step -> step.getAction().isPresent())
+            .filter(s -> s.getAction().filter(ConnectorAction.class::isInstance).isPresent())
             .filter(step -> step.getConnection().isPresent())
             .forEach(step -> {
-                final Action action = step.getAction().get();
+                final ConnectorAction action = step.getAction().map(ConnectorAction.class::cast).get();
+                final ConnectorDescriptor descriptor = action.getDescriptor();
                 final Connection connection = step.getConnection().get();
-                final String connectorId = connection.getConnectorId().orElseGet(action::getConnectorId);
+                final String connectorId = connection.getConnectorId().orElseGet(descriptor::getConnectorId);
 
                 if (!connectorMap.containsKey(connectorId)) {
                     throw new IllegalStateException("Connector:[" + connectorId + "] not found.");
                 }
 
-                final String connectorPrefix = action.getCamelConnectorPrefix();
+                final String connectorPrefix = descriptor.getCamelConnectorPrefix();
                 final Connector connector = connectorMap.get(connectorId);
                 final Map<String, String> properties = aggregate(connector.getConfiguredProperties(), connection.getConfiguredProperties(), step.getConfiguredProperties());
 
