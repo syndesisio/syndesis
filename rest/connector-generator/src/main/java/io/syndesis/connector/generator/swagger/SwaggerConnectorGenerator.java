@@ -24,26 +24,21 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
-import io.swagger.models.Model;
-import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.auth.OAuth2Definition;
+import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.MapProperty;
-import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
-import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.core.Json;
+import io.syndesis.credential.Credentials;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ActionDescriptor;
@@ -54,10 +49,31 @@ import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 
+import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
+import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
+
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwaggerConnectorGenerator implements ConnectorGenerator {
 
     private static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
+
+    /* default */ static class PropertyData {
+        private final String defaultValue;
+
+        private final String description;
+
+        private final String displayName;
+
+        private final String[] tags;
+
+        /* default */ PropertyData(final String displayName, final String description, final String defaultValue,
+            final String... tags) {
+            this.displayName = displayName;
+            this.description = description;
+            this.defaultValue = defaultValue;
+            this.tags = tags;
+        }
+    }
 
     @Override
     public Connector generate(final ConnectorTemplate connectorTemplate, final Connector template) {
@@ -143,7 +159,12 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
             builder.putConfiguredProperty("specification", serialize(swagger));
         }
 
-        return builder.build();
+        final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
+        if (securityDefinitions == null) {
+            return builder.build();
+        }
+
+        return withSecurityConfiguration(securityDefinitions, builder);
     }
 
     /* default */ static String createActionId(final String connectorId, final String connectorGav,
@@ -246,76 +267,33 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
-    /* default */ static DataShape createShapeFromModel(final String specification, final Model schema) {
-        if (schema instanceof ArrayModel) {
-            final Property items = ((ArrayModel) schema).getItems();
+    /* default */ static ConfigurationProperty property(final PropertyData propertyData) {
+        final ConfigurationProperty.Builder property = new ConfigurationProperty.Builder()//
+            .kind("property")//
+            .displayName(propertyData.displayName)//
+            .group("security")//
+            .label("common,security")//
+            .required(true)//
+            .type("string")//
+            .javaType("java.lang.String")//
+            .componentProperty(true)//
+            .description(propertyData.description);
 
-            return createShapeFromProperty(specification, items);
-        } else if (schema instanceof ModelImpl) {
-            return createShapeFromModelImpl(schema);
+        if (propertyData.tags != null && propertyData.tags.length > 0) {
+            property.addTag(propertyData.tags);
         }
 
-        final String title = Optional.ofNullable(schema.getTitle())
-            .orElse(schema.getReference().replaceAll("^.*/", ""));
-
-        return createShapeFromReference(specification, title, schema.getReference());
-    }
-
-    /* default */ static DataShape createShapeFromModelImpl(final Model schema) {
-        try {
-            final String schemaString = Json.mapper().writeValueAsString(schema);
-
-            return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException(
-                "Unable to serialize given JSON specification in response schema: " + schema, e);
-        }
-    }
-
-    /* default */ static DataShape createShapeFromProperty(final String specification, final Property schema) {
-        if (schema instanceof MapProperty) {
-            try {
-                final String schemaString = Json.mapper().writeValueAsString(schema);
-
-                return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
-            } catch (final JsonProcessingException e) {
-                throw new IllegalStateException(
-                    "Unable to serialize given JSON specification in response schema: " + schema, e);
-            }
-        } else if (schema instanceof StringProperty) {
-            return DATA_SHAPE_NONE;
+        if (propertyData.defaultValue != null) {
+            property.defaultValue(propertyData.defaultValue);
         }
 
-        final String reference = determineSchemaReference(schema);
-
-        final String title = Optional.ofNullable(schema.getTitle()).orElse(reference.replaceAll("^.*/", ""));
-
-        return createShapeFromReference(specification, title, reference);
+        return property.build();
     }
 
-    /* default */ static DataShape createShapeFromReference(final String specification, final String title,
-        final String reference) {
-        final String jsonSchema = JsonSchemaHelper.resolveSchemaForReference(specification, title, reference);
+    /* default */ static ConfigurationProperty securityProperty(final PropertyData propertyData) {
+        final ConfigurationProperty property = property(propertyData);
 
-        return new DataShape.Builder().kind("json-schema").specification(jsonSchema).build();
-    }
-
-    /* default */ static DataShape createShapeFromResponse(final String specification, final Response response) {
-        final Property schema = response.getSchema();
-
-        return createShapeFromProperty(specification, schema);
-    }
-
-    /* default */ static String determineSchemaReference(final Property schema) {
-        if (schema instanceof RefProperty) {
-            return ((RefProperty) schema).get$ref();
-        } else if (schema instanceof ArrayProperty) {
-            final Property property = ((ArrayProperty) schema).getItems();
-
-            return determineSchemaReference(property);
-        }
-
-        throw new IllegalArgumentException("Only references to schemas are supported");
+        return new ConfigurationProperty.Builder().createFrom(property).secret(true).build();
     }
 
     /* default */ static String serialize(final Swagger swagger) {
@@ -324,6 +302,46 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize Swagger specification", e);
         }
+    }
+
+    /* default */ static Connector withSecurityConfiguration(
+        final Map<String, SecuritySchemeDefinition> securityDefinitions, final Connector.Builder builder) {
+        final Optional<OAuth2Definition> maybeOauth2Definition = securityDefinitions.values().stream()
+            .filter(d -> "oauth2".equals(d.getType())).map(OAuth2Definition.class::cast).findFirst();
+
+        if (maybeOauth2Definition.isPresent()) {
+            final OAuth2Definition oauth2Definition = maybeOauth2Definition.get();
+
+            final String tokenUrl = oauth2Definition.getTokenUrl();
+            final String authorizationUrl = oauth2Definition.getAuthorizationUrl();
+
+            builder
+                .putProperty("authenticationType",
+                    property(new PropertyData("Authentication type", "Authentication type", "oauth2",
+                        Credentials.AUTHENTICATION_TYPE_TAG)))
+                .putConfiguredProperty("authenticationType", "oauth2")
+                .putProperty("clientId",
+                    property(
+                        new PropertyData("Client ID", "OAuth Application Client ID", null, Credentials.CLIENT_ID_TAG)))
+                .putProperty("clientSecret",
+                    securityProperty(new PropertyData("Client Secret", "OAuth Application Client Secret", null,
+                        Credentials.CLIENT_SECRET_TAG)))
+                .putProperty("accessTokenUrl",
+                    property(new PropertyData("Access token URL", "URL for the OAuth access token retrieval", tokenUrl,
+                        Credentials.ACCESS_TOKEN_URL_TAG)))
+                .putConfiguredProperty("accessTokenUrl", tokenUrl)
+                .putProperty("authorizationUrl",
+                    property(new PropertyData("Authorization URL", "URL for the OAuth authorization", authorizationUrl,
+                        Credentials.AUTHORIZATION_URL_TAG)))
+                .putProperty("accessToken",
+                    securityProperty(new PropertyData("Access token", "OAuth Access Token", null)));
+
+            if (authorizationUrl != null) {
+                builder.putConfiguredProperty("authorizationUrl", authorizationUrl);
+            }
+        }
+
+        return builder.build();
     }
 
 }

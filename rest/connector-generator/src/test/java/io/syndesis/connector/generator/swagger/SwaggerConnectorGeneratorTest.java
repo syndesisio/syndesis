@@ -15,19 +15,10 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import io.swagger.models.Swagger;
-import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.core.Json;
@@ -38,6 +29,9 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
+
+import static io.syndesis.connector.generator.swagger.TestHelper.reformatJson;
+import static io.syndesis.connector.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,17 +64,41 @@ public class SwaggerConnectorGeneratorTest {
     }
 
     @Test
-    public void shouldExtractJsonSchemaFromPetstoreSwagger() throws IOException {
-        final String specification = resource("/petstore.json");
-        final Swagger swagger = new SwaggerParser().parse(specification);
+    public void shouldCreateSecurityConfigurationFromReverbSwagger() throws IOException {
+        final String specification = resource("/reverb.json");
 
-        final BodyParameter body = (BodyParameter) swagger.getPath("/pet").getPost().getParameters().get(0);
+        final ConnectorTemplate connectorTemplate = new ConnectorTemplate.Builder()//
+            .id("swagger-connector-template")//
+            .camelConnectorGAV("io.syndesis:swagger-connector:latest")//
+            .camelConnectorPrefix("swagger-operation")//
+            .putConnectorProperty("host",
+                new ConfigurationProperty.Builder()//
+                    .kind("property")//
+                    .displayName("Host")//
+                    .group("producer")//
+                    .label("producer")//
+                    .required(false)//
+                    .type("string")//
+                    .javaType("java.lang.String")//
+                    .deprecated(false)//
+                    .secret(false)//
+                    .componentProperty(true)//
+                    .description(
+                        "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration.")//
+                    .build())
+            .build();
 
-        final DataShape dataShape = SwaggerConnectorGenerator.createShapeFromModel(specification, body.getSchema());
+        final Connector template = new Connector.Builder()//
+            .id("reverb-api")//
+            .name("Reverb API")//
+            .description("Invokes Reverb API")//
+            .icon("fa-music")//
+            .putConfiguredProperty("specification", specification)//
+            .build();
 
-        final String jsonSchema = dataShape.getSpecification();
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, template);
 
-        assertThat(reformatJson(jsonSchema)).isEqualTo(reformatJson(resource("/expected-pet-schema.json")));
+        assertThat(sculpted.getProperties()).containsKeys("accessToken", "accessTokenUrl", "clientId", "clientSecret");
     }
 
     @Test
@@ -165,25 +183,6 @@ public class SwaggerConnectorGeneratorTest {
                 assertThat(reformatJson(sculptedOutputDataShape.getSpecification()))
                     .isEqualTo(reformatJson(expectedOutputDataShape.getSpecification()));
             }
-        }
-    }
-
-    /* default */ static String reformatJson(final String json) throws IOException {
-        if (json == null) {
-            return null;
-        }
-
-        final Map<?, ?> tree = Json.mapper().readValue(json, Map.class);
-
-        return Json.mapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
-            .writerWithDefaultPrettyPrinter().writeValueAsString(tree);
-    }
-
-    /* default */ static String resource(final String path) throws IOException {
-        try (final InputStream in = SwaggerConnectorGeneratorTest.class.getResourceAsStream(path);
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-
-            return reader.lines().collect(Collectors.joining("\n"));
         }
     }
 
