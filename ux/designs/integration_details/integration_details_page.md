@@ -54,12 +54,11 @@ The designs covers the following user interactions:
 
 #### Kebab menu
 
-![kebab menu](img/integration_details_page_rework_11.16_kebab.png)
+![kebab menu](img/integration_details_page_rework_11.21_kebab.png)
 
 1. Breadcrumb & toolbar level kebab, users are able to:
 
   - Stop Integration
-  - Replace Draft
   - View Logs
   - Delete Integration (all versions)
 
@@ -112,4 +111,4 @@ In this case, the published version is being “decommissioned” and the new ve
 
 ![error message](img/integration_details_page_rework_11.16_error.png)
 
-1. When an integration is not running, display an error message and change indicators accordingly. 
+1. When an integration is not running, display an error message and change indicators accordingly.
