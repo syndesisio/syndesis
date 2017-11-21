@@ -25,6 +25,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
 import io.syndesis.project.converter.visitor.EndpointStepVisitor;
 import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
+import io.syndesis.project.converter.visitor.ExtensionStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
@@ -77,5 +78,10 @@ public class ProjectGeneratorConfiguration {
     @Bean
     public StepVisitorFactory<ExpressionFilterStepVisitor> expressionFilterStepVisitorFactory() {
         return new ExpressionFilterStepVisitor.Factory();
+    }
+
+    @Bean
+    public StepVisitorFactory<ExtensionStepVisitor> extensionStepVisitorFactory() {
+        return new ExtensionStepVisitor.Factory();
     }
 }

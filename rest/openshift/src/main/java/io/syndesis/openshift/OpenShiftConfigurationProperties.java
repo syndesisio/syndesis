@@ -43,6 +43,8 @@ public class OpenShiftConfigurationProperties {
     private String namespace;
     private String imageStreamNamespace;
 
+    private String integrationDataPath = "${JAVA_DATA_DIR}/syndesis/loader";
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -117,5 +119,13 @@ public class OpenShiftConfigurationProperties {
 
     public void setMavenOptions(String mavenOptions) {
         this.mavenOptions = mavenOptions;
+    }
+
+    public String getIntegrationDataPath() {
+        return integrationDataPath;
+    }
+
+    public void setIntegrationDataPath(String integrationDataPath) {
+        this.integrationDataPath = integrationDataPath;
     }
 }

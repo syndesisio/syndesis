@@ -74,7 +74,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DefaultProjectGenerator implements ProjectGenerator {
-
     private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelpers.createObjectMapper();
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
@@ -191,11 +190,11 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 addTarEntry(tos, "src/main/resources/application.properties", generate(integration, applicationPropertiesMustache));
                 addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlow(tos, integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
+                addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
 
                 List<Extension> extensions = integration.getSteps().stream().map(Step::getExtension).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
                 if (!extensions.isEmpty() && extensionDataManager.isPresent()) {
                     addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(integration));
-                    addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
 
                     for (Extension extension: extensions) {
                         addTarEntry(
@@ -228,7 +227,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     private void addResource(TarArchiveOutputStream tos, String destination, String resource) throws IOException, URISyntaxException {
-        addTarEntry(tos, destination, Files.readAllBytes(Paths.get(getClass().getResource(resource).toURI())));
+        final URL url = getClass().getResource(resource);
+        final byte[] bytes = IOUtils.toByteArray(url);
+
+        addTarEntry(tos, destination, bytes);
     }
 
     @Override
@@ -273,13 +275,16 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         for (Step step : integration.getSteps()) {
             if (step.getStepKind().equals(io.syndesis.integration.model.steps.Extension.KIND)) {
-                step.getExtension().map(Extension::getExtensionId).map(Names::sanitize).map(id -> id + ".jar").ifPresent(extensions::add);
+                step.getExtension()
+                    .map(Extension::getExtensionId)
+                    .map(Names::sanitize)
+                    .map(id -> generatorProperties.getSyndesisExtensionPath() + "/" + id + ".jar")
+                    .ifPresent(extensions::add);
             }
         }
 
         if (!extensions.isEmpty()) {
             return new StringBuilder()
-                .append("loader.home").append('=').append(generatorProperties.getExtensionLoaderHome()).append('\n')
                 .append("loader.path").append('=').append(String.join(",", extensions)).append('\n')
                 .toString()
                     .getBytes(StandardCharsets.UTF_8);

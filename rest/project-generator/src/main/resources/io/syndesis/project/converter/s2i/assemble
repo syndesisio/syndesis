@@ -6,9 +6,11 @@
 # Load global S2I variable setup
 source /usr/local/s2i/s2i-setup
 
+mkdir -p $JAVA_DATA_DIR/syndesis/loader
+
 if [ -d $S2I_SOURCE_DIR/extensions ]; then
-    echo "copy $S2I_SOURCE_DIR/extensions to $JAVA_DATA_DIR"
-    cp -rv $S2I_SOURCE_DIR/extensions $JAVA_DATA_DIR"
+    echo "copy $S2I_SOURCE_DIR/extensions to $JAVA_DATA_DIR/syndesis/loader"
+    cp -rv $S2I_SOURCE_DIR/extensions $JAVA_DATA_DIR/syndesis/loader
 fi
 
 
