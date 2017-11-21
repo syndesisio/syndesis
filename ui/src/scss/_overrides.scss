@@ -84,6 +84,28 @@ body.cards-pf {
   }
 }
 
+// override the background that seems off with patternfly-ng's list
+.list-pf {
+  .list-pf-item {
+    background: $color-pf-white;
+    cursor: pointer;
+    &:hover {
+      background: $color-pf-blue-50;
+    }
+  }
+}
+
 .blank-slate-pf {
   background-color: inherit;
+}
+
+// override classes to help sort padding issues
+.no-bottom-margin {
+  margin-bottom: 0px;
+}
+
+// wrapper for toolbar-pf buttons where a breadcrumb is also used
+.toolbar-pf-action-right-alignment {
+  margin-top: 5px;
+  position: relative;
 }

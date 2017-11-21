@@ -17,4 +17,12 @@ export class ExtensionStore extends AbstractStore<
   protected get kind() {
     return 'Extension';
   }
+
+  public getUploadUrl() {
+    return this.service.getUploadUrl();
+  }
+
+  public importExtension(id: string) {
+    return this.service.importExtension(id);
+  }
 }

@@ -1,6 +1,7 @@
 @import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 .integrations.list {
   color: #656565;
+  /*
   /deep/ .list-pf {
     .list-pf-item {
       background: $color-pf-white;
@@ -10,6 +11,7 @@
       }
     }
   }
+  */
   .integration-icons {
     display: inline-table;
     min-width: 135px;
