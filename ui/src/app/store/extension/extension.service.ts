@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+import { Observable } from 'rxjs/Observable';
 import { Http, Response, ResponseContentType } from '@angular/http';
 import { Restangular } from 'ngx-restangular';
 
@@ -16,7 +16,7 @@ export class ExtensionService extends RESTService<Extension, Extensions> {
     return this.restangularService.one().getRestangularUrl();
   }
 
-  public importExtension(id: string) {
+  public importExtension(id: string): Observable<Response> {
     const url = this.restangularService.one(id).one('install').getRestangularUrl();
     return this.http.post(url, {});
   }

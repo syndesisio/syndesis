@@ -19,16 +19,16 @@ import { Extensions, Extension } from '../../model';
   styleUrls: ['./tech-extensions-list.component.scss']
 })
 export class TechExtensionsListComponent implements OnInit {
-  extensions: Observable<Extensions>;
-  filteredExtensions: Subject<Extensions> = new BehaviorSubject(<Extensions>{});
-  loading: Observable<boolean>;
+  extensions$: Observable<Extensions>;
+  filteredExtensions$: Subject<Extensions> = new BehaviorSubject(<Extensions>{});
+  loading$: Observable<boolean>;
   listConfig: ListConfig;
 
   constructor(private store: ExtensionStore,
               private router: Router,
               private route: ActivatedRoute) {
-    this.extensions = this.store.list;
-    this.loading = this.store.loading;
+    this.extensions$ = this.store.list;
+    this.loading$ = this.store.loading;
     this.listConfig = {
       dblClick: false,
       multiSelect: false,

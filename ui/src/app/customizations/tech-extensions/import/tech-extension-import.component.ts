@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   FileUploader,
@@ -22,11 +22,11 @@ interface FileError {
   selector: 'syndesis-tech-extentions-import',
   templateUrl: 'tech-extension-import.component.html'
 })
-export class TechExtensionImportComponent {
+export class TechExtensionImportComponent implements OnInit {
 
   uploader: FileUploader;
-  response: Extension = undefined;
-  error: FileError = undefined;
+  response: Extension;
+  error: FileError;
   importing = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
@@ -34,7 +34,41 @@ export class TechExtensionImportComponent {
   constructor(private store: ExtensionStore,
               private notificationService: NotificationService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute) { }
+
+  getGenericError() {
+    return {
+        level: 'alert alert-danger',
+        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file'
+      };
+  }
+
+  doImport() {
+    this.importing = true;
+    if (!this.response || !this.response.id) {
+      // safety net
+      this.response = undefined;
+      return;
+    }
+    this.store.importExtension(this.response.id).toPromise().then( value => {
+      this.notificationService.message(
+        NotificationType.SUCCESS,
+        'Imported!',
+        'Your technical extension has been imported',
+        false,
+        null,
+        []
+      );
+      this.router.navigate(['..', this.response.id], { relativeTo: this.route });
+    }).catch((reason: any) => {
+      this.error = {
+        level: 'alert alert-danger',
+        message: reason.userMsg || 'An unknown error has occurred'
+      };
+    });
+  }
+
+  ngOnInit() {
     this.uploader = new FileUploader({
       url: this.store.getUploadUrl(),
       disableMultipart: false,
@@ -75,37 +109,5 @@ export class TechExtensionImportComponent {
         message: resp.userMsg || 'An unknown error has occurred'
       };
     };
-  }
-
-  getGenericError() {
-    return {
-        level: 'alert alert-danger',
-        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file'
-      };
-  }
-
-  doImport() {
-    this.importing = true;
-    if (!this.response || !this.response.id) {
-      // safety net
-      this.response = undefined;
-      return;
-    }
-    this.store.importExtension(this.response.id).toPromise().then( value => {
-      this.notificationService.message(
-        NotificationType.SUCCESS,
-        'Imported!',
-        'Your technical extension has been imported',
-        false,
-        null,
-        []
-      );
-      this.router.navigate(['..', this.response.id], { relativeTo: this.route });
-    }).catch((reason: any) => {
-      this.error = {
-        level: 'alert alert-danger',
-        message: reason.userMsg || 'An unknown error has occurred'
-      };
-    });
   }
 }

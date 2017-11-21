@@ -23,8 +23,8 @@
     </div>
   </div>
 </div>
-<syndesis-loading [loading]="loading | async">
-  <div class="row">
+<syndesis-loading [loading]="loading$ | async">
+  <div class="row" *ngIf="extension$ | async; let extension">
     <div class="col-xs-12">
       <p></p>
       <div class="panel panel-default">
