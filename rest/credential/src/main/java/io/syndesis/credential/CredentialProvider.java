@@ -29,6 +29,6 @@ public interface CredentialProvider {
 
     String id();
 
-    CredentialFlowState prepare(URI baseUrl, URI returnUrl);
+    CredentialFlowState prepare(String connectorId, URI baseUrl, URI returnUrl);
 
 }

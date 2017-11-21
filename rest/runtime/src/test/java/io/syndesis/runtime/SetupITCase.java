@@ -99,7 +99,7 @@ public class SetupITCase extends BaseITCase {
                     .isInstanceOfSatisfying(OAuth1CredentialProvider.class, p -> {
                         final Connection connection = new Connection.Builder().build();
                         final CredentialFlowState flowState = new OAuth1CredentialFlowState.Builder()
-                            .accessToken(new OAuthToken("value", "secret")).build();
+                            .accessToken(new OAuthToken("value", "secret")).connectorId("connectorId").build();
                         final Connection appliedTo = p.applyTo(connection, flowState);
 
                         // test that the updated values are used

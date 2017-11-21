@@ -16,6 +16,7 @@
 package io.syndesis.credential;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,19 +32,6 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
     private final Map<String, CredentialProviderFactory> credentialProviderFactories;
 
     private final DataManager dataManager;
-
-    /* default */ static class ConnectorSettings extends SocialProperties {
-
-        ConnectorSettings(final Connector connector) {
-            setAppId(requiredProperty(connector, Credentials.CLIENT_ID_TAG));
-            setAppSecret(requiredProperty(connector, Credentials.CLIENT_SECRET_TAG));
-        }
-
-        private static String requiredProperty(final Connector connector, final String tag) {
-            return connector.propertyTaggedWith(tag).orElseThrow(
-                () -> new IllegalArgumentException("No property tagged with `" + tag + "` on connector: " + connector));
-        }
-    }
 
     CredentialProviderRegistry(final DataManager dataManager) {
         this.dataManager = dataManager;
@@ -61,9 +49,26 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
             throw new IllegalArgumentException("Unable to find connector with id: " + providerId);
         }
 
-        final SocialProperties socialProperties = new ConnectorSettings(connector);
+        final SocialProperties socialProperties;
+        final String providerToUse;
 
-        final CredentialProvider providerWithId = credentialProviderFactories.get(providerId).create(socialProperties);
+        final Optional<String> authentication = connector.propertyTaggedWith(Credentials.AUTHENTICATION_TYPE_TAG);
+        if (authentication.isPresent()) {
+            providerToUse = authentication.get();
+
+            if ("oauth2".equalsIgnoreCase(authentication.get())) {
+                socialProperties = new OAuth2ConnectorProperties(connector);
+            } else {
+                throw new IllegalArgumentException(
+                    "Unsupported authentication type: " + authentication.get() + ", for connector: " + providerId);
+            }
+        } else {
+            socialProperties = new ConnectorSettings(connector);
+            providerToUse = providerId;
+        }
+
+        final CredentialProvider providerWithId = credentialProviderFactories.get(providerToUse)
+            .create(socialProperties);
 
         if (providerWithId == null) {
             throw new IllegalArgumentException("Unable to locate credential provider with id: " + providerId);

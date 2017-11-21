@@ -36,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.core.SuppressFBWarnings;
+import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 
@@ -118,8 +119,8 @@ public class OAuthAppHandler {
         app.id = connector.getId().get();
         app.name = connector.getName();
         app.icon = connector.getIcon();
-        app.clientId = connector.propertyTaggedWith("oauth-client-id").orElse(null);
-        app.clientSecret = connector.propertyTaggedWith("oauth-client-secret").orElse(null);
+        app.clientId = connector.propertyTaggedWith(Credentials.CLIENT_ID_TAG).orElse(null);
+        app.clientSecret = connector.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG).orElse(null);
         return app;
     }
 
@@ -133,8 +134,8 @@ public class OAuthAppHandler {
         }
 
         final Connector updated = new Connector.Builder().createFrom(connector)
-            .putOrRemoveConfiguredPropertyTaggedWith("oauth-client-id", app.clientId)
-            .putOrRemoveConfiguredPropertyTaggedWith("oauth-client-secret", app.clientSecret)
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_ID_TAG, app.clientId)
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.CLIENT_SECRET_TAG, app.clientSecret)
             .build();
 
         dataMgr.update(updated);
@@ -142,7 +143,7 @@ public class OAuthAppHandler {
 
     private static boolean isOauthConnector(Connector connector) {
         return connector.getProperties().values().stream().anyMatch(x -> {
-                return x.getTags().contains("oauth-client-id");
+                return x.getTags().contains(Credentials.CLIENT_ID_TAG);
             }
         );
     }

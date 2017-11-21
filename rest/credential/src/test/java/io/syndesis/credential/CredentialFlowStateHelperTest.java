@@ -77,8 +77,10 @@ public class CredentialFlowStateHelperTest {
 
     @Test
     public void shouldRestoreCookiesToStreamOfState() {
-        final CredentialFlowState expected1 = new OAuth2CredentialFlowState.Builder().key("key1").build();
-        final CredentialFlowState expected2 = new OAuth2CredentialFlowState.Builder().key("key2").build();
+        final CredentialFlowState expected1 = new OAuth2CredentialFlowState.Builder().connectorId("connectorId")
+            .key("key1").build();
+        final CredentialFlowState expected2 = new OAuth2CredentialFlowState.Builder().connectorId("connectorId")
+            .key("key2").build();
 
         final Cookie cookie1 = new Cookie(CredentialFlowState.CREDENTIAL_PREFIX + "key1", "anyValue");
         final Cookie cookie2 = new Cookie(CredentialFlowState.CREDENTIAL_PREFIX + "key2", "anyValue");
@@ -91,7 +93,7 @@ public class CredentialFlowStateHelperTest {
             assertThat(cookies).allSatisfy(cookie -> assertThat(cookie.getValue()).isEqualTo("anyValue"));
 
             return cookies.stream()
-                .map(cookie -> new OAuth2CredentialFlowState.Builder()
+                .map(cookie -> new OAuth2CredentialFlowState.Builder().connectorId("connectorId")
                     .key(cookie.getName().substring(CredentialFlowState.CREDENTIAL_PREFIX.length())).build())
                 .collect(Collectors.toSet());
         }, request);

@@ -56,7 +56,7 @@ public class TestCredentialProviderFactory implements CredentialProviderFactory 
         }
 
         @Override
-        public CredentialFlowState prepare(final URI baseUrl, final URI returnUrl) {
+        public CredentialFlowState prepare(final String connectorId, final URI baseUrl, final URI returnUrl) {
             return null;
         }
 
