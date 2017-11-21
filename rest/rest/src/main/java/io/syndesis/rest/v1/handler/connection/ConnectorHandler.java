@@ -15,24 +15,10 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.credential.Credentials;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.inspector.Inspectors;
-import io.syndesis.model.Kind;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.filter.FilterOptions;
-import io.syndesis.model.filter.Op;
-import io.syndesis.rest.v1.handler.BaseHandler;
-import io.syndesis.rest.v1.operations.Getter;
-import io.syndesis.rest.v1.operations.Lister;
-import io.syndesis.rest.v1.state.ClientSideState;
-import io.syndesis.verifier.Verifier;
-import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.Map;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -41,38 +27,110 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
-import java.util.Map;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.credential.Credentials;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.inspector.Inspectors;
+import io.syndesis.model.Kind;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.filter.FilterOptions;
+import io.syndesis.model.filter.Op;
+import io.syndesis.rest.v1.handler.BaseHandler;
+import io.syndesis.rest.v1.operations.Getter;
+import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.state.ClientSideState;
+import io.syndesis.verifier.Verifier;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 @Path("/connectors")
 @Api(value = "connectors")
 @Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
-    private final Verifier verifier;
+    private final ApplicationContext applicationContext;
     private final Credentials credentials;
+    private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
     private final ClientSideState state;
-    private final EncryptionComponent encryptionComponent;
+    private final Verifier verifier;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials,
-                            final Inspectors inspectors, final ClientSideState state, EncryptionComponent encryptionComponent) {
+        final Inspectors inspectors, final ClientSideState state, final EncryptionComponent encryptionComponent,
+        final ApplicationContext applicationContext) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
         this.inspectors = inspectors;
         this.state = state;
         this.encryptionComponent = encryptionComponent;
+        this.applicationContext = applicationContext;
     }
 
-    @Override
-    public Kind resourceKind() {
-        return Kind.Connector;
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
+    @Path("/{connector-template-id}")
+    public Connector create(@NotNull @PathParam("connector-template-id") final String connectorTemplateId,
+        final Connector template) {
+        final ConnectorTemplate connectorTemplate = getDataManager().fetch(ConnectorTemplate.class,
+            connectorTemplateId);
+
+        if (connectorTemplate == null) {
+            throw new EntityNotFoundException("Connector template: " + connectorTemplateId);
+        }
+
+        final ConnectorGenerator connectorGenerator = applicationContext.getBean(connectorTemplateId,
+            ConnectorGenerator.class);
+
+        final Connector connector = connectorGenerator.generate(connectorTemplate, template);
+
+        return getDataManager().create(connector);
+    }
+
+    @Path("/{id}/credentials")
+    public ConnectorCredentialHandler credentials(@NotNull final @PathParam("id") String connectorId) {
+        return new ConnectorCredentialHandler(credentials, state, connectorId);
     }
 
     @Path("/{id}/actions")
     public ConnectorActionHandler getActions(@PathParam("id") final String connectorId) {
         return new ConnectorActionHandler(getDataManager(), connectorId);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
+    public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) final String connectorId,
+        @PathParam("actionId") @ApiParam(required = true) final String actionId) {
+        final FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
+        final Connector connector = getDataManager().fetch(Connector.class, connectorId);
+
+        if (connector == null) {
+            return builder.build();
+        }
+
+        connector.actionById(actionId).filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast)
+            .ifPresent(action -> {
+                action.getOutputDataShape().ifPresent(dataShape -> {
+                    final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(),
+                        dataShape.getSpecification(), dataShape.getExemplar());
+                    builder.addAllPaths(paths);
+                });
+            });
+        return builder.build();
+    }
+
+    @Override
+    public Kind resourceKind() {
+        return Kind.Connector;
     }
 
     @POST
@@ -82,35 +140,5 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId,
         final Map<String, String> props) {
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
-    }
-
-    @Path("/{id}/credentials")
-    public ConnectorCredentialHandler credentials(@NotNull final @PathParam("id") String connectorId) {
-        return new ConnectorCredentialHandler(credentials, state, connectorId);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
-    public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) String connectorId,
-        @PathParam("actionId") @ApiParam(required = true) String actionId) {
-        FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
-        Connector connector = getDataManager().fetch(Connector.class, connectorId);
-
-        if (connector == null) {
-            return builder.build();
-        }
-
-        connector.actionById(actionId)
-            .filter(ConnectorAction.class::isInstance)
-            .map(ConnectorAction.class::cast)
-            .ifPresent(action -> {
-                action.getOutputDataShape().ifPresent(dataShape -> {
-                    final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
-                    builder.addAllPaths(paths);
-                }
-            );
-        });
-        return builder.build();
     }
 }
