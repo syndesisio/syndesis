@@ -26,6 +26,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import org.immutables.value.Value;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = ImmutableOAuth1CredentialFlowState.class, name = "OAUTH1"),
     @JsonSubTypes.Type(value = ImmutableOAuth2CredentialFlowState.class, name = "OAUTH2")})
@@ -64,6 +66,11 @@ public interface CredentialFlowState {
     }
 
     Builder builder();
+
+    @Value.Default
+    default String getConnectorId() {
+        return getProviderId();
+    }
 
     String getKey();
 

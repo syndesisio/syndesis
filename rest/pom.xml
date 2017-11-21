@@ -114,7 +114,7 @@
     <spring-cloud-sleuth.version>1.2.5.RELEASE</spring-cloud-sleuth.version>
     <spring-security.version>4.2.3.RELEASE</spring-security.version>
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
-    <swagger.version>1.5.12</swagger.version>
+    <swagger.version>1.5.16</swagger.version>
     <undertow.version>1.4.21.Final</undertow.version>
     <atlasmap.version>1.31.1</atlasmap.version>
     <camel-atlasmap.version>1.31.1</camel-atlasmap.version>
@@ -144,26 +144,27 @@
   </properties>
 
   <modules>
+	<module>archetypes</module>
     <module>connector-catalog</module>
+    <module>connector-generator</module>
     <module>controllers</module>
     <module>core</module>
     <module>credential</module>
     <module>dao</module>
     <module>filestore</module>
+    <module>inspector</module>
     <module>jsondb</module>
     <module>model</module>
     <module>model2</module>
     <module>openshift</module>
     <module>project-generator</module>
     <module>rest</module>
-    <module>syndesis-annotation-processor</module>
-    <module>syndesis-maven-plugin</module>
-    <module>syndesis-build-helper-maven-plugin</module>
     <module>runtime</module>
-    <module>verifier</module>
-    <module>inspector</module>
+    <module>syndesis-annotation-processor</module>
+    <module>syndesis-build-helper-maven-plugin</module>
     <module>syndesis-builder-image-generator</module>
-    <module>archetypes</module>
+    <module>syndesis-maven-plugin</module>
+    <module>verifier</module>
   </modules>
 
   <dependencyManagement>
@@ -349,6 +350,18 @@
       </dependency>
 
       <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>connector-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration-runtime</groupId>
+        <artifactId>model</artifactId>
+        <version>${syndesis-integration-runtime.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>javax.ws.rs</groupId>
         <artifactId>javax.ws.rs-api</artifactId>
         <version>2.0.1</version>
@@ -525,6 +538,12 @@
       </dependency>
 
       <dependency>
+        <groupId>me.andrz.jackson</groupId>
+        <artifactId>jackson-json-reference-core</artifactId>
+        <version>0.2.1</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.github.mikegirard</groupId>
         <artifactId>spring-social-salesforce</artifactId>
         <version>1.3.0</version>
@@ -579,6 +598,12 @@
       </dependency>
 
       <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>23.3-jre</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>${dep.findbugs.version}</version>
@@ -588,6 +613,12 @@
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>findbugs-annotations</artifactId>
         <version>${dep.findbugs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.errorprone</groupId>
+        <artifactId>error_prone_annotations</artifactId>
+        <version>2.0.19</version>
       </dependency>
 
       <dependency>
@@ -618,6 +649,39 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-compress</artifactId>
         <version>1.14</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-parser</artifactId>
+        <version>1.0.32</version>
+        <exclusions>
+          <!--
+          Trying to keep transitive dependencies only to required ones.
+          -->
+          <exclusion>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-ext</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-models</artifactId>
+        <version>${swagger.version}</version>
       </dependency>
 
       <!-- Testing Dependencies -->

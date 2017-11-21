@@ -25,9 +25,23 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Credentials {
 
+    public static final String ACCESS_TOKEN_TAG = "oauth-access-token";
+
+    public static final String ACCESS_TOKEN_URL_TAG = "oauth-access-token-url";
+
+    public static final String AUTHENTICATION_TYPE_TAG = "authentication-type";
+
+    public static final String AUTHENTICATION_URL_TAG = "oauth-authentication-url";
+
+    public static final String AUTHORIZATION_URL_TAG = "oauth-authorization-url";
+
+    public static final String AUTHORIZE_USING_PARAMETERS_TAG = "oauth-authorize-using-parameters";
+
     public static final String CLIENT_ID_TAG = "oauth-client-id";
 
     public static final String CLIENT_SECRET_TAG = "oauth-client-secret";
+
+    public static final String TOKEN_STRATEGY_TAG = "oauth-token-strategy";
 
     private final CredentialProviderLocator credentialProviderLocator;
 
@@ -40,7 +54,7 @@ public final class Credentials {
 
         final CredentialProvider credentialProvider = providerFor(providerId);
 
-        final CredentialFlowState flowState = credentialProvider.prepare(baseUrl, returnUrl);
+        final CredentialFlowState flowState = credentialProvider.prepare(providerId, baseUrl, returnUrl);
 
         return new AcquisitionFlow.Builder().type(flowState.type()).redirectUrl(flowState.getRedirectUrl())
             .state(flowState).build();
@@ -74,9 +88,9 @@ public final class Credentials {
     }
 
     /* default */ CredentialProvider providerFrom(final CredentialFlowState flowState) {
-        final String providerId = flowState.getProviderId();
+        final String connectorId = flowState.getConnectorId();
 
-        return providerFor(providerId);
+        return providerFor(connectorId);
     }
 
 }

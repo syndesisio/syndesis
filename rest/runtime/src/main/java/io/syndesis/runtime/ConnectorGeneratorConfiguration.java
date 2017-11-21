@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.credential;
+package io.syndesis.runtime;
 
-import java.net.URI;
+import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.swagger.SwaggerConnectorGenerator;
 
-import io.syndesis.model.connection.Connection;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-public interface CredentialProvider {
+@Configuration
+public class ConnectorGeneratorConfiguration {
 
-    AcquisitionMethod acquisitionMethod();
-
-    Connection applyTo(Connection connection, CredentialFlowState flowState);
-
-    CredentialFlowState finish(CredentialFlowState flowState, URI baseUrl);
-
-    String id();
-
-    CredentialFlowState prepare(String connectorId, URI baseUrl, URI returnUrl);
-
+    @Bean("swagger-connector-template")
+    public ConnectorGenerator swaggerConnectorGenerator() {
+        return new SwaggerConnectorGenerator();
+    }
 }

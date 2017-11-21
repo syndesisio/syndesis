@@ -512,6 +512,11 @@
       <artifactId>credential</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>connector-generator</artifactId>
+    </dependency>
+
     <!-- Credentials to support -->
     <dependency>
       <groupId>org.springframework.social</groupId>

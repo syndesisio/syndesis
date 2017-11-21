@@ -19,14 +19,13 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.server.mock.OpenShiftServer;
 import io.syndesis.model.user.User;
 import io.syndesis.openshift.OpenShiftServiceImpl;
+
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-
-import static org.junit.Assert.*;
 
 public class UserHandlerTest {
 

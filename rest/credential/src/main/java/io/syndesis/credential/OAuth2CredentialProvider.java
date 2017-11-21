@@ -68,7 +68,7 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
     }
 
     @Override
-    public CredentialFlowState prepare(final URI baseUrl, final URI returnUrl) {
+    public CredentialFlowState prepare(final String connectorId, final URI baseUrl, final URI returnUrl) {
         final OAuth2CredentialFlowState.Builder flowState = new OAuth2CredentialFlowState.Builder().returnUrl(returnUrl)
             .providerId(id);
 
@@ -88,6 +88,8 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
 
         final String redirectUrl = oauthOperations.buildAuthorizeUrl(parameters);
         flowState.redirectUrl(redirectUrl);
+
+        flowState.connectorId(connectorId);
 
         return flowState.build();
     }

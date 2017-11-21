@@ -1,0 +1,78 @@
+{
+  "xml": {
+    "name": "Pet"
+  }, 
+  "$schema": "http://json-schema.org/schema#",
+  "title": "Pet",
+  "required": [
+    "name", 
+    "photoUrls"
+  ], 
+  "type": "object", 
+  "properties": {
+    "category": {
+      "xml": {
+        "name": "Category"
+      }, 
+      "type": "object", 
+      "properties": {
+        "id": {
+          "type": "integer", 
+          "format": "int64"
+        }, 
+        "name": {
+          "type": "string"
+        }
+      }
+    }, 
+    "status": {
+      "enum": [
+        "available", 
+        "pending", 
+        "sold"
+      ], 
+      "type": "string", 
+      "description": "pet status in the store"
+    }, 
+    "name": {
+      "type": "string", 
+      "example": "doggie"
+    }, 
+    "tags": {
+      "xml": {
+        "wrapped": true, 
+        "name": "tag"
+      }, 
+      "items": {
+        "xml": {
+          "name": "Tag"
+        }, 
+        "type": "object", 
+        "properties": {
+          "id": {
+            "type": "integer", 
+            "format": "int64"
+          }, 
+          "name": {
+            "type": "string"
+          }
+        }
+      }, 
+      "type": "array"
+    }, 
+    "photoUrls": {
+      "xml": {
+        "wrapped": true, 
+        "name": "photoUrl"
+      }, 
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array"
+    }, 
+    "id": {
+      "type": "integer", 
+      "format": "int64"
+    }
+  }
+}

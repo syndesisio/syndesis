@@ -1,0 +1,416 @@
+{
+  "swagger": "2.0",
+  "host": "www.concursolutions.com",
+  "basePath": "/api/v3.0",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json",
+    "application/xml"
+  ],
+  "consumes": [
+    "application/json",
+    "application/xml"
+  ],
+  "info": {
+    "title": "Quick Expenses",
+    "description": "The Quick Expense API provides methods to create basic expenses without requiring any client or user specific Expense configuration data. These expenses appear in the Available Expenses area in Concur, for users to add to expense reports.",
+    "version": "3.0"
+  },
+  "tags": [
+    {
+      "name": "Resources",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/expense/quickexpenses": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Get all quick expenses",
+        "description": "Returns all quick expenses owned by the user.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The start of the page offset.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of records to return (default 25).",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/QuickExpenseCollection"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Create a new quick expense",
+        "description": "Creates a new quick expense.",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "body",
+            "description": "The quick expense object to be created.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuickExpensePost"
+            }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreateResponse"
+            }
+          }
+        }
+      }
+    },
+    "/expense/quickexpenses/{id}": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Get a single quick expense by ID",
+        "description": "Returns a quick expenses by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the quick expense.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/QuickExpenseGet"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Update a quick expense by ID",
+        "description": "Updates the QuickExpense specified in the URL.  Only the fields provided in the supplied object will be updated, missing fields will not be altered.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the quick expense.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "Partial or complete QuickExpense object to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QuickExpensePut"
+            }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Delete a quick expense by ID",
+        "description": "Deletes the specified quick expense.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the quick expense to be deleted.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateResponse": {
+      "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "URI": {
+          "type": "string"
+        }
+      }
+    },
+    "Decimal": {
+      "properties": {}
+    },
+    "Nullable`1": {
+      "properties": {
+        "HasValue": {
+          "type": "boolean"
+        },
+        "Value": {
+          "$ref": "#/definitions/Decimal"
+        }
+      }
+    },
+    "QuickExpenseCollection": {
+      "properties": {
+        "Items": {
+          "$ref": "#/definitions/QuickExpenseGet"
+        },
+        "NextPage": {
+          "type": "string",
+          "description": "The URI of the next page of results, if any."
+        }
+      }
+    },
+    "QuickExpenseGet": {
+      "properties": {
+        "Comment": {
+          "type": "string",
+          "description": "A comment that describes the expense. Max Length: 2000"
+        },
+        "CurrencyCode": {
+          "type": "string",
+          "description": "The <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_4217\">3-letter ISO 4217 currency code</a> for the expense transaction amount. Example: USD"
+        },
+        "ExpenseTypeCode": {
+          "type": "string",
+          "description": "The code for the expense type in the company's expense management system. Currently supports Concur Expense codes. The Expense Type Code is returned in the ExpKey element of the Get Expense Group Configuration function response."
+        },
+        "ExpenseTypeName": {
+          "type": "string",
+          "description": "The name of the expense type associated with the quick expense."
+        },
+        "ID": {
+          "type": "string",
+          "description": "The unique identifier of the resource."
+        },
+        "LocationName": {
+          "type": "string",
+          "description": "The name of the location where the expense was incurred."
+        },
+        "OwnerLoginID": {
+          "type": "string",
+          "description": "The Concur login ID for the expense owner. Useful for system to system integration when there are expenses for multiple users."
+        },
+        "OwnerName": {
+          "type": "string",
+          "description": "The first and last name for the expense owner. Useful for system to system integration when there are expenses for multiple users."
+        },
+        "PaymentTypeCode": {
+          "type": "string",
+          "description": "This element specifies the method of payment for the expense. Format: CASHX = Cash, CPAID = Company Paid, or PENDC = Pending Card Transaction (default)"
+        },
+        "ReceiptImageID": {
+          "type": "string",
+          "description": "The ID of the receipt image associated with this quick expense, if any."
+        },
+        "TransactionAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the expense in the original currency, with up to three decimal places. Example: 123.654"
+        },
+        "TransactionDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the expense was incurred. Format: YYYY-MM-DD"
+        },
+        "URI": {
+          "type": "string",
+          "description": "The URI to the resource."
+        },
+        "VendorDescription": {
+          "type": "string",
+          "description": "The descriptive text for the vendor for the quick expense. This often matches the Merchant Name found in a credit card transaction.  Max Length: 64"
+        }
+      }
+    },
+    "QuickExpensePost": {
+      "properties": {
+        "Comment": {
+          "type": "string",
+          "description": "A comment that describes the expense. Max Length: 2000"
+        },
+        "CurrencyCode": {
+          "type": "string",
+          "description": "The <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_4217\">3-letter ISO 4217 currency code</a> for the expense transaction amount. Example: USD"
+        },
+        "ExpenseTypeCode": {
+          "type": "string",
+          "description": "The code for the expense type in the company's expense management system. Currently supports Concur Expense codes. The Expense Type Code is returned in the ExpKey element of the <a target=\"_blank\" href=\"https://developer.concur.com/node/473\">Get Expense Group Configuration</a> function response."
+        },
+        "LocationCity": {
+          "type": "string",
+          "description": "The city where the expense was incurred. This is used to determine the Location ID when the quick expense is converted into an expense entry.<br/><br/>If you provide both the LocationCity and LocationCountry values, Concur will try to match them with the company's list of locations. If they are matched successfully, the full location details including country will be saved with the expense.<br/><br/>If a LocationCity is provided, the LocationCountry and LocationSubdivision must be provided. If a country does not have subdivisions, the LocationSubdivision field may be omitted."
+        },
+        "LocationCountry": {
+          "type": "string",
+          "description": "The country where the expense was incurred. This is used to determine the Location ID when the quick expense is converted into an expense entry. Format: 2-letter <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2\">ISO 3166-1</a> country code."
+        },
+        "LocationSubdivision": {
+          "type": "string",
+          "description": "The state, province, or other country subdivision where the expense was incurred. This is used to determine the Location ID when the quick expense is converted into an expense entry. Format: <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_3166-2:2007-04-17#I-8\">ISO 3166-2:2007</a> country subdivision."
+        },
+        "PaymentTypeCode": {
+          "type": "string",
+          "description": "This element specifies the method of payment for the expense. Format: CASHX = Cash, CPAID = Company Paid, or PENDC = Pending Card Transaction (default)"
+        },
+        "ReceiptImageID": {
+          "type": "string",
+          "description": "The unique identifier for the image. The ReceiptImageID is returned in the ID element of the Post Receipt Image API response."
+        },
+        "SpendCategoryCode": {
+          "type": "string",
+          "description": "The spend category code for the quick expense. The available spend category codes are consistent across all Concur products. The values are used in Concur reporting.  Format: One of the Code values in the Spend Category Code List.  Developers can view the configured Spend Category/Expense Type mappings by using the Get Expense Group Configuration function."
+        },
+        "TransactionAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the expense in the original currency, with up to three decimal places. Example: 123.654"
+        },
+        "TransactionDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the expense was incurred. Format: YYYY-MM-DD"
+        },
+        "VendorDescription": {
+          "type": "string",
+          "description": "The descriptive text for the vendor for the quick expense. This often matches the Merchant Name found in a credit card transaction.  Max Length: 64"
+        }
+      }
+    },
+    "QuickExpensePut": {
+      "properties": {
+        "Comment": {
+          "type": "string",
+          "description": "A comment that describes the expense. Max Length: 2000"
+        },
+        "CurrencyCode": {
+          "type": "string",
+          "description": "The <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_4217\">3-letter ISO 4217 currency code</a> for the expense transaction amount. Example: USD"
+        },
+        "ExpenseTypeCode": {
+          "type": "string",
+          "description": "The code for the expense type in the company's expense management system. Currently supports Concur Expense codes. The Expense Type Code is returned in the ExpKey element of the <a target=\"_blank\" href=\"https://developer.concur.com/node/473\">Get Expense Group Configuration</a> function response."
+        },
+        "LocationCity": {
+          "type": "string",
+          "description": "The city where the expense was incurred. This is used to determine the Location ID when the quick expense is converted into an expense entry.<br/><br/>If you provide both the LocationCity and LocationCountry values, Concur will try to match them with the company's list of locations. If they are matched successfully, the full location details including country will be saved with the expense.<br/><br/>If a LocationCity is provided, the LocationCountry and LocationSubdivision must be provided. If a country does not have subdivisions, the LocationSubdivision field may be omitted."
+        },
+        "LocationCountry": {
+          "type": "string",
+          "description": "The country where the expense was incurred. This is used to determine the Location ID when the quick expense is converted into an expense entry. Format: 2-letter <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2\">ISO 3166-1</a> country code."
+        },
+        "LocationSubdivision": {
+          "type": "string",
+          "description": "The state, province, or other country subdivision where the expense was incurred. This is used to determine the Location ID when the quick expense is converted into an expense entry. Format: <a target=\"_blank\" href=\"http://en.wikipedia.org/wiki/ISO_3166-2:2007-04-17#I-8\">ISO 3166-2:2007</a> country subdivision."
+        },
+        "PaymentTypeCode": {
+          "type": "string",
+          "description": "This element specifies the method of payment for the expense. Format: CASHX = Cash, CPAID = Company Paid, or PENDC = Pending Card Transaction (default)"
+        },
+        "ReceiptImageID": {
+          "type": "string",
+          "description": "The unique identifier for the image. The ReceiptImageID is returned in the ID element of the Post Receipt Image API response."
+        },
+        "SpendCategoryCode": {
+          "type": "string",
+          "description": "The spend category code for the quick expense. The available spend category codes are consistent across all Concur products. The values are used in Concur reporting.  Format: One of the Code values in the <a target=\"_blank\" href=\"https://developer.concur.com/node/557\">Spend Category Code List.  Developers can view the configured Spend Category/Expense Type mappings by using the <a target=\"_blank\" href=\"https://developer.concur.com/node/473\">Get Expense Group Configuration</a> function.</a>"
+        },
+        "TransactionAmount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the expense in the original currency, with up to three decimal places. Example: 123.654"
+        },
+        "TransactionDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date the expense was incurred. Format: YYYY-MM-DD"
+        },
+        "VendorDescription": {
+          "type": "string",
+          "description": "The descriptive text for the vendor for the quick expense. This often matches the Merchant Name found in a credit card transaction.  Max Length: 64"
+        }
+      }
+    },
+    "Void": {
+      "properties": {}
+    }
+  }
+}

@@ -112,7 +112,7 @@ public class CredentialHandler {
         final CredentialFlowState flowState = maybeUpdatedFlowState.get();
 
         final URI successfullReturnUrl = addFragmentTo(flowState.getReturnUrl(),
-            success(flowState.getProviderId(), "Successfully authorized Syndesis's access"));
+            success(flowState.getConnectorId(), "Successfully authorized Syndesis's access"));
 
         return Response.temporaryRedirect(successfullReturnUrl)
             .cookie(state.persist(flowState.persistenceKey(), "/", flowState)).build();

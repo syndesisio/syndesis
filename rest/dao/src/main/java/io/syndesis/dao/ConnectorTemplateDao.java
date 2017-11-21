@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.credential;
+package io.syndesis.dao;
 
-import java.net.URI;
+import io.syndesis.dao.manager.DataAccessObject;
+import io.syndesis.model.connection.ConnectorTemplate;
 
-import io.syndesis.model.connection.Connection;
+public interface ConnectorTemplateDao extends DataAccessObject<ConnectorTemplate> {
 
-public interface CredentialProvider {
-
-    AcquisitionMethod acquisitionMethod();
-
-    Connection applyTo(Connection connection, CredentialFlowState flowState);
-
-    CredentialFlowState finish(CredentialFlowState flowState, URI baseUrl);
-
-    String id();
-
-    CredentialFlowState prepare(String connectorId, URI baseUrl, URI returnUrl);
+    @Override
+    default Class<ConnectorTemplate> getType() {
+        return ConnectorTemplate.class;
+    }
 
 }
