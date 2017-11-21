@@ -20,9 +20,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>9</version>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -48,46 +48,6 @@
          of Java 1.8.0_121 (1.2.3 is running 1.8.0_111) -->
     <java-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image>
   </properties>
-
-  <inceptionYear>2017</inceptionYear>
-
-  <organization>
-    <name>Red Hat</name>
-    <url>http://redhat.com</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <!-- including A developer as it's required by the maven poms going into
-    central -->
-  <developers>
-    <developer>
-      <id>syndesis</id>
-      <name>Syndesis Development Team</name>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git:git@github.com:syndesisio/syndesis-verifier.git</connection>
-    <developerConnection>scm:git:git@github.com:syndesisio/syndesis-verifier.git
-    </developerConnection>
-    <url>http://github.com/syndesisio/syndesis-verifier/</url>
-    <tag>${project.version}</tag>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
@@ -213,6 +173,64 @@
   </dependencies>
 
   <build>
+
+    <pluginManagement>
+      <plugins>
+
+        <!-- Disable some of these checks until we get the code base in basepom shape -->
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.hubspot.maven.plugins</groupId>
+          <artifactId>dependency-management-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.ning.maven.plugins</groupId>
+          <artifactId>maven-dependency-versions-check-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.basepom.maven</groupId>
+          <artifactId>duplicate-finder-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
     <plugins>
 
       <plugin>
@@ -240,25 +258,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>${license-maven-plugin.version}</version>
-        <configuration>
-          <aggregate>true</aggregate>
-          <header>header.txt</header>
-          <properties>
-            <owner>Red Hat, Inc.</owner>
-          </properties>
-          <excludes>
-            <exclude>.editorconfig</exclude>
-            <exclude>LICENSE.txt</exclude>
-            <exclude>**/*.adoc</exclude>
-            <exclude>Jenkinsfile*</exclude>
-          </excludes>
-        </configuration>
       </plugin>
 
       <plugin>

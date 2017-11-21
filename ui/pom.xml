@@ -32,44 +32,6 @@
   <name>Syndesis UI</name>
   <description>syndesis :: ${project.artifactId}</description>
 
-  <url>https://syndesis.io/</url>
-  <scm>
-    <connection>scm:git:https://github.com/syndesisio/syndesis-ui.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis-ui.git</developerConnection>
-    <url>http://github.com/syndesisio/syndesis-ui</url>
-  </scm>
-  <organization>
-    <name>JBoss by Red Hat</name>
-    <url>http://jboss.org</url>
-  </organization>
-  <issueManagement>
-    <system>github</system>
-    <url>https://github.com/syndesisio/syndesis.io/issues</url>
-  </issueManagement>
-  <developers>
-    <developer>
-      <name>Syndesis committers</name>
-    </developer>
-  </developers>
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <distributionManagement>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-      <uniqueVersion>false</uniqueVersion>
-    </repository>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <properties>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
     <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
