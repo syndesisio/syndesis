@@ -15,7 +15,7 @@
  */
 package io.syndesis.runtime;
 
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.model.integration.Integration;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

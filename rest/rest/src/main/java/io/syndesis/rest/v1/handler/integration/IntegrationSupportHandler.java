@@ -17,12 +17,15 @@ package io.syndesis.rest.v1.handler.integration;
 
 import io.swagger.annotations.Api;
 import io.syndesis.core.Json;
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.ModelExport;
+import io.syndesis.model.Schema;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.project.converter.ProjectGenerator;
+import io.syndesis.rest.v1.handler.exception.RestErrorResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -66,7 +69,7 @@ public class IntegrationSupportHandler {
 
     @POST
     @Path("/import")
-    public Response importIntegration(InputStream is) {
+    public Response importIntegration(InputStream is) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(is)) {
             int imported = 0;
             while (true) {
@@ -75,12 +78,12 @@ public class IntegrationSupportHandler {
                     break;
                 }
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    ModelData[] models = Json.mapper().readValue(new FilterInputStream(zis) {
+                    ModelExport models = Json.mapper().readValue(new FilterInputStream(zis) {
                         @Override
                         public void close() throws IOException {
                             // We want to avoid closing zis
                         }
-                    }, ModelData[].class);
+                    }, ModelExport.class);
 
                     imported += importModels(models);
                 }
@@ -88,20 +91,26 @@ public class IntegrationSupportHandler {
             }
             if (imported==0) {
                 LOG.info("Could not import integration: No integration data model found.");
-                return Response.status(Response.Status.BAD_REQUEST).build();
+                return RestErrorResponses.badRequest(
+                    "Does not look like an integration export.",
+                    "No integration data model found");
             }
             return Response.status(Response.Status.NO_CONTENT).build();
         } catch (IOException e) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Could not import integration: " + e, e);
             }
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return RestErrorResponses.badRequest(e);
         }
     }
 
-    public int importModels(ModelData... models) throws IOException {
+    public int importModels(ModelExport export) throws IOException {
+
+        validateForImport(export);
+
+        // Now do the actual import.
         int count = 0;
-        for (ModelData model : models) {
+        for (ModelData model : export.models()) {
             switch (model.getKind()) {
                 case Integration:
 
@@ -134,6 +143,7 @@ public class IntegrationSupportHandler {
                     break;
 
                 default:
+
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Cannot import unsupported model kind: " + model.getKind());
                     }
@@ -142,6 +152,25 @@ public class IntegrationSupportHandler {
             }
         }
         return count;
+    }
+
+    public void validateForImport(ModelExport export) throws IOException {
+        // First do some validation of the models..
+        if (!Schema.VERSION.equals(export.schemaVersion())) {
+            throw new IOException("Cannot import an export at schema version level: " + export.schemaVersion());
+        }
+
+        for (ModelData model : export.models()) {
+            switch (model.getKind()) {
+                case Integration:
+                case Connection:
+                case Connector:
+                    break;
+                default:
+                    throw new IOException("Cannot import unsupported model kind: " + model.getKind());
+
+            }
+        }
     }
 
 

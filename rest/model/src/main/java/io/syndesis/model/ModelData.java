@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao.init;
-
-import java.io.IOException;
+package io.syndesis.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import io.syndesis.core.Json;
-import io.syndesis.model.Kind;
-import io.syndesis.model.ToJson;
-import io.syndesis.model.WithId;
+
+import java.io.IOException;
 
 /**
  * Used to read the deployment.json file from the client GUI project

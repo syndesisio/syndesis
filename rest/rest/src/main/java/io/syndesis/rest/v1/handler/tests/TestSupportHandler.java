@@ -28,7 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ListResult;

@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import io.atlasmap.maven.GenerateInspectionsMojo;
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.DataShapeKinds;

@@ -19,10 +19,13 @@
   </ng-template>
 </syndesis-list-toolbar>
 
-<syndesis-loading [loading]="loading | async">
-  <syndesis-integrations-list [complete]="true"
-                              [integrations]="filteredIntegrations | async"></syndesis-integrations-list>
-</syndesis-loading>
+<!-- Support importing by DND right into the integraiton list area. Very google drive like -->
+<div ng2FileDrop class="max-height" [uploader]="uploader">
+  <syndesis-loading [loading]="loading | async">
+    <syndesis-integrations-list [complete]="true"
+                                [integrations]="filteredIntegrations | async"></syndesis-integrations-list>
+  </syndesis-loading>
+</div>
 
 <syndesis-modal id="importIntegration" title="Integration Import" [body]="importIntegrationModal">
 

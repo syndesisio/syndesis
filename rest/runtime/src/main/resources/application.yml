@@ -64,8 +64,6 @@ endpoints:
 
 dao:
   kind: jsondb
-  schema:
-    version: 21 # changing this will reset all the DB data.
 
 filestore:
   enabled: false

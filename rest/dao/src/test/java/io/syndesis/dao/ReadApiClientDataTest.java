@@ -27,7 +27,7 @@ import java.util.TreeSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.Json;
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.Kind;
 import io.syndesis.model.connection.Connection;

@@ -33,7 +33,7 @@ import io.syndesis.connector.catalog.ConnectorCatalogConfiguration;
 import io.syndesis.connector.catalog.ConnectorCatalogProperties;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.dao.init.ModelData;
+import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.dao.manager.DaoConfiguration;
 import io.syndesis.model.Kind;
