@@ -102,9 +102,9 @@ var syndesisContext = Context{
 			Atlasmap: "atlasmap",
 		},
 		S2i: s2iConfig{
-			ImageStream: "s2i-java",
-			DockerImage: "fabric8/s2i-java",
-			Tag:         "2.0",
+			ImageStream: "syndesis-s2i",
+			DockerImage: "syndesis/syndesis-s2i",
+			Tag:         "latest",
 		},
 	},
 	Tags: tags{
