@@ -109,11 +109,23 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             Extension embeddedExtension = extractExtension(fileLocation);
 
             if (updatedId != null) {
+                // Update
                 Extension replacedExtension = getDataManager().fetch(Extension.class, updatedId);
                 if (!replacedExtension.getExtensionId().equals(embeddedExtension.getExtensionId())) {
                     throw new IllegalArgumentException("The uploaded extensionId (" + embeddedExtension.getExtensionId() +
                         ") does not match the existing extensionId (" + replacedExtension.getExtensionId() + ")");
                 }
+            } else {
+                // New import
+                Set<String> ids = getDataManager().fetchIdsByPropertyValue(Extension.class,
+                    "extensionId", embeddedExtension.getExtensionId(),
+                    "status", Extension.Status.Installed.name());
+
+                if (!ids.isEmpty()) {
+                    throw new IllegalArgumentException("An extension with the same extensionId (" + embeddedExtension.getExtensionId() +
+                        ") is already installed. Please update the existing extension instead of importing a new one");
+                }
+
             }
 
             Extension extension = new Extension.Builder()
