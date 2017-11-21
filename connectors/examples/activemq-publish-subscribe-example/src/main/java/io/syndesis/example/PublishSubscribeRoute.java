@@ -29,13 +29,13 @@ public class PublishSubscribeRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         // subscribe route
-        from("activemq-subscribe-text-connector:hello?brokerUrl=RAW(vm://broker?broker.persistent=false&broker.useJmx=false)")
+        from("activemq-subscribe-text")
                 .log("Received body ${body.body}");
 
         // publish route
         from("periodic-timer-connector")
             .log("Timer is triggered")
             .setBody(constant(new JmsTextMessage("Hello at " + new Date())))
-            .to("activemq-publish-text-connector:hello?brokerUrl=RAW(vm://broker?broker.persistent=false&broker.useJmx=false)");
+            .to("activemq-publish-text");
     }
 }

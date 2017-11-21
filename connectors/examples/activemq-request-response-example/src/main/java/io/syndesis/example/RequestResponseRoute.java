@@ -29,7 +29,7 @@ public class RequestResponseRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         // response route
-        from("activemq-respond-text-connector:hello?brokerUrl=RAW(vm://broker?broker.persistent=false&broker.useJmx=false)")
+        from("activemq-respond-text")
             .log("Received request '${body.body}'")
             .setBody(constant(new JmsTextMessage("The time is "  + new Date())));
 
@@ -37,7 +37,7 @@ public class RequestResponseRoute extends RouteBuilder {
         from("periodic-timer-connector")
             .log("Timer is triggered")
             .setBody(constant(new JmsTextMessage("What time is it?")))
-            .to("activemq-request-text-connector:hello?brokerUrl=RAW(vm://broker?broker.persistent=false&broker.useJmx=false)")
+            .to("activemq-request-text")
             .log("Response is ${body.body}");
     }
 }

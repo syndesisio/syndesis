@@ -1,0 +1,59 @@
+{
+  "baseScheme" : "sjms2",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-sjms2",
+  "baseVersion" : "2.20.0",
+  "baseJavaType" : "org.apache.camel.component.sjms2.Sjms2Component",
+  "name" : "ActiveMQRespondBytes",
+  "scheme" : "activemq-respond-bytes",
+  "javaType" : "io.syndesis.connector.jms.ActiveMQRespondBytesComponent",
+  "groupId" : "io.syndesis",
+  "artifactId" : "activemq-respond-bytes-connector",
+  "version" : "0.5-SNAPSHOT",
+  "description" : "Respond to JMS Destination",
+  "labels" : [ "jms" ],
+  "pattern" : "From",
+  "inputDataType" : "java:io.syndesis.connector.jms.JmsBytesMessage",
+  "outputDataType" : "java:io.syndesis.connector.jms.JmsBytesMessage",
+  "globalOptions" : [ "brokerUrl", "username", "password" ],
+  "componentOptions" : [ "connectionCount" ],
+  "endpointOptions" : [ "destinationType", "destinationName", "synchronous", "includeAllJMSXProperties", "transacted", "sharedJMSSession", "namedReplyTo", "sessionCount", "producerCount", "consumerCount", "ttl", "persistent", "durableSubscriptionId", "responseTimeOut", "messageSelector", "transactionBatchCount", "transactionBatchTimeout", "asyncStartListener", "asyncStopListener", "prefillPool", "allowNullBody", "subscriptionId", "durable", "shared" ],
+  "connectorProperties" : {
+    "brokerUrl": {
+      "kind" : "property",
+      "displayName" : "Broker URL",
+      "group" : "common",
+      "label" : "common",
+      "required" : true,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "description" : "Broker URL"
+    },
+    "username" : {
+      "kind": "property",
+      "displayName": "User Name",
+      "group": "security",
+      "label": "common,security",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "description": "Authorization credential user name"
+    },
+    "password" : {
+      "kind" : "property",
+      "displayName" : "Password",
+      "group": "security",
+      "label": "common,security",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": true,
+      "description" : "Authorization credential password"
+    }
+  }
+}
