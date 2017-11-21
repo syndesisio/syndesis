@@ -27,6 +27,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -35,8 +37,10 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.action.ActionDescriptor;
 import io.syndesis.model.action.ExtensionAction;
 import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.extension.Extension;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -51,6 +55,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
+
+import javax.annotation.Nullable;
 
 
 /**
@@ -185,6 +191,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
             }
         }
 
+        List<ActionDescriptor.ActionDescriptorStep> propertyDefinitionSteps = createPropertiesDefinitionSteps(p);
+
         actionBuilder.id(actionId)
             .name(actionName)
             .descriptor(
@@ -201,10 +209,77 @@ public class GenerateMetadataMojo extends AbstractMojo {
                             .kind(p.getProperty("outputDataShape"))
                             .build()
                     )
+                    .propertyDefinitionSteps(propertyDefinitionSteps)
                     .build()
             );
 
         actions.put(actionId, actionBuilder.build());
+    }
+
+    protected List<ActionDescriptor.ActionDescriptorStep> createPropertiesDefinitionSteps(Properties p) {
+        List<ActionDescriptor.ActionDescriptorStep> propertyDefinitionSteps = new LinkedList<>();
+        int idx = 0;
+        while (getPropertyValue(p, idx, "name") != null) {
+            String name = getPropertyValue(p, idx, "name");
+            String displayName = getPropertyValue(p, idx, "displayName");
+            String pDescription = getPropertyValue(p, idx, "description");
+            Boolean componentProperty = getBooleanPropertyValue(p, idx, "componentProperty");
+            String defaultValue = getPropertyValue(p, idx, "defaultValue");
+            Boolean deprecated = getBooleanPropertyValue(p, idx, "deprecated");
+            String group = getPropertyValue(p, idx, "group");
+            String javaType = getPropertyValue(p, idx, "javaType");
+            String kind = getPropertyValue(p, idx, "kind");
+            String label = getPropertyValue(p, idx, "label");
+            Boolean required = getBooleanPropertyValue(p, idx, "required");
+            Boolean secret = getBooleanPropertyValue(p, idx, "secret");
+            String type = getPropertyValue(p, idx, "type");
+
+            String pTags = getPropertyValue(p, idx, "tags");
+            List<String> propTagList = new LinkedList<>();
+            if(StringUtils.isNotEmpty(pTags)){
+                for (String tag : pTags.trim().split(",")) {
+                    propTagList.add(tag);
+                }
+            }
+
+            int idy = 0;
+            List<ConfigurationProperty.PropertyValue> propertyValues = new LinkedList<>();
+            while (getPropertyValue(p, idx, "enums", idy, "value") != null) {
+                String enumValue = getPropertyValue(p, idx, "enums", idy, "value");
+                String enumLabel = getPropertyValue(p, idx, "enums", idy, "label");
+                propertyValues.add(new ConfigurationProperty.PropertyValue.Builder()
+                    .value(enumValue)
+                    .label(enumLabel)
+                    .build());
+
+                idy++;
+            }
+
+            propertyDefinitionSteps.add(new ActionDescriptor.ActionDescriptorStep.Builder()
+                .name(name)
+                .description(pDescription)
+                .putProperty(name, new ConfigurationProperty.Builder()
+                    .displayName(displayName)
+                    .description(pDescription)
+                    .componentProperty(componentProperty)
+                    .defaultValue(defaultValue)
+                    .deprecated(deprecated)
+                    .group(group)
+                    .javaType(javaType)
+                    .kind(kind)
+                    .label(label)
+                    .required(required)
+                    .secret(secret)
+                    .type(type)
+                    .tags(propTagList)
+                    .addAllEnum(propertyValues)
+                    .build())
+                .build());
+
+            idx++;
+        }
+
+        return propertyDefinitionSteps;
     }
 
     /**
@@ -312,4 +387,22 @@ public class GenerateMetadataMojo extends AbstractMojo {
             dependency.getType()
         );
     }
+
+    @Nullable
+    protected Boolean getBooleanPropertyValue(Properties props, int prg, String name) {
+        String val = getPropertyValue(props, prg, name);
+        if (val == null) {
+            return null;
+        }
+        return "true".equalsIgnoreCase(val);
+    }
+
+    protected String getPropertyValue(Properties props, int prg, String name) {
+        return props.getProperty("property[" + prg + "]." + name);
+    }
+
+    protected String getPropertyValue(Properties props, int prg1, String root2, int prg2, String name) {
+        return props.getProperty("property[" + prg1 + "]." + root2 + "[" + prg2 + "]." + name);
+    }
+
 }
