@@ -28,54 +28,9 @@
   <artifactId>syndesis-connectors-project</artifactId>
   <version>0.5-SNAPSHOT</version>
   <packaging>pom</packaging>
+
   <name>Syndesis Connectors :: Project</name>
-
-  <url>https://syndesis.io</url>
   <description>Connectors for Syndesis</description>
-
-  <inceptionYear>2017</inceptionYear>
-
-  <organization>
-    <name>Red Hat</name>
-    <url>http://redhat.com</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <!-- including A developer as it's required by the maven poms going into
-    central -->
-  <developers>
-    <developer>
-      <id>syndesis</id>
-      <name>Syndesis Development Team</name>
-      <url>https://syndesis.io</url>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git:git@github.com:syndesisio/connectors.git</connection>
-    <developerConnection>scm:git:git@github.com:syndesisio/connectors.git</developerConnection>
-    <url>https://github.com/syndesisio/connectors/</url>
-    <tag>HEAD</tag>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-      <uniqueVersion>false</uniqueVersion>
-    </repository>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

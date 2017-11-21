@@ -49,46 +49,6 @@
     <java-image>fabric8/java-jboss-openjdk8-jdk:1.2.3</java-image>
   </properties>
 
-  <inceptionYear>2017</inceptionYear>
-
-  <organization>
-    <name>Red Hat</name>
-    <url>http://redhat.com</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <!-- including A developer as it's required by the maven poms going into
-    central -->
-  <developers>
-    <developer>
-      <id>syndesis</id>
-      <name>Syndesis Development Team</name>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git:git@github.com:syndesisio/syndesis-verifier.git</connection>
-    <developerConnection>scm:git:git@github.com:syndesisio/syndesis-verifier.git
-    </developerConnection>
-    <url>http://github.com/syndesisio/syndesis-verifier/</url>
-    <tag>${project.version}</tag>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
-
   <dependencyManagement>
     <dependencies>
       <dependency>

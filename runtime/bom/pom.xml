@@ -36,45 +36,6 @@
 
   <name>Syndesis :: Integration Runtime :: Bill of Materials</name>
   <description>Syndesis Integration Runtime Bill of Materials POM</description>
-  <inceptionYear>2016</inceptionYear>
-
-  <organization>
-    <name>Red Hat</name>
-    <url>http://redhat.com</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <!-- including A developer as it's required by the maven poms going into
-    central -->
-  <developers>
-    <developer>
-      <id>syndesis</id>
-      <name>Syndesis Development Team</name>
-      <organizationUrl>https://syndesis.io/</organizationUrl>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git:git@github.com:syndesisio/syndesis-rest.git</connection>
-    <developerConnection>scm:git:git@github.com:syndesisio/syndesis-rest.git    </developerConnection>
-    <url>http://github.com/syndesisio/syndesis-rest/</url>
-    <tag>v0.2.0</tag>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
