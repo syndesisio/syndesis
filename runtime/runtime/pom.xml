@@ -146,22 +146,42 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUsedUndeclaredDependencies>
-            <ignoredUsedUndeclaredDependency>org.springframework:spring-core</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.springframework:spring-beans</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.springframework:spring-context</ignoredUsedUndeclaredDependency>
-          </ignoredUsedUndeclaredDependencies>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-configuration-processor</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>com.google.auto.service:auto-service</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <configuration>
+            <ignoredUsedUndeclaredDependencies>
+              <ignoredUsedUndeclaredDependency>org.springframework:spring-core</ignoredUsedUndeclaredDependency>
+              <ignoredUsedUndeclaredDependency>org.springframework:spring-beans</ignoredUsedUndeclaredDependency>
+              <ignoredUsedUndeclaredDependency>org.springframework:spring-context</ignoredUsedUndeclaredDependency>
+            </ignoredUsedUndeclaredDependencies>
+            <ignoredUnusedDeclaredDependencies>
+              <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-configuration-processor</ignoredUnusedDeclaredDependency>
+              <ignoredUnusedDeclaredDependency>com.google.auto.service:auto-service</ignoredUnusedDeclaredDependency>
+            </ignoredUnusedDeclaredDependencies>
+          </configuration>
+        </plugin>
+
+        <!-- Disable some of these checks until we get the code base in basepom shape -->
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>

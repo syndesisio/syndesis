@@ -23,10 +23,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.basepom</groupId>
-    <artifactId>basepom-oss</artifactId>
-    <version>23</version>
-    <relativePath></relativePath>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis</groupId>
