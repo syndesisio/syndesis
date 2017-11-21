@@ -81,6 +81,15 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>${maven.exec.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>exec</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <executable>java</executable>
           <arguments>
@@ -94,12 +103,16 @@
         <groupId>io.fabric8</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>${docker.maven.plugin.fabric8.version}</version>
+        <executions>
+          <execution>
+            <id>exec</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
-          <id>copy</id>
-          <phase>package</phase>
-          <goals>
-            <goal>build</goal>
-          </goals>
           <images>
             <image>
               <name>${docker-image-name}</name>

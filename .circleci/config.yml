@@ -84,6 +84,29 @@ jobs:
           path: ./apidocs
       - store_artifacts:
           path: ./junit
-      - store_test_results:
-          path: ./junit
+
+      - deploy:
+          command: |
+            if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
+              exit 0
+            fi
+
+            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+
+            IMAGES='syndesis-rest syndesis-s2i'
+            
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+              for image in ${IMAGES} ; do
+                docker push syndesis/${image}:latest | cat -
+              done
+            fi
+            if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
+              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+              for image in ${IMAGES} ; do
+                docker push syndesis/${image}:${CIRCLE_TAG} | cat -
+                docker tag syndesis/${image}:${CIRCLE_TAG} syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
+                docker push syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
+              done
+            fi
 

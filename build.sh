@@ -54,7 +54,7 @@ function readopt() {
 # Build functions
 
 function modules_to_build() {
-  modules="connectors verifier runtime rest ui"
+  modules="connectors verifier runtime rest s2i ui"
   resume_from=$(readopt --resume-from $ARGS 2> /dev/null)
   if [ "x${resume_from}" != x ]; then
     modules=$(echo $modules | sed -e "s/^.*$resume_from/$resume_from/")
@@ -139,6 +139,12 @@ function runtime() {
 function rest() {
   pushd rest
   "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_PARAMS
+  popd
+}
+
+function s2i() {
+  pushd s2i
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
   popd
 }
 

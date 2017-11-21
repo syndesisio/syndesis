@@ -111,7 +111,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: s2i-java
+    name: syndesis-s2i
     labels:
       app: syndesis
       component: s2i-java
@@ -119,10 +119,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: fabric8/s2i-java:2.0
+        name: syndesis/syndesis-s2i:latest
       importPolicy:
         scheduled: true
-      name: "2.0"
+      name: "latest"
 
 - apiVersion: v1
   kind: Secret
@@ -827,7 +827,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: s2i-java:2.0
+        builderImageStreamTag: syndesis-s2i:latest
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
