@@ -41,7 +41,7 @@
                [value]="model.value"
                (blur)="onFocusChange($event)"
                (change)="onValueChange($event)"
-               (focus)="onFocusChange($event)" />
+               (focus)="onFocusChange($event)">
         <span [innerHTML]="model.label"
               [ngClass]="[model.cls.element.label, model.cls.grid.label]">
         </span>
@@ -135,6 +135,7 @@
                [maxlength]="model.maxLength"
                [minlength]="model.minLength"
                [name]="model.name"
+               [tooltip]="model.hint"
                [ngClass]="model.cls.element.control"
                [pattern]="model.pattern"
                [placeholder]="model.placeholder"
@@ -188,13 +189,13 @@
         </div>
       </fieldset>
 
-
       <select *ngSwitchCase="6"
               class="form-control"
               [attr.tabindex]="model.tabIndex"
               [dynamicId]="bindId && model.id"
               [formControlName]="model.id"
               [name]="model.name"
+              [tooltip]="model.hint"
               [ngClass]="model.cls.element.control"
               [required]="model.required"
               (blur)="onFocusChange($event)"

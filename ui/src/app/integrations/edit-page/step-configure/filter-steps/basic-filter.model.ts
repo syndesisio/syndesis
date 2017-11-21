@@ -59,6 +59,7 @@ export function createBasicFilterModel(
           id: 'path',
           maxLength: 51,
           required: true,
+          hint: 'The data you want to evaluate',
           validators: {
             required: null
           },
@@ -82,6 +83,7 @@ export function createBasicFilterModel(
       new DynamicSelectModel<string>(
         {
           id: 'op',
+          hint: 'Must meet this condition',
           value: rule ? rule.op : 'contains',
           options: Observable.of(<any>ops)
         },
@@ -97,6 +99,7 @@ export function createBasicFilterModel(
       ),
       new DynamicInputModel(
         {
+          hint: 'For this value',
           id: 'value',
           value: rule ? rule.value : undefined,
           placeholder: 'Keywords...'
