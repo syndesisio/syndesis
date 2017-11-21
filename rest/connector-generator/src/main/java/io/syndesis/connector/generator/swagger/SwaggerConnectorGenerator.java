@@ -48,6 +48,7 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.connection.CustomConnector;
 
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
@@ -76,24 +77,29 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
     }
 
     @Override
-    public Connector generate(final ConnectorTemplate connectorTemplate, final Connector template) {
-        final Map<String, String> configuredProperties = template.getConfiguredProperties();
+    public Connector generate(final ConnectorTemplate connectorTemplate, final CustomConnector customConnector) {
+        final Connector connector = basicConnector(connectorTemplate, customConnector);
 
-        final String specification = configuredProperties.get("specification");
+        final String specification = requiredSpecification(customConnector);
 
-        if (specification == null) {
-            throw new IllegalStateException(
-                "Configured properties of the given Connector template does not include `specification` property");
-        }
+        return configureConnector(connectorTemplate, connector, specification);
+    }
 
-        final Connector baseConnector = baseConnectorFrom(connectorTemplate, template);
+    @Override
+    public Connector info(final ConnectorTemplate connectorTemplate, final CustomConnector customConnector) {
+        return basicConnector(connectorTemplate, customConnector);
+    }
 
-        final Connector connector = new Connector.Builder()//
+    /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate,
+        final CustomConnector customConnector) {
+        final String specification = requiredSpecification(customConnector);
+
+        final Connector baseConnector = baseConnectorFrom(connectorTemplate, customConnector);
+
+        return new Connector.Builder()//
             .createFrom(baseConnector)//
             .putConfiguredProperty("specification", specification)//
             .build();
-
-        return configureConnector(connectorTemplate, connector, specification);
     }
 
     /* default */ static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
@@ -288,6 +294,18 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         }
 
         return property.build();
+    }
+
+    /* default */ static String requiredSpecification(final CustomConnector customConnector) {
+        final Map<String, String> configuredProperties = customConnector.getConfiguredProperties();
+
+        final String specification = configuredProperties.get("specification");
+
+        if (specification == null) {
+            throw new IllegalStateException(
+                "Configured properties of the given Connector template does not include `specification` property");
+        }
+        return specification;
     }
 
     /* default */ static ConfigurationProperty securityProperty(final PropertyData propertyData) {

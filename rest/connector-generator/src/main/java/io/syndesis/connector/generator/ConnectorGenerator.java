@@ -23,23 +23,25 @@ import java.util.stream.Collectors;
 import io.syndesis.core.Names;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.connection.CustomConnector;
 
 public interface ConnectorGenerator {
 
-    default Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate, final Connector template) {
+    default Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate,
+        final CustomConnector customConnector) {
         final Set<String> properties = connectorTemplate.getProperties().keySet();
 
-        final Map<String, String> configuredProperties = template.getConfiguredProperties()//
+        final Map<String, String> configuredProperties = customConnector.getConfiguredProperties()//
             .entrySet().stream()//
             .filter(e -> properties.contains(e.getKey()))//
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         final Connector.Builder connectorBuilder = new Connector.Builder()//
-            .id(template.getId()
-                .orElseGet(() -> Names.sanitize(connectorTemplate.getName()) + ":" + Names.sanitize(template.getName())))//
-            .name(template.getName())//
-            .description(template.getDescription())//
-            .icon(template.getIcon())//
+            .id(customConnector.getId().orElseGet(
+                () -> Names.sanitize(connectorTemplate.getName()) + ":" + Names.sanitize(customConnector.getName())))//
+            .name(customConnector.getName())//
+            .description(customConnector.getDescription())//
+            .icon(customConnector.getIcon())//
             .properties(connectorTemplate.getConnectorProperties())//
             .configuredProperties(configuredProperties)//
             .connectorGroup(connectorTemplate.getConnectorGroup());
@@ -47,5 +49,7 @@ public interface ConnectorGenerator {
         return connectorBuilder.build();
     }
 
-    Connector generate(ConnectorTemplate connectorTemplate, Connector template);
+    Connector generate(ConnectorTemplate connectorTemplate, CustomConnector customConnector);
+
+    Connector info(ConnectorTemplate connectorTemplate, CustomConnector customConnector);
 }

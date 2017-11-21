@@ -107,7 +107,7 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(list.getBody().getItems()).as("items").hasSize(1);
 
         // Lets now re-import the integration:
-        post("/api/v1/integration-support/import", exportData.getBody(), null);
+        post("/api/v1/integration-support/import", exportData.getBody(), (Class<?>) null);
 
     }
 

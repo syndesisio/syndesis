@@ -27,6 +27,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.connection.CustomConnector;
 
 import org.junit.Test;
 
@@ -88,7 +89,7 @@ public class SwaggerConnectorGeneratorTest {
                     .build())
             .build();
 
-        final Connector template = new Connector.Builder()//
+        final CustomConnector customConnector = new CustomConnector.Builder()//
             .id("reverb-api")//
             .name("Reverb API")//
             .description("Invokes Reverb API")//
@@ -96,7 +97,7 @@ public class SwaggerConnectorGeneratorTest {
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, template);
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, customConnector);
 
         assertThat(sculpted.getProperties()).containsKeys("accessToken", "accessTokenUrl", "clientId", "clientSecret");
     }
@@ -127,7 +128,7 @@ public class SwaggerConnectorGeneratorTest {
                     .build())
             .build();
 
-        final Connector template = new Connector.Builder()//
+        final CustomConnector customConnector = new CustomConnector.Builder()//
             .id("concur-quick-expense")//
             .name("Concur Quick Expense API")//
             .description("Invokes Quick Expense API")//
@@ -135,7 +136,7 @@ public class SwaggerConnectorGeneratorTest {
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, template);
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, customConnector);
 
         final Connector expected = Json.mapper().readValue(resource("/expected-quick-expenses-connector.json"),
             Connector.class);
