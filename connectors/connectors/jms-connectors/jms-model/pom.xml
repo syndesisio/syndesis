@@ -23,7 +23,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>jms-connectors</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>jms-model</artifactId>
