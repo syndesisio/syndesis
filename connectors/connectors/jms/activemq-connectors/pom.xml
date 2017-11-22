@@ -29,18 +29,21 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>activemq-publish-bytes-connector</module>
-    <module>activemq-publish-map-connector</module>
-    <module>activemq-publish-text-connector</module>
-    <module>activemq-request-bytes-connector</module>
-    <module>activemq-request-map-connector</module>
-    <module>activemq-request-text-connector</module>
-    <module>activemq-respond-bytes-connector</module>
-    <module>activemq-respond-map-connector</module>
-    <module>activemq-respond-text-connector</module>
-    <module>activemq-subscribe-bytes-connector</module>
-    <module>activemq-subscribe-map-connector</module>
-    <module>activemq-subscribe-text-connector</module>
+    <module>activemq-model</module>
+    <module>activemq-publish-connector</module>
+    <module>activemq-request-connector</module>
+    <module>activemq-respond-connector</module>
+    <module>activemq-subscribe-connector</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>activemq-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 </project>

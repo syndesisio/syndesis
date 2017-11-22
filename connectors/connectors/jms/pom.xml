@@ -29,7 +29,6 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>jms-model</module>
     <module>activemq-connectors</module>
   </modules>
 

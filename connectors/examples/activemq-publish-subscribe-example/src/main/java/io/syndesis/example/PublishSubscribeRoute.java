@@ -17,8 +17,6 @@ package io.syndesis.example;
 
 import java.util.Date;
 
-import io.syndesis.connector.jms.JmsTextMessage;
-
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
@@ -29,13 +27,14 @@ public class PublishSubscribeRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         // subscribe route
-        from("activemq-subscribe-text")
-                .log("Received body ${body.body}");
+        from("activemq-subscribe")
+            .log("Received body ${body}");
 
         // publish route
         from("periodic-timer-connector")
             .log("Timer is triggered")
-            .setBody(constant(new JmsTextMessage("Hello at " + new Date())))
-            .to("activemq-publish-text");
+            .setBody(constant("Hello at " + new Date()))
+            .log("Publishing message ${body}")
+            .to("activemq-publish");
     }
 }
