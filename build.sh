@@ -130,7 +130,7 @@ function connectors() {
 
 function verifier() {
   pushd verifier
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_PARAMS
   popd
 }
 
