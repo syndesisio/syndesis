@@ -2,6 +2,9 @@
 
 # compiled output
 /dist
+/docker/dist
+/bin
+/node
 /tmp
 /documentation
 

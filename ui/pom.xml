@@ -33,12 +33,6 @@
   <name>Syndesis UI</name>
   <description>syndesis :: ${project.artifactId}</description>
 
-  <properties>
-    <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
-    <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
-    <node.version>v6.11.5</node.version>
-    <yarn.version>v1.2.1</yarn.version>
-  </properties>
 
   <build>
     <pluginManagement>
@@ -148,6 +142,49 @@
               </includes>
             </fileset>
           </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <target>
+            <sync todir="${basedir}/docker/dist">
+              <fileset dir="${basedir}/dist"/>
+            </sync>
+          </target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${docker.maven.plugin.fabric8.version}</version>
+        <executions>
+          <execution>
+            <id>exec</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <images>
+            <image>
+              <name>${syndesis-ui-image-name}</name>
+              <build>
+                <dockerFile>${basedir}/docker/Dockerfile</dockerFile>
+              </build>
+            </image>
+          </images>
         </configuration>
       </plugin>
     </plugins>

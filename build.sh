@@ -154,21 +154,22 @@ function s2i() {
 
 function ui() {
   pushd ui
-  yarn
-  yarn ng build -- --aot --prod --progress=false
-  if [ -z "$SKIP_IMAGE_BUILDS" ]; then
-      if [ -n "$WITH_IMAGE_STREAMS" ]; then
-          BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
-          if [ -z "$BC_DETAILS" ]; then
-              cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
-          fi
-          tar -cvf archive.tar dist docker
-          oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
-          rm archive.tar
-      else
-          docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
-      fi
-  fi
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
+  # yarn
+  # yarn ng build -- --aot --prod --progress=false
+  # if [ -z "$SKIP_IMAGE_BUILDS" ]; then
+  #     if [ -n "$WITH_IMAGE_STREAMS" ]; then
+  #         BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
+  #         if [ -z "$BC_DETAILS" ]; then
+  #             cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
+  #         fi
+  #         tar -cvf archive.tar dist docker
+  #         oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
+  #         rm archive.tar
+  #     else
+  #         docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
+  #     fi
+  # fi
   popd
 }
 
