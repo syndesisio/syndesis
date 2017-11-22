@@ -28,6 +28,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>integration-runtime</artifactId>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Syndesis :: Integration Runtime</name>

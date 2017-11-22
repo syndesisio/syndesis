@@ -38,3 +38,5 @@ Thumbs.db
 # Build generated files
 node_modules
 target
+ui/bin
+ui/node
