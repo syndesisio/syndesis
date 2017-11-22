@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>activemq-connectors</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -48,7 +48,7 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>jms-model</artifactId>
-      <version>0.5-SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
 
     <!-- base component to use for this connector -->

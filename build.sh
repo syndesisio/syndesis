@@ -54,7 +54,7 @@ function readopt() {
 # Build functions
 
 function modules_to_build() {
-  modules="connectors verifier runtime rest s2i ui"
+  modules="parent connectors verifier runtime rest s2i ui"
   resume_from=$(readopt --resume-from $ARGS 2> /dev/null)
   if [ "x${resume_from}" != x ]; then
     modules=$(echo $modules | sed -e "s/^.*$resume_from/$resume_from/")
@@ -115,6 +115,10 @@ function init_options() {
   else
     MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.mode=kubernetes"
   fi
+}
+
+function parent() {
+  "${MAVEN_CMD}" install -N $MAVEN_PARAMS
 }
 
 function connectors() {
