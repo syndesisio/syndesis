@@ -20,6 +20,7 @@ import io.syndesis.model.ResourceIdentifier;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 @Value.Immutable
@@ -28,7 +29,10 @@ public interface ExtensionDetail extends Serializable {
 
     Extension getExtension();
 
-    Set<ResourceIdentifier> activeIntegrations();
+    @Value.Default
+    default Set<ResourceIdentifier> getActiveIntegrations() {
+        return Collections.emptySet();
+    }
 
     class Builder extends ImmutableExtensionDetail.Builder {
     }

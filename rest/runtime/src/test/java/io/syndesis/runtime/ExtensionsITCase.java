@@ -298,7 +298,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<ExtensionDetail> got1 = get("/api/v1beta1/extensions/" + id + "/details",
             ExtensionDetail.class, tokenRule.validToken(), HttpStatus.OK);
 
-        assertThat(got1.getBody().activeIntegrations()).isEmpty();
+        assertThat(got1.getBody().getActiveIntegrations()).isEmpty();
 
         // Create a active integration that uses the extension
         dataManager.create(new Integration.Builder()
@@ -326,8 +326,8 @@ public class ExtensionsITCase extends BaseITCase {
             ExtensionDetail.class, tokenRule.validToken(), HttpStatus.OK);
 
 
-        assertThat(got2.getBody().activeIntegrations().size()).isEqualTo(1);
-        assertThat(got2.getBody().activeIntegrations()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension-1"));
+        assertThat(got2.getBody().getActiveIntegrations().size()).isEqualTo(1);
+        assertThat(got2.getBody().getActiveIntegrations()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension-1"));
 
         // Get extension list
         ResponseEntity<ListResult<ExtensionDetail>> list = get("/api/v1beta1/extensions/details",
