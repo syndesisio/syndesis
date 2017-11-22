@@ -159,6 +159,7 @@
               <exclude>**/spring.factories</exclude>
               <exclude>**/*.adoc</exclude>
               <exclude>archetypes/**/src/main/resources/archetype-resources/**</exclude>
+              <exclude>s2i/src/main/docker/project/**</exclude>
             </excludes>
           </configuration>
         </plugin>

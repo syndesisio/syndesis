@@ -144,49 +144,65 @@
           </filesets>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <target>
-            <sync todir="${basedir}/docker/dist">
-              <fileset dir="${basedir}/dist"/>
-            </sync>
-          </target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>${docker.maven.plugin.fabric8.version}</version>
-        <executions>
-          <execution>
-            <id>exec</id>
-            <phase>package</phase>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <images>
-            <image>
-              <name>${syndesis-ui-image-name}</name>
-              <build>
-                <dockerFile>${basedir}/docker/Dockerfile</dockerFile>
-              </build>
-            </image>
-          </images>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>build-docker-image</id>
+      <activation>
+        <property>
+          <name>env.DOCKER_HOST</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <target>
+                <sync todir="${basedir}/docker/dist">
+                  <fileset dir="${basedir}/dist"/>
+                </sync>
+              </target>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>${docker.maven.plugin.fabric8.version}</version>
+            <executions>
+              <execution>
+                <id>exec</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <images>
+                <image>
+                  <name>${syndesis-ui-image-name}</name>
+                  <build>
+                    <dockerFile>${basedir}/docker/Dockerfile</dockerFile>
+                  </build>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
