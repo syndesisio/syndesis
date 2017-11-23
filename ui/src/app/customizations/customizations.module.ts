@@ -27,12 +27,12 @@ const routes: Routes = [
         component: TechExtensionsListComponent,
       },
       {
-        path: 'api-connectors',
+        path: 'api-connector',
         component: ApiConnectorListComponent
       },
       {
         path: '',
-        redirectTo: 'api-connectors'
+        redirectTo: 'api-connector'
       }
     ]
   },
@@ -45,7 +45,7 @@ const routes: Routes = [
     component: TechExtensionDetailComponent
   },
   {
-    path: 'api-connectors/create',
+    path: 'api-connector/create',
     component: ApiConnectorCreateComponent
   }
 ];
