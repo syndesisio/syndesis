@@ -18,6 +18,7 @@ package io.syndesis.runtime;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.extension.ExtensionDetail;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.rest.v1.operations.Violation;
@@ -35,7 +36,9 @@ import org.springframework.util.MultiValueMap;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -280,6 +283,59 @@ public class ExtensionsITCase extends BaseITCase {
 
         dataManager.delete(Integration.class, "integration-extension-1");
         dataManager.delete(Integration.class, "integration-extension-2");
+    }
+
+    @Test
+    public void testListExtensionDetails() throws IOException {
+        // Create one extension
+        ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(created.getBody().getId().isPresent());
+        String id = created.getBody().getId().get();
+
+        // Get extension details
+        ResponseEntity<ExtensionDetail> got1 = get("/api/v1beta1/extensions/" + id + "/details",
+            ExtensionDetail.class, tokenRule.validToken(), HttpStatus.OK);
+
+        assertThat(got1.getBody().getActiveIntegrations()).isEmpty();
+
+        // Create a active integration that uses the extension
+        dataManager.create(new Integration.Builder()
+            .id("integration-extension-1")
+            .desiredStatus(Integration.Status.Activated)
+            .currentStatus(Integration.Status.Activated)
+            .createdDate(new Date())
+            .lastUpdated(new Date())
+            .userId("important user")
+            .steps(Collections.singletonList(
+                new SimpleStep.Builder()
+                    .id("step1")
+                    .name("step1")
+                    .stepKind("extension")
+                    .extension(
+                        new Extension.Builder()
+                            .createFrom(created.getBody())
+                            .build())
+                    .build()))
+            .build());
+
+
+        // Get extension details again
+        ResponseEntity<ExtensionDetail> got2 = get("/api/v1beta1/extensions/" + id + "/details",
+            ExtensionDetail.class, tokenRule.validToken(), HttpStatus.OK);
+
+
+        assertThat(got2.getBody().getActiveIntegrations().size()).isEqualTo(1);
+        assertThat(got2.getBody().getActiveIntegrations()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension-1"));
+
+        // Get extension list
+        ResponseEntity<ListResult<ExtensionDetail>> list = get("/api/v1beta1/extensions/details",
+            new ParameterizedTypeReference<ListResult<ExtensionDetail>>() {}, tokenRule.validToken(), HttpStatus.OK);
+
+        assertThat(list.getBody().getItems()).hasSize(1);
+
+        dataManager.delete(Integration.class, "integration-extension-1");
     }
 
 

@@ -15,29 +15,10 @@
  */
 package io.syndesis.rest.v1beta1.handler.extension;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.Default;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.KeyGenerator;
@@ -45,8 +26,10 @@ import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.extension.ExtensionDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.extension.ExtensionDetail;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
@@ -61,6 +44,30 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Path("/extensions")
 @Api(value = "extensions")
@@ -203,10 +210,44 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @Path(value = "/{id}/integrations")
     public Set<ResourceIdentifier> integrations(@NotNull @PathParam("id") final String id) {
         Extension extension = getDataManager().fetch(Extension.class, id);
-        return getDataManager().fetchAll(Integration.class).getItems().stream()
-            .filter(integration -> isIntegrationActiveAndUsingExtension(integration, extension))
-            .map(this::toResourceIdentifier)
-            .collect(Collectors.toSet());
+        return integrations(extension);
+    }
+
+    @GET
+    @Path(value = "/details")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "sort", value = "Sort the result list according to the given field value",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
+            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
+        @ApiImplicitParam(
+            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20")
+
+    })
+    public ListResult<ExtensionDetail> listDetails(@Context UriInfo uriInfo) {
+        ListResult<Extension> extensions = this.list(uriInfo);
+
+        List<ExtensionDetail> details = extensions.getItems().stream()
+            .map(this::toExtensionDetail)
+            .collect(Collectors.toList());
+
+        return new ListResult.Builder<ExtensionDetail>()
+            .items(details)
+            .totalCount(extensions.getTotalCount())
+            .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}/details")
+    public ExtensionDetail getDetails(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+        Extension extension = this.get(id);
+        return this.toExtensionDetail(extension);
     }
 
     // ===============================================================
@@ -285,6 +326,13 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .build());
     }
 
+    private Set<ResourceIdentifier> integrations(Extension extension) {
+        return getDataManager().fetchAll(Integration.class).getItems().stream()
+            .filter(integration -> isIntegrationActiveAndUsingExtension(integration, extension))
+            .map(this::toResourceIdentifier)
+            .collect(Collectors.toSet());
+    }
+
     private ResourceIdentifier toResourceIdentifier(Integration integration) {
         return new ResourceIdentifier.Builder()
             .id(integration.getId())
@@ -311,6 +359,13 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .orElse(null)
             )
         );
+    }
+
+    private ExtensionDetail toExtensionDetail(Extension extension) {
+        return new ExtensionDetail.Builder()
+            .extension(extension)
+            .activeIntegrations(integrations(extension))
+            .build();
     }
 
 }
