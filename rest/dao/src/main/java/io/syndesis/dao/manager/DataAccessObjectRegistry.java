@@ -15,13 +15,9 @@
  */
 package io.syndesis.dao.manager;
 
-import java.util.Map;
-
 import io.syndesis.model.WithId;
 
 public interface DataAccessObjectRegistry {
-
-    <T extends WithId<T>> Map<Class<T>, DataAccessObject<T>> getDataAccessObjectMapping();
 
     /**
      * Finds the {@link DataAccessObject} for the specified type.
@@ -29,10 +25,7 @@ public interface DataAccessObjectRegistry {
      * @param <T>   The specified type.
      * @return      The {@link DataAccessObject} if found, or null no matching {@link DataAccessObject} was found.
      */
-    default <T extends WithId<T>> DataAccessObject<T> getDataAccessObject(Class<T> type) {
-        return this.<T>getDataAccessObjectMapping().get(type);
-    }
-
+    <T extends WithId<T>> DataAccessObject<T> getDataAccessObject(Class<T> type);
 
     /**
      * Finds the {@link DataAccessObject} for the specified type.
@@ -41,7 +34,7 @@ public interface DataAccessObjectRegistry {
      * @return      The {@link DataAccessObject} or throws SyndesisServerException.
      */
     default <T extends WithId<T>> DataAccessObject<T> getDataAccessObjectRequired(Class<T> type) {
-        final DataAccessObject<T> dao = this.<T>getDataAccessObjectMapping().get(type);
+        final DataAccessObject<T> dao = getDataAccessObject(type);
         if (dao != null) {
             return dao;
         }
@@ -53,7 +46,5 @@ public interface DataAccessObjectRegistry {
      * @param dataAccessObject  The {@link DataAccessObject} to register.
      * @param <T>               The type of the {@link DataAccessObject}.
      */
-    default <T extends WithId<T>> void registerDataAccessObject(DataAccessObject<T> dataAccessObject) {
-        this.<T>getDataAccessObjectMapping().put(dataAccessObject.getType(), dataAccessObject);
-    }
+    <T extends WithId<T>> void registerDataAccessObject(DataAccessObject<T> dataAccessObject);
 }

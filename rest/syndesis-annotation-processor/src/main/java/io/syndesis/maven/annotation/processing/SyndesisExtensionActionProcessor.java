@@ -285,9 +285,11 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message);
     }
 
-    protected Class<?> mandatoryFindClass(String name) {
+    private Class<? extends Annotation> mandatoryFindClass(String name) {
         try {
-            return Class.forName(name);
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            Class<? extends Annotation> ret = (Class) Class.forName(name);
+            return ret;
         } catch (ClassNotFoundException e) {
             error("Unable to find Class " +  name + " on Classpath");
         }
@@ -295,9 +297,11 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         return null;
     }
 
-    protected Class<?> findClass(String name) {
+    private Class<? extends Annotation> findClass(String name) {
         try {
-            return Class.forName(name);
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            Class<? extends Annotation> ret = (Class) Class.forName(name);
+            return ret;
         } catch (ClassNotFoundException e) {
             warning("Unable to find Class " +  name + " on Classpath");
         }

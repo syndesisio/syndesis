@@ -31,16 +31,12 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorGroup.Builder.class)
+@SuppressWarnings("immutables")
 public interface ConnectorGroup extends WithId<ConnectorGroup>, WithName, Serializable {
 
     @Override
     default Kind getKind() {
         return Kind.ConnectorGroup;
-    }
-
-    @Override
-    default ConnectorGroup withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
     }
 
     class Builder extends ImmutableConnectorGroup.Builder {

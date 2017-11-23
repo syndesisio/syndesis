@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = User.Builder.class)
+@SuppressWarnings("immutables")
 public interface User extends WithId<User>, Serializable {
 
     @Override
@@ -49,11 +50,6 @@ public interface User extends WithId<User>, Serializable {
     Optional<String> getRoleId();
 
     Optional<String> getOrganizationId();
-
-    @Override
-    default User withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
 
     class Builder extends ImmutableUser.Builder {
     }

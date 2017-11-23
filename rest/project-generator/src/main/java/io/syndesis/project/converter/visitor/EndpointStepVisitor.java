@@ -144,10 +144,13 @@ public class EndpointStepVisitor implements StepVisitor {
         return new Endpoint(endpointUri);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     private static Map<String, String> aggregate(Map<String, String> ... maps) throws IOException {
         return Stream.of(maps).flatMap(map -> map.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 
+    @SafeVarargs
     private static <T> Predicate<T> or(Predicate<T>... predicates) {
         Predicate<T> predicate = predicates[0];
 

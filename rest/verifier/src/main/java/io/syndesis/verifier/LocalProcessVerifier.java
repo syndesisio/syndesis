@@ -99,12 +99,12 @@ public class LocalProcessVerifier {
     private ImmutableResult createResult(Verifier.Scope scope, Verifier.Result.Status status, Properties response) {
         ImmutableResult.Builder builder = ImmutableResult.builder().scope(scope).status(status);
         if( response != null ) {
-            LinkedHashMap<String, ImmutableError.Builder> errors = new LinkedHashMap<>();
+            LinkedHashMap<String, ImmutableVerifierError.Builder> errors = new LinkedHashMap<>();
             for (Map.Entry<Object, Object> entry : response.entrySet()) {
                 String key = (String) entry.getKey();
                 if( key.startsWith("error.") ) {
                     String errorId = key.substring("error.".length()).replaceFirst("\\..*", "");
-                    ImmutableError.Builder error = errors.getOrDefault(errorId, ImmutableError.builder());
+                    ImmutableVerifierError.Builder error = errors.getOrDefault(errorId, ImmutableVerifierError.builder());
                     String value = (String) entry.getValue();
                     if( key.endsWith(".code") ) {
                         error.code(value);
@@ -115,7 +115,7 @@ public class LocalProcessVerifier {
                     errors.put(errorId, error);
                 }
             }
-            builder.addAllErrors(errors.values().stream().map(ImmutableError.Builder::build).collect(Collectors.toList()));
+            builder.addAllErrors(errors.values().stream().map(ImmutableVerifierError.Builder::build).collect(Collectors.toList()));
         }
         return builder.build();
     }

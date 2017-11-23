@@ -41,14 +41,13 @@ public abstract class IntegrationRevision {
      */
     public abstract Integer getParentVersion();
 
-
     public abstract IntegrationRevisionSpec getSpec();
 
     /**
      * The desired state of the revision.
      * @return
      */
-     public abstract IntegrationRevisionState getTargetState();
+    public abstract IntegrationRevisionState getTargetState();
 
     /**
      * The current state of the revision.
@@ -62,14 +61,11 @@ public abstract class IntegrationRevision {
      */
     public abstract Optional<String> getCurrentMessage();
 
-
-
     /**
      * Message which should become the currentMessage after reconciliation
      * @return
      */
     public abstract Optional<String> getTargetMessage();
-
 
     public abstract Optional<BigInteger> getTimesUsed();
 
@@ -87,19 +83,8 @@ public abstract class IntegrationRevision {
         return getTargetState() != getCurrentState();
     }
 
-    public IntegrationRevision withVersion(Integer version) {
-        return new IntegrationRevision.Builder().createFrom(this).version(version).build();
-    }
-
     public IntegrationRevision withCurrentState(IntegrationRevisionState state) {
         return new IntegrationRevision.Builder().createFrom(this).currentState(state).build();
-    }
-
-    public IntegrationRevision withCurrentState(IntegrationRevisionState state, String message) {
-        return new IntegrationRevision.Builder().createFrom(this)
-            .currentState(state)
-            .currentMessage(message)
-            .build();
     }
 
     public IntegrationRevision withTargetState(IntegrationRevisionState state) {
@@ -113,11 +98,11 @@ public abstract class IntegrationRevision {
 
     @Override
     public boolean equals(Object other) {
-       if (!(other instanceof IntegrationRevision)) {
-           return false;
-       }
-       IntegrationRevision revision = (IntegrationRevision) other;
-       return  getVersion().orElse(1).equals(revision.getVersion().orElse(1));
+        if (!(other instanceof IntegrationRevision)) {
+            return false;
+        }
+        IntegrationRevision revision = (IntegrationRevision) other;
+        return getVersion().orElse(1).equals(revision.getVersion().orElse(1));
     }
 
     public static IntegrationRevision createNewRevision(Integration integration) {

@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -118,6 +119,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
 
     private URLClassLoader createClassLoader(File jar) throws MalformedURLException {
         return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
+            @Override
             public URLClassLoader run() {
                 try {
                     return new URLClassLoader(new URL[]{jar.toURI().toURL()});

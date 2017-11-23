@@ -32,7 +32,7 @@ public class TagsITCase extends BaseITCase {
 
         assertThat(list.getBody().getTotalCount()).as("total count").isGreaterThan(1);
         assertThat(list.getBody().getItems()).as("items").size().isGreaterThan(1);
-        assertThat(list.getBody().getItems().get(0).equals("example"));
+        assertThat(list.getBody().getItems().get(0)).isEqualTo("example");
 
     }
 

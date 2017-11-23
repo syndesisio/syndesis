@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.syndesis.maven.layouts.ModuleLayoutFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -53,6 +52,8 @@ import org.jboss.shrinkwrap.resolver.impl.maven.MavenWorkingSessionContainer;
 import org.springframework.boot.maven.Exclude;
 import org.springframework.boot.maven.ExcludeFilter;
 
+import io.syndesis.maven.layouts.ModuleLayoutFactory;
+
 /**
  * Helper Maven plugin
  *
@@ -73,6 +74,7 @@ public class RepackageExtensionMojo extends SupportMojo {
 
     @Parameter
     protected String blackListedBoms;
+
     @Parameter
     protected String blackListedGAVs;
 
@@ -81,6 +83,7 @@ public class RepackageExtensionMojo extends SupportMojo {
 
     @Parameter(readonly = true, defaultValue = "${repositorySystemSession}")
     private RepositorySystemSession repoSession;
+
     @Parameter(readonly = true, defaultValue = "${project.remotePluginRepositories}")
     private List<RemoteRepository> remoteRepos;
 
@@ -92,7 +95,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     @Override
-    protected Collection getAdditionalFilters() {
+    protected Collection<ArtifactsFilter> getAdditionalFilters() {
         Collection<MavenDependency> dependencies = new HashSet<>();
 
         if(StringUtils.isNotBlank(blackListedBoms)){
@@ -175,7 +178,6 @@ public class RepackageExtensionMojo extends SupportMojo {
         }
     }
 
-
     protected void addCustomGAVs(Collection<MavenDependency> dependencies) {
         String[] gavs = blackListedGAVs.split(",");
 
@@ -183,7 +185,6 @@ public class RepackageExtensionMojo extends SupportMojo {
             dependencies.add(newMavenDependency(gav));
         }
     }
-
 
     protected Set<MavenDependency> obtainBomDependencies(String urlLocation) throws IOException, MojoExecutionException {
         ArtifactResult artifact = downloadAndInstallArtifact(urlLocation);

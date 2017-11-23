@@ -39,9 +39,12 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
+@SuppressWarnings("immutables")
 public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
-    enum Status { Draft, Pending, Activated, Deactivated, Deleted }
+    enum Status {
+        Draft, Pending, Activated, Deactivated, Deleted
+    }
 
     @Override
     default Kind getKind() {
@@ -58,7 +61,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<IntegrationRevision> getDraftRevision();
 
     Optional<Integer> getDeployedRevisionId();
-
 
     @JsonIgnore
     default Optional<IntegrationRevision> getDeployedRevision() {
@@ -111,11 +113,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
         Optional<IntegrationRevision> deployedRevision = getDeployedRevision();
 
         return deployedRevision.map(r -> r.getCurrentState()).orElse(IntegrationRevisionState.Pending);
-    }
-
-    @Override
-    default Integration withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
     }
 
     default IntegrationRevision lastRevision() {

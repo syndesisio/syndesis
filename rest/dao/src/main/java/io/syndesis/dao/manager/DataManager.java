@@ -47,9 +47,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@SuppressWarnings("PMD.GodClass")
 public class DataManager implements DataAccessObjectRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
+
+    @SuppressWarnings("rawtypes")
+    private static final Function[] NO_OPERATORS = new Function[0];
 
     private final CacheContainer caches;
     private final EventBus eventBus;
@@ -137,15 +141,25 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
-    public <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
+    @SuppressWarnings("unchecked")
+    public final <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model) {
+        return fetchAll(model, noOperators());
+    }
+
+    @SafeVarargs
+    public final <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
 
         ListResult<T> result;
-        if( getDataAccessObject(model)!=null ) {
+        if (getDataAccessObject(model) != null) {
             result = doWithDataAccessObject(model, d -> d.fetchAll());
         } else {
             Kind kind = Kind.from(model);
             Cache<String, T> cache = caches.getCache(kind.getModelName());
             result = ListResult.of(cache.values());
+        }
+
+        if (operators == null) {
+            return result;
         }
 
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
@@ -279,8 +293,14 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     @Override
-    public Map<Class<? extends WithId<?>>, DataAccessObject<?>> getDataAccessObjectMapping() {
-        return dataAccessObjectMapping;
+    @SuppressWarnings("unchecked")
+    public <T extends WithId<T>> DataAccessObject<T> getDataAccessObject(Class<T> type) {
+        return (DataAccessObject<T>) dataAccessObjectMapping.get(type);
+    }
+
+    @Override
+    public <T extends WithId<T>> void registerDataAccessObject(DataAccessObject<T> dataAccessObject) {
+        dataAccessObjectMapping.put(dataAccessObject.getType(), dataAccessObject);
     }
 
     /**
@@ -311,4 +331,8 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> Function<ListResult<T>, ListResult<T>>[] noOperators() {
+        return (Function<ListResult<T>, ListResult<T>>[]) NO_OPERATORS;
+    }
 }

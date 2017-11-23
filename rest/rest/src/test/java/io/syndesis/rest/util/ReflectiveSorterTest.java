@@ -89,7 +89,7 @@ public class ReflectiveSorterTest {
         ListResult<TestPersonInterface> toSort = new ListResult.Builder<TestPersonInterface>().items(getTestData()).totalCount(getTestData().size()).build();
         Function<ListResult<TestPersonInterface>, ListResult<TestPersonInterface>> operator =
             new ReflectiveSorter<>(TestPersonInterface.class, getOptions(null, null));
-        operator.apply(toSort);
+        ListResult<TestPersonInterface> sorted = operator.apply(toSort);
 
         String[] expectedNames = {
             "Schrödinger",
@@ -99,9 +99,9 @@ public class ReflectiveSorterTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.getItems().get(i).getLastName(), expectedNames[i]);
+            assertEquals(sorted.getItems().get(i).getLastName(), expectedNames[i]);
         }
-        assertEquals(getTestData().size(), toSort.getTotalCount());
+        assertEquals(getTestData().size(), sorted.getTotalCount());
 
     }
 

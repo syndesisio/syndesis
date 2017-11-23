@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClientSideStateTest {
 
-    private static final Edition RFC_EDITION = new Edition(new BigInteger("tid".getBytes()).longValue(),
+    private static final Edition RFC_EDITION = new Edition(new BigInteger("tid".getBytes(StandardCharsets.US_ASCII)).longValue(),
         "AES/CBC/PKCS5Padding", "HmacSHA1") {
         private final SecretKeySpec authenticationKey = new SecretKeySpec(
             "12345678901234567890".getBytes(StandardCharsets.US_ASCII), "HmacSHA1");
@@ -72,9 +72,9 @@ public class ClientSideStateTest {
 
     private static final LongSupplier RFC_TIME = () -> 1347265955L;
 
-    private static final BiFunction<Class<?>, byte[], Object> SIMPLE_DESERIALIZATION = (t, v) -> String.valueOf(v);
+    private static final BiFunction<Class<?>, byte[], Object> SIMPLE_DESERIALIZATION = (t, v) -> new String(v, StandardCharsets.UTF_8);
 
-    private static final Function<Object, byte[]> SIMPLE_SERIALIZATION = o -> ((String) o).getBytes();
+    private static final Function<Object, byte[]> SIMPLE_SERIALIZATION = o -> ((String) o).getBytes(StandardCharsets.UTF_8);
 
     @Immutable
     @JsonDeserialize(builder = ImmutableData.Builder.class)

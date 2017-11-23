@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
+@SuppressWarnings("immutables")
 public interface ConnectorDescriptor extends ActionDescriptor, Serializable {
 
     final class Builder extends ImmutableConnectorDescriptor.Builder {

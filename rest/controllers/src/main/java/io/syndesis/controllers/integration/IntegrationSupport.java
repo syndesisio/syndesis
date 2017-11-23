@@ -38,12 +38,15 @@ public final class IntegrationSupport {
     private IntegrationSupport() {
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> Map<K, V> aggregate(Map<K, V> ... maps) {
         return Stream.of(maps)
             .flatMap(map -> map.entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue));
     }
 
+    @SafeVarargs
     public static <T> Predicate<T> or(Predicate<T>... predicates) {
         Predicate<T> predicate = predicates[0];
 

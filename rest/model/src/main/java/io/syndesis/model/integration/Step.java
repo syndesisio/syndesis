@@ -36,7 +36,7 @@ public interface Step extends WithId<Step>, Serializable {
         return Kind.Step;
     }
 
-    Optional<Action> getAction();
+    Optional<Action<?>> getAction();
 
     Optional<Connection> getConnection();
 
@@ -54,6 +54,5 @@ public interface Step extends WithId<Step>, Serializable {
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder
     }
-
 
 }

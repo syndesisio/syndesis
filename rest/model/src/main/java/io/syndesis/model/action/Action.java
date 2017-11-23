@@ -92,6 +92,7 @@ public interface Action<D extends ActionDescriptor> extends WithKind, WithName, 
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Override
     default Map<String, ConfigurationProperty> getProperties() {
         ActionDescriptor descriptor = getDescriptor();
 

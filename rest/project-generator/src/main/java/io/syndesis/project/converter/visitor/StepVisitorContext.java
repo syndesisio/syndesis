@@ -38,10 +38,12 @@ public interface StepVisitorContext extends Iterator<StepVisitorContext> {
 
     Function<Step, Optional<String>> getConnectorIdSupplier();
 
+    @Override
     default boolean hasNext() {
         return !getRemaining().isEmpty();
     }
 
+    @Override
     default StepVisitorContext next() {
         final int index = getIndex();
         final Queue<Step> remaining = getRemaining();

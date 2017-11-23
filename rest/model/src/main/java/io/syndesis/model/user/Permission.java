@@ -25,6 +25,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Permission.Builder.class)
+@SuppressWarnings("immutables")
 public interface Permission extends WithId<Permission>, WithName, Serializable {
 
     @Override
@@ -33,11 +34,6 @@ public interface Permission extends WithId<Permission>, WithName, Serializable {
     }
 
     String getDescription();
-
-    @Override
-    default Permission withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
 
     class Builder extends ImmutablePermission.Builder {
     }

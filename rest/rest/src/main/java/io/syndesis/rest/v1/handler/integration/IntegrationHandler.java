@@ -132,19 +132,19 @@ public class IntegrationHandler extends BaseHandler
     @Path("/{id}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public StreamingOutput export(@NotNull @PathParam("id") @ApiParam(required = true) String id) throws IOException {
-        ArrayList<ModelData> models = new ArrayList<>();
+        ArrayList<ModelData<?>> models = new ArrayList<>();
 
         Integration integration = this.get(id);
-        models.add(new ModelData(Kind.Integration, integration));
+        models.add(new ModelData<Integration>(Kind.Integration, integration));
 
         for (Step step : integration.getSteps()) {
             Optional<Connection> c = step.getConnection();
             if( c.isPresent() ) {
                 Connection connection = c.get();
-                models.add(new ModelData(Kind.Connection, connection));
+                models.add(new ModelData<Connection>(Kind.Connection, connection));
                 Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
                 if( connector != null ) {
-                    models.add(new ModelData(Kind.Connector, connector));
+                    models.add(new ModelData<Connector>(Kind.Connector, connector));
                 }
             }
         }

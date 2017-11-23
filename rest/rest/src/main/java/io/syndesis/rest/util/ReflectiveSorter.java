@@ -17,6 +17,7 @@ package io.syndesis.rest.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +37,7 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
 
     @Override
     public ListResult<T> apply(ListResult<T> result) {
-        List<T> list = result.getItems();
+        List<T> list = new ArrayList<>(result.getItems());
         if (delegate != null) {
             // We are sorting inline when a delegate is given. Otherwise its a no-op
             list.sort(this);

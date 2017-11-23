@@ -22,26 +22,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public final class StepVisitorFactoryRegistry {
-    private final ConcurrentMap<String, StepVisitorFactory> MAP = new ConcurrentHashMap<>();
-    private final StepVisitorFactory FALLBACK_STEP_FACTORY = new GenericStepVisitor.Factory();
+    private final ConcurrentMap<String, StepVisitorFactory<?>> MAP = new ConcurrentHashMap<>();
+    private final StepVisitorFactory<?> FALLBACK_STEP_FACTORY = new GenericStepVisitor.Factory();
 
-    public StepVisitorFactoryRegistry(StepVisitorFactory... factories) {
-        for (StepVisitorFactory factory:  factories) {
+    public StepVisitorFactoryRegistry(StepVisitorFactory<?>... factories) {
+        for (StepVisitorFactory<?> factory:  factories) {
             register(factory);
         }
     }
 
-    public StepVisitorFactoryRegistry(List<StepVisitorFactory> factories) {
+    public StepVisitorFactoryRegistry(List<StepVisitorFactory<?>> factories) {
         factories.forEach(this::register);
     }
 
-    public void register(StepVisitorFactory factory) {
+    public void register(StepVisitorFactory<?> factory) {
         MAP.put(factory.getStepKind(), factory);
     }
 
-    public StepVisitorFactory get(String kind) {
+    public StepVisitorFactory<?> get(String kind) {
         return MAP.computeIfAbsent(kind, k -> {
-            for (StepVisitorFactory factory : ServiceLoader.load(StepVisitorFactory.class, Thread.currentThread().getContextClassLoader())) {
+            for (StepVisitorFactory<?> factory : ServiceLoader.load(StepVisitorFactory.class, Thread.currentThread().getContextClassLoader())) {
                 if (factory.getStepKind().equals(k)) {
                     return factory;
                 }

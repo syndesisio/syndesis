@@ -27,6 +27,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ExtensionDescriptor.Builder.class)
+@SuppressWarnings("immutables")
 public interface ExtensionDescriptor extends ActionDescriptor, Serializable {
 
     final class Builder extends ImmutableExtensionDescriptor.Builder {

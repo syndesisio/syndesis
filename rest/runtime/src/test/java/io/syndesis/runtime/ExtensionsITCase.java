@@ -63,7 +63,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(created.getBody().getId()).isNotEmpty();
         assertThat(created.getBody().getName()).isNotBlank();
 
-        assertThat(created.getBody().getId().isPresent());
+        assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
 
         // GET
@@ -93,13 +93,13 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created.getBody().getId().isPresent());
+        assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
 
         ResponseEntity<Extension> updated = post("/api/v1beta1/extensions?updatedId=" + id, multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(updated.getBody().getId().isPresent());
+        assertThat(updated.getBody().getId()).isPresent();
     }
 
     @Test
@@ -107,7 +107,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created.getBody().getId().isPresent());
+        assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
 
         // Using wrong extensionId="extension2"
@@ -120,7 +120,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created.getBody().getId().isPresent());
+        assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
 
         // Install it
@@ -138,7 +138,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created1 = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created1.getBody().getId().isPresent());
+        assertThat(created1.getBody().getId()).isPresent();
         String id1 = created1.getBody().getId().get();
 
         // Install it
@@ -149,7 +149,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created2 = post("/api/v1beta1/extensions?updatedId=" + id1, multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created2.getBody().getId().isPresent());
+        assertThat(created2.getBody().getId()).isPresent();
         String id2 = created2.getBody().getId().get();
 
         // 200 status code: it's just a warning
@@ -167,14 +167,14 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created1 = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created1.getBody().getId().isPresent());
+        assertThat(created1.getBody().getId()).isPresent();
         String id1 = created1.getBody().getId().get();
 
         // Create another extension (id-2)
         ResponseEntity<Extension> created2 = post("/api/v1beta1/extensions", multipartBody(extensionData(2)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created2.getBody().getId().isPresent());
+        assertThat(created2.getBody().getId()).isPresent();
         String id2 = created2.getBody().getId().get();
 
         // Install them
@@ -198,7 +198,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> createdCopy1 = post("/api/v1beta1/extensions?updatedId=" + id1, multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(createdCopy1.getBody().getId().isPresent());
+        assertThat(createdCopy1.getBody().getId()).isPresent();
         String idCopy1 = createdCopy1.getBody().getId().get();
 
         // Install copy
@@ -227,7 +227,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created.getBody().getId().isPresent());
+        assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
 
         // Get extensions using it
@@ -293,7 +293,7 @@ public class ExtensionsITCase extends BaseITCase {
         ResponseEntity<Extension> created = post("/api/v1beta1/extensions", multipartBody(extensionData(1)),
             Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        assertThat(created.getBody().getId().isPresent());
+        assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
 
         // Get extension details

@@ -30,16 +30,10 @@ import org.immutables.value.Value;
 public interface ChangeEvent extends ToJson, Serializable {
 
     Optional<String> getAction();
-    ChangeEvent withAction(String kind);
 
     Optional<String> getKind();
-    ChangeEvent withKind(String kind);
 
     Optional<String> getId();
-
-    default ChangeEvent withId(String id) {
-        return new ChangeEvent.Builder().createFrom(this).id(id).build();
-    }
 
     static ChangeEvent of(String action, String kind, String id) {
         return new ChangeEvent.Builder().action(action).kind(kind).id(id).build();

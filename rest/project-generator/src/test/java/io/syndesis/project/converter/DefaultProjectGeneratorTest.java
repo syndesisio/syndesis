@@ -413,7 +413,7 @@ public class DefaultProjectGeneratorTest {
         runtimePath.toFile().deleteOnExit();
 
         assertFileContents(generatorProperties, runtimePath.resolve("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
-        assertThat(new String(Files.readAllBytes(runtimePath.resolve("src/main/resources/mapping-step-2.json")))).isEqualTo("{}");
+        assertThat(new String(Files.readAllBytes(runtimePath.resolve("src/main/resources/mapping-step-2.json")), StandardCharsets.UTF_8)).isEqualTo("{}");
     }
 
     @Test
@@ -575,9 +575,9 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-pom-extension.xml");
         assertFileContents(generatorProperties, runtimeDir.resolve(".s2i/bin/assemble"), "test-s2i-assemble");
 
-        assertThat(Files.exists(runtimeDir.resolve("extensions/my-extension-1.jar")));
-        assertThat(Files.exists(runtimeDir.resolve("extensions/my-extension-2.jar")));
-        assertThat(Files.exists(runtimeDir.resolve("extensions/my-extension-3.jar")));
+        assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();
+        assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
+        assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
     }
 
     // ************************************************
@@ -641,7 +641,7 @@ public class DefaultProjectGeneratorTest {
             throw new IllegalArgumentException("Unable to find te required resource (" + expectedFileName + ")");
         }
 
-        final String actual = new String(Files.readAllBytes(actualFilePath));
+        final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8);
         final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8);
 
         assertThat(actual).isEqualTo(expected);

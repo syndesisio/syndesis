@@ -20,10 +20,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -345,7 +346,7 @@ public class SqlJsonDB implements JsonDB {
 
     private int deleteJsonRecords(Handle dbi, String baseDBPath, String like) {
 
-        LinkedList<String> params = getAllParentPaths(baseDBPath);
+        Deque<String> params = getAllParentPaths(baseDBPath);
 
         StringBuilder sql = new StringBuilder("DELETE from jsondb where path LIKE ?");
         if( !params.isEmpty() ) {
@@ -358,8 +359,8 @@ public class SqlJsonDB implements JsonDB {
         return dbi.update(sql.toString(), params.toArray());
     }
 
-    private static LinkedList<String> getAllParentPaths(String baseDBPath) {
-        LinkedList<String> params = new LinkedList<String>();
+    private static Deque<String> getAllParentPaths(String baseDBPath) {
+        Deque<String> params = new ArrayDeque<String>();
         Pattern compile = Pattern.compile("/[^/]*$");
         String current = Strings.trimSuffix(baseDBPath, "/");
         while( true ) {

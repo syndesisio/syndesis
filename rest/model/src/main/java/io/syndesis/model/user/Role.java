@@ -26,6 +26,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Role.Builder.class)
+@SuppressWarnings("immutables")
 public interface Role extends WithId<Role>, WithName, Serializable {
 
     @Override
@@ -34,11 +35,6 @@ public interface Role extends WithId<Role>, WithName, Serializable {
     }
 
     List<Permission> getPermissions();
-
-    @Override
-    default Role withId(String id) {
-        return new Builder().createFrom(this).id(id).build();
-    }
 
     class Builder extends ImmutableRole.Builder {
     }

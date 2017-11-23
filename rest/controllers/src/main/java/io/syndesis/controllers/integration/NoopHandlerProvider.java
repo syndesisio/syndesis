@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "noop")
 public class NoopHandlerProvider implements StatusChangeHandlerProvider.StatusChangeHandler, StatusChangeHandlerProvider {
 
+    @Override
     public Set<Integration.Status> getTriggerStatuses() {
         return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             Integration.Status.Activated,

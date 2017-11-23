@@ -107,8 +107,8 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
             ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         ConfigurationProperty procedureNames = firstResponse.getBody().getPropertyDefinitionSteps().iterator().next().getProperties().get("procedureName");
-        assertThat(procedureNames.getEnum().size() == 2);
-        assertThat(procedureNames.getEnum().iterator().next().getLabel().startsWith("DEMO_ADD"));
+        assertThat(procedureNames.getEnum()).hasSize(2);
+        assertThat(procedureNames.getEnum().iterator().next().getLabel()).startsWith("DEMO_ADD");
 
         final ResponseEntity<ConnectorDescriptor> secondResponse = http(HttpMethod.POST,
                 "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest",

@@ -26,6 +26,7 @@ import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
 import org.immutables.value.Value;
 
+@SuppressWarnings("immutables")
 public interface ActionDescriptor {
     @Value.Immutable
     @JsonDeserialize(builder = ActionDescriptor.ActionDescriptorStep.Builder.class)

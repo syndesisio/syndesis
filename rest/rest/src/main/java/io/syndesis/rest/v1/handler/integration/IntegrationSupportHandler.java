@@ -69,7 +69,7 @@ public class IntegrationSupportHandler {
 
     @POST
     @Path("/import")
-    public Response importIntegration(InputStream is) throws IOException {
+    public Response importIntegration(InputStream is) {
         try (ZipInputStream zis = new ZipInputStream(is)) {
             int imported = 0;
             while (true) {
@@ -110,7 +110,7 @@ public class IntegrationSupportHandler {
 
         // Now do the actual import.
         int count = 0;
-        for (ModelData model : export.models()) {
+        for (ModelData<?> model : export.models()) {
             switch (model.getKind()) {
                 case Integration:
 
@@ -160,7 +160,7 @@ public class IntegrationSupportHandler {
             throw new IOException("Cannot import an export at schema version level: " + export.schemaVersion());
         }
 
-        for (ModelData model : export.models()) {
+        for (ModelData<?> model : export.models()) {
             switch (model.getKind()) {
                 case Integration:
                 case Connection:

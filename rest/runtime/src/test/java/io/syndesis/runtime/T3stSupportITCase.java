@@ -44,8 +44,8 @@ public class T3stSupportITCase extends BaseITCase {
         assertThat(r1.getBody().length).isGreaterThan(1);
 
         // restoring to no data should.. leave us with no data.
-        ModelData<?>[] NO_DATA = new ModelData[]{};
-        post("/api/v1/test-support/restore-db", NO_DATA, (Class<?>) null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        ModelData<?>[] noData = new ModelData<?>[]{};
+        post("/api/v1/test-support/restore-db", noData, (Class<?>) null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Lets add an integration...
         Integration integration = new Integration.Builder()
