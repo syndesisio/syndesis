@@ -9,7 +9,8 @@ import { CustomizationsComponent } from './customizations.component';
 
 import {
   ApiConnectorListComponent,
-  ApiConnectorCreateComponent
+  ApiConnectorCreateComponent,
+  ApiConnectorDetailComponent,
 } from './api-connector';
 
 import {  } from './api-connectors/create-api-connector.component';
@@ -47,6 +48,10 @@ const routes: Routes = [
   {
     path: 'api-connector/create',
     component: ApiConnectorCreateComponent
+  },
+  {
+    path: 'api-connector/:id',
+    component: ApiConnectorDetailComponent
   }
 ];
 
@@ -64,6 +69,7 @@ const routes: Routes = [
     CustomizationsComponent,
     ApiConnectorListComponent,
     ApiConnectorCreateComponent,
+    ApiConnectorDetailComponent,
     TechExtensionsListComponent,
     TechExtensionImportComponent,
     TechExtensionDetailComponent
