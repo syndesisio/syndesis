@@ -19,8 +19,10 @@ package io.syndesis.runtime;
 import io.syndesis.dao.extension.ExtensionDataAccessObject;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
+import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -30,11 +32,28 @@ import org.springframework.context.annotation.Configuration;
 public class ExtensionConfiguration {
 
     @Bean
-    @ConditionalOnBean({DataManager.class, ExtensionDataAccessObject.class})
+    @Conditional(ExtensionDataManagerCondition.class)
     public ExtensionDataManager extensionDataManager(
             DataManager dataManager,
             ExtensionDataAccessObject extensionDataAccess) {
 
         return  new ExtensionDataManager(dataManager, extensionDataAccess);
+    }
+
+    // Required as ConditionalOnBean uses as OR operation in Spring Boot 1.x
+    // but it will use AND in Spring 2.x so this class can be replaced by a simple
+    // ConditionalOnBean once migrated to 2.x
+    public static class ExtensionDataManagerCondition extends AllNestedConditions {
+        public ExtensionDataManagerCondition() {
+            super(ConfigurationPhase.REGISTER_BEAN);
+        }
+
+        @ConditionalOnBean(DataManager.class)
+        static class OnDataManager {
+        }
+
+        @ConditionalOnBean(ExtensionDataAccessObject.class)
+        static class OnExtensionDataAccessObject {
+        }
     }
 }
