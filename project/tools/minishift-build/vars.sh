@@ -2,13 +2,13 @@
 
 set -e
 
-root_dir_file="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)/root_dir"
+root_dir_file="$(cd "$(dirname "$(readlink -f "$BASH_SOURCE")")" && pwd)/root_dir"
 if [ -f  $root_dir_file ]; then
   root=$(cat $root_dir_file)  
 else 
   # Common includes
-  pushd `dirname $0`/.. > /dev/null
-  root=`pwd`
+  pushd "$(cd "$(dirname "$(readlink -f "$BASH_SOURCE")")" && pwd)/.." > /dev/null
+  root=$(pwd)
   popd > /dev/null
 fi
 
