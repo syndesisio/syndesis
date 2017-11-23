@@ -9,5 +9,7 @@ import { ConnectorStore } from '../../store/connector/connector.store';
 export class ApiConnectorCreateComponent implements OnInit {
   constructor(private store: ConnectorStore) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Happening soon!
+  }
 }

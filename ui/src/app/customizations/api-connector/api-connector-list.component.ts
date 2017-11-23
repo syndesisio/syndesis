@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { ConfigService } from '../../config.service';
 import { ConnectorStore } from '../../store/connector/connector.store';
