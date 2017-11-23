@@ -4,7 +4,7 @@
 
 The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages open source technologies like Apache Camel and OpenShift to provide a rock-solid user experience.
 
-For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis-rest) repo.
+For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis/rest) dir.
 
 ## Table of Contents
 
@@ -65,6 +65,9 @@ $ eval $(minishift docker-env)
 
 # For a fresh install of Syndesis:
 $ ./scripts/syndesis-install --clean --pull
+
+# Set OpenShift routes
+$ ./scripts/minishift-setup.sh
 
 # Install the dependencies:
 $ yarn install
