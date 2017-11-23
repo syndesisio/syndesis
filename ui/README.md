@@ -4,7 +4,7 @@
 
 The front end application or UI for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service. It leverages open source technologies like Apache Camel and OpenShift to provide a rock-solid user experience.
 
-For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis/rest) dir.
+For the middle tier API that this client communicates with, please see the [syndesis-rest](https://github.com/syndesisio/syndesis/tree/master/rest) dir.
 
 ## Table of Contents
 
