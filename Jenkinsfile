@@ -14,6 +14,11 @@ node {
                         withYarn {
                             inside {
                                 checkout scm
+                                stage ('install parent') {
+                                    container('maven') {
+                                        sh "mvn -B -U -N install"
+                                    }
+                                }
                                 stage ('build connectors') {
                                     container('maven') {
                                         sh """
