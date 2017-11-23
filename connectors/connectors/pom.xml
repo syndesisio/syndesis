@@ -38,7 +38,7 @@
     <module>sql</module>
     <module>day-trade</module>
     <module>trade-insight</module>
-    <module>jms-connectors</module>
+    <module>jms</module>
   </modules>
 
 </project>

@@ -77,12 +77,12 @@
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>activemq-publish-text-connector</artifactId>
+      <artifactId>activemq-publish-connector</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>activemq-subscribe-text-connector</artifactId>
+      <artifactId>activemq-subscribe-connector</artifactId>
       <version>${project.version}</version>
     </dependency>
 
