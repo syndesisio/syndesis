@@ -14,13 +14,6 @@
 # limitations under the License.
 #
 
-features:
-  api:
-    v1beta1:
-      enabled: true
-  filestore:
-    enabled: true
-
 encrypt:
   key: da39a3ee5e6b4b0d3255bfef95601890afd80709
 
