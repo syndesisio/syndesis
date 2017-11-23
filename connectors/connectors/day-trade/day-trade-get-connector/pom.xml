@@ -22,6 +22,7 @@
     <groupId>io.syndesis</groupId>
     <artifactId>day-trade-connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 

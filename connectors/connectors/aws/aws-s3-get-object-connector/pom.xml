@@ -24,6 +24,7 @@
     <artifactId>aws-connectors</artifactId>
     <groupId>io.syndesis</groupId>
     <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>aws-s3-get-object-connector</artifactId>

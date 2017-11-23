@@ -24,6 +24,7 @@
     <groupId>io.syndesis</groupId>
     <artifactId>activemq-connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>activemq-model</artifactId>

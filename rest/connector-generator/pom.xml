@@ -23,6 +23,7 @@
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-rest-parent</artifactId>
     <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>connector-generator</artifactId>
