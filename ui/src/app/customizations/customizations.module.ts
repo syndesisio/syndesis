@@ -10,7 +10,7 @@ import { CustomizationsComponent } from './customizations.component';
 import {
   ApiConnectorListComponent,
   ApiConnectorCreateComponent
-} from './api-connectors';
+} from './api-connector';
 
 import {  } from './api-connectors/create-api-connector.component';
 import { TechExtensionsListComponent } from './tech-extensions/tech-extensions-list.component';
