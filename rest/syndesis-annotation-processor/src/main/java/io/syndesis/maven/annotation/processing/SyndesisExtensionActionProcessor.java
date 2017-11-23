@@ -15,17 +15,8 @@
  */
 package io.syndesis.maven.annotation.processing;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Properties;
-import java.util.Set;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -41,20 +32,33 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Properties;
+import java.util.Set;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-@SuppressWarnings({"PMD.AvoidSynchronizedAtMethodLevel", "PMD.AvoidCatchingGenericException", "PMD.ExcessiveImports"})
+@SuppressWarnings({"PMD.AvoidSynchronizedAtMethodLevel", "PMD.AvoidCatchingGenericException", "PMD.ExcessiveImports", "PMD.GodClass"})
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
     SyndesisExtensionActionProcessor.SYNDESIS_ANNOTATION_CLASS_NAME
 })
 public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     public static final String SYNDESIS_ANNOTATION_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisExtensionAction";
+    public static final String SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisActionProperty";
+    public static final String SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisActionProperty$Enum";
     public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.integration.runtime.api.SyndesisStepExtension";
     public static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.context.annotation.Bean";
 
-    private Class<? extends Annotation> annotationClass ;
+    private Class<? extends Annotation> annotationClass;
+    private Class<? extends Annotation> propertyAnnotationClass;
+    private Class<? extends Annotation> propertyEnumAnnotationClass;
     private Class<? extends Annotation> beanAnnotationClass;
     private Class<?> stepClass;
 
@@ -63,6 +67,8 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         super.init(processingEnv);
 
         annotationClass = (Class<? extends Annotation>)mandatoryFindClass(SYNDESIS_ANNOTATION_CLASS_NAME);
+        propertyAnnotationClass = (Class<? extends Annotation>)mandatoryFindClass(SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME);
+        propertyEnumAnnotationClass = (Class<? extends Annotation>)mandatoryFindClass(SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME);
         stepClass = findClass(SYNDESIS_STEP_CLASS_NAME);
         beanAnnotationClass = (Class<? extends Annotation>)findClass(BEAN_ANNOTATION_CLASS_NAME);
     }
@@ -79,6 +85,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                 try {
                     Properties props = gatherProperties(annotatedElement);
                     augmentProperties((TypeElement) annotatedElement, props);
+                    addActionProperties(annotatedElement, props);
                     persistToFile(annotatedElement, props);
                 } catch (IOException|InvocationTargetException|IllegalAccessException|NoSuchMethodException e){
                     return false;
@@ -87,6 +94,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                 try {
                     Properties props = gatherProperties(annotatedElement);
                     augmentProperties((ExecutableElement) annotatedElement, props);
+                    addActionProperties(annotatedElement, props);
                     persistToFile(annotatedElement, props);
                 } catch (IOException|InvocationTargetException|IllegalAccessException|NoSuchMethodException e){
                     return false;
@@ -133,10 +141,30 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         }
     }
 
+    /**
+     * Add action properties to the global properties.
+     * @param element
+     * @param props
+     */
+    protected void addActionProperties(Element element, Properties props) throws InvocationTargetException, IllegalAccessException {
+        Annotation[] annotations = element.getAnnotationsByType(propertyAnnotationClass);
+        for (int i=0; i<annotations.length; i++) {
+            Annotation annotation = annotations[i];
+            Properties propData = gatherProperties(annotation, propertyAnnotationClass);
+            for (String key : propData.stringPropertyNames()) {
+                writeIfNotEmpty(props, "property[" + i + "]." + key, propData.getProperty(key));
+            }
+        }
+    }
+
     protected Properties gatherProperties(Element element) throws InvocationTargetException, IllegalAccessException {
-        Properties prop = new Properties();
         Annotation annotation = element.getAnnotation(annotationClass);
-        Method[] methods = annotationClass.getDeclaredMethods();
+        return gatherProperties(annotation, annotationClass);
+    }
+
+    protected Properties gatherProperties(Annotation annotation, Class<? extends Annotation> clazz) throws InvocationTargetException, IllegalAccessException  {
+        Properties prop = new Properties();
+        Method[] methods = clazz.getDeclaredMethods();
         for (Method m : methods) {
             writeIfNotEmpty(prop, m.getName(), m.invoke(annotation));
         }
@@ -153,15 +181,26 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     }
 
 
-    protected void writeIfNotEmpty(Properties prop, String key, Object value) {
-        if(value != null && !"".equals(value.toString().trim())){
+    protected void writeIfNotEmpty(Properties prop, String key, Object value) throws InvocationTargetException, IllegalAccessException {
+        if(value != null && !"".equals(value.toString().trim())) {
             if(value instanceof String[]){
                 String[] arr = (String[])value;
                 if(arr.length > 0){
                     prop.put(key, String.join(",", arr));
                 }
+            } else if(Object[].class.isInstance(value)) {
+                Object[] array = (Object[]) value;
+                for (int i=0; i<array.length; i++) {
+                    if (propertyEnumAnnotationClass.isInstance(array[i])) {
+                        Annotation enumAnn = (Annotation) array[i];
+                        Properties props = gatherProperties(enumAnn, propertyEnumAnnotationClass);
+                        for (String propName : props.stringPropertyNames()) {
+                            prop.put(key + "[" + i + "]." + propName, props.getProperty(propName));
+                        }
+                    }
+                }
             } else {
-                prop.put(key, value);
+                prop.put(key, value.toString());
             }
         }
     }
