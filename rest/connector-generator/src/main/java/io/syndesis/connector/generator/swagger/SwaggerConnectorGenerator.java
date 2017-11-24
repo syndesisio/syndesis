@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.models.HttpMethod;
+import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
@@ -54,7 +55,7 @@ import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShap
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
 
 @SuppressWarnings("PMD.ExcessiveImports")
-public class SwaggerConnectorGenerator implements ConnectorGenerator {
+public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     private static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
@@ -102,6 +103,26 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
             .build();
     }
 
+    @Override
+    protected String determineConnectorName(final ConnectorTemplate connectorTemplate,
+        final CustomConnector customConnector) {
+        final String specification = requiredSpecification(customConnector);
+
+        final Swagger swagger = parseSpecification(specification);
+
+        final Info info = swagger.getInfo();
+        if (info == null) {
+            return super.determineConnectorName(connectorTemplate, customConnector);
+        }
+
+        final String title = info.getTitle();
+        if (title == null) {
+            return super.determineConnectorName(connectorTemplate, customConnector);
+        }
+
+        return title;
+    }
+
     /* default */ static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
         final Map<String, Parameter> globalParameters = swagger.getParameters();
         if (globalParameters != null) {
@@ -118,7 +139,7 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
-        final Swagger swagger = new SwaggerParser().parse(specification);
+        final Swagger swagger = parseSpecification(specification);
         addGlobalParameters(builder, swagger);
 
         final Map<String, Path> paths = swagger.getPaths();
@@ -238,7 +259,7 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         }
 
         if (!(parameter instanceof SerializableParameter)) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
         }
 
@@ -273,6 +294,17 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
+    static Swagger parseSpecification(final String specification) {
+        final SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = Optional.ofNullable(parser.read(specification))
+            .orElseGet(() -> parser.parse(specification));
+        if (swagger == null) {
+            throw new IllegalArgumentException("Unable to read Swagger specification from: " + specification);
+        }
+
+        return swagger;
+    }
+
     /* default */ static ConfigurationProperty property(final PropertyData propertyData) {
         final ConfigurationProperty.Builder property = new ConfigurationProperty.Builder()//
             .kind("property")//
@@ -302,7 +334,7 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         final String specification = configuredProperties.get("specification");
 
         if (specification == null) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "Configured properties of the given Connector template does not include `specification` property");
         }
         return specification;
