@@ -24,8 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.Json;
@@ -56,8 +57,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
 
-import javax.annotation.Nullable;
-
 
 /**
  * Helper Maven plugin
@@ -69,11 +68,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
-    @Parameter
-    private String groupId;
-
-    @Parameter
-    private String artifactId;
+    @Parameter(defaultValue = "${project.groupId}:${project.artifactId}")
+    private String extensionId;
 
     @Parameter
     private String version;
@@ -317,13 +313,12 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
     protected void overrideConfigFromMavenPlugin() {
         getLog().info("Looking for configuration to override at Maven Plugin configuration level. ");
-        if(StringUtils.isBlank(groupId)){
-            groupId = project.getGroupId();
+
+        if(StringUtils.isBlank(extensionId)) {
+            extensionBuilder.extensionId(project.getGroupId() + ":" + project.getArtifactId());
+        } else {
+            extensionBuilder.extensionId(extensionId);
         }
-        if(StringUtils.isBlank(artifactId)){
-            artifactId = project.getArtifactId();
-        }
-        extensionBuilder.extensionId(groupId + ":" + artifactId);
 
         if(StringUtils.isBlank(version)){
             version = project.getVersion();
