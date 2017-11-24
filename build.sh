@@ -54,7 +54,7 @@ function readopt() {
 # Build functions
 
 function modules_to_build() {
-  modules="parent connectors verifier runtime rest s2i ui"
+  modules="parent"
   resume_from=$(readopt --resume-from $ARGS 2> /dev/null)
   if [ "x${resume_from}" != x ]; then
     modules=$(echo $modules | sed -e "s/^.*$resume_from/$resume_from/")
@@ -118,57 +118,27 @@ function init_options() {
 }
 
 function parent() {
-  "${MAVEN_CMD}" install -N $MAVEN_PARAMS
-}
-
-function connectors() {
-  pushd connectors
-  # We are ALWAYS clean this project, because build fails otherwise: https://github.com/syndesisio/connectors/issues/93
-  "${MAVEN_CMD}" clean install $MAVEN_PARAMS
-  popd
-}
-
-function verifier() {
-  pushd verifier
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_PARAMS
-  popd
-}
-
-function runtime() {
-  pushd runtime
   "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-  popd  
-}
-
-function rest() {
-  pushd rest
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_PARAMS
-  popd
-}
-
-function s2i() {
-  pushd s2i
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-  popd
 }
 
 function ui() {
   pushd ui
-  yarn
-  yarn ng build -- --aot --prod --progress=false
-  if [ -z "$SKIP_IMAGE_BUILDS" ]; then
-      if [ -n "$WITH_IMAGE_STREAMS" ]; then
-          BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
-          if [ -z "$BC_DETAILS" ]; then
-              cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
-          fi
-          tar -cvf archive.tar dist docker
-          oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
-          rm archive.tar
-      else
-          docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
-      fi
-  fi
+  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
+  # yarn
+  # yarn ng build -- --aot --prod --progress=false
+  # if [ -z "$SKIP_IMAGE_BUILDS" ]; then
+  #     if [ -n "$WITH_IMAGE_STREAMS" ]; then
+  #         BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
+  #         if [ -z "$BC_DETAILS" ]; then
+  #             cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
+  #         fi
+  #         tar -cvf archive.tar dist docker
+  #         oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
+  #         rm archive.tar
+  #     else
+  #         docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
+  #     fi
+  # fi
   popd
 }
 

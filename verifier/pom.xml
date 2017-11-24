@@ -281,6 +281,37 @@
   </build>
 
   <profiles>
+
+    <profile>
+      <id>build-docker-image</id>
+      <activation>
+        <property>
+          <name>env.DOCKER_HOST</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <version>${fabric8-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>build-docker-image</id>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <mode>kubernetes</mode>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <!-- Profile for Jenkins CI build on OpenShift -->
     <profile>
       <id>ci</id>

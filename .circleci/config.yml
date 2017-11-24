@@ -93,7 +93,7 @@ jobs:
 
             curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
-            IMAGES='syndesis-rest syndesis-verifier syndesis-s2i'
+            IMAGES='syndesis-rest syndesis-verifier syndesis-ui syndesis-s2i'
             
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD

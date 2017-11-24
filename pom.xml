@@ -34,10 +34,17 @@
   <description>syndesis :: ${project.artifactId}</description>
 
   <properties>
+
+    <syndesis-ui-image-name>syndesis/syndesis-ui</syndesis-ui-image-name>
+    <syndesis-s2i-image-name>syndesis/syndesis-s2i</syndesis-s2i-image-name>
+
+    <docker.maven.plugin.fabric8.version>0.22.1</docker.maven.plugin.fabric8.version>
+    <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
     <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
     <node.version>v6.11.5</node.version>
     <yarn.version>v1.2.1</yarn.version>
+
   </properties>
   
   <modules>
@@ -152,6 +159,7 @@
               <exclude>**/spring.factories</exclude>
               <exclude>**/*.adoc</exclude>
               <exclude>archetypes/**/src/main/resources/archetype-resources/**</exclude>
+              <exclude>s2i/src/main/docker/project/**</exclude>
             </excludes>
           </configuration>
         </plugin>

@@ -45,11 +45,7 @@
   </repositories>
 
   <properties>
-    <docker-image-name>syndesis/syndesis-s2i</docker-image-name>
-
-    <docker.maven.plugin.fabric8.version>0.22.1</docker.maven.plugin.fabric8.version>
-    <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
-    <syndesis.rest.version>0.1-SNAPSHOT</syndesis.rest.version>
+    <syndesis.rest.version>${project.version}</syndesis.rest.version>
   </properties>
   <build>
     <plugins>
@@ -101,30 +97,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>${docker.maven.plugin.fabric8.version}</version>
-        <executions>
-          <execution>
-            <id>exec</id>
-            <phase>package</phase>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <images>
-            <image>
-              <name>${docker-image-name}</name>
-              <build>
-                <dockerFile>Dockerfile</dockerFile>
-              </build>
-            </image>
-          </images>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
@@ -134,5 +106,44 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>build-docker-image</id>
+      <activation>
+        <property>
+          <name>env.DOCKER_HOST</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>${docker.maven.plugin.fabric8.version}</version>
+            <executions>
+              <execution>
+                <id>exec</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <images>
+                <image>
+                  <name>${syndesis-s2i-image-name}</name>
+                  <build>
+                    <dockerFile>Dockerfile</dockerFile>
+                  </build>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
 
