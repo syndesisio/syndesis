@@ -36,6 +36,7 @@
       <groupId>io.syndesis.integration-runtime</groupId>
       <artifactId>model</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.syndesis.integration-runtime</groupId>
       <artifactId>runtime-api</artifactId>
@@ -86,12 +87,6 @@
     <dependency>
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
       <optional>true</optional>
     </dependency>
 
