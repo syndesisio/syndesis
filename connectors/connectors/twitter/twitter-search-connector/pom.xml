@@ -25,7 +25,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  
+
   <artifactId>twitter-search-connector</artifactId>
   <name>Syndesis Twitter Connectors :: Twitter Search Connector</name>
   <description>Twitter Search Connector</description>
@@ -183,16 +183,6 @@
             <goals>
               <goal>jar</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-jar</id>
-            <phase>never</phase>
           </execution>
         </executions>
       </plugin>

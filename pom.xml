@@ -373,7 +373,6 @@
         <groupId>org.commonjava.maven.plugins</groupId>
         <artifactId>directory-maven-plugin</artifactId>
         <version>0.1</version>
-        <inherited>false</inherited>
         <executions>
           <execution>
             <id>directories</id>

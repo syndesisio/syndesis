@@ -21,24 +21,22 @@
 
   <parent>
       <groupId>io.syndesis</groupId>
-      <artifactId>integration-runtime-bom</artifactId>
+      <artifactId>syndesis-parent</artifactId>
       <version>1.2-SNAPSHOT</version>
-      <relativePath>bom/pom.xml</relativePath>
+      <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
   <artifactId>integration-runtime</artifactId>
   <packaging>pom</packaging>
 
   <name>Syndesis :: Integration Runtime</name>
 
   <modules>
-    <module>bom</module>
     <module>model</module>
     <module>runtime-api</module>
     <module>runtime</module>
   </modules>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -75,6 +73,84 @@
       </plugin>
     </plugins>
   </build>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <camel.version>2.20.0</camel.version>
+    <jackson.version>2.8.10</jackson.version>
+    <assertj.version>2.4.1</assertj.version>
+    <rest-assured.version>3.0.0</rest-assured.version>
+    <spring-boot.version>1.5.7.RELEASE</spring-boot.version>
+    <spring.version>4.3.11</spring.version>
+    <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
+    <auto-service.version>1.0-rc3</auto-service.version>
+    <json-path.version>2.4.0</json-path.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <basepom.test.timeout>180</basepom.test.timeout>
+    <basepom.failsafe.timeout>180</basepom.failsafe.timeout>
+  </properties>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Syndesis Runtime Modules -->
+      <dependency>
+        <groupId>io.syndesis.integration-runtime</groupId>
+        <artifactId>model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.integration-runtime</groupId>
+        <artifactId>runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.integration-runtime</groupId>
+        <artifactId>runtime-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>integration-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- project dependencies -->
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.auto.service</groupId>
+        <artifactId>auto-service</artifactId>
+        <version>${auto-service.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>${json-path.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <profiles>
     <profile>
