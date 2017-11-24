@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.search.TwitterSearchComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "twitter-search-connector",
-  "version" : "0.5-SNAPSHOT",
+  "version" : "1.2-SNAPSHOT",
   "description" : "Search for twitter",
   "labels" : [ "twitter" ],
   "pattern" : "From",
