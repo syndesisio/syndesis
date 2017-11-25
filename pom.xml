@@ -35,29 +35,55 @@
 
   <properties>
 
-    <syndesis-ui-image-name>syndesis/syndesis-ui</syndesis-ui-image-name>
-    <syndesis-s2i-image-name>syndesis/syndesis-s2i</syndesis-s2i-image-name>
-
-    <docker.maven.plugin.fabric8.version>0.22.1</docker.maven.plugin.fabric8.version>
+    <fabric8.maven.plugin.version>3.5.33</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
     <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
     <node.version>v6.11.5</node.version>
     <yarn.version>v1.2.1</yarn.version>
 
+    <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
+    <basepom.test.fork-count>1</basepom.test.fork-count>
+    <basepom.failsafe.fork-count>1</basepom.failsafe.fork-count>
+    <basepom.failsafe.reuse-vm>true</basepom.failsafe.reuse-vm>
   </properties>
-  
-  <modules>
-      <module>connectors</module>
-      <module>ui</module>
-      <module>runtime</module>
-      <module>rest</module>
-      <module>s2i</module>
-      <module>tests</module>
-      <module>verifier</module>
-  </modules>
+
 
   <profiles>
+
+    <profile>
+      <id>default</id>
+      <activation>
+        <property><name>::default</name></property>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>connectors</module>
+        <module>ui</module>
+        <module>runtime</module>
+        <module>rest</module>
+        <module>s2i</module>
+        <module>tests</module>
+        <module>verifier</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>image</id>
+      <activation>
+        <property><name>::image</name></property>
+      </activation>
+
+      <modules>
+        <module>rest</module>
+        <module>verifier</module>
+        <module>ui</module>
+      </modules>
+
+      <build>
+        <defaultGoal>install</defaultGoal>
+      </build>
+    </profile>
 
     <profile>
       <id>no-checks</id>
@@ -74,62 +100,235 @@
     </profile>
 
     <profile>
-      <id>yarn</id>      
+      <id>docker</id>
+      <properties>
+        <fabric8.generator.name>syndesis/%a</fabric8.generator.name>
+        <fabric8.mode>kubernetes</fabric8.mode>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>openshift</id>
+      <properties>
+        <fabric8.generator.name>syndesis/%a</fabric8.generator.name>
+        <fabric8.mode>openshift</fabric8.mode>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>flash</id>
+      <activation>
+        <property>
+          <name>deploy</name>
+        </property>
+      </activation>
+      <properties>
+        <basepom.check.skip-all>true</basepom.check.skip-all>
+      </properties>
       <build>
         <plugins>
           <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <version>${frontend-maven-plugin-version}</version>
+            <artifactId>maven-resources-plugin</artifactId>
             <executions>
               <execution>
-                <id>install node and npm</id>
-                <goals>
-                  <goal>install-node-and-npm</goal>
-                </goals>
-                <configuration>
-                  <nodeVersion>${node.version}</nodeVersion>
-                </configuration> 
-              </execution>
-              <execution>
-                <id>install yarn</id>
-                <goals>
-                  <goal>install-node-and-yarn</goal>
-                </goals>
-                <configuration>
-                  <nodeVersion>${node.version}</nodeVersion>
-                  <yarnVersion>${yarn.version}</yarnVersion>
-                </configuration>
-              </execution>
-              <execution>
-                <id>angular-cli install</id>
-                <goals>
-                  <goal>npm</goal>
-                </goals>
-                <configuration>
-                  <arguments>install --no-optional -g angular-cli</arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>yarn install</id>
-                <goals>
-                  <goal>yarn</goal>
-                </goals>
-                <configuration>
-                  <arguments>install --no-progress</arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>yarn ng build</id>
-                <goals>
-                  <goal>yarn</goal>
-                </goals>
-                <configuration>
-                  <arguments>ng build -- --aot --prod --progress=false</arguments>
-                </configuration>
+                <id>default-testResources</id>
+                <phase />
               </execution>
             </executions>
-          </plugin>  
+          </plugin>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-testCompile</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>property-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>get-build-id</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>default-it</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-tests</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.ning.maven.plugins</groupId>
+            <artifactId>maven-dependency-versions-check-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-management-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>duplicate-finder-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-test</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -142,10 +341,23 @@
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <configuration>
-            <header>${syndesis.basedir}/header.txt</header>
-            <properties>
-              <owner>Red Hat, Inc.</owner>
-            </properties>
+            <inlineHeader>Copyright (C) ${project.inceptionYear} Red Hat, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</inlineHeader>
+            <skipExistingHeaders>true</skipExistingHeaders>
+            <!-- Reduce this even further. Vote for https://github.com/mycila/license-maven-plugin/pull/133
+                 to make this a fixed thread number value -->
+            <concurrencyFactor>1</concurrencyFactor>
             <excludes>
               <exclude>**/node_modules/**</exclude>
               <exclude>.editorconfig</exclude>
@@ -163,31 +375,17 @@
             </excludes>
           </configuration>
         </plugin>
+
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>fabric8-maven-plugin</artifactId>
+          <version>${fabric8.maven.plugin.version}</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.commonjava.maven.plugins</groupId>
-        <artifactId>directory-maven-plugin</artifactId>
-        <version>0.1</version>
-        <executions>
-          <execution>
-            <id>directories</id>
-            <goals>
-              <goal>directory-of</goal>
-            </goals>
-            <phase>initialize</phase>
-            <configuration>
-              <property>syndesis.basedir</property>
-              <project>
-                <groupId>io.syndesis</groupId>
-                <artifactId>syndesis-parent</artifactId>
-              </project>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+
+    <!-- Used for resolving the proper license header. -->
   </build>
 
 

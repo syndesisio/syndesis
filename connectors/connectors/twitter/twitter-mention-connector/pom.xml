@@ -93,14 +93,14 @@
       <version>${spring-boot.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 
   <build>
     <defaultGoal>install</defaultGoal>
 
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -110,7 +110,7 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -181,16 +181,6 @@
             <goals>
               <goal>jar</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default-jar</id>
-            <phase>never</phase>
           </execution>
         </executions>
       </plugin>

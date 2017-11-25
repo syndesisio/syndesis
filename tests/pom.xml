@@ -20,15 +20,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>9</version>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
   <artifactId>system-tests-project</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <name>Syndesis System Tests :: Project</name>
   <inceptionYear>2016</inceptionYear>
 
@@ -112,6 +112,8 @@
 
     <junit.version>4.12</junit.version>
     <kubernetes-client.version>2.6.3</kubernetes-client.version>
+    <kubernetes-model.version>1.1.4</kubernetes-model.version>
+    <okhttp.version>3.8.1</okhttp.version>
   </properties>
 
   <dependencyManagement>
@@ -136,8 +138,14 @@
 
     <dependency>
       <groupId>io.fabric8</groupId>
-      <artifactId>openshift-client</artifactId>
+      <artifactId>kubernetes-client</artifactId>
       <version>${kubernetes-client.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-model</artifactId>
+      <version>${kubernetes-model.version}</version>
     </dependency>
 
     <dependency>
@@ -168,12 +176,50 @@
     </dependency>
 
     <dependency>
+      <groupId>org.jboss.arquillian.test</groupId>
+      <artifactId>arquillian-test-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
     </dependency>
+
+
+
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
+            <ignoredResourcePattern>schema/kube-schema.json</ignoredResourcePattern>
+            <ignoredResourcePattern>log4j.properties</ignoredResourcePattern>
+            <ignoredResourcePattern>about.html</ignoredResourcePattern>
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
     <profile>
