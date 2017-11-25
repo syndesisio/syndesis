@@ -42,6 +42,10 @@
     <node.version>v6.11.5</node.version>
     <yarn.version>v1.2.1</yarn.version>
 
+    <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
+    <basepom.test.fork-count>1</basepom.test.fork-count>
+    <basepom.failsafe.fork-count>1</basepom.failsafe.fork-count>
+    <basepom.failsafe.reuse-vm>true</basepom.failsafe.reuse-vm>
   </properties>
 
 
@@ -328,7 +332,6 @@
         </plugins>
       </build>
     </profile>
-
   </profiles>
 
   <build>
@@ -338,10 +341,23 @@
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <configuration>
-            <header>${syndesis.basedir}/header.txt</header>
-            <properties>
-              <owner>Red Hat, Inc.</owner>
-            </properties>
+            <inlineHeader>Copyright (C) ${project.inceptionYear} Red Hat, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</inlineHeader>
+            <skipExistingHeaders>true</skipExistingHeaders>
+            <!-- Reduce this even further. Vote for https://github.com/mycila/license-maven-plugin/pull/133
+                 to make this a fixed thread number value -->
+            <concurrencyFactor>1</concurrencyFactor>
             <excludes>
               <exclude>**/node_modules/**</exclude>
               <exclude>.editorconfig</exclude>
@@ -368,29 +384,8 @@
 
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.commonjava.maven.plugins</groupId>
-        <artifactId>directory-maven-plugin</artifactId>
-        <version>0.1</version>
-        <executions>
-          <execution>
-            <id>directories</id>
-            <goals>
-              <goal>directory-of</goal>
-            </goals>
-            <phase>initialize</phase>
-            <configuration>
-              <property>syndesis.basedir</property>
-              <project>
-                <groupId>io.syndesis</groupId>
-                <artifactId>syndesis-parent</artifactId>
-              </project>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+
+    <!-- Used for resolving the proper license header. -->
   </build>
 
 
