@@ -31,7 +31,7 @@ public class SalesforceOnDeleteComponent extends DefaultConnectorComponent {
     }
 
     public SalesforceOnDeleteComponent(String componentSchema) {
-        super("salesforce-on-delete", componentSchema, SalesforceOnDeleteComponent.class.getName());
+        super("on-delete", componentSchema, SalesforceOnDeleteComponent.class.getName());
     }
 
     @Override

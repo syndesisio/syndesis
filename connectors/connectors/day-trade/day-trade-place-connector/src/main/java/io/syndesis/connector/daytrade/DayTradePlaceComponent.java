@@ -27,7 +27,7 @@ public class DayTradePlaceComponent extends DefaultConnectorComponent {
     }
 
     public DayTradePlaceComponent(String componentSchema) {
-        super("day-trade-place", componentSchema, DayTradePlaceComponent.class.getName());
+        super("place", componentSchema, DayTradePlaceComponent.class.getName());
 
         // remove all the headers as we should not propagate any of them
         // and set the content type as json which is what this connector uses

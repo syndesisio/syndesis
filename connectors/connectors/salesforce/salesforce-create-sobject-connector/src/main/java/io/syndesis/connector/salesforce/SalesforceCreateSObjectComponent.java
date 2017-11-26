@@ -33,7 +33,7 @@ public class SalesforceCreateSObjectComponent extends DefaultConnectorComponent 
     }
 
     public SalesforceCreateSObjectComponent(String componentSchema) {
-        super("salesforce-create-sobject", componentSchema, SalesforceCreateSObjectComponent.class.getName());
+        super("create-sobject", componentSchema, SalesforceCreateSObjectComponent.class.getName());
 
         setAfterProducer( exchange -> {
 

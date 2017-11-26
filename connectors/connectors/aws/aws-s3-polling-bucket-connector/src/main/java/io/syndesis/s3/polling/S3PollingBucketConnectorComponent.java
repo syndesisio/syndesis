@@ -12,6 +12,6 @@ public class S3PollingBucketConnectorComponent extends DefaultConnectorComponent
     }
 
     public S3PollingBucketConnectorComponent(String componentSchema) {
-        super("aws-s3-polling-bucket-connector", componentSchema, "io.syndesis.s3.polling.S3PollingBucketConnectorComponent");
+        super("polling-bucket-connector", componentSchema, "io.syndesis.s3.polling.S3PollingBucketConnectorComponent");
     }
 }

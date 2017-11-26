@@ -22,7 +22,7 @@ public class SalesforceOnUpdateComponent extends AbstractSalesforceStreamingConn
     }
 
     public SalesforceOnUpdateComponent(String componentSchema) {
-        super("salesforce-on-update", componentSchema, SalesforceOnUpdateComponent.class.getName(), "syndesis_", "_update");
+        super("on-update", componentSchema, SalesforceOnUpdateComponent.class.getName(), "syndesis_", "_update");
     }
 
 }

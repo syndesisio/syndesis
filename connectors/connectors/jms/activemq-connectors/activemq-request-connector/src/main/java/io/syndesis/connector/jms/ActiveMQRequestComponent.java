@@ -25,7 +25,7 @@ public class ActiveMQRequestComponent extends AbstractActiveMQConnector {
     }
 
     public ActiveMQRequestComponent(String componentSchema) {
-        super("activemq-request", componentSchema, ActiveMQRequestComponent.class.getName());
+        super("request", componentSchema, ActiveMQRequestComponent.class.getName());
 
     }
 

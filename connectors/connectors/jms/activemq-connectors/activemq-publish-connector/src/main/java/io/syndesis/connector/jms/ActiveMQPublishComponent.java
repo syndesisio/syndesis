@@ -25,7 +25,7 @@ public class ActiveMQPublishComponent extends AbstractActiveMQConnector {
     }
 
     public ActiveMQPublishComponent(String componentSchema) {
-        super("activemq-publish", componentSchema, ActiveMQPublishComponent.class.getName());
+        super("publish", componentSchema, ActiveMQPublishComponent.class.getName());
 
 
     }

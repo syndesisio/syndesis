@@ -26,9 +26,9 @@ public class TwitterSearchComponent extends DefaultConnectorComponent {
     public TwitterSearchComponent() {
         this(null);
     }
-    
+
     public TwitterSearchComponent(String componentSchema) {
-        super("twitter-search-connector", componentSchema, "io.syndesis.search.TwitterSearchComponent");
+        super("connector", componentSchema, "io.syndesis.search.TwitterSearchComponent");
     }
 
 }

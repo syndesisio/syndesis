@@ -28,7 +28,7 @@ public class SalesforceGetSObjectComponent extends DefaultConnectorComponent {
     }
 
     public SalesforceGetSObjectComponent(String componentJson) {
-        super("salesforce-get-sobject", componentJson, SalesforceGetSObjectComponent.class.getName());
+        super("get-sobject", componentJson, SalesforceGetSObjectComponent.class.getName());
 
         // replace DTO with id for Salesforce component
         setBeforeProducer(exchange -> {

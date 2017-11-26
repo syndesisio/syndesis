@@ -25,6 +25,6 @@ public class ActiveMQRespondComponent extends AbstractActiveMQConnector {
     }
 
     public ActiveMQRespondComponent(String componentSchema) {
-        super("activemq-respond", componentSchema, ActiveMQRespondComponent.class.getName());
+        super("respond", componentSchema, ActiveMQRespondComponent.class.getName());
     }
 }

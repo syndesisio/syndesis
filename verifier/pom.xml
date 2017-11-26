@@ -150,6 +150,12 @@
       <groupId>io.swagger</groupId>
       <artifactId>swagger-jaxrs</artifactId>
       <version>${swagger.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.ws.rs</groupId>
+          <artifactId>jsr311-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -166,17 +172,16 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.spec.javax.ws.rs</groupId>
-      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-      <version>1.0.1.Beta1</version>
-      <scope></scope>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
       <version>3.1.4.Final</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+      <version>1.0.1.Beta1</version>
+    </dependency>
 
     <!-- === Connectors ================================================================== -->
 
@@ -297,8 +302,38 @@
         <groupId>org.basepom.maven</groupId>
         <artifactId>duplicate-finder-maven-plugin</artifactId>
         <configuration>
+          <quiet>true</quiet>
           <printEqualFiles>false</printEqualFiles>
           <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+          <checkRuntimeClasspath>false</checkRuntimeClasspath>
+          <checkTestClasspath>false</checkTestClasspath>
+          <ignoredResourcePatterns>
+            <ignore>camel-component-schema.json</ignore>
+            <ignore>camel-connector-schema.json</ignore>
+            <ignore>camel-connector.json</ignore>
+            <ignore>git.properties</ignore>
+          </ignoredResourcePatterns>
+          <ignoredDependencies>
+            <ignoredDependency>
+              <groupId>org.apache.camel</groupId>
+              <artifactId>spi-annotations</artifactId>
+            </ignoredDependency>
+            <ignoredDependency>
+              <groupId>com.vaadin.external.google</groupId>
+              <artifactId>android-json</artifactId>
+            </ignoredDependency>
+            <ignoredDependency>
+              <groupId>xpp3</groupId>
+              <artifactId>xpp3_min</artifactId>
+            </ignoredDependency>
+            <ignoredDependency>
+              <groupId>commons-logging</groupId>
+              <artifactId>commons-logging</artifactId>
+            </ignoredDependency>
+          </ignoredDependencies>
+          <ignoredClassPatterns>
+            <ignored>org.apache.camel.json.simple.*</ignored>
+          </ignoredClassPatterns>
         </configuration>
       </plugin>
     </plugins>

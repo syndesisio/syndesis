@@ -12,6 +12,6 @@ public class S3GetObjectConnectorComponent extends DefaultConnectorComponent {
     }
 
     public S3GetObjectConnectorComponent(String componentSchema) {
-        super("aws-s3-get-object-connector", componentSchema, "io.syndesis.s3.get.S3GetObjectConnectorComponent");
+        super("get-object-connector", componentSchema, "io.syndesis.s3.get.S3GetObjectConnectorComponent");
     }
 }

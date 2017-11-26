@@ -12,6 +12,8 @@
   <packaging>jar</packaging>
 
   <properties>
+    <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+    <camel.version>2.20.1</camel.version>
     <syndesis-integration-runtime.version>1.2-SNAPSHOT</syndesis-integration-runtime.version>
     <camel-atlasmap.version>1.31.1</camel-atlasmap.version>
   </properties>

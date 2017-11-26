@@ -27,7 +27,7 @@ public class DayTradeGetComponent extends DefaultConnectorComponent {
     }
 
     public DayTradeGetComponent(String componentSchema) {
-        super("day-trade-get", componentSchema, DayTradeGetComponent.class.getName());
+        super("get", componentSchema, DayTradeGetComponent.class.getName());
 
         // remove all the headers, expect the order id as we should not propagate any of them
         // and set the content type as json which is what this connector uses

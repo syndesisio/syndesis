@@ -34,7 +34,7 @@ public class SalesforceUpdateSObjectComponent extends DefaultConnectorComponent 
     }
 
     public SalesforceUpdateSObjectComponent(String componentSchema) {
-        super("salesforce-update-sobject", componentSchema, SalesforceUpdateSObjectComponent.class.getName());
+        super("update-sobject", componentSchema, SalesforceUpdateSObjectComponent.class.getName());
 
         // set sObjectId header
         setBeforeProducer(exchange -> {
