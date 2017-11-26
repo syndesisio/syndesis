@@ -1,7 +1,7 @@
 package io.syndesis.verifier.impl;
 
-import io.syndesis.connector.SqlStoredConnectorVerifierExtension;
 
+import io.syndesis.connector.sql.stored.SqlStoredConnectorVerifierExtension;
 import org.springframework.stereotype.Component;
 
 /**

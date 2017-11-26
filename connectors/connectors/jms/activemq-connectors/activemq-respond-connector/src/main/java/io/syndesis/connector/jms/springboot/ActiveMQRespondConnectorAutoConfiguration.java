@@ -90,7 +90,8 @@ public class ActiveMQRespondConnectorAutoConfiguration {
         for (Map.Entry<String, ActiveMQRespondConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            ActiveMQRespondComponent connector = new ActiveMQRespondComponent();
+            ActiveMQRespondComponent connector = new ActiveMQRespondComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

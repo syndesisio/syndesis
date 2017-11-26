@@ -90,7 +90,7 @@ public class HttpPostConnectorAutoConfiguration {
         for (Map.Entry<String, HttpPostConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            HttpPostComponent connector = new HttpPostComponent();
+            HttpPostComponent connector = new HttpPostComponent(entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

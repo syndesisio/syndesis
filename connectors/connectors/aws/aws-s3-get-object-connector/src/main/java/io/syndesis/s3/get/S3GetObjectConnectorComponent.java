@@ -6,9 +6,12 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel S3GetObjectConnectorComponent connector
  */
 public class S3GetObjectConnectorComponent extends DefaultConnectorComponent {
-    
+
     public S3GetObjectConnectorComponent() {
-        super("aws-s3-get-object-connector", "io.syndesis.s3.get.S3GetObjectConnectorComponent");
+        this(null);
     }
 
+    public S3GetObjectConnectorComponent(String componentSchema) {
+        super("aws-s3-get-object-connector", componentSchema, "io.syndesis.s3.get.S3GetObjectConnectorComponent");
+    }
 }

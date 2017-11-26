@@ -26,7 +26,6 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
   <artifactId>syndesis-verifier</artifactId>
   <name>Syndesis Verifier</name>
   <version>1.2-SNAPSHOT</version>
@@ -37,13 +36,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-    <camel.version>2.20.0</camel.version>
-    <swagger.version>1.5.12</swagger.version>
-    <resteasy-spring-boot-starter.version>2.3.0-RELEASE</resteasy-spring-boot-starter.version>
-    <jackson.version>2.8.7</jackson.version>
+    <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <syndesis-connector.version>0.5.8</syndesis-connector.version>
   </properties>
 
   <dependencyManagement>
@@ -90,32 +84,66 @@
     </dependency>
 
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>com.paypal.springboot</groupId>
       <artifactId>resteasy-spring-boot-starter</artifactId>
       <version>${resteasy-spring-boot-starter.version}</version>
     </dependency>
 
+    <!-- =========================================================== -->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-      <version>${swagger.version}</version>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jsonSchema</artifactId>
     </dependency>
 
     <dependency>
@@ -124,30 +152,67 @@
       <version>${swagger.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+      <version>1.0.0.Final</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+      <version>1.0.1.Beta1</version>
+      <scope></scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+      <version>3.1.4.Final</version>
+    </dependency>
+
+
     <!-- === Connectors ================================================================== -->
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>http-get-connector</artifactId>
-      <version>${syndesis-connector.version}</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>twitter-mention-connector</artifactId>
-      <version>${syndesis-connector.version}</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
      <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>salesforce-upsert-contact-connector</artifactId>
-      <version>${syndesis-connector.version}</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
-      <version>${syndesis-connector.version}</version>
+      <version>${syndesis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-common</artifactId>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -170,64 +235,6 @@
   </dependencies>
 
   <build>
-
-    <pluginManagement>
-      <plugins>
-
-        <!-- Disable some of these checks until we get the code base in basepom shape -->
-        <plugin>
-          <groupId>com.mycila</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>com.hubspot.maven.plugins</groupId>
-          <artifactId>dependency-management-maven-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>com.ning.maven.plugins</groupId>
-          <artifactId>maven-dependency-versions-check-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.basepom.maven</groupId>
-          <artifactId>duplicate-finder-maven-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>findbugs-maven-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
-        </plugin>
-
-      </plugins>
-    </pluginManagement>
-
     <plugins>
 
       <plugin>
@@ -256,11 +263,48 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>com.paypal.springboot:resteasy-spring-boot-starter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-web:</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-undertow</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:salesforce-upsert-contact-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:http-get-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:twitter-mention-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-management-maven-plugin</artifactId>
+        <configuration>
+          <requireManagement>
+            <allowExclusions>true</allowExclusions>
+          </requireManagement>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <printEqualFiles>false</printEqualFiles>
+          <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <profiles>
-
     <profile>
       <id>image</id>
       <activation>

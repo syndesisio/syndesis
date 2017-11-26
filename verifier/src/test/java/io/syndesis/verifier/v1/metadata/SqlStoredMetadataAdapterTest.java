@@ -15,10 +15,10 @@ import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 
-import io.syndesis.connector.DatabaseProduct;
-import io.syndesis.connector.SampleStoredProcedures;
-import io.syndesis.connector.SqlStoredConnectorMetaDataExtension;
 
+import io.syndesis.connector.sql.DatabaseProduct;
+import io.syndesis.connector.sql.stored.SampleStoredProcedures;
+import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -32,7 +32,7 @@ public class SqlStoredMetadataAdapterTest {
 
     private static Connection connection;
     private static Properties properties = new Properties();
-    private static String DERBY_DEMO_ADD2_SQL = 
+    private static String DERBY_DEMO_ADD2_SQL =
             "CREATE PROCEDURE DEMO_ADD2( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
             "PARAMETER STYLE JAVA " +
             "LANGUAGE JAVA " +

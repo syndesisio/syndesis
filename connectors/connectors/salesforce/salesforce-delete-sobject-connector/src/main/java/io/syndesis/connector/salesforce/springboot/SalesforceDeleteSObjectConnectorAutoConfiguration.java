@@ -91,7 +91,8 @@ public class SalesforceDeleteSObjectConnectorAutoConfiguration {
         for (Map.Entry<String, SalesforceDeleteSObjectConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SalesforceDeleteSObjectComponent connector = new SalesforceDeleteSObjectComponent();
+            SalesforceDeleteSObjectComponent connector = new SalesforceDeleteSObjectComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

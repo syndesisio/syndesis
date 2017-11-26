@@ -34,7 +34,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <camel.version>2.20.0</camel.version>
   </properties>
 
   <dependencyManagement>
@@ -186,8 +185,8 @@
         </executions>
       </plugin>
 
-      <!-- 
-        generate components meta-data and validate component includes documentation etc 
+      <!--
+        generate components meta-data and validate component includes documentation etc
       -->
       <plugin>
         <groupId>org.apache.camel</groupId>
@@ -211,7 +210,7 @@
         </executions>
       </plugin>
 
-      <!-- 
+      <!--
           generate connector
       -->
       <plugin>

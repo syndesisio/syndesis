@@ -24,7 +24,12 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class SalesforceDeleteSObjectWithIdComponent extends DefaultConnectorComponent {
 
     public SalesforceDeleteSObjectWithIdComponent() {
-        super("salesforce-delete-sobject-with-id", SalesforceDeleteSObjectWithIdComponent.class.getName());
+        this(null);
+
+    }
+
+    public SalesforceDeleteSObjectWithIdComponent(String componentSchema) {
+        super("salesforce-delete-sobject-with-id", componentSchema, SalesforceDeleteSObjectWithIdComponent.class.getName());
 
         // replace DTO with id for Salesforce component
         setBeforeProducer(exchange -> {

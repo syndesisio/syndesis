@@ -24,7 +24,11 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
 public class SalesforceGetSObjectComponent extends DefaultConnectorComponent {
 
     public SalesforceGetSObjectComponent() {
-        super("salesforce-get-sobject", SalesforceGetSObjectComponent.class.getName());
+        this(null);
+    }
+
+    public SalesforceGetSObjectComponent(String componentJson) {
+        super("salesforce-get-sobject", componentJson, SalesforceGetSObjectComponent.class.getName());
 
         // replace DTO with id for Salesforce component
         setBeforeProducer(exchange -> {

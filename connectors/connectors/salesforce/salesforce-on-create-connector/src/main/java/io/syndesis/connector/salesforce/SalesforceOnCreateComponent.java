@@ -18,7 +18,11 @@ package io.syndesis.connector.salesforce;
 public class SalesforceOnCreateComponent extends AbstractSalesforceStreamingConnector {
 
     public SalesforceOnCreateComponent() {
-        super("salesforce-on-create", SalesforceOnCreateComponent.class.getName(), "syndesis_", "_create");
+        this(null);
+    }
+
+    public SalesforceOnCreateComponent(String componentSchema) {
+        super("salesforce-on-create", componentSchema, SalesforceOnCreateComponent.class.getName(), "syndesis_", "_create");
     }
 
 }

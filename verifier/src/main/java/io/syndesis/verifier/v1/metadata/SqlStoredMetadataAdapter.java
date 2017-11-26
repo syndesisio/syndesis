@@ -28,10 +28,9 @@ import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
 
-import io.syndesis.connector.ColumnMode;
-import io.syndesis.connector.StoredProcedureColumn;
-import io.syndesis.connector.StoredProcedureMetadata;
-
+import io.syndesis.connector.sql.stored.ColumnMode;
+import io.syndesis.connector.sql.stored.StoredProcedureColumn;
+import io.syndesis.connector.sql.stored.StoredProcedureMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.springframework.stereotype.Component;
 

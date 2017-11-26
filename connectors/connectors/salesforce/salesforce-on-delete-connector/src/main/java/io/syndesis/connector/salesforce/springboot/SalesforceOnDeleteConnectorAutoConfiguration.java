@@ -91,7 +91,8 @@ public class SalesforceOnDeleteConnectorAutoConfiguration {
         for (Map.Entry<String, SalesforceOnDeleteConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SalesforceOnDeleteComponent connector = new SalesforceOnDeleteComponent();
+            SalesforceOnDeleteComponent connector = new SalesforceOnDeleteComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

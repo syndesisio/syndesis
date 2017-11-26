@@ -15,6 +15,7 @@
  */
 package io.syndesis.verifier;
 
+
 import javax.servlet.Filter;
 
 import org.springframework.boot.SpringApplication;

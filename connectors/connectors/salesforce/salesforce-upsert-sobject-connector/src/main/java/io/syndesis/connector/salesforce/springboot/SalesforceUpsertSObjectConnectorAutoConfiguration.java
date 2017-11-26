@@ -91,7 +91,8 @@ public class SalesforceUpsertSObjectConnectorAutoConfiguration {
         for (Map.Entry<String, SalesforceUpsertSObjectConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SalesforceUpsertSObjectComponent connector = new SalesforceUpsertSObjectComponent();
+            SalesforceUpsertSObjectComponent connector = new SalesforceUpsertSObjectComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

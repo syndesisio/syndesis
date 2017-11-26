@@ -47,8 +47,7 @@
 
     <assertj-core.version>3.6.2</assertj-core.version>
     <caffeine.version>2.4.0</caffeine.version>
-    <camel.version>2.20.0</camel.version>
-    <camel.runtime.version>2.20.0</camel.runtime.version>
+    <camel.runtime.version>${camel.version}</camel.runtime.version>
     <derby.version>10.14.1.0</derby.version>
     <jdbi.version>2.78</jdbi.version>
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
@@ -66,13 +65,11 @@
     <resteasy.version>3.1.4.Final</resteasy.version>
     <shrinkwrap.version>2.2.6</shrinkwrap.version>
     <spring.version>4.3.12.RELEASE</spring.version>
-    <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
     <spring-cloud.version>Dalston.SR4</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
     <spring-cloud-sleuth.version>1.2.5.RELEASE</spring-cloud-sleuth.version>
     <spring-security.version>4.2.3.RELEASE</spring-security.version>
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
-    <swagger.version>1.5.16</swagger.version>
     <undertow.version>1.4.21.Final</undertow.version>
     <atlasmap.version>1.31.1</atlasmap.version>
     <camel-atlasmap.version>1.31.1</camel-atlasmap.version>

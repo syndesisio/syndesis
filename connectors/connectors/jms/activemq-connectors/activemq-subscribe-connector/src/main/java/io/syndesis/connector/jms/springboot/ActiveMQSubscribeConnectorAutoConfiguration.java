@@ -91,7 +91,8 @@ public class ActiveMQSubscribeConnectorAutoConfiguration {
         for (Map.Entry<String, ActiveMQSubscribeConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            ActiveMQSubscribeComponent connector = new ActiveMQSubscribeComponent();
+            ActiveMQSubscribeComponent connector = new ActiveMQSubscribeComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

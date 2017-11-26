@@ -22,9 +22,13 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel twitter-mention connector
  */
 public class TwitterSearchComponent extends DefaultConnectorComponent {
-    
+
     public TwitterSearchComponent() {
-        super("twitter-search-connector", "io.syndesis.search.TwitterSearchComponent");
+        this(null);
+    }
+    
+    public TwitterSearchComponent(String componentSchema) {
+        super("twitter-search-connector", componentSchema, "io.syndesis.search.TwitterSearchComponent");
     }
 
 }

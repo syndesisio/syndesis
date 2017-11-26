@@ -21,6 +21,10 @@ package io.syndesis.connector.jms;
 public class ActiveMQRespondComponent extends AbstractActiveMQConnector {
 
     public ActiveMQRespondComponent() {
-        super("activemq-respond", ActiveMQRespondComponent.class.getName());
+        this(null);
+    }
+
+    public ActiveMQRespondComponent(String componentSchema) {
+        super("activemq-respond", componentSchema, ActiveMQRespondComponent.class.getName());
     }
 }

@@ -91,7 +91,8 @@ public class TradeInsightSellConnectorAutoConfiguration {
         for (Map.Entry<String, TradeInsightSellConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            TradeInsightSellComponent connector = new TradeInsightSellComponent();
+            TradeInsightSellComponent connector = new TradeInsightSellComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

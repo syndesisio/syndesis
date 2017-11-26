@@ -2,7 +2,7 @@
   "baseScheme" : "twitter-search",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-twitter",
-  "baseVersion" : "2.20.0",
+  "baseVersion" : "2.20.1",
   "baseJavaType" : "org.apache.camel.component.twitter.search.TwitterSearchComponent",
   "name" : "TwitterSearch",
   "scheme" : "twitter-search-connector",
