@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2016 Red Hat, Inc.
+/*
+ * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ import org.springframework.stereotype.Component;
 @Component("sql-stored-connector-adapter")
 public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchema> {
 
-    final static String PROCEDURE_NAME = "procedureName";
-    final static String PROCEDURE_TEMPLATE = "template";
+    static final String PROCEDURE_NAME = "procedureName";
+    static final String PROCEDURE_TEMPLATE = "template";
 
     @Override
     public SyndesisMetadata<JsonSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {

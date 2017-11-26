@@ -1,5 +1,5 @@
-/**
- * Copyright (C) 2016 Red Hat, Inc.
+/*
+ * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package io.syndesis.verifier;
 
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.StringJoiner;
@@ -70,7 +71,7 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
                 headersJoined.add(header + ": " + String.join("|", Collections.list(request.getHeaders(header))));
             }
             LOG.debug("Headers: \n{}", headersJoined.toString());
-            LOG.debug("Request content: \n{}", new String(requestCache.getContentAsByteArray()));
+            LOG.debug("Request content: \n{}", new String(requestCache.getContentAsByteArray(), Charset.defaultCharset()));
         }
 
         final Error error = new Error(500, rootCauseMessage(exception), exception.getMessage());
