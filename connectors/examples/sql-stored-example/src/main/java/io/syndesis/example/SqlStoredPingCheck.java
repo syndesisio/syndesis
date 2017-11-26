@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,9 +46,9 @@ public class SqlStoredPingCheck {
             ComponentVerifierExtension verifier = vce.get();
 
             Map<String, Object> parameters = loadParameters();
-            
+
             ComponentVerifierExtension.Result result = verifier.verify(ComponentVerifierExtension.Scope.PARAMETERS, parameters);
-            
+
             System.out.println("=============================================");
             System.out.println("");
             System.out.println("Parameters check result: " + result.getStatus());
@@ -57,7 +57,7 @@ public class SqlStoredPingCheck {
             }
             System.out.println("");
             System.out.println("=============================================");
-            
+
             ComponentVerifierExtension.Result result2 = verifier.verify(ComponentVerifierExtension.Scope.CONNECTIVITY, parameters);
 
             System.out.println("=============================================");

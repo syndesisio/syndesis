@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,7 +68,7 @@ public class S3GetObjectConnectorTest {
         Assert.assertEquals("test", s3Endpoint.getConfiguration().getBucketName());
         Assert.assertFalse(s3Endpoint.getConfiguration().isDeleteAfterRead());
     }
-    
+
     // ***********************************
     // Configuration
     // ***********************************
@@ -86,9 +86,9 @@ public class S3GetObjectConnectorTest {
             };
         }
     }
-    
+
     public static class S3Configuration {
-        @Bean 
+        @Bean
         AmazonS3ClientMock  amazonS3Client() {
     		return new AmazonS3ClientMock();
         }

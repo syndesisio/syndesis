@@ -1,12 +1,11 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+/*
+ * Copyright (C) 2017 Red Hat, Inc.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,10 +55,10 @@ public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifie
             .error(ResultErrorHelper.requiresOption("password", parameters));
 
         if (builder.build().getErrors().isEmpty()) {
-            try (Connection connection = 
+            try (Connection connection =
                 DriverManager.getConnection(
-                        parameters.get("url").toString(), 
-                        String.valueOf(parameters.get("user")), 
+                        parameters.get("url").toString(),
+                        String.valueOf(parameters.get("user")),
                         String.valueOf(parameters.get("password")))) {
                 // just try to get the connection
             } catch (SQLException e) {
@@ -99,13 +98,13 @@ public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifie
     }
 
     private static void unsupportedDatabase(ResultBuilder builder) {
-        String supportedDatabases = String.join(",", 
+        String supportedDatabases = String.join(",",
                 Arrays.stream(DatabaseProduct.values())
                 .map(Enum::name)
                 .toArray(String[]::new));
         String msg = "Supported Databases are [" + supportedDatabases + "]";
         builder.error(ResultErrorBuilder.withCodeAndDescription(
-                VerificationError.StandardCode.UNSUPPORTED, 
+                VerificationError.StandardCode.UNSUPPORTED,
                     msg).build()).build();
     }
 
@@ -121,8 +120,8 @@ public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifie
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         try ( Connection connection = DriverManager.getConnection(
-                    parameters.get("url").toString(), 
-                    String.valueOf(parameters.get("user")), 
+                    parameters.get("url").toString(),
+                    String.valueOf(parameters.get("user")),
                     String.valueOf(parameters.get("password")))) {
             if (connection == null) {
                 throw new SQLException("No Connection");

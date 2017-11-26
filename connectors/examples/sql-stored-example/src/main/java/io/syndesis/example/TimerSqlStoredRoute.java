@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,21 +22,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TimerSqlStoredRoute extends RouteBuilder {
-    
+
     @Override
     public void configure() throws Exception {
-        
+
         String jsonBody = "{\"a\":20,\"b\":30}";
-        
+
         from("timer://myTimer?period=1000")
-        .setBody().constant(jsonBody)  
-        
+        .setBody().constant(jsonBody)
+
         .to("sql-stored-connector:DEMO_ADD( "
                 + "INTEGER ${body[a]}, "
                 + "INTEGER ${body[b]}, "
                 + "OUT INTEGER c)")
         .process(new Processor() {
-            
+
             public void process(Exchange exchange)
                     throws Exception {
                 System.out.println(exchange.getIn()
