@@ -1,15 +1,5 @@
 @import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
 .integrations.list {
-  color: #656565;
-  /deep/ .list-pf {
-    .list-pf-item {
-      background: $color-pf-white;
-      cursor: pointer;
-      &:hover {
-        background: $color-pf-blue-50;
-      }
-    }
-  }
   .integration-icons {
     display: inline-table;
     min-width: 135px;

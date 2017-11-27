@@ -1,31 +1,31 @@
 <div class="row">
   <div class="col-xs-12">
     <h1>Technical Extensions</h1>
-    <p>A technical extension defines one or more custom steps for use in integrations.  Find out more at <a>Syndesis Help</a></p>
+    <p>A technical extension defines one or more custom steps for use in integrations.  Find out more at <a><!-- TODO -->Syndesis Help</a></p>
   </div>
 </div>
-<div class="row">
+<div class="row tech-extensions-list">
   <div class="col-xs-12">
-    <syndesis-loading [loading]="loading | async">
-      <syndesis-list-toolbar [items]="extensions"
-                             [filterTags]="false"
-                             [filteredItems]="filteredExtensions"
-                             [viewTemplate]="viewTemplate">
-        <ng-template #viewTemplate>
-          <div class="toolbar-pf-action-right">
-            <button type="button"
-                    class="btn btn-primary"
-                    [routerLink]="['/customizations/tech-extensions/import']">
-                    Import Technical Extension
-            </button>
-          </div>
-        </ng-template>
-
-      </syndesis-list-toolbar>
-      <pfng-list [items]="filteredExtensions"
+    <syndesis-list-toolbar [items]="extensions$"
+                            [filterTags]="false"
+                            [filteredItems]="filteredExtensions$"
+                            [viewTemplate]="viewTemplate">
+      <ng-template #viewTemplate>
+        <div class="toolbar-pf-action-right">
+          <button type="button"
+                  class="btn btn-primary"
+                  [routerLink]="['/customizations/tech-extensions/import']">
+                  Import Technical Extension
+          </button>
+        </div>
+      </ng-template>
+    </syndesis-list-toolbar>
+    <syndesis-loading [loading]="loading$ | async">
+      <pfng-list [items]="filteredExtensions$ | async"
                 [config]="listConfig"
                 [itemTemplate]="itemTemplate"
-                [actionTemplate]="actionTemplate">
+                [actionTemplate]="actionTemplate"
+                (onClick)="handleClick($event)">
         <ng-template #itemTemplate
                     let-item="item"
                     let-index="index">
