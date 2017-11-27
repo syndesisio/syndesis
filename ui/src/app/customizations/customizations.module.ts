@@ -11,13 +11,15 @@ import { CustomizationsComponent } from './customizations.component';
 import {
   ApiConnectorListComponent,
   ApiConnectorCreateComponent,
-  ApiConnectorDetailComponent,
+  ApiConnectorDetailComponent
 } from './api-connector';
 
-import {  } from './api-connectors/create-api-connector.component';
-import { TechExtensionsListComponent } from './tech-extensions/tech-extensions-list.component';
-import { TechExtensionImportComponent } from './tech-extensions/import/tech-extension-import.component';
-import { TechExtensionDetailComponent } from './tech-extensions/detail/tech-extension-detail.component';
+import {
+  TechExtensionsListComponent,
+  TechExtensionImportComponent,
+  TechExtensionDetailComponent,
+  TechExtensionDeleteModalComponent
+} from './tech-extensions';
 
 const routes: Routes = [
   {
@@ -26,7 +28,7 @@ const routes: Routes = [
     children: [
       {
         path: 'tech-extensions',
-        component: TechExtensionsListComponent,
+        component: TechExtensionsListComponent
       },
       {
         path: 'api-connector',
@@ -37,6 +39,10 @@ const routes: Routes = [
         redirectTo: 'api-connector'
       }
     ]
+  },
+  {
+    path: 'tech-extensions/import/:id',
+    component: TechExtensionImportComponent
   },
   {
     path: 'tech-extensions/import',
@@ -74,6 +80,7 @@ const routes: Routes = [
     ApiConnectorDetailComponent,
     TechExtensionsListComponent,
     TechExtensionImportComponent,
+    TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
   ],
   providers: []

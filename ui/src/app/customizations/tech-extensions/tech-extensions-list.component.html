@@ -21,10 +21,12 @@
       </ng-template>
     </syndesis-list-toolbar>
     <syndesis-loading [loading]="loading$ | async">
+      <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
       <pfng-list [items]="filteredExtensions$ | async"
                 [config]="listConfig"
                 [itemTemplate]="itemTemplate"
                 [actionTemplate]="actionTemplate"
+                (onActionSelect)="handleAction($event)"
                 (onClick)="handleClick($event)">
         <ng-template #itemTemplate
                     let-item="item"
@@ -44,8 +46,12 @@
         <ng-template #actionTemplate
                      let-item="item"
                      let-index="index">
-            <button type="button" class="btn btn-default">Update</button>
-            <button type="button" class="btn btn-default">Delete</button>
+            <button type="button"
+                    class="btn btn-default"
+                    [routerLink]="['import', item.id]">Update</button>
+            <button type="button"
+                    class="btn btn-default"
+                    (click)="deleteModal.prompt(item)">Delete</button>
         </ng-template>
       </pfng-list>
     </syndesis-loading>
