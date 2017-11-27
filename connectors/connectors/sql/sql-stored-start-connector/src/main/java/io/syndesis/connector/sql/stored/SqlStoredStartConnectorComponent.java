@@ -33,7 +33,7 @@ public class SqlStoredStartConnectorComponent extends DefaultConnectorComponent 
     }
 
     public SqlStoredStartConnectorComponent(String componentSchema) {
-        super("start-connector", componentSchema, "io.syndesis.connector.sql.stored.SqlStoredStartConnectorComponent");
+        super("sql-stored-start-connector", componentSchema, "io.syndesis.connector.sql.stored.SqlStoredStartConnectorComponent");
 
         registerExtension(SqlStoredConnectorVerifierExtension::new);
         registerExtension(SqlStoredConnectorMetaDataExtension::new);

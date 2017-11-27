@@ -27,6 +27,6 @@ public class PeriodicTimerComponent extends DefaultConnectorComponent {
     }
 
     public PeriodicTimerComponent(String componentSchema) {
-        super("connector", componentSchema, PeriodicTimerComponent.class.getName());
+        super("periodic-timer-connector", componentSchema, PeriodicTimerComponent.class.getName());
     }
 }

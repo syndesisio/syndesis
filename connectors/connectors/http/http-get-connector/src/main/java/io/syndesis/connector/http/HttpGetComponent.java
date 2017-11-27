@@ -27,7 +27,7 @@ public class HttpGetComponent extends DefaultConnectorComponent {
     }
 
     public HttpGetComponent(String componentSchema) {
-        super("get-connector", componentSchema, HttpGetComponent.class.getName());
+        super("http-get-connector", componentSchema, HttpGetComponent.class.getName());
     }
 
 }

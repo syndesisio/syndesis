@@ -28,7 +28,7 @@ public class TwitterMentionComponent extends DefaultConnectorComponent {
     }
 
     public TwitterMentionComponent(String componentSchema) {
-        super("mention-connector", componentSchema, TwitterMentionComponent.class.getName());
+        super("twitter-mention-connector", componentSchema, TwitterMentionComponent.class.getName());
 
         setBeforeConsumer(exchange -> {
             exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "application/java-byte-code");

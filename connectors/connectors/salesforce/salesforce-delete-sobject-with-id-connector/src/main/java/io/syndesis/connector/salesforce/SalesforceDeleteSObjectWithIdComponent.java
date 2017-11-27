@@ -29,7 +29,7 @@ public class SalesforceDeleteSObjectWithIdComponent extends DefaultConnectorComp
     }
 
     public SalesforceDeleteSObjectWithIdComponent(String componentSchema) {
-        super("delete-sobject-with-id", componentSchema, SalesforceDeleteSObjectWithIdComponent.class.getName());
+        super("salesforce-delete-sobject-with-id", componentSchema, SalesforceDeleteSObjectWithIdComponent.class.getName());
 
         // replace DTO with id for Salesforce component
         setBeforeProducer(exchange -> {

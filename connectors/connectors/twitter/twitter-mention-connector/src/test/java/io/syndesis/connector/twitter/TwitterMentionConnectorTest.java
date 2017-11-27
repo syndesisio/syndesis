@@ -65,7 +65,7 @@ public class TwitterMentionConnectorTest {
         String uri = twitterEnpoint.getEndpointUri();
 
         Assert.assertNotNull("No TwitterTimelineEndpoint found", twitterEnpoint);
-        Assert.assertTrue(uri.startsWith("twitter-timeline-mention-connector:") || uri.startsWith("twitter-timeline-mention-connector-component:"));
+        Assert.assertTrue(uri.startsWith("twitter-timeline-twitter-mention-connector:") || uri.startsWith("twitter-timeline-twitter-mention-connector-component:"));
         Assert.assertEquals(TimelineType.MENTIONS, twitterEnpoint.getTimelineType());
     }
 

@@ -25,7 +25,7 @@ public class ActiveMQSubscribeComponent extends AbstractActiveMQConnector {
     }
 
     public ActiveMQSubscribeComponent(String componentSchema) {
-        super("subscribe", componentSchema, ActiveMQSubscribeComponent.class.getName());
+        super("activemq-subscribe", componentSchema, ActiveMQSubscribeComponent.class.getName());
 
     }
 

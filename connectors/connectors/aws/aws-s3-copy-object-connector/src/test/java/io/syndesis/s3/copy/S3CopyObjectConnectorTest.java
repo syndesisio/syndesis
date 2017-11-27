@@ -64,11 +64,11 @@ public class S3CopyObjectConnectorTest {
         String uri = s3Endpoint.getEndpointUri();
 
         Assert.assertNotNull("No s3Endpoint found", s3Endpoint);
-        Assert.assertTrue(uri.startsWith("aws-s3-copy-object-connector:") || uri.startsWith("aws-s3-copy-object-connector-component:"));
+        Assert.assertTrue(uri.startsWith("aws-s3-aws-s3-copy-object-connector:") || uri.startsWith("aws-s3-aws-s3-copy-object-connector-component:"));
         Assert.assertEquals("test", s3Endpoint.getConfiguration().getBucketName());
         Assert.assertFalse(s3Endpoint.getConfiguration().isDeleteAfterWrite());
     }
-    
+
     // ***********************************
     // Configuration
     // ***********************************
@@ -86,9 +86,9 @@ public class S3CopyObjectConnectorTest {
             };
         }
     }
-    
+
     public static class S3Configuration {
-        @Bean 
+        @Bean
         AmazonS3ClientMock  amazonS3Client() {
     		return new AmazonS3ClientMock();
         }

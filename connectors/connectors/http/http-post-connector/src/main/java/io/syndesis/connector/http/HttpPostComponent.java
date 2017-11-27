@@ -27,7 +27,7 @@ public class HttpPostComponent extends DefaultConnectorComponent {
     }
 
     public HttpPostComponent(String componentSchema) {
-        super("post-connector", componentSchema, HttpPostComponent.class.getName());
+        super("http-post-connector", componentSchema, HttpPostComponent.class.getName());
     }
 
 }

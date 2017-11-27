@@ -27,7 +27,7 @@ public class TradeInsightTopComponent extends DefaultConnectorComponent {
     }
 
     public TradeInsightTopComponent(String componentSchema) {
-        super("top", componentSchema, TradeInsightTopComponent.class.getName());
+        super("trade-insight-top", componentSchema, TradeInsightTopComponent.class.getName());
 
         // remove all the headers, as we should not propagate any of them
         // and set the content type as json which is what this connector uses

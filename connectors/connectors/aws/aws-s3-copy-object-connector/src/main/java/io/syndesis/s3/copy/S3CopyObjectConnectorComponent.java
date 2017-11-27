@@ -12,6 +12,6 @@ public class S3CopyObjectConnectorComponent extends DefaultConnectorComponent {
     }
 
     public S3CopyObjectConnectorComponent(String componentSchema) {
-        super("copy-object-connector", componentSchema, "io.syndesis.s3.copy.S3CopyObjectConnectorComponent");
+        super("aws-s3-copy-object-connector", componentSchema, "io.syndesis.s3.copy.S3CopyObjectConnectorComponent");
     }
 }
