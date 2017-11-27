@@ -26,8 +26,8 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
-import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -63,27 +63,22 @@ public class ConnectorTemplateHandlerTest {
         final ConnectorAction action = new ConnectorAction.Builder().name("action").build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template-id")).thenReturn(connectorTemplate);
-        when(dataManager.create(any(Connector.class)))
-            .thenAnswer(invocation -> invocation.getArgumentAt(0, Connector.class));
+        when(dataManager.create(any(Connector.class))).thenAnswer(invocation -> invocation.getArgumentAt(0, Connector.class));
 
-        when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class))
-            .thenReturn(new ConnectorGenerator() {
-                @Override
-                public Connector generate(final ConnectorTemplate connectorTemplate,
-                    final ConnectorSettings connectorSettings) {
-                    return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings))
-                        .addAction(action).build();
-                }
+        when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class)).thenReturn(new ConnectorGenerator() {
+            @Override
+            public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+                return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings)).addAction(action)
+                    .build();
+            }
 
-                @Override
-                public Connector info(final ConnectorTemplate connectorTemplate,
-                    final ConnectorSettings connectorSettings) {
-                    return null;
-                }
-            });
+            @Override
+            public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+                return null;
+            }
+        });
 
-        final Connector created = new ConnectorTemplateHandler(dataManager, applicationContext).create(
-            "connector-template-id",
+        final Connector created = new ConnectorTemplateHandler(dataManager, applicationContext).create("connector-template-id",
             new ConnectorSettings.Builder()//
                 .name("new connector")//
                 .description("new connector description")//
@@ -112,4 +107,5 @@ public class ConnectorTemplateHandlerTest {
             new ConnectorSettings.Builder().build())).isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Connector template: non-existant");
     }
+
 }
