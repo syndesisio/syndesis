@@ -20,4 +20,15 @@ export class ExtensionService extends RESTService<Extension, Extensions> {
     const url = this.restangularService.one(id).one('install').getRestangularUrl();
     return this.http.post(url, {});
   }
+
+  public loadIntegrations(id: string): Observable<Response> {
+    const url = this.restangularService.one(id).one('integrations').getRestangularUrl();
+    return this.http.get(url);
+  }
+
+  public list(): Observable<Extensions> {
+    return super.list().map( extensions => {
+      return extensions.filter( extension => extension.status !== 'Deleted');
+    });
+  }
 }

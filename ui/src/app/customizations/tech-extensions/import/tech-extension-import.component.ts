@@ -20,7 +20,8 @@ interface FileError {
 
 @Component({
   selector: 'syndesis-tech-extentions-import',
-  templateUrl: 'tech-extension-import.component.html'
+  templateUrl: 'tech-extension-import.component.html',
+  styleUrls: ['tech-extension-import.component.scss']
 })
 export class TechExtensionImportComponent implements OnInit {
 

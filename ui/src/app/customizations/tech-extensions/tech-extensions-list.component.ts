@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExtensionStore } from '../../store/extension/extension.store';
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +11,7 @@ import {
   ListEvent,
   EmptyStateConfig,
 } from 'patternfly-ng';
+import { TechExtensionDeleteModalComponent } from './tech-extension-delete-modal.component';
 import { Extensions, Extension } from '../../model';
 
 @Component({
@@ -23,6 +24,8 @@ export class TechExtensionsListComponent implements OnInit {
   filteredExtensions$: Subject<Extensions> = new BehaviorSubject(<Extensions>{});
   loading$: Observable<boolean>;
   listConfig: ListConfig;
+  @ViewChild(TechExtensionDeleteModalComponent)
+  deleteModal: TechExtensionDeleteModalComponent;
 
   constructor(private store: ExtensionStore,
               private router: Router,
@@ -44,13 +47,21 @@ export class TechExtensionsListComponent implements OnInit {
             {
               id: 'importTechnicalExtension',
               title: 'Import Technical Extension',
-              tooltip: 'Import Technical Extension'
+              tooltip: 'Import Technical Extension',
+              visible: true,
+              disabled: false
             }
           ],
           moreActions: []
         } as ActionConfig
       } as EmptyStateConfig
     };
+  }
+
+  handleAction(event: any) {
+    if (event.id === 'importTechnicalExtension') {
+      this.router.navigate(['import'], { relativeTo: this.route });
+    }
   }
 
   handleClick(event: any) {
