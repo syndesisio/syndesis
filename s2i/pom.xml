@@ -80,21 +80,36 @@
         <version>${maven.exec.plugin.version}</version>
         <executions>
           <execution>
-            <id>exec</id>
+            <id>syndesis-builder-image-generator</id>
             <phase>package</phase>
             <goals>
               <goal>exec</goal>
             </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-jar</argument>
+                <argument>${project.build.directory}/syndesis-builder-image-generator.jar</argument>
+                <argument>--to=${basedir}/src/main/docker/project</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-local-repo</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bash</executable>
+              <arguments>
+                <argument>${basedir}/copy_mvn_repo.sh </argument>
+                <argument>${syndesis.rest.version}</argument>
+                <argument>${basedir}/src/main/docker/project</argument>
+              </arguments>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <executable>java</executable>
-          <arguments>
-            <argument>-jar</argument>
-            <argument>${project.build.directory}/syndesis-builder-image-generator.jar</argument>
-            <argument>--to=${basedir}/src/main/docker/project</argument>
-          </arguments>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>com.mycila</groupId>
@@ -137,7 +152,7 @@
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
-                  <name>syndesis/%a</name>
+                  <name>${syndesis-s2i-image-name}</name>
                   <build>
                     <dockerFile>Dockerfile</dockerFile>
                   </build>
