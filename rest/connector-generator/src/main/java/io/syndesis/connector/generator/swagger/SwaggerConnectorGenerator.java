@@ -49,7 +49,7 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
@@ -78,24 +78,24 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     }
 
     @Override
-    public Connector generate(final ConnectorTemplate connectorTemplate, final CustomConnector customConnector) {
-        final Connector connector = basicConnector(connectorTemplate, customConnector);
+    public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        final Connector connector = basicConnector(connectorTemplate, connectorSettings);
 
-        final String specification = requiredSpecification(customConnector);
+        final String specification = requiredSpecification(connectorSettings);
 
         return configureConnector(connectorTemplate, connector, specification);
     }
 
     @Override
-    public Connector info(final ConnectorTemplate connectorTemplate, final CustomConnector customConnector) {
-        return basicConnector(connectorTemplate, customConnector);
+    public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        return basicConnector(connectorTemplate, connectorSettings);
     }
 
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate,
-        final CustomConnector customConnector) {
-        final String specification = requiredSpecification(customConnector);
+        final ConnectorSettings connectorSettings) {
+        final String specification = requiredSpecification(connectorSettings);
 
-        final Connector baseConnector = baseConnectorFrom(connectorTemplate, customConnector);
+        final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
 
         return new Connector.Builder()//
             .createFrom(baseConnector)//
@@ -105,19 +105,19 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected String determineConnectorName(final ConnectorTemplate connectorTemplate,
-        final CustomConnector customConnector) {
-        final String specification = requiredSpecification(customConnector);
+        final ConnectorSettings connectorSettings) {
+        final String specification = requiredSpecification(connectorSettings);
 
         final Swagger swagger = parseSpecification(specification);
 
         final Info info = swagger.getInfo();
         if (info == null) {
-            return super.determineConnectorName(connectorTemplate, customConnector);
+            return super.determineConnectorName(connectorTemplate, connectorSettings);
         }
 
         final String title = info.getTitle();
         if (title == null) {
-            return super.determineConnectorName(connectorTemplate, customConnector);
+            return super.determineConnectorName(connectorTemplate, connectorSettings);
         }
 
         return title;
@@ -328,8 +328,8 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         return property.build();
     }
 
-    /* default */ static String requiredSpecification(final CustomConnector customConnector) {
-        final Map<String, String> configuredProperties = customConnector.getConfiguredProperties();
+    /* default */ static String requiredSpecification(final ConnectorSettings connectorSettings) {
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
         final String specification = configuredProperties.get("specification");
 

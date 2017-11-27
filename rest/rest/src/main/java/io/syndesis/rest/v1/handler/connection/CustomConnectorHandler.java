@@ -32,7 +32,7 @@ import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.rest.v1.operations.Violation;
 
 import org.springframework.context.ApplicationContext;
@@ -57,7 +57,7 @@ public final class CustomConnectorHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `connector-template-id` and the data given in `customConnector`")
-    public Connector info(final CustomConnector customConnector) {
+    public Connector info(final ConnectorSettings connectorSettings) {
         final ConnectorTemplate connectorTemplate = dataManager.fetch(ConnectorTemplate.class, connectorTemplateId);
 
         if (connectorTemplate == null) {
@@ -72,7 +72,7 @@ public final class CustomConnectorHandler {
                 "Unable to find connector generator for connector template with id: " + connectorTemplateId);
         }
 
-        return connectorGenerator.info(connectorTemplate, customConnector);
+        return connectorGenerator.info(connectorTemplate, connectorSettings);
     }
 
     @POST
@@ -85,7 +85,7 @@ public final class CustomConnectorHandler {
         @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
             response = Violation.class)//
     })
-    public List<Violation> validate(final CustomConnector customConnector) {
+    public List<Violation> validate(final ConnectorSettings connectorSettings) {
         // intentionally left blank
         return Collections.emptyList();
     }

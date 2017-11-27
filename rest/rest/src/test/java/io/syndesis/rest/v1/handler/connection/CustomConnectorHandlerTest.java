@@ -21,7 +21,7 @@ import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.rest.v1.operations.Violation;
 
 import org.junit.Test;
@@ -45,14 +45,14 @@ public class CustomConnectorHandlerTest {
         final ConnectorGenerator connectorGenerator = mock(ConnectorGenerator.class);
 
         final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
-        final CustomConnector customConnector = new CustomConnector.Builder().build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
         final Connector connector = new Connector.Builder().build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
         when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
-        when(connectorGenerator.info(same(template), same(customConnector))).thenReturn(connector);
+        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(connector);
 
-        final Connector connectorInfo = handler.info(customConnector);
+        final Connector connectorInfo = handler.info(connectorSettings);
 
         assertThat(connectorInfo).isSameAs(connector);
     }
@@ -62,9 +62,9 @@ public class CustomConnectorHandlerTest {
         final CustomConnectorHandler handler = new CustomConnectorHandler("connector-template", dataManager,
             applicationContext);
 
-        final CustomConnector customConnector = new CustomConnector.Builder().build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
-        final List<Violation> violations = handler.validate(customConnector);
+        final List<Violation> violations = handler.validate(connectorSettings);
 
         assertThat(violations).isEmpty();
     }

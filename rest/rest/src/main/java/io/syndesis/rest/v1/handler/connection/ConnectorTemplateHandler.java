@@ -36,7 +36,7 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
@@ -64,7 +64,7 @@ public final class ConnectorTemplateHandler extends BaseHandler
     @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in`customConnector`")
     @ApiParam(name = "id", example = "swagger-connector-template")
     @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
-    public Connector create(@PathParam("id") @NotNull final String templateId, final CustomConnector customConnector) {
+    public Connector create(@PathParam("id") @NotNull final String templateId, final ConnectorSettings connectorSettings) {
         final ConnectorTemplate connectorTemplate = getDataManager().fetch(ConnectorTemplate.class, templateId);
 
         if (connectorTemplate == null) {
@@ -73,7 +73,7 @@ public final class ConnectorTemplateHandler extends BaseHandler
 
         final ConnectorGenerator connectorGenerator = applicationContext.getBean(templateId, ConnectorGenerator.class);
 
-        final Connector connector = connectorGenerator.generate(connectorTemplate, customConnector);
+        final Connector connector = connectorGenerator.generate(connectorTemplate, connectorSettings);
 
         return getDataManager().create(connector);
     }

@@ -23,11 +23,11 @@ import io.syndesis.model.WithProperties;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = CustomConnector.Builder.class)
+@JsonDeserialize(builder = ConnectorSettings.Builder.class)
 @SuppressWarnings("immutables")
-public interface CustomConnector extends WithName, WithProperties {
+public interface ConnectorSettings extends WithName, WithProperties {
 
-    class Builder extends ImmutableCustomConnector.Builder {
+    class Builder extends ImmutableConnectorSettings.Builder {
         // make ImmutableCustomConnector accessible
     }
 

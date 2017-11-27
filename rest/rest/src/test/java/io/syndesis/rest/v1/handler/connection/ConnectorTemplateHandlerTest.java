@@ -27,7 +27,7 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -70,21 +70,21 @@ public class ConnectorTemplateHandlerTest {
             .thenReturn(new ConnectorGenerator() {
                 @Override
                 public Connector generate(final ConnectorTemplate connectorTemplate,
-                    final CustomConnector customConnector) {
-                    return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, customConnector))
+                    final ConnectorSettings connectorSettings) {
+                    return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings))
                         .addAction(action).build();
                 }
 
                 @Override
                 public Connector info(final ConnectorTemplate connectorTemplate,
-                    final CustomConnector customConnector) {
+                    final ConnectorSettings connectorSettings) {
                     return null;
                 }
             });
 
         final Connector created = new ConnectorTemplateHandler(dataManager, applicationContext).create(
             "connector-template-id",
-            new CustomConnector.Builder()//
+            new ConnectorSettings.Builder()//
                 .name("new connector")//
                 .description("new connector description")//
                 .icon("new connector icon")//
@@ -109,7 +109,7 @@ public class ConnectorTemplateHandlerTest {
     @Test
     public void shouldThrowEntityNotFoundIfNoConnectorTemplateExists() {
         assertThatThrownBy(() -> new ConnectorTemplateHandler(dataManager, applicationContext).create("non-existant",
-            new CustomConnector.Builder().build())).isInstanceOf(EntityNotFoundException.class)
+            new ConnectorSettings.Builder().build())).isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Connector template: non-existant");
     }
 }

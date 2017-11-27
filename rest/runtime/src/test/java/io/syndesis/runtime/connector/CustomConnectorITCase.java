@@ -20,7 +20,7 @@ import java.util.List;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.rest.v1.operations.Violation;
 import io.syndesis.runtime.BaseITCase;
 
@@ -52,14 +52,14 @@ public class CustomConnectorITCase extends BaseITCase {
             return new ConnectorGenerator() {
                 @Override
                 public Connector generate(final ConnectorTemplate connectorTemplate,
-                    final CustomConnector customConnector) {
-                    return baseConnectorFrom(connectorTemplate, customConnector);
+                    final ConnectorSettings connectorSettings) {
+                    return baseConnectorFrom(connectorTemplate, connectorSettings);
                 }
 
                 @Override
                 public Connector info(final ConnectorTemplate connectorTemplate,
-                    final CustomConnector customConnector) {
-                    return baseConnectorFrom(connectorTemplate, customConnector);
+                    final ConnectorSettings connectorSettings) {
+                    return baseConnectorFrom(connectorTemplate, connectorSettings);
                 }
             };
 
@@ -77,9 +77,9 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldCreateNewCustomConnectors() {
-        final CustomConnector customConnector = new CustomConnector.Builder().build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
-        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template", customConnector,
+        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template", connectorSettings,
             Connector.class);
 
         final Connector created = response.getBody();
@@ -98,10 +98,10 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldOfferCustomConnectorInfo() {
-        final CustomConnector customConnector = new CustomConnector.Builder().build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
         final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template/info",
-            customConnector, Connector.class);
+            connectorSettings, Connector.class);
 
         assertThat(response.getBody()).isNotNull();
     }
@@ -117,10 +117,10 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldValidateCustomConnectors() {
-        final CustomConnector customConnector = new CustomConnector.Builder().build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
         final ResponseEntity<List<Violation>> response = post("/api/v1/custom/connectors/connector-template/validation",
-            customConnector, new ParameterizedTypeReference<List<Violation>>() {
+            connectorSettings, new ParameterizedTypeReference<List<Violation>>() {
                 // defining type parameters
             });
 

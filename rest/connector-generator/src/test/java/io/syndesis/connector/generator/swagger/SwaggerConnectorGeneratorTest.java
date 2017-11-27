@@ -27,7 +27,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 
 import org.junit.Test;
 
@@ -89,14 +89,14 @@ public class SwaggerConnectorGeneratorTest {
                     .build())
             .build();
 
-        final CustomConnector customConnector = new CustomConnector.Builder()//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Reverb API")//
             .description("Invokes Reverb API")//
             .icon("fa-music")//
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, customConnector);
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, connectorSettings);
 
         assertThat(sculpted.getProperties()).containsKeys("accessToken", "accessTokenUrl", "clientId", "clientSecret");
     }
@@ -127,14 +127,14 @@ public class SwaggerConnectorGeneratorTest {
                     .build())
             .build();
 
-        final CustomConnector customConnector = new CustomConnector.Builder()//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Concur Quick Expense API")//
             .description("Invokes Quick Expense API")//
             .icon("fa-link")//
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, customConnector);
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, connectorSettings);
 
         final Connector expected = Json.mapper().readValue(resource("/expected-quick-expenses-connector.json"),
             Connector.class);

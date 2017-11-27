@@ -24,31 +24,31 @@ import java.util.stream.Collectors;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.connection.CustomConnector;
+import io.syndesis.model.connection.ConnectorSettings;
 
 public abstract class ConnectorGenerator {
 
-    public abstract Connector generate(ConnectorTemplate connectorTemplate, CustomConnector customConnector);
+    public abstract Connector generate(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
-    public abstract Connector info(ConnectorTemplate connectorTemplate, CustomConnector customConnector);
+    public abstract Connector info(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
     protected final Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate,
-        final CustomConnector customConnector) {
+        final ConnectorSettings connectorSettings) {
         final Set<String> properties = connectorTemplate.getProperties().keySet();
 
-        final Map<String, String> configuredProperties = customConnector.getConfiguredProperties()//
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties()//
             .entrySet().stream()//
             .filter(e -> properties.contains(e.getKey()))//
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
-        final String name = Optional.ofNullable(customConnector.getName())
-            .orElseGet(() -> determineConnectorName(connectorTemplate, customConnector));
+        final String name = Optional.ofNullable(connectorSettings.getName())
+            .orElseGet(() -> determineConnectorName(connectorTemplate, connectorSettings));
 
         final Connector.Builder connectorBuilder = new Connector.Builder()//
             .id(KeyGenerator.createKey())//
             .name(name)//
-            .description(customConnector.getDescription())//
-            .icon(customConnector.getIcon())//
+            .description(connectorSettings.getDescription())//
+            .icon(connectorSettings.getIcon())//
             .properties(connectorTemplate.getConnectorProperties())//
             .configuredProperties(configuredProperties)//
             .connectorGroup(connectorTemplate.getConnectorGroup());
@@ -60,10 +60,10 @@ public abstract class ConnectorGenerator {
      * Determines the newly created connector name.
      *
      * @param connectorTemplate connector template
-     * @param customConnector custom connector definition
+     * @param connectorSettings custom connector definition
      */
     protected String determineConnectorName(final ConnectorTemplate connectorTemplate,
-        final CustomConnector customConnector) {
+        final ConnectorSettings connectorSettings) {
         return "unspecified";
     }
 }
