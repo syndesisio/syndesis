@@ -6,7 +6,14 @@ import { SyndesisCommonModule } from '../common/common.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 
 import { CustomizationsComponent } from './customizations.component';
-import { ApiConnectorListComponent } from './api-connectors/api-connector-list.component';
+
+import {
+  ApiConnectorListComponent,
+  ApiConnectorCreateComponent,
+  ApiConnectorDetailComponent,
+} from './api-connector';
+
+import {  } from './api-connectors/create-api-connector.component';
 import { TechExtensionsListComponent } from './tech-extensions/tech-extensions-list.component';
 import { TechExtensionImportComponent } from './tech-extensions/import/tech-extension-import.component';
 import { TechExtensionDetailComponent } from './tech-extensions/detail/tech-extension-detail.component';
@@ -21,12 +28,12 @@ const routes: Routes = [
         component: TechExtensionsListComponent,
       },
       {
-        path: 'api-connectors',
+        path: 'api-connector',
         component: ApiConnectorListComponent
       },
       {
         path: '',
-        redirectTo: 'api-connectors'
+        redirectTo: 'api-connector'
       }
     ]
   },
@@ -37,6 +44,14 @@ const routes: Routes = [
   {
     path: 'tech-extensions/:id',
     component: TechExtensionDetailComponent
+  },
+  {
+    path: 'api-connector/create',
+    component: ApiConnectorCreateComponent
+  },
+  {
+    path: 'api-connector/:id',
+    component: ApiConnectorDetailComponent
   }
 ];
 
@@ -53,6 +68,8 @@ const routes: Routes = [
   declarations: [
     CustomizationsComponent,
     ApiConnectorListComponent,
+    ApiConnectorCreateComponent,
+    ApiConnectorDetailComponent,
     TechExtensionsListComponent,
     TechExtensionImportComponent,
     TechExtensionDetailComponent
