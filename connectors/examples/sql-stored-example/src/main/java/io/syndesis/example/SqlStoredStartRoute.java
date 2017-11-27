@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,14 +22,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SqlStoredStartRoute extends RouteBuilder {
-
+    
     @Override
     public void configure() throws Exception {
 
         from("sql-stored-start-connector:DEMO_OUT( "
                 + "OUT INTEGER C )?schedulerPeriod=5000")
         .process(new Processor() {
-
+            
             public void process(Exchange exchange)
                     throws Exception {
                 System.out.println(exchange.getIn()
