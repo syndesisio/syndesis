@@ -91,7 +91,8 @@ public class SalesforceCreateSObjectConnectorAutoConfiguration {
         for (Map.Entry<String, SalesforceCreateSObjectConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SalesforceCreateSObjectComponent connector = new SalesforceCreateSObjectComponent();
+            SalesforceCreateSObjectComponent connector = new SalesforceCreateSObjectComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

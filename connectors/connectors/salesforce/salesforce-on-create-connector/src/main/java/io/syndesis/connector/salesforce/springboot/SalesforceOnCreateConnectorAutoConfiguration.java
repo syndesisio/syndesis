@@ -91,7 +91,8 @@ public class SalesforceOnCreateConnectorAutoConfiguration {
         for (Map.Entry<String, SalesforceOnCreateConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SalesforceOnCreateComponent connector = new SalesforceOnCreateComponent();
+            SalesforceOnCreateComponent connector = new SalesforceOnCreateComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

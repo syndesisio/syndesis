@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2017 Red Hat, Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,18 +18,23 @@ package io.syndesis.connector.tradeinsight;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
+import static org.apache.camel.Exchange.CONTENT_TYPE;
+
 public class TradeInsightTopComponent extends DefaultConnectorComponent {
 
     public TradeInsightTopComponent() {
-        super("trade-insight-top", TradeInsightTopComponent.class.getName());
+        this(null);
+    }
+
+    public TradeInsightTopComponent(String componentSchema) {
+        super("top", componentSchema, TradeInsightTopComponent.class.getName());
 
         // remove all the headers, as we should not propagate any of them
         // and set the content type as json which is what this connector uses
         setBeforeProducer(exchange -> {
             exchange.getIn().removeHeaders("*");
-            exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "application/json");
+            exchange.getIn().setHeader(CONTENT_TYPE, "application/json");
         });
-
     }
 
 }

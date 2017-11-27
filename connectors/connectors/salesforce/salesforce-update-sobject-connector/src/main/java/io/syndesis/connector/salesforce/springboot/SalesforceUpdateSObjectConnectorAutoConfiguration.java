@@ -91,7 +91,8 @@ public class SalesforceUpdateSObjectConnectorAutoConfiguration {
         for (Map.Entry<String, SalesforceUpdateSObjectConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SalesforceUpdateSObjectComponent connector = new SalesforceUpdateSObjectComponent();
+            SalesforceUpdateSObjectComponent connector = new SalesforceUpdateSObjectComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

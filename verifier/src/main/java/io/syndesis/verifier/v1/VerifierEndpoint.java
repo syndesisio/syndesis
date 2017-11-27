@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2017 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,24 @@
  */
 package io.syndesis.verifier.v1;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import io.syndesis.verifier.Verifier;
 import io.syndesis.verifier.VerifierRegistry;
 import io.syndesis.verifier.VerifierResponse;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.*;
 
 @Component
 @Path("/verifier")

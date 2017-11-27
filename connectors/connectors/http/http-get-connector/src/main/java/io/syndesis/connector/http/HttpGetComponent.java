@@ -21,9 +21,13 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel HTTP GET connector
  */
 public class HttpGetComponent extends DefaultConnectorComponent {
-    
+
     public HttpGetComponent() {
-        super("http-get-connector", HttpGetComponent.class.getName());
+        this(null);
+    }
+
+    public HttpGetComponent(String componentSchema) {
+        super("get-connector", componentSchema, HttpGetComponent.class.getName());
     }
 
 }

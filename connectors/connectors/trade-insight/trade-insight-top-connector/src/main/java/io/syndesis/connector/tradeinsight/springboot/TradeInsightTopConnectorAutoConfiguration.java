@@ -90,7 +90,8 @@ public class TradeInsightTopConnectorAutoConfiguration {
         for (Map.Entry<String, TradeInsightTopConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            TradeInsightTopComponent connector = new TradeInsightTopComponent();
+            TradeInsightTopComponent connector = new TradeInsightTopComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

@@ -30,7 +30,11 @@ import org.apache.camel.component.salesforce.api.utils.JsonUtils;
 public class SalesforceUpdateSObjectComponent extends DefaultConnectorComponent {
 
     public SalesforceUpdateSObjectComponent() {
-        super("salesforce-update-sobject", SalesforceUpdateSObjectComponent.class.getName());
+        this(null);
+    }
+
+    public SalesforceUpdateSObjectComponent(String componentSchema) {
+        super("update-sobject", componentSchema, SalesforceUpdateSObjectComponent.class.getName());
 
         // set sObjectId header
         setBeforeProducer(exchange -> {

@@ -91,7 +91,8 @@ public class TwitterSearchConnectorAutoConfiguration {
         for (Map.Entry<String, TwitterSearchConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            TwitterSearchComponent connector = new TwitterSearchComponent();
+            TwitterSearchComponent connector = new TwitterSearchComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

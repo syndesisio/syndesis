@@ -23,8 +23,8 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
     @Metadata(label = "basic", description = "Password for authorization credential")
     private String password;
 
-    public AbstractActiveMQConnector(String componentName, String className) {
-        super(componentName, className);
+    public AbstractActiveMQConnector(String componentName, String componentSchema, String className) {
+        super(componentName, componentSchema, className);
     }
 
     @Override

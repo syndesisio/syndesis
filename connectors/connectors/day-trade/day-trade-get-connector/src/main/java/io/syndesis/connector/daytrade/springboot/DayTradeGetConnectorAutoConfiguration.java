@@ -90,7 +90,8 @@ public class DayTradeGetConnectorAutoConfiguration {
         for (Map.Entry<String, DayTradeGetConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            DayTradeGetComponent connector = new DayTradeGetComponent();
+            DayTradeGetComponent connector = new DayTradeGetComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

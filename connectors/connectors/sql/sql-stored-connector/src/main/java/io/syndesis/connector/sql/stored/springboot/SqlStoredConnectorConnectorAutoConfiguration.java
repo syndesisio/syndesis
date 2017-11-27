@@ -91,7 +91,8 @@ public class SqlStoredConnectorConnectorAutoConfiguration {
         for (Map.Entry<String, SqlStoredConnectorConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            SqlStoredConnectorComponent connector = new SqlStoredConnectorComponent();
+            SqlStoredConnectorComponent connector = new SqlStoredConnectorComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

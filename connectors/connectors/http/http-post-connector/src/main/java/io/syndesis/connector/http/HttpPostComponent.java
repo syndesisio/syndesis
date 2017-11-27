@@ -21,9 +21,13 @@ import org.apache.camel.component.connector.DefaultConnectorComponent;
  * Camel HTTP POST connector
  */
 public class HttpPostComponent extends DefaultConnectorComponent {
-    
+
     public HttpPostComponent() {
-        super("http-post-connector", HttpPostComponent.class.getName());
+        this(null);
+    }
+
+    public HttpPostComponent(String componentSchema) {
+        super("post-connector", componentSchema, HttpPostComponent.class.getName());
     }
 
 }

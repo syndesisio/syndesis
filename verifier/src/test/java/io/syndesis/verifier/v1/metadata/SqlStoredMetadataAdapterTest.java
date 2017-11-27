@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.syndesis.verifier.v1.metadata;
 
 import java.io.IOException;
@@ -15,10 +31,10 @@ import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 
-import io.syndesis.connector.DatabaseProduct;
-import io.syndesis.connector.SampleStoredProcedures;
-import io.syndesis.connector.SqlStoredConnectorMetaDataExtension;
 
+import io.syndesis.connector.sql.DatabaseProduct;
+import io.syndesis.connector.sql.stored.SampleStoredProcedures;
+import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -32,7 +48,7 @@ public class SqlStoredMetadataAdapterTest {
 
     private static Connection connection;
     private static Properties properties = new Properties();
-    private static String DERBY_DEMO_ADD2_SQL = 
+    private static String DERBY_DEMO_ADD2_SQL =
             "CREATE PROCEDURE DEMO_ADD2( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
             "PARAMETER STYLE JAVA " +
             "LANGUAGE JAVA " +

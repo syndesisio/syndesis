@@ -30,9 +30,8 @@ public abstract class AbstractSalesforceStreamingConnector extends DefaultConnec
 
     private final String topicSufix;
 
-    public AbstractSalesforceStreamingConnector(final String componentName, final String className,
-        final String topicPrefix, final String topicSufix) {
-        super(componentName, className);
+    public AbstractSalesforceStreamingConnector(final String componentName, final String componentSchema, final String className, final String topicPrefix, final String topicSufix) {
+        super(componentName, componentSchema, className);
         this.topicPrefix = topicPrefix;
         this.topicSufix = topicSufix;
     }

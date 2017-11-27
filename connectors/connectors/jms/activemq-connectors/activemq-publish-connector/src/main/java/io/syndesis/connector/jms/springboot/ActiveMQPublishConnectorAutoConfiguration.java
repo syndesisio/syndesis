@@ -90,7 +90,8 @@ public class ActiveMQPublishConnectorAutoConfiguration {
         for (Map.Entry<String, ActiveMQPublishConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            ActiveMQPublishComponent connector = new ActiveMQPublishComponent();
+            ActiveMQPublishComponent connector = new ActiveMQPublishComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

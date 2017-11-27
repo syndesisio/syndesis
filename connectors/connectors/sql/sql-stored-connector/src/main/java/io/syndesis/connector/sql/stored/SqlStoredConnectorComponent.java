@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,13 +22,21 @@ import java.util.Properties;
 import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
+import static io.syndesis.connector.sql.stored.JSONBeanUtil.mapToJSONBean;
+import static io.syndesis.connector.sql.stored.JSONBeanUtil.parsePropertiesFromJSONBean;
+
 /**
  * Camel SqlStoredConnector connector
  */
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
 
     public SqlStoredConnectorComponent() {
-        super("sql-stored-connector", "io.syndesis.connector.sql.stored.SqlStoredConnectorComponent");
+        this(null);
+    }
+
+    public SqlStoredConnectorComponent(String componentSchema) {
+        super("connector", componentSchema, "io.syndesis.connector.sql.stored.SqlStoredConnectorComponent");
+
         registerExtension(SqlStoredConnectorVerifierExtension::new);
         registerExtension(SqlStoredConnectorMetaDataExtension::new);
     }
@@ -38,7 +46,7 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
 
         final Processor processor = exchange -> {
             final String body = (String) exchange.getIn().getBody();
-            final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
+            final Properties properties = parsePropertiesFromJSONBean(body);
             exchange.getIn().setBody(properties);
         };
         return processor;
@@ -48,8 +56,8 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
     public Processor getAfterProducer() {
         final Processor processor = exchange -> {
             @SuppressWarnings("unchecked")
-            Map<String,Object> map = (Map<String,Object>) exchange.getIn().getBody();
-            String jsonBean = JSONBeanUtil.mapToJSONBean(map);
+            Map<String, Object> map = (Map<String, Object>) exchange.getIn().getBody();
+            String jsonBean = mapToJSONBean(map);
             exchange.getIn().setBody(jsonBean);
         };
         return processor;

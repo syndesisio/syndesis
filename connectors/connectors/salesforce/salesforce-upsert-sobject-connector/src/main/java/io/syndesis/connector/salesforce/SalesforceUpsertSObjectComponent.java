@@ -37,7 +37,11 @@ import org.apache.camel.component.salesforce.api.utils.JsonUtils;
 public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent {
 
     public SalesforceUpsertSObjectComponent() {
-        super("salesforce-upsert-sobject", SalesforceUpsertSObjectComponent.class.getName());
+        this(null);
+    }
+
+    public SalesforceUpsertSObjectComponent(String componentSchema) {
+        super("upsert-sobject", componentSchema, SalesforceUpsertSObjectComponent.class.getName());
 
         // set sObjectId header
         setBeforeProducer(exchange -> {
