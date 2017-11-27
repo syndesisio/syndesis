@@ -27,7 +27,7 @@ public class TradeInsightBuyComponent extends DefaultConnectorComponent {
     }
 
     public TradeInsightBuyComponent(String componentSchema) {
-        super("buy", componentSchema, TradeInsightBuyComponent.class.getName());
+        super("trade-insight-buy", componentSchema, TradeInsightBuyComponent.class.getName());
 
         // remove all the headers, as we should not propagate any of them
         // and set the content type as json which is what this connector uses

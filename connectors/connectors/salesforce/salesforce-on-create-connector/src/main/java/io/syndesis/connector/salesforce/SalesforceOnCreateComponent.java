@@ -22,7 +22,7 @@ public class SalesforceOnCreateComponent extends AbstractSalesforceStreamingConn
     }
 
     public SalesforceOnCreateComponent(String componentSchema) {
-        super("on-create", componentSchema, SalesforceOnCreateComponent.class.getName(), "syndesis_", "_create");
+        super("salesforce-on-create", componentSchema, SalesforceOnCreateComponent.class.getName(), "syndesis_", "_create");
     }
 
 }

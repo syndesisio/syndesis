@@ -41,7 +41,7 @@ public class SalesforceUpsertSObjectComponent extends DefaultConnectorComponent 
     }
 
     public SalesforceUpsertSObjectComponent(String componentSchema) {
-        super("upsert-sobject", componentSchema, SalesforceUpsertSObjectComponent.class.getName());
+        super("salesforce-upsert-sobject", componentSchema, SalesforceUpsertSObjectComponent.class.getName());
 
         // set sObjectId header
         setBeforeProducer(exchange -> {

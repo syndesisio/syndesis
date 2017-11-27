@@ -64,7 +64,7 @@ public class TwitterSearchConnectorTest {
         String uri = twitterEnpoint.getEndpointUri();
 
         Assert.assertNotNull("No TwitterSearchEndpoint found", twitterEnpoint);
-        Assert.assertTrue(uri.startsWith("twitter-search-connector:") || uri.startsWith("twitter-search-connector-component:"));
+        Assert.assertTrue(uri.startsWith("twitter-search-twitter-search-connector:") || uri.startsWith("twitter-search-twitter-search-connector-component:"));
         Assert.assertEquals("camelsearchtest", twitterEnpoint.getKeywords());
         Assert.assertFalse(twitterEnpoint.isFilterOld());
     }

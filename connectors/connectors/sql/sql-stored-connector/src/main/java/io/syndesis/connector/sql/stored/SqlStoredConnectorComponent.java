@@ -35,7 +35,7 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
     }
 
     public SqlStoredConnectorComponent(String componentSchema) {
-        super("connector", componentSchema, "io.syndesis.connector.sql.stored.SqlStoredConnectorComponent");
+        super("sql-stored-connector", componentSchema, "io.syndesis.connector.sql.stored.SqlStoredConnectorComponent");
 
         registerExtension(SqlStoredConnectorVerifierExtension::new);
         registerExtension(SqlStoredConnectorMetaDataExtension::new);
