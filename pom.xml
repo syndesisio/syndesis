@@ -387,6 +387,14 @@ limitations under the License.</inlineHeader>
             <!-- Reduce this even further. Vote for https://github.com/mycila/license-maven-plugin/pull/133
                  to make this a fixed thread number value -->
             <concurrencyFactor>1</concurrencyFactor>
+            <mapping combine.children="append">
+              <provides>SCRIPT_STYLE</provides>
+              <assemble>SCRIPT_STYLE</assemble>
+            </mapping>
+            <includes>
+              <include>**/src/**</include>
+              <include>**/pom.xml</include>
+            </includes>
             <excludes>
               <exclude>**/node_modules/**</exclude>
               <exclude>.editorconfig</exclude>
@@ -399,8 +407,16 @@ limitations under the License.</inlineHeader>
               <exclude>**/test/resources/**</exclude>
               <exclude>**/spring.factories</exclude>
               <exclude>**/*.adoc</exclude>
-              <exclude>archetypes/**/src/main/resources/archetype-resources/**</exclude>
-              <exclude>s2i/src/main/docker/project/**</exclude>
+              <exclude>**/archetypes/**/src/main/resources/archetype-resources/**</exclude>
+              <exclude>**/s2i/src/main/docker/project/**</exclude>
+              <exclude>**/Dockerfile</exclude>
+              <exclude>**/*.ts</exclude>
+              <exclude>**/*.scss</exclude>
+              <exclude>**/*.html</exclude>
+              <exclude>**/config.json*</exclude>
+              <exclude>**/.gitkeep</exclude>
+              <exclude>**/*.webapp</exclude>
+              <exclude>**/browserconfig.xml</exclude>
             </excludes>
           </configuration>
         </plugin>
