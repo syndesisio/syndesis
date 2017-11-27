@@ -26,7 +26,7 @@
                 [config]="listConfig"
                 [itemTemplate]="itemTemplate"
                 [actionTemplate]="actionTemplate"
-                (onActionSelect)="handleAction($event, null)"
+                (onActionSelect)="handleAction($event)"
                 (onClick)="handleClick($event)">
         <ng-template #itemTemplate
                     let-item="item"
