@@ -2,16 +2,21 @@
 
 # Run the original assemble script.
 /usr/local/s2i/assemble
+rc=$?
 
-# Load global S2I variable setup
-source /usr/local/s2i/s2i-setup
+if [ $rc -eq 0 ]; then
+    # Load global S2I variable setup
+    source /usr/local/s2i/s2i-setup
 
-mkdir -p $JAVA_DATA_DIR/syndesis/loader
+    # Make PropertiesLoader sirectory structure
+    mkdir -p $JAVA_DATA_DIR/syndesis/loader
 
-if [ -d $S2I_SOURCE_DIR/extensions ]; then
-    echo "copy $S2I_SOURCE_DIR/extensions to $JAVA_DATA_DIR/syndesis/loader"
-    cp -rv $S2I_SOURCE_DIR/extensions $JAVA_DATA_DIR/syndesis/loader
+    if [ -d $S2I_SOURCE_DIR/extensions ]; then
+        echo "copy $S2I_SOURCE_DIR/extensions to $JAVA_DATA_DIR/syndesis/loader"
+        cp -rv $S2I_SOURCE_DIR/extensions $JAVA_DATA_DIR/syndesis/loader
+    fi
+else
+    echo "assemble failed with rc=$rc"   
 fi
 
-
-
+exit $rc
