@@ -52,8 +52,7 @@ if [ -n "${SYNDESIS_RELEASED_IMAGES}" ]; then
     # no op required
 else
     # Move image streams (one by one) inside the test namespace
-    echo "ImageStreams from CI namespace will be used"
-    for i in `oc get istag -n syndesis-ci | cut -f1 -d " " | grep -v NAME`;do oc tag syndesis-ci/$i ${KUBERNETES_NAMESPACE}/$i; done
+    echo "Local ImageStreams will be used"
 fi
 
 oc create -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}

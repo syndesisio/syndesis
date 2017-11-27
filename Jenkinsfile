@@ -1,98 +1,38 @@
-@Library('github.com/syndesisio/syndesis-pipeline-library@master')
-def params = [:]
-
-node {
-
-    def branch = "${env.BRANCH_NAME}"
-    echo "Using branch: ${branch}."
-
-    slave {
-        withArbitraryUser {
-            withSshKeys {
-                withOpenshift {
-                    withMaven(serviceAccount: 'jenkins', mavenSettingsXmlSecret: 'm2-settings') {
-                        withYarn {
-                            inside {
-                                checkout scm
-                                stage ('install parent') {
-                                    container('maven') {
-                                        sh "mvn -B -U -N install"
-                                    }
-                                }
-                                stage ('build connectors') {
-                                    container('maven') {
-                                        sh """
-                                    cd connectors
-                                    mvn -B -U clean install
-                                    """
-                                    }
-                                }
-                                stage ('build verifier') {
-                                    container('maven') {
-                                        sh """
-                                    cd verifier
-                                    mvn -B -U clean install
-                                    """
-                                    }
-                                }
-                                stage ('build integration runtime') {
-                                    container('maven') {
-                                        sh """
-                                    cd runtime
-                                    mvn -B -U clean install
-                                    """
-                                    }
-                                }
-                                stage ('build rest') {
-                                    container('maven') {
-                                        sh """
-                                    cd rest
-                                    mvn -B -U clean install fabric8:build -Pci
-                                    """
-                                    }
-                                }
-                                stage ('build ui') {
-                                    container('yarn') {
-                                        sh """
-                                    cd ui
-                                    yarn
-                                    yarn ng build -- --aot --prod --progress=false
-                                    """
-                                    }
-                                    container ('openshift') {
-                                        sh """
-                                    cd ui
-                                    BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
-                                    if [ -z "\$BC_DETAILS" ]; then
-                                        cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker
-                                    fi
-                                    tar -cvf archive.tar dist docker
-                                    oc start-build -F --from-archive=archive.tar syndesis-ui
-                                    rm archive.tar
-                                    """
-                                    }
-                                }
-
-                                stage('System Tests') {
-                                    test(component: 'syndesis', serviceAccount: 'jenkins')
-                                }
-
-                                if ("master" == branch) {
-                                    stage('Rollout') {
-                                        tag(sourceProject: 'syndesis-ci', imageStream: 'syndesis-rest')
-                                        rollout(deploymentConfig: 'syndesis-rest', namespace: 'syndesis-staging')
-
-                                        tag(sourceProject: 'syndesis-ci', imageStream: 'syndesis-ui')
-                                        rollout(deploymentConfig: 'syndesis-ui', namespace: 'syndesis-staging')
-                                    }
-                                } else {
-                                    echo "Branch: ${branch} is not master. Skipping rollout"
-                                }
-                            }
-                        }
-                    }
+pipeline {
+    agent any
+    tools {
+        jdk 'JDK8'
+        maven 'maven-3.3.9'
+        nodejs 'node 8.9.1'
+    }
+    environment {
+        PATH="${tool('oc')}:$PATH"
+        KUBE_CONFIG="${WORKSPACE}/.kubr/config"
+    }
+    stages {
+        stage('prepare') {
+            steps {
+             withCredentials([string(credentialsId: 'api.rh-idev.openshift.com', variable: 'TOKEN')]) {
+                    sh """
+                    oc login --server=https://api.rh-idev.openshift.com --token=$TOKEN
+                    oc project syndesis-ci
+                    """
                 }
             }
+        }
+        stage('build') {
+            steps {
+                checkout scm
+                sh """
+                echo $PATH
+                ./build.sh --image-streams --batch-mode
+                """
+            }
+        }
+    }
+    post {
+        always {
+            sh 'oc logout'
         }
     }
 }

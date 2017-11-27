@@ -1043,6 +1043,7 @@
                 <arg>-Xlint:-serial</arg>
                 <arg>-Werror</arg>
                 <arg>-XepDisableWarningsInGeneratedCode</arg>
+                <arg>-implicit:none</arg>
               </compilerArgs>
             </configuration>
             <dependencies>
