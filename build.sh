@@ -143,6 +143,12 @@ function init_project_pool() {
         POOL_NAMESPACE="syndesis-ci"
     fi
 
+    POOL_NAMESPACE_STATS=`oc get projects | grep $POOL_NAMESPACE | awk -F " " '{print $2}'`
+    if [ "$POOL_NAMESPACE_STATUS" != "Active" ]; then
+        echo "Project pool: $PROJECT_NAMESPACE doesn't exist. Skipping pool configuration!"
+        return
+    fi
+
     echo "Using pool namespace: $POOL_NAMESPACE"
 
     LOCK=$(obtain_project_lock $BUILD_ID $POOL_NAMESPACE)
@@ -166,6 +172,10 @@ function init_project_pool() {
     echo "Allocated project: $NAMESPACE for: $BUILD_ID"
     oc login --token=$TOKEN --server=$CURRENT_SERVER
     trap 'teardown_project_pool $NAMESPACE $POOL_NAMESPACE $INITIAL_NAMESPACE' EXIT
+    export NAMESPACE_USE_EXISTING=$NAMESPACE
+    export KUBERNETES_NAMESPACE=$NAMESPACE
+    export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
+    export WORKSPACE=deploy
     MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.namespace=$NAMESPACE"
     OC_OPTS=" -n $NAMESPACE"
 }
@@ -194,7 +204,7 @@ function teardown_project_pool() {
 # Build functions
 
 function modules_to_build() {
-  modules="parent tests"
+  modules="parent"
   resume_from=$(readopt --resume-from $ARGS 2> /dev/null)
   if [ "x${resume_from}" != x ]; then
     modules=$(echo $modules | sed -e "s/^.*$resume_from/$resume_from/")
@@ -236,10 +246,6 @@ function init_options() {
   if [ -n "$SKIP_IMAGE_BUILDS" ]; then
       echo "Skipping image builds ..."
       MAVEN_IMAGE_BUILD_GOAL=""
-  fi
-
-  if [ -z "$POOL_NAMESPACE" ];then
-      POOL_NAMESPACE="syndesis-ci"
   fi
 
   if [ -n "$NAMESPACE" ]; then
@@ -301,23 +307,6 @@ function ui() {
   #     fi
   # fi
   popd
-}
-
-function tests() {
-    if [ $(which oc) ] ; then
-        echo "oc binary found. Proceeding with system tests."
-    else
-        echo "Warning: oc binary not found in path. Disabling system tests!"
-        return
-    fi
-
-    pushd tests
-    export NAMESPACE_USE_EXISTING=$NAMESPACE
-    export KUBERNETES_NAMESPACE=$NAMESPACE
-    export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
-    export WORKSPACE=../deploy
-    mvn clean install
-    popd
 }
 
 # ============================================================================

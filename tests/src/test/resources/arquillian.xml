@@ -5,6 +5,8 @@
     http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <extension qualifier="kubernetes">
+      <property name="namespace.init.enabled">true</property>
+      <property name="namespace.cleanup.enabled">true</property>
       <property name="env.setup.script.url">setup.sh</property>
       <property name="env.teardown.script.url">teardown.sh</property>
       <property name="wait.for.service.list">syndesis-rest syndesis-ui syndesis-keycloak</property>
