@@ -74,14 +74,19 @@ function init_options() {
 
   # Internal variable default values
   OC_OPTS=""
-  MAVEN_PARAMS=""
+  MAVEN_PARAMS="-P default"
   MAVEN_CLEAN_GOAL="clean"
   MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
   MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
 
-  # If  we are running in cicleci lets configure thigs to avoid running out of memory:
+  # If  we are running in cicleci 
   if [ "$CIRCLECI" == "true" ] ; then
-    MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2"
+    # Use batch mode so we get friendiler log files.
+    MAVEN_PARAMS="$MAVEN_PARAMS --batch-mode"
+    # lets configure thigs to avoid running out of memory:
+    MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2 --batch-mode -P image"
+    # Enable the image profile so that they get built
+    MAVEN_PARAMS="$MAVEN_PARAMS -P image"
   fi
 
   # Apply options
