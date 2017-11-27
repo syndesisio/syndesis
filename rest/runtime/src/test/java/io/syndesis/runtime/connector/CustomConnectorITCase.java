@@ -77,13 +77,14 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldCreateNewCustomConnectors() {
-        final CustomConnector customConnector = new CustomConnector.Builder().id("new-connector").build();
+        final CustomConnector customConnector = new CustomConnector.Builder().build();
 
         final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template", customConnector,
             Connector.class);
 
-        assertThat(response.getBody()).isNotNull();
-        assertThat(dataManager.fetch(Connector.class, "new-connector")).isNotNull();
+        final Connector created = response.getBody();
+        assertThat(created).isNotNull();
+        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
     }
 
     @Test
@@ -97,7 +98,7 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldOfferCustomConnectorInfo() {
-        final CustomConnector customConnector = new CustomConnector.Builder().id("new-connector").build();
+        final CustomConnector customConnector = new CustomConnector.Builder().build();
 
         final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template/info",
             customConnector, Connector.class);

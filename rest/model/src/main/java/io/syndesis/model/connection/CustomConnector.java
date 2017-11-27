@@ -17,7 +17,6 @@ package io.syndesis.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
 
@@ -26,7 +25,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = CustomConnector.Builder.class)
 @SuppressWarnings("immutables")
-public interface CustomConnector extends WithId<CustomConnector>, WithName, WithProperties {
+public interface CustomConnector extends WithName, WithProperties {
 
     class Builder extends ImmutableCustomConnector.Builder {
         // make ImmutableCustomConnector accessible

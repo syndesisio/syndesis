@@ -90,7 +90,6 @@ public class SwaggerConnectorGeneratorTest {
             .build();
 
         final CustomConnector customConnector = new CustomConnector.Builder()//
-            .id("reverb-api")//
             .name("Reverb API")//
             .description("Invokes Reverb API")//
             .icon("fa-music")//
@@ -129,7 +128,6 @@ public class SwaggerConnectorGeneratorTest {
             .build();
 
         final CustomConnector customConnector = new CustomConnector.Builder()//
-            .id("concur-quick-expense")//
             .name("Concur Quick Expense API")//
             .description("Invokes Quick Expense API")//
             .icon("fa-link")//
@@ -147,17 +145,17 @@ public class SwaggerConnectorGeneratorTest {
         assertThat(reformatJson(sculptedSpecification)).isEqualTo(reformatJson(expectedSpecification));
 
         assertThat(sculpted.getProperties()).isEqualTo(expected.getProperties());
-        assertThat(sculpted).isEqualToIgnoringGivenFields(expected, "configuredProperties", "actions");
+        assertThat(sculpted).isEqualToIgnoringGivenFields(expected, "id", "configuredProperties", "actions");
         assertThat(sculpted.getActions()).hasSameSizeAs(expected.getActions());
 
         for (final ConnectorAction expectedAction : expected.getActions()) {
-            final String actionId = expectedAction.getId().get();
+            final String actionId = expectedAction.getId().get().replace("_id_", sculpted.getId().get());
             final Optional<ConnectorAction> maybeSculptedAction = sculpted.actionById(actionId);
             assertThat(maybeSculptedAction).as("No action with id: " + actionId + " was sculpted").isPresent();
 
             final ConnectorAction sculptedAction = maybeSculptedAction.get();
             assertThat(sculptedAction).as("Difference found for action: " + actionId)
-                .isEqualToIgnoringGivenFields(expectedAction, "descriptor");
+                .isEqualToIgnoringGivenFields(expectedAction, "id", "descriptor");
 
             assertThat(sculptedAction.getDescriptor().getPropertyDefinitionSteps())
                 .as("Sculpted and expected action definition property definition steps for action with id: " + actionId

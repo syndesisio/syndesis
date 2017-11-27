@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.syndesis.core.Names;
+import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.connection.CustomConnector;
@@ -45,8 +45,7 @@ public abstract class ConnectorGenerator {
             .orElseGet(() -> determineConnectorName(connectorTemplate, customConnector));
 
         final Connector.Builder connectorBuilder = new Connector.Builder()//
-            .id(customConnector.getId()
-                .orElseGet(() -> Names.sanitize(connectorTemplate.getName()) + ":" + Names.sanitize(name)))//
+            .id(KeyGenerator.createKey())//
             .name(name)//
             .description(customConnector.getDescription())//
             .icon(customConnector.getIcon())//

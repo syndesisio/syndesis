@@ -93,7 +93,7 @@ public class ConnectorTemplateHandlerTest {
                 .build());
 
         final Connector expected = new Connector.Builder()//
-            .id("connector-template:new-connector")//
+            .id(created.getId())//
             .name("new connector")//
             .description("new connector description")//
             .icon("new connector icon")//
