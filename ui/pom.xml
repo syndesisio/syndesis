@@ -99,6 +99,15 @@
             </configuration>
           </execution>
           <execution>
+            <id>yarn cache dir</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>cache dir</arguments>
+            </configuration>
+          </execution>
+          <execution>
             <id>yarn ng build</id>
             <goals>
               <goal>yarn</goal>

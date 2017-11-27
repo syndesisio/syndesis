@@ -37,6 +37,8 @@
     <!-- Global Syndesis version -->
     <syndesis.version>${project.version}</syndesis.version>
 
+    <!-- Image names -->
+    <syndesis-s2i-image-name>syndesis/syndesis-s2i:latest</syndesis-s2i-image-name>
 
     <fabric8.maven.plugin.version>3.5.33</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
