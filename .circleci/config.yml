@@ -18,7 +18,7 @@ jobs:
   build:
     working_directory: /workspace
     docker:
-    - image: wombat7/openjdk-node-docker
+    - image: openjdk:8-jdk
     environment:
       MAVEN_OPTS: -Xmx1024m
       DOCKER_VERSION: 17.04.0-ce
