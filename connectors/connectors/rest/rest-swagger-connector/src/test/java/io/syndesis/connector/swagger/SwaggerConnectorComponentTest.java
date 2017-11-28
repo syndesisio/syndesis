@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.swagger;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,7 +53,7 @@ public class SwaggerConnectorComponentTest {
             .filter(RestSwaggerEndpoint.class::isInstance).map(RestSwaggerEndpoint.class::cast).findFirst();
 
         assertThat(maybeRestSwagger).hasValueSatisfying(restSwagger -> {
-            assertThat(restSwagger.getSpecificationUri()).isEqualTo(URI.create("file:swagger-operation.swagger"));
+            assertThat(restSwagger.getSpecificationUri().toString()).matches("file:.*swagger-operation.*\\.swagger");
         });
     }
 
@@ -65,8 +64,7 @@ public class SwaggerConnectorComponentTest {
 
         final String specification = IOUtils.toString(SwaggerConnectorComponentTest.class.getResource("/petstore.json"),
             StandardCharsets.UTF_8);
-        IntrospectionSupport.setProperties(component,
-            new HashMap<>(Collections.singletonMap("specification", specification)));
+        IntrospectionSupport.setProperties(component, new HashMap<>(Collections.singletonMap("specification", specification)));
 
         final Endpoint endpoint = component.createEndpoint("swagger-operation://?operationId=addPet");
         assertThat(endpoint).isNotNull();

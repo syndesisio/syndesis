@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.swagger;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -54,13 +55,12 @@ public class SwaggerConnectorComponent extends DefaultConnectorComponent {
     }
 
     @Override
-    protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters)
-        throws Exception {
+    protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters) throws Exception {
         final URI baseEndpointUri = URI.create(uri);
 
         final String scheme = Optional.ofNullable(baseEndpointUri.getScheme()).orElse(baseEndpointUri.getPath());
 
-        final String swaggerSpecificationPath = scheme + ".swagger";
+        final String swaggerSpecificationPath = File.createTempFile(scheme, ".swagger").getAbsolutePath();
 
         try (final OutputStream out = new FileOutputStream(swaggerSpecificationPath)) {
             IOUtils.write(specification, out, StandardCharsets.UTF_8);
