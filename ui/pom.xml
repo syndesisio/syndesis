@@ -81,15 +81,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>angular-cli install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>install --no-optional -g @angular/cli</arguments>
-            </configuration>
-          </execution>
-          <execution>
             <id>yarn install</id>
             <goals>
               <goal>yarn</goal>
@@ -113,7 +104,7 @@
               <goal>yarn</goal>
             </goals>
             <configuration>
-              <arguments>ng build --aot --prod --progress=false</arguments>
+              <arguments>build:ci</arguments>
             </configuration>
           </execution>
         </executions>
