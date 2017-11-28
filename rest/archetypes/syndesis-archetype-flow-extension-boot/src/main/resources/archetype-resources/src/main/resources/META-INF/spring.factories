@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  {package}.${name}Extension
+  ${package}.${extension-name}Extension

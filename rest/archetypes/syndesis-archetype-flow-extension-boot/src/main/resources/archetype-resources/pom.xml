@@ -41,7 +41,6 @@
     <spring-boot.version>${spring-boot-version}</spring-boot.version>
     <camel.version>${camel-version}</camel.version>
     <syndesis.version>${syndesis-version}</syndesis.version>
-    <syndesis-integration-runtime.version>${syndesis-integration-runtime-version}</syndesis-integration-runtime.version>
   </properties>
 
   <dependencyManagement>
@@ -69,8 +68,8 @@
       </dependency>
       <dependency>
         <groupId>io.syndesis</groupId>
-        <artifactId>integration-runtime-bom</artifactId>
-        <version>${syndesis-integration-runtime.version}</version>
+        <artifactId>integration-runtime</artifactId>
+        <version>${syndesis.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -85,7 +84,6 @@
       <artifactId>syndesis-annotation-processor</artifactId>
       <version>${syndesis.version}</version>
       <optional>true</optional>
-      <scope>provided</scope>
     </dependency>
 
     <!-- runtime -->
