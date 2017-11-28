@@ -20,8 +20,8 @@ import java.util.List;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.rest.v1.operations.Violation;
 
 import org.junit.Test;
@@ -32,16 +32,15 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CustomConnectorHandlerTest {
+public class ConnectorSettingsHandlerTest {
 
     private final ApplicationContext applicationContext = mock(ApplicationContext.class);
 
     private final DataManager dataManager = mock(DataManager.class);
 
     @Test
-    public void shouldProvideInfoAboutCustomConnectors() {
-        final CustomConnectorHandler handler = new CustomConnectorHandler("connector-template", dataManager,
-            applicationContext);
+    public void shouldProvideInfoAboutAppliedConnectorSettings() {
+        final ConnectorSettingsHandler handler = new ConnectorSettingsHandler("connector-template", dataManager, applicationContext);
         final ConnectorGenerator connectorGenerator = mock(ConnectorGenerator.class);
 
         final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
@@ -58,9 +57,8 @@ public class CustomConnectorHandlerTest {
     }
 
     @Test
-    public void shouldVlidateCustomConnectors() {
-        final CustomConnectorHandler handler = new CustomConnectorHandler("connector-template", dataManager,
-            applicationContext);
+    public void shouldValidateConnectorSettings() {
+        final ConnectorSettingsHandler handler = new ConnectorSettingsHandler("connector-template", dataManager, applicationContext);
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
