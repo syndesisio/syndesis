@@ -1,7 +1,8 @@
 #!/bin/bash
 
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 NAMESPACE="syndesis"
-FROM="https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master"
+FROM="${PROJECT_DIR}/deploy"
 ROUTE_HOSTNAME="syndesis.$(minishift ip).nip.io"
 
 while [ $# -gt 0 ]; do
