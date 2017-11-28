@@ -7,15 +7,14 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <syndesis-loading [loading]="loading | async">
+      <syndesis-loading [loading]="loading$ | async">
 
         <!-- List Toolbar -->
 
-        <syndesis-list-toolbar [items]="connectors"
+        <syndesis-list-toolbar [items]="connectors$"
                                [filterTags]="false"
-                               [filteredItems]="filteredConnectors"
-                               [viewTemplate]="viewTemplate"
-                               *ngIf="connectors">
+                               [filteredItems]="filteredConnectors$"
+                               [viewTemplate]="viewTemplate">
           <ng-template #viewTemplate>
             <div class="toolbar-pf-action-right">
               <button type="button"
@@ -29,10 +28,12 @@
 
         <!-- PatternFly List -->
 
-        <pfng-list [items]="filteredConnectors"
+        <pfng-list [items]="filteredConnectors$ | async"
                    [config]="listConfig"
                    [itemTemplate]="itemTemplate"
-                   [actionTemplate]="actionTemplate">
+                   [actionTemplate]="actionTemplate"
+                   (onActionSelect)="handleAction($event)"
+                   (onClick)="handleClick($event)">
           <ng-template #itemTemplate
                        let-item="item"
                        let-index="index">
