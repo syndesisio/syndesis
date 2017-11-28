@@ -1,0 +1,8 @@
+{
+  "message": "@pullRequester, thanks! @reviewers, please review this.",
+  "assignToReviewer": true,
+  "createReviewRequest": true,
+  "actions": ["opened", "reopened"],
+  "skipAlreadyAssignedPR": true,
+  "skipAlreadyMentionedPR": true
+}
