@@ -65,7 +65,7 @@ public class RepackageExtensionMojo extends SupportMojo {
 
     public static final String SPRING_BOOT_BOM = "org.springframework.boot:spring-boot-dependencies:pom:";
     public static final String CAMEL_BOM = "org.apache.camel:camel-spring-boot-dependencies:pom:";
-    public static final String SYNDESIS_INTEGRATION_RUNTIME_BOM = "io.syndesis:integration-runtime-bom:pom:";
+    public static final String SYNDESIS_INTEGRATION_RUNTIME_BOM = "io.syndesis:integration-runtime:pom:";
     public static final String SYNDESIS_BOM = "io.syndesis:syndesis-rest-parent:pom:";
     public static final String NET_MINIDEV_JSON_SMART = "net.minidev:json-smart";
     public static final String NET_MINIDEV_ACCESSORS_SMART = "net.minidev:accessors-smart";
@@ -165,7 +165,7 @@ public class RepackageExtensionMojo extends SupportMojo {
             resolveBomVersion(SPRING_BOOT_BOM, "spring-boot.version"),
             resolveBomVersion(CAMEL_BOM, "camel.version"),
             resolveBomVersion(SYNDESIS_BOM, "syndesis.version"),
-            resolveBomVersion(SYNDESIS_INTEGRATION_RUNTIME_BOM, "syndesis-integration-runtime.version")
+            resolveBomVersion(SYNDESIS_INTEGRATION_RUNTIME_BOM, "syndesis.version")
         };
 
         try {
