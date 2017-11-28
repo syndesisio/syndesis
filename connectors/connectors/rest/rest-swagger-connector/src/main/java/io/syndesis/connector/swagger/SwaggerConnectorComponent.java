@@ -43,7 +43,11 @@ public class SwaggerConnectorComponent extends DefaultConnectorComponent {
     private String specification;
 
     public SwaggerConnectorComponent() {
-        super("swagger-connector", SwaggerConnectorComponent.class.getName());
+        this(null);
+    }
+
+    public SwaggerConnectorComponent(final String componentSchema) {
+        super("swagger-connector", componentSchema, SwaggerConnectorComponent.class.getName());
     }
 
     public String getSpecification() {
@@ -73,15 +77,9 @@ public class SwaggerConnectorComponent extends DefaultConnectorComponent {
         final DefaultConnectorEndpoint endpoint = (DefaultConnectorEndpoint) super.createEndpoint(uri,
             "file:" + swaggerSpecificationPath + "#" + operationId, parameters);
 
-        return new DelegateEndpointImpl(endpoint, headers);
-    }
+        endpoint.setBeforeProducer(exchange -> exchange.getIn().getHeaders().putAll(headers));
 
-    @Override
-    protected void doStart() throws Exception {
-        super.doStart();
-
-        // workaround for CAMEL-11986
-        getCamelContext().addComponent("http4s", getCamelContext().getComponent("https4"));
+        return endpoint;
     }
 
     /* default */ static Map<String, Object> determineHeaders(final Map<String, Object> parameters) {
