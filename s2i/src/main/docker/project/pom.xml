@@ -166,15 +166,4 @@
     </plugins>
   </build>
 
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>local</id>
-      <url>file:/deployments/project/.m2/repository</url>
-    </snapshotRepository>
-    <repository>
-      <id>local</id>
-      <url>file:/deployments/project/.m2/repository</url>
-    </repository>
-  </distributionManagement>
 </project>

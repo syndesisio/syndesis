@@ -7,6 +7,8 @@ USER 1000
 
 RUN \
   cd /deployments/project; \
+  mkdir -p /tmp/artifacts/; \
+  mv .m2/repository /tmp/artifacts/m2; \
   mvn -Dmaven.repo.local=/tmp/artifacts/m2 package -DskipTests -e -Dfabric8.skip=true; \
   rm -rf /deployments/project;
 
