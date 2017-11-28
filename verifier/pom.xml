@@ -359,6 +359,15 @@
                 <phase>package</phase>
               </execution>
             </executions>
+            <configuration>
+              <generator>
+                <config>
+                  <spring-boot>
+                    <name>${syndesis-rest-image-name}</name>
+                  </spring-boot>
+                </config>
+              </generator>
+            </configuration>
           </plugin>
         </plugins>
       </build>

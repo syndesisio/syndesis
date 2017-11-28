@@ -39,6 +39,9 @@
 
     <!-- Image names -->
     <syndesis-s2i-image-name>syndesis/syndesis-s2i:latest</syndesis-s2i-image-name>
+    <syndesis-rest-image-name>syndesis/syndesis-rest:latest</syndesis-rest-image-name>
+    <syndesis-verifier-image-name>syndesis/syndesis-verifier:latest</syndesis-verifier-image-name>
+    <syndesis-ui-image-name>syndesis/syndesis-ui:latest</syndesis-ui-image-name>
 
     <fabric8.maven.plugin.version>3.5.33</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -132,7 +135,6 @@
     <profile>
       <id>docker</id>
       <properties>
-        <fabric8.generator.name>syndesis/%a</fabric8.generator.name>
         <fabric8.mode>kubernetes</fabric8.mode>
       </properties>
     </profile>
@@ -140,7 +142,6 @@
     <profile>
       <id>openshift</id>
       <properties>
-        <fabric8.generator.name>syndesis/%a</fabric8.generator.name>
         <fabric8.mode>openshift</fabric8.mode>
       </properties>
     </profile>
