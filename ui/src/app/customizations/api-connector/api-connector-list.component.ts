@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -24,16 +25,19 @@ const category = getCategory('ApiConnectors');
   styleUrls: ['./api-connector-list.component.scss']
 })
 export class ApiConnectorListComponent implements OnInit {
-  connectors: Observable<Connectors>;
-  filteredConnectors: Subject<Connectors> = new BehaviorSubject(<Connectors>{});
-  loading: Observable<boolean>;
+  connectors$: Observable<Connectors>;
+  filteredConnectors$: Subject<Connectors> = new BehaviorSubject(<Connectors>{});
+  loading$: Observable<boolean>;
   listConfig: ListConfig;
 
   constructor(
     public config: ConfigService,
     private store: ConnectorStore,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.loading = this.store.loading;
+    this.connectors$ = this.store.list;
+    this.loading$ = this.store.loading;
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -56,6 +60,17 @@ export class ApiConnectorListComponent implements OnInit {
         } as ActionConfig
       } as EmptyStateConfig
     };
+  }
+
+  handleAction(event: any) {
+    if (event.id === 'importApiConnector') {
+      this.router.navigate(['create'], { relativeTo: this.route });
+    }
+  }
+
+  handleClick(event: any) {
+    const connector = event.item;
+    this.router.navigate([connector.id], { relativeTo: this.route });
   }
 
   ngOnInit() {
