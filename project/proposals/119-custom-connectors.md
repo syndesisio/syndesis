@@ -29,11 +29,11 @@ New API endpoints for defining custom connectors:
 
 | HTTP Verb | Path | Description |
 | --------- | ---- | ----------- |
-| GET       | /api/**{version}**/connector-templates | Returns a list of known connector templates |
-| GET       | /api/**{version}**/connector-templates/**{id}** | Returns a specific connector template identified by the given **id** |
-| POST      | /api/**{version}**/connectors/**{connector-template-id}**/validation | Validate new custom connector properties and return suggested properties in addition to validation result |
-| POST      | /api/**{version}**/connectors/**{connector-template-id}**/info | Provides information like proposed name, icon and description for new connector |
-| POST      | /api/**{version}**/connectors/**{connector-template-id}**| Create a new custom connector |
+| GET       | /api/**{version}**/custom/connectors | Returns a list of known connector templates |
+| GET       | /api/**{version}**/custom/connectors/**{id}** | Returns a specific connector template identified by the given **id** |
+| POST      | /api/**{version}**/custom/connectors/**{id}**/validation | Validate new custom connector properties and return suggested properties in addition to validation result |
+| POST      | /api/**{version}**/custom/connectors/**{id}**/info | Provides information like proposed name, icon and description for new connector |
+| POST      | /api/**{version}**/custom/connectors/**{id}**| Create a new custom connector |
 
 ### New custom connector based on Swagger specification example
 
@@ -89,7 +89,7 @@ The REST API supports multiple connector templates, we'll be focusing on the con
 UI fetches the definition of the connector template by using the `swagger-connector-template` identifier:
 
 ```http
-GET /api/v1/connector-templates/swagger-connector-template
+GET /api/v1/custom/connectors/swagger-connector-template
 Accept: application/json
 
 HTTP/1.1 200 OK
@@ -121,12 +121,14 @@ Based on the connector template property `specification`, tagged with `upload`, 
 The user opts to specify the Swagger specification via URL of the specification, but mistakenly selects the URL of the HTML document instead of the specification, the UI can perform validation before proceeding by invoking:
 
 ```http
-POST /api/v1/connectors/swagger-connector-template/validation
+POST /api/v1/custom/connectors/swagger-connector-template/validation
 Content-Type: application/json
 Accept: application/json
 
 {
-  "specification": "http://petstore.swagger.io/index.html"
+  "configuredProperties": {
+    "specification": "http://petstore.swagger.io/index.html"
+  }
 }
 
 HTTP/1.1 400 Bad Request
@@ -143,27 +145,33 @@ Content-Type: application/json
 The user provides the correct URL, now the response is positive:
 
 ```http
-POST /api/v1/connectors/swagger-connector-template/validation
+POST /api/v1/custom/connectors/swagger-connector-template/validation
 Content-Type: application/json
 Accept: application/json
 
 {
-  "specification": "http://petstore.swagger.io/v2/swagger.yaml"
+  "configuredProperties": {
+    "specification": "http://petstore.swagger.io/v2/swagger.json"
+  }
 }
 
 HTTP/1.1 200 OK
-Content-Length: 0
+Content-Length: 2
+
+[]
 ```
 
 After validating the specification information about it can be retrieved:
 
 ```http
-POST /api/v1/connectors/swagger-connector-template/info
+POST /api/v1/custom/connectors/swagger-connector-template/info
 Content-Type: application/json
 Accept: application/json
 
 {
-  "specification": "http://petstore.swagger.io/v2/swagger.yaml"
+  "configuredProperties": {
+    "specification": "http://petstore.swagger.io/v2/swagger.json"
+  }
 }
 
 HTTP/1.1 200 OK
@@ -200,7 +208,7 @@ Content-Type: application/json
 With that the user can opt to change some of the date, here the user opted to change the name of the new connector from the suggested *"Swagger Petstore"* to *"Petstore API"*, and the new connector can be created:
 
 ```http
-POST /api/v1/connectors/swagger-connector-template/info
+POST /api/v1/custom/connectors/swagger-connector-template
 Content-Type: application/json
 Accept: application/json
 
