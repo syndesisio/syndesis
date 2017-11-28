@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.models.HttpMethod;
+import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
@@ -48,12 +49,13 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.connection.ConnectorSettings;
 
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
 
 @SuppressWarnings("PMD.ExcessiveImports")
-public class SwaggerConnectorGenerator implements ConnectorGenerator {
+public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     private static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
@@ -76,24 +78,49 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
     }
 
     @Override
-    public Connector generate(final ConnectorTemplate connectorTemplate, final Connector template) {
-        final Map<String, String> configuredProperties = template.getConfiguredProperties();
+    public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        final Connector connector = basicConnector(connectorTemplate, connectorSettings);
 
-        final String specification = configuredProperties.get("specification");
+        final String specification = requiredSpecification(connectorSettings);
 
-        if (specification == null) {
-            throw new IllegalStateException(
-                "Configured properties of the given Connector template does not include `specification` property");
-        }
+        return configureConnector(connectorTemplate, connector, specification);
+    }
 
-        final Connector baseConnector = baseConnectorFrom(connectorTemplate, template);
+    @Override
+    public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        return basicConnector(connectorTemplate, connectorSettings);
+    }
 
-        final Connector connector = new Connector.Builder()//
+    /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate,
+        final ConnectorSettings connectorSettings) {
+        final String specification = requiredSpecification(connectorSettings);
+
+        final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
+
+        return new Connector.Builder()//
             .createFrom(baseConnector)//
             .putConfiguredProperty("specification", specification)//
             .build();
+    }
 
-        return configureConnector(connectorTemplate, connector, specification);
+    @Override
+    protected String determineConnectorName(final ConnectorTemplate connectorTemplate,
+        final ConnectorSettings connectorSettings) {
+        final String specification = requiredSpecification(connectorSettings);
+
+        final Swagger swagger = parseSpecification(specification);
+
+        final Info info = swagger.getInfo();
+        if (info == null) {
+            return super.determineConnectorName(connectorTemplate, connectorSettings);
+        }
+
+        final String title = info.getTitle();
+        if (title == null) {
+            return super.determineConnectorName(connectorTemplate, connectorSettings);
+        }
+
+        return title;
     }
 
     /* default */ static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
@@ -112,7 +139,7 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
-        final Swagger swagger = new SwaggerParser().parse(specification);
+        final Swagger swagger = parseSpecification(specification);
         addGlobalParameters(builder, swagger);
 
         final Map<String, Path> paths = swagger.getPaths();
@@ -232,7 +259,7 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         }
 
         if (!(parameter instanceof SerializableParameter)) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 "Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
         }
 
@@ -267,6 +294,17 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
+    static Swagger parseSpecification(final String specification) {
+        final SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = Optional.ofNullable(parser.read(specification))
+            .orElseGet(() -> parser.parse(specification));
+        if (swagger == null) {
+            throw new IllegalArgumentException("Unable to read Swagger specification from: " + specification);
+        }
+
+        return swagger;
+    }
+
     /* default */ static ConfigurationProperty property(final PropertyData propertyData) {
         final ConfigurationProperty.Builder property = new ConfigurationProperty.Builder()//
             .kind("property")//
@@ -288,6 +326,18 @@ public class SwaggerConnectorGenerator implements ConnectorGenerator {
         }
 
         return property.build();
+    }
+
+    /* default */ static String requiredSpecification(final ConnectorSettings connectorSettings) {
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+
+        final String specification = configuredProperties.get("specification");
+
+        if (specification == null) {
+            throw new IllegalArgumentException(
+                "Configured properties of the given Connector template does not include `specification` property");
+        }
+        return specification;
     }
 
     /* default */ static ConfigurationProperty securityProperty(final PropertyData propertyData) {

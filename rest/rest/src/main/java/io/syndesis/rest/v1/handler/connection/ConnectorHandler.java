@@ -18,7 +18,6 @@ package io.syndesis.rest.v1.handler.connection;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,7 +29,6 @@ import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
@@ -38,7 +36,6 @@ import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.rest.v1.handler.BaseHandler;
@@ -47,7 +44,6 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Path("/connectors")
@@ -55,7 +51,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
 
-    private final ApplicationContext applicationContext;
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
@@ -63,36 +58,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Verifier verifier;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials,
-        final Inspectors inspectors, final ClientSideState state, final EncryptionComponent encryptionComponent,
-        final ApplicationContext applicationContext) {
+        final Inspectors inspectors, final ClientSideState state, final EncryptionComponent encryptionComponent) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
         this.inspectors = inspectors;
         this.state = state;
         this.encryptionComponent = encryptionComponent;
-        this.applicationContext = applicationContext;
-    }
-
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes("application/json")
-    @Path("/{connector-template-id}")
-    public Connector create(@NotNull @PathParam("connector-template-id") final String connectorTemplateId,
-        final Connector template) {
-        final ConnectorTemplate connectorTemplate = getDataManager().fetch(ConnectorTemplate.class,
-            connectorTemplateId);
-
-        if (connectorTemplate == null) {
-            throw new EntityNotFoundException("Connector template: " + connectorTemplateId);
-        }
-
-        final ConnectorGenerator connectorGenerator = applicationContext.getBean(connectorTemplateId,
-            ConnectorGenerator.class);
-
-        final Connector connector = connectorGenerator.generate(connectorTemplate, template);
-
-        return getDataManager().create(connector);
     }
 
     @Path("/{id}/credentials")

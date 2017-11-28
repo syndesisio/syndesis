@@ -24,7 +24,7 @@
   },
   "actions": [
     {
-      "id": "io.syndesis:swagger-connector:latest:concur-quick-expense:operation-0",
+      "id": "io.syndesis:swagger-connector:latest:_id_:operation-0",
       "connectorId": "concur-quick-expense",
       "name": "Get all quick expenses",
       "description": "Returns all quick expenses owned by the user.",
@@ -102,7 +102,7 @@
       }
     },
     {
-      "id": "io.syndesis:swagger-connector:latest:concur-quick-expense:operation-1",
+      "id": "io.syndesis:swagger-connector:latest:_id_:operation-1",
       "connectorId": "concur-quick-expense",
       "name": "Create a new quick expense",
       "description": "Creates a new quick expense.",
@@ -157,7 +157,7 @@
       }
     },
     {
-      "id": "io.syndesis:swagger-connector:latest:concur-quick-expense:operation-2",
+      "id": "io.syndesis:swagger-connector:latest:_id_:operation-2",
       "connectorId": "concur-quick-expense",
       "name": "Get a single quick expense by ID",
       "description": "Returns a quick expenses by ID.",
@@ -223,7 +223,7 @@
       }
     },
     {
-      "id": "io.syndesis:swagger-connector:latest:concur-quick-expense:operation-3",
+      "id": "io.syndesis:swagger-connector:latest:_id_:operation-3",
       "connectorId": "concur-quick-expense",
       "name": "Update a quick expense by ID",
       "description": "Updates the QuickExpense specified in the URL.  Only the fields provided in the supplied object will be updated, missing fields will not be altered.",
@@ -290,7 +290,7 @@
       }
     },
     {
-      "id": "io.syndesis:swagger-connector:latest:concur-quick-expense:operation-4",
+      "id": "io.syndesis:swagger-connector:latest:_id_:operation-4",
       "connectorId": "concur-quick-expense",
       "name": "Delete a quick expense by ID",
       "description": "Deletes the specified quick expense.",

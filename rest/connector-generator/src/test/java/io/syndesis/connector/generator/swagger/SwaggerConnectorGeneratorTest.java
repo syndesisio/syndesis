@@ -27,6 +27,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.connection.ConnectorSettings;
 
 import org.junit.Test;
 
@@ -88,15 +89,14 @@ public class SwaggerConnectorGeneratorTest {
                     .build())
             .build();
 
-        final Connector template = new Connector.Builder()//
-            .id("reverb-api")//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Reverb API")//
             .description("Invokes Reverb API")//
             .icon("fa-music")//
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, template);
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, connectorSettings);
 
         assertThat(sculpted.getProperties()).containsKeys("accessToken", "accessTokenUrl", "clientId", "clientSecret");
     }
@@ -127,15 +127,14 @@ public class SwaggerConnectorGeneratorTest {
                     .build())
             .build();
 
-        final Connector template = new Connector.Builder()//
-            .id("concur-quick-expense")//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Concur Quick Expense API")//
             .description("Invokes Quick Expense API")//
             .icon("fa-link")//
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, template);
+        final Connector sculpted = new SwaggerConnectorGenerator().generate(connectorTemplate, connectorSettings);
 
         final Connector expected = Json.mapper().readValue(resource("/expected-quick-expenses-connector.json"),
             Connector.class);
@@ -146,17 +145,17 @@ public class SwaggerConnectorGeneratorTest {
         assertThat(reformatJson(sculptedSpecification)).isEqualTo(reformatJson(expectedSpecification));
 
         assertThat(sculpted.getProperties()).isEqualTo(expected.getProperties());
-        assertThat(sculpted).isEqualToIgnoringGivenFields(expected, "configuredProperties", "actions");
+        assertThat(sculpted).isEqualToIgnoringGivenFields(expected, "id", "configuredProperties", "actions");
         assertThat(sculpted.getActions()).hasSameSizeAs(expected.getActions());
 
         for (final ConnectorAction expectedAction : expected.getActions()) {
-            final String actionId = expectedAction.getId().get();
+            final String actionId = expectedAction.getId().get().replace("_id_", sculpted.getId().get());
             final Optional<ConnectorAction> maybeSculptedAction = sculpted.actionById(actionId);
             assertThat(maybeSculptedAction).as("No action with id: " + actionId + " was sculpted").isPresent();
 
             final ConnectorAction sculptedAction = maybeSculptedAction.get();
             assertThat(sculptedAction).as("Difference found for action: " + actionId)
-                .isEqualToIgnoringGivenFields(expectedAction, "descriptor");
+                .isEqualToIgnoringGivenFields(expectedAction, "id", "descriptor");
 
             assertThat(sculptedAction.getDescriptor().getPropertyDefinitionSteps())
                 .as("Sculpted and expected action definition property definition steps for action with id: " + actionId

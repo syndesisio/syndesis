@@ -21,17 +21,13 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.rest.v1.state.ClientSideState;
-import io.syndesis.verifier.Verifier;
+import io.syndesis.model.connection.ConnectorSettings;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -42,24 +38,10 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ConnectorHandlerTest {
-
-    private static final Credentials NO_CREDENTIALS = null;
-
-    private static final EncryptionComponent NO_ENCRYPTION_COMPONENT = null;
-
-    private static final Inspectors NO_INSPECTORS = null;
-
-    private static final ClientSideState NO_STATE = null;
-
-    private static final Verifier NO_VERIFIER = null;
-
+public class ConnectorTemplateHandlerTest {
     private final ApplicationContext applicationContext = mock(ApplicationContext.class);
 
     private final DataManager dataManager = mock(DataManager.class);
-
-    private final ConnectorHandler handler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS,
-        NO_INSPECTORS, NO_STATE, NO_ENCRYPTION_COMPONENT, applicationContext);
 
     @Test
     public void shouldCreateNewConnectorsBasedOnConnectorTemplates() {
@@ -87,14 +69,22 @@ public class ConnectorHandlerTest {
         when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class))
             .thenReturn(new ConnectorGenerator() {
                 @Override
-                public Connector generate(final ConnectorTemplate connectorTemplate, final Connector template) {
-                    return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, template))
+                public Connector generate(final ConnectorTemplate connectorTemplate,
+                    final ConnectorSettings connectorSettings) {
+                    return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings))
                         .addAction(action).build();
+                }
+
+                @Override
+                public Connector info(final ConnectorTemplate connectorTemplate,
+                    final ConnectorSettings connectorSettings) {
+                    return null;
                 }
             });
 
-        final Connector created = handler.create("connector-template-id",
-            new Connector.Builder()//
+        final Connector created = new ConnectorTemplateHandler(dataManager, applicationContext).create(
+            "connector-template-id",
+            new ConnectorSettings.Builder()//
                 .name("new connector")//
                 .description("new connector description")//
                 .icon("new connector icon")//
@@ -103,7 +93,7 @@ public class ConnectorHandlerTest {
                 .build());
 
         final Connector expected = new Connector.Builder()//
-            .id("connector-template:new-connector")//
+            .id(created.getId())//
             .name("new connector")//
             .description("new connector description")//
             .icon("new connector icon")//
@@ -118,7 +108,8 @@ public class ConnectorHandlerTest {
 
     @Test
     public void shouldThrowEntityNotFoundIfNoConnectorTemplateExists() {
-        assertThatThrownBy(() -> handler.create("non-existant", new Connector.Builder().build()))
-            .isInstanceOf(EntityNotFoundException.class).hasMessage("Connector template: non-existant");
+        assertThatThrownBy(() -> new ConnectorTemplateHandler(dataManager, applicationContext).create("non-existant",
+            new ConnectorSettings.Builder().build())).isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("Connector template: non-existant");
     }
 }

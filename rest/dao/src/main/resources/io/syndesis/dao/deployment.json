@@ -860,13 +860,13 @@
           "group": "producer",
           "label": "producer",
           "required": true,
-          "type": "string",
+          "type": "file",
           "javaType": "java.lang.String",
           "tags": [ "blob" ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Swagger specification of the service"
+          "description": "Upload the Swagger specification for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented swagger is available and conforms to OpenAPI standards."
         }
       },
       "connectorProperties": {
@@ -906,7 +906,7 @@
           "required": false,
           "type": "hidden",
           "javaType": "java.lang.String",
-          "tags": [ "blob" ],
+          "tags": [ "upload", "url" ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
