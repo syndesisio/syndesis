@@ -733,7 +733,7 @@
           "displayName": "Password",
           "group": "security",
           "label": "common,security",
-          "required": true,
+          "required": false,
           "type": "string",
           "javaType": "java.lang.String",
           "tags":[],
@@ -745,8 +745,7 @@
         "schema": {
           "kind": "property",
           "displayName": "Schema",
-          "group": "producer",
-          "label": "common",
+          "group": "common",
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
@@ -760,8 +759,7 @@
         "catalog": {
           "kind": "property",
           "displayName": "Catalog",
-          "group": "producer",
-          "label": "common",
+          "group": "common",
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
@@ -794,15 +792,15 @@
               "description": "Select the Stored Procedure",
               "properties": {
                 "procedureName": {
-                  "kind": "path",
+                  "kind": "property",
+                  "group": "common",
                   "displayName": "Procedure Name",
-                  "group": "producer",
-                  "required": true,
+                  "required": false,
                   "type": "string",
                   "javaType": "java.lang.String",
                   "tags":[],
                   "deprecated": false,
-                  "secret": false,
+                  "secret": true,
                   "componentProperty": false,
                   "description": "Name of the Store Procedure"
                 },

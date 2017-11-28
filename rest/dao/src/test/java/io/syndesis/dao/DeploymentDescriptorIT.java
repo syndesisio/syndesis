@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -60,8 +61,7 @@ public class DeploymentDescriptorIT {
     private final MavenArtifactProvider mavenArtifactProvider = createArtifactProvider();
 
     public DeploymentDescriptorIT() throws IOException {
-        deployment = MAPPER
-            .readTree(DeploymentDescriptorIT.class.getResourceAsStream("/io/syndesis/dao/deployment.json"));
+        deployment = MAPPER.readTree(DeploymentDescriptorIT.class.getResourceAsStream("/io/syndesis/dao/deployment.json"));
     }
 
     @Test
@@ -80,15 +80,13 @@ public class DeploymentDescriptorIT {
                     final String actionName = action.get("name").asText();
                     final String gav = action.get("descriptor").get("camelConnectorGAV").asText();
 
-                    assertThat(gav).as("Action `%s` does not have `camelConnectorGAV` property", actionName)
-                        .isNotEmpty();
+                    assertThat(gav).as("Action `%s` does not have `camelConnectorGAV` property", actionName).isNotEmpty();
 
                     final String[] coordinates = gav.split(":");
 
-                    final Set<String> names = mavenArtifactProvider.addArtifactToCatalog(camelCatalog, connectorCatalog,
-                        coordinates[0], coordinates[1], coordinates[2]);
-                    assertThat(names)
-                        .as("Could not resolve artifact for Camel catalog with GAV: %s:%s:%s", (Object[]) coordinates)
+                    final Set<String> names = mavenArtifactProvider.addArtifactToCatalog(camelCatalog, connectorCatalog, coordinates[0],
+                        coordinates[1], coordinates[2]);
+                    assertThat(names).as("Could not resolve artifact for Camel catalog with GAV: %s:%s:%s", (Object[]) coordinates)
                         .isNotEmpty();
 
                     final String scheme = action.get("descriptor").get("camelConnectorPrefix").asText();
@@ -117,8 +115,10 @@ public class DeploymentDescriptorIT {
                         .as("The scheme `%s` was resolved from a unexpected artifact", scheme).isEqualTo(coordinates);
 
                     final JsonNode componentPropertiesFromCatalog = catalogedJsonSchema.get("componentProperties");
+                    final JsonNode connectorPropertiesFromCatalog = catalogedJsonSchema.get("connectorProperties");
 
-                    assertConnectorProperties(connectorId, connectorPropertiesJson, componentPropertiesFromCatalog);
+                    assertConnectorProperties(connectorId, connectorPropertiesJson, componentPropertiesFromCatalog,
+                        connectorPropertiesFromCatalog);
 
                     assertActionProperties(connectorId, action, actionName, catalogedJsonSchema);
 
@@ -137,8 +137,8 @@ public class DeploymentDescriptorIT {
             .map(action -> action.get("descriptor").get("camelConnectorGAV").asText())
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream()
-            .filter(e -> e.getValue() > 1).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream().filter(e -> e.getValue() > 1)
+            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         assertThat(multipleCoordinates).as("Expected connector GAV coordinates to be unique").isEmpty();
     }
@@ -148,8 +148,7 @@ public class DeploymentDescriptorIT {
         final Map<String, Long> namesWithCount = StreamSupport.stream(deployment.spliterator(), true)
             .filter(data -> "connector".equals(data.get("kind").asText()))
             .flatMap(connector -> StreamSupport.stream(connector.get("data").get("actions").spliterator(), true))
-            .map(action -> action.get("name").asText())
-            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+            .map(action -> action.get("name").asText()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         final Map<String, Long> multipleNames = namesWithCount.entrySet().stream().filter(e -> e.getValue() > 1)
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
@@ -157,8 +156,8 @@ public class DeploymentDescriptorIT {
         assertThat(multipleNames).as("Expected unique action names").isEmpty();
     }
 
-    private static void assertActionDataShapes(final CamelConnectorCatalog connectorCatalog, final JsonNode action,
-        final String actionName, final String... coordinates) {
+    private static void assertActionDataShapes(final CamelConnectorCatalog connectorCatalog, final JsonNode action, final String actionName,
+        final String... coordinates) {
 
         final String connectorJSon = connectorCatalog.connectorJSon(coordinates[0], coordinates[1], coordinates[2]);
         JsonNode connectorJson;
@@ -176,29 +175,24 @@ public class DeploymentDescriptorIT {
         final JsonNode inputDataShape = actionDescriptor.get("inputDataShape");
         if ("json".equals(connectorInputDataType)) {
             assertThat(inputDataShape.get("kind").asText())
-                .as("Connector defines input data shape for action %s as JSON, deployment descriptor does not",
-                    actionName)
+                .as("Connector defines input data shape for action %s as JSON, deployment descriptor does not", actionName)
                 .isEqualTo("json-schema");
             assertThat(inputDataShape.get("type"))
-                .as("shapes of kind `json-schema` should not define type, input data shape of %s does", actionName)
-                .isNull();
+                .as("shapes of kind `json-schema` should not define type, input data shape of %s does", actionName).isNull();
         }
 
         final JsonNode outputDataShape = actionDescriptor.get("outputDataShape");
         if ("json".equals(connectorOutputDataType)) {
             assertThat(outputDataShape.get("kind").asText())
-                .as("Connector defines output data shape for action %s as JSON, deployment descriptor does not",
-                    actionName)
+                .as("Connector defines output data shape for action %s as JSON, deployment descriptor does not", actionName)
                 .isEqualTo("json-schema");
             assertThat(outputDataShape.get("type"))
-                .as("shapes of kind `json-schema` should not define type, output data shape of %s does", actionName)
-                .isNull();
+                .as("shapes of kind `json-schema` should not define type, output data shape of %s does", actionName).isNull();
         }
 
         if (connectorInputDataType.startsWith("java:")) {
             assertThat(inputDataShape.get("kind").asText())
-                .as("Connector defines input data shape for action %s as java, deployment descriptor does not",
-                    actionName)
+                .as("Connector defines input data shape for action %s as java, deployment descriptor does not", actionName)
                 .isEqualTo("java");
             assertThat(inputDataShape.get("type").asText())
                 .as("Connector input data shape for action %s differs in class name from deployment", actionName)
@@ -207,8 +201,7 @@ public class DeploymentDescriptorIT {
 
         if (connectorOutputDataType.startsWith("java:")) {
             assertThat(outputDataShape.get("kind").asText())
-                .as("Connector defines output data shape for action %s as java, deployment descriptor does not",
-                    actionName)
+                .as("Connector defines output data shape for action %s as java, deployment descriptor does not", actionName)
                 .isEqualTo("java");
             assertThat(outputDataShape.get("type").asText())
                 .as("Connector output data shape for action %s differs in class name from deployment", actionName)
@@ -217,8 +210,7 @@ public class DeploymentDescriptorIT {
 
         if ("none".equals(connectorInputDataType)) {
             assertThat(inputDataShape.get("kind").asText())
-                .as("Connector defines input data shape for action %s as none, deployment descriptor does not",
-                    actionName)
+                .as("Connector defines input data shape for action %s as none, deployment descriptor does not", actionName)
                 .isEqualTo("none");
             assertThat(inputDataShape.get("type"))
                 .as("shapes of kind `none` should not define type, input data shape of %s does", actionName).isNull();
@@ -226,8 +218,7 @@ public class DeploymentDescriptorIT {
 
         if ("none".equals(connectorOutputDataType)) {
             assertThat(outputDataShape.get("kind").asText())
-                .as("Connector defines output data shape for action %s as none, deployment descriptor does not",
-                    actionName)
+                .as("Connector defines output data shape for action %s as none, deployment descriptor does not", actionName)
                 .isEqualTo("none");
             assertThat(outputDataShape.get("type"))
                 .as("shapes of kind `none` should not define type, output data shape of %s does", actionName).isNull();
@@ -238,17 +229,19 @@ public class DeploymentDescriptorIT {
         final JsonNode catalogedJsonSchema) {
         final JsonNode actionDescriptor = action.get("descriptor");
         final JsonNode propertiesFromCatalog = catalogedJsonSchema.get("properties");
+        final JsonNode connectorPropertiesFromCatalog = catalogedJsonSchema.get("connectorProperties");
 
         // make sure that all action properties are as defined in
         // the connector
         StreamSupport.stream(actionDescriptor.get("propertyDefinitionSteps").spliterator(), true)
-            .flatMap(step -> StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(step.get("properties").fields(), Spliterator.CONCURRENT), true))
+            .flatMap(step -> StreamSupport
+                .stream(Spliterators.spliteratorUnknownSize(step.get("properties").fields(), Spliterator.CONCURRENT), true))
             .forEach(property -> {
                 final String propertyName = property.getKey();
                 final JsonNode propertyDefinition = property.getValue();
 
-                final JsonNode catalogedPropertyDefinition = propertiesFromCatalog.get(propertyName);
+                final JsonNode catalogedPropertyDefinition = Optional.ofNullable(propertiesFromCatalog.get(propertyName))
+                    .orElseGet(() -> connectorPropertiesFromCatalog.get(propertyName));
 
                 assertThat(catalogedPropertyDefinition)
                     .as("Definition of `%s` connector's action `%s` defines a property `%s` that is not defined in the Camel connector",
@@ -256,12 +249,12 @@ public class DeploymentDescriptorIT {
                     .isNotNull();
 
                 assertThat(propertyDefinition.get("componentProperty"))
-                    .as("`componentProperty` field is missing for connector's %s %s action property %s", connectorId,
-                        actionName, propertyName)
+                    .as("`componentProperty` field is missing for connector's %s %s action property %s", connectorId, actionName,
+                        propertyName)
                     .isNotNull();
                 assertThat(propertyDefinition.get("componentProperty").asBoolean())
-                    .as("Definition of `%s` connector's action `%s` property `%s` should be marked as `componentProperty`",
-                        connectorId, actionName, propertyName)
+                    .as("Definition of `%s` connector's action `%s` property `%s` should be marked as `componentProperty`", connectorId,
+                        actionName, propertyName)
                     .isFalse();
                 // remove Syndesis specifics
                 final ObjectNode propertyDefinitionForComparisson = propertyNodeForComparisson(propertyDefinition);
@@ -270,33 +263,32 @@ public class DeploymentDescriptorIT {
                 removeCustomizedProperties(propertyDefinitionForComparisson, catalogedPropertyDefinition);
 
                 assertThat(propertyDefinitionForComparisson)
-                    .as("Definition of `%s` connector's action's `%s` property `%s` differs from the one in Camel connector",
-                        connectorId, actionName, propertyName)
+                    .as("Definition of `%s` connector's action's `%s` property `%s` differs from the one in Camel connector", connectorId,
+                        actionName, propertyName)
                     .isEqualTo(catalogedPropertyDefinition);
             });
     }
 
     private static void assertConnectorProperties(final String connectorId, final JsonNode connectorPropertiesJson,
-        final JsonNode componentPropertiesFromCatalog) {
+        final JsonNode componentPropertiesFromCatalog, final JsonNode connectorPropertiesFromCatalog) {
         // make sure that all connector properties are as defined in
         // the connector
         connectorPropertiesJson.fields().forEachRemaining(property -> {
             final String propertyName = property.getKey();
             final JsonNode propertyDefinition = property.getValue();
 
-            final JsonNode catalogedPropertyDefinition = componentPropertiesFromCatalog.get(propertyName);
+            final JsonNode catalogedPropertyDefinition = Optional.ofNullable(componentPropertiesFromCatalog.get(propertyName))
+                .orElseGet(() -> connectorPropertiesFromCatalog.get(propertyName));
 
             assertThat(catalogedPropertyDefinition)
-                .as("Definition of `%s` connector has a property `%s` that is not defined in the Camel connector",
-                    connectorId, propertyName)
+                .as("Definition of `%s` connector has a property `%s` that is not defined in the Camel connector", connectorId,
+                    propertyName)
                 .isNotNull();
 
             assertThat(propertyDefinition.get("componentProperty"))
-                .as("`componentProperty` field is missing for connector's %s property %s", connectorId, propertyName)
-                .isNotNull();
+                .as("`componentProperty` field is missing for connector's %s property %s", connectorId, propertyName).isNotNull();
             assertThat(propertyDefinition.get("componentProperty").asBoolean())
-                .as("Definition of `%s` connector's property `%s` should be marked as `componentProperty`", connectorId,
-                    propertyName)
+                .as("Definition of `%s` connector's property `%s` should be marked as `componentProperty`", connectorId, propertyName)
                 .isTrue();
             final ObjectNode propertyDefinitionForComparisson = propertyNodeForComparisson(propertyDefinition);
 
@@ -304,8 +296,7 @@ public class DeploymentDescriptorIT {
             removeCustomizedProperties(propertyDefinitionForComparisson, catalogedPropertyDefinition);
 
             assertThat(propertyDefinitionForComparisson)
-                .as("Definition of `%s` connector's property `%s` differs from the one in Camel connector", connectorId,
-                    propertyName)
+                .as("Definition of `%s` connector's property `%s` differs from the one in Camel connector", connectorId, propertyName)
                 .isEqualTo(catalogedPropertyDefinition);
         });
     }
@@ -329,8 +320,7 @@ public class DeploymentDescriptorIT {
 
     private static void removeCustomizedProperties(final JsonNode... nodes) {
         for (final JsonNode node : nodes) {
-            ((ObjectNode) node)
-                .remove(Arrays.asList("displayName", "type", "description", "defaultValue", "optionalPrefix"));
+            ((ObjectNode) node).remove(Arrays.asList("displayName", "type", "description", "defaultValue", "optionalPrefix"));
         }
     }
 }
