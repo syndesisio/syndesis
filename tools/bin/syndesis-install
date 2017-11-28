@@ -8,7 +8,11 @@ ROUTE_HOSTNAME="syndesis.$(minishift ip).nip.io"
 while [ $# -gt 0 ]; do
 case $1 in
     --pull) 
-        docker pull syndesis/syndesis-ui && docker pull syndesis/syndesis-rest && docker pull syndesis/syndesis-verifier && docker pull atlasmap/atlasmap || exit 1
+        docker pull syndesis/syndesis-ui && \
+        docker pull syndesis/syndesis-rest && \
+        docker pull syndesis/syndesis-verifier && \
+        docker pull syndesis/syndesis-s2i && \
+        docker pull atlasmap/atlasmap || exit 1
         shift 1
     ;;
     --clean) 
