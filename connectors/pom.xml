@@ -206,6 +206,8 @@
         <inherited>true</inherited>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
+          <useFile>false</useFile>
+          <trimStackTrace>false</trimStackTrace>
           <environmentVariables>
             <ENV_VAR_EXISTS>value</ENV_VAR_EXISTS>
             <ENV_VAR_EXISTS_BOOLEAN>true</ENV_VAR_EXISTS_BOOLEAN>
