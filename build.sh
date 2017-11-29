@@ -224,19 +224,8 @@ function init_options() {
   OC_OPTS=""
   MAVEN_PARAMS="-P default"
   MAVEN_CLEAN_GOAL="clean"
-  MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
   MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
   LOCK=""
-
-  # If  we are running in cicleci 
-  if [ "$CIRCLECI" == "true" ] ; then
-    # Use batch mode so we get friendiler log files.
-    MAVEN_PARAMS="$MAVEN_PARAMS --batch-mode"
-    # lets configure thigs to avoid running out of memory:
-    MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2 --batch-mode -P image"
-    # Enable the image profile so that they get built
-    MAVEN_PARAMS="$MAVEN_PARAMS -P image"
-  fi
 
   # Apply options
   if [ -n "$(hasflag --batch-mode $ARGS 2> /dev/null)" ]; then
@@ -250,7 +239,8 @@ function init_options() {
 
   if [ -n "$SKIP_IMAGE_BUILDS" ]; then
       echo "Skipping image builds ..."
-      MAVEN_IMAGE_BUILD_GOAL=""
+  else
+      MAVEN_PARAMS="$MAVEN_PARAMS -P image"
   fi
 
   if [ -n "$NAMESPACE" ]; then
@@ -278,6 +268,7 @@ function init_options() {
 }
 
 function parent() {
+  echo "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
   "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
 }
 
@@ -290,27 +281,6 @@ function rest() {
 function s2i() {
   pushd s2i
   "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-  popd
-}
-
-function ui() {
-  pushd ui
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-  # yarn
-  # yarn ng build -- --aot --prod --progress=false
-  # if [ -z "$SKIP_IMAGE_BUILDS" ]; then
-  #     if [ -n "$WITH_IMAGE_STREAMS" ]; then
-  #         BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
-  #         if [ -z "$BC_DETAILS" ]; then
-  #             cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
-  #         fi
-  #         tar -cvf archive.tar dist docker
-  #         oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
-  #         rm archive.tar
-  #     else
-  #         docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
-  #     fi
-  # fi
   popd
 }
 

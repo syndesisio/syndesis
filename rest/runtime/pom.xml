@@ -199,7 +199,7 @@
           <generator>
             <config>
               <spring-boot>
-                <name>syndesis/syndesis-rest:%l</name>
+                <name>${syndesis-rest-image-name}</name>
               </spring-boot>
             </config>
           </generator>
