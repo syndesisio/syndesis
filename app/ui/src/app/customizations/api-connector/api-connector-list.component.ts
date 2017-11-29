@@ -51,7 +51,7 @@ export class ApiConnectorListComponent implements OnInit {
         actions: {
           primaryActions: [
             {
-              id: 'importApiConnector',
+              id: 'createApiConnector',
               title: 'Create API Connector',
               tooltip: 'Create API Connector'
             }
@@ -63,7 +63,7 @@ export class ApiConnectorListComponent implements OnInit {
   }
 
   handleAction(event: any) {
-    if (event.id === 'importApiConnector') {
+    if (event.id === 'createApiConnector') {
       this.router.navigate(['create'], { relativeTo: this.route });
     }
   }
