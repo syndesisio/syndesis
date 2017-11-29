@@ -52,6 +52,7 @@ and the following options:
   --batch-mode            Run mvn in batch mode
 
   --pool-namespace <ns>   Specify the pool namespace to use for testing
+  --create-lock <prefix>  Create project pool locks for system-tests for the projects with the given prefix
   --help                  Display this help message
 
 Examples:
