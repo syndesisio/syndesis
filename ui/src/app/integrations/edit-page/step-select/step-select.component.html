@@ -35,22 +35,29 @@
         <h1>Add a Step</h1>
       </div>
       <p>A step specifies an operation on the data in the integration.  Click one to add it.</p>
-      <div class="list-group list-view-pf list-view-pf-view">
-        <div class="step list-group-item"
-             title="{{step.name}}"
-             *ngFor="let step of steps | stepVisible:{position: position}"
-             (click)="onSelect(step)"
-             [class.active]="isSelected(step)">
-          <div class="list-view-pf-main-info">
-            <div class="list-view-pf-body">
-              <div class="list-group-item-heading">{{ getName(step) }}</div>
-              <div class="list-group-item-text">{{ getDescription(step) }}
+      <syndesis-loading [loading]="loading$ | async">
+        <pfng-toolbar [config]="toolbarConfig"
+                      (onFilterChange)="onFilterChange($event)"
+                      (onFilterFieldSelect)="onFilterFieldSelect($event)"
+                      (onSortChange)="onSortChange($event)">
+        </pfng-toolbar>
+        <div *ngIf="steps"
+            class="list-group list-view-pf list-view-pf-view">
+          <div class="step list-group-item"
+              title="{{step.name}}"
+              *ngFor="let step of filteredSteps | stepVisible:{position: position}"
+              (click)="onSelect(step)"
+              [class.active]="isSelected(step)">
+            <div class="list-view-pf-main-info">
+              <div class="list-view-pf-body">
+                <div class="list-group-item-heading">{{ getName(step) }}</div>
+                <div class="list-group-item-text">{{ getDescription(step) }}
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-      </div>
+      </syndesis-loading>
     </div>
   </div>
 </syndesis-loading>

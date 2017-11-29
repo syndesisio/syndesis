@@ -174,8 +174,8 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     }
     this.loading = true;
     const step = (this.step = <Step>this.currentFlow.getStep(this.position));
-    // If no Step exists, redirect to the Select Step view
-    if (!step) {
+    // If no Step exists or it's not actually a step, redirect to the Select Step view
+    if (!step || step.stepKind === 'endpoint') {
       this.router.navigate(['step-select', this.position], {
         relativeTo: this.route.parent
       });
@@ -197,14 +197,6 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   }
 
   loadFormSetup(step: Step) {
-    // Step exists, get its configuration
-    const stepDef = this.stepStore.getStepConfig(step.stepKind);
-    log.info('stepConfig: ' + JSON.stringify(stepDef));
-    if (!stepDef) {
-      // TODO if we don't have a definition for this step then ???
-      this.postEvent();
-      return;
-    }
     // Now check if we've a custom view for this step kind
     if (this.stepStore.isCustomStep(step)) {
       this.customProperties = this.getConfiguredProperties(
@@ -213,7 +205,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
       this.postEvent();
       return;
     }
-    this.formConfig = JSON.parse(JSON.stringify(stepDef.properties));
+    this.formConfig = this.stepStore.getProperties(step);
     if (!Object.keys(this.formConfig).length) {
       this.continue({});
       return;
