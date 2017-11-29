@@ -203,7 +203,7 @@ current_server() {
 project_lock_data() {
   local secret_name=$1
   local pool_namespace=$2
-  oc get secret $secret_name -n $pool_namespace -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}} {{.metadata.resourceVersion}} {{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
+  oc get secret $secret_name -n $pool_namespace -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}~{{.metadata.resourceVersion}}~{{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
 }
 
 #
@@ -214,14 +214,14 @@ obtain_project_lock() {
   for lock in $(oc get secret -n $pool_namespace | grep project-lock- | awk -F " " '{print $1}'); do
     echo "Trying to obtain lock data from secret $lock" > /tmp/log
     local status=$(project_lock_data $lock $pool_namespace)
-    local project=`echo $status | awk -F " " '{print $1}'`
-    local version=`echo $status | awk -F " " '{print $2}'`
-    local allocator=`echo $status | awk -F " " '{print $3}'`
+    local project=`echo $status | awk -F "~" '{print $1}'`
+    local version=`echo $status | awk -F "~" '{print $2}'`
+    local allocator=`echo $status | awk -F "~" '{print $3}'`
 
     if [ -z "$allocator" ] || [ "$build_name" == "$allocator" ]; then
-      oc annotate secret $lock syndesis.io/allocated-by=$build_name --resource-version=$version --overwrite -n $pool_namespace > /dev/null
+      oc annotate secret $lock syndesis.io/allocated-by=$build_name syndesis.io/lock-for-project=$pool_namespace --resource-version=$version --overwrite -n $pool_namespace > /dev/null
       local newstatus=$(project_lock_data $lock $pool_namespace)
-      local newallocator=`echo $newstatus | awk -F " " '{print $3}'`
+      local newallocator=`echo $newstatus | awk -F "~" '{print $3}'`
       if [ "$newallocator" == "$build_name" ]; then
         echo $lock
         return
