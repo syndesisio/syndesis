@@ -34,3 +34,13 @@ a.disabled {
     //justify-content: center; /* Optional, to align inner items horizontally inside the column */
   }
 }
+
+//----- Convenience helpers mapping custon SASS mixins ----------------->>
+
+.visuallyhidden {
+  @include visuallyhidden;
+}
+
+.preventclick {
+  @include preventclick;
+}

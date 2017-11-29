@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectorStore } from '../../store/connector/connector.store';
 
 @Component({
   selector: 'syndesis-api-connector-create',
+  styles: [`
+    .wizard-nav__button { margin-left: 1.6em; }
+  `],
   templateUrl: 'api-connector-create.component.html'
 })
-
 export class ApiConnectorCreateComponent implements OnInit {
-  constructor(private store: ConnectorStore) { }
+  constructor() { }
 
   ngOnInit() {
     // Happening soon!

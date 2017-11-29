@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-//import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
 import { NotificationModule } from 'patternfly-ng';
 
 import { EditableTagsComponent } from './editable/editable-tags.component';
@@ -14,7 +14,7 @@ import { TruncateCharactersPipe } from './truncate-characters.pipe';
 import { TruncateWordsPipe } from './truncate-words.pipe';
 import { CapitalizePipe } from './capitalize.pipe';
 import { TitleizePipe } from './titleize.pipe';
-import { ToIdPipe } from './to-id.pipe';
+import { SlugifyPipe } from './slugify.pipe';
 import { LoadingComponent } from './loading/loading.component';
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
@@ -24,13 +24,14 @@ import { ModalComponent } from './modal/modal.component';
 import { ModalService } from './modal/modal.service';
 import { TagInputModule } from 'ngx-chips';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { WizardProgressBarComponent } from './wizard_progress_bar';
 
 @NgModule({
   imports: [
-    //HttpModule,
     FormsModule,
     CommonModule,
-    TagInputModule
+    TagInputModule,
+    RouterModule
   ],
   declarations: [
     DerpPipe,
@@ -41,13 +42,15 @@ import { NotificationService } from 'app/common/ui-patternfly/notification-servi
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
-    ToIdPipe,
+    SlugifyPipe,
     ModalComponent,
     EditableTagsComponent,
     EditableTextComponent,
-    EditableTextareaComponent
+    EditableTextareaComponent,
+    WizardProgressBarComponent,
   ],
   exports: [
+    CommonModule,
     DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
@@ -56,11 +59,12 @@ import { NotificationService } from 'app/common/ui-patternfly/notification-servi
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
-    ToIdPipe,
+    SlugifyPipe,
     ModalComponent,
     EditableTagsComponent,
     EditableTextComponent,
-    EditableTextareaComponent
+    EditableTextareaComponent,
+    WizardProgressBarComponent
   ],
   providers: [FormFactoryService]
 })

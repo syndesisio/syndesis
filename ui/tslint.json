@@ -211,7 +211,7 @@
     "directive-class-suffix": true,
     "directive-selector": [
       "attribute",
-      ["syndesis"],
+      ["syndesis", "syn"],
       "camelCase"
     ],
     "import-destructuring-spacing": true,

@@ -53,7 +53,11 @@ const routes: Routes = [
     component: TechExtensionDetailComponent
   },
   {
-    path: 'api-connector/create',
+    path: 'api-connector/create/:template',
+    component: ApiConnectorCreateComponent
+  },
+  {
+    path: 'api-connector/create/:template/:step',
     component: ApiConnectorCreateComponent
   },
   {
@@ -85,4 +89,4 @@ const routes: Routes = [
   ],
   providers: []
 })
-export class CustomizationsModule {}
+export class CustomizationsModule { }

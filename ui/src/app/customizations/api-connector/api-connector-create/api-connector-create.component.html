@@ -1,0 +1,35 @@
+<nav class="wizard-nav row toolbar-pf toolbar">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-actions">
+      <div class="wizard-nav__breadcrumbs inline-block">
+        <ol class="breadcrumb">
+          <li>
+            <a routerLink="/">Home</a>
+          </li>
+          <li>
+            <a routerLink="/customizations/api-connector">Customize</a>
+          </li>
+          <li class="active">
+            <strong>API Client Connector</strong>
+          </li>
+        </ol>
+      </div>
+      <div class="wizard-nav__buttons toolbar-pf-action-right">
+        <button class="wizard-nav__button btn btn-default">
+          Cancel
+        </button>
+        <button class="wizard-nav__button btn btn-primary visuallyhidden">
+          Create Connector
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<syndesis-wizard-progress-bar [steps]="[
+  'Upload Swagger',
+  'Review Swagger Action',
+  'Security',
+  'General Connector Info']"
+  [selectedStep]="1">
+</syndesis-wizard-progress-bar>
