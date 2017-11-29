@@ -307,7 +307,7 @@ join_comma() {
 }
 
 get_maven_args() {
-  local namespace=$1
+  local namespace=${1:-}
   local modules=$(extract_modules)
   local args=$(args_for_modules $modules)
 
@@ -324,7 +324,7 @@ get_maven_args() {
   fi
 
   if [ -n "$(hasflag --batch-mode)" ]; then
-    args="$args --batchmode"
+    args="$args --batch-mode"
   fi
 
   local image_mode="$(readopt --image-mode)"
