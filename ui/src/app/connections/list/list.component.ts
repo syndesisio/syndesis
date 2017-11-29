@@ -38,7 +38,9 @@ export class ConnectionsListComponent implements OnInit {
     public store: ConnectionStore,
     private notificationService: NotificationService,
     private modalService: ModalService
-  ) {}
+  ) {
+    this.notificationService.setDelay(4000);
+  }
 
   //----- Initialization ------------------->>
 
