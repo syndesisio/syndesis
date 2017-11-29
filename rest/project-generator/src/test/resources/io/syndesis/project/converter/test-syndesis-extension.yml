@@ -2,7 +2,9 @@
 flows:
 - steps:
   - kind: endpoint
-    uri: periodic-timer-connector?period=5000
+    uri: periodic-timer-connector
+    properties:
+      period: "5000"
   - kind: setHeaders
     headers:
       key-1: val-1
@@ -20,4 +22,8 @@ flows:
       key-1: val-1
       key-2: val-2
   - kind: endpoint
-    uri: http-get-connector?httpUri=http://localhost:8080/bye&password={{http-get-connector.password}}&username={{http-get-connector.username}}
+    uri: http-get-connector
+    properties:
+      password: '{{http-get-connector.password}}'
+      httpUri: http://localhost:8080/bye
+      username: '{{http-get-connector.username}}'

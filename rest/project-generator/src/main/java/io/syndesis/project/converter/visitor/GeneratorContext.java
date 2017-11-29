@@ -16,11 +16,7 @@
 
 package io.syndesis.project.converter.visitor;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.Flow;
@@ -30,13 +26,15 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.immutables.value.Value;
 
+import java.io.IOException;
+import java.util.Optional;
+
 @Value.Immutable
 @JsonDeserialize(builder = GeneratorContext.Builder.class)
 public interface GeneratorContext {
 
     Integration getIntegration();
     Flow getFlow();
-    ConnectorCatalog getConnectorCatalog();
     ProjectGeneratorProperties getGeneratorProperties();
     StepVisitorFactoryRegistry getVisitorFactoryRegistry();
     TarArchiveOutputStream getTarArchiveOutputStream();

@@ -15,6 +15,36 @@
  */
 package io.syndesis.project.converter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import io.syndesis.core.Names;
+import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.integration.model.Flow;
+import io.syndesis.integration.model.SyndesisModel;
+import io.syndesis.integration.model.YamlHelpers;
+import io.syndesis.integration.support.Strings;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Step;
+import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
+import io.syndesis.project.converter.mvn.MavenGav;
+import io.syndesis.project.converter.mvn.PomContext;
+import io.syndesis.project.converter.visitor.GeneratorContext;
+import io.syndesis.project.converter.visitor.StepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorContext;
+import io.syndesis.project.converter.visitor.StepVisitorFactory;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,43 +72,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.core.Names;
-import io.syndesis.dao.extension.ExtensionDataManager;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.YamlHelpers;
-import io.syndesis.integration.support.Strings;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Step;
-import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
-import io.syndesis.project.converter.mvn.MavenGav;
-import io.syndesis.project.converter.mvn.PomContext;
-import io.syndesis.project.converter.visitor.GeneratorContext;
-import io.syndesis.project.converter.visitor.StepVisitor;
-import io.syndesis.project.converter.visitor.StepVisitorContext;
-import io.syndesis.project.converter.visitor.StepVisitorFactory;
-import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class DefaultProjectGenerator implements ProjectGenerator {
     private static final ObjectMapper YAML_OBJECT_MAPPER = YamlHelpers.createObjectMapper();
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
     private final ProjectGeneratorProperties generatorProperties;
-    private final ConnectorCatalog connectorCatalog;
     private final StepVisitorFactoryRegistry registry;
     private final DataManager dataManager;
     private final Optional<ExtensionDataManager> extensionDataManager;
@@ -90,13 +88,11 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     public DefaultProjectGenerator(
             ProjectGeneratorProperties generatorProperties,
-            ConnectorCatalog connectorCatalog,
             StepVisitorFactoryRegistry registry,
             DataManager dataManager,
             Optional<ExtensionDataManager> extensionDataManager) throws IOException {
 
         this.generatorProperties = generatorProperties;
-        this.connectorCatalog = connectorCatalog;
         this.registry = registry;
         this.dataManager = dataManager;
         this.extensionDataManager = extensionDataManager;
@@ -131,17 +127,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     @Override
     public InputStream generate(Integration integration) throws IOException {
-        for (Step step : integration.getSteps()) {
-            LOG.debug("Integration [{}]: Adding step {} ",
-                Names.sanitize(integration.getName()),
-                step.getId().orElse(""));
-
-            step.getAction()
-                .filter(ConnectorAction.class::isInstance)
-                .map(ConnectorAction.class::cast)
-                .ifPresent(action -> connectorCatalog.addConnector(action.getDescriptor().getCamelConnectorGAV()));
-        }
-
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
@@ -321,7 +306,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
             if (first != null) {
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()
                     .generatorContext(new GeneratorContext.Builder()
-                        .connectorCatalog(connectorCatalog)
                         .generatorProperties(generatorProperties)
                         .integration(integration)
                         .tarArchiveOutputStream(tos)

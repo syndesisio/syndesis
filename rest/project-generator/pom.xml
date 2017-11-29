@@ -41,11 +41,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>connector-catalog</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>io.syndesis.integration-runtime</groupId>
       <artifactId>model</artifactId>
     </dependency>

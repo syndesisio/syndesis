@@ -807,6 +807,12 @@
         <artifactId>wiremock-standalone</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
   </dependencies>
 
   <profiles>
