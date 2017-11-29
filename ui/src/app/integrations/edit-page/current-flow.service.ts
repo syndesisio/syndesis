@@ -305,8 +305,7 @@ export class CurrentFlow {
       case 'integration-set-step': {
         const position = +event['position'];
         const step = <Step>event['step'];
-        this.steps[position] = TypeFactory.createStep();
-        this.steps[position].stepKind = step.stepKind;
+        this.steps[position] = { ...TypeFactory.createStep(), ...step };
         this.maybeDoAction(event['onSave']);
         log.debugc(() => 'Set step at position: ' + position, category);
         break;

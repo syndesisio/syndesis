@@ -321,11 +321,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
         if (this.step.name) {
           return this.step.name;
         }
-        if (this.step.stepKind) {
-          return this.stepStore.getStepName(this.step.stepKind);
-        } else {
-          return 'Set up this step';
-        }
+        return 'Set up this step';
     }
   }
 
