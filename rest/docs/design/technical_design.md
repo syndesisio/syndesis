@@ -20,13 +20,15 @@ The real definition of what an `Integration` does, is delegated to the following
 - `Action`
 - `Step`
 
+![Syndesis Model core concepts](img/syndesisModel-coreConcepts.svg)
+
 ##### Connector
 Is used to define a set of common properties the user can define on a `Connection` entity coupled with this `Connector`.  
 Think of `Connector` as a **configurable schema**, used to define the shape of a corresponding `Connection` entity.  
 Another responsibility of the `Connector` is to aggregate a list of `Actions`, that are "operations" available to the user.  
 An example of `Connector` could be a **Twitter** `Connector`, where you define some of the properties that are **required by all** the operations it will provide.  
 Properties could be for example `user`, `password`, `token` and so on. Just understand that **you are not setting the values for these keys** here. You are just declaring what are the fields that a specific instance of this item will ask to fill!  
-`Connector` is associated with set of Maven GAV coordinates, to being referred to. 
+`Connector` is associated with set of Maven GAV coordinates, to being referred to.
 
 ##### Connection
 It can be seen as a specific instance of `Connector`.  
@@ -73,7 +75,7 @@ When she's done, the UI application produces a `.json` files that corresponds to
 The component responsible of consuming this `.json` is the [`ActivateHandler`](https://github.com/syndesisio/syndesis/blob/master/rest/controllers/src/main/java/io/syndesis/controllers/integration/online/ActivateHandler.java), that at runtime, lives in the `syndesis-rest` pod.  
 
 This component is responsible of 3 main activities:  
-1. produce **deplyoment data** 
+1. produce **deplyoment data**
 1. **build** the project related to our `Integration`
 1. **deploy** an instance of our `Integration`
 
@@ -124,4 +126,3 @@ The idea is to enable a technical user to augment his `Integration` in a pluggab
 From a UX proint of view, this happens letting a user uploading a `.jar` file containing classes and dependencies required to run.
 
 This `.jar`, despite not not having any requirement from code point of view, has to be built, using a Maven Plugin we made available, called `syndesis-maven-plugin`, that creates the correct metadata to be loaded by the runtime and removes references to libraries that might have been already provided.
-
