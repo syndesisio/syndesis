@@ -152,7 +152,7 @@
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
-                  <name>${syndesis-s2i-image-name}</name>
+                  <name>${image.s2i}</name>
                   <build>
                     <dockerFile>Dockerfile</dockerFile>
                   </build>
