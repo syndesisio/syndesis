@@ -175,7 +175,7 @@
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
-                  <name>syndesis/%a:latest</name>
+                  <name>${image.ui}</name>
                   <build>
                     <assembly>
                       <inline>
