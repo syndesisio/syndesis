@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConnectorService } from './api-connector.service';
-import { ApiConnector, ApiConnectors, TypeFactory } from './api-connector.model';
+import { ApiConnector, ApiConnectors } from './api-connector.model';
 import { AbstractStore } from '../../store/entity/entity.store';
 import { EventsService } from '../../store/entity/events.service';
 

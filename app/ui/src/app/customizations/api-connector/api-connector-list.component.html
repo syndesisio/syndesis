@@ -7,13 +7,14 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
+
       <syndesis-loading [loading]="loading$ | async">
 
         <!-- List Toolbar -->
 
-        <syndesis-list-toolbar [items]="connectors$"
+        <syndesis-list-toolbar [items]="apiConnectors$"
                                [filterTags]="false"
-                               [filteredItems]="filteredConnectors$"
+                               [filteredItems]="filteredApiConnectors$"
                                [viewTemplate]="viewTemplate">
           <ng-template #viewTemplate>
             <div class="toolbar-pf-action-right">
@@ -28,7 +29,7 @@
 
         <!-- PatternFly List -->
 
-        <pfng-list [items]="filteredConnectors$ | async"
+        <pfng-list [items]="filteredApiConnectors$ | async"
                    [config]="listConfig"
                    [itemTemplate]="itemTemplate"
                    [actionTemplate]="actionTemplate"
@@ -45,8 +46,8 @@
                 </div>
               </div>
               <div class="list-pf-additional-content">
-                <div *ngIf="item.connectors">
-                  <strong>Used by {{ item.connectors }}</strong>
+                <div *ngIf="item.apiConnectors">
+                  <strong>Used by {{ item.apiConnectors }}</strong>
                 </div>
               </div>
             </div>
