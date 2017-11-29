@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.syndesis.integration.model.steps.Step;
 
 public final class YamlHelpers {
@@ -39,6 +40,7 @@ public final class YamlHelpers {
             .configure(YAMLGenerator.Feature.USE_NATIVE_TYPE_ID, false);
 
         ObjectMapper mapper = new ObjectMapper(yamlFactory)
+            .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
             .enable(SerializationFeature.INDENT_OUTPUT)
             .disable(SerializationFeature.WRITE_NULL_MAP_VALUES);

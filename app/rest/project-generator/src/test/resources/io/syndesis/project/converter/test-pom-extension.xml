@@ -69,19 +69,17 @@
       <version>\${camel-atlasmap.version}</version>
     </dependency>
 
-    <!-- connectors used in this integration -->
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>timer-connector</artifactId>
-      <version>@syndesis-connectors.version@</version>
-    </dependency>
+    <!-- dependencies used in this integration -->
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>http-get-connector</artifactId>
       <version>@syndesis-connectors.version@</version>
     </dependency>
-
-    <!-- extensions used in this integration -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>timer-connector</artifactId>
+      <version>@syndesis-connectors.version@</version>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

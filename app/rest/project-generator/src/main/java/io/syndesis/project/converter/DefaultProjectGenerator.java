@@ -29,15 +29,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -47,7 +45,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.core.Names;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
@@ -55,7 +52,9 @@ import io.syndesis.integration.model.Flow;
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.support.Strings;
-import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.Dependency;
+import io.syndesis.model.WithDependencies;
+import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
@@ -78,10 +77,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
     private final ProjectGeneratorProperties generatorProperties;
-    private final ConnectorCatalog connectorCatalog;
     private final StepVisitorFactoryRegistry registry;
     private final DataManager dataManager;
-    private final Optional<ExtensionDataManager> extensionDataManager;
+    private final ExtensionDataManager extensionDataManager;
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
     private final Mustache pomMustache;
@@ -90,13 +88,11 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     public DefaultProjectGenerator(
             ProjectGeneratorProperties generatorProperties,
-            ConnectorCatalog connectorCatalog,
             StepVisitorFactoryRegistry registry,
             DataManager dataManager,
-            Optional<ExtensionDataManager> extensionDataManager) throws IOException {
+            ExtensionDataManager extensionDataManager) throws IOException {
 
         this.generatorProperties = generatorProperties;
-        this.connectorCatalog = connectorCatalog;
         this.registry = registry;
         this.dataManager = dataManager;
         this.extensionDataManager = extensionDataManager;
@@ -131,17 +127,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     @Override
     public InputStream generate(Integration integration) throws IOException {
-        for (Step step : integration.getSteps()) {
-            LOG.debug("Integration [{}]: Adding step {} ",
-                Names.sanitize(integration.getName()),
-                step.getId().orElse(""));
-
-            step.getAction()
-                .filter(ConnectorAction.class::isInstance)
-                .map(ConnectorAction.class::cast)
-                .ifPresent(action -> connectorCatalog.addConnector(action.getDescriptor().getCamelConnectorGAV()));
-        }
-
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
@@ -191,25 +176,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlow(tos, integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
-
-                List<Extension> extensions = integration.getSteps().stream().map(Step::getExtension).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
-                if (!extensions.isEmpty() && extensionDataManager.isPresent()) {
-                    addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(integration));
-
-                    for (Extension extension: extensions) {
-                        addTarEntry(
-                            tos,
-                            "extensions/" + Names.sanitize(extension.getExtensionId()) + ".jar",
-                            IOUtils.toByteArray(
-                                extensionDataManager.get().getExtensionBinaryFile(extension.getExtensionId())
-                            )
-                        );
-                    }
-                }
-
+                addExtensions(tos, integration);
                 addAdditionalResources(tos);
                 LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(integration.getName()));
-            } catch (IOException|URISyntaxException e) {
+            } catch (IOException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",
                         integration.getName(), e.toString()), e);
@@ -226,66 +196,64 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         tos.closeArchiveEntry();
     }
 
-    private void addResource(TarArchiveOutputStream tos, String destination, String resource) throws IOException, URISyntaxException {
+    private void addResource(TarArchiveOutputStream tos, String destination, String resource) throws IOException {
         final URL url = getClass().getResource(resource);
         final byte[] bytes = IOUtils.toByteArray(url);
 
         addTarEntry(tos, destination, bytes);
     }
 
-    @Override
-    public byte[] generatePom(Integration integration) throws IOException {
-        final Set<MavenGav> connectors = new LinkedHashSet<>();
-        final Set<MavenGav> extensions = new LinkedHashSet<>();
+    private void addExtensions(TarArchiveOutputStream tos, Integration integration) throws IOException {
+        final Set<String> extensions = collectDependencies(integration).stream()
+            .filter(Dependency::isExtension)
+            .map(Dependency::getId)
+            .collect(Collectors.toCollection(TreeSet::new));
 
-        for (Step step : integration.getSteps()) {
-            if (step.getStepKind().equals(io.syndesis.integration.model.steps.Endpoint.KIND)) {
-                step.getAction()
-                    .filter(ConnectorAction.class::isInstance)
-                    .map(ConnectorAction.class::cast)
-                    .map(action -> action.getDescriptor().getCamelConnectorGAV())
-                    .map(MavenGav::new)
-                    .ifPresent(connectors::add);
-            }
-            if (step.getStepKind().equals(io.syndesis.integration.model.steps.Extension.KIND)) {
-                step.getExtension()
-                    .map(Extension::getDependencies)
-                    .orElseGet(Collections::emptySortedSet)
-                    .stream()
-                        .map(MavenGav::new)
-                        .forEach(extensions::add);
+        if (!extensions.isEmpty()) {
+            addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(extensions));
+
+            for (String extensionId : extensions) {
+                addTarEntry(
+                    tos,
+                    "extensions/" + Names.sanitize(extensionId) + ".jar",
+                    IOUtils.toByteArray(
+                        extensionDataManager.getExtensionBinaryFile(extensionId)
+                    )
+                );
             }
         }
+    }
+
+    @Override
+    public byte[] generatePom(Integration integration) throws IOException {
+        final Set<MavenGav> dependencies = collectDependencies(integration).stream()
+            .filter(Dependency::isMaven)
+            .map(Dependency::getId)
+            .map(MavenGav::new)
+            .collect(Collectors.toCollection(TreeSet::new));
 
         return generate(
             new PomContext(
                 integration.getId().orElse(""),
                 integration.getName(),
                 integration.getDescription().orElse(null),
-                connectors,
-                extensions,
+                dependencies,
                 generatorProperties.getMavenProperties()),
             pomMustache
         );
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private byte[] generateExtensionLoader(Integration integration) {
-        final Set<String> extensions = new LinkedHashSet<>();
-
-        for (Step step : integration.getSteps()) {
-            if (step.getStepKind().equals(io.syndesis.integration.model.steps.Extension.KIND)) {
-                step.getExtension()
-                    .map(Extension::getExtensionId)
-                    .map(Names::sanitize)
-                    .map(id -> generatorProperties.getSyndesisExtensionPath() + "/" + id + ".jar")
-                    .ifPresent(extensions::add);
-            }
-        }
-
+    private byte[] generateExtensionLoader(Set<String> extensions) {
         if (!extensions.isEmpty()) {
             return new StringBuilder()
-                .append("loader.path").append('=').append(String.join(",", extensions)).append('\n')
+                .append("loader.path")
+                .append('=')
+                .append(extensions.stream()
+                    .map(Names::sanitize)
+                    .map(id -> generatorProperties.getSyndesisExtensionPath() + "/" + id + ".jar")
+                    .collect(Collectors.joining(",")))
+                .append('\n')
                 .toString()
                     .getBytes(StandardCharsets.UTF_8);
         }
@@ -295,33 +263,15 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     private byte[] generateFlow(TarArchiveOutputStream tos, Integration integration) throws JsonProcessingException {
-        final Map<Step, String> connectorIdMap = new HashMap<>();
         final List<? extends Step> steps =  integration.getSteps();
         final Flow flow = new Flow();
 
         if (!steps.isEmpty()) {
-            // Determine connector prefix
-            integration.getSteps().stream()
-                .filter(s -> s.getStepKind().equals(io.syndesis.integration.model.steps.Endpoint.KIND))
-                .filter(s -> s.getAction().filter(ConnectorAction.class::isInstance).isPresent())
-                .filter(s -> s.getConnection().isPresent())
-                .collect(Collectors.groupingBy(s -> s.getAction().map(ConnectorAction.class::cast).get().getDescriptor().getCamelConnectorPrefix()))
-                .forEach(
-                    (prefix, stepList) -> {
-                        if (stepList.size() > 1) {
-                            for (int i = 0; i < stepList.size(); i++) {
-                                connectorIdMap.put(stepList.get(i), Integer.toString(i + 1));
-                            }
-                        }
-                    }
-                );
-
             Queue<Step> remaining = new ArrayDeque<>(steps);
             Step first = remaining.remove();
             if (first != null) {
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()
                     .generatorContext(new GeneratorContext.Builder()
-                        .connectorCatalog(connectorCatalog)
                         .generatorProperties(generatorProperties)
                         .integration(integration)
                         .tarArchiveOutputStream(tos)
@@ -333,7 +283,6 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                     .index(1)
                     .step(first)
                     .remaining(remaining)
-                    .connectorIdSupplier(step -> Optional.ofNullable(connectorIdMap.get(step)))
                     .build();
 
                 visitStep(stepContext);
@@ -363,5 +312,45 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         template.execute(new OutputStreamWriter(bos, StandardCharsets.UTF_8), scope).flush();
         return bos.toByteArray();
+    }
+
+
+    private Collection<Dependency> collectDependencies(Integration integration) {
+        List<Dependency> dependencies = new ArrayList<>();
+
+        for (Step step : integration.getSteps()) {
+            step.getAction()
+                .filter(WithDependencies.class::isInstance)
+                .map(WithDependencies.class::cast)
+                .map(WithDependencies::getDependencies)
+                .ifPresent(dependencies::addAll);
+
+            step.getConnection()
+                .filter(c -> c.getConnector().isPresent())
+                .map(c -> c.getConnector().get())
+                .map(WithDependencies::getDependencies)
+                .ifPresent(dependencies::addAll);
+
+            step.getConnection()
+                .filter(c -> Objects.nonNull(dataManager))
+                .filter(c -> !c.getConnector().isPresent())
+                .filter(c -> c.getConnectorId().isPresent())
+                .map(c -> c.getConnectorId().get())
+                .map(c -> dataManager.fetch(Connector.class, c))
+                .filter(Objects::nonNull)
+                .map(WithDependencies::getDependencies)
+                .ifPresent(dependencies::addAll);
+
+            step.getExtension()
+                .map(WithDependencies::getDependencies)
+                .ifPresent(dependencies::addAll);
+
+            step.getExtension()
+                .map(Extension::getExtensionId)
+                .map(Dependency::extension)
+                .ifPresent(dependencies::add);
+        }
+
+        return dependencies;
     }
 }

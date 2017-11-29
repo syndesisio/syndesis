@@ -33,12 +33,13 @@ public class FilterHandler implements StepHandler<Filter> {
         return step.getClass().equals(Filter.class);
     }
 
-  @Override
-  public ProcessorDefinition handle(Filter step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    CamelContext context = routeBuilder.getContext();
-    Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, step, step.getExpression());
-    FilterDefinition filter = route.filter(predicate);
-    return routeBuilder.addSteps(filter, step.getSteps());
-  }
+    @Override
+    public ProcessorDefinition handle(Filter step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+        CamelContext context = routeBuilder.getContext();
+        Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, step, step.getExpression());
+        FilterDefinition filter = route.filter(predicate);
+
+        return routeBuilder.addSteps(filter, step.getSteps());
+    }
 }
 

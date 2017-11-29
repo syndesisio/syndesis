@@ -15,6 +15,7 @@
  */
 package io.syndesis.project.converter.mvn;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,16 +25,14 @@ public final class PomContext {
     private final String id;
     private final String name;
     private final String description;
-    private final Set<MavenGav> connectors;
-    private final Set<MavenGav> extensions;
+    private final Collection<MavenGav> dependencies;
     private final MavenProperties mavenProperties;
 
-    public PomContext(String id, String name, String description, Set<MavenGav> connectors, Set<MavenGav> extensions, MavenProperties mavenProperties) {
+    public PomContext(String id, String name, String description, Collection<MavenGav> dependencies, MavenProperties mavenProperties) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.connectors = connectors;
-        this.extensions = extensions;
+        this.dependencies = dependencies;
         this.mavenProperties = mavenProperties;
     }
 
@@ -49,12 +48,8 @@ public final class PomContext {
         return description;
     }
 
-    public Set<MavenGav> getConnectors() {
-        return connectors;
-    }
-
-    public Set<MavenGav> getExtensions() {
-        return extensions;
+    public Collection<MavenGav> getDependencies() {
+        return dependencies;
     }
 
     public Set<Map.Entry<String, String>> getMavenRepositories() {

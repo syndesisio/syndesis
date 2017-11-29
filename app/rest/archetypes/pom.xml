@@ -26,7 +26,7 @@
   </parent>
 
   <groupId>io.syndesis</groupId>
-  <artifactId>syndesis-archetypes</artifactId>
+  <artifactId>archetypes</artifactId>
   <name>REST :: Archetypes :: Parent</name>
   <packaging>pom</packaging>
 

@@ -15,30 +15,34 @@
  */
 package io.syndesis.integration.model.steps;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.google.auto.service.AutoService;
 
 /**
  * Invokes an endpoint URI (typically HTTP or HTTPS) with the current payload
  */
 @AutoService(Step.class)
-public class Endpoint extends Step {
+public final class Endpoint extends Step implements FromStep {
     public static final String KIND = "endpoint";
 
     private String uri;
+    private Map<String, Object> properties;
 
     public Endpoint() {
         super(KIND);
     }
 
     public Endpoint(String uri) {
-        super(KIND);
-
-        this.uri = uri;
+        this(uri, null);
     }
 
-    @Override
-    public String toString() {
-        return "Endpoint: " + uri;
+    public Endpoint(String uri, Map<String, Object> properties) {
+        super(KIND);
+        setUri(uri);
+        setProperties(properties);
     }
 
     public String getUri() {
@@ -49,4 +53,27 @@ public class Endpoint extends Step {
         this.uri = uri;
     }
 
+    public Map<String, Object> getProperties() {
+        return clone(properties);
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = clone(properties);
+    }
+
+    @Override
+    public String toString() {
+        return "Endpoint{"
+            + "uri='" + uri + '\''
+            + ", properties=" + properties
+            + '}';
+    }
+
+    private static final Map<String, Object> clone(Map<String, Object> properties) {
+        if (properties == null) {
+            return Collections.emptyMap();
+        } else {
+            return new TreeMap<>(properties);
+        }
+    }
 }

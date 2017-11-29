@@ -29,6 +29,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>camel-component-proxy</module>
     <module>http-component</module>
   </modules>
 

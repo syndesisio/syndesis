@@ -23,6 +23,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.Kind;
+import io.syndesis.model.WithConfiguredProperties;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
@@ -40,7 +41,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Connection.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface Connection extends WithId<Connection>, WithTags, WithName, Serializable {
+public interface Connection extends WithId<Connection>, WithTags, WithName, WithConfiguredProperties, Serializable {
 
     @Override
     default Kind getKind() {
@@ -54,8 +55,6 @@ public interface Connection extends WithId<Connection>, WithTags, WithName, Seri
     Optional<Connector> getConnector();
 
     Optional<String> getConnectorId();
-
-    Map<String, String> getConfiguredProperties();
 
     /**
      * Actual options how this connection is configured

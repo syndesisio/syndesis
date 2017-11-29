@@ -15,6 +15,8 @@
  */
 package io.syndesis.model.extension;
 
+import java.util.OptionalInt;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
@@ -27,8 +29,6 @@ import io.syndesis.model.action.ExtensionAction;
 import io.syndesis.model.action.ExtensionDescriptor;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.OptionalInt;
 
 import static org.junit.Assert.assertFalse;
 

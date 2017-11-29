@@ -134,10 +134,12 @@ public class DeploymentDescriptorIT {
         final Map<String, Long> coordinatesWithCount = StreamSupport.stream(deployment.spliterator(), true)
             .filter(data -> "connector".equals(data.get("kind").asText()))
             .flatMap(connector -> StreamSupport.stream(connector.get("data").get("actions").spliterator(), true))
+            .filter(action -> action.get("descriptor").get("camelConnectorGAV") != null)
             .map(action -> action.get("descriptor").get("camelConnectorGAV").asText())
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream().filter(e -> e.getValue() > 1)
+        final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream()
+            .filter(e -> e.getValue() > 1)
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         assertThat(multipleCoordinates).as("Expected connector GAV coordinates to be unique").isEmpty();

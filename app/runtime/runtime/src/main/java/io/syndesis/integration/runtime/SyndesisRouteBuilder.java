@@ -20,15 +20,14 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.model.SyndesisModel;
-import io.syndesis.integration.model.steps.Endpoint;
+import io.syndesis.integration.model.YamlHelpers;
+import io.syndesis.integration.model.steps.FromStep;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.designer.SingleMessageRoutePolicyFactory;
 import io.syndesis.integration.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +52,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void configure() throws Exception {
         int flowIndex = 0;
@@ -75,20 +75,22 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                 throw new IllegalStateException("No valid steps! Invalid flow " + flow);
             }
 
-            RouteDefinition route = null;
+            ProcessorDefinition route = null;
 
             for (int i = 0; i < steps.size(); i++) {
                 Step step = steps.get(i);
 
-                if (i == 0 && !Endpoint.class.isInstance(step)) {
+                if (i == 0 && !FromStep.class.isInstance(step)) {
                     throw new IllegalStateException("No endpoint found as first step (found: " + step.getKind() + ")");
-                } else if (i == 0 && Endpoint.class.isInstance(step)) {
-                    route = from(Endpoint.class.cast(step).getUri());
-                    route.id(name);
+                } else if (FromStep.class.isInstance(step)) {
+                    boolean setId = route == null;
+                    route = findHandler(step).handle(step, route, this);
+                    if (setId) {
+                        route.id(name);
+                    }
                 } else {
                     addStep(route, step);
                 }
-
             }
 
             if (flow.isLogResultEnabled()) {
@@ -111,14 +113,19 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         return route;
     }
 
+    @SuppressWarnings("unchecked")
     public ProcessorDefinition addStep(ProcessorDefinition route, Step item) {
         if (route == null) {
-            throw new IllegalArgumentException("You cannot use a " + item.getKind() + " step before you have started a flow with an endpoint or function!");
+            throw new IllegalArgumentException("You cannot use a " + item.getKind() + " step before you have started a flow");
         }
 
+        return findHandler(item).handle(item, route, this);
+    }
+
+    private StepHandler findHandler(Step item) {
         for (StepHandler handler : ServiceLoader.load(StepHandler.class, getClass().getClassLoader())) {
             if (handler.canHandle(item)) {
-                return handler.handle(item, route, this);
+                return handler;
             }
         }
 
