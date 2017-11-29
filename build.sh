@@ -245,8 +245,9 @@ project_lock_name() {
 }
 
 release_project_lock() {
+  local lock="project-lock-$1"
   local pool_namespace=$2
-  oc annotate secret $1 syndesis.io/allocated-by="" --overwrite -n $pool_namespace > /dev/null
+  oc annotate secret $lock syndesis.io/allocated-by="" --overwrite -n $pool_namespace > /dev/null
 }
 
 
@@ -254,11 +255,12 @@ teardown_project_pool() {
   local NAMESPACE=$1
   local POOL_NAMESPACE=$2
   local INITIAL_NAMESPACE=$3
+  local INITIAL_TOKEN=$4
 
+  echo "oc login --token=$INITIAL_TOKEN --server=$(current_server)"
   #1. We need to login to the original project first, before releasing the lock.
-  local current_token=$(current_token)
-  if [ -n "${current_token:-}" ]; then
-    oc login --token=$current_token --server=$(current_server) || true
+  if [ -n "${INITIAL_TOKEN:-}" ]; then
+    oc login --token=$INITIAL_TOKEN --server=$(current_server) || true
     oc project $POOL_NAMESPACE
   fi
 
@@ -380,6 +382,7 @@ run_build() {
 }
 
 run_test() {
+  local initial_token=$(current_token)
   local initial_namespace=$(oc project -q)
   local pool_namespace=$(readopt --pool-namespace)
 
@@ -427,7 +430,7 @@ run_test() {
     exit 1
   fi
 
-  trap 'teardown_project_pool $namespace $pool_namespace $initial_namespace' EXIT
+  trap "teardown_project_pool $namespace $pool_namespace $initial_namespace $initial_token" EXIT
   export NAMESPACE_USE_EXISTING=$namespace
   export KUBERNETES_NAMESPACE=$namespace
   export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
