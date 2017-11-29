@@ -72,10 +72,10 @@
   </properties>
 
   <modules>
+    <module>app</module>
     <module>connectors</module>
     <module>runtime</module>
     <module>rest</module>
-    <module>s2i</module>
     <module>verifier</module>
     <module>ui</module>
   </modules>
