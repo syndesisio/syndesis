@@ -12,6 +12,15 @@
   <packaging>jar</packaging>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!--
+        The spring-boot-starter-parent chooses fairly conservative Java compatibility. If you want to follow our
+        recommendation and use a later Java version you can add a java.version property
+    -->
+    <java.version>1.8</java.version>
+
     <spring-boot.version>@spring-boot.version@</spring-boot.version>
     <fabric8.version>@fabric8.version@</fabric8.version>
     <fabric8.maven.plugin.version>@fabric8.maven.plugin.version@</fabric8.maven.plugin.version>
