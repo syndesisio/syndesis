@@ -23,6 +23,13 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ExtensionAction.Builder.class)
 @SuppressWarnings("immutables")
 public interface ExtensionAction extends Action<ExtensionDescriptor>, WithId<ExtensionAction> {
+
+    @Override
+    @Value.Default
+    default String getActionType() {
+        return Action.TYPE_EXTENSION;
+    }
+
     @Override
     default ExtensionAction withId(String id) {
         return new Builder().createFrom(this).id(id).build();

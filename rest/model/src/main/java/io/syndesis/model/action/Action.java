@@ -38,7 +38,7 @@ import io.syndesis.model.connection.ConfigurationProperty;
 
 @JsonTypeInfo(
     use      = JsonTypeInfo.Id.NAME,
-    include  = JsonTypeInfo.As.PROPERTY,
+    include  = JsonTypeInfo.As.EXISTING_PROPERTY,
     property = "actionType"
 )
 @JsonSubTypes({
