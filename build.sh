@@ -60,7 +60,7 @@ Examples:
 * Build only backend modules, fast               build.sh --backend --flash
 * Build only UI                                  build.sh --module ui
 * Build only images with OpenShift S2I, fast     build.sh --images --image-mode s2i --flash
-* Build only the rest image                      build.sh --module rest --image-mode s2i
+* Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
 * Build for system test                          build.sh --mode system-test
 
 EOT
@@ -280,7 +280,7 @@ extract_modules() {
     modules="$modules ui rest verifier"
   fi
 
-  local arg_modules=$(readopt --modules -m);
+  local arg_modules=$(readopt --module -m);
   if [ -n "${arg_modules}" ]; then
     modules="$modules ${arg_modules//,/ }"
   fi
