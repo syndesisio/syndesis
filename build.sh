@@ -159,6 +159,11 @@ read_token_of_sa() {
 create_lock() {
   local prefix=$1
   local service_account="default"
+  local pool_namespace=$(readopt --pool-namespace)
+
+  if [ -z "$pool_namespace" ]; then
+      pool_namespace="syndesis-ci"
+  fi
 
   for p in $(oc get projects | grep $prefix | awk -F " " '{print $1}'); do
 	  echo "Creating a secret lock for project $p"
@@ -166,10 +171,10 @@ create_lock() {
 	  echo "Found secret: $secret"
   	local token=$(read_token_of_sa $p $service_account)
 	  echo "Found token: $token"
-  	oc delete secret project-lock-$p || true
-	  oc create secret generic project-lock-$p --from-literal=token=$token
-	  oc annotate secret project-lock-$p syndesis.io/lock-for-project=$p
-	  oc annotate secret project-lock-$p syndesis.io/allocated-by=""
+  	oc delete  secret project-lock-$p -n $pool_namespace || true
+	  oc create secret generic project-lock-$p --from-literal=token=$token -n $pool_namespace
+	  oc annotate secret project-lock-$p syndesis.io/lock-for-project=$p -n $pool_namespace
+	  oc annotate secret project-lock-$p syndesis.io/allocated-by="" -n $pool_namespace
 
 	  oc adm policy add-role-to-user edit system:serviceaccount:$p:$service_account -n $p
 	  oc adm policy add-role-to-user system:image-puller system:serviceaccount:$p:$service_account -n $p
