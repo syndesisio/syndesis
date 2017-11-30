@@ -62,7 +62,8 @@ export class TechExtensionImportComponent implements OnInit {
         null,
         []
       );
-      this.router.navigate(['..', this.response.id], { relativeTo: this.route });
+      const id = this.extensionId || this.response.id;
+      this.router.navigate(['/customizations/tech-extensions', id], { relativeTo: this.route });
     }).catch((reason: any) => {
       this.error = {
         level: 'alert alert-danger',
@@ -73,9 +74,14 @@ export class TechExtensionImportComponent implements OnInit {
 
   ngOnInit() {
     this.extensionId = this.route.snapshot.paramMap.get('id');
-    this.extensionName = this.route.snapshot.queryParamMap.get('name');
+    this.extensionName = this.route.snapshot.paramMap.get('name');
+    if (!this.extensionName) {
+      // safety net
+      this.extensionId = undefined;
+    }
+    const uploadUrl = this.extensionStore.getUploadUrl(this.extensionId);
     this.uploader = new FileUploader({
-      url: this.extensionStore.getUploadUrl(this.extensionId),
+      url: uploadUrl,
       disableMultipart: false,
       autoUpload: true,
       filters: [

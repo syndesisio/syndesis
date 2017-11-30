@@ -15,7 +15,12 @@
           </li>
           <li class="active">
             <strong>
-              Import Technical Extension
+              <ng-container *ngIf="!extensionId && !extensionName">
+                Import Technical Extension
+              </ng-container>
+              <ng-container *ngIf="extensionId && extensionName">
+                Update {{ extensionName }} <small>(ID: {{ extensionId }})</small>
+              </ng-container>
             </strong>
           </li>
         </ol>

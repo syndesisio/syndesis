@@ -37,7 +37,7 @@
           <div class="pull-right">
             <button type="button"
                     class="btn btn-primary"
-                    [routerLink]="['..', 'import', extension.id, { 'name': item.name }]">Update</button>
+                    [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
             <button type="button"
                     class="btn btn-default"
                     (click)="deleteModal.prompt(extension)">Delete</button>
