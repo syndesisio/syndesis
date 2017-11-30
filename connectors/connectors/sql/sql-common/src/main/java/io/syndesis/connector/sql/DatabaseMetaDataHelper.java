@@ -72,7 +72,7 @@ public class DatabaseMetaDataHelper {
         Set<String> tablesInSchema = new HashSet<>();
         ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
         while (rs.next()) {
-            tablesInSchema.add(rs.getString(3));
+            tablesInSchema.add(rs.getString(3).toUpperCase());
         }
         return tablesInSchema;
     }
@@ -90,6 +90,10 @@ public class DatabaseMetaDataHelper {
             SqlParam param = params.get(i);
             String columnName = param.getColumn();
             ResultSet column = meta.getColumns(catalog, schema, tableName, columnName);
+            if (column.getFetchSize() == 0) {
+                //Postgresql does lowercase instead, so let's try that if we don't have a match
+                column = meta.getColumns(catalog, schema, tableName.toLowerCase(), columnName.toLowerCase());
+            }
             column.next();
             param.setJdbcType(JDBCType.valueOf(column.getInt("DATA_TYPE")));
             paramList.add(param);
