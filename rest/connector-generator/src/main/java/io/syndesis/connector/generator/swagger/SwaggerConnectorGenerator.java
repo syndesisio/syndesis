@@ -17,10 +17,12 @@ package io.syndesis.connector.generator.swagger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -36,6 +38,7 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.parser.SwaggerParser;
+import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.connector.generator.util.ActionComparator;
@@ -77,7 +80,28 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Connector connector = basicConnector(connectorTemplate, connectorSettings);
 
-        return new ConnectorSummary.Builder().createFrom(connector).build();
+        final Swagger swagger = parseSpecification(connectorSettings);
+        final Map<String, Path> paths = swagger.getPaths();
+
+        int total = 0;
+        final Map<String, AtomicInteger> tagCounts = new HashMap<>();
+        for (final Entry<String, Path> pathEntry : paths.entrySet()) {
+            final Path path = pathEntry.getValue();
+
+            final Map<HttpMethod, Operation> operationMap = path.getOperationMap();
+
+            for (final Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
+                final Operation operation = entry.getValue();
+                total++;
+                operation.getTags().forEach(tag -> tagCounts.computeIfAbsent(tag, x -> new AtomicInteger(0)).incrementAndGet());
+            }
+        }
+
+        final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
+            .totalActions(total)//
+            .actionCountByTags(tagCounts.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> e.getValue().intValue())))
+            .build();
+        return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).build();
     }
 
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
