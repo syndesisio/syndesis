@@ -242,7 +242,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-common</artifactId>
       <type>test-jar</type>
-      <version>1.2-SNAPSHOT</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
