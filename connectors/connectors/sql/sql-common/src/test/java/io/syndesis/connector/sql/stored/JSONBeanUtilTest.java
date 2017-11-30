@@ -54,7 +54,7 @@ public class JSONBeanUtilTest {
         Map<String,Object> map = new HashMap<>();
         map.put("c", 50);
         map.put("#update-count-1",0);
-        String jsonBeanActual = JSONBeanUtil.mapToJSONBean(map);
+        String jsonBeanActual = JSONBeanUtil.toJSONBean(map);
         Assert.assertEquals(jsonBeanExcpected, jsonBeanActual);
     }
 

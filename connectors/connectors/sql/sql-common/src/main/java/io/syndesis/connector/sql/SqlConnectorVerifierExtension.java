@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sql.stored;
+package io.syndesis.connector.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,26 +30,23 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.syndesis.connector.sql.DatabaseProduct;
+public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExtension {
 
-public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifierExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(SqlConnectorVerifierExtension.class);
 
-    private static final Logger LOG = LoggerFactory.getLogger(SqlStoredConnectorVerifierExtension.class);
-
-    public SqlStoredConnectorVerifierExtension() {
-        super("sql-stored-connector");
+    public SqlConnectorVerifierExtension() {
+        super("sql-connector");
     }
 
-    public SqlStoredConnectorVerifierExtension(String scheme) {
+    public SqlConnectorVerifierExtension(String scheme) {
         super(scheme);
     }
 
     // *********************************
     // Parameters validation
     // *********************************
-
     @Override
-    protected Result verifyParameters(Map<String, Object> parameters) {
+    public Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
             .error(ResultErrorHelper.requiresOption("url", parameters))
             .error(ResultErrorHelper.requiresOption("user", parameters))
@@ -113,7 +110,7 @@ public class SqlStoredConnectorVerifierExtension extends DefaultComponentVerifie
     // Connectivity validation
     // *********************************
     @Override
-    protected Result verifyConnectivity(Map<String, Object> parameters) {
+    public Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
             .error(parameters, this::verifyCredentials)
             .build();

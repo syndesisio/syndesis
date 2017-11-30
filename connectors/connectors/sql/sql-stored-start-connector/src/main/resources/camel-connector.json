@@ -14,7 +14,7 @@
   "labels" : [ "sql-stored" ],
   "pattern" : "From",
   "scheduler" : "timer",
-  "inputDataType" : "json",
+  "inputDataType" : "none",
   "outputDataType" : "json",
   "componentOptions" : [ "dataSource" ],
   "endpointOptions" : [ "template", "schedulerPeriod" ],

@@ -24,12 +24,12 @@ public class SampleStoredProcedures {
             "CREATE PROCEDURE DEMO_ADD( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
             "PARAMETER STYLE JAVA " +
             "LANGUAGE JAVA " +
-            "EXTERNAL NAME 'io.syndesis.connector.sql.stored.SampleStoredProcedures.demo_add'";
+            "EXTERNAL NAME '" + SampleStoredProcedures.class.getName() + ".demo_add'";
     public static String DERBY_DEMO_OUT_SQL = 
             "CREATE PROCEDURE DEMO_OUT( OUT C INTEGER ) " +
             "PARAMETER STYLE JAVA " +
             "LANGUAGE JAVA " +
-            "EXTERNAL NAME 'io.syndesis.connector.sql.stored.SampleStoredProcedures.demo_out'";
+            "EXTERNAL NAME '" + SampleStoredProcedures.class.getName() + ".demo_out'";
 
     /**
      * SQL to create the DEMO_ADD procedure in Oracle

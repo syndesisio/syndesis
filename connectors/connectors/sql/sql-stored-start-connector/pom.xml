@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (C) 2016 Red Hat, Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-            http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
@@ -24,7 +7,6 @@
     <groupId>io.syndesis</groupId>
     <artifactId>sql-connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>sql-stored-start-connector</artifactId>
@@ -121,6 +103,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-common</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <scope>test</scope>
@@ -155,7 +144,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -184,7 +172,7 @@
             </goals>
             <configuration>
               <sourceFile>${project.build.directory}/classes/camel-connector-schema.json</sourceFile>
-              <destinationFile>${project.build.directory}/classes/io/syndesis/connector/sql-stored-connector.json</destinationFile>
+              <destinationFile>${project.build.directory}/classes/io/syndesis/connector/sql-stored-start-connector.json</destinationFile>
             </configuration>
           </execution>
         </executions>
@@ -253,7 +241,6 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
 
