@@ -34,11 +34,14 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -52,10 +55,12 @@ public class IntegrationSupportHandler {
 
     private final ProjectGenerator projectConverter;
     private final DataManager dataManager;
+    private final IntegrationHandler integrationHandler;
 
-    public IntegrationSupportHandler(ProjectGenerator projectConverter, final DataManager dataManager) {
+    public IntegrationSupportHandler(ProjectGenerator projectConverter, final DataManager dataManager, IntegrationHandler integrationHandler) {
         this.projectConverter = projectConverter;
         this.dataManager = dataManager;
+        this.integrationHandler = integrationHandler;
     }
 
     @POST
@@ -69,7 +74,7 @@ public class IntegrationSupportHandler {
 
     @POST
     @Path("/import")
-    public Response importIntegration(InputStream is) {
+    public Response importIntegration(@Context SecurityContext sec, InputStream is) {
         try (ZipInputStream zis = new ZipInputStream(is)) {
             int imported = 0;
             while (true) {
@@ -85,7 +90,7 @@ public class IntegrationSupportHandler {
                         }
                     }, ModelExport.class);
 
-                    imported += importModels(models);
+                    imported += importModels(sec, models);
                 }
                 zis.closeEntry();
             }
@@ -104,7 +109,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    public int importModels(ModelExport export) throws IOException {
+    public int importModels(SecurityContext sec, ModelExport export) throws IOException {
 
         validateForImport(export);
 
@@ -115,11 +120,18 @@ public class IntegrationSupportHandler {
                 case Integration:
 
                     Integration integration = (Integration) model.getData();
+                    integration = new Integration.Builder()
+                        .createFrom(integration)
+                        .desiredStatus(Integration.Status.Draft)
+                        .build();
+
                     // Do we need to create it?
                     if (dataManager.fetch(Integration.class, integration.getId().get()) == null) {
-                        dataManager.create(integration);
+                        LOG.info("Creating integration: "+integration.getName());
+                        integrationHandler.create(sec, integration);
                     } else {
-                        dataManager.update(integration);
+                        LOG.info("Updating integration: "+integration.getName());
+                        integrationHandler.update(integration.getId().get(), integration);
                     }
                     count ++;
                     break;
