@@ -9,7 +9,7 @@ import { Extension, Extensions } from '../../model';
 @Injectable()
 export class ExtensionService extends RESTService<Extension, Extensions> {
   constructor(restangular: Restangular, private http: Http) {
-    super(restangular.service('../v1beta1/extensions'), 'extension');
+    super(restangular.service('../v1/extensions'), 'extension');
   }
 
   public getUploadUrl() {

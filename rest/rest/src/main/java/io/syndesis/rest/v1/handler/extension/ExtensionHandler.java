@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1beta1.handler.extension;
+package io.syndesis.rest.v1.handler.extension;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -39,7 +39,6 @@ import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Violation;
-import io.syndesis.rest.v1beta1.util.ExtensionAnalyzer;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

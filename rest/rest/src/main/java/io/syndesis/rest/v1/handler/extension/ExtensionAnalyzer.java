@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1beta1.util;
+package io.syndesis.rest.v1.handler.extension;
 
 import java.io.IOException;
 import java.io.InputStream;
