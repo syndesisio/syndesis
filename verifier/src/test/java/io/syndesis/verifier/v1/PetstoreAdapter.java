@@ -49,7 +49,7 @@ public class PetstoreAdapter implements MetadataAdapter<ObjectSchema> {
     }
 
     @Override
-    public SyndesisMetadata<ObjectSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata<ObjectSchema> adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
         @SuppressWarnings("unchecked")
         final Map<String, String> payload = metadata.getPayload(Map.class);
 

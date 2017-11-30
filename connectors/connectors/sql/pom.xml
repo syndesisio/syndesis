@@ -21,7 +21,6 @@
     <groupId>io.syndesis</groupId>
     <artifactId>connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -29,8 +28,14 @@
   <name>Syndesis SQL Connectors :: Connectors</name>
   <packaging>pom</packaging>
 
+  <properties>
+    <camel.version>2.20.1</camel.version>
+  </properties>
+
   <modules>
     <module>sql-common</module>
+    <module>sql-connector</module>
+    <module>sql-start-connector</module>
     <module>sql-stored-connector</module>
     <module>sql-stored-start-connector</module>
   </modules>

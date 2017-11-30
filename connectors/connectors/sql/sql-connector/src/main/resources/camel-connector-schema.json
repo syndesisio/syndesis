@@ -1,0 +1,102 @@
+{
+  "component":{
+    "kind":"component",
+    "baseScheme":"sql",
+    "scheme":"sql-connector",
+    "syntax":"sql-connector:query",
+    "title":"SqlConnector",
+    "description":"SQL Connector perform CRUD operations on a database",
+    "label":"sql",
+    "deprecated":false,
+    "async":false,
+    "producerOnly":true,
+    "lenientProperties":false,
+    "javaType":"io.syndesis.connector.sql.SqlConnectorComponent",
+    "groupId":"io.syndesis",
+    "artifactId":"sql-connector",
+    "version":"1.2-SNAPSHOT"
+  },
+  "componentProperties":{
+    "dataSource":{
+      "kind":"property",
+      "displayName":"Data Source",
+      "group":"common",
+      "required":false,
+      "type":"object",
+      "javaType":"javax.sql.DataSource",
+      "deprecated":false,
+      "secret":false,
+      "description":"Sets the DataSource to use to communicate with the database."
+    }
+  },
+  "properties":{
+    "query":{
+      "kind":"path",
+      "displayName":"Query",
+      "group":"common",
+      "required":true,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"Sets the SQL query to perform. You can externalize the query by using file: or classpath: as prefix and specify the location of the file."
+    }
+  },
+  "connectorProperties":{
+    "user":{
+      "kind":"property",
+      "displayName":"DB User Name",
+      "group":"common",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":true,
+      "description":"DB User Name"
+    },
+    "password":{
+      "kind":"property",
+      "displayName":"DB User Password",
+      "group":"common",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":true,
+      "description":"DB User Password"
+    },
+    "url":{
+      "kind":"property",
+      "displayName":"DB URL",
+      "group":"common",
+      "required":true,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"DB URL"
+    },
+    "schema":{
+      "kind":"property",
+      "displayName":"DB Schema",
+      "group":"common",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"DB Schema"
+    },
+    "catalog":{
+      "kind":"property",
+      "displayName":"DB Catalog",
+      "group":"common",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"DB Catalog"
+    }
+  }
+}

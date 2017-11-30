@@ -28,7 +28,7 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.component.extension.ComponentVerifierExtension.Result;
 import org.apache.camel.impl.DefaultCamelContext;
 
-import io.syndesis.connector.sql.stored.SqlStoredConnectorVerifierExtension;
+import io.syndesis.connector.sql.SqlConnectorVerifierExtension;
 
 public class SqlStoredPingCheck {
 
@@ -41,7 +41,7 @@ public class SqlStoredPingCheck {
         Component sqlstored = camel.getComponent("sql-stored-connector");
 
         // the connector must support ping check if its verifiable
-        Optional<SqlStoredConnectorVerifierExtension> vce = sqlstored.getExtension(SqlStoredConnectorVerifierExtension.class);
+        Optional<SqlConnectorVerifierExtension> vce = sqlstored.getExtension(SqlConnectorVerifierExtension.class);
         if (vce.isPresent()) {
             ComponentVerifierExtension verifier = vce.get();
 

@@ -32,36 +32,16 @@ import java.util.stream.Collectors;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
 
-import io.syndesis.connector.sql.DatabaseProduct;
+import io.syndesis.connector.sql.DatabaseMetaDataHelper;
 
 public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
 
-        MetaData metaData = null;
-
         final Map<String, StoredProcedureMetadata> list = getStoredProcedures(properties);
-        metaData = new DefaultMetaData(null, null, list);
+        MetaData metaData = new DefaultMetaData(null, null, list);
         return Optional.of(metaData);
-    }
-
-    protected String getDefaultSchema(final String databaseProductName, final Map<String, Object> parameters) {
-
-        String defaultSchema = null;
-        // Oracle uses the username as schema
-        if (databaseProductName.equalsIgnoreCase(DatabaseProduct.ORACLE.name())) {
-            defaultSchema = parameters.get("user").toString();
-        } else if (databaseProductName.equalsIgnoreCase(DatabaseProduct.POSTGRESQL.name())) {
-            defaultSchema = "public";
-        } else if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
-            if (parameters.get("user") != null) {
-                defaultSchema = parameters.get("user").toString().toUpperCase();
-            } else {
-                defaultSchema = "NULL";
-            }
-        }
-        return defaultSchema;
     }
 
     protected StoredProcedureMetadata getStoredProcedureMetadata(final Connection connection, final String catalog,
@@ -71,11 +51,11 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
         storedProcedureMetadata.setName(procedureName);
         try {
             final DatabaseMetaData meta = connection.getMetaData();
-            try (ResultSet columnSet = fetchProcedureColumns(meta, catalog, schema, procedureName)) {
+            try (ResultSet columnSet = DatabaseMetaDataHelper.fetchProcedureColumns(meta, catalog, schema, procedureName)) {
                 final List<StoredProcedureColumn> columnList = new ArrayList<>();
                 while (columnSet.next()) {
                     final ColumnMode mode = ColumnMode.valueOf(columnSet.getInt("COLUMN_TYPE"));
-                    if (ColumnMode.IN == mode || ColumnMode.OUT == mode) {
+                    if (ColumnMode.IN == mode || ColumnMode.OUT == mode || ColumnMode.INOUT == mode) {
                         final StoredProcedureColumn column = new StoredProcedureColumn();
                         column.setName(columnSet.getString("COLUMN_NAME"));
                         column.setMode(mode);
@@ -104,11 +84,12 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
 
             final DatabaseMetaData meta = connection.getMetaData();
             final String catalog = (String) parameters.getOrDefault("catalog", null);
-            final String defaultSchema = getDefaultSchema(meta.getDatabaseProductName(), parameters);
+            final String defaultSchema = DatabaseMetaDataHelper.getDefaultSchema(
+                    meta.getDatabaseProductName(), String.valueOf(parameters.get("user")));
             final String schemaPattern = (String) parameters.getOrDefault("schema-pattern", defaultSchema);
             final String procedurePattern = (String) parameters.getOrDefault("procedure-pattern", null);
 
-            try (ResultSet procedureSet = fetchProcedures(meta, catalog, schemaPattern, procedurePattern)) {
+            try (ResultSet procedureSet = DatabaseMetaDataHelper.fetchProcedures(meta, catalog, schemaPattern, procedurePattern)) {
                 while (procedureSet.next()) {
                     final String name = procedureSet.getString("PROCEDURE_NAME");
                     final StoredProcedureMetadata storedProcedureMetadata = getStoredProcedureMetadata(connection,
@@ -124,24 +105,6 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    /* default */ static ResultSet fetchProcedureColumns(final DatabaseMetaData meta, final String catalog,
-        final String schema, final String procedureName) throws SQLException {
-        if (meta.getDatabaseProductName().equalsIgnoreCase(DatabaseProduct.POSTGRESQL.name())) {
-            return meta.getFunctionColumns(catalog, schema, procedureName, null);
-        }
-
-        return meta.getProcedureColumns(catalog, schema, procedureName, null);
-    }
-
-    /* default */ static ResultSet fetchProcedures(final DatabaseMetaData meta, final String catalog,
-        final String schemaPattern, final String procedurePattern) throws SQLException {
-        if (meta.getDatabaseProductName().equalsIgnoreCase(DatabaseProduct.POSTGRESQL.name())) {
-            return meta.getFunctions(catalog, schemaPattern, procedurePattern);
-        }
-
-        return meta.getProcedures(catalog, schemaPattern, procedurePattern);
     }
 
 }

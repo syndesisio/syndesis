@@ -27,7 +27,7 @@ import io.syndesis.connector.sql.stored.SqlStoredStartConnectorComponent;
 
 @Configuration
 @EnableConfigurationProperties(SqlStoredStartConnectorConnectorConfiguration.class)
-public class DataSourceStartCustomizer implements ConnectorCustomizer<SqlStoredStartConnectorComponent> {
+public class SqlStoredStartDataSourceCustomizer implements ConnectorCustomizer<SqlStoredStartConnectorComponent> {
 
     @Autowired
     private SqlStoredStartConnectorConnectorConfiguration configuration;

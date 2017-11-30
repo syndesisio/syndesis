@@ -17,6 +17,7 @@
 package io.syndesis.connector.sql.stored;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -59,7 +60,7 @@ public class JSONBeanUtil {
      * @param map
      * @return JSON bean String
      */
-    public static String mapToJSONBean(final Map<String,Object> map) {
+    public static String toJSONBean(final Map<String,Object> map) {
         final JSONObject obj = new JSONObject();
         for (String key : map.keySet()) {
             if (! key.startsWith("#")) {  //don't include Camel stats
@@ -67,5 +68,31 @@ public class JSONBeanUtil {
             }
         }
         return obj.toString();
+    }
+    /**
+     * Convenience method to convert a Camel Map output to a JSON Bean String.
+     * 
+     * @param map
+     * @return JSON bean String
+     */
+    @SuppressWarnings("unchecked")
+    public static String toJSONBean(final List<Object> list) {
+        String json = null;
+        if (list.size()==1) {
+            Map<String,Object> map = (Map<String,Object>) list.get(0);
+            json = JSONBeanUtil.toJSONBean(map);
+        } else if (list.size() > 1) {
+            StringBuilder stringBuilder = new StringBuilder("[");
+            for (int i=0; i<list.size(); i++) {
+                Map<String,Object> map = (Map<String,Object>) list.get(i);
+                stringBuilder.append(JSONBeanUtil.toJSONBean(map));
+                if ( i < (list.size()-1 )) {
+                    stringBuilder.append(",");
+                }
+            }
+            stringBuilder.append("]");
+            json = stringBuilder.toString();
+        }
+        return json;
     }
 }

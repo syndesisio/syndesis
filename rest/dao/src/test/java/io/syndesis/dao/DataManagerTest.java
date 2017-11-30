@@ -62,7 +62,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "sql-stored-connector", "http", "trade-insight");
+            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "http", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());

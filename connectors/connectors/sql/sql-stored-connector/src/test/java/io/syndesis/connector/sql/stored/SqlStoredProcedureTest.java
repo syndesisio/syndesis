@@ -33,23 +33,25 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import io.syndesis.connector.sql.SqlCommon;
 import io.syndesis.connector.sql.stored.StoredProcedureMetadata;
 
 public class SqlStoredProcedureTest {
 
     private static Connection connection;
     private static Properties properties = new Properties();
-    private static SqlStoredCommon sqlStoredCommon;
+    private static SqlCommon sqlCommon;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        sqlStoredCommon = new SqlStoredCommon();
-        connection = sqlStoredCommon.setupConnectionAndStoredProcedure(connection, properties);
+        sqlCommon = new SqlCommon();
+        connection = sqlCommon.setupConnection(connection, properties);
+        SqlStoredCommon.setupStoredProcedure(connection, properties);
     }
 
     @AfterClass
     public static void afterClass() throws SQLException {
-        sqlStoredCommon.closeConnection(connection);
+        sqlCommon.closeConnection(connection);
     }
 
     @Test

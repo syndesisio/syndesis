@@ -1,0 +1,82 @@
+{
+  "baseScheme" : "sql",
+  "baseGroupId" : "org.apache.camel",
+  "baseArtifactId" : "camel-sql",
+  "baseVersion" : "${camel.version}",
+  "baseJavaType" : "org.apache.camel.component.sql.SqlComponent",
+  "name" : "SqlConnector",
+  "scheme" : "sql-connector",
+  "javaType" : "io.syndesis.connector.sql.SqlConnectorComponent",
+  "groupId" : "io.syndesis",
+  "artifactId" : "sql-connector",
+  "version" : "${project.version}",
+  "description" : "SQL Connector perform CRUD operations on a database",
+  "labels" : [ "sql" ],
+  "inputDataType" : "json",
+  "outputDataType" : "json",
+  "pattern" : "To",
+  "componentOptions" : [ "dataSource" ],
+  "endpointOptions" : [ "query" ],
+  "connectorProperties" : {
+    "user" : {
+      "kind" : "property",
+      "displayName" : "DB User Name",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : true,
+      "description" : "DB User Name"
+    },
+    "password" : {
+      "kind" : "property",
+      "displayName" : "DB User Password",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : true,
+      "description" : "DB User Password"
+    },
+    "url" : {
+      "kind" : "property",
+      "displayName" : "DB URL",
+      "group": "common",
+      "label" : "",
+      "required" : true,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "DB URL"
+    },
+    "schema" : {
+      "kind" : "property",
+      "displayName" : "DB Schema",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "DB Schema"
+    },
+    "catalog" : {
+      "kind" : "property",
+      "displayName" : "DB Catalog",
+      "group": "common",
+      "label" : "",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "DB Catalog"
+    }
+  }
+}

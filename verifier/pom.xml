@@ -208,17 +208,42 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>sql-common</artifactId>
+      <version>${syndesis.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-connector</artifactId>
+      <version>${syndesis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-start-connector</artifactId>
+      <version>${syndesis.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
       <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>sql-common</artifactId>
+      <artifactId>sql-stored-start-connector</artifactId>
       <version>${syndesis.version}</version>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-common</artifactId>
+      <type>test-jar</type>
+      <version>${syndesis.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -279,7 +304,10 @@
             <ignoredUnusedDeclaredDependency>io.syndesis:salesforce-upsert-contact-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:http-get-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:twitter-mention-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-start-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-start-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>

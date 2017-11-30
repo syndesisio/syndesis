@@ -28,20 +28,67 @@ import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
 
+import io.syndesis.connector.sql.SqlParam;
+import io.syndesis.connector.sql.SqlStatementMetaData;
 import io.syndesis.connector.sql.stored.ColumnMode;
 import io.syndesis.connector.sql.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.stored.StoredProcedureMetadata;
+
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.springframework.stereotype.Component;
 
-@Component("sql-stored-connector-adapter")
-public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchema> {
+@Component("sql-adapter")
+public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
 
     static final String PROCEDURE_NAME = "procedureName";
     static final String PROCEDURE_TEMPLATE = "template";
+    static final String PATTERN = "Pattern";
+    static final String FROM_PATTERN = "From";
+
+    static final String QUERY = "query";
 
     @Override
-    public SyndesisMetadata<JsonSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata<JsonSchema> adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
+
+        if (actionId.startsWith("sql-stored")) {
+            return adaptForStoredSql(actionId, properties, metadata);
+        } else {
+            return adaptForSql(actionId, properties, metadata);
+        }
+    }
+
+    public SyndesisMetadata<JsonSchema> adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
+
+        final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
+
+        final List<PropertyPair> ppList = new ArrayList<>();
+        @SuppressWarnings("unchecked")
+        final SqlStatementMetaData sqlStatementMetaData = (SqlStatementMetaData) metadata.getPayload();
+        if (sqlStatementMetaData!=null) {
+            ppList.add(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY));
+            enrichedProperties.put(QUERY, ppList);
+
+            // build the input and output schemas
+            final ObjectSchema builderIn = new ObjectSchema();
+            builderIn.set$schema("http://json-schema.org/schema#");
+            builderIn.setTitle("SQL_PARAM_IN");
+            for (SqlParam inParam: sqlStatementMetaData.getInParams()) {
+                builderIn.putProperty(inParam.getName(), schemaFor(inParam.getJdbcType()));
+            }
+
+            final ObjectSchema builderOut = new ObjectSchema();
+            builderOut.setTitle("SQL_PARAM_OUT");
+            builderOut.set$schema("http://json-schema.org/schema#");
+            for (SqlParam outParam: sqlStatementMetaData.getOutParams()) {
+                builderOut.putProperty(outParam.getName(), schemaFor(outParam.getJdbcType()));
+            }
+
+            return new SyndesisMetadata<>(enrichedProperties, builderIn, builderOut);
+        } else {
+            return new SyndesisMetadata<>(enrichedProperties, null, null);
+        }
+    }
+    public SyndesisMetadata<JsonSchema> adaptForStoredSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
 
@@ -78,17 +125,63 @@ public final class SqlStoredMetadataAdapter implements MetadataAdapter<JsonSchem
             return new SyndesisMetadata<>(enrichedProperties, builderIn, builderOut);
         }
 
-        // return list of all stored procedures in the database
-        final List<PropertyPair> ppList = new ArrayList<>();
+        // return list of stored procedures in the database
         @SuppressWarnings("unchecked")
         final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata
             .getPayload();
+        if (isPresentAndNonNull(properties, PATTERN) && FROM_PATTERN.equalsIgnoreCase(String.valueOf(properties.get(PATTERN)))) {
+            enrichedProperties.put(PROCEDURE_NAME, obtainFromProcedureList(procedureMap));
+        } else {
+            enrichedProperties.put(PROCEDURE_NAME, obtainToProcedureList(procedureMap));
+        }
+        return new SyndesisMetadata<>(enrichedProperties, null, null);
+    }
+    /**
+     * Puts all stored procedures in the list, as all queries adhere to the `To` pattern.
+     *
+     * @param procedureMap
+     * @return list of property pairs containing the stored procedure names
+     */
+    private List<PropertyPair> obtainToProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
+        final List<PropertyPair> ppList = new ArrayList<>();
         for (final String storedProcedureName : procedureMap.keySet()) {
             final PropertyPair pp = new PropertyPair(storedProcedureName, storedProcedureName);
             ppList.add(pp);
         }
-        enrichedProperties.put(PROCEDURE_NAME, ppList);
-        return new SyndesisMetadata<>(enrichedProperties, null, null);
+        return ppList;
+    }
+    /**
+     * Puts stored procedures in the list that have NO input parameters, which adheres to the `From`
+     * pattern.
+     *
+     * @param procedureMap
+     * @return list of property pairs containing the stored procedure names
+     */
+    private List<PropertyPair> obtainFromProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
+        final List<PropertyPair> ppList = new ArrayList<>();
+        for (final StoredProcedureMetadata storedProcedure : procedureMap.values() ) {
+            if (! containsInputParams(storedProcedure)) {
+                final PropertyPair pp = new PropertyPair(storedProcedure.getName(), storedProcedure.getName());
+                ppList.add(pp);
+            }
+        }
+        return ppList;
+    }
+    /**
+     * Checks if the given stored procedure contains input parameters.
+     *
+     * @param storedProcedure
+     * @return boolean - true if input params present, false if no input params.
+     */
+    private boolean containsInputParams(StoredProcedureMetadata storedProcedure) {
+        if (storedProcedure.getColumnList() != null && !storedProcedure.getColumnList().isEmpty()) {
+            for (final StoredProcedureColumn column : storedProcedure.getColumnList()) {
+                if (column.getMode().equals(ColumnMode.IN) || column.getMode().equals(ColumnMode.INOUT)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     static boolean isPresent(final Map<String, Object> properties, final String property) {

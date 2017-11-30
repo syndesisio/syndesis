@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.syndesis.verifier.impl;
 
+import io.syndesis.connector.sql.SqlConnectorVerifierExtension;
 
-import io.syndesis.connector.sql.stored.SqlStoredConnectorVerifierExtension;
 import org.springframework.stereotype.Component;
 
 /**
  * @author kstam
  * @since 8/29/2017
  */
-@Component("sql-stored-connector")
-public class SqlStoredVerifier extends BaseVerifier {
+@Component("sql")
+public class SqlVerifier extends BaseVerifier {
 
-    public SqlStoredVerifier() {
-        super(SqlStoredConnectorVerifierExtension.class);
+    public SqlVerifier() {
+        super(SqlConnectorVerifierExtension.class);
     }
 
     @Override
     protected String getConnectorAction() {
-        return "sql-stored-connector";
+        return "sql";
     }
 
 }

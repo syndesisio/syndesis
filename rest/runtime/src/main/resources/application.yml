@@ -62,6 +62,8 @@ endpoints:
 
 dao:
   kind: jsondb
+  schema:
+    version: 25
 
 filestore:
   enabled: false
