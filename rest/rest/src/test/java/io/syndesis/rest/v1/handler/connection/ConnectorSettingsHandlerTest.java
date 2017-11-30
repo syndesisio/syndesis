@@ -15,14 +15,11 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.util.List;
-
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.rest.v1.operations.Violation;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -56,14 +53,4 @@ public class ConnectorSettingsHandlerTest {
         assertThat(connectorInfo).isSameAs(connector);
     }
 
-    @Test
-    public void shouldValidateConnectorSettings() {
-        final ConnectorSettingsHandler handler = new ConnectorSettingsHandler("connector-template", dataManager, applicationContext);
-
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
-
-        final List<Violation> violations = handler.validate(connectorSettings);
-
-        assertThat(violations).isEmpty();
-    }
 }

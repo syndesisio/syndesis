@@ -15,9 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.util.Collections;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,12 +22,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
-import io.syndesis.rest.v1.operations.Violation;
 
 import org.springframework.context.ApplicationContext;
 
@@ -53,17 +47,4 @@ public final class ConnectorSettingsHandler extends BaseConnectorGeneratorHandle
         return withGeneratorAndTemplate(templateId, (generator, template) -> generator.info(template, connectorSettings));
     }
 
-    @POST
-    @Path("/validation")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation("Validates a new Connector based on the ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    @ApiResponses({//
-        @ApiResponse(code = 204, message = "All validations pass"), //
-        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set", response = Violation.class)//
-    })
-    public List<Violation> validate(final ConnectorSettings connectorSettings) {
-        // intentionally left blank
-        return Collections.emptyList();
-    }
 }

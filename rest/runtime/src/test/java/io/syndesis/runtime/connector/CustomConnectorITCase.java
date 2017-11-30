@@ -19,16 +19,14 @@ import java.util.List;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.connection.ConnectorSettings;
-import io.syndesis.rest.v1.operations.Violation;
+import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.runtime.BaseITCase;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -51,14 +49,12 @@ public class CustomConnectorITCase extends BaseITCase {
         public static final ConnectorGenerator testGenerator() {
             return new ConnectorGenerator() {
                 @Override
-                public Connector generate(final ConnectorTemplate connectorTemplate,
-                    final ConnectorSettings connectorSettings) {
+                public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                     return baseConnectorFrom(connectorTemplate, connectorSettings);
                 }
 
                 @Override
-                public Connector info(final ConnectorTemplate connectorTemplate,
-                    final ConnectorSettings connectorSettings) {
+                public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                     return baseConnectorFrom(connectorTemplate, connectorSettings);
                 }
             };
@@ -79,8 +75,7 @@ public class CustomConnectorITCase extends BaseITCase {
     public void shouldCreateNewCustomConnectors() {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
-        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template", connectorSettings,
-            Connector.class);
+        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template", connectorSettings, Connector.class);
 
         final Connector created = response.getBody();
         assertThat(created).isNotNull();
@@ -89,8 +84,7 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldOfferConnectorTemplates() {
-        final ResponseEntity<ConnectorTemplateResultList> response = get("/api/v1/custom/connectors",
-            ConnectorTemplateResultList.class);
+        final ResponseEntity<ConnectorTemplateResultList> response = get("/api/v1/custom/connectors", ConnectorTemplateResultList.class);
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().items).contains(template);
@@ -100,31 +94,18 @@ public class CustomConnectorITCase extends BaseITCase {
     public void shouldOfferCustomConnectorInfo() {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
-        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template/info",
-            connectorSettings, Connector.class);
+        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template/info", connectorSettings,
+            Connector.class);
 
         assertThat(response.getBody()).isNotNull();
     }
 
     @Test
     public void shouldOfferSingleConnectorTemplateById() {
-        final ResponseEntity<ConnectorTemplate> response = get("/api/v1/custom/connectors/connector-template",
-            ConnectorTemplate.class);
+        final ResponseEntity<ConnectorTemplate> response = get("/api/v1/custom/connectors/connector-template", ConnectorTemplate.class);
 
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody()).isEqualTo(template);
-    }
-
-    @Test
-    public void shouldValidateCustomConnectors() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
-
-        final ResponseEntity<List<Violation>> response = post("/api/v1/custom/connectors/connector-template/validation",
-            connectorSettings, new ParameterizedTypeReference<List<Violation>>() {
-                // defining type parameters
-            });
-
-        assertThat(response.getBody()).isNotNull().isEmpty();
     }
 
     private static ConnectorTemplate createConnectorTemplate() {

@@ -31,7 +31,6 @@ New API endpoints for defining custom connectors:
 | --------- | ---- | ----------- |
 | GET       | /api/**{version}**/custom/connectors | Returns a list of known connector templates |
 | GET       | /api/**{version}**/custom/connectors/**{id}** | Returns a specific connector template identified by the given **id** |
-| POST      | /api/**{version}**/custom/connectors/**{id}**/validation | Validate new custom connector properties and return suggested properties in addition to validation result |
 | POST      | /api/**{version}**/custom/connectors/**{id}**/info | Provides information like proposed name, icon and description for new connector |
 | POST      | /api/**{version}**/custom/connectors/**{id}**| Create a new custom connector |
 
@@ -120,48 +119,24 @@ Based on the connector template property `specification`, tagged with `upload`, 
 
 The user opts to specify the Swagger specification via URL of the specification, but mistakenly selects the URL of the HTML document instead of the specification, the UI can perform validation before proceeding by invoking:
 
+
 ```http
-POST /api/v1/custom/connectors/swagger-connector-template/validation
+POST /api/v1/custom/connectors/swagger-connector-template/info
 Content-Type: application/json
 Accept: application/json
 
 {
-  "configuredProperties": {
-    "specification": "http://petstore.swagger.io/index.html"
-  }
+  "errors" : [
+    {
+      "property": "specification",
+      "error": "ValidSpecification",
+      "message": "Given specification is not readable"
+    }
+  ]
 }
-
-HTTP/1.1 400 Bad Request
-Content-Type: application/json
-[
-  {
-    "property": "specification",
-    "error": "ValidSpecification",
-    "message": "Given specification is not readable"
-  }
-]
 ```
 
-The user provides the correct URL, now the response is positive:
-
-```http
-POST /api/v1/custom/connectors/swagger-connector-template/validation
-Content-Type: application/json
-Accept: application/json
-
-{
-  "configuredProperties": {
-    "specification": "http://petstore.swagger.io/v2/swagger.json"
-  }
-}
-
-HTTP/1.1 200 OK
-Content-Length: 2
-
-[]
-```
-
-After validating the specification information about it can be retrieved:
+The user provides the correct URL, now the response is positive and information fetched from the specification is returned:
 
 ```http
 POST /api/v1/custom/connectors/swagger-connector-template/info
@@ -175,37 +150,27 @@ Accept: application/json
 }
 
 HTTP/1.1 200 OK
-Content-Type: application/json
+Content-Length: 2
 
 {
   "name": "Swagger Petstore",
   "description": "This is a sample server Petstore server. You can find out more about Swagger at http://swagger.io or on irc.freenode.net, #swagger. For this sample, you can use the api key special-key to test the authorization filters.",
   "icon": "data:image/svg+xml;utf8,<svg ...",
-  "host": "http://petstore.swagger.io",
-  "basePath": "/v2",
-  "authentication": [
-    {
-      "type": "oauth2",
-      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog"
-    },
-    {
-      "type" : "apiKey"
-    }
-  ],
-  "actions": [
-    {
-      "groupName": "pet",
-      "description": "Everything about your Pets",
-      "actions": [
-        { "name": "POST /pet", "description": "Add a new pet to the store" },
-        ...
-      ]
-    }
-  ]
+  "properties": {
+    "host": "http://petstore.swagger.io",
+    "basePath": "/v2"
+    "authentication": [
+      {
+        "type": "oauth2",
+        "authorizationUrl": "http://petstore.swagger.io/oauth/dialog"
+      }
+    ]
+  }
+  "errors" : []
 }
 ```
 
-With that the user can opt to change some of the date, here the user opted to change the name of the new connector from the suggested *"Swagger Petstore"* to *"Petstore API"*, and the new connector can be created:
+With that the user can opt to change some of the data, here the user opted to change the name of the new connector from the suggested *"Swagger Petstore"* to *"Petstore API"*, and the new connector can be created:
 
 ```http
 POST /api/v1/custom/connectors/swagger-connector-template
