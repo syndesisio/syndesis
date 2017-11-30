@@ -73,7 +73,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis.version@",
             "camelConnectorPrefix": "twitter-mention-connector",
             "inputDataShape": {
                "kind": "none"
@@ -92,7 +92,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis.version@",
             "camelConnectorPrefix": "twitter-search-connector",
             "inputDataShape": {
                "kind" : "none"
@@ -259,7 +259,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-create-sobject",
             "inputDataShape": {
                "kind": "json-schema"
@@ -297,7 +297,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-delete-sobject",
             "inputDataShape": {
                "kind": "java",
@@ -335,7 +335,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
             "inputDataShape": {
                "kind": "java",
@@ -392,7 +392,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-get-sobject",
             "inputDataShape": {
                "kind": "java",
@@ -430,7 +430,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-get-sobject-with-id",
             "inputDataShape": {
                "kind": "java",
@@ -487,7 +487,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-update-sobject",
             "inputDataShape": {
                "kind": "json-schema"
@@ -524,7 +524,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-upsert-sobject",
             "inputDataShape": {
                "kind": "json-schema"
@@ -581,7 +581,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-on-create",
             "inputDataShape": {
                "kind": "none"
@@ -618,7 +618,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-on-update",
             "inputDataShape": {
                "kind": "none"
@@ -655,7 +655,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-on-delete",
             "inputDataShape": {
                "kind": "none"
@@ -767,7 +767,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:sql-connector:1.2-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis:sql-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-connector",
             "inputDataShape": {
                "kind" : "json-schema"
@@ -802,7 +802,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:sql-start-connector:1.2-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis:sql-start-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-start-connector",
             "inputDataShape": {
                "kind" : " none"
@@ -849,7 +849,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:sql-stored-connector:1.2-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-stored-connector",
             "inputDataShape": {
                "kind" : "json-schema"
@@ -900,7 +900,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:sql-stored-start-connector:1.2-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis:sql-stored-start-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-stored-start-connector",
             "inputDataShape": {
                "kind" : "none"
@@ -982,7 +982,7 @@
       "name": "Swagger API Connector",
       "description": "Swagger API Connector",
       "icon": "fa-link",
-      "camelConnectorGAV": "io.syndesis:swagger-connector:@syndesis-connectors.version@",
+      "camelConnectorGAV": "io.syndesis:swagger-connector:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
       "properties": {
         "specification": {

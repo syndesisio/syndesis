@@ -209,31 +209,31 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-common</artifactId>
-      <version>1.2-SNAPSHOT</version>
+      <version>${syndesis.version}</version>
     </dependency>
     
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-connector</artifactId>
-      <version>1.2-SNAPSHOT</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-start-connector</artifactId>
-      <version>1.2-SNAPSHOT</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
-      <version>1.2-SNAPSHOT</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-start-connector</artifactId>
-      <version>1.2-SNAPSHOT</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
