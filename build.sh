@@ -254,12 +254,12 @@ release_project_lock() {
 
 
 teardown_project_pool() {
+    echo "Cleaning up..."
     local NAMESPACE=$1
     local POOL_NAMESPACE=$2
     local INITIAL_NAMESPACE=$3
     local INITIAL_TOKEN=$4
 
-    echo "oc login --token=$INITIAL_TOKEN --server=$(current_server)"
     #1. We need to login to the original project first, before releasing the lock.
     if [ -n "${INITIAL_TOKEN:-}" ]; then
         oc login --token=$INITIAL_TOKEN --server=$(current_server) || true
@@ -269,6 +269,8 @@ teardown_project_pool() {
     if [ -n "$NAMESPACE" ]; then
         echo "Releasing project: $NAMESPACE"
         $(release_project_lock $NAMESPACE $POOL_NAMESPACE) || echo "Failed to release project: $NAMESPACE"
+    else
+        echo "Warning: No project was passed to release! Project will not get released! "
     fi
 
     if [ -n "$INITIAL_NAMESPACE" ]; then
