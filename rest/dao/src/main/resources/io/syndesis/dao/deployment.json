@@ -1020,12 +1020,12 @@
       ]
     }
   },
-  {
+    {
     "kind": "connector",
     "data": {
-      "id": "sql-stored-connector",
-      "name": "SQL Stored Procedure",
-      "description": "Relational Database SQL Stored procedure invocation",
+      "id": "sql",
+      "name": "Database",
+      "description": "Invoke SQL or Stored Procedures",
       "icon": "fa-database",
       "configuredProperties": {},
       "properties": {
