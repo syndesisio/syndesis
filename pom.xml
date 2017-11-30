@@ -363,6 +363,32 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>deploy-local-nexus</id>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>openshift-nexus</id>
+          <!-- replace with your cluster address -->
+          <!--<url>http://nexus-syndesis.192.168.64.12.nip.io/nexus/content/repositories/snapshots</url>-->
+        </snapshotRepository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>openshift-nexus</serverId>
+              <nexusUrl>http://nexus-syndesis.192.168.64.12.nip.io/nexus/</nexusUrl>
+              <skipStaging>true</skipStaging>
+              <skipLocalStaging>true</skipLocalStaging>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <build>

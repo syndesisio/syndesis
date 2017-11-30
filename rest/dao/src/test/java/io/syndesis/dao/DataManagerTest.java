@@ -15,6 +15,13 @@
  */
 package io.syndesis.dao;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
@@ -25,17 +32,11 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -62,7 +63,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactly("gmail", "github", "ftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "http", "trade-insight");
+            .containsExactly("gmail", "activemq", "github", "ftp", "facebook", "linkedin", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "sql-stored-connector", "http", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -85,8 +86,8 @@ public class DataManagerTest {
             Connector.class,
             resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
         );
-        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactly("gmail", "github");
-        Assert.assertEquals(14, connectors.getTotalCount());
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactly("gmail", "activemq");
+        Assert.assertEquals(15, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 
