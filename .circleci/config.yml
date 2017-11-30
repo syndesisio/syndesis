@@ -41,7 +41,8 @@ jobs:
       - run:
           name: Build
           command: |
-            ./build.sh --batch-mode --image-mode=docker
+            ./build.sh --batch-mode --image-mode=docker | tee ~/build_log.txt
+            cp ~/build_log.txt $CIRCLE_ARTIFACTS
 
       - save_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}
