@@ -77,7 +77,7 @@ public class SalesforceMetadataAdapterTest {
         properties.put("sObjectName", "SimpleObject");
         properties.put("sObjectIdName", null);
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(properties,
+        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
         assertThat(metadata.properties).containsKey("sObjectIdName");
@@ -93,7 +93,7 @@ public class SalesforceMetadataAdapterTest {
         final Map<String, Object> properties = new HashMap<>();
         properties.put("sObjectName", "SimpleObject");
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(properties,
+        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
         assertThat(metadata.inputSchema).isSameAs(metadata.outputSchema);
@@ -110,7 +110,7 @@ public class SalesforceMetadataAdapterTest {
         oneOf.add(simpleObjectSchema("Object2", "Object2 Label"));
         globalObjectsPayload.setOneOf(oneOf);
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(NOT_USED,
+        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withPayload(globalObjectsPayload).build());
 
         assertThat(metadata.properties).containsKey("sObjectName");
@@ -126,7 +126,7 @@ public class SalesforceMetadataAdapterTest {
         final JsonNode payload = new ObjectMapper().readTree(
             "[{\"name\":\"Object1\",\"label\":\"Object1 Label\"},{\"name\":\"Object2\",\"label\":\"Object2 Label\"}]");
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(NOT_USED,
+        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object_types").withPayload(payload).build());
 
         assertThat(metadata.properties).containsKey("sObjectName");

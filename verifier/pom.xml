@@ -208,17 +208,36 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>sql-stored-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <artifactId>sql-connector</artifactId>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>sql-common</artifactId>
-      <version>${syndesis.version}</version>
+      <artifactId>sql-start-connector</artifactId>
+      <version>1.2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-stored-connector</artifactId>
+      <version>1.2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-stored-start-connector</artifactId>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>sql-common</artifactId>
+      <type>test-jar</type>
+      <version>0.5-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>

@@ -39,7 +39,7 @@ public class ActionDefinitionEndpoint extends MetadataEndpoint {
     @Path("/{actionId}")
     public SyndesisMetadata<?> definition(@PathParam("actionId") final String actionId,
         final Map<String, Object> properties) throws Exception {
-
-        return fetchMetadata(properties);
+        
+        return fetchMetadata(actionId, properties);
     }
 }

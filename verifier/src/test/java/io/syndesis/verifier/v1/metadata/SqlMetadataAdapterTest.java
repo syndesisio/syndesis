@@ -31,6 +31,13 @@ import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 
+<<<<<<< HEAD:verifier/src/test/java/io/syndesis/verifier/v1/metadata/SqlStoredMetadataAdapterTest.java
+=======
+import io.syndesis.connector.sql.DatabaseProduct;
+import io.syndesis.connector.sql.SqlConnectorMetaDataExtension;
+import io.syndesis.connector.sql.stored.SampleStoredProcedures;
+import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
+>>>>>>> Updating verifier with SQL adapter changes:verifier/src/test/java/io/syndesis/verifier/v1/metadata/SqlMetadataAdapterTest.java
 
 import io.syndesis.connector.sql.DatabaseProduct;
 import io.syndesis.connector.sql.stored.SampleStoredProcedures;
@@ -44,7 +51,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertEquals;
 
-public class SqlStoredMetadataAdapterTest {
+public class SqlMetadataAdapterTest {
 
     private static Connection connection;
     private static Properties properties = new Properties();
@@ -56,7 +63,7 @@ public class SqlStoredMetadataAdapterTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        try (InputStream is = SqlStoredMetadataAdapterTest.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(is);
             String user     = String.valueOf(properties.get("sql-stored-connector.user"));
             String password = String.valueOf(properties.get("sql-stored-connector.password"));
@@ -70,12 +77,17 @@ public class SqlStoredMetadataAdapterTest {
             }
             if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
                 try (Statement stmt = connection.createStatement()) {
+                    stmt.execute(SampleStoredProcedures.DERBY_DEMO_OUT_SQL);
                     stmt.execute(SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
                     stmt.execute(DERBY_DEMO_ADD2_SQL);
                 } catch (Exception e) {
                     fail("Exception during Stored Procedure Creation.", e);
                 }
             }
+            Statement stmt = connection.createStatement();
+            String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
+                    "lastName VARCHAR(255))"; 
+            stmt.executeUpdate(createTable);
         } catch (Exception ex) {
             fail("Exception", ex);
         }
@@ -87,9 +99,30 @@ public class SqlStoredMetadataAdapterTest {
             connection.close();
         }
     }
+    
+    @Test
+    public void adaptForSqlTest() throws IOException {
+
+        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension();
+        Map<String,Object> parameters = new HashMap<>();
+        for (final String name: properties.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf(".")+1), properties.getProperty(name));
+        }
+        parameters.put("query", "SELECT * FROM NAME WHERE ID=:#id");
+        Optional<MetaData> metadata = ext.meta(parameters);
+        SqlMetadataAdapter adapter = new SqlMetadataAdapter();
+
+        ObjectMapper mapper = new ObjectMapper();
+        
+        SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-connector", parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8);
+        String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
+        assertEquals(expectedMetadata, actualMetadata);
+
+    }
 
     @Test
-    public void adaptTest() throws IOException {
+    public void adaptForSqlStoredTest() throws IOException {
 
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension();
         Map<String,Object> parameters = new HashMap<>();
@@ -98,18 +131,24 @@ public class SqlStoredMetadataAdapterTest {
         }
         Optional<MetaData> metadata = ext.meta(parameters);
 
-        SqlStoredMetadataAdapter adapter = new SqlStoredMetadataAdapter();
-        SyndesisMetadata<JsonSchema> syndesisMetaData = adapter.adapt(parameters, metadata.get());
+        SqlMetadataAdapter adapter = new SqlMetadataAdapter();
+        SyndesisMetadata<JsonSchema> syndesisMetaData = adapter.adapt("sql-stored-connector", parameters, metadata.get());
 
         ObjectMapper mapper = new ObjectMapper();
         String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
         String actualListOfProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
         assertEquals(expectedListOfProcedures, actualListOfProcedures);
 
+        parameters.put(SqlMetadataAdapter.PATTERN, SqlMetadataAdapter.FROM_PATTERN);
+        String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
+        String actualListOfStartProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
+        assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures);
+
         parameters.put("procedureName", "DEMO_ADD");
-        SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt(parameters, metadata.get());
+        SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-stored-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8);
         String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata);
+
     }
 }

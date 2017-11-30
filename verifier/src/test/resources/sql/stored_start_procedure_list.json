@@ -3,12 +3,6 @@
   "outputSchema" : null,
   "properties" : {
     "procedureName" : [ {
-      "displayValue" : "DEMO_ADD",
-      "value" : "DEMO_ADD"
-    }, {
-      "displayValue" : "DEMO_ADD2",
-      "value" : "DEMO_ADD2"
-    }, {
       "displayValue" : "DEMO_OUT",
       "value" : "DEMO_OUT"
     } ]

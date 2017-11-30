@@ -39,6 +39,6 @@ public interface MetadataAdapter<T> {
      * @param metadata the retrieved metadata
      * @return Syndesis styled metadata
      */
-    SyndesisMetadata<T> adapt(Map<String, Object> properties, MetaData metadata);
+    SyndesisMetadata<T> adapt(String actionId, Map<String, Object> properties, MetaData metadata);
 
 }
