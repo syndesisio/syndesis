@@ -29,10 +29,12 @@ export class TechExtensionImportComponent implements OnInit {
   response: Extension;
   error: FileError;
   importing = false;
+  extensionId: string;
+  extensionName: string;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  constructor(private store: ExtensionStore,
+  constructor(private extensionStore: ExtensionStore,
               private notificationService: NotificationService,
               private router: Router,
               private route: ActivatedRoute) { }
@@ -51,7 +53,7 @@ export class TechExtensionImportComponent implements OnInit {
       this.response = undefined;
       return;
     }
-    this.store.importExtension(this.response.id).toPromise().then( value => {
+    this.extensionStore.importExtension(this.response.id).toPromise().then( value => {
       this.notificationService.message(
         NotificationType.SUCCESS,
         'Imported!',
@@ -70,8 +72,10 @@ export class TechExtensionImportComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.extensionId = this.route.snapshot.paramMap.get('id');
+    this.extensionName = this.route.snapshot.queryParamMap.get('name');
     this.uploader = new FileUploader({
-      url: this.store.getUploadUrl(),
+      url: this.extensionStore.getUploadUrl(this.extensionId),
       disableMultipart: false,
       autoUpload: true,
       filters: [

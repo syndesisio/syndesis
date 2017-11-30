@@ -12,8 +12,12 @@ export class ExtensionService extends RESTService<Extension, Extensions> {
     super(restangular.service('../v1/extensions'), 'extension');
   }
 
-  public getUploadUrl() {
-    return this.restangularService.one().getRestangularUrl();
+  public getUploadUrl(id?: string) {
+    let url = this.restangularService.one().getRestangularUrl();
+    if (id) {
+      url = url + '?updatedId=' + id;
+    }
+    return url;
   }
 
   public importExtension(id: string): Observable<Response> {
