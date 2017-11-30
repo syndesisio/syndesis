@@ -1,70 +1,197 @@
 #!/bin/bash
 
-# Exit if any error occurs
-set -e
-set -x
+# ===================================================================================================
+# Syndesis Build Script
+#
+# See `build.sh --help` for usage information
+# ==================================================================================================
 
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Exit if any error occurs
+# Fail on a single failed command in a pipeline (if supported)
+set -o pipefail
+
+# Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
+set -eu
 
 # Save global script args
 ARGS="$@"
 
-CURRENT_TOKEN=""
-CURRENT_SERVER=""
-
 # Display a help message.
-function displayHelp() {
-    echo "This script helps you build the syndesis monorepo."
-    echo "The available options are:"
-    echo " --skip-tests            Skips the test execution."
-    echo " --skip-image-builds     Skips image builds."
-    echo " --with-image-streams    Builds everything using image streams."
-    echo " --namespace N           Specifies the namespace to use."
-    echo " --pool-namespace N      Specifies the pool namespace to use."
-    echo " --resume-from           Resume build from module."
-    echo " --clean                 Cleans up the projects."
-    echo " --batch-mode            Runs mvn in batch mode."
-    echo " --help                  Displays this help message."
+display_help() {
+  cat - <<EOT
+Build Syndesis
+
+Usage: build.sh [--mode <mode>] [... options ...]
+
+with the following modes:
+
+build       -- Developer builds (without system test). This is the default if no mode is given. Images are *not*
+               build by default, use --images or --image-mode to switch this on.
+system-test -- Run the build and the system test. Needs an valid OpenShift login.
+
+and the following options:
+
+  --backend               Build only backend modules (rest, verifier, runtime, connectors)
+  --images                Build only modules with Docker images (ui, rest, verifier, s2i).
+  --module <m1>,<m2>, ..  Build multiple modules (and their dependencies and dependent modules)
+                          Modules: ui, rest, connectors, s2i, verifier, runtime
+  --dependencies          Build also all project the specified module depends on
+
+  --skip-tests            Skip unit and system test execution
+  --skip-checks           Disable all checks
+  --flash                 Skip checks and tests execution (fastest mode)
+
+  --image-mode  <mode>    <mode> can be:
+                          - "none"   : No images are build (default)
+                          - "s2i"    : Build for OpenShift image streams
+                          - "docker" : Build against a plain Docker daemon
+                          - "auto"   : Automatically detect whether to use "s2i" or "docker"
+  --namespace <ns>        Specifies the namespace to create images in when using ''--images s2i'
+
+  --clean                 Run clean builds (mvn clean)
+  --batch-mode            Run mvn in batch mode
+
+  --pool-namespace <ns>   Specify the pool namespace to use for testing
+  --create-lock <prefix>  Create project pool locks for system-tests for the projects with the given prefix
+  --help                  Display this help message
+
+Examples:
+
+* Build only backend modules, fast               build.sh --backend --flash
+* Build only UI                                  build.sh --module ui
+* Build only images with OpenShift S2I, fast     build.sh --images --image-mode s2i --flash
+* Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
+* Build for system test                          build.sh --mode system-test
+
+EOT
 }
 
-#
+# Dir where this script is located
+basedir() {
+    # Default is current directory
+    local dir=$(dirname "$0")
+    local full_dir=$(cd "${dir}" && pwd)
+    echo ${full_dir}
+}
+
 # Checks if a flag is present in the arguments.
-function hasflag() {
-    filter=$1
-    for var in "${@:2}"; do
-        if [ "$var" = "$filter" ]; then
-            echo 'true'
-            break;
-        fi
-    done
+hasflag() {
+  filter=$1
+  for var in $ARGS; do
+    if [ "$var" = "$filter" ]; then
+      echo 'true'
+      break;
+    fi
+  done
 }
 
-#
 # Read the value of an option.
-function readopt() {
-        filter=$1
-        next=false
-        for var in "${@:2}"; do
-                if $next; then
-                        echo $var
-                        break;
-                fi
-                if [ "$var" = "$filter" ]; then
-                        next=true
-                fi
-        done
+readopt() {
+  filters="$@"
+  next=false
+  for var in $ARGS; do
+    if $next; then
+      echo $var
+      break;
+    fi
+    for filter in $filters; do
+      if [[ "$var" = ${filter}* ]]; then
+        local value="${var//${filter}=/}"
+        if [ "$value" != "$var" ]; then
+          echo $value
+          return
+        fi
+        next=true
+      fi
+    done
+  done
 }
 
-#
-# Gets the current user token.
-function current_token() {
-    local TMP_FILE=$(mktemp /tmp/syndesis-build-script.XXXXXX)
-    oc whoami --loglevel=8 > /dev/null 2> $TMP_FILE
-    cat $TMP_FILE | grep Authorization | awk -F "Bearer " '{print $2}'
-    rm $TMP_FILE 2> /dev/null
+
+check_error() {
+   local msg="$*"
+   if [ "${msg//ERROR/}" != "${msg}" ]; then
+     echo $msg
+     exit 1
+   fi
 }
 
 # ======================================================
+# Testing functions
+
+base64_decode_option() {
+  set +e
+  for opt in -D -d; do
+    echo "Y2hpbGk=" | base64 $opt >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo $opt
+      set -e
+      return
+    fi
+  done
+  set -e
+  echo "ERROR: Neither base64 -d nor base64 -D works"
+}
+
+find_secret() {
+	local namespace=$1
+	local service_account=$2
+	oc get sa $service_account -n $namespace -o yaml | grep ${service_account}-token- | awk -F ": " '{print $2}'
+}
+
+read_token() {
+	local secret=$1
+	local namespace=$2
+  base64_opt=$(base64_decode_option)
+  check_error $base64_opt
+	oc get secret $secret -n $namespace -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
+}
+
+read_token_of_sa() {
+	local namespace=$1
+	local service_account=$2
+	local secret=$(find_secret $namespace $service_account)
+	local token=$(read_token $secret $namespace)
+	echo $token
+}
+
+# Create a lock for all projects with the given prefix
+create_lock() {
+  local prefix=$1
+  local service_account="default"
+  local pool_namespace=$(readopt --pool-namespace)
+
+  if [ -z "$pool_namespace" ]; then
+      pool_namespace="syndesis-ci"
+  fi
+
+  for p in $(oc get projects | grep $prefix | awk -F " " '{print $1}'); do
+	  echo "Creating a secret lock for project $p"
+	  local secret=$(find_secret $p "default")
+	  echo "Found secret: $secret"
+  	local token=$(read_token_of_sa $p $service_account)
+	  echo "Found token: $token"
+  	oc delete  secret project-lock-$p -n $pool_namespace || true
+	  oc create secret generic project-lock-$p --from-literal=token=$token -n $pool_namespace
+	  oc annotate secret project-lock-$p syndesis.io/lock-for-project=$p -n $pool_namespace
+	  oc annotate secret project-lock-$p syndesis.io/allocated-by="" -n $pool_namespace
+
+	  oc adm policy add-role-to-user edit system:serviceaccount:$p:$service_account -n $p
+	  oc adm policy add-role-to-user system:image-puller system:serviceaccount:$p:$service_account -n $p
+	  oc adm policy add-role-to-user system:image-builder system:serviceaccount:$p:$service_account -n $p
+  done
+}
+
+# Gets the current OpenShift user token.
+current_token() {
+  echo $(oc whoami -t)
+}
+
+# Get the current OpenShift server
+current_server() {
+  echo $(oc whoami --show-server)
+}
+
 # Lock functions (secret lock strategy)
 
 # Displays the data of the lock. A project lock is a secret that contains the following:
@@ -73,261 +200,278 @@ function current_token() {
 #    ii) syndesis.io/allocated-by:     The owner of the lock.
 # 2. data:
 #    i)  connection information for the project (token)
-function project_lock_data() {
-    local SECRET_NAME=$1
-    local POOL_NAMESPACE=$2
-    oc get secret $SECRET_NAME -n $POOL_NAMESPACE -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}} {{.metadata.resourceVersion}} {{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
+project_lock_data() {
+  local secret_name=$1
+  local pool_namespace=$2
+  oc get secret $secret_name -n $pool_namespace -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}~{{.metadata.resourceVersion}}~{{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
 }
 
 #
 # Obtains a project lock. (See above).
-function obtain_project_lock() {
-    local BUILD_NAME=$1
-    local POOL_NAMESPACE=$2
-    for lock in `oc get secret -n $POOL_NAMESPACE | grep project-lock- | awk -F " " '{print $1}'`; do
-        echo "Trying to obtain lock data from secret $lock" > /tmp/log
-        status=$(project_lock_data $lock $POOL_NAMESPACE)
-        project=`echo $status | awk -F " " '{print $1}'`
-        version=`echo $status | awk -F " " '{print $2}'`
-        allocator=`echo $status | awk -F " " '{print $3}'`
+obtain_project_lock() {
+  local build_name=$1
+  local pool_namespace=$2
+  for lock in $(oc get secret -n $pool_namespace | grep project-lock- | awk -F " " '{print $1}'); do
+    echo "Trying to obtain lock data from secret $lock" > /tmp/log
+    local status=$(project_lock_data $lock $pool_namespace)
+    local project=`echo $status | awk -F "~" '{print $1}'`
+    local version=`echo $status | awk -F "~" '{print $2}'`
+    local allocator=`echo $status | awk -F "~" '{print $3}'`
 
-        if [ -z "$allocator" ] || [ "$BUILD_NAME" == "$allocator" ]; then
-            oc annotate secret $lock syndesis.io/allocated-by=$BUILD_NAME --resource-version=$version --overwrite -n $POOL_NAMESPACE > /dev/null
-            newstatus=$(project_lock_data $lock $POOL_NAMESPACE)
-            newallocator=`echo $newstatus | awk -F " " '{print $3}'`
-            if [ "$newallocator" == "$BUILD_NAME" ]; then
-                echo $lock
-                return
-            fi
-        fi
-    done
-}
-
-function project_lock_token() {
-    local SECRET_NAME=$1
-    local POOL_NAMESPACE=$2
-    oc get secret $SECRET_NAME -n $POOL_NAMESPACE -o yaml | grep token: | awk -F ": " '{print $2}' | base64 -d
-}
-
-function project_lock_name() {
-    local SECRET_NAME=$1
-    local POOL_NAMESPACE=$2
-    oc get secret $SECRET_NAME -n $POOL_NAMESPACE -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}{{"\n"}}'
-}
-
-function release_project_lock() {
-    local POOL_NAMESPACE=$2
-    oc annotate secret $1 syndesis.io/allocated-by="" --overwrite -n $POOL_NAMESPACE > /dev/null
-}
-
-function init_project_pool() {
-    BUILD_ID=$JOB_NAME$BUILD_NUMBER
-    if [ -z "$BUILD_ID" ]; then
-        BUILD_ID="cli"
-    fi
-
-    echo "Trying to allocate project for: $BUILD_ID"
-
-    if [ $(which oc) ] ; then
-        echo "oc binary found. Proceeding with pool initialization."
-    else
-        echo "Warning: oc binary not found in path. Disabling allocation of test project!"
+    if [ -z "$allocator" ] || [ "$build_name" == "$allocator" ]; then
+      oc annotate secret $lock syndesis.io/allocated-by=$build_name --resource-version=$version --overwrite -n $pool_namespace > /dev/null
+      local newstatus=$(project_lock_data $lock $pool_namespace)
+      local newallocator=`echo $newstatus | awk -F "~" '{print $3}'`
+      if [ "$newallocator" == "$build_name" ]; then
+        echo $lock
         return
+      fi
     fi
-
-    CURRENT_TOKEN=$(current_token)
-    CURRENT_SERVER=`oc whoami --show-server`
-    INITIAL_NAMESPACE=$(oc project -q)
-    POOL_NAMESPACE=$(readopt --pool-namespace $ARGS 2> /dev/null)
-    if [ -z "$POOL_NAMESPACE" ]; then
-        POOL_NAMESPACE="syndesis-ci"
-    fi
-
-    POOL_NAMESPACE_STATS=`oc get projects | grep $POOL_NAMESPACE | awk -F " " '{print $2}'`
-    if [ "$POOL_NAMESPACE_STATUS" != "Active" ]; then
-        echo "Project pool: $PROJECT_NAMESPACE doesn't exist. Skipping pool configuration!"
-        return
-    fi
-
-    echo "Using pool namespace: $POOL_NAMESPACE"
-
-    LOCK=$(obtain_project_lock $BUILD_ID $POOL_NAMESPACE)
-    if [ -n "$LOCK" ]; then
-        echo "Obtained lock: $LOCK"
-    fi
-
-    NAMESPACE=$(project_lock_name $LOCK $POOL_NAMESPACE)
-    TOKEN=$(project_lock_token $LOCK $POOL_NAMESPACE)
-    while [ -z "$NAMESPACE" ]; do
-        echo "Couldn't obtain lock. Retrying in 1 minute."
-        sleep 1m
-
-        if [ -n "$LOCK" ]; then
-            LOCK=$(obtain_project_lock $BUILD_ID $POOL_NAMESPACE)
-            NAMESPACE=$(project_lock_name $LOCK $POOL_NAMESPACE)
-            TOKEN=$(project_lock_token $LOCK $POOL_NAMESPACE)
-        fi
-    done
-
-    echo "Allocated project: $NAMESPACE for: $BUILD_ID"
-    oc login --token=$TOKEN --server=$CURRENT_SERVER
-    trap 'teardown_project_pool $NAMESPACE $POOL_NAMESPACE $INITIAL_NAMESPACE' EXIT
-    export NAMESPACE_USE_EXISTING=$NAMESPACE
-    export KUBERNETES_NAMESPACE=$NAMESPACE
-    export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
-    export WORKSPACE=deploy
-    MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.namespace=$NAMESPACE"
-    OC_OPTS=" -n $NAMESPACE"
+  done
 }
 
-function teardown_project_pool() {
-    local NAMESPACE=$1
-    local POOL_NAMESPACE=$2
-    local INITIAL_NAMESPACE=$3
+project_lock_token() {
+  local secret_name=$1
+  local pool_namespace=$2
+  local base64_opt=$(base64_decode_option)
+  check_error $base64_opt
+  oc get secret $secret_name -n $pool_namespace -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
+}
 
-    #1. We need to login to the original project first, before releasing the lock.
-    if [ -n "$CURRENT_TOKEN" ]; then
-        oc login --token=$CURRENT_TOKEN --server=$CURRENT_SERVER || true
-        oc project $POOL_NAMESPACE
-    fi
+project_lock_name() {
+  local secret_name=$1
+  local pool_namespace=$2
+  oc get secret $secret_name -n $pool_namespace -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}{{"\n"}}'
+}
 
-    if [ -n "$NAMESPACE" ]; then
-        $(release_project_lock $NAMESPACE $POOL_NAMESPACE) || true
-    fi
+release_project_lock() {
+  local lock="project-lock-$1"
+  local pool_namespace=$2
+  oc annotate secret $lock syndesis.io/allocated-by="" --overwrite -n $pool_namespace > /dev/null
+}
 
-    if [ -n "$INITIAL_NAMESPACE" ]; then
-        oc project $INITIAL_NAMESPACE || true
-    fi
+
+teardown_project_pool() {
+  local NAMESPACE=$1
+  local POOL_NAMESPACE=$2
+  local INITIAL_NAMESPACE=$3
+  local INITIAL_TOKEN=$4
+
+  echo "oc login --token=$INITIAL_TOKEN --server=$(current_server)"
+  #1. We need to login to the original project first, before releasing the lock.
+  if [ -n "${INITIAL_TOKEN:-}" ]; then
+    oc login --token=$INITIAL_TOKEN --server=$(current_server) || true
+    oc project $POOL_NAMESPACE
+  fi
+
+  if [ -n "$NAMESPACE" ]; then
+    echo "Releasing project: $NAMESPACE"
+    $(release_project_lock $NAMESPACE $POOL_NAMESPACE) || echo "Failed to release project: $NAMESPACE"
+  fi
+
+  if [ -n "$INITIAL_NAMESPACE" ]; then
+    oc project $INITIAL_NAMESPACE || true
+  fi
 }
 
 # ======================================================
 # Build functions
 
-function modules_to_build() {
-  modules="parent"
-  resume_from=$(readopt --resume-from $ARGS 2> /dev/null)
-  if [ "x${resume_from}" != x ]; then
-    modules=$(echo $modules | sed -e "s/^.*$resume_from/$resume_from/")
+extract_modules() {
+  local modules=""
+
+  if [ "$(hasflag --backend)" ]; then
+    modules="$modules connectors runtime rest verifier"
   fi
-  echo $modules
+
+  if [ "$(hasflag --images)" ]; then
+    modules="$modules ui rest verifier"
+  fi
+
+  local arg_modules=$(readopt --module -m);
+  if [ -n "${arg_modules}" ]; then
+    modules="$modules ${arg_modules//,/ }"
+  fi
+
+  # Unique modules
+  echo "$modules" | xargs -n 1 | sort -u | xargs | awk '$1=$1'
 }
 
-function init_options() {
-  SKIP_TESTS=$(hasflag --skip-tests $ARGS 2> /dev/null)
-  SKIP_IMAGE_BUILDS=$(hasflag --skip-image-builds $ARGS 2> /dev/null)
-  CLEAN=$(hasflag --clean $ARGS 2> /dev/null)
-  WITH_IMAGE_STREAMS=$(hasflag --with-image-streams $ARGS 2> /dev/null)
-  NAMESPACE=$(readopt --namespace $ARGS 2> /dev/null)
-  HELP=$(hasflag --help $ARGS 2> /dev/null)
+args_for_modules() {
+  local modules="$*"
+  if [ -n "${modules}" ]; then
+    local args="-pl $(join_comma ${modules})"
+    if [ -n "$(hasflag --dependencies)" ]; then
+      args="${args} -am"
+    fi
+    args="${args} -amd"
+    echo "$args"
+  fi
+}
 
-  # Internal variable default values
-  OC_OPTS=""
-  MAVEN_PARAMS="-P default"
-  MAVEN_CLEAN_GOAL="clean"
-  MAVEN_IMAGE_BUILD_GOAL="fabric8:build"
-  MAVEN_CMD="${MAVEN_CMD:-${BASEDIR}/mvnw}"
-  LOCK=""
+join_comma() {
+  local IFS=","
+  echo "$*"
+}
 
-  # If  we are running in cicleci 
-  if [ "$CIRCLECI" == "true" ] ; then
-    # Use batch mode so we get friendiler log files.
-    MAVEN_PARAMS="$MAVEN_PARAMS --batch-mode"
-    # lets configure thigs to avoid running out of memory:
-    MAVEN_PARAMS="$MAVEN_PARAMS -Dbasepom.test.fork-count=2 --batch-mode -P image"
-    # Enable the image profile so that they get built
-    MAVEN_PARAMS="$MAVEN_PARAMS -P image"
+get_maven_args() {
+  local namespace=${1:-}
+  local modules=$(extract_modules)
+  local args=$(args_for_modules $modules)
+
+  if [ -n "$(hasflag --flash)" ]; then
+    args="$args -Pflash"
   fi
 
-  # Apply options
-  if [ -n "$(hasflag --batch-mode $ARGS 2> /dev/null)" ]; then
-    MAVEN_PARAMS="$MAVEN_PARAMS --batch-mode"
+  if [ -n "$(hasflag --skip-tests)" ]; then
+    args="$args -DskipTests"
   fi
 
-  if [ -n "$SKIP_TESTS" ]; then
-      echo "Skipping tests ..."
-      MAVEN_PARAMS="$MAVEN_PARAMS -DskipTests"
+  if [ -n "$(hasflag --skip-checks)" ]; then
+    args="$args -Pskip-checks"
   fi
 
-  if [ -n "$SKIP_IMAGE_BUILDS" ]; then
-      echo "Skipping image builds ..."
-      MAVEN_IMAGE_BUILD_GOAL=""
+  if [ -n "$(hasflag --batch-mode)" ]; then
+    args="$args --batch-mode"
   fi
 
-  if [ -n "$NAMESPACE" ]; then
-      echo "Namespace: $NAMESPACE"
-      MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.namespace=$NAMESPACE"
-      OC_OPTS=" -n $NAMESPACE"
+  local image_mode="$(readopt --image-mode)"
+  if [ "${image_mode}" != "none" ]; then
+    if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
+      #Build images
+      args="$args -Pimage"
+      if [ -n "${image_mode}" ]; then
+        if [ "${image_mode}" == "s2i" ]; then
+          args="$args -Dfabric8.mode=openshift"
+        elif [ "${image_mode}" == "docker" ]; then
+          args="$args -Dfabric8.mode=kubernetes"
+        elif [ "${image_mode}" != "auto" ]; then
+          echo "ERROR: Invalid --image-mode ${image_mode}. Only 'none', 's2i', 'docker' or 'auto' supported".
+          exit 1
+        fi
+      fi
+    fi
+  fi
+
+  local ns="$namespace"
+  if [ -z "$ns" ]; then
+    ns="$(readopt --namespace)"
+  fi
+  if [ -n "${ns}" ]; then
+    args="$args -Dfabric8.namespace=${ns}"
+  fi
+
+  if [ -n "$(hasflag --clean)" ]; then
+    args="$args clean"
+  fi
+
+  local goals="$(readopt --goals)"
+  if [ -n "${goals}" ]; then
+    args="$args ${goals//,/ }"
   else
-      init_project_pool
+    args="$args install"
   fi
 
-  if [ -z "$CLEAN" ];then
-      MAVEN_CLEAN_GOAL=""
+  echo $args
+}
+
+run_build() {
+  local maven_args=$(get_maven_args)
+  check_error $maven_args
+  echo "./mvnw $maven_args"
+  exec $(basedir)/mvnw $maven_args
+}
+
+run_test() {
+  local initial_token=$(current_token)
+  local initial_namespace=$(oc project -q)
+  local pool_namespace=$(readopt --pool-namespace)
+
+  local build_id=${JOB_NAME:-}${BUILD_NUMBER:-}
+  if [ -z "$build_id" ]; then
+    build_id="cli"
+  fi
+  echo "Trying to allocate project for: $build_id"
+
+  if [ -z "$pool_namespace" ]; then
+    pool_namespace="syndesis-ci"
   fi
 
-  if [ -n "$WITH_IMAGE_STREAMS" ]; then
-    echo "With image streams ..."
-    MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.mode=openshift"
-  else
-    MAVEN_PARAMS="$MAVEN_PARAMS -Dfabric8.mode=kubernetes"
+  local pool_namespace_status=$(oc get projects | grep $pool_namespace | awk -F " " '{print $2}')
+  if [ "$pool_namespace_status" != "Active" ]; then
+    echo "No active namespace $pool_namespace: $pool_namespace_status"
+    exit 1
   fi
 
-  if [ -z "$BUILD_ID" ]; then
-      BUILD_ID="cli"
+  echo "Using pool namespace: $pool_namespace"
+
+  local lock=$(obtain_project_lock $build_id $pool_namespace)
+  if [ -n "${lock:-}" ]; then
+    echo "Obtained lock: $lock"
   fi
-}
 
-function parent() {
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-}
+  local namespace=$(project_lock_name $lock $pool_namespace)
+  local token=$(project_lock_token $lock $pool_namespace)
+  while [ -z "$namespace" ]; do
+    echo "Couldn't obtain lock. Retrying in 1 minute."
+    sleep 1m
 
-function rest() {
-  pushd rest
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_IMAGE_BUILD_GOAL $MAVEN_PARAMS
-  popd
-}
+    if [ -n "${lock:-}" ]; then
+      lock=$(obtain_project_lock $build_id $pool_namespace)
+      namespace=$(project_lock_name $lock $pool_namespace)
+      token=$(project_lock_token $lock $pool_namespace)
+    fi
+  done
 
-function s2i() {
-  pushd s2i
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-  popd
-}
+  echo "Allocated project: $namespace for: $build_id"
+  oc login --token=$token --server=$(current_server)
 
-function ui() {
-  pushd ui
-  "${MAVEN_CMD}" $MAVEN_CLEAN_GOAL install $MAVEN_PARAMS
-  # yarn
-  # yarn ng build -- --aot --prod --progress=false
-  # if [ -z "$SKIP_IMAGE_BUILDS" ]; then
-  #     if [ -n "$WITH_IMAGE_STREAMS" ]; then
-  #         BC_DETAILS=`oc get bc | grep syndesis-ui || echo ""`
-  #         if [ -z "$BC_DETAILS" ]; then
-  #             cat docker/Dockerfile | oc new-build --dockerfile=- --to=syndesis/syndesis-ui:latest --strategy=docker $OC_OPTS
-  #         fi
-  #         tar -cvf archive.tar dist docker
-  #         oc start-build -F --from-archive=archive.tar syndesis-ui $OC_OPTS
-  #         rm archive.tar
-  #     else
-  #         docker build -t syndesis/syndesis-ui:latest -f docker/Dockerfile . | cat -
-  #     fi
-  # fi
-  popd
+  if [ -z "${namespace}" ]; then
+    echo "Could not determine test namespace"
+    exit 1
+  fi
+
+  trap "teardown_project_pool $namespace $pool_namespace $initial_namespace $initial_token" EXIT
+  oc project $namespace
+  export NAMESPACE_USE_EXISTING=$namespace
+  export KUBERNETES_NAMESPACE=$namespace
+  export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
+  export WORKSPACE=deploy
+
+  local maven_args=$(get_maven_args $namespace)
+  check_error $maven_args
+  maven_args="$maven_args -Psystem-tests"
+  echo "./mvnw $maven_args"
+  exec $(basedir)/mvnw $maven_args
 }
 
 # ============================================================================
 # Main loop
 
-init_options
-
-if [ -n "$HELP" ]; then
-   displayHelp
-   exit 0
+if [ -n "$(hasflag --help)" ]; then
+  display_help
+  exit 0
 fi
 
-for module in $(modules_to_build)
-do
-  echo "=========================================================="
-  echo "Building ${module} ...."
-  echo "=========================================================="
-  eval "${module}"
-done
+mode=$(readopt --mode)
+if [ -z "${mode}" ]; then
+  mode="build"
+fi
+
+case $mode in
+  "build")
+    run_build
+    ;;
+  "system-test")
+    lock_prefix=$(readopt --create-lock)
+    if [ -n "${lock_prefix}" ]; then
+      create_lock $lock_prefix
+      exit 0
+    fi
+
+    run_test
+    ;;
+  **)
+    echo "Invalid mode '$mode'. Known modes: build, system-test"
+    exit 1
+esac

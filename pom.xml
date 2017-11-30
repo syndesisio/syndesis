@@ -38,7 +38,11 @@
     <syndesis.version>${project.version}</syndesis.version>
 
     <!-- Image names -->
-    <syndesis-s2i-image-name>syndesis/syndesis-s2i:latest</syndesis-s2i-image-name>
+    <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
+    <image.rest>syndesis/syndesis-rest:%l</image.rest>
+    <image.verifier>syndesis/syndesis-verifier:%l</image.verifier>
+    <image.ui>syndesis/syndesis-ui:%l</image.ui>
+
 
     <fabric8.maven.plugin.version>3.5.33</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -65,39 +69,24 @@
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
   </properties>
 
+  <modules>
+    <module>connectors</module>
+    <module>runtime</module>
+    <module>rest</module>
+    <module>s2i</module>
+    <module>verifier</module>
+    <module>ui</module>
+  </modules>
 
   <profiles>
 
-    <profile>
-      <id>default</id>
-      <activation>
-        <property><name>::default</name></property>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>connectors</module>
-        <module>ui</module>
-        <module>runtime</module>
-        <module>rest</module>
-        <module>s2i</module>
-        <module>tests</module>
-        <module>verifier</module>
-      </modules>
-    </profile>
+    <!--
+    =========================================================================
+    Profiles (which can and should be combined)
+    =========================================================================
+    -->
 
-    <profile>
-      <id>backend</id>
-      <activation>
-        <property><name>::backend</name></property>
-      </activation>
-      <modules>
-        <module>connectors</module>
-        <module>runtime</module>
-        <module>rest</module>
-        <module>verifier</module>
-      </modules>
-    </profile>
-
+    <!-- Profile for building Docker images -->
     <profile>
       <id>image</id>
       <activation>
@@ -115,13 +104,15 @@
       </build>
     </profile>
 
+    <!-- No checks enabled -->
     <profile>
-      <id>no-checks</id>
+      <id>skip-checks</id>
       <properties>
         <basepom.check.skip-all>true</basepom.check.skip-all>
       </properties>
     </profile>
 
+    <!-- All checks enabled -->
     <profile>
       <id>checks</id>
       <properties>
@@ -129,22 +120,31 @@
       </properties>
     </profile>
 
+    <!-- System tests enabled -->
+    <profile>
+      <id>system-tests</id>
+      <modules>
+        <module>tests</module>
+      </modules>
+    </profile>
+
+    <!-- Build Docker images directly -->
     <profile>
       <id>docker</id>
       <properties>
-        <fabric8.generator.name>syndesis/%a</fabric8.generator.name>
         <fabric8.mode>kubernetes</fabric8.mode>
       </properties>
     </profile>
 
+    <!-- Build with OpenShift S2I -->
     <profile>
-      <id>openshift</id>
+      <id>s2i</id>
       <properties>
-        <fabric8.generator.name>syndesis/%a</fabric8.generator.name>
         <fabric8.mode>openshift</fabric8.mode>
       </properties>
     </profile>
 
+    <!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
     <profile>
       <id>flash</id>
       <activation>

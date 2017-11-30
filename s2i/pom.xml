@@ -44,9 +44,14 @@
     </repository>
   </repositories>
 
-  <properties>
-    <syndesis.rest.version>${project.version}</syndesis.rest.version>
-  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>syndesis-builder-image-generator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -66,7 +71,7 @@
             <artifactItem>
               <groupId>io.syndesis</groupId>
               <artifactId>syndesis-builder-image-generator</artifactId>
-              <version>${syndesis.rest.version}</version>
+              <version>${project.version}</version>
               <type>jar</type>
               <outputDirectory>${project.build.directory}</outputDirectory>
               <destFileName>syndesis-builder-image-generator.jar</destFileName>
@@ -80,6 +85,21 @@
         <version>${maven.exec.plugin.version}</version>
         <executions>
           <execution>
+            <id>copy-local-repo</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bash</executable>
+              <arguments>
+                <argument>${basedir}/copy_mvn_repo.sh </argument>
+                <argument>${project.version}</argument>
+                <argument>${basedir}/target/generated-sources/docker</argument>
+              </arguments>
+            </configuration>
+          </execution>          
+          <execution>
             <id>syndesis-builder-image-generator</id>
             <phase>package</phase>
             <goals>
@@ -90,22 +110,7 @@
               <arguments>
                 <argument>-jar</argument>
                 <argument>${project.build.directory}/syndesis-builder-image-generator.jar</argument>
-                <argument>--to=${basedir}/src/main/docker/project</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-local-repo</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>bash</executable>
-              <arguments>
-                <argument>${basedir}/copy_mvn_repo.sh </argument>
-                <argument>${syndesis.rest.version}</argument>
-                <argument>${basedir}/src/main/docker/project</argument>
+                <argument>--to=${basedir}/target/generated-sources/docker/project</argument>
               </arguments>
             </configuration>
           </execution>
@@ -152,9 +157,9 @@
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
-                  <name>${syndesis-s2i-image-name}</name>
+                  <name>${image.s2i}</name>
                   <build>
-                    <dockerFile>Dockerfile</dockerFile>
+                    <dockerFileDir>${basedir}/target/generated-sources/docker</dockerFileDir>
                   </build>
                 </image>
               </images>

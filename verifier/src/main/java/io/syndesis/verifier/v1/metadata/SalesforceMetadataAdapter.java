@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSchema> {
 
     @Override
-    public SyndesisMetadata<ObjectSchema> adapt(final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata<ObjectSchema> adapt(String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final ObjectSchema schema = schemaPayload(metadata);
 

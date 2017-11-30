@@ -18,7 +18,7 @@ jobs:
   build:
     working_directory: /workspace
     docker:
-    - image: wombat7/openjdk-node-docker
+    - image: openjdk:8-jdk
     environment:
       MAVEN_OPTS: -Xmx1024m
       DOCKER_VERSION: 17.04.0-ce
@@ -29,30 +29,20 @@ jobs:
       - checkout
 
       - run:
-          name: Install yarn
-          command: |
-            rm -rf ~/.yarn
-            curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.2.1
-            echo 'export PATH="${HOME}/.yarn/bin:${PATH}"' >> $BASH_ENV
-
-      - run:
           name: Prep for Cache Load
           command: |
-            git submodule init
-            git submodule update
             find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | sort | xargs cat > all-poms
 
       - restore_cache:
-          key: syndesis-mvn-{{ checksum "all-poms" }}          
+          key: syndesis-mvn-{{ checksum "all-poms" }}
       - restore_cache:
           key: syndesis-yarn-{{ checksum "ui/yarn.lock" }}
 
       - run:
           name: Build
           command: |
-            echo Using node version: $(node --version)
-            ./build.sh
-
+            ./build.sh --batch-mode --image-mode=docker | tee build_log.txt
+      
       - save_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}
           paths:
@@ -72,7 +62,7 @@ jobs:
           name: Collect API docs
           command: |
             mkdir ./apidocs
-            if [[ -d runtime/runtime/target/classes/static ]]; then 
+            if [[ -d runtime/runtime/target/classes/static ]]; then
               cp runtime/runtime/target/classes/static/index.html ./apidocs
               cp runtime/runtime/target/classes/static/swagger.json ./apidocs
               cp runtime/runtime/target/classes/static/swagger.yaml ./apidocs
@@ -84,6 +74,9 @@ jobs:
           path: ./apidocs
       - store_artifacts:
           path: ./junit
+      - store_artifacts:
+          path: ./build_log.txt
+
 
       - deploy:
           command: |
@@ -94,7 +87,7 @@ jobs:
             curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
 
             IMAGES='syndesis-rest syndesis-verifier syndesis-ui syndesis-s2i'
-            
+
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
               for image in ${IMAGES} ; do

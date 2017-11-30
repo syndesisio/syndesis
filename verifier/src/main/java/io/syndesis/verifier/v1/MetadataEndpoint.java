@@ -34,7 +34,7 @@ class MetadataEndpoint {
 
     private final String connectorId;
 
-    public MetadataEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
+    MetadataEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
         this.connectorId = connectorId;
         this.adapter = adapter;
     }
@@ -43,15 +43,20 @@ class MetadataEndpoint {
         return new DefaultCamelContext();
     }
 
-    /* default */ final SyndesisMetadata<?> fetchMetadata(final Map<String, Object> properties) {
+    /* default */ final SyndesisMetadata<?> fetchMetadata(final String actionId, final Map<String, Object> properties) {
         try {
             final CamelContext camel = camelContext();
             camel.start();
 
             try {
-                final MetaDataExtension metadataExtension = camel.getComponent(connectorId, true, false)
+                //TODO Kurt
+                String componentId = connectorId;
+                if ("sql".equals(connectorId)) {
+                    componentId = actionId;
+                }
+                final MetaDataExtension metadataExtension = camel.getComponent(componentId, true, false)
                     .getExtension(MetaDataExtension.class).orElseThrow(() -> new IllegalArgumentException(
-                        "No Metadata extension present for connector: " + connectorId));
+                        "No Metadata extension present for action: " + actionId));
 
                 final Map<String, Object> propertiesForMetadataExtension = properties.entrySet().stream()
                     .filter(e -> e.getValue() != null).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
@@ -59,7 +64,7 @@ class MetadataEndpoint {
                 final MetaData metaData = metadataExtension.meta(propertiesForMetadataExtension)
                     .orElseThrow(() -> new IllegalArgumentException("No Metadata returned by the metadata extension"));
 
-                return adapter.adapt(properties, metaData);
+                return adapter.adapt(actionId, properties, metaData);
             } finally {
                 camel.stop();
             }

@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Connection, Action, Step, Steps, TypeFactory } from '../../model';
+import {
+  Extension,
+  Extensions,
+  Connection,
+  Action,
+  Step,
+  Steps,
+  TypeFactory
+} from '../../model';
 
 export interface StepKind extends Step {
   name: string;
@@ -13,6 +21,9 @@ export interface StepKind extends Step {
 }
 export type StepKinds = Array<StepKind>;
 
+export const EXTENSION = 'extension';
+export const ENDPOINT = 'endpoint';
+export const CONNECTION = ENDPOINT;
 export const DATA_MAPPER = 'mapper';
 export const BASIC_FILTER = 'rule-filter';
 export const ADVANCED_FILTER = 'filter';
@@ -152,34 +163,62 @@ export class StepStore {
     */
   ];
 
-  getStepName(kind: string): string {
-    const step = this.getStepConfig(kind);
+  getStepName(step: any): string {
     if (step) {
       return step.name;
     }
-    return kind;
+    return 'step';
   }
 
-  getStepDescription(kind: string): string {
-    const step = this.getStepConfig(kind);
+  getStepDescription(step: any): string {
     if (step) {
       return step.description;
     }
     return '';
   }
 
-  getStepConfig(kind: string) {
-    return this.steps.find(step => step.stepKind === kind);
+  getProperties(step: Step) {
+    const action = step.action;
+    if (!action) {
+      // it's a legacy step
+      const _step = this.getStepConfig(step.stepKind);
+      return _step.properties;
+    }
+    // flatten arrays of properties into one object until step configuration supports pages
+    return action.descriptor.propertyDefinitionSteps.reduce( (acc, current) => {
+      return { ...acc, ...current.properties };
+    }, {});
   }
 
-  getSteps() {
-    return this.steps;
+  getSteps(extensions: Extensions = []) {
+    const allSteps = [];
+    for ( const extension of extensions ) {
+      for ( const action of extension.actions) {
+        const properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
+          return { ...acc, ...current.properties };
+        }, {});
+        allSteps.push({
+          name: action.name,
+          description: action.description,
+          stepKind: 'extension',
+          properties: properties,
+          extension: extension,
+          action: action,
+          configuredProperties: undefined,
+        });
+      }
+    }
+    return this.steps.concat(allSteps).sort((a, b) => a.name.localeCompare(b.name));
   }
 
   // Check if we need a custom form handling which stores the parsed
   // properties in customProperties
   isCustomStep(step: Step): boolean {
     return step.stepKind === BASIC_FILTER || step.stepKind === DATA_MAPPER;
+  }
+
+  private getStepConfig(stepKind: String) {
+    return this.steps.find(step => step.stepKind === stepKind);
   }
 
   private stepsHaveOutputDataShape(steps: Array<Step>): boolean {

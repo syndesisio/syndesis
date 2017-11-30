@@ -32,8 +32,8 @@
     <file>target/sql-stored-connector-test.log</file>
   </appender>
 
-  <root level="INFO">
-    <!--<appender-ref ref="STDOUT"/>-->
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE"/>
   </root>
 

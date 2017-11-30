@@ -6,7 +6,7 @@
       "name" : "My Step",
       "description" : "A simple step",
       "descriptor" : {
-        "kind" : "ROUTE",
+        "kind" : "ENDPOINT",
         "entrypoint" : "direct:my-step",
         "inputDataShape" : {
           "kind" : "any"

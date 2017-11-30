@@ -837,6 +837,9 @@
           <name>::image</name>
         </property>
       </activation>
+      <properties>
+        <fabric8.generator.name>${image.rest}</fabric8.generator.name>
+      </properties>
       <build>
         <plugins>
           <plugin>

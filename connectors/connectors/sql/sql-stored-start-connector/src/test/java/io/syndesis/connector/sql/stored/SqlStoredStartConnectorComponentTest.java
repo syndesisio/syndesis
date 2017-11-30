@@ -34,30 +34,33 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import io.syndesis.connector.sql.SqlCommon;
+
 public class SqlStoredStartConnectorComponentTest {
 
     private static Connection connection;
     private static Properties properties = new Properties();
-    private static SqlStoredCommon sqlStoredCommon;
+    private static SqlCommon sqlCommon;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        sqlStoredCommon = new SqlStoredCommon();
-        connection = sqlStoredCommon.setupConnectionAndStoredProcedure(connection, properties);
+        sqlCommon = new SqlCommon();
+        connection = sqlCommon.setupConnection(connection, properties);
+        SqlStoredCommon.setupStoredProcedure(connection, properties);
     }
 
     @AfterClass
     public static void afterClass() throws SQLException {
-        sqlStoredCommon.closeConnection(connection);
+        sqlCommon.closeConnection(connection);
     }
 
     @Test
     public void camelConnectorTest() throws Exception {
 
         BasicDataSource ds = new BasicDataSource();
-        ds.setUsername(properties.getProperty("sql-stored-start-connector.user"));
-        ds.setPassword(properties.getProperty("sql-stored-start-connector.password"));
-        ds.setUrl(     properties.getProperty("sql-stored-start-connector.url"));
+        ds.setUsername(properties.getProperty("sql-connector.user"));
+        ds.setPassword(properties.getProperty("sql-connector.password"));
+        ds.setUrl(     properties.getProperty("sql-connector.url"));
 
         SimpleRegistry registry = new SimpleRegistry();
         registry.put("dataSource", ds);

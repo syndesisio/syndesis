@@ -18,10 +18,8 @@ features:
   api:
     v1:
       enabled: true
-    v1beta1:
-      enabled: false
   filestore:
-    enabled: false
+    enabled: true
 
 server:
   useForwardHeaders: true
@@ -64,6 +62,8 @@ endpoints:
 
 dao:
   kind: jsondb
+  schema:
+    version: 25
 
 filestore:
   enabled: false

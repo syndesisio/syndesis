@@ -66,7 +66,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
 
     @Before
     public void setupConnection() {
-        dataManager.create(new Connection.Builder().id(connectionId).connectorId("sql-stored-connector")
+        dataManager.create(new Connection.Builder().id(connectionId).connectorId("sql")
             .putConfiguredProperty("user", "sa").build());
     }
 
@@ -75,10 +75,10 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
         WireMock.configureFor(wireMock.port());
         stubFor(WireMock
             .post(urlEqualTo(
-                "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
+                "/api/v1/connectors/sql/actions/sql-stored-connector"))//
             .withHeader("Accept", containing("application/json"))//
             .withRequestBody(
-                    equalToJson("{\"template\":null,\"procedureName\":null,\"user\":\"sa\"}"))
+                    equalToJson("{\"template\":null,\"Pattern\":\"To\",\"procedureName\":null,\"user\":\"sa\"}"))
             .willReturn(aResponse()//
                 .withStatus(200)//
                 .withHeader("Content-Type", "application/json")//
@@ -86,10 +86,10 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
 
         stubFor(WireMock
             .post(urlEqualTo(
-                "/api/v1/connectors/sql-stored-connector/actions/io.syndesis:sql-stored-connector:latest"))//
+                "/api/v1/connectors/sql/actions/sql-stored-connector"))//
             .withHeader("Accept", equalTo("application/json"))//
             .withRequestBody(
-                    equalToJson("{\"template\":null,\"user\":\"sa\",\"procedureName\":\"DEMO_ADD\"}"))
+                    equalToJson("{\"template\":null,\"Pattern\":\"To\",\"user\":\"sa\",\"procedureName\":\"DEMO_ADD\"}"))
             .willReturn(aResponse()//
                 .withStatus(200)//
                 .withHeader("Content-Type", "application/json")//
@@ -103,7 +103,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         final ResponseEntity<ConnectorDescriptor> firstResponse = http(HttpMethod.POST,
-            "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest", null,
+            "/api/v1/connections/" + connectionId + "/actions/sql-stored-connector", null,
             ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         ConfigurationProperty procedureNames = firstResponse.getBody().getPropertyDefinitionSteps().iterator().next().getProperties().get("procedureName");
@@ -111,7 +111,7 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
         assertThat(procedureNames.getEnum().iterator().next().getLabel()).startsWith("DEMO_ADD");
 
         final ResponseEntity<ConnectorDescriptor> secondResponse = http(HttpMethod.POST,
-                "/api/v1/connections/" + connectionId + "/actions/io.syndesis:sql-stored-connector:latest",
+                "/api/v1/connections/" + connectionId + "/actions/sql-stored-connector",
                 Collections.singletonMap("procedureName", "DEMO_ADD"),
                 ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 

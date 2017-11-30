@@ -22,23 +22,24 @@ import java.util.Properties;
 import org.apache.camel.Processor;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
 
-import static io.syndesis.connector.sql.stored.JSONBeanUtil.mapToJSONBean;
-import static io.syndesis.connector.sql.stored.JSONBeanUtil.parsePropertiesFromJSONBean;
+import io.syndesis.connector.sql.SqlConnectorVerifierExtension;
 
 /**
  * Camel SqlStoredConnector connector
  */
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
 
+    final static String COMPONENT_NAME  ="sql-stored-connector";
+    final static String COMPONENT_SCHEME="sql-stored-connector";
+
     public SqlStoredConnectorComponent() {
         this(null);
     }
 
     public SqlStoredConnectorComponent(String componentSchema) {
-        super("sql-stored-connector", componentSchema, "io.syndesis.connector.sql.stored.SqlStoredConnectorComponent");
-
-        registerExtension(SqlStoredConnectorVerifierExtension::new);
-        registerExtension(SqlStoredConnectorMetaDataExtension::new);
+        super(COMPONENT_NAME, SqlStoredConnectorComponent.class.getName());
+        registerExtension(new SqlConnectorVerifierExtension(COMPONENT_SCHEME));
+        registerExtension(new SqlStoredConnectorMetaDataExtension());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
 
         final Processor processor = exchange -> {
             final String body = (String) exchange.getIn().getBody();
-            final Properties properties = parsePropertiesFromJSONBean(body);
+            final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
             exchange.getIn().setBody(properties);
         };
         return processor;
@@ -56,8 +57,8 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
     public Processor getAfterProducer() {
         final Processor processor = exchange -> {
             @SuppressWarnings("unchecked")
-            Map<String, Object> map = (Map<String, Object>) exchange.getIn().getBody();
-            String jsonBean = mapToJSONBean(map);
+            Map<String,Object> map = (Map<String,Object>) exchange.getIn().getBody();
+            String jsonBean = JSONBeanUtil.toJSONBean(map);
             exchange.getIn().setBody(jsonBean);
         };
         return processor;

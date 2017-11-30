@@ -197,6 +197,7 @@ public class IntegrationHandler extends BaseHandler
             .createdDate(rightNow)
             .currentStatus(determineCurrentStatus(encryptedIntegration))
             .userId(sec.getUserPrincipal().getName())
+            .stepsDone(new ArrayList<>())
             .build();
 
         return Creator.super.create(sec, updatedIntegration);
@@ -217,6 +218,7 @@ public class IntegrationHandler extends BaseHandler
             .lastUpdated(new Date())
             .currentStatus(currentStatus)
             .addRevision(currentRevision)
+            .stepsDone(new ArrayList<>())
             .build();
 
         Updater.super.update(id, updatedIntegration);
@@ -238,6 +240,7 @@ public class IntegrationHandler extends BaseHandler
             .lastUpdated(new Date())
             .desiredStatus(Status.Deleted)
             .addRevision(currentRevision)
+            .stepsDone(new ArrayList<>())
             .build();
 
         Updater.super.update(id, updatedIntegration);

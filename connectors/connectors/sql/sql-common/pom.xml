@@ -24,11 +24,10 @@
     <groupId>io.syndesis</groupId>
     <artifactId>sql-connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>sql-common</artifactId>
-  <name>Syndesis SQL Connectors :: SQL common code</name>
+  <name>Syndesis SQL Connectors :: Sql common code</name>
   <description>Common code shared by all SQL connectors</description>
 
   <properties>
@@ -41,12 +40,23 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
       </plugin>
+      <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-jar-plugin</artifactId>
+       <executions>
+         <execution>
+           <id>default-jar</id>
+           <goals>
+             <goal>test-jar</goal>
+           </goals>
+         </execution>
+       </executions>
+     </plugin>
 
     </plugins>
   </build>
@@ -62,6 +72,11 @@
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
     
     <!-- testing -->
     <dependency>
@@ -69,6 +84,10 @@
       <artifactId>camel-test</artifactId>
       <version>${camel.version}</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

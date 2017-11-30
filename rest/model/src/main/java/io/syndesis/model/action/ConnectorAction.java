@@ -23,6 +23,13 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
 @SuppressWarnings("immutables")
 public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction> {
+
+    @Override
+    @Value.Default
+    default String getActionType() {
+        return Action.TYPE_CONNECTOR;
+    }
+
     @Override
     default ConnectorAction withId(String id) {
         return new Builder().createFrom(this).id(id).build();
