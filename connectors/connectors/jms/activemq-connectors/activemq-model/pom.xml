@@ -69,6 +69,11 @@
       <version>${camel.version}</version>
       <scope>provided</scope>
     </dependency>
+    <!-- ActiveMQ dependencies -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-broker</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
