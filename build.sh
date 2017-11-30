@@ -265,7 +265,8 @@ teardown_project_pool() {
   fi
 
   if [ -n "$NAMESPACE" ]; then
-    $(release_project_lock $NAMESPACE $POOL_NAMESPACE) || true
+    echo "Releasing project: $NAMESPACE"
+    $(release_project_lock $NAMESPACE $POOL_NAMESPACE) || echo "Failed to release project: $NAMESPACE"
   fi
 
   if [ -n "$INITIAL_NAMESPACE" ]; then
@@ -431,6 +432,7 @@ run_test() {
   fi
 
   trap "teardown_project_pool $namespace $pool_namespace $initial_namespace $initial_token" EXIT
+  oc project $namespace
   export NAMESPACE_USE_EXISTING=$namespace
   export KUBERNETES_NAMESPACE=$namespace
   export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
