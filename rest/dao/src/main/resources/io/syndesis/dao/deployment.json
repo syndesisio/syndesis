@@ -692,17 +692,17 @@
   {
     "kind": "connector",
     "data": {
-      "id": "sql-stored-connector",
-      "name": "SQL Stored Procedure",
-      "description": "Relational Database SQL Stored procedure invocation",
+      "id": "sql",
+      "name": "Database",
+      "description": "Invoke SQL or Stored Procedures",
       "icon": "fa-database",
       "configuredProperties": {},
       "properties": {
         "url": {
           "kind": "property",
           "displayName": "Connection URL",
-          "group": "producer",
-          "label": "common",
+          "group": "common",
+          "label": "",
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
@@ -716,8 +716,8 @@
         "user": {
           "kind": "property",
           "displayName": "Username",
-          "group": "security",
-          "label": "common,security",
+          "group": "common",
+          "label": "",
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
@@ -746,6 +746,7 @@
           "kind": "property",
           "displayName": "Schema",
           "group": "common",
+          "label": "common",
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
@@ -755,31 +756,100 @@
           "componentProperty": true,
           "defaultValue": "sampledb",
           "description": "Database schema"
-        },
-        "catalog": {
-          "kind": "property",
-          "displayName": "Catalog",
-          "group": "common",
-          "required": false,
-          "type": "string",
-          "javaType": "java.lang.String",
-          "tags":[],
-          "deprecated": false,
-          "secret": false,
-          "componentProperty": true,
-          "description": "Database catalog"
         }
       },
       "actions": [
         {
-          "id": "io.syndesis:sql-stored-connector:latest",
-          "name": "Invoke SQL stored procedure",
-          "description": "Invoke SQL stored procedure to get data in and/or out",
+          "id": "sql-connector",
+          "name": "Invoke SQL",
+          "description": "Invoke SQL to get data in and/or out",
           "tags": [ "dynamic" ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV": "io.syndesis:sql-connector:1.2-SNAPSHOT",
+            "camelConnectorPrefix": "sql-connector",
+            "inputDataShape": {
+               "kind" : "json-schema"
+            },
+            "outputDataShape": {
+               "kind" : "json-schema"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "SQL Statement",
+              "description": "Enter a SQL Statement starting with INSERT, SELECT, UPDATE or DELETE",
+              "properties": {
+                  "query":{
+                    "kind":"path",
+                    "displayName":"Query",
+                    "group":"common",
+                    "required":true,
+                    "type":"string",
+                    "javaType":"java.lang.String",
+                    "deprecated":false,
+                    "secret":false,
+                   "description":"SQL Statement to be executed. Can contain input parameters prefixed by ':#' i.e. ':#MYPARAMNAME'"
+                 }
+               }
+            }]
+          }
+        },
+        {
+          "id": "sql-start-connector",
+          "name": "Periodic SQL Invocation",
+          "description": "Invoke SQL to periodically get data out",
+          "tags": [ "dynamic" ],
+          "pattern": "From",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:sql-start-connector:1.2-SNAPSHOT",
+            "camelConnectorPrefix": "sql-start-connector",
+            "inputDataShape": {
+               "kind" : " none"
+            },
+            "outputDataShape": {
+               "kind" : "json-schema"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "SQL Statement",
+              "description": "Enter a SQL Statement starting with SELECT",
+              "properties": {
+                  "query":{
+                    "kind":"path",
+                    "displayName":"Query",
+                    "group":"common",
+                    "required":true,
+                    "type":"string",
+                    "javaType":"java.lang.String",
+                    "deprecated":false,
+                    "secret":false,
+                   "description":"SQL Select Statement to be executed"
+                 },
+                  "schedulerPeriod":{
+                    "kind":"parameter",
+                    "displayName":"Period",
+                    "group":"consumer",
+                    "required":false,
+                    "type":"integer",
+                    "javaType":"long",
+                    "deprecated":false,
+                    "secret":false,
+                    "defaultValue":1000,
+                    "description":"Delay in milli seconds between scheduling (executing)"
+                  }
+               }
+            }]
+          }
+        },
+        {
+          "id": "sql-stored-connector",
+          "name": "Invoke Stored Procedure",
+          "description": "Invoke a Stored Procedure to get Data in and/or out",
+          "tags": [ "dynamic" ],
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:sql-stored-connector:1.2-SNAPSHOT",
             "camelConnectorPrefix": "sql-stored-connector",
             "inputDataShape": {
                "kind" : "json-schema"
@@ -821,6 +891,69 @@
               }
             }]
           }
+        },
+        {
+          "id": "sql-stored-start-connector",
+          "name": "Periodic Stored Procedure Invocation",
+          "description": "Periodically Invoke a Stored Procedure to get Data out",
+          "tags": [ "dynamic" ],
+          "pattern": "From",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:sql-stored-start-connector:1.2-SNAPSHOT",
+            "camelConnectorPrefix": "sql-stored-start-connector",
+            "inputDataShape": {
+               "kind" : "none"
+            },
+            "outputDataShape": {
+               "kind" : "json-schema"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Procedure Name",
+              "description": "Select the Stored Procedure",
+              "properties": {
+                "procedureName": {
+                  "kind": "path",
+                  "displayName": "Procedure Name",
+                  "group": "producer",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "Name of the Store Procedure"
+                },
+                "template": {
+                  "kind": "path",
+                  "displayName": "Template",
+                  "group": "producer",
+                  "required": true,
+                  "type": "hidden",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "",
+                  "description": "Stored Procedure template to perform"
+                },
+                  "schedulerPeriod":{
+                  "kind":"parameter",
+                  "displayName":"Period",
+                  "group":"consumer",
+                  "required":false,
+                  "type":"integer",
+                  "javaType":"long",
+                  "deprecated":false,
+                  "secret":false,
+                  "defaultValue":1000,
+                  "description":"Delay in milli seconds between scheduling (executing)"
+                }
+              }
+            }]
+          }
         }
       ]
     }
@@ -830,10 +963,10 @@
     "data": {
       "id": "5",
       "name": "PostgresDB",
-      "description": "Sample Database Connection for Stored Procedure Invocation",
+      "description": "Connection to SampleDB",
       "tags":["sampledb"],
       "icon": "fa-database",
-      "connectorId": "sql-stored-connector",
+      "connectorId": "sql",
       "configuredProperties": {
         "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
         "user": "sampledb",
