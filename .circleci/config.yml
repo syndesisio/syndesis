@@ -41,9 +41,8 @@ jobs:
       - run:
           name: Build
           command: |
-            ./build.sh --batch-mode --image-mode=docker | tee ~/build_log.txt
-            cp ~/build_log.txt $CIRCLE_ARTIFACTS
-
+            ./build.sh --batch-mode --image-mode=docker | tee build_log.txt
+      
       - save_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}
           paths:
@@ -75,6 +74,9 @@ jobs:
           path: ./apidocs
       - store_artifacts:
           path: ./junit
+      - store_artifacts:
+          path: ./build_log.txt
+
 
       - deploy:
           command: |
