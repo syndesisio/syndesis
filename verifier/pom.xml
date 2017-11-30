@@ -236,6 +236,12 @@
       <version>${syndesis.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>activemq-publish-connector</artifactId>
+      <version>${syndesis.version}</version>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
