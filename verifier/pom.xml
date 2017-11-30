@@ -208,6 +208,12 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>sql-common</artifactId>
+      <version>1.2-SNAPSHOT</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>sql-connector</artifactId>
       <version>1.2-SNAPSHOT</version>
     </dependency>
@@ -236,7 +242,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-common</artifactId>
       <type>test-jar</type>
-      <version>0.5-SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -298,7 +304,10 @@
             <ignoredUnusedDeclaredDependency>io.syndesis:salesforce-upsert-contact-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:http-get-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:twitter-mention-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-start-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-start-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>

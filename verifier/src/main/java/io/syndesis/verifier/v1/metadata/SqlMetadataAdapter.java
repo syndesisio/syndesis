@@ -28,30 +28,24 @@ import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
 
-<<<<<<< HEAD:verifier/src/main/java/io/syndesis/verifier/v1/metadata/SqlStoredMetadataAdapter.java
-import io.syndesis.connector.sql.stored.ColumnMode;
-import io.syndesis.connector.sql.stored.StoredProcedureColumn;
-import io.syndesis.connector.sql.stored.StoredProcedureMetadata;
-=======
 import io.syndesis.connector.sql.SqlParam;
 import io.syndesis.connector.sql.SqlStatementMetaData;
 import io.syndesis.connector.sql.stored.ColumnMode;
 import io.syndesis.connector.sql.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.stored.StoredProcedureMetadata;
 
->>>>>>> Updating verifier with SQL adapter changes:verifier/src/main/java/io/syndesis/verifier/v1/metadata/SqlMetadataAdapter.java
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.springframework.stereotype.Component;
 
 @Component("sql-adapter")
 public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
 
-    final static String PROCEDURE_NAME = "procedureName";
-    final static String PROCEDURE_TEMPLATE = "template";
-    final static String PATTERN = "Pattern";
-    final static String FROM_PATTERN = "From";
-    
-    final static String QUERY = "query";
+    static final String PROCEDURE_NAME = "procedureName";
+    static final String PROCEDURE_TEMPLATE = "template";
+    static final String PATTERN = "Pattern";
+    static final String FROM_PATTERN = "From";
+
+    static final String QUERY = "query";
 
     @Override
     public SyndesisMetadata<JsonSchema> adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
@@ -62,7 +56,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
             return adaptForSql(actionId, properties, metadata);
         }
     }
-    
+
     public SyndesisMetadata<JsonSchema> adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
@@ -73,7 +67,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
         if (sqlStatementMetaData!=null) {
             ppList.add(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY));
             enrichedProperties.put(QUERY, ppList);
-            
+
             // build the input and output schemas
             final ObjectSchema builderIn = new ObjectSchema();
             builderIn.set$schema("http://json-schema.org/schema#");
@@ -81,14 +75,14 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
             for (SqlParam inParam: sqlStatementMetaData.getInParams()) {
                 builderIn.putProperty(inParam.getName(), schemaFor(inParam.getJdbcType()));
             }
-    
+
             final ObjectSchema builderOut = new ObjectSchema();
             builderOut.setTitle("SQL_PARAM_OUT");
             builderOut.set$schema("http://json-schema.org/schema#");
             for (SqlParam outParam: sqlStatementMetaData.getOutParams()) {
                 builderOut.putProperty(outParam.getName(), schemaFor(outParam.getJdbcType()));
             }
-            
+
             return new SyndesisMetadata<>(enrichedProperties, builderIn, builderOut);
         } else {
             return new SyndesisMetadata<>(enrichedProperties, null, null);
@@ -144,7 +138,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
     }
     /**
      * Puts all stored procedures in the list, as all queries adhere to the `To` pattern.
-     * 
+     *
      * @param procedureMap
      * @return list of property pairs containing the stored procedure names
      */
@@ -157,27 +151,25 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
         return ppList;
     }
     /**
-     * Puts stored procedures in the list that have NO input parameters, which adheres to the `From` 
+     * Puts stored procedures in the list that have NO input parameters, which adheres to the `From`
      * pattern.
-     * 
+     *
      * @param procedureMap
      * @return list of property pairs containing the stored procedure names
      */
     private List<PropertyPair> obtainFromProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
         final List<PropertyPair> ppList = new ArrayList<>();
-        for (final String storedProcedureName : procedureMap.keySet()) {
-            final StoredProcedureMetadata storedProcedure = procedureMap.get(storedProcedureName);
-            if (containsInputParams(storedProcedure)) {
-                continue;
+        for (final StoredProcedureMetadata storedProcedure : procedureMap.values() ) {
+            if (! containsInputParams(storedProcedure)) {
+                final PropertyPair pp = new PropertyPair(storedProcedure.getName(), storedProcedure.getName());
+                ppList.add(pp);
             }
-            final PropertyPair pp = new PropertyPair(storedProcedureName, storedProcedureName);
-            ppList.add(pp);
         }
         return ppList;
     }
     /**
      * Checks if the given stored procedure contains input parameters.
-     * 
+     *
      * @param storedProcedure
      * @return boolean - true if input params present, false if no input params.
      */

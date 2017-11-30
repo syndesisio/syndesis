@@ -34,7 +34,7 @@ class MetadataEndpoint {
 
     private final String connectorId;
 
-    public MetadataEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
+    MetadataEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
         this.connectorId = connectorId;
         this.adapter = adapter;
     }

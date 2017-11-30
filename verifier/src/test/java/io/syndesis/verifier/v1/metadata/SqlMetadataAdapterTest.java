@@ -31,17 +31,12 @@ import java.util.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 
-<<<<<<< HEAD:verifier/src/test/java/io/syndesis/verifier/v1/metadata/SqlStoredMetadataAdapterTest.java
-=======
+
 import io.syndesis.connector.sql.DatabaseProduct;
 import io.syndesis.connector.sql.SqlConnectorMetaDataExtension;
 import io.syndesis.connector.sql.stored.SampleStoredProcedures;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
->>>>>>> Updating verifier with SQL adapter changes:verifier/src/test/java/io/syndesis/verifier/v1/metadata/SqlMetadataAdapterTest.java
 
-import io.syndesis.connector.sql.DatabaseProduct;
-import io.syndesis.connector.sql.stored.SampleStoredProcedures;
-import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
