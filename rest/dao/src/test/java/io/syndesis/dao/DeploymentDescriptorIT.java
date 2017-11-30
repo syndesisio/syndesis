@@ -72,11 +72,6 @@ public class DeploymentDescriptorIT {
             if ("connector".equals(entry.get("kind").asText())) {
 
                 final String connectorId = entry.get("data").get("id").asText();
-                // FIXME: skip sql-stored-connector
-                if ("sql-stored-connector".equals(connectorId)) {
-                    continue;
-                }
-
                 final JsonNode connectorData = entry.get("data");
                 final JsonNode connectorPropertiesJson = connectorData.get("properties");
 
