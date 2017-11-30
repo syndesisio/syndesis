@@ -9,11 +9,15 @@ import { Extension, Extensions } from '../../model';
 @Injectable()
 export class ExtensionService extends RESTService<Extension, Extensions> {
   constructor(restangular: Restangular, private http: Http) {
-    super(restangular.service('../v1/extensions'), 'extension');
+    super(restangular.service('extensions'), 'extension');
   }
 
-  public getUploadUrl() {
-    return this.restangularService.one().getRestangularUrl();
+  public getUploadUrl(id?: string) {
+    let url = this.restangularService.one().getRestangularUrl();
+    if (id) {
+      url = url + '?updatedId=' + id;
+    }
+    return url;
   }
 
   public importExtension(id: string): Observable<Response> {

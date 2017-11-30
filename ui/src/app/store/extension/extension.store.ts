@@ -20,8 +20,8 @@ export class ExtensionStore extends AbstractStore<
     return 'Extension';
   }
 
-  public getUploadUrl(): string {
-    return this.service.getUploadUrl();
+  public getUploadUrl(id?: string): string {
+    return this.service.getUploadUrl(id);
   }
 
   public importExtension(id: string): Observable<Response> {
