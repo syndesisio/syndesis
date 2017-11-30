@@ -395,6 +395,8 @@ objects:
         GRANT ALL PRIVILEGES ON DATABASE sampledb to sampledb;
       EOF
       psql -d sampledb -U sampledb <<'EOF'
+        CREATE TABLE IF NOT EXISTS contact (first_name VARCHAR, last_name VARCHAR, company VARCHAR, lead_source VARCHAR, create_date DATE);
+        INSERT INTO contact VALUES ('Joe','Jackson','Red Hat','db',current_timestamp);
         CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
         CREATE OR REPLACE FUNCTION add_lead(
           first_and_last_name varchar,
@@ -580,7 +582,7 @@ objects:
       targetPort: 8443
     tls:
       insecureEdgeTerminationPolicy: Redirect
-      termination: edge
+      termination: reencrypt
     to:
       kind: Service
       name: syndesis-oauthproxy
@@ -615,8 +617,6 @@ objects:
         - name: syndesis-oauthproxy
           image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
           args:
-            - --http-address=:8443
-            - --https-address=:8444
             - --provider=openshift
             - --client-id=${OPENSHIFT_OAUTH_CLIENT_ID}
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
