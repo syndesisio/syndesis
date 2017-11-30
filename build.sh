@@ -219,7 +219,7 @@ obtain_project_lock() {
     local allocator=`echo $status | awk -F "~" '{print $3}'`
 
     if [ -z "$allocator" ] || [ "$build_name" == "$allocator" ]; then
-      oc annotate secret $lock syndesis.io/allocated-by=$build_name syndesis.io/lock-for-project=$pool_namespace --resource-version=$version --overwrite -n $pool_namespace > /dev/null
+      oc annotate secret $lock syndesis.io/allocated-by=$build_name --resource-version=$version --overwrite -n $pool_namespace > /dev/null
       local newstatus=$(project_lock_data $lock $pool_namespace)
       local newallocator=`echo $newstatus | awk -F "~" '{print $3}'`
       if [ "$newallocator" == "$build_name" ]; then
