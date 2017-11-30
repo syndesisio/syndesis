@@ -25,7 +25,7 @@ pipeline {
                 checkout scm
                 sh """
                 echo $PATH
-                ./build.sh --image-streams --batch-mode --mode system-test
+                ./build.sh --image-mode s2i --batch-mode --mode system-test
                 """
             }
         }
