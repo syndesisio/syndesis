@@ -38,7 +38,7 @@
             </div>
             <div class="list-pf-additional-content">
               <span>
-                Used by <strong>{{ item.uses || 0 }}</strong> {{ item.uses === 1 ? 'integration' : 'integrations' }}
+                Used by <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
               </span>
             </div>
           </div>
