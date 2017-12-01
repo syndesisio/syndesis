@@ -23,17 +23,16 @@ import java.util.stream.Collectors;
 
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorTemplate;
 
 public abstract class ConnectorGenerator {
 
     public abstract Connector generate(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
-    public abstract Connector info(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
+    public abstract ConnectorSummary info(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
-    protected final Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate,
-        final ConnectorSettings connectorSettings) {
+    protected final Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Set<String> properties = connectorTemplate.getProperties().keySet();
 
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties()//
@@ -44,10 +43,13 @@ public abstract class ConnectorGenerator {
         final String name = Optional.ofNullable(connectorSettings.getName())
             .orElseGet(() -> determineConnectorName(connectorTemplate, connectorSettings));
 
+        final String description = Optional.ofNullable(connectorSettings.getDescription())
+            .orElseGet(() -> determineConnectorDescription(connectorTemplate, connectorSettings));
+
         final Connector.Builder connectorBuilder = new Connector.Builder()//
             .id(KeyGenerator.createKey())//
             .name(name)//
-            .description(connectorSettings.getDescription())//
+            .description(description)//
             .icon(connectorSettings.getIcon())//
             .properties(connectorTemplate.getConnectorProperties())//
             .configuredProperties(configuredProperties)//
@@ -57,13 +59,22 @@ public abstract class ConnectorGenerator {
     }
 
     /**
+     * Determines the newly created connector description.
+     *
+     * @param connectorTemplate connector template
+     * @param connectorSettings custom connector definition
+     */
+    protected String determineConnectorDescription(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        return "unspecified";
+    }
+
+    /**
      * Determines the newly created connector name.
      *
      * @param connectorTemplate connector template
      * @param connectorSettings custom connector definition
      */
-    protected String determineConnectorName(final ConnectorTemplate connectorTemplate,
-        final ConnectorSettings connectorSettings) {
+    protected String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         return "unspecified";
     }
 }

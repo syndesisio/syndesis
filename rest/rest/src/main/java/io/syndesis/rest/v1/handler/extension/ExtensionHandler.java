@@ -16,9 +16,6 @@
 package io.syndesis.rest.v1.handler.extension;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.KeyGenerator;
@@ -29,7 +26,6 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.extension.ExtensionDetail;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
@@ -38,7 +34,7 @@ import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
-import io.syndesis.rest.v1.operations.Violation;
+import io.syndesis.model.Violation;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -57,7 +53,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
@@ -65,6 +60,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -138,6 +134,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .createFrom(embeddedExtension)
                 .id(id)
                 .status(Extension.Status.Draft)
+                .uses(OptionalInt.empty())
                 .build();
 
             return getDataManager().create(extension);
@@ -212,41 +209,24 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return integrations(extension);
     }
 
-    @GET
-    @Path(value = "/details")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
-        @ApiImplicitParam(
-            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20")
-
-    })
-    public ListResult<ExtensionDetail> listDetails(@Context UriInfo uriInfo) {
-        ListResult<Extension> extensions = this.list(uriInfo);
-
-        List<ExtensionDetail> details = extensions.getItems().stream()
-            .map(this::toExtensionDetail)
-            .collect(Collectors.toList());
-
-        return new ListResult.Builder<ExtensionDetail>()
-            .items(details)
-            .totalCount(extensions.getTotalCount())
-            .build();
+    @Override
+    public Extension get(String id) {
+        Extension extension = Getter.super.get(id);
+        return enhance(extension);
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{id}/details")
-    public ExtensionDetail getDetails(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
-        Extension extension = this.get(id);
-        return this.toExtensionDetail(extension);
+    @Override
+    public ListResult<Extension> list(UriInfo uriInfo) {
+        ListResult<Extension> extensions = Lister.super.list(uriInfo);
+
+        List<Extension> enhanced = extensions.getItems().stream()
+            .map(this::enhance)
+            .collect(Collectors.toList());
+
+        return new ListResult.Builder<Extension>()
+            .items(enhanced)
+            .totalCount(extensions.getTotalCount())
+            .build();
     }
 
     // ===============================================================
@@ -360,10 +340,10 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         );
     }
 
-    private ExtensionDetail toExtensionDetail(Extension extension) {
-        return new ExtensionDetail.Builder()
-            .extension(extension)
-            .activeIntegrations(integrations(extension))
+    private Extension enhance(Extension extension) {
+        return new Extension.Builder()
+            .createFrom(extension)
+            .uses(integrations(extension).size())
             .build();
     }
 

@@ -25,10 +25,6 @@ public class ActiveMQSubscribeConnectorConfigurationCommon {
      */
     private String destinationName;
     /**
-     * Sets topic consumer to durable.
-     */
-    private boolean durable = false;
-    /**
      * Sets the durable subscription Id required for durable topics.
      */
     private String durableSubscriptionId;
@@ -71,14 +67,6 @@ public class ActiveMQSubscribeConnectorConfigurationCommon {
 
     public void setDestinationName(String destinationName) {
         this.destinationName = destinationName;
-    }
-
-    public boolean isDurable() {
-        return durable;
-    }
-
-    public void setDurable(boolean durable) {
-        this.durable = durable;
     }
 
     public String getDurableSubscriptionId() {

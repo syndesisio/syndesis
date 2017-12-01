@@ -20,7 +20,8 @@ import java.util.Map;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
-import org.apache.camel.component.sjms2.Sjms2Component;
+import org.apache.camel.component.extension.ComponentExtension;
+import org.apache.camel.component.sjms.SjmsComponent;
 import org.apache.camel.spi.Metadata;
 import org.apache.camel.util.ObjectHelper;
 
@@ -40,6 +41,13 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
 
     public AbstractActiveMQConnector(String componentName, String componentSchema, String className) {
         super(componentName, componentSchema, className);
+
+        // support connection verification
+        registerExtension(this::getComponentVerifier);
+    }
+
+    private ComponentExtension getComponentVerifier() {
+        return new ActiveMQConnectorVerifierExtension(getComponentName());
     }
 
     @Override
@@ -53,7 +61,7 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
         // create ActiveMQ Connection Factory
         ActiveMQConnectionFactory connectionFactory = ObjectHelper.isEmpty(username) ?
                 new ActiveMQConnectionFactory(this.brokerUrl) : new ActiveMQConnectionFactory(username, password, this.brokerUrl);
-        Sjms2Component delegate = getCamelContext().getComponent(getComponentName() + "-component", Sjms2Component.class);
+        SjmsComponent delegate = getCamelContext().getComponent(scheme, SjmsComponent.class);
         delegate.setConnectionFactory(connectionFactory);
 
         return super.createEndpointUri(scheme, options);

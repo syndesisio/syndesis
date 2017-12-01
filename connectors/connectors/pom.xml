@@ -37,9 +37,11 @@
     <module>twitter</module>
     <module>salesforce</module>
     <module>sql</module>
+    <module>rest</module>
     <module>day-trade</module>
     <module>trade-insight</module>
     <module>jms</module>
+    <module>odata</module>
   </modules>
 
 </project>

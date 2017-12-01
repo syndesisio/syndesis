@@ -44,7 +44,7 @@ public class ChoiceHandler implements StepHandler<Choice> {
         final CamelContext context = routeBuilder.getContext();
         final ChoiceDefinition choice = route.choice();
 
-        List<Filter> filters = ObjectHelper.supplyIfEmpty(step.getFilters(), Collections::emptyList);
+        List<Filter> filters = ObjectHelper.supplyIfEmpty(step.getFilters(), Collections::<Filter>emptyList);
         for (Filter filter : filters) {
             Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, filter, filter.getExpression());
             ChoiceDefinition when = choice.when(predicate);
@@ -54,7 +54,7 @@ public class ChoiceHandler implements StepHandler<Choice> {
 
         Otherwise otherwiseStep = step.getOtherwise();
         if (otherwiseStep != null) {
-            List<Step> otherwiseSteps = ObjectHelper.supplyIfEmpty(otherwiseStep.getSteps(), Collections::emptyList);
+            List<Step> otherwiseSteps = ObjectHelper.supplyIfEmpty(otherwiseStep.getSteps(), Collections::<Step>emptyList);
             if (!otherwiseSteps.isEmpty()) {
                 route = routeBuilder.addSteps(choice.otherwise(), otherwiseSteps);
             }

@@ -30,6 +30,9 @@ hs_err_pid*
 *.launch
 .settings/
 .vscode/
+.checkstyle
+.pmd
+.pmdruleset.xml
 
 # System Files
 .DS_Store

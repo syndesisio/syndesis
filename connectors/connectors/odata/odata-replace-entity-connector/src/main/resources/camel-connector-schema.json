@@ -1,0 +1,40 @@
+{
+  "component":{
+    "kind":"component",
+    "baseScheme":"olingo4",
+    "scheme":"odata-replace-entity",
+    "syntax":"odata-replace-entity:apiName\/methodName",
+    "title":"ODataReplaceEntity",
+    "description":"Replace OData Entity",
+    "label":"odata",
+    "deprecated":false,
+    "async":false,
+    "producerOnly":true,
+    "lenientProperties":false,
+    "javaType":"io.syndesis.connector.odata.ODataReplaceEntityComponent",
+    "groupId":"io.syndesis",
+    "artifactId":"odata-replace-entity-connector",
+    "version":"1.2-SNAPSHOT"
+  },
+  "componentProperties":{
+    
+  },
+  "properties":{
+    
+  },
+  "connectorProperties":{
+    "serviceUri":{
+      "kind":"property",
+      "displayName":"Service Uri",
+      "group":"security",
+      "label":"common,security",
+      "required":true,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "defaultValue":"http:\/\/services.odata.org\/TripPinRESTierService(SessionId)",
+      "description":"URL of the OData Service"
+    }
+  }
+}

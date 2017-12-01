@@ -19,6 +19,7 @@ import { IntegrationViewBase } from '../components/integrationViewBase.component
 import { ModalService } from '../../common/modal/modal.service';
 import { log, getCategory } from '../../logging';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { IntegrationSupportService } from 'app/store/integration-support.service';
 
 @Component({
   selector: 'syndesis-integrations-list',
@@ -36,9 +37,10 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     public router: Router,
     public notificationService: NotificationService,
     public modalService: ModalService,
-    public application: ApplicationRef
+    public application: ApplicationRef,
+    integrationSupportService: IntegrationSupportService,
   ) {
-    super(store, route, router, notificationService, modalService, application);
+    super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -108,7 +110,13 @@ export class IntegrationsListComponent extends IntegrationViewBase {
           title: 'Delete',
           tooltip: `Delete ${integration.name}`,
           visible: this.canDelete(integration)
-        }
+        },
+        {
+          id: 'export',
+          title: 'Export',
+          tooltip: `Export ${integration.name}`,
+          visible: true
+        },
       ],
       moreActionsDisabled: false,
       moreActionsVisible: true

@@ -3,7 +3,7 @@
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 NAMESPACE="syndesis"
 FROM="${PROJECT_DIR}/deploy"
-ROUTE_HOSTNAME="syndesis.$(minishift ip).nip.io"
+ROUTE_HOSTNAME="syndesis.$(minishift ip).xip.io"
 
 while [ $# -gt 0 ]; do
 case $1 in

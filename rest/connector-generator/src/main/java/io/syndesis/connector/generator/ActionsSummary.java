@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.extension;
+package io.syndesis.connector.generator;
+
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.model.ResourceIdentifier;
+
 import org.immutables.value.Value;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Set;
-
 @Value.Immutable
-@JsonDeserialize(builder = ExtensionDetail.Builder.class)
-public interface ExtensionDetail extends Serializable {
+@JsonDeserialize(builder = ActionsSummary.Builder.class)
+@SuppressWarnings("immutables")
+public interface ActionsSummary {
 
-    Extension getExtension();
-
-    @Value.Default
-    default Set<ResourceIdentifier> getActiveIntegrations() {
-        return Collections.emptySet();
+    final class Builder extends ImmutableActionsSummary.Builder {
+        // make ImmutableActionsSummary.Builder accessible
     }
 
-    class Builder extends ImmutableExtensionDetail.Builder {
-    }
+    Map<String, Integer> getActionCountByTags();
+
+    int getTotalActions();
 }

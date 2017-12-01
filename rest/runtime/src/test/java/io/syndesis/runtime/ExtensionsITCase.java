@@ -17,11 +17,11 @@ package io.syndesis.runtime;
 
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
+import io.syndesis.model.Violation;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.extension.ExtensionDetail;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
-import io.syndesis.rest.v1.operations.Violation;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -30,7 +30,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -296,10 +295,10 @@ public class ExtensionsITCase extends BaseITCase {
         String id = created.getBody().getId().get();
 
         // Get extension details
-        ResponseEntity<ExtensionDetail> got1 = get("/api/v1/extensions/" + id + "/details",
-            ExtensionDetail.class, tokenRule.validToken(), HttpStatus.OK);
+        ResponseEntity<Extension> got1 = get("/api/v1/extensions/" + id,
+            Extension.class, tokenRule.validToken(), HttpStatus.OK);
 
-        assertThat(got1.getBody().getActiveIntegrations()).isEmpty();
+        assertThat(got1.getBody().getUses()).hasValue(0);
 
         // Create a active integration that uses the extension
         dataManager.create(new Integration.Builder()
@@ -323,16 +322,15 @@ public class ExtensionsITCase extends BaseITCase {
 
 
         // Get extension details again
-        ResponseEntity<ExtensionDetail> got2 = get("/api/v1/extensions/" + id + "/details",
-            ExtensionDetail.class, tokenRule.validToken(), HttpStatus.OK);
+        ResponseEntity<Extension> got2 = get("/api/v1/extensions/" + id,
+            Extension.class, tokenRule.validToken(), HttpStatus.OK);
 
 
-        assertThat(got2.getBody().getActiveIntegrations().size()).isEqualTo(1);
-        assertThat(got2.getBody().getActiveIntegrations()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension-1"));
+        assertThat(got2.getBody().getUses()).hasValue(1);
 
         // Get extension list
-        ResponseEntity<ListResult<ExtensionDetail>> list = get("/api/v1/extensions/details",
-            new ParameterizedTypeReference<ListResult<ExtensionDetail>>() {}, tokenRule.validToken(), HttpStatus.OK);
+        ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions",
+            new ParameterizedTypeReference<ListResult<Extension>>() {}, tokenRule.validToken(), HttpStatus.OK);
 
         assertThat(list.getBody().getItems()).hasSize(1);
 

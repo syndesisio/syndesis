@@ -1,7 +1,7 @@
 {
   "component":{
     "kind":"component",
-    "baseScheme":"sjms2",
+    "baseScheme":"sjms",
     "scheme":"activemq-publish",
     "syntax":"activemq-publish:destinationType:destinationName",
     "title":"ActiveMQPublish",
