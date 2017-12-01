@@ -21,7 +21,11 @@ package io.syndesis.connector.odata;
 public class ODataDeleteEntityComponent extends AbstractODataResourceConnector {
 
     public ODataDeleteEntityComponent() {
-        super("odata-delete-entity", ODataDeleteEntityComponent.class.getName());
+        this(null);
+    }
+
+    public ODataDeleteEntityComponent(String componentScheme) {
+        super("odata-delete-entity", componentScheme, ODataDeleteEntityComponent.class.getName());
     }
 
 }

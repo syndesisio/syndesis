@@ -21,6 +21,10 @@ package io.syndesis.connector.odata;
 public class ODataReplaceEntityComponent extends AbstractODataEntityConnector {
 
     public ODataReplaceEntityComponent() {
-        super("odata-replace-entity", ODataReplaceEntityComponent.class.getName());
+        this(null);
+    }
+
+    public ODataReplaceEntityComponent(String componentScheme) {
+        super("odata-replace-entity", componentScheme, ODataReplaceEntityComponent.class.getName());
     }
 }

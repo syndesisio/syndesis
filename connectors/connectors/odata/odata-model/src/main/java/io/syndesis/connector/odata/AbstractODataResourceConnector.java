@@ -24,8 +24,8 @@ import org.apache.camel.component.olingo4.internal.Olingo4Constants;
  */
 public class AbstractODataResourceConnector extends AbstractODataConnector {
 
-    public AbstractODataResourceConnector(String componentName, String className) {
-        super(componentName, className);
+    public AbstractODataResourceConnector(String componentName, String componentScheme, String className) {
+        super(componentName, componentScheme, className);
 
         // replace DTO with headers
         setBeforeProducer(exchange -> {

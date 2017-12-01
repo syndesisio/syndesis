@@ -58,8 +58,8 @@ public abstract class AbstractODataConnector extends DefaultConnectorComponent {
     protected final ODataClient odataClient = ODataClientFactory.getClient();
     protected final ClientObjectFactory objFactory = odataClient.getObjectFactory();
 
-    public AbstractODataConnector(final String componentName, final String className) {
-        super(componentName, className);
+    public AbstractODataConnector(String componentName, String componentScheme, String className) {
+        super(componentName, componentScheme, className);
     }
 
     @Override

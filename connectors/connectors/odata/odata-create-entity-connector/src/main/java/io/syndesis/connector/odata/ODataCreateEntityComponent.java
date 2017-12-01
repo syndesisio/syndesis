@@ -21,6 +21,10 @@ package io.syndesis.connector.odata;
 public class ODataCreateEntityComponent extends AbstractODataEntityConnector {
 
     public ODataCreateEntityComponent() {
-        super("odata-create-entity", ODataCreateEntityComponent.class.getName());
+        this(null);
+    }
+
+    public ODataCreateEntityComponent(String componentScheme) {
+        super("odata-create-entity", componentScheme, ODataCreateEntityComponent.class.getName());
     }
 }

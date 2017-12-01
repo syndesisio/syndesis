@@ -14,10 +14,6 @@ public class ODataDeleteEntityConnectorConfigurationCommon {
      * URL of the OData Service
      */
     private String serviceUri = "http://services.odata.org/TripPinRESTierService(SessionId)";
-    /**
-     * Entity Resource Path, usually Entity Name
-     */
-    private String resourcePath = "People";
 
     public String getServiceUri() {
         return serviceUri;
@@ -25,13 +21,5 @@ public class ODataDeleteEntityConnectorConfigurationCommon {
 
     public void setServiceUri(String serviceUri) {
         this.serviceUri = serviceUri;
-    }
-
-    public String getResourcePath() {
-        return resourcePath;
-    }
-
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
     }
 }

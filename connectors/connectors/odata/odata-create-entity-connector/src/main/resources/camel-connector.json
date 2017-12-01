@@ -2,7 +2,7 @@
   "baseScheme" : "olingo4",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-olingo4",
-  "baseVersion" : "2.20.0",
+  "baseVersion" : "2.20.1",
   "baseJavaType" : "org.apache.camel.component.olingo4.Olingo4Component",
   "name" : "ODataCreateEntity",
   "scheme" : "odata-create-entity",
@@ -16,20 +16,20 @@
   "inputDataType" : "json",
   "outputDataType" : "json",
   "globalOptions" : [ "serviceUri" ],
-  "componentOptions" : [],
+  "componentOptions" : [ ],
   "connectorProperties" : {
-    "serviceUri":{
-      "kind":"property",
-      "displayName":"Service Uri",
-      "group":"common",
-      "label":"common,security",
-      "required":true,
-      "type":"string",
-      "javaType":"java.lang.String",
-      "deprecated":false,
-      "secret":false,
-      "defaultValue":"http:\/\/services.odata.org\/TripPinRESTierService(SessionId)",
-      "description":"URL of the OData Service"
+    "serviceUri" : {
+      "kind" : "property",
+      "displayName" : "Service Uri",
+      "group" : "common",
+      "label" : "common,security",
+      "required" : true,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "defaultValue" : "http://services.odata.org/TripPinRESTierService(SessionId)",
+      "description" : "URL of the OData Service"
     }
   },
   "endpointOptions" : [ "resourcePath" ],

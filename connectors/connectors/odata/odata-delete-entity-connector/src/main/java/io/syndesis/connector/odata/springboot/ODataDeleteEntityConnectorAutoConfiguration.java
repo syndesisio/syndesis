@@ -91,7 +91,8 @@ public class ODataDeleteEntityConnectorAutoConfiguration {
         for (Map.Entry<String, ODataDeleteEntityConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            ODataDeleteEntityComponent connector = new ODataDeleteEntityComponent();
+            ODataDeleteEntityComponent connector = new ODataDeleteEntityComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),

@@ -91,7 +91,8 @@ public class ODataCreateEntityConnectorAutoConfiguration {
         for (Map.Entry<String, ODataCreateEntityConnectorConfigurationCommon> entry : configuration
                 .getConfigurations().entrySet()) {
             parameters.clear();
-            ODataCreateEntityComponent connector = new ODataCreateEntityComponent();
+            ODataCreateEntityComponent connector = new ODataCreateEntityComponent(
+                    entry.getKey());
             connector.setCamelContext(camelContext);
             try {
                 IntrospectionSupport.getProperties(entry.getValue(),
