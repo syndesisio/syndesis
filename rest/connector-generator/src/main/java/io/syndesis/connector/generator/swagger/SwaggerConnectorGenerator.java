@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.util.ActionComparator;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ActionDescriptor;
@@ -154,6 +156,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         final String connectorGav = connectorTemplate.getCamelConnectorGAV();
         final String connectorScheme = connectorTemplate.getCamelConnectorPrefix();
 
+        final List<ConnectorAction> actions = new ArrayList<>();
         int idx = 0;
         for (final Entry<String, Path> pathEntry : paths.entrySet()) {
             final Path path = pathEntry.getValue();
@@ -196,9 +199,12 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
                     .descriptor(descriptor).tags(ofNullable(operation.getTags()).orElse(Collections.emptyList()))//
                     .build();
 
-                builder.addAction(action);
+                actions.add(action);
             }
         }
+
+        actions.sort(ActionComparator.INSTANCE);
+        builder.addAllActions(actions);
 
         if (idx != 0) {
             // we changed the Swagger specification by adding missing
