@@ -1,0 +1,40 @@
+{
+  "component":{
+    "kind":"component",
+    "baseScheme":"olingo4",
+    "scheme":"odata-delete-entity",
+    "syntax":"odata-delete-entity:apiName\/methodName",
+    "title":"ODataDeleteEntity",
+    "description":"Delete OData Entity",
+    "label":"odata",
+    "deprecated":false,
+    "async":false,
+    "producerOnly":true,
+    "lenientProperties":false,
+    "javaType":"io.syndesis.connector.odata.ODataDeleteEntityComponent",
+    "groupId":"io.syndesis",
+    "artifactId":"odata-delete-entity-connector",
+    "version":"1.2-SNAPSHOT"
+  },
+  "componentProperties":{
+    
+  },
+  "properties":{
+    
+  },
+  "connectorProperties":{
+    "serviceUri":{
+      "kind":"property",
+      "displayName":"Service Uri",
+      "group":"security",
+      "label":"common,security",
+      "required":true,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "defaultValue":"http:\/\/services.odata.org\/TripPinRESTierService(SessionId)",
+      "description":"URL of the OData Service"
+    }
+  }
+}

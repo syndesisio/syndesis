@@ -37,11 +37,12 @@
     <module>activemq-request-response-example</module>
     <module>twitter-salesforce-example</module>
     <module>trade-buy-place-example</module>
-    <module>twitter-search-example</module>   
+    <module>twitter-search-example</module>
     <module>http-pingcheck-example</module>
     <module>salesforce-pingcheck-example</module>
     <module>twitter-pingcheck-example</module>
     <module>sql-stored-example</module>
+    <module>odata-example</module>
   </modules>
 
 </project>
