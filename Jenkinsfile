@@ -16,7 +16,7 @@ pipeline {
             steps {
              withCredentials([string(credentialsId: "${env.IGNITE_ACCOUNT_CREDENTIAL}", variable: 'TOKEN')]) {
                     sh """
-                    oc login --server=https://api.rh-idev.openshift.com --token=$TOKEN
+                    oc login --server=https://api.fuse-ignite.openshift.com --token=$TOKEN
                     oc project syndesis-ci
                     """
                 }
