@@ -27,7 +27,6 @@ export class TechExtensionsListComponent implements OnInit {
   @ViewChild(TechExtensionDeleteModalComponent)
   deleteModal: TechExtensionDeleteModalComponent;
   itemUseMapping: { [valueComparator: string]: string } = {
-    '=0': '<strong>0</strong> integrations',
     '=1': '<strong>1</strong> integration',
     'other': '<strong>#</strong> integrations'
   };

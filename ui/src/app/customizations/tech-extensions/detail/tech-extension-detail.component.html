@@ -76,39 +76,39 @@
             </div>
           </div>
           <ng-container *ngIf="integrations$ | async; let integrations">
-            <ng-container *ngIf="integrations.length">
               <p></p>
               <h4>Usage</h4>
               <div class="row">
                 <div class="col-xs-1">
                 </div>
                 <div class="col-xs-11">
-                    <table class="table">
-                      <caption>Currently used by <strong>{{ integrations.length }}</strong> integrations</caption>
-                      <thead>
-                        <tr>
-                          <th>
-                            Integration Name
-                          </th>
-                          <th>
-                            Integration Description
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let integration of integrations">
-                          <td>
-                            <a [routerLink]="['/integrations', integration.id]">{{ integration.name }}</a>
-                          </td>
-                          <td>
-                            {{ integration.description }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <p *ngIf="integrations"
+                     [innerHtml]="integrations.length | i18nPlural: integrationLengthMapping"></p>
+                  <table class="table"
+                         *ngIf="integrations.length">
+                    <thead>
+                      <tr>
+                        <th>
+                          Integration Name
+                        </th>
+                        <th>
+                          Integration Description
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let integration of integrations">
+                        <td>
+                          <a [routerLink]="['/integrations', integration.id]">{{ integration.name }}</a>
+                        </td>
+                        <td>
+                          {{ integration.description }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </ng-container>
           </ng-container>
         </div>
       </div>

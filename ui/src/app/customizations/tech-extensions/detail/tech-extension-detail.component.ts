@@ -16,6 +16,11 @@ export class TechExtensionDetailComponent implements OnInit {
   integrations$: Observable<Integrations>;
   loading$: Observable<boolean>;
   @ViewChild(TechExtensionDeleteModalComponent) deleteModal: TechExtensionDeleteModalComponent;
+  integrationLengthMapping: { [valueComparator: string]: string } = {
+    '=0': 'No integrations are using this extension.',
+    '=1': 'Currently used by <strong>1</strong> integration.',
+    'other': 'Currently used by <strong>#</strong> integrations.'
+  };
 
   constructor(private extensionStore: ExtensionStore,
               private router: Router,
