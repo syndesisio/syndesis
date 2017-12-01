@@ -66,7 +66,7 @@ public abstract class AbstractODataConnector extends DefaultConnectorComponent {
     public String createEndpointUri(final String scheme, final Map<String, String> options) throws URISyntaxException {
 
         // set serviceUri on delegate component
-        Olingo4Component delegate = getCamelContext().getComponent(getComponentName() + "-component", Olingo4Component.class);
+        Olingo4Component delegate = getCamelContext().getComponent(scheme, Olingo4Component.class);
         Olingo4Configuration configuration = new Olingo4Configuration();
         configuration.setServiceUri(this.serviceUri);
         delegate.setConfiguration(configuration);
