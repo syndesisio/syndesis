@@ -30,7 +30,7 @@ public abstract class ConnectorGenerator {
 
     public abstract Connector generate(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
-    public abstract Connector info(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
+    public abstract ConnectorSummary info(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
     protected final Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Set<String> properties = connectorTemplate.getProperties().keySet();

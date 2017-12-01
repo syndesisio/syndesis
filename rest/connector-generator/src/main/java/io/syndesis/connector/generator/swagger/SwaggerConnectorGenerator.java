@@ -37,6 +37,7 @@ import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.connector.generator.util.ActionComparator;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.Action;
@@ -73,8 +74,10 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     }
 
     @Override
-    public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        return basicConnector(connectorTemplate, connectorSettings);
+    public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        final Connector connector = basicConnector(connectorTemplate, connectorSettings);
+
+        return new ConnectorSummary.Builder().createFrom(connector).build();
     }
 
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {

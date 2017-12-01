@@ -16,8 +16,8 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
 
@@ -42,15 +42,15 @@ public class ConnectorSettingsHandlerTest {
 
         final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
-        final Connector connector = new Connector.Builder().build();
+        final ConnectorSummary preparedSummary = new ConnectorSummary.Builder().build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
         when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
-        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(connector);
+        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
 
-        final Connector connectorInfo = handler.info(connectorSettings);
+        final ConnectorSummary info = handler.info(connectorSettings);
 
-        assertThat(connectorInfo).isSameAs(connector);
+        assertThat(info).isSameAs(preparedSummary);
     }
 
 }

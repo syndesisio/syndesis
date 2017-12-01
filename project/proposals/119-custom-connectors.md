@@ -150,23 +150,99 @@ Accept: application/json
 }
 
 HTTP/1.1 200 OK
-Content-Length: 2
 
 {
-  "name": "Swagger Petstore",
-  "description": "This is a sample server Petstore server. You can find out more about Swagger at http://swagger.io or on irc.freenode.net, #swagger. For this sample, you can use the api key special-key to test the authorization filters.",
-  "icon": "data:image/svg+xml;utf8,<svg ...",
+  "name": "Petstore",
+  "description": "Petstore API connector",
   "properties": {
-    "host": "http://petstore.swagger.io",
-    "basePath": "/v2"
-    "authentication": [
-      {
-        "type": "oauth2",
-        "authorizationUrl": "http://petstore.swagger.io/oauth/dialog"
-      }
-    ]
-  }
-  "errors" : []
+    "accessToken": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OAuth Access token",
+      "displayName": "OAuth Access token",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": true,
+      "type": "string",
+      "tags": [
+        "oauth-access-token"
+      ],
+      "enum": []
+    },
+    "accessTokenUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "URL to fetch the OAuth Access token",
+      "displayName": "OAuth Access token URL",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string",
+      "tags": [
+        "oauth-access-token-url"
+      ],
+      "enum": []
+    },
+    "authenticationType": {
+      "componentProperty": true,
+      "defaultValue": "oauth2",
+      "deprecated": false,
+      "description": "Type of authentication used to connect to the API",
+      "displayName": "Authentication Type",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string",
+      "tags": [
+        "authentication-type"
+      ],
+      "enum": [
+        {
+          "label": "OAuth 2.0",
+          "value": "oauth2"
+        }
+      ]
+    },
+    "basePath": {
+        //...
+    },
+    "clientId": {
+        //...
+    },
+    "clientSecret": {
+        //...
+    },
+    "host": {
+        //...
+    },
+    "operationId": {
+        //...
+    },
+    "specification": {
+        //...
+    }
+  },
+  "actionsSummary": {
+    "actionCountByTags": {
+      "store": 4,
+      "user": 8,
+      "pet": 8
+    },
+    "totalActions": 20
+  },
+  "warnings": [
+  ],
+  "errors": [
+  ]
 }
 ```
 

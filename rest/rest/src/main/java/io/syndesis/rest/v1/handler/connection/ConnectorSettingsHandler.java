@@ -22,8 +22,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import io.swagger.annotations.ApiOperation;
+import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 
 import org.springframework.context.ApplicationContext;
@@ -42,8 +42,8 @@ public final class ConnectorSettingsHandler extends BaseConnectorGeneratorHandle
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    public Connector info(final ConnectorSettings connectorSettings) {
+    @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
+    public ConnectorSummary info(final ConnectorSettings connectorSettings) {
         return withGeneratorAndTemplate(templateId, (generator, template) -> generator.info(template, connectorSettings));
     }
 

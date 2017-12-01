@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1.operations;
+package io.syndesis.model;
 
 import java.lang.annotation.Annotation;
 

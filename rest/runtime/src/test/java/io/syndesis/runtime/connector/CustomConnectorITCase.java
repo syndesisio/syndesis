@@ -17,7 +17,10 @@ package io.syndesis.runtime.connector;
 
 import java.util.List;
 
+import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.ConnectorSummary;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
@@ -45,17 +48,43 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Configuration
     public static class TestConfiguration {
+        private static final ActionsSummary ACTIONS_SUMMARY = new ActionsSummary.Builder().totalActions(5).putActionCountByTag("foo", 3)
+            .putActionCountByTag("bar", 2).build();
+
+        private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
+
         @Bean("connector-template")
         public static final ConnectorGenerator testGenerator() {
             return new ConnectorGenerator() {
                 @Override
                 public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-                    return baseConnectorFrom(connectorTemplate, connectorSettings);
+                    return generateTestConnector(connectorTemplate, connectorSettings);
                 }
 
                 @Override
-                public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-                    return baseConnectorFrom(connectorTemplate, connectorSettings);
+                public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+                    final Connector base = generateTestConnector(connectorTemplate, connectorSettings);
+
+                    return new ConnectorSummary.Builder().createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
+                }
+
+                Connector generateTestConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+                    return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings))//
+                        .icon("test-icon")//
+                        .putProperty("property1", PROPERTY_1)//
+                        .build();
+                }
+
+                @Override
+                protected String determineConnectorDescription(final ConnectorTemplate connectorTemplate,
+                    final ConnectorSettings connectorSettings) {
+                    return "test-description";
+                }
+
+                @Override
+                protected String determineConnectorName(final ConnectorTemplate connectorTemplate,
+                    final ConnectorSettings connectorSettings) {
+                    return "test-name";
                 }
             };
 
@@ -94,10 +123,17 @@ public class CustomConnectorITCase extends BaseITCase {
     public void shouldOfferCustomConnectorInfo() {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
 
-        final ResponseEntity<Connector> response = post("/api/v1/custom/connectors/connector-template/info", connectorSettings,
-            Connector.class);
+        final ResponseEntity<ConnectorSummary> response = post("/api/v1/custom/connectors/connector-template/info", connectorSettings,
+            ConnectorSummary.class);
 
-        assertThat(response.getBody()).isNotNull();
+        final ConnectorSummary expected = new ConnectorSummary.Builder()// \
+            .name("test-name")//
+            .description("test-description")//
+            .icon("test-icon")//
+            .putProperty("property1", TestConfiguration.PROPERTY_1)//
+            .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)//
+            .build();
+        assertThat(response.getBody()).isEqualTo(expected);
     }
 
     @Test
