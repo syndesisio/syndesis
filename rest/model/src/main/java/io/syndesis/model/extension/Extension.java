@@ -17,6 +17,7 @@ package io.syndesis.model.extension;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.SortedSet;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -64,6 +65,8 @@ public interface Extension extends WithId<Extension>, WithActions<ExtensionActio
     @Value.NaturalOrder
     @SkipNulls
     SortedSet<String> getDependencies();
+
+    OptionalInt getUses();
 
     @Override
     default Extension withId(String id) {
