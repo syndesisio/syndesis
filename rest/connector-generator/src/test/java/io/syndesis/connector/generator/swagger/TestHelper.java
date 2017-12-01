@@ -23,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import io.syndesis.core.Json;
@@ -40,18 +42,18 @@ import io.syndesis.core.Json;
 
         final Map<?, ?> tree = Json.mapper().readValue(json, Map.class);
 
-        return Json.mapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
-            .writerWithDefaultPrettyPrinter().writeValueAsString(tree);
+        return Json.mapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
+            .writeValueAsString(tree);
     }
 
     /* default */ static String resource(final String path) throws IOException {
-        final String specification;
-        try (final InputStream in = TestHelper.class.getResourceAsStream(path);
+        final String resource;
+        try (final InputStream in = requireNonNull(TestHelper.class.getResourceAsStream(path), path);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
 
-            specification = reader.lines().collect(Collectors.joining("\n"));
+            resource = reader.lines().collect(Collectors.joining("\n"));
         }
-        return specification;
+        return resource;
     }
 
 }

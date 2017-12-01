@@ -33,7 +33,7 @@ public class DataShapeHelperTest {
 
     @Test
     public void shouldExtractJsonSchemaFromPetstoreSwagger() throws IOException {
-        final String specification = resource("/petstore.json");
+        final String specification = resource("/swagger/petstore.swagger.json");
         final Swagger swagger = new SwaggerParser().parse(specification);
 
         final BodyParameter body = (BodyParameter) swagger.getPath("/pet").getPost().getParameters().get(0);
@@ -42,7 +42,7 @@ public class DataShapeHelperTest {
 
         final String jsonSchema = dataShape.getSpecification();
 
-        assertThat(reformatJson(jsonSchema)).isEqualTo(reformatJson(resource("/expected-pet-schema.json")));
+        assertThat(reformatJson(jsonSchema)).isEqualTo(reformatJson(resource("/swagger/expected-pet-schema.json")));
     }
 
 }
