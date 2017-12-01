@@ -7,6 +7,8 @@ import { log } from '../../logging';
 
 import { NotificationType } from 'patternfly-ng';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { IntegrationSupportService } from 'app/store/integration-support.service';
+import { saveAs } from 'file-saver';
 
 export class IntegrationViewBase {
   currentAction: string = undefined;
@@ -18,7 +20,8 @@ export class IntegrationViewBase {
     public router: Router,
     public notificationService: NotificationService,
     public modalService: ModalService,
-    public application: ApplicationRef
+    public application: ApplicationRef,
+    private integrationSupportService: IntegrationSupportService,
   ) {}
 
   canEdit = int => int.currentStatus !== 'Deleted';
@@ -38,6 +41,12 @@ export class IntegrationViewBase {
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
         return this.router.navigate(['/integrations', integration.id, 'edit']);
+      case 'export':
+        return this.integrationSupportService
+          .exportIntegration(integration.id).toPromise()
+          .then(value => {
+            saveAs(value.blob(), integration.name + '-export.zip');
+          });
       case 'activate':
         header = 'Integration is activating';
         message =

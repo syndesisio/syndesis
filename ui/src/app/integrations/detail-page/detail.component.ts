@@ -16,7 +16,6 @@ import { IntegrationViewBase } from '../components/integrationViewBase.component
 import { ModalService } from '../../common/modal/modal.service';
 import { IntegrationSupportService } from '../../store/integration-support.service';
 import { NotificationType } from 'patternfly-ng';
-import { saveAs } from 'file-saver';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({
@@ -138,9 +137,9 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
-    private integrationSupportService: IntegrationSupportService
+    integrationSupportService: IntegrationSupportService
   ) {
-    super(store, route, router, notificationService, modalService, application);
+    super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
   }
@@ -404,12 +403,6 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
   }
 
   exportIntegration() {
-    const id = this.i.id;
-    this.integrationSupportService
-      .exportIntegration(this.i.id)
-      .toPromise()
-      .then(value => {
-        saveAs(value.blob(), id + '-export.zip');
-      });
+    super.requestAction('export', this.i);
   }
 }
