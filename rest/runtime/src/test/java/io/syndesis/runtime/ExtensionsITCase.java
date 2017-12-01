@@ -17,10 +17,11 @@ package io.syndesis.runtime;
 
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
+import io.syndesis.model.Violation;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
-import io.syndesis.rest.v1.operations.Violation;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;

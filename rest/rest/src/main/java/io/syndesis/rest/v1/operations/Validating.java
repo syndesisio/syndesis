@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.syndesis.model.Violation;
 import io.syndesis.model.WithId;
 import io.syndesis.model.validation.AllValidations;
 

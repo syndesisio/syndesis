@@ -15,14 +15,11 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.util.List;
-
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.rest.v1.operations.Violation;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -45,25 +42,15 @@ public class ConnectorSettingsHandlerTest {
 
         final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
-        final Connector connector = new Connector.Builder().build();
+        final ConnectorSummary preparedSummary = new ConnectorSummary.Builder().build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
         when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
-        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(connector);
+        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
 
-        final Connector connectorInfo = handler.info(connectorSettings);
+        final ConnectorSummary info = handler.info(connectorSettings);
 
-        assertThat(connectorInfo).isSameAs(connector);
+        assertThat(info).isSameAs(preparedSummary);
     }
 
-    @Test
-    public void shouldValidateConnectorSettings() {
-        final ConnectorSettingsHandler handler = new ConnectorSettingsHandler("connector-template", dataManager, applicationContext);
-
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
-
-        final List<Violation> violations = handler.validate(connectorSettings);
-
-        assertThat(violations).isEmpty();
-    }
 }

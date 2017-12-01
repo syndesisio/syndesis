@@ -34,7 +34,7 @@ import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
-import io.syndesis.rest.v1.operations.Violation;
+import io.syndesis.model.Violation;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

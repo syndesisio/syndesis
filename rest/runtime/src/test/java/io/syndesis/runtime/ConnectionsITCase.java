@@ -18,8 +18,8 @@ package io.syndesis.runtime;
 import java.util.List;
 import java.util.UUID;
 
+import io.syndesis.model.Violation;
 import io.syndesis.model.connection.Connection;
-import io.syndesis.rest.v1.operations.Violation;
 
 import org.junit.Before;
 import org.junit.Test;
