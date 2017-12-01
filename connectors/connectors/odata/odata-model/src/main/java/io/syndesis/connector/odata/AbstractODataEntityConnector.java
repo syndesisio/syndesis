@@ -29,8 +29,8 @@ import org.apache.olingo.commons.api.format.ContentType;
  */
 public abstract class AbstractODataEntityConnector extends AbstractODataConnector {
 
-    public AbstractODataEntityConnector(String componentName, String className) {
-        super(componentName, className);
+    public AbstractODataEntityConnector(String componentName, String componentScheme, String className) {
+        super(componentName, componentScheme, className);
 
         setBeforeProducer(exchange -> {
             // convert json into ClientEntity

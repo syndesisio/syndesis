@@ -21,7 +21,11 @@ package io.syndesis.connector.odata;
 public class ODataRetrieveEntityComponent extends AbstractODataResourceConnector {
 
     public ODataRetrieveEntityComponent() {
-        super("odata-retrieve-entity", ODataRetrieveEntityComponent.class.getName());
+        this(null);
+    }
+
+    public ODataRetrieveEntityComponent(String componentScheme) {
+        super("odata-retrieve-entity", componentScheme, ODataRetrieveEntityComponent.class.getName());
     }
 
 }
