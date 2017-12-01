@@ -1,5 +1,7 @@
 pipeline {
-    agent {label: 'ignite-account'} 
+    agent {
+        label 'ignite-account'
+    } 
     tools {
         jdk 'JDK8'
         maven 'maven-3.3.9'
