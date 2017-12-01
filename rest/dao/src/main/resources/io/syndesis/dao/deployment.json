@@ -692,6 +692,337 @@
   {
     "kind": "connector",
     "data": {
+      "id": "activemq",
+      "name": "ActiveMQ",
+      "description": "ActiveMQ Message Broker",
+      "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
+      "properties": {
+        "brokerUrl": {
+          "kind" : "property",
+          "displayName" : "Broker URL",
+          "group" : "common",
+          "label" : "common",
+          "required" : true,
+          "componentProperty": true,
+          "type" : "string",
+          "javaType" : "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description" : "Broker URL"
+        },
+        "username" : {
+          "kind": "property",
+          "displayName": "User Name",
+          "group": "security",
+          "label": "common,security",
+          "required": false,
+          "componentProperty": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Authorization credential user name"
+        },
+        "password" : {
+          "kind" : "property",
+          "displayName" : "Password",
+          "group": "security",
+          "label": "common,security",
+          "required": false,
+          "componentProperty": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "description" : "Authorization credential password"
+        }
+      },
+      "actions": [
+        {
+          "id": "io.syndesis:activemq-publish-connector:latest",
+          "name": "Publish Messages",
+          "description": "Publish one-way Text messages on an ActiveMQ Queue or Topic.",
+          "tags": [],
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:activemq-publish-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "activemq-publish",
+            "inputDataShape": {
+              "type": "*"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Select the JMS Destination",
+              "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+              "properties": {
+                "destinationName": {
+                  "kind": "path",
+                  "displayName": "Destination Name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags":[],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                },
+                "destinationType":{
+                  "kind":"path",
+                  "displayName":"Destination Type",
+                  "group":"common",
+                  "required":false,
+                  "type":"string",
+                  "javaType":"java.lang.String",
+                  "enum":[
+                    {"value": "topic", "label": "Topic"},
+                    {"value": "queue", "label": "Queue"}
+                  ],
+                  "deprecated":false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue":"queue",
+                  "description":"The kind of destination to use"
+                },
+                "persistent":{
+                  "kind":"parameter",
+                  "displayName":"Persistent",
+                  "group":"producer",
+                  "label":"producer",
+                  "required":false,
+                  "type":"boolean",
+                  "javaType":"boolean",
+                  "deprecated":false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue":true,
+                  "description":"Flag used to enable\/disable message persistence."
+                }
+              }
+            }]
+          }
+        },
+        {
+          "id": "io.syndesis:activemq-subscribe-connector:latest",
+          "name": "Subscribe for Messages",
+          "description": "Subscribe for one-way Text messages on an ActiveMQ Queue or Topic.",
+          "tags": [],
+          "pattern": "From",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:activemq-subscribe-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "activemq-subscribe",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "type": "*"
+            },
+            "propertyDefinitionSteps": [{
+              "name": "Select the JMS Destination",
+              "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+              "properties": {
+                "destinationName": {
+                  "kind": "path",
+                  "displayName": "Destination Name",
+                  "group": "common",
+                  "required": true,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "tags": [],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                },
+                "destinationType": {
+                  "kind": "path",
+                  "displayName": "Destination Type",
+                  "group": "common",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "enum": [
+                    {"value": "topic", "label": "Topic"},
+                    {"value": "queue", "label": "Queue"}
+                  ],
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "defaultValue": "queue",
+                  "description": "The kind of destination to use"
+                },
+                "durableSubscriptionId": {
+                  "kind": "parameter",
+                  "displayName": "Durable Subscription Id",
+                  "group": "consumer",
+                  "label": "consumer",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "Sets the durable subscription Id required for durable topics."
+                },
+                "messageSelector": {
+                  "kind": "parameter",
+                  "displayName": "Message Selector",
+                  "group": "consumer (advanced)",
+                  "label": "consumer,advanced",
+                  "required": false,
+                  "type": "string",
+                  "javaType": "java.lang.String",
+                  "deprecated": false,
+                  "secret": false,
+                  "componentProperty": false,
+                  "description": "Sets the JMS Message selector syntax."
+                },
+                "durable": {
+                  "kind": "parameter",
+                  "displayName": "Durable",
+                  "group":"consumer",
+                  "label":"consumer",
+                  "required": false,
+                  "type": "boolean",
+                  "javaType": "boolean",
+                  "deprecated": false,
+                  "secret": false,
+                  "defaultValue": false,
+                  "componentProperty": false,
+                  "description":"Sets topic consumer to durable."
+                }
+              }
+            }]
+          }
+        },
+        {
+          "id": "io.syndesis:activemq-request-connector:latest",
+          "name": "Request response using Messages",
+          "description": "Request response using two-way Text messages on an ActiveMQ Queue or Topic.",
+          "tags": [],
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:activemq-request-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "activemq-request",
+            "inputDataShape": {
+              "type": "*"
+            },
+            "outputDataShape": {
+              "type": "*"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "name": "Select the JMS Destination",
+                "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+                "properties": {
+                  "destinationName": {
+                    "kind": "path",
+                    "displayName": "Destination Name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                  },
+                  "destinationType": {
+                    "kind": "path",
+                    "displayName": "Destination Type",
+                    "group": "common",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "enum": [
+                      {
+                        "value": "topic",
+                        "label": "Topic"
+                      },
+                      {
+                        "value": "queue",
+                        "label": "Queue"
+                      }
+                    ],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "queue",
+                    "description": "The kind of destination to use"
+                  },
+                  "messageSelector": {
+                    "kind": "parameter",
+                    "displayName": "Message Selector",
+                    "group": "consumer (advanced)",
+                    "label": "consumer,advanced",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "Sets the JMS Message selector syntax."
+                  },
+                  "namedReplyTo": {
+                    "kind": "parameter",
+                    "displayName": "Named Reply To",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "Sets the reply to destination name used for InOut producer endpoints."
+                  },
+                  "persistent": {
+                    "kind": "parameter",
+                    "displayName": "Persistent",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": true,
+                    "description": "Flag used to enable\/disable message persistence."
+                  },
+                  "responseTimeOut": {
+                    "kind": "parameter",
+                    "displayName": "Response Time Out",
+                    "group": "producer (advanced)",
+                    "label": "producer,advanced",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "long",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": 5000,
+                    "description": "Sets the amount of time we should wait before timing out a InOut response."
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+    {
+    "kind": "connector",
+    "data": {
       "id": "sql",
       "name": "Database",
       "description": "Invoke SQL or Stored Procedures",

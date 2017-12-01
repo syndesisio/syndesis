@@ -54,18 +54,12 @@
     <!-- base component to use for this connector -->
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-sjms2</artifactId>
+      <artifactId>camel-sjms</artifactId>
     </dependency>
     <!-- add spring-boot support -->
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-sjms2-starter</artifactId>
-    </dependency>
-
-    <!-- ActiveMQ dependencies -->
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-client</artifactId>
+      <artifactId>camel-sjms-starter</artifactId>
     </dependency>
 
     <!-- camel-connector -->

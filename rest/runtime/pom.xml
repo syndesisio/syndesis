@@ -160,6 +160,22 @@
             <artifactId>salesforce-delete-sobject-with-id-connector</artifactId>
             <version>${syndesis-connectors.version}</version>
           </dependency>
+          <!-- ==== JMS ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>activemq-publish-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>activemq-subscribe-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>activemq-request-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
           <!-- ==== SQL ==== -->
           <dependency>
             <groupId>io.syndesis</groupId>

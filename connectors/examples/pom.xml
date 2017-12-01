@@ -32,6 +32,7 @@
 
   <modules>
     <module>http-pull-push-example</module>
+    <module>activemq-pingcheck-example</module>
     <module>activemq-publish-subscribe-example</module>
     <module>activemq-request-response-example</module>
     <module>twitter-salesforce-example</module>
