@@ -20,28 +20,18 @@
 
   <parent>
     <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-connectors-project</artifactId>
+    <artifactId>connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>connectors</artifactId>
-  <name>Syndesis Connectors :: Connectors</name>
+  <artifactId>rest-connectors</artifactId>
+  <name>Syndesis Connectors :: REST</name>
   <packaging>pom</packaging>
 
   <modules>
-    <module>aws</module>
-    <module>http</module>
-    <module>timer</module>
-    <module>twitter</module>
-    <module>salesforce</module>
-    <module>sql</module>
-    <module>rest</module>
-    <module>day-trade</module>
-    <module>trade-insight</module>
-    <module>jms</module>
-    <module>odata</module>
+    <module>rest-swagger-connector</module>
   </modules>
 
 </project>

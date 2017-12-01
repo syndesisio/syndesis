@@ -1,0 +1,57 @@
+{
+  "component":{
+    "kind":"component",
+    "baseScheme":"rest-swagger",
+    "scheme":"swagger-operation",
+    "syntax":"swagger-operation:specificationUri#operationId",
+    "title":"rest-swagger-connector",
+    "description":"REST Swagger Connector",
+    "deprecated":false,
+    "async":false,
+    "consumerOnly":true,
+    "lenientProperties":false,
+    "javaType":"io.syndesis.connector.swagger.SwaggerConnectorComponent",
+    "groupId":"io.syndesis",
+    "artifactId":"rest-swagger-connector",
+    "version":"1.2-SNAPSHOT"
+  },
+  "componentProperties":{
+    "host":{
+      "kind":"property",
+      "displayName":"Host",
+      "group":"producer",
+      "label":"producer",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"Scheme hostname and port to direct the HTTP requests to in the form of https:\/\/hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+    }
+  },
+  "properties":{
+    "operationId":{
+      "kind":"path",
+      "displayName":"Operation Id",
+      "group":"producer",
+      "label":"producer",
+      "required":true,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"ID of the operation from the Swagger specification."
+    }
+  },
+  "connectorProperties":{
+    "specification":{
+      "kind":"property",
+      "displayName":"Swagger specification",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    }
+  }
+}
