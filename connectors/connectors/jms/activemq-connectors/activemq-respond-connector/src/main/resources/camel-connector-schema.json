@@ -1,7 +1,7 @@
 {
   "component":{
     "kind":"component",
-    "baseScheme":"sjms2",
+    "baseScheme":"sjms",
     "scheme":"activemq-respond",
     "syntax":"activemq-respond:destinationType:destinationName",
     "title":"ActiveMQRespond",
@@ -57,19 +57,6 @@
       "deprecated":false,
       "secret":false,
       "description":"DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
-    },
-    "durable":{
-      "kind":"parameter",
-      "displayName":"Durable",
-      "group":"consumer",
-      "label":"consumer",
-      "required":false,
-      "type":"boolean",
-      "javaType":"boolean",
-      "deprecated":false,
-      "secret":false,
-      "defaultValue":false,
-      "description":"Sets topic consumer to durable."
     },
     "durableSubscriptionId":{
       "kind":"parameter",

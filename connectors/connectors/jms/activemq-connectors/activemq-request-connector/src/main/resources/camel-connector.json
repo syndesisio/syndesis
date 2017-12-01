@@ -1,9 +1,9 @@
 {
-  "baseScheme" : "sjms2",
+  "baseScheme" : "sjms",
   "baseGroupId" : "org.apache.camel",
-  "baseArtifactId" : "camel-sjms2",
+  "baseArtifactId" : "camel-sjms",
   "baseVersion" : "2.20.1",
-  "baseJavaType" : "org.apache.camel.component.sjms2.Sjms2Component",
+  "baseJavaType" : "org.apache.camel.component.sjms.SjmsComponent",
   "name" : "ActiveMQRequest",
   "scheme" : "activemq-request",
   "javaType" : "io.syndesis.connector.jms.ActiveMQRequestComponent",

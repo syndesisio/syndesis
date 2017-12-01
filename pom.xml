@@ -57,6 +57,8 @@
 
     <swagger.version>1.5.16</swagger.version>
 
+    <activemq.version>5.15.2</activemq.version>
+
     <!-- Global camel version used everywhere -->
     <camel.version>2.20.1</camel.version>
 
@@ -497,6 +499,26 @@ limitations under the License.</inlineHeader>
         <artifactId>jackson-module-jsonSchema</artifactId>
         <version>${jackson.version}</version>
       </dependency>
+
+      <!-- ActiveMQ deps to override Spring Boot imported pom -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-broker</artifactId>
+        <version>${activemq.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+        <version>${activemq.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-openwire-legacy</artifactId>
+        <version>${activemq.version}</version>
+      </dependency>
+
     </dependencies>
 
   </dependencyManagement>

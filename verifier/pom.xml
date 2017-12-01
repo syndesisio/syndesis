@@ -211,7 +211,7 @@
       <artifactId>sql-common</artifactId>
       <version>${syndesis.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-connector</artifactId>
@@ -233,6 +233,28 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-start-connector</artifactId>
+      <version>${syndesis.version}</version>
+    </dependency>
+
+    <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-broker</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-openwire-legacy</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>activemq-model</artifactId>
       <version>${syndesis.version}</version>
     </dependency>
 
@@ -314,6 +336,10 @@
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-start-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-start-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:activemq-publish-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-broker</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-client</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-openwire-legacy</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
