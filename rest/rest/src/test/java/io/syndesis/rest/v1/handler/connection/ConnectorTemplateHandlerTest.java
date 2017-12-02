@@ -108,4 +108,5 @@ public class ConnectorTemplateHandlerTest {
             new ConnectorSettings.Builder().build())).isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Connector template: non-existant");
     }
+
 }
