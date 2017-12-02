@@ -15,11 +15,6 @@
  */
 package io.syndesis.project.converter;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-
-import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
@@ -34,6 +29,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+
 @Configuration
 @EnableConfigurationProperties(ProjectGeneratorProperties.class)
 public class ProjectGeneratorConfiguration {
@@ -45,10 +44,9 @@ public class ProjectGeneratorConfiguration {
     private ExtensionDataManager extensionDataManager;
 
     @Bean
-    public ProjectGenerator projectConverter(ConnectorCatalog connectorCatalog, StepVisitorFactoryRegistry registry) throws IOException {
+    public ProjectGenerator projectConverter(StepVisitorFactoryRegistry registry) throws IOException {
         return new DefaultProjectGenerator(
             properties,
-            connectorCatalog,
             registry,
             dataManager,
             Optional.ofNullable(extensionDataManager)

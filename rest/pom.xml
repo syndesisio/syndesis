@@ -99,7 +99,6 @@
 
   <modules>
 	<module>archetypes</module>
-    <module>connector-catalog</module>
     <module>connector-generator</module>
     <module>controllers</module>
     <module>core</module>
@@ -176,18 +175,6 @@
         <version>${camel.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-catalog-maven</artifactId>
-        <version>${camel.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
 
       <dependency>

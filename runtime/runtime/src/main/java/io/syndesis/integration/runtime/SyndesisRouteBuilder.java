@@ -15,13 +15,9 @@
  */
 package io.syndesis.integration.runtime;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.ServiceLoader;
-
 import io.syndesis.integration.model.Flow;
-import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.model.SyndesisModel;
+import io.syndesis.integration.model.YamlHelpers;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.designer.SingleMessageRoutePolicyFactory;
@@ -29,9 +25,14 @@ import io.syndesis.integration.support.Strings;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
 import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * A Camel {@link RouteBuilder} which maps the SyndesisModel rules to Camel routes
@@ -83,7 +84,30 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                 if (i == 0 && !Endpoint.class.isInstance(step)) {
                     throw new IllegalStateException("No endpoint found as first step (found: " + step.getKind() + ")");
                 } else if (i == 0 && Endpoint.class.isInstance(step)) {
-                    route = from(Endpoint.class.cast(step).getUri());
+                    Endpoint endpoint = Endpoint.class.cast(step);
+                    String endpointUri = endpoint.getUri();
+                    if( endpoint.getProperties()!=null ) {
+
+                        // This logic used to be in project gen time in EndpointStepVisitor:
+//                        String endpointUri = generatorContext.getConnectorCatalog().buildEndpointUri(camelConnectorPrefix, endpointOptions);
+
+                        RuntimeCamelCatalog catalog = getContext().getRuntimeCamelCatalog();
+                        String camelConnectorPrefix = endpoint.getUri();
+                        endpointUri = catalog.asEndpointUri(camelConnectorPrefix, endpoint.getProperties(), true);
+
+                        // We likely need to do this part too..
+//                        if (endpointUri.startsWith(camelConnectorPrefix) && !camelConnectorPrefix.equals(connectorScheme)) {
+//                            String remaining = endpointUri.substring(camelConnectorPrefix.length());
+//
+//                            if (!remaining.isEmpty()) {
+//                                endpointUri = connectorScheme + remaining;
+//                            } else {
+//                                endpointUri = connectorScheme;
+//                            }
+//                        }
+
+                    }
+                    route = from(endpointUri);
                     route.id(name);
                 } else {
                     addStep(route, step);

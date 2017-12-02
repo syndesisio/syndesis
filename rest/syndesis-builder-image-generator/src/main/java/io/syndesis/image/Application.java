@@ -123,7 +123,7 @@ public class Application implements ApplicationRunner {
         ConnectorCatalogProperties catalogProperties = new ConnectorCatalogProperties(mavenProperties);
         ConnectorCatalog connectorCatalog = new ConnectorCatalog(catalogProperties);
         StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Arrays.asList());
-        ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, connectorCatalog, registry, null, Optional.empty());
+        ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, null, Optional.empty());
 
         Path dir =targetDir.toPath();
         Files.createDirectories( dir);

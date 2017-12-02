@@ -125,23 +125,11 @@ public class EndpointStepVisitor implements StepVisitor {
             properties.put("timerName", "every");
         }
 
-        return createEndpoint(visitorContext.getGeneratorContext(), camelConnectorPrefix, connectorScheme, properties);
+        return createEndpoint(camelConnectorPrefix, connectorScheme, properties);
     }
 
-    private Endpoint createEndpoint(GeneratorContext generatorContext, String camelConnectorPrefix, String connectorScheme, Map<String, String> endpointOptions) throws URISyntaxException {
-        String endpointUri = generatorContext.getConnectorCatalog().buildEndpointUri(camelConnectorPrefix, endpointOptions);
-
-        if (endpointUri.startsWith(camelConnectorPrefix) && !camelConnectorPrefix.equals(connectorScheme)) {
-            String remaining = endpointUri.substring(camelConnectorPrefix.length());
-
-            if (!remaining.isEmpty()) {
-                endpointUri = connectorScheme + remaining;
-            } else {
-                endpointUri = connectorScheme;
-            }
-        }
-
-        return new Endpoint(endpointUri);
+    private Endpoint createEndpoint(String camelConnectorPrefix, String connectorScheme, Map<String, String> endpointOptions) throws URISyntaxException {
+        return new Endpoint(connectorScheme, endpointOptions);
     }
 
     @SafeVarargs

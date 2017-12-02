@@ -2,11 +2,17 @@
 flows:
 - steps:
   - kind: endpoint
-    uri: periodic-timer-connector?period=5000
+    uri: periodic-timer-connector
+    properties:
+      period: "5000"
   - kind: endpoint
-    uri: http-get-connector?httpUri=http://localhost:8080/hello
+    uri: http-get-connector
+    properties:
+      httpUri: http://localhost:8080/hello
   - kind: log
     message: Hello World! ${body}
     loggingLevel: INFO
   - kind: endpoint
-    uri: http-post-connector?httpUri=http://localhost:8080/bye
+    uri: http-post-connector
+    properties:
+      httpUri: http://localhost:8080/bye

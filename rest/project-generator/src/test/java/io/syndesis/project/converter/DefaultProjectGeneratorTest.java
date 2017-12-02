@@ -40,8 +40,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.connector.catalog.ConnectorCatalogProperties;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
@@ -86,7 +84,6 @@ public class DefaultProjectGeneratorTest {
     private static MavenProperties mavenProperties = new MavenProperties(map("maven.central", "https://repo1.maven.org/maven2",
         "redhat.ga", "https://maven.repository.redhat.com/ga",
         "jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea"));
-    private static final ConnectorCatalogProperties CATALOG_PROPERTIES = new ConnectorCatalogProperties(mavenProperties);
     private static Properties properties = new Properties();
     private static final ObjectMapper OBJECT_MAPPER;
     private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF;
@@ -587,7 +584,7 @@ public class DefaultProjectGeneratorTest {
     private Path generate(Integration integration, ProjectGeneratorProperties generatorProperties) throws IOException {
         final DataManager dataManager = mock(DataManager.class);
         final ExtensionDataManager extensionDataManager = mock(ExtensionDataManager.class);
-        final ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, new ConnectorCatalog(CATALOG_PROPERTIES), registry, dataManager, Optional.of(extensionDataManager));
+        final ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, dataManager, Optional.of(extensionDataManager));
 
         // Mock data manager
         connectors.forEach((k, v) -> when(dataManager.fetch(Connector.class, k)).thenReturn(v));
