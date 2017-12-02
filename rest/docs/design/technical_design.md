@@ -126,4 +126,102 @@ The idea is to enable a technical user to augment his `Integration` in a pluggab
 
 From a UX point of view, this happens letting a user uploading a `.jar` file containing classes and dependencies required to run.
 
-This `.jar`, despite not having any requirement from code point of view, has to be built, using a Maven Plugin we made available, called `syndesis-maven-plugin`, that creates the correct metadata to be loaded by the runtime and removes references to libraries that might have been already provided.
+The `.jar` that is uploaded has to be built following a specific structure. To aid with the operation of creating this structure, a Maven Plugin has been created: `syndesis-maven-plugin`.  
+
+This plugin has 2 main roles:
+
+- to identify the "kind" of extension and create a metadata descriptor according to its findings
+- to package the extension dependencies in the correct location while filtering out provided libs
+
+You can see those 2 logical steps, being explicitly invoked in this sample configuration of `syndesis-maven-plugin`
+
+```xml
+<plugin>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-maven-plugin</artifactId>
+    <version>${syndesis.version}</version>
+    <configuration>
+        <listAllArtifacts>false</listAllArtifacts>
+    </configuration>
+    <executions>
+        <execution>
+        <id>generate</id>
+        <goals>
+            <goal>generate-metadata</goal>
+        </goals>
+        </execution>
+        <execution>
+        <id>repackage</id>
+        <goals>
+            <goal>repackage-extension</goal>
+        </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+### Supported extensions
+
+An extension can be implemented following different approaches: from the simpler annotated POJO to the usage of Camel aware resources.
+
+Here a brief descriptions of the options a developer has:
+
+- **Annotated POJO**
+- **Implementing SyndesisStepExtension Interface**
+- **Camel Spring XML DSL**
+- **Camel Java DSL**
+
+##### Annotated POJO
+This is the simplest form of integration. You are allowed to write your code as you prefer and to be plugged as a Syndesis Extension, you just need to annotate the method you want to be invoked, with ` @SyndesisExtensionAction( id = "myId", name = "myExtension",  description = "bla" )`.  
+When you are building your extension project, using `syndesis-maven-plugin`, the plugin will look for annotated methods, and when it will find one, it will generated metadata, that it will put inside a `META-INF/syndesis/extension-definition.json` file, defining all the important information, for Syndesis Runtime to recognize your code as a Syndesis Extension and allow you to reference it in the UI.  
+From a runtime point of view, methods annotated this way, behaves entirely as Camel `bean` component, that allows you to use both static and non-static methods in your Camel routes.
+
+##### Implementing `SyndesisStepExtension` Interface
+You can extend Syndesis implementing `SyndesisStepExtension` functional interface.  
+You need to provide the behavior for a single method:
+```java
+ProcessorDefinition configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
+``` 
+Two important aspects are present here:
+- you have direct access to a `CamelContext` (so you can customize/break Camel engine)
+- you have a direct access to `ProcessorDefinition`
+
+`ProcessorDefinition`, might not tell you much, but it's actually your entry point to the full power of Camel Java DSL. With a reference to a `ProcessorDefinition` you have access to all the method you find in the fluent Camel Java DSL, from `split()` to `script()` to `toD()` giving you literally total control to the full Camel expressiveness.  
+
+Your implementation doesn't require di be annotated as a Spring Boot component. The mechanism the runtime will use to load it, is based on a `Class.forName()` invocation.
+
+##### Camel Spring XML DSL
+Another option you have is to express your extension as if you were writing a Camel application using Spring XML DSL.  
+You can define either a `<camelContext>` node or just a `<routes>` node.  
+Just like you can break things in the runtime your extension will run into when implementing `SyndesisStepExtension`, you can end up doing the same here. So the suggested approach is actually to write only `<routes>` definition, as per Camel [documentation](http://camel.apache.org/loading-routes-from-xml-files.html).
+
+
+##### Camel Java DSL
+The last option we describe is Camel Java DSL.  
+You can write your `RouteBuilder` or `RouteDefinition`, just like you do when you write Camel Routes directly in Java DSL.  
+The only caveat here is that since your extension is going to be loaded as part of a Spring Boot application, you have to annotate your classes in such a way that Spring is able to inject them in its own Spring context.  
+These means that you have to annotate your methods with `@Bean` annotation.  
+Additionally, since a Spring Boot application auto discovery, only looks for classes within the same package of the entry point class annotated with `@SpringBootApplication`, which in Syndesis case is `io.syndesis.example`, you to do the extra work to "present" your code to the Spring Boot container.  
+To do so you have to perform steps:
+- define a `spring.factories` class in your `.jar` `META-INF` folder, where you add one or more entries for the key `org.springframework.boot.autoconfigure.EnableAutoConfiguration=` with a fully qualified class name
+- provide the implementation of the classes you have specified in the previous step that have also to be annotated with `@Configuration` annotation.
+
+Will this configuration in place, your extension will be picked up correctly by the Spring Boot application you Syndesis Integration lives into.
+
+
+### What happens in Syndesis when an Extension is uploaded to the platform
+A record in a database is created, linking the logical name of our extension to its `.jar`.  
+From now on, the UI, when you add a new `Step` will also list all the `Extension` that are present in the database.
+
+### Some consideration
+There's currently no explicit metadata about the input and output of an Extension. So it's up to you to expect something that can be handled by Camel implicit converters.  
+You have a lot of freedom while writing your extension. And with a lot of freedom you have a lot of risk of breaking things.  
+You can probably guess already that if you start spawning new threads here and there you are probably going to corrupt the main engine.  
+What it's less intuitive is that you can also break things with what might look as an innocuous Camel Route:
+Imagine that you define a route that starts with a `from("twitter:xxxx")`.  On the consuming side there are no problems. As long as you managed to inline all the relevant field in the endpoint, Camel will be able to start a consumer hitting Twitter services.  
+The logical error though, arises due to the way Extensions have been implemented.  
+The `Step` just before your Extension step, will use the same Camel URI to try to hit pipe it's output to your route.  
+This would work without issues with a simpler kind of Camel component, like "direct:" or "seda:" but won't work in the Twitter example, since the URI represents a remote service, not a local one.  
+What would happen in this case, is that the previous `Step` will try to write to Twitter!
+
+So, keep this in mind when you design your Techinical Extensions.
