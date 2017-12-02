@@ -21,6 +21,8 @@ import java.util.Optional;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.parser.SwaggerParser;
+import io.syndesis.connector.generator.ActionsSummary;
+import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
@@ -75,6 +77,29 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
         assertThat(generated.getProperties().keySet()).contains("accessToken", "accessTokenUrl", "clientId", "clientSecret");
         assertThat(generated.getProperties().get("authenticationType").getEnum())
             .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2").label("OAuth 2.0").build());
+    }
+
+    @Test
+    public void shouldProvideInfoFromPetstoreSwagger() throws IOException {
+        final String specification = resource("/swagger/petstore.swagger.json");
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
+            .putConfiguredProperty("specification", specification)//
+            .build();
+
+        final ConnectorSummary summary = new SwaggerConnectorGenerator().info(SWAGGER_TEMPLATE, connectorSettings);
+
+        final ActionsSummary actionsSummary = new ActionsSummary.Builder().totalActions(20).putActionCountByTag("store", 4)
+            .putActionCountByTag("user", 8).putActionCountByTag("pet", 8).build();
+
+        final ConnectorSummary expected = new ConnectorSummary.Builder()//
+            .name("Swagger Petstore")//
+            .actionsSummary(actionsSummary)//
+            .build();
+        assertThat(summary).isEqualToIgnoringGivenFields(expected, "description", "properties");
+        assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
+        assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "clientId", "clientSecret",
+            "accessToken", "accessTokenUrl", "operationId", "specification");
     }
 
 }

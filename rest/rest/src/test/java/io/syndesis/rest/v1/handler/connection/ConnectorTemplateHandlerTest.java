@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -73,7 +74,7 @@ public class ConnectorTemplateHandlerTest {
             }
 
             @Override
-            public Connector info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+            public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                 return null;
             }
         });

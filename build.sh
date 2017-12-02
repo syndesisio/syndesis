@@ -46,7 +46,7 @@ and the following options:
                           - "s2i"    : Build for OpenShift image streams
                           - "docker" : Build against a plain Docker daemon
                           - "auto"   : Automatically detect whether to use "s2i" or "docker"
-  --namespace <ns>        Specifies the namespace to create images in when using ''--images s2i'
+  --namespace <ns>        Specifies the namespace to create images in when using '--images s2i'
 
   --clean                 Run clean builds (mvn clean)
   --batch-mode            Run mvn in batch mode
@@ -255,26 +255,26 @@ release_project_lock() {
 
 teardown_project_pool() {
     echo "Cleaning up..."
-    local NAMESPACE=$1
-    local POOL_NAMESPACE=$2
-    local INITIAL_NAMESPACE=$3
-    local INITIAL_TOKEN=$4
+    local namespace=${1:-}
+    local pool_namespace=${2:-}
+    local initial_namespace=${3:-}
+    local initial_token=${4:-}
 
     #1. We need to login to the original project first, before releasing the lock.
-    if [ -n "${INITIAL_TOKEN:-}" ]; then
-        oc login --token=$INITIAL_TOKEN --server=$(current_server) || true
-        oc project $POOL_NAMESPACE
+    if [ -n "${intial_token:-}" ]; then
+        oc login --token=${initial_token} --server=$(current_server) || true
+        oc project ${pool_namespace}
     fi
 
-    if [ -n "$NAMESPACE" ]; then
-        echo "Releasing project: $NAMESPACE"
-        $(release_project_lock $NAMESPACE $POOL_NAMESPACE) || echo "Failed to release project: $NAMESPACE"
+    if [ -n "${namespace:-}" ]; then
+        echo "Releasing project: ${namespace}"
+        $(release_project_lock ${namespace} ${pool_namespace}) || echo "Failed to release project: ${namespace}"
     else
         echo "Warning: No project was passed to release! Project will not get released! "
     fi
 
-    if [ -n "$INITIAL_NAMESPACE" ]; then
-        oc project $INITIAL_NAMESPACE || true
+    if [ -n "${initial_namespace}" ]; then
+        oc project ${initial_namespace} || true
     fi
 }
 
@@ -383,6 +383,7 @@ run_build() {
     local maven_args=$(get_maven_args)
     check_error $maven_args
     echo "./mvnw $maven_args"
+    echo "=============================================================================="
     exec $(basedir)/mvnw $maven_args
 }
 
@@ -456,7 +457,7 @@ run_test() {
 
     local maven_args=$(get_maven_args $namespace)
     check_error $maven_args
-    maven_args="$maven_args -Psystem-tests"
+    maven_args="-Psystem-tests -Pimages -Dfabric8.mode=openshift $maven_args"
     echo "./mvnw $maven_args"
     exec $(basedir)/mvnw $maven_args
 }

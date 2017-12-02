@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import io.syndesis.rest.v1.operations.Violation;
+import io.syndesis.model.Violation;
 
 import org.springframework.stereotype.Component;
 

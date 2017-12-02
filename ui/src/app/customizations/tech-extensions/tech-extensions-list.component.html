@@ -37,9 +37,9 @@
               <div class="list-pf-description" text-overflow-pf>{{ item.description }}</div>
             </div>
             <div class="list-pf-additional-content">
-              <div *ngIf="item.integrations">
-                <strong>Used by {{ item.integrations }}</strong>
-              </div>
+              <span *ngIf="item.uses">
+                Used by <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
+              </span>
             </div>
           </div>
         </ng-template>

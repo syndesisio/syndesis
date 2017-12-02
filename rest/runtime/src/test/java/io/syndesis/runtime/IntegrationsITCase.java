@@ -16,9 +16,11 @@
 package io.syndesis.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
+import io.syndesis.model.Violation;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.exception.RestError;
-import io.syndesis.rest.v1.operations.Violation;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

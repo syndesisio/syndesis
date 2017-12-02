@@ -26,6 +26,10 @@ export class TechExtensionsListComponent implements OnInit {
   listConfig: ListConfig;
   @ViewChild(TechExtensionDeleteModalComponent)
   deleteModal: TechExtensionDeleteModalComponent;
+  itemUseMapping: { [valueComparator: string]: string } = {
+    '=1': '<strong>1</strong> integration',
+    'other': '<strong>#</strong> integrations'
+  };
 
   constructor(private store: ExtensionStore,
               private router: Router,
