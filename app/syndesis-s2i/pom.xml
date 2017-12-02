@@ -22,16 +22,16 @@
 
   <parent>
     <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-parent</artifactId>
+    <artifactId>app</artifactId>
     <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis</groupId>
-  <artifactId>s2i</artifactId>
+  <artifactId>syndesis-s2i</artifactId>
   <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Syndesis S2I</name>
+  <name>${project.artifactId}</name>
 
   <repositories>
     <repository>
