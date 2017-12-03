@@ -6,12 +6,12 @@ There exist different flavours of OpenShift templates, with the following charac
 
 | Template | Descripton |
 | -------- | ---------- |
-| [syndesis.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
-| [syndesis-dev.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. against a Minishift Docker daemon) can be used directly. |
-| [syndesis-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-in-a-restricted-environment) below for detailed usage instructions. |
-| [syndesis-dev-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
-| [syndesis-restricted-ephemeral.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted-ephemeral.yml) | A variant of `syndesis-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
-| [syndesis-ci.yml](https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-ci.yml) | A variant of `syndesis.yml` which makes limit use of probes. Mostly needed for testing as a workaround to the [http readiness and liveness probe fail](https://bugzilla.redhat.com/show_bug.cgi?id=1457399) issue. |
+| [syndesis.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis.yml) | Full production when setting up on a cluster with full access rights. Uses image streams under the hoods. |
+| [syndesis-dev.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis-dev.yml) | Same as above, but with direct references to Docker images so that they locally created images (e.g. against a Minishift Docker daemon) can be used directly. |
+| [syndesis-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis-restricted.yml) | If running in an restricted environment without admin access this template should be used. See the [section](#running-in-a-restricted-environment) below for detailed usage instructions. |
+| [syndesis-dev-restricted.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis-dev-restricted.yml) | Same as above, but as a developer version with using direct Docker images |
+| [syndesis-restricted-ephemeral.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis-restricted-ephemeral.yml) | A variant of `syndesis-restricted.yml` which does only use temporary persistence. Mostly needed for testing as a workaround to the [pods with pvc sporadically timeout](https://bugzilla.redhat.com/show_bug.cgi?id=1435424) issue. |
+| [syndesis-ci.yml](https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis-ci.yml) | A variant of `syndesis.yml` which makes limit use of probes. Mostly needed for testing as a workaround to the [http readiness and liveness probe fail](https://bugzilla.redhat.com/show_bug.cgi?id=1457399) issue. |
 
 More about the differences can be found in this [issue](https://github.com/syndesisio/syndesis-openshift-templates/issues/28)
 
@@ -163,16 +163,18 @@ Here are step-by-step the installation instructions for setting up a Minishift i
 minishift start --memory 4192
 
 # Add a serviceaccount as OAuth client to OpenShift
-oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
+oc create -f https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/support/serviceaccount-as-oauthclient-restricted.yml
 
 # Install the OpenShift template
-oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml
+oc create -f https://raw.githubusercontent.com/syndesisio/syndesis/master/app/deploy/syndesis-dev-restricted.yml
 
 # Create an App. Use "syndesis-dev" or "syndesis" depending on the template
 # you have installed
 oc new-app syndesis-dev-restricted \
     -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
-    -p OPENSHIFT_MASTER=$(oc whoami --show-server)
+    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+    -p OPENSHIFT_PROJECT=$(oc project -q) \
+    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
 
 # Wait until all pods are running. Some pods are crashing at first, but are restarted
 # so that the system will eventually converts to a stable state ;-). Especially the proxies
