@@ -54,9 +54,9 @@ fi
 patch_file=/tmp/pr_${module_dir}_${pr}.patch
 curl -L $url.patch > $patch_file
 cd $module_dir
-git co -b "pr/$pr"
+git checkout -b "pr/${module_dir}-$pr"
 patch -p1 < $patch_file
-git status -s | grep -v -e '^ M ' | sed -e 's/^?? //' | xargs git add
+git status -s | grep -v -e '^ M ' | grep -v -e '^ D ' | sed -e 's/^?? //' | xargs git add
 git commit -a -m "Applied PR $url (Module: $module_dir, PR: $pr)"
 
 cat - <<EOT
@@ -67,7 +67,7 @@ cat - <<EOT
 
 PR $pr applied successfully.
 
-The patch has been committed locally to branch pr/$pr
+The patch has been committed locally to branch pr/${module_dir}-$pr
 Please push this branch to your fork and create a new PR against Syndesis 
 (possibly copying over relevant comments from the original PR)
 EOT
