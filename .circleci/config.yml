@@ -31,17 +31,17 @@ jobs:
       - run:
           name: Prep for Cache Load
           command: |
-            find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | sort | xargs cat > all-poms
+            find app | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | sort | xargs cat > all-poms
 
       - restore_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}
       - restore_cache:
-          key: syndesis-yarn-{{ checksum "ui/yarn.lock" }}
+          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
 
       - run:
           name: Build
           command: |
-            ./build.sh --batch-mode --image-mode=docker | tee build_log.txt
+            ./app/build.sh --batch-mode --image-mode=docker | tee build_log.txt
       
       - save_cache:
           key: syndesis-mvn-{{ checksum "all-poms" }}
@@ -56,16 +56,16 @@ jobs:
           name: Collect junit reports
           command: |
             mkdir ./junit/
-            find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
+            find . -type f -regex "app/.*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
 
       - run:
           name: Collect API docs
           command: |
             mkdir ./apidocs
-            if [[ -d runtime/runtime/target/classes/static ]]; then
-              cp runtime/runtime/target/classes/static/index.html ./apidocs
-              cp runtime/runtime/target/classes/static/swagger.json ./apidocs
-              cp runtime/runtime/target/classes/static/swagger.yaml ./apidocs
+            if [[ -d app/runtime/runtime/target/classes/static ]]; then
+              cp app/runtime/runtime/target/classes/static/index.html ./apidocs
+              cp app/runtime/runtime/target/classes/static/swagger.json ./apidocs
+              cp app/runtime/runtime/target/classes/static/swagger.yaml ./apidocs
             fi
 
       - store_artifacts:
