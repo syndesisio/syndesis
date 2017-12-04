@@ -193,7 +193,7 @@ jobs:
           key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
       - <<: *load_m2
       - run:
-          name: Build Runtime
+          name: Build S2I Builder image
           command: |
             ./app/build.sh --batch-mode --module s2i --image-mode docker | tee build_log.txt | grep -v " Download"
       - store_artifacts:
