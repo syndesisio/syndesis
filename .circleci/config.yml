@@ -14,92 +14,255 @@
 # limitations under the License.
 #
 version: 2
-jobs:
-  build:
-    working_directory: /workspace
-    docker:
-    - image: openjdk:8-jdk
-    environment:
-      MAVEN_OPTS: -Xmx1024m
-      DOCKER_VERSION: 17.04.0-ce
 
+common_env: &common_env
+  MAVEN_OPTS: -Xmx1024m
+  DOCKER_VERSION: 17.04.0-ce
+
+job_default: &job_defaults
+  working_directory: /workspace
+  docker:
+    - image: openjdk:8-jdk
+
+push_images: &push_images
+  deploy:
+    command: |
+      if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
+        exit 0
+      fi
+
+      curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
+
+      if [ "${CIRCLE_BRANCH}" == "master" ]; then
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        for image in ${DOCKER_IMAGES} ; do
+          docker push syndesis/${image}:latest | cat -
+        done
+      fi
+      if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        for image in ${IMAGES} ; do
+          docker push syndesis/${image}:${CIRCLE_TAG} | cat -
+          docker tag syndesis/${image}:${CIRCLE_TAG} syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
+          docker push syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
+        done
+      fi
+
+load_m2: &load_m2
+  attach_workspace:
+    at: ~/.m2
+
+save_m2: &save_m2
+  persist_to_workspace:
+    root: ~/.m2
+    paths:
+      - repository/io/syndesis
+
+jobs:
+  # UI has no dependencies, just load cache
+  ui:
+    <<: *job_defaults
+    environment:
+      DOCKER_IMAGES: syndesis-ui
+      <<: *common_env
     steps:
       - setup_remote_docker
-
       - checkout
-
-      - run:
-          name: Prep for Cache Load
-          command: |
-            find . | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | sort | xargs cat > all-poms
-
       - restore_cache:
-          key: syndesis-mvn-{{ checksum "all-poms" }}
+          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
       - restore_cache:
-          key: syndesis-yarn-{{ checksum "ui/yarn.lock" }}
-
+          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
       - run:
-          name: Build
+          name: Build UI
           command: |
-            ./build.sh --batch-mode --image-mode=docker | tee build_log.txt
-      
+            ./app/build.sh --batch-mode --module ui --image-mode=docker | tee build_log.txt | grep -v " Download"
+      - store_artifacts:
+          path: ./build_ui_log.txt
       - save_cache:
-          key: syndesis-mvn-{{ checksum "all-poms" }}
-          paths:
-          - ~/.m2
-      - save_cache:
-          key: syndesis-yarn-{{ checksum "ui/yarn.lock" }}
+          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
           paths:
           - /usr/local/share/.cache/yarn/v1
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
+          paths:
+          - ~/.m2
+      - <<: *push_images
 
+  # Connectors have no dependencies, just load cache
+  connectors:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+      - run:
+          name: Build Connectors
+          command: |
+            ./app/build.sh --init --batch-mode --module connectors | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect junit reports
           command: |
             mkdir ./junit/
-            find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
+            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+          paths:
+          - ~/.m2
+      - <<: *save_m2
 
+
+  # Verifier depends on connectors, mount workspace .m2
+  verifier:
+    <<: *job_defaults
+    environment:
+      DOCKER_IMAGES: syndesis-verifier
+      <<: *common_env
+    steps:
+      - setup_remote_docker
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Verifier
+          command: |
+            ./app/build.sh --batch-mode --module verifier --image-mode=docker | tee build_log.txt | grep -v " Download"
+      - run:
+          name: Collect junit reports
+          command: |
+            mkdir ./junit/
+            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *push_images
+      - <<: *save_m2
+      - save_cache:
+          key: syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
+          paths:
+          - ~/.m2
+
+  # Runtime has no dependencies, just load cache
+  runtime:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-runtime-{{ checksum "app/runtime/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Runtime
+          command: |
+            ./app/build.sh --batch-mode --module runtime | tee build_log.txt | grep -v " Download"
+      - run:
+          name: Collect junit reports
+          command: |
+            mkdir ./junit/
+            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *save_m2
+      - save_cache:
+          key: syndesis-mvn-runtime-{{ checksum "app/runtime/pom.xml" }}
+          paths:
+          - ~/.m2
+
+  # S2I image
+  s2i:
+    <<: *job_defaults
+    environment:
+      DOCKER_IMAGES: syndesis-s2i
+      <<: *common_env
+    steps:
+      - setup_remote_docker
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build S2I Builder image
+          command: |
+            ./app/build.sh --batch-mode --module s2i --image-mode docker | tee build_log.txt | grep -v " Download"
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *push_images
+      - <<: *save_m2
+      - save_cache:
+          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
+          paths:
+          - ~/.m2
+
+  # Rest depends on connectors and runtime, mount workspace .m2
+  rest:
+    <<: *job_defaults
+    environment:
+      DOCKER_IMAGES: syndesis-rest
+      <<: *common_env
+    steps:
+      - setup_remote_docker
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Rest
+          command: |
+            ./app/build.sh --batch-mode --module rest --image-mode docker | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect API docs
           command: |
             mkdir ./apidocs
-            if [[ -d runtime/runtime/target/classes/static ]]; then
-              cp runtime/runtime/target/classes/static/index.html ./apidocs
-              cp runtime/runtime/target/classes/static/swagger.json ./apidocs
-              cp runtime/runtime/target/classes/static/swagger.yaml ./apidocs
+            if [[ -d app/runtime/runtime/target/classes/static ]]; then
+              cp app/runtime/runtime/target/classes/static/index.html ./apidocs
+              cp app/runtime/runtime/target/classes/static/swagger.json ./apidocs
+              cp app/runtime/runtime/target/classes/static/swagger.yaml ./apidocs
             fi
-
-      - store_artifacts:
-          path: all-poms
-      - store_artifacts:
-          path: ./apidocs
-      - store_artifacts:
-          path: ./junit
-      - store_artifacts:
-          path: ./build_log.txt
-
-
-      - deploy:
+      - run:
+          name: Collect junit reports
           command: |
-            if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
-              exit 0
-            fi
+            mkdir ./junit/
+            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: apidocs
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *push_images
+      - <<: *save_m2
+      - save_cache:
+          key: syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
+          paths:
+          - ~/.m2
 
-            curl -fsSL https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
-
-            IMAGES='syndesis-rest syndesis-verifier syndesis-ui syndesis-s2i'
-
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-              for image in ${IMAGES} ; do
-                docker push syndesis/${image}:latest | cat -
-              done
-            fi
-            if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
-              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-              for image in ${IMAGES} ; do
-                docker push syndesis/${image}:${CIRCLE_TAG} | cat -
-                docker tag syndesis/${image}:${CIRCLE_TAG} syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
-                docker push syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
-              done
-            fi
-
+workflows:
+  version: 2
+  syndesis:
+    jobs:
+      - ui
+      - connectors
+      - runtime:
+          requires:
+            - connectors
+      - verifier:
+          requires:
+            - connectors
+      - rest:
+          requires:
+            - runtime
+      - s2i:
+          requires:
+            - rest

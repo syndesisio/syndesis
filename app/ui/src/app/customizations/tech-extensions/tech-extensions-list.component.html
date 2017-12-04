@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Technical Extensions</h1>
+    <p>A technical extension defines one or more custom steps for use in integrations.  Find out more at <a><!-- TODO -->Syndesis Help</a></p>
+  </div>
+</div>
+<div class="row tech-extensions-list">
+  <div class="col-xs-12">
+    <syndesis-list-toolbar [items]="extensions$"
+                            [filterTags]="false"
+                            [filteredItems]="filteredExtensions$"
+                            [viewTemplate]="viewTemplate">
+      <ng-template #viewTemplate>
+        <div class="toolbar-pf-action-right">
+          <button type="button"
+                  class="btn btn-primary"
+                  [routerLink]="['/customizations/tech-extensions/import']">
+                  Import Technical Extension
+          </button>
+        </div>
+      </ng-template>
+    </syndesis-list-toolbar>
+    <syndesis-loading [loading]="loading$ | async">
+      <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
+      <pfng-list [items]="filteredExtensions$ | async"
+                [config]="listConfig"
+                [itemTemplate]="itemTemplate"
+                [actionTemplate]="actionTemplate"
+                (onActionSelect)="handleAction($event)"
+                (onClick)="handleClick($event)">
+        <ng-template #itemTemplate
+                    let-item="item"
+                    let-index="index">
+          <div class="list-pf-content-wrapper">
+            <div class="list-pf-main-content">
+              <div class="list-pf-title">{{ item.name }}</div>
+              <div class="list-pf-description" text-overflow-pf>{{ item.description }}</div>
+            </div>
+            <div class="list-pf-additional-content">
+              <span *ngIf="item.uses">
+                Used by <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
+              </span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #actionTemplate
+                     let-item="item"
+                     let-index="index">
+            <button type="button"
+                    class="btn btn-default"
+                    [routerLink]="['import', item.id, { 'name': item.name }]">Update</button>
+            <button type="button"
+                    class="btn btn-default"
+                    (click)="deleteModal.prompt(item)">Delete</button>
+        </ng-template>
+      </pfng-list>
+    </syndesis-loading>
+  </div>
+</div>

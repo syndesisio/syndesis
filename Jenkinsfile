@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('prepare') {
             steps {
-             withCredentials([string(credentialsId: "${env.IGNITE_ACCOUNT_CREDENTIAL}", variable: 'TOKEN')]) {
+             withCredentials([string(credentialsId: "api.rh-idev.openshift.com", variable: 'TOKEN')]) {
                     sh """
                     oc login --server=https://api.rh-idev.openshift.com --token=$TOKEN
                     oc project syndesis-ci
@@ -25,7 +25,7 @@ pipeline {
                 checkout scm
                 sh """
                 echo $PATH
-                ./build.sh --image-mode s2i --batch-mode --mode system-test
+                ./app/build.sh --batch-mode --mode system-test
                 """
             }
         }

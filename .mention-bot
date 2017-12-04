@@ -4,5 +4,9 @@
   "createReviewRequest": true,
   "actions": ["opened", "reopened"],
   "skipAlreadyAssignedPR": true,
-  "skipAlreadyMentionedPR": true
+  "skipAlreadyMentionedPR": true,
+  "fallbackNotifyForPaths": [{
+    "name": "syndesisio/all",
+    "files": ["**/*"]
+   }]
 }

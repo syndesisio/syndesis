@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Copyright (C) 2016 Red Hat, Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-rest-parent</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>runtime</artifactId>
+  <name>REST :: Runtime</name>
+  <packaging>jar</packaging>
+
+  <properties>
+    <failOnMissingWebXml>false</failOnMissingWebXml>
+
+    <apidocs.dir>${project.build.directory}/api-docs</apidocs.dir>
+    <apidocs.output.dir>${project.build.outputDirectory}/static</apidocs.output.dir>
+
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+  </properties>
+
+  <repositories>
+
+    <!-- needed for Spring Social Salesforce fork from mikegirard/spring-social-salesforce -->
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+
+  </repositories>
+
+  <pluginRepositories>
+
+    <!-- needed for swagger2markup-maven-plugin -->
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>jcenter-releases</id>
+      <name>jcenter</name>
+      <url>https://jcenter.bintray.com</url>
+    </pluginRepository>
+
+  </pluginRepositories>
+
+  <build>
+    <finalName>runtime</finalName>
+
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>*.bin</exclude>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>*.bin</include>
+        </includes>
+      </testResource>
+    </testResources>
+
+    <plugins>
+
+      <plugin>
+        <groupId>io.syndesis</groupId>
+        <artifactId>syndesis-build-helper-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>generate-mapper-inspections</id>
+            <goals>
+              <goal>generate-mapper-inspections</goal>
+              <goal>extract-connector-descriptors</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <!-- ==== Twitter ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>twitter-mention-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>twitter-search-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <!-- ==== Salesforce ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-on-create-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-on-update-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-on-delete-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-update-sobject-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-upsert-sobject-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-create-sobject-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-get-sobject-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-get-sobject-with-id-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-delete-sobject-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>salesforce-delete-sobject-with-id-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <!-- ==== JMS ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>activemq-publish-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>activemq-subscribe-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>activemq-request-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <!-- ==== SQL ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>sql-stored-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>build-info</id>
+            <goals>
+              <goal>build-info</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <configuration>
+          <generator>
+            <config>
+              <spring-boot>
+                <name>syndesis/syndesis-rest:%l</name>
+              </spring-boot>
+            </config>
+          </generator>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>dk.nykredit.swagger</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <configuration>
+          <outputDirectory>${apidocs.output.dir}</outputDirectory>
+          <outputFormats>
+            <outputFormat>JSON</outputFormat>
+            <outputFormat>YAML</outputFormat>
+          </outputFormats>
+          <attachSwaggerArtifact>true</attachSwaggerArtifact>
+          <resourcePackages>
+            <resourcePackage>io.syndesis.rest.v1.handler.connection</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.environment</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.integration</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.user</resourcePackage>
+          </resourcePackages>
+          <swaggerConfig>
+            <info>
+              <title>Syndesis API</title>
+              <version>v1</version>
+              <description>
+                The Syndesis REST API connects to back-end services on the Syndesis and provides a single
+                entry
+                point for the Syndesis UI. For console developement it can run in off-line mode where it only
+                serves
+                responses from the response cache.
+              </description>
+              <license>
+                <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                <name>Apache 2.0</name>
+              </license>
+              <contact>
+                <email>syndesis@googlegroups.com</email>
+                <name>The Syndesis Community</name>
+                <url>https://syndesis.io/</url>
+              </contact>
+            </info>
+            <schemes>http,https</schemes>
+            <host>localhost:8080</host>
+            <basePath>/api/v1</basePath>
+          </swaggerConfig>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rest</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.github.swagger2markup</groupId>
+        <artifactId>swagger2markup-maven-plugin</artifactId>
+        <configuration>
+          <swaggerInput>${apidocs.output.dir}/swagger.json</swaggerInput>
+          <outputDir>${apidocs.dir}/asciidoc</outputDir>
+          <config>
+            <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+          </config>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>convertSwagger2markup</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
+        <configuration>
+          <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
+          <sourceDocumentName>index.adoc</sourceDocumentName>
+          <outputDirectory>${apidocs.output.dir}</outputDirectory>
+          <backend>html5</backend>
+          <sourceHighlighter>coderay</sourceHighlighter>
+          <attributes>
+            <generated>${apidocs.dir}/asciidoc</generated>
+            <toc>left</toc>
+            <sectnums>true</sectnums>
+            <revnumber>${project.version}</revnumber>
+            <revdate>${maven.build.timestamp}</revdate>
+            <organization>${project.organization.name}</organization>
+          </attributes>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>reserve-ports</id>
+            <goals>
+              <goal>reserve-network-port</goal>
+            </goals>
+            <!--
+                phase used to be `pre-integration-test` which is a
+                proper phase for this, but it ended up being invoked
+                after process-exec-maven-plugin defined below, so the
+                reserved ports would not be defined, moving it to a
+                prior phase helped the issue
+            -->
+            <phase>process-test-resources</phase>
+            <configuration>
+              <portNames>
+                <portName>server.port</portName>
+              </portNames>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <additionalClasspathElements>
+                <!-- workaround suggested in https://github.com/spring-projects/spring-boot/issues/6254 -->
+                <additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
+              </additionalClasspathElements>
+              <reuseForks>true</reuseForks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>io.fabric8:spring-cloud-kubernetes-core</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-jdbc</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-security</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-undertow</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-web</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-websocket</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.security:spring-security-crypto</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-security</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-zipkin</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>postgresql:postgresql</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.github.mikegirard:spring-social-salesforce</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.springframework.social:spring-social-twitter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.ning.maven.plugins</groupId>
+        <artifactId>maven-dependency-versions-check-plugin</artifactId>
+        <configuration>
+          <exceptions>
+            <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <resolvedVersion>2.8.8</resolvedVersion>
+              <expectedVersion>2.5.4</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <resolvedVersion>2.8.8</resolvedVersion>
+              <expectedVersion>2.6.0</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <resolvedVersion>2.8.8</resolvedVersion>
+              <expectedVersion>2.7.0</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <resolvedVersion>2.8.8</resolvedVersion>
+              <expectedVersion>2.8.3</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <resolvedVersion>2.8.8</resolvedVersion>
+              <expectedVersion>2.8.6</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>com.google.guava</groupId>
+              <artifactId>guava</artifactId>
+              <resolvedVersion>18.0</resolvedVersion>
+              <expectedVersion>15.0</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>com.google.guava</groupId>
+              <artifactId>guava</artifactId>
+              <resolvedVersion>18.0</resolvedVersion>
+              <expectedVersion>19.0</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>org.bouncycastle</groupId>
+              <artifactId>bcpkix-jdk15on</artifactId>
+              <resolvedVersion>1.52</resolvedVersion>
+              <expectedVersion>1.47</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>org.bouncycastle</groupId>
+              <artifactId>bcpkix-jdk15on</artifactId>
+              <resolvedVersion>1.52</resolvedVersion>
+              <expectedVersion>1.55</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>org.bouncycastle</groupId>
+              <artifactId>bcprov-jdk15on</artifactId>
+              <resolvedVersion>1.52</resolvedVersion>
+              <expectedVersion>1.47</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>org.bouncycastle</groupId>
+              <artifactId>bcprov-jdk15on</artifactId>
+              <resolvedVersion>1.52</resolvedVersion>
+              <expectedVersion>1.55</expectedVersion>
+            </exception>
+            <exception>
+              <groupId>org.objenesis</groupId>
+              <artifactId>objenesis</artifactId>
+              <resolvedVersion>2.1</resolvedVersion>
+              <expectedVersion>2.5.1</expectedVersion>
+            </exception>
+          </exceptions>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredDependencies>
+            <!-- spring-cloud-starter BOM excludes all wiremock dependencies, so we bring in
+                 wiremock-standalone, which packages duplicate classes/resources already
+                 present in other dependencies. It's used only in tests so let's ignore it
+                 completely -->
+            <dependency>
+              <groupId>com.github.tomakehurst</groupId>
+              <artifactId>wiremock-standalone</artifactId>
+            </dependency>
+          </ignoredDependencies>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
+
+    <!-- Top most layer, entrypoint. It contains the deps to other modules -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>dao</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>rest</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>verifier</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>credential</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>connector-generator</artifactId>
+    </dependency>
+
+    <!-- Credentials to support -->
+    <dependency>
+      <groupId>org.springframework.social</groupId>
+      <artifactId>spring-social-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.mikegirard</groupId>
+      <artifactId>spring-social-salesforce</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.social</groupId>
+      <artifactId>spring-social-twitter</artifactId>
+    </dependency>
+
+    <!-- DAO implementations: -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>jsondb</artifactId>
+    </dependency>
+
+    <!-- FileStore implementation -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>filestore</artifactId>
+    </dependency>
+
+    <!-- ===================================================================================== -->
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-undertow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-crypto</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-zipkin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.paypal.springboot</groupId>
+      <artifactId>resteasy-spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-validator-provider-11</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.undertow</groupId>
+      <artifactId>undertow-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.undertow</groupId>
+      <artifactId>undertow-servlet</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.launchdarkly</groupId>
+      <artifactId>okhttp-eventsource</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>spring-cloud-kubernetes-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-spring4-embedded</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-standalone</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>fabric8</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>fmp</id>
+                <goals>
+                  <goal>resource</goal>
+                  <goal>helm</goal>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>debug</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+              <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -server -Xms256m -Xmx512m</jvmArguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>image</id>
+      <activation>
+        <property>
+          <name>::image</name>
+        </property>
+      </activation>
+      <properties>
+        <fabric8.generator.name>${image.rest}</fabric8.generator.name>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>build</id>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>flash</id>
+      <activation>
+        <property>
+          <name>deploy</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctor-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>reserve-ports</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
