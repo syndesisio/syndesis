@@ -264,7 +264,7 @@ jobs:
           name: Run System Tests
           command: |
             if [ -n "${OPENSHIFT_TOKEN}" ]; then
-              curl -fsSL https://github.com/openshift/origin/releases/download/v3.7.0/openshift-origin-client-tools-${OPENSHIFT_VERSION}-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
+              curl -fsSL https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
               oc login --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}"
               ./app/build.sh --batch-mode --mode system-test | tee test_log.txt | grep -v " Download"
             fi
