@@ -91,7 +91,7 @@ public class SqlStartConnectorComponentTest {
             context.addRoutes(new RouteBuilder() {
                 @Override
                 public void configure() throws Exception {
-                    from("sql-start-connector:SELECT * FROM NAME")
+                    from("sql-start-connector:SELECT * FROM NAME ORDER BY id")
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange)
