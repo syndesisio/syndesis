@@ -75,13 +75,15 @@ jobs:
       - run:
           name: Build UI
           command: |
-            ./app/build.sh --batch-mode --module ui --image-mode=docker | tee build_ui_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module ui --image-mode=docker | tee build_log.txt | grep -v " Download"
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
           key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
           paths:
           - /usr/local/share/.cache/yarn/v1
+      - store_artifacts:
+          path: build_log.txt
       - save_cache:
           key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
           paths:
@@ -98,18 +100,18 @@ jobs:
       - restore_cache:
           key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
       - run:
-          name: Install Parent pom
-          command: |
-            cd app && ./mvnw -N install
-      - run:
           name: Build Connectors
           command: |
-            ./app/build.sh --batch-mode --module connectors | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --init --batch-mode --module connectors | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect junit reports
           command: |
             mkdir ./junit/
             find . -type f -regex "app/.*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: build_log.txt
       - save_cache:
           key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
           paths:
@@ -139,9 +141,9 @@ jobs:
             mkdir ./junit/
             find . -type f -regex "app/.*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
       - store_artifacts:
-          path: ./junit
+          path: junit
       - store_artifacts:
-          path: ./build_log.txt
+          path: build_log.txt
       - <<: *push_images
       - <<: *save_m2
       - save_cache:
@@ -162,17 +164,48 @@ jobs:
       - run:
           name: Build Runtime
           command: |
-            ./app/build.sh --batch-mode --module runtime | tee build_rest_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module runtime | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect junit reports
           command: |
             mkdir ./junit/
             find . -type f -regex "app/.*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
       - store_artifacts:
-          path: ./junit
+          path: junit
+      - store_artifacts:
+          path: build_log.txt
       - <<: *save_m2
       - save_cache:
           key: syndesis-mvn-runtime-{{ checksum "app/runtime/pom.xml" }}
+          paths:
+          - ~/.m2
+
+  # S2I image
+  s2i:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Runtime
+          command: |
+            ./app/build.sh --batch-mode --module s2i | tee build_log.txt | grep -v " Download"
+      - run:
+          name: Collect junit reports
+          command: |
+            mkdir ./junit/
+            find . -type f -regex "app/.*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
+      - store_artifacts:
+          path: junit
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *save_m2
+      - save_cache:
+          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -191,7 +224,7 @@ jobs:
       - run:
           name: Build Rest
           command: |
-            ./app/build.sh --batch-mode --module rest --image-mode=docker | tee build_rest_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module rest --image-mode=docker | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect API docs
           command: |
@@ -207,9 +240,11 @@ jobs:
             mkdir ./junit/
             find . -type f -regex "app/.*/target/.*-reports/.*xml" -exec cp {} ./junit/ \;
       - store_artifacts:
-          path: ./junit
+          path: junit
       - store_artifacts:
-          path: ./apidocs
+          path: apidocs
+      - store_artifacts:
+          path: build_log.txt
       - <<: *push_images
       - <<: *save_m2
       - save_cache:
@@ -230,5 +265,8 @@ workflows:
           requires:
             - connectors
       - rest:
+          requires:
+            - runtime
+      - s2i:
           requires:
             - runtime
