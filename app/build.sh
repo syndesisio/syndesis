@@ -47,6 +47,7 @@ and the following options:
   --module <m1>,<m2>, ..    Build modules (shortcut: -m)
                             Modules: ui, rest, connectors, s2i, verifier, runtime
   --dependencies            Build also all project the specified module depends on (shortcut: -d)
+  --init                    Install top-level parent pom, too (shortcut: -i). Only needed when used with -m
 
   --skip-tests              Skip unit and system test execution
   --skip-checks             Disable all checks
@@ -464,9 +465,11 @@ run_mvnw() {
         ./mvnw $args
     else
       echo "Modules: $maven_modules"
-      echo "=============================================================================="
-      echo "./mvnw -N install"
-      ./mvnw -N install
+      if [ $(hasflag --init -i) ]; then
+        echo "=============================================================================="
+        echo "./mvnw -N install"
+        ./mvnw -N install
+      fi
       for module in $maven_modules; do
         echo "=============================================================================="
         echo "./mvnw $args -f $module"
