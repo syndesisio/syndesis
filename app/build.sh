@@ -32,14 +32,7 @@ display_help() {
     cat - <<EOT
 Build Syndesis
 
-Usage: build.sh [--mode <mode>] [... options ...]
-
-with the following modes:
-
-build       -- Developer builds (without system test). This is the default if no mode is given.
-               Images are *not* build by default, use --images or --image-mode to switch this on.
-system-test -- Run the build and the system test. Needs an valid OpenShift login.
-minishift   -- Help in installing and updating minishift
+Usage: build.sh [... options ...]
 
 and the following options:
 
@@ -48,28 +41,33 @@ and the following options:
 -m  --module <m1>,<m2>, ..    Build modules
                               Modules: ui, rest, connectors, s2i, verifier, runtime
 -d  --dependencies            Build also all project the specified module depends on
--i  --init                    Install top-level parent pom, too. Only needed when used with -m
+    --init                    Install top-level parent pom, too. Only needed when used with -m
 
     --skip-tests              Skip unit and system test execution
     --skip-checks             Disable all checks
 -f  --flash                   Skip checks and tests execution (fastest mode)
 
 -i  --image-mode  <mode>      <mode> can be
-                              - "none"   : No images are build (default)
-                              - "s2i"    : Build for OpenShift image streams
-                              - "docker" : Build against a plain Docker daemon
-                              - "auto"   : Automatically detect whether to use "s2i" or "docker"
+                              - "none"      : No images are build (default)
+                              - "openshift" : Build for OpenShift image streams
+                              - "docker"    : Build against a plain Docker daemon
+                              - "auto"      : Automatically detect whether to use "s2i" or "docker"
 -n  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
 
 -c  --clean                   Run clean builds (mvn clean)
 -b  --batch-mode              Run mvn in batch mode
 -r  --rebase                  Fetch origin/master and try a rebase
 
+-h  --help                    Display this help message
+
+With "--system-test" the system tests are triggered which know these additional options:
+
     --test-namespace <ns>     The test namespace to use
     --test-token <token>      The token for the test namespace
     --pool-namespace <ns>     Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
     --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
--h  --help                    Display this help message
+
+With "--minishift" Minishift can be initialized and installed with Syndesis
 
     --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
     --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
@@ -82,8 +80,8 @@ Examples:
 * Build only UI                                  build.sh --module ui
 * Build only images with OpenShift S2I, fast     build.sh --images --image-mode s2i --flash
 * Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
-* Build for system test                          build.sh --mode system-test
-* Start Minishift afresh                         build.sh --mode minishift --full-reset --install --watch
+* Build for system test                          build.sh --system-test
+* Start Minishift afresh                         build.sh --minishift --full-reset --install --watch
 
 EOT
 }
@@ -428,12 +426,12 @@ get_maven_args() {
             #Build images
             args="$args -Pimage"
             if [ -n "${image_mode}" ]; then
-                if [ "${image_mode}" == "s2i" ]; then
+                if [ "${image_mode}" == "openshift" ] || [ "${image_mode}" == "s2i" ]; then
                     args="$args -Dfabric8.mode=openshift"
                 elif [ "${image_mode}" == "docker" ]; then
                     args="$args -Dfabric8.mode=kubernetes"
                 elif [ "${image_mode}" != "auto" ]; then
-                    echo "ERROR: Invalid --image-mode ${image_mode}. Only 'none', 's2i', 'docker' or 'auto' supported".
+                    echo "ERROR: Invalid --image-mode ${image_mode}. Only 'none', 'openshift', 'docker' or 'auto' supported".
                     exit 1
                 fi
             fi
@@ -474,7 +472,7 @@ run_mvnw() {
         ./mvnw $args
     else
       echo "Modules: $maven_modules"
-      if [ $(hasflag --init -i) ]; then
+      if [ $(hasflag --init) ]; then
         echo "=============================================================================="
         echo "./mvnw -N install"
         ./mvnw -N install
@@ -585,8 +583,8 @@ run_minishift() {
     if [ $(hasflag --install) ]; then
         basedir=$(basedir)
         check_error "$basedir"
-        oc create -f deploy/support/serviceaccount-as-oauthclient-restricted.yml
-        oc create -f deploy/syndesis-restricted.yml
+        oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+        oc create -f ${basedir}/deploy/syndesis-restricted.yml
         oc new-app syndesis-restricted \
           -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
           -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
@@ -610,6 +608,24 @@ if [ -n "$(hasflag --rebase -r)" ]; then
     git_rebase_upstream
 fi
 
+# RUn minishift tasks
+if [ -n "$(hasflag --minishift)" ]; then
+    run_minishift
+    exit 0
+fi
+
+# Run system tests
+if [ -n "$(hasflag --system-test)" ]; then
+    lock_prefix=$(readopt --create-lock)
+    if [ -n "${lock_prefix}" ]; then
+        create_lock $lock_prefix
+        exit 0
+    fi
+    run_test
+    exit 0
+fi
+
+# Check for the mode to use
 mode=$(readopt --mode)
 if [ -z "${mode}" ]; then
     mode="build"
