@@ -61,6 +61,7 @@ and the following options:
 
   --clean                   Run clean builds (mvn clean)
   --batch-mode              Run mvn in batch mode
+  --rebase                  Fetch origin/master and try a rebase (shortcut: -r)
 
   --test-namespace <ns>     The test namespace to use
   --test-token <token>      The token for the test namespace
@@ -82,10 +83,27 @@ EOT
 # Dir where this script is located
 basedir() {
     # Default is current directory
-    local dir="$(pwd)/"$(dirname "${BASH_SOURCE[0]}")
+    local script=${BASH_SOURCE[0]}
+
+    # Resolve symbolic links
+    if [ -L $script ]; then
+        if readlink -f $script >/dev/null 2>&1; then
+            script=$(readlink -f $script)
+        elif readlink $script >/dev/null 2>&1; then
+            script=$(readlink $script)
+        elif realpath $script >/dev/null 2>&1; then
+            script=$(realpath $script)
+        else
+            echo "ERROR: Cannot resolve symbolic link $script"
+            exit 1
+        fi
+    fi
+
+    local dir=$(dirname "$script")
     local full_dir=$(cd "${dir}" && pwd)
     echo ${full_dir}
 }
+
 
 # Checks if a flag is present in the arguments.
 hasflag() {
@@ -129,6 +147,26 @@ check_error() {
         echo $msg
         exit 1
     fi
+}
+
+# ======================================================
+# Git update functions
+
+git_rebase_upstream() {
+  echo "git fetch upstream master"
+  git fetch upstream master
+  echo -n "git rebase upstream/master"
+  if ! git rebase upstream/master; then
+    echo " (failed)"
+    echo "git stash"
+    git stash
+    echo "git rebase upstream/master"
+    git rebase upstream/master
+    echo "git stash pop"
+    git stash pop
+  else
+    echo
+  fi
 }
 
 # ======================================================
@@ -323,6 +361,9 @@ extract_modules() {
         done
         modules="$modules $extra_modules"
     fi
+    if [ -z "$modules" ]; then
+      return
+    fi
     # Unique modules
     local unique_modules=$(echo $modules | xargs -n 1 | sort -u | xargs | awk '$1=$1')
     echo $(order_modules "$unique_modules")
@@ -331,6 +372,7 @@ extract_modules() {
 order_modules() {
     # Fix order
     local modules="$1"
+    # All modules in the proper order
     local ret=$ALL_MODULES
     for cm in "${MODULES[@]}"; do
       local check_module=${cm%%:*}
@@ -422,6 +464,9 @@ run_mvnw() {
         ./mvnw $args
     else
       echo "Modules: $maven_modules"
+      echo "=============================================================================="
+      echo "./mvnw -N install"
+      ./mvnw -N install
       for module in $maven_modules; do
         echo "=============================================================================="
         echo "./mvnw $args -f $module"
@@ -516,6 +561,10 @@ run_test() {
 if [ -n "$(hasflag --help)" ]; then
     display_help
     exit 0
+fi
+
+if [ -n "$(hasflag --rebase -r)" ]; then
+    git_rebase_upstream
 fi
 
 mode=$(readopt --mode)
