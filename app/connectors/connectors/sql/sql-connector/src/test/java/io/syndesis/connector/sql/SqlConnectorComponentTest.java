@@ -68,12 +68,12 @@ public class SqlConnectorComponentTest {
     public void camelConnectorTest() throws Exception {
 
         Statement stmt = connection.createStatement();
-        String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
-                             "lastName VARCHAR(255))"; 
+        String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " +
+                             "lastName VARCHAR(255))";
         stmt.executeUpdate(createTable);
         stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
         stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
-        
+
         BasicDataSource ds = new BasicDataSource();
         ds.setUsername(properties.getProperty("sql-connector.user"));
         ds.setPassword(properties.getProperty("sql-connector.password"));
@@ -92,7 +92,7 @@ public class SqlConnectorComponentTest {
             context.addRoutes(new RouteBuilder() {
                 @Override
                 public void configure() throws Exception {
-                    from("sql-connector:SELECT * FROM NAME")
+                    from("sql-connector:SELECT * FROM NAME ORDER BY id")
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange)
@@ -115,12 +115,12 @@ public class SqlConnectorComponentTest {
     public void camelConnectorInputParamTest() throws Exception {
 
         Statement stmt = connection.createStatement();
-        
-        String createTable = "CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), " + 
+
+        String createTable = "CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), " +
                 "numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT," +
                 "dateType DATE, timeType TIME )";
         stmt.executeUpdate(createTable);
-        
+
         BasicDataSource ds = new BasicDataSource();
         ds.setUsername(properties.getProperty("sql-connector.user"));
         ds.setPassword(properties.getProperty("sql-connector.password"));
@@ -128,7 +128,7 @@ public class SqlConnectorComponentTest {
 
         SimpleRegistry registry = new SimpleRegistry();
         registry.put("dataSource", ds);
-        
+
         CamelContext context = new DefaultCamelContext(registry);
 
         CountDownLatch latch = new CountDownLatch(1);
