@@ -503,6 +503,10 @@ run_test() {
     local test_token=$(readopt --test-token)
 
     local build_id=${JOB_NAME:-}${BUILD_NUMBER:-}
+    if [ -z "$build_id" ] && [ -n "${CIRCLE_JOB:-}" ]; then
+       build_id="${CIRCLE_JOB}${CIRCLE_BUILD_NUM:-}"
+    fi
+
     if [ -z "$build_id" ]; then
         build_id="cli"
     fi
