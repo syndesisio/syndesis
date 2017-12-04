@@ -56,12 +56,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>sql-common</artifactId>
-      <type>test-jar</type>
-      <version>${project.version}</version>
-    </dependency>
 
     <!-- JSON support -->
     <dependency>
