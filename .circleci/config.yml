@@ -269,4 +269,4 @@ workflows:
             - runtime
       - s2i:
           requires:
-            - runtime
+            - rest
