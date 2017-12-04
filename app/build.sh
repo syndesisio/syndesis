@@ -78,6 +78,11 @@ With "--minishift" Minishift can be initialized and installed with Syndesis
     --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
+
+With "--dev" common development tasks are simplified
+
+    --debug <name>           Setup a port forwarding to <name> pod (example: rest)
+
 Examples:
 
 * Build only backend modules, fast               build.sh --backend --flash
@@ -86,6 +91,7 @@ Examples:
 * Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
 * Build for system test                          build.sh --system-test
 * Start Minishift afresh                         build.sh --minishift --full-reset --install --watch
+* Setup debug port forward for rest pod          build.sh --dev --debug rest
 
 EOT
 }
@@ -614,6 +620,18 @@ run_minishift() {
     fi
 }
 
+dev_tasks() {
+    if [ $(hasflag --debug) ]; then
+        local name=$(readopt --debug)
+        if [ -z "${name}" ]; then
+            name="rest"
+        fi
+
+        local pod=$(oc get -o name pod -l component=syndesis-${name})
+        oc port-forward ${pod//*\//} 5005:5005
+    fi
+}
+
 # ============================================================================
 # Main loop
 
@@ -643,6 +661,12 @@ if [ -n "$(hasflag --system-test)" ]; then
     exit 0
 fi
 
+# Developer helper tasks
+if [ -n "$(hasflag --dev)" ]; then
+    dev_tasks
+    exit 0
+fi
+
 # Check for the mode to use
 mode=$(readopt --mode)
 if [ -z "${mode}" ]; then
@@ -666,6 +690,10 @@ case $mode in
         ;;
     "minishift")
         run_minishift
+        exit 0
+        ;;
+    "dev")
+        dev_tasks
         exit 0
         ;;
     **)
