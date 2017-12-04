@@ -184,7 +184,7 @@ jobs:
   s2i:
     <<: *job_defaults
     environment:
-      DOCKER_IMAGES: syndesis-rest
+      DOCKER_IMAGES: syndesis-s2i
       <<: *common_env
     steps:
       - checkout
