@@ -73,7 +73,8 @@ With "--minishift" Minishift can be initialized and installed with Syndesis
     --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
     --install                 Install templates into a running Minishift
     --watch                   Watch startup of pods
-
+-i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
+                              (default: "openshift")
 Examples:
 
 * Build only backend modules, fast               build.sh --backend --flash
@@ -574,18 +575,27 @@ run_minishift() {
     if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
         # Only warning if minishift is not installed
         minishift delete
+        sleep 2
         if [ $(hasflag --full-reset) ] && [ -d ~/.minishift ]; then
             rm -rf ~/.minishift
         fi
         # TODO: Make startup options customizable
         minishift start --memory 4192 --cpus 2
     fi
+
+    local image_mode=$(readopt --image-mode -i)
+    local template="syndesis-restricted"
+    if [ "$image_mode" == "openshift" ]; then
+        template="syndesis-restricted"
+    elif [ "$image_mode" == "docker" ]; then
+        template="syndesis-dev-restricted"
+    fi
     if [ $(hasflag --install) ]; then
         basedir=$(basedir)
         check_error "$basedir"
         oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
-        oc create -f ${basedir}/deploy/syndesis-restricted.yml
-        oc new-app syndesis-restricted \
+        oc create -f ${basedir}/deploy/${template}.yml
+        oc new-app ${template} \
           -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
           -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
           -p OPENSHIFT_PROJECT=$(oc project -q) \
