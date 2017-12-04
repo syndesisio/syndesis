@@ -4,6 +4,9 @@ import { SlugifyPipe } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-wizard-progress-bar',
+  styles: [`
+    :host(.has-half-width) .wizard-pf-steps-indicator { max-width: 50%; }
+  `],
   template: `
   <div class="row toolbar-pf steps" *ngIf="steps.length > 0">
     <ul class="wizard-pf-steps-indicator center">
@@ -33,7 +36,7 @@ export class WizardProgressBarComponent implements OnInit {
   @Input() stepUrls: Array<string>;
 
   ngOnInit() {
-    if (this.stepUrls.length < 1 && !!this.selectedStep) {
+    if (!this.stepUrls && !this.selectedStep) {
       this.selectedStep =  1;
     }
 
