@@ -80,6 +80,22 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
     }
 
     @Test
+    public void shouldIncorporateGivenConfiguredProperties() throws IOException {
+        final String specification = resource("/swagger/reverb.swagger.json");
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
+            .name("Reverb API")//
+            .description("Invokes Reverb API")//
+            .icon("fa-music")//
+            .putConfiguredProperty("specification", specification)//
+            .putConfiguredProperty("accessTokenUrl", "http://some.token.url").build();
+
+        final Connector connector = new SwaggerConnectorGenerator().generate(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(connector.getConfiguredProperties()).containsEntry("accessTokenUrl", "http://some.token.url");
+    }
+
+    @Test
     public void shouldProvideInfoFromPetstoreSwagger() throws IOException {
         final String specification = resource("/swagger/petstore.swagger.json");
 

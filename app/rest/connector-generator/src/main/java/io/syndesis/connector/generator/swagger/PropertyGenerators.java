@@ -40,16 +40,7 @@ import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
     accessTokenUrl {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> {
-                if (hasOAuth2Definition(swagger)) {
-                    final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
-                    final OAuth2Definition oauth2 = (OAuth2Definition) securityDefinitions.get("oauth2");
-
-                    return Optional.of(new ConfigurationProperty.Builder().createFrom(template).defaultValue(oauth2.getTokenUrl()).build());
-                }
-
-                return Optional.empty();
-            };
+            return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getTokenUrl);
         }
     },
     authenticationType {
@@ -78,6 +69,12 @@ import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 
                 return Optional.of(authenticationType.build());
             };
+        }
+    },
+    authorizationUrl {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getAuthorizationUrl);
         }
     },
     basePath {
@@ -118,9 +115,7 @@ import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
     }
 
     private static boolean hasOAuth2Definition(final Swagger swagger) {
-        final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
-
-        return securityDefinitions != null && securityDefinitions.containsKey("oauth2");
+        return oauth2Definition(swagger).isPresent();
     }
 
     private static Optional<ConfigurationProperty> ifHasOAuthSecurityDefinition(final Swagger swagger,
@@ -130,6 +125,22 @@ import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
         }
 
         return Optional.empty();
+    }
+
+    private static Optional<OAuth2Definition> oauth2Definition(final Swagger swagger) {
+        final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
+
+        if (securityDefinitions == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable((OAuth2Definition) securityDefinitions.get("oauth2"));
+    }
+
+    private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,
+        final Function<OAuth2Definition, String> defaultValueExtractor) {
+        return oauth2Definition(swagger).map(definition -> new ConfigurationProperty.Builder().createFrom(template)
+            .defaultValue(defaultValueExtractor.apply(definition)).build());
     }
 
     private static BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>>

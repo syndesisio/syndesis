@@ -107,18 +107,29 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings);
 
-        final String specification = requiredSpecification(connectorSettings);
+        requiredSpecification(connectorSettings);
 
         final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
 
-        final Connector.Builder builder = new Connector.Builder()//
-            .createFrom(baseConnector)//
-            .putConfiguredProperty("specification", specification);
+        final Connector.Builder builder = new Connector.Builder().createFrom(baseConnector);
+
+        final Map<String, String> alreadyConfiguredProperties = ((Connector) builder.build()).getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
+            if (alreadyConfiguredProperties.containsKey(propertyName)) {
+                return;
+            }
+
             final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template);
 
-            maybeProperty.map(property -> builder.putProperty(propertyName, property));
+            maybeProperty.ifPresent(property -> {
+                builder.putProperty(propertyName, property);
+
+                final String defaultValue = property.getDefaultValue();
+                if (defaultValue != null) {
+                    builder.putConfiguredProperty(propertyName, defaultValue);
+                }
+            });
         });
 
         return builder.build();
