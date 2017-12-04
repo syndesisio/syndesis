@@ -71,6 +71,9 @@ With "--minishift" Minishift can be initialized and installed with Syndesis
 
     --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
     --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
+    --memory                  How much memory to use when doing a reset. Default: 4GB
+    --cpus                    How many CPUs to use when doing a reset. Default: 2
+    --disk-size               How many disk space to use when doing a reset. Default: 20GB
     --install                 Install templates into a running Minishift
     --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
@@ -574,13 +577,14 @@ run_test() {
 run_minishift() {
     if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
         # Only warning if minishift is not installed
-        minishift delete
-        sleep 2
+        minishift delete --clear-cache --force
         if [ $(hasflag --full-reset) ] && [ -d ~/.minishift ]; then
             rm -rf ~/.minishift
         fi
-        # TODO: Make startup options customizable
-        minishift start --memory 4192 --cpus 2
+        local memory=$(readopt --memory)
+        local cpus=$(readopt --cpus)
+        local disksize=$(readopt --disk-size)
+        minishift start --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
     fi
 
     local image_mode=$(readopt --image-mode -i)
