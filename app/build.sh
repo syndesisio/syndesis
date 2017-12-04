@@ -36,39 +36,39 @@ Usage: build.sh [--mode <mode>] [... options ...]
 
 with the following modes:
 
-build       -- Developer builds (without system test). This is the default if no mode is given. Images are *not*
-               build by default, use --images or --image-mode to switch this on.
+build       -- Developer builds (without system test). This is the default if no mode is given.
+               Images are *not* build by default, use --images or --image-mode to switch this on.
 system-test -- Run the build and the system test. Needs an valid OpenShift login.
 
 and the following options:
 
-  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
-  --images                  Build only modules with Docker images (ui, rest, verifier, s2i).
-  --module <m1>,<m2>, ..    Build modules (shortcut: -m)
-                            Modules: ui, rest, connectors, s2i, verifier, runtime
-  --dependencies            Build also all project the specified module depends on (shortcut: -d)
-  --init                    Install top-level parent pom, too (shortcut: -i). Only needed when used with -m
+-b  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
+    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-m  --module <m1>,<m2>, ..    Build modules
+                              Modules: ui, rest, connectors, s2i, verifier, runtime
+-d  --dependencies            Build also all project the specified module depends on
+-i  --init                    Install top-level parent pom, too. Only needed when used with -m
 
-  --skip-tests              Skip unit and system test execution
-  --skip-checks             Disable all checks
-  --flash                   Skip checks and tests execution (fastest mode)
+    --skip-tests              Skip unit and system test execution
+    --skip-checks             Disable all checks
+-f  --flash                   Skip checks and tests execution (fastest mode)
 
-  --image-mode  <mode>      <mode> can be:
-                            - "none"   : No images are build (default)
-                            - "s2i"    : Build for OpenShift image streams
-                            - "docker" : Build against a plain Docker daemon
-                            - "auto"   : Automatically detect whether to use "s2i" or "docker"
-  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
+-i  --image-mode  <mode>      <mode> can be
+                              - "none"   : No images are build (default)
+                              - "s2i"    : Build for OpenShift image streams
+                              - "docker" : Build against a plain Docker daemon
+                              - "auto"   : Automatically detect whether to use "s2i" or "docker"
+-n  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
 
-  --clean                   Run clean builds (mvn clean)
-  --batch-mode              Run mvn in batch mode
-  --rebase                  Fetch origin/master and try a rebase (shortcut: -r)
+-c  --clean                   Run clean builds (mvn clean)
+-b  --batch-mode              Run mvn in batch mode
+-r  --rebase                  Fetch origin/master and try a rebase
 
-  --test-namespace <ns>     The test namespace to use
-  --test-token <token>      The token for the test namespace
-  --pool-namespace <ns>     Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
-  --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
-  --help                    Display this help message
+    --test-namespace <ns>     The test namespace to use
+    --test-token <token>      The token for the test namespace
+    --pool-namespace <ns>     Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
+    --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
+-h  --help                    Display this help message
 
 Examples:
 
@@ -336,7 +336,7 @@ teardown_project_pool() {
 extract_modules() {
     local modules=""
 
-    if [ "$(hasflag --backend)" ]; then
+    if [ "$(hasflag --backend -b)" ]; then
         modules="$modules connectors runtime rest verifier"
     fi
 
@@ -397,7 +397,7 @@ get_maven_args() {
     local namespace=${1:-}
     local args=""
 
-    if [ -n "$(hasflag --flash)" ]; then
+    if [ -n "$(hasflag --flash -f)" ]; then
         args="$args -Pflash"
     fi
 
@@ -409,11 +409,11 @@ get_maven_args() {
         args="$args -Pskip-checks"
     fi
 
-    if [ -n "$(hasflag --batch-mode)" ]; then
+    if [ -n "$(hasflag --batch-mode -b)" ]; then
         args="$args --batch-mode"
     fi
 
-    local image_mode="$(readopt --image-mode)"
+    local image_mode="$(readopt --image-mode -i)"
     if [ "${image_mode}" != "none" ]; then
         if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
             #Build images
@@ -433,13 +433,13 @@ get_maven_args() {
 
     local ns="$namespace"
     if [ -z "$ns" ]; then
-        ns="$(readopt --namespace)"
+        ns="$(readopt --namespace -n)"
     fi
     if [ -n "${ns}" ]; then
         args="$args -Dfabric8.namespace=${ns}"
     fi
 
-    if [ -n "$(hasflag --clean)" ]; then
+    if [ -n "$(hasflag --clean -c)" ]; then
         args="$args clean"
     fi
 
@@ -561,7 +561,7 @@ run_test() {
 # ============================================================================
 # Main loop
 
-if [ -n "$(hasflag --help)" ]; then
+if [ -n "$(hasflag --help -h)" ]; then
     display_help
     exit 0
 fi
