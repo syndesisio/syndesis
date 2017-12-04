@@ -24,7 +24,7 @@ MODULES=(
   "runtime:connectors"
   "verifier:connectors"
   "rest:connectors runtime"
-  "s2i:connectors runtime"
+  "s2i:rest runtime connectors"
 )
 
 # Display a help message.
