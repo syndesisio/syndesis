@@ -527,16 +527,22 @@ run_test() {
 
         local namespace=$(project_lock_name $lock $pool_namespace)
         local token=$(project_lock_token $lock $pool_namespace)
-        while [ -z "$namespace" ]; do
-            echo "Couldn't obtain lock. Retrying in 1 minute."
-            sleep 1m
-
-            if [ -n "${lock:-}" ]; then
-                lock=$(obtain_project_lock $build_id $pool_namespace)
-                namespace=$(project_lock_name $lock $pool_namespace)
-                token=$(project_lock_token $lock $pool_namespace)
+        for r in {1..10}; do
+            if [ -z "$namespace" ]; then
+                echo "Couldn't obtain lock. Retrying in 1 minute."
+                sleep 1m
+                if [ -n "${lock:-}" ]; then
+                    lock=$(obtain_project_lock $build_id $pool_namespace)
+                    namespace=$(project_lock_name $lock $pool_namespace)
+                    token=$(project_lock_token $lock $pool_namespace)
+                fi
             fi
         done
+
+        if [ -z "$namespace" ]; then
+            echo "Failed to allocate lock! Exiting!"
+            exit -1
+        fi
 
         echo "Allocated project: $namespace for: $build_id"
         oc login --token=$token --server=$(current_server)
