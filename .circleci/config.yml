@@ -258,7 +258,7 @@ jobs:
           name: Prep for Maven cache load
           command: |
             find app | grep pom.xml | grep -v src/test/resources | grep -v src/main/resources | sort | xargs cat > all-poms
-     - restore_cache:
+      - restore_cache:
           key: syndesis-mvn-tests-{{ checksum "all-poms" }}
       - run:
           name: Run System Tests
