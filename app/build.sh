@@ -39,6 +39,7 @@ with the following modes:
 build       -- Developer builds (without system test). This is the default if no mode is given.
                Images are *not* build by default, use --images or --image-mode to switch this on.
 system-test -- Run the build and the system test. Needs an valid OpenShift login.
+minishift   -- Help in installing and updating minishift
 
 and the following options:
 
@@ -70,6 +71,11 @@ and the following options:
     --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
 -h  --help                    Display this help message
 
+    --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
+    --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
+    --install                 Install templates into a running Minishift
+    --watch                   Watch startup of pods
+
 Examples:
 
 * Build only backend modules, fast               build.sh --backend --flash
@@ -77,6 +83,7 @@ Examples:
 * Build only images with OpenShift S2I, fast     build.sh --images --image-mode s2i --flash
 * Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
 * Build for system test                          build.sh --mode system-test
+* Start Minishift afresh                         build.sh --mode minishift --full-reset --install --watch
 
 EOT
 }
@@ -343,7 +350,7 @@ extract_modules() {
     fi
 
     if [ "$(hasflag --images)" ]; then
-        modules="$modules ui rest verifier"
+        modules="$modules ui rest verifier s2i"
     fi
 
     local arg_modules=$(readopt --module -m);
@@ -559,6 +566,31 @@ run_test() {
     run_mvnw "$maven_args"
 }
 
+run_minishift() {
+    if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
+        # Only warning if minishift is not installed
+        minishift delete
+        if [ $(hasflag --full-reset) ] && [ -d ~/.minishift ]; then
+            rm -rf ~/.minishift
+        fi
+        # TODO: Make startup options customizable
+        minishift start --memory 4192 --cpus 2
+    fi
+    if [ $(hasflag --install) ]; then
+        basedir=$(basedir)
+        check_error "$basedir"
+        oc create -f deploy/support/serviceaccount-as-oauthclient-restricted.yml
+        oc create -f deploy/syndesis-restricted.yml
+        oc new-app syndesis-restricted \
+          -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
+          -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+          -p OPENSHIFT_PROJECT=$(oc project -q) \
+          -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+    fi
+    if [ $(hasflag --watch) ]; then
+        watch oc get pods
+    fi
+}
 
 # ============================================================================
 # Main loop
@@ -590,6 +622,10 @@ case $mode in
         fi
 
         run_test
+        exit 0
+        ;;
+    "minishift")
+        run_minishift
         exit 0
         ;;
     **)
