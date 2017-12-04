@@ -187,6 +187,7 @@ jobs:
       DOCKER_IMAGES: syndesis-s2i
       <<: *common_env
     steps:
+      - setup_remote_docker
       - checkout
       - restore_cache:
           key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
