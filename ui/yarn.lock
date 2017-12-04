@@ -5077,9 +5077,9 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly-ng@0.13.3:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-0.13.3.tgz#ea5b0ffbb5126519a3e5c0d864cb5fc796ef05b4"
+patternfly-ng@^0.13.3:
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-0.13.7.tgz#25909229193531b8845b3939d66b01694f1dcb6c"
   dependencies:
     "@angular/animations" "^4.0.1"
     "@angular/common" "^4.0.1"
