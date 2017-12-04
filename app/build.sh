@@ -306,16 +306,18 @@ release_project_lock() {
 
 
 teardown_project_pool() {
-    echo "Cleaning up..."
     local namespace=${1:-}
     local pool_namespace=${2:-}
     local initial_namespace=${3:-}
     local initial_token=${4:-}
+    echo "Cleaning up namespace: $namespace using pool namespace: $pool_namespace and switching back to namespace: $initial_namespace."
 
     #1. We need to login to the original project first, before releasing the lock.
-    if [ -n "${intial_token:-}" ]; then
+    if [ -n "${initial_token:-}" ]; then
         oc login --token=${initial_token} --server=$(current_server) || true
         oc project ${pool_namespace}
+    else
+        echo "Warning: No initial token found!"
     fi
 
     if [ -n "${namespace:-}" ]; then
