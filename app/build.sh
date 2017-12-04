@@ -16,6 +16,17 @@ set -eu
 # Save global script args
 ARGS="$@"
 
+# All modules, in the right build order
+ALL_MODULES="connectors verifier runtime rest s2i ui"
+MODULES=(
+  "ui"
+  "connectors"
+  "runtime:connectors"
+  "verifier:connectors"
+  "rest:connectors runtime"
+  "s2i:rest runtime connectors"
+)
+
 # Display a help message.
 display_help() {
     cat - <<EOT
@@ -31,31 +42,33 @@ system-test -- Run the build and the system test. Needs an valid OpenShift login
 
 and the following options:
 
-  --backend               Build only backend modules (rest, verifier, runtime, connectors)
-  --images                Build only modules with Docker images (ui, rest, verifier, s2i).
-  --module <m1>,<m2>, ..  Build multiple modules (and their dependencies and dependent modules)
-                          Modules: ui, rest, connectors, s2i, verifier, runtime
-  --dependencies          Build also all project the specified module depends on
+  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
+  --images                  Build only modules with Docker images (ui, rest, verifier, s2i).
+  --module <m1>,<m2>, ..    Build modules (shortcut: -m)
+                            Modules: ui, rest, connectors, s2i, verifier, runtime
+  --dependencies            Build also all project the specified module depends on (shortcut: -d)
+  --init                    Install top-level parent pom, too (shortcut: -i). Only needed when used with -m
 
-  --skip-tests            Skip unit and system test execution
-  --skip-checks           Disable all checks
-  --flash                 Skip checks and tests execution (fastest mode)
+  --skip-tests              Skip unit and system test execution
+  --skip-checks             Disable all checks
+  --flash                   Skip checks and tests execution (fastest mode)
 
-  --image-mode  <mode>    <mode> can be:
-                          - "none"   : No images are build (default)
-                          - "s2i"    : Build for OpenShift image streams
-                          - "docker" : Build against a plain Docker daemon
-                          - "auto"   : Automatically detect whether to use "s2i" or "docker"
-  --namespace <ns>        Specifies the namespace to create images in when using '--images s2i'
+  --image-mode  <mode>      <mode> can be:
+                            - "none"   : No images are build (default)
+                            - "s2i"    : Build for OpenShift image streams
+                            - "docker" : Build against a plain Docker daemon
+                            - "auto"   : Automatically detect whether to use "s2i" or "docker"
+  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
 
-  --clean                 Run clean builds (mvn clean)
-  --batch-mode            Run mvn in batch mode
+  --clean                   Run clean builds (mvn clean)
+  --batch-mode              Run mvn in batch mode
+  --rebase                  Fetch origin/master and try a rebase (shortcut: -r)
 
-  --test-namespace <ns>   The test namespace to use
-  --test-token <token>    The token for the test namespace
-  --pool-namespace <ns>   Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
-  --create-lock <prefix>  Create project pool locks for system-tests for the projects with the given prefix
-  --help                  Display this help message
+  --test-namespace <ns>     The test namespace to use
+  --test-token <token>      The token for the test namespace
+  --pool-namespace <ns>     Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
+  --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
+  --help                    Display this help message
 
 Examples:
 
@@ -71,19 +84,38 @@ EOT
 # Dir where this script is located
 basedir() {
     # Default is current directory
-    local dir="$(pwd)/"$(dirname "${BASH_SOURCE[0]}")
+    local script=${BASH_SOURCE[0]}
+
+    # Resolve symbolic links
+    if [ -L $script ]; then
+        if readlink -f $script >/dev/null 2>&1; then
+            script=$(readlink -f $script)
+        elif readlink $script >/dev/null 2>&1; then
+            script=$(readlink $script)
+        elif realpath $script >/dev/null 2>&1; then
+            script=$(realpath $script)
+        else
+            echo "ERROR: Cannot resolve symbolic link $script"
+            exit 1
+        fi
+    fi
+
+    local dir=$(dirname "$script")
     local full_dir=$(cd "${dir}" && pwd)
     echo ${full_dir}
 }
 
+
 # Checks if a flag is present in the arguments.
 hasflag() {
-    filter=$1
+    filters="$@"
     for var in $ARGS; do
-        if [ "$var" = "$filter" ]; then
-            echo 'true'
-            break;
-        fi
+        for filter in $filters; do
+          if [ "$var" = "$filter" ]; then
+              echo 'true'
+              return
+          fi
+        done
     done
 }
 
@@ -116,6 +148,26 @@ check_error() {
         echo $msg
         exit 1
     fi
+}
+
+# ======================================================
+# Git update functions
+
+git_rebase_upstream() {
+  echo "git fetch upstream master"
+  git fetch upstream master
+  echo -n "git rebase upstream/master"
+  if ! git rebase upstream/master; then
+    echo " (failed)"
+    echo "git stash"
+    git stash
+    echo "git rebase upstream/master"
+    git rebase upstream/master
+    echo "git stash pop"
+    git stash pop
+  else
+    echo
+  fi
 }
 
 # ======================================================
@@ -297,20 +349,43 @@ extract_modules() {
         modules="$modules ${arg_modules//,/ }"
     fi
 
+    if [ "$(hasflag --dependencies -d)" ]; then
+        local extra_modules=""
+        for module in $modules; do
+            for m in "${MODULES[@]}"; do
+              local k=${m%%:*}
+              if [ "$module" == $k ]; then
+                  local v=${m#*:}
+                  extra_modules="${extra_modules} $v"
+              fi
+            done
+        done
+        modules="$modules $extra_modules"
+    fi
+    if [ -z "$modules" ]; then
+      return
+    fi
     # Unique modules
-    echo "$modules" | xargs -n 1 | sort -u | xargs | awk '$1=$1'
+    local unique_modules=$(echo $modules | xargs -n 1 | sort -u | xargs | awk '$1=$1')
+    echo $(order_modules "$unique_modules")
 }
 
-args_for_modules() {
-    local modules="$*"
-    if [ -n "${modules}" ]; then
-        local args="-pl $(join_comma ${modules})"
-        if [ -n "$(hasflag --dependencies)" ]; then
-            args="${args} -am"
-        fi
-        args="${args} -amd"
-        echo "$args"
-    fi
+order_modules() {
+    # Fix order
+    local modules="$1"
+    # All modules in the proper order
+    local ret=$ALL_MODULES
+    for cm in "${MODULES[@]}"; do
+      local check_module=${cm%%:*}
+      # Check if $check_module is in the module list
+      if [ -n "${modules##*${check_module}*}" ]; then
+        # No, so remove it from the return value
+        ret=${ret//$check_module/}
+      fi
+    done
+
+    # Normalize return value
+    echo $ret | awk '$1=$1'
 }
 
 join_comma() {
@@ -320,8 +395,7 @@ join_comma() {
 
 get_maven_args() {
     local namespace=${1:-}
-    local modules=$(extract_modules)
-    local args=$(args_for_modules $modules)
+    local args=""
 
     if [ -n "$(hasflag --flash)" ]; then
         args="$args -Pflash"
@@ -379,13 +453,34 @@ get_maven_args() {
     echo $args
 }
 
-run_build() {
-    local maven_args=$(get_maven_args)
-    check_error $maven_args
-    echo "./mvnw $maven_args"
+run_mvnw() {
+    local args=$1
+    local maven_modules=$(extract_modules)
+    check_error $maven_modules
     cd $(basedir)
-    echo "=============================================================================="
-    exec ./mvnw $maven_args
+    if [ -z "${maven_modules}" ]; then
+        echo "=============================================================================="
+        echo "./mvnw $args"
+        echo "=============================================================================="
+        ./mvnw $args
+    else
+      echo "Modules: $maven_modules"
+      if [ $(hasflag --init -i) ]; then
+        echo "=============================================================================="
+        echo "./mvnw -N install"
+        ./mvnw -N install
+      fi
+      for module in $maven_modules; do
+        echo "=============================================================================="
+        echo "./mvnw $args -f $module"
+        echo "=============================================================================="
+        ./mvnw -f $module $args
+      done
+    fi
+}
+
+run_build() {
+    run_mvnw "$(get_maven_args)"
 }
 
 run_test() {
@@ -459,10 +554,9 @@ run_test() {
     local maven_args=$(get_maven_args $namespace)
     check_error $maven_args
     maven_args="-Psystem-tests -Pimages -Dfabric8.mode=openshift $maven_args"
-    echo "mvnw $maven_args"
-    cd $(basedir)
-    exec ./mvnw $maven_args
+    run_mvnw "$maven_args"
 }
+
 
 # ============================================================================
 # Main loop
@@ -470,6 +564,10 @@ run_test() {
 if [ -n "$(hasflag --help)" ]; then
     display_help
     exit 0
+fi
+
+if [ -n "$(hasflag --rebase -r)" ]; then
+    git_rebase_upstream
 fi
 
 mode=$(readopt --mode)
@@ -480,6 +578,7 @@ fi
 case $mode in
     "build")
         run_build
+        exit 0
         ;;
     "system-test")
         lock_prefix=$(readopt --create-lock)
@@ -489,6 +588,7 @@ case $mode in
         fi
 
         run_test
+        exit 0
         ;;
     **)
         echo "Invalid mode '$mode'. Known modes: build, system-test"
