@@ -81,7 +81,7 @@ With "--minishift" Minishift can be initialized and installed with Syndesis
 
 With "--dev" common development tasks are simplified
 
-    --debug <name>           Setup a port forwarding to <name> pod (example: rest)
+    --debug <name>            Setup a port forwarding to <name> pod (example: rest)
 
 Examples:
 
