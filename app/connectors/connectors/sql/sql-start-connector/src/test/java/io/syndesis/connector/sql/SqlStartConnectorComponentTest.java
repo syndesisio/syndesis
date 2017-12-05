@@ -103,7 +103,7 @@ public class SqlStartConnectorComponentTest {
                 }
             });
             context.start();
-            latch.await(5l,TimeUnit.SECONDS);
+            latch.await(30l,TimeUnit.SECONDS);
             Assert.assertEquals("[{\"LASTNAME\":\"Jackson\",\"FIRSTNAME\":\"Joe\",\"ID\":1},{\"LASTNAME\":\"Waters\",\"FIRSTNAME\":\"Roger\",\"ID\":2}]", result.getJsonBean());
         } finally {
             context.stop();
