@@ -72,7 +72,7 @@ public class SqlConnectorComponentTest {
                              "lastName VARCHAR(255))";
         stmt.executeUpdate(createTable);
         stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
-        stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
+        //stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
 
         BasicDataSource ds = new BasicDataSource();
         ds.setUsername(properties.getProperty("sql-connector.user"));
