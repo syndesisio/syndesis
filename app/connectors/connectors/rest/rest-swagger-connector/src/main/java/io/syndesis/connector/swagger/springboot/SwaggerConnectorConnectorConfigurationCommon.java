@@ -1,6 +1,7 @@
 package io.syndesis.connector.swagger.springboot;
 
 import javax.annotation.Generated;
+import io.syndesis.connector.swagger.AuthenticationType;
 
 /**
  * REST Swagger Connector
@@ -10,6 +11,11 @@ import javax.annotation.Generated;
 @Generated("org.apache.camel.maven.connector.SpringBootAutoConfigurationMojo")
 public class SwaggerConnectorConnectorConfigurationCommon {
 
+    /**
+     * API basePath for example /v2. Default is unset if set overrides the value
+     * present in Swagger specification.
+     */
+    private String basePath;
     /**
      * Scheme hostname and port to direct the HTTP requests to in the form of
      * https://hostname:port. Can be configured at the endpoint component or in
@@ -25,6 +31,16 @@ public class SwaggerConnectorConnectorConfigurationCommon {
      */
     private String operationId;
     private String specification;
+    private AuthenticationType authenticationType;
+    private String accessToken;
+
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
 
     public String getHost() {
         return host;
@@ -48,5 +64,21 @@ public class SwaggerConnectorConnectorConfigurationCommon {
 
     public void setSpecification(String specification) {
         this.specification = specification;
+    }
+
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

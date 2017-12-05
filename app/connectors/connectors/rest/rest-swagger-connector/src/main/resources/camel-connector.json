@@ -14,7 +14,7 @@
   "pattern" : "From",
   "inputDataType" : "json",
   "outputDataType" : "json",
-  "componentOptions" : [ "host" ],
+  "componentOptions" : [ "host", "basePath" ],
   "endpointValues" : {
     "consumes" : "application/json"
   },
@@ -23,6 +23,20 @@
     "specification" : {
       "name" : "specification",
       "displayName" : "Swagger specification",
+      "kind" : "property",
+      "type" : "string",
+      "javaType" : "java.lang.String"
+    },
+    "authenticationType" : {
+      "name" : "authenticationType",
+      "displayName" : "Authentication type",
+      "kind" : "property",
+      "type" : "enum",
+      "javaType" : "io.syndesis.connector.swagger.AuthenticationType"
+    },
+    "accessToken" : {
+      "name" : "accessToken",
+      "displayName" : "OAuth access token",
       "kind" : "property",
       "type" : "string",
       "javaType" : "java.lang.String"
