@@ -78,14 +78,14 @@ export class IntegrationViewBase {
         modal.result
           ? this.doAction(action, integration)
               .then(_ =>
-                this.popNotification({
+                this.notificationService.popNotification({
                   type: NotificationType.SUCCESS,
                   header,
                   message
                 })
               )
               .catch(error =>
-                this.popNotification({
+                this.notificationService.popNotification({
                   type: NotificationType.DANGER,
                   header: danger,
                   message: `${reason}: ${error}`
@@ -213,19 +213,5 @@ export class IntegrationViewBase {
 
   getAction() {
     return this.currentAction;
-  }
-
-  //-----  Toast ------------------->>
-
-  // Show toast notification
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      []
-    );
   }
 }

@@ -54,14 +54,11 @@ export class TechExtensionImportComponent implements OnInit {
       return;
     }
     this.extensionStore.importExtension(this.response.id).toPromise().then( value => {
-      this.notificationService.message(
-        NotificationType.SUCCESS,
-        'Imported!',
-        'Your technical extension has been imported',
-        false,
-        null,
-        []
-      );
+      this.notificationService.popNotification({
+        type: NotificationType.SUCCESS,
+        header: 'Imported!',
+        message: 'Your technical extension has been imported'
+      });
       const id = this.extensionId || this.response.id;
       this.router.navigate(['/customizations/tech-extensions', id], { relativeTo: this.route });
     }).catch((reason: any) => {

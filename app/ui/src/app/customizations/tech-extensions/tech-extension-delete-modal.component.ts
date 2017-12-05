@@ -34,26 +34,20 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
     this.modalService.show(this.id).then( modal => {
       if (modal.result) {
         this.extensionStore.delete(this.extension).subscribe(ext => {
-          this.notificationService.message(
-            NotificationType.SUCCESS,
-            'Deleted!',
-            'The technical extension "' + this.extension.name + '" has been deleted',
-            false,
-            null,
-            [],
-          );
+          this.notificationService.popNotification({
+            type: NotificationType.SUCCESS,
+            header: 'Deleted!',
+            message: 'The technical extension "' + this.extension.name + '" has been deleted'
+          });
           if ('id' in this.route.snapshot.params) {
             this.router.navigate(['..'], { relativeTo: this.route });
           }
         }, err => {
-          this.notificationService.message(
-            NotificationType.WARNING,
-            'Deleted!',
-            'The technical extension "' + this.extension.name + '" could not be deleted due to: ' + err.userMsg || 'Unknown error',
-            false,
-            null,
-            [],
-          );
+          this.notificationService.popNotification({
+            type: NotificationType.WARNING,
+            header: 'Deleted!',
+            message: 'The technical extension "' + this.extension.name + '" could not be deleted due to: ' + err.userMsg || 'Unknown error'
+          });
         });
       } else {
         this.extension = undefined;

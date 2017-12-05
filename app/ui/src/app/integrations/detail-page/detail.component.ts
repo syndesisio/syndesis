@@ -172,24 +172,18 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       .update(this.i)
       .toPromise()
       .then((update: Integration) => {
-        this.notificationService.message(
-          NotificationType.SUCCESS,
-          'Update Successful',
-          'Updated description',
-          false,
-          undefined,
-          undefined
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Update Successful',
+          message: 'Updated description'
+        });
       })
       .catch(reason => {
-        this.notificationService.message(
-          NotificationType.WARNING,
-          'Update Failed',
-          'Failed to update description: ' + reason,
-          false,
-          undefined,
-          undefined
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.WARNING,
+          header: 'Update Failed',
+          message: 'Failed to update description: ' + reason
+        });
       });
   }
 
@@ -199,24 +193,18 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
       .update(this.i)
       .toPromise()
       .then((update: Integration) => {
-        this.notificationService.message(
-          NotificationType.SUCCESS,
-          'Update Successful',
-          'Updated ' + attr,
-          false,
-          undefined,
-          undefined
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Update Successful',
+          message: 'Updated ' + attr
+        });
       })
       .catch(reason => {
-        this.notificationService.message(
-          NotificationType.WARNING,
-          'Update Failed',
-          'Failed to update ' + attr + ': ' + reason,
-          false,
-          undefined,
-          undefined
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.WARNING,
+          header: 'Update Failed',
+          message: 'Failed to update ' + attr + ': ' + reason
+        });
       });
   }
 
@@ -232,7 +220,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     integration.createdDate = undefined;
     integration.lastUpdated = undefined;
     integration.revisions = [];
-    this.popNotification({
+    this.notificationService.popNotification({
       type: NotificationType.INFO,
       header: 'Duplicating revision',
       message: 'Duplicating revision ' + revision.version
@@ -243,7 +231,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         sub.unsubscribe();
       },
       resp => {
-        this.popNotification({
+        this.notificationService.popNotification({
           type: NotificationType.DANGER,
           header: 'Failed to duplicate revision',
           message:
@@ -257,14 +245,14 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
   deployRevision(revision) {
     const integration = JSON.parse(JSON.stringify(this.i));
     integration.steps = revision.spec.steps;
-    this.popNotification({
+    this.notificationService.popNotification({
       type: NotificationType.INFO,
       header: 'Deploying revision',
       message: 'Deploying revision ' + revision.version
     });
     const sub = this.store.update(integration).subscribe(
       updated => {
-        this.popNotification({
+        this.notificationService.popNotification({
           type: NotificationType.SUCCESS,
           header: 'Deployment successful',
           message: 'Deployed revision ' + revision.version
@@ -272,7 +260,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         sub.unsubscribe();
       },
       resp => {
-        this.popNotification({
+        this.notificationService.popNotification({
           type: NotificationType.DANGER,
           header: 'Failed to deploy revision',
           message:

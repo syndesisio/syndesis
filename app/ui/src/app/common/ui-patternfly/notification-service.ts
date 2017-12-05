@@ -39,4 +39,17 @@ export class NotificationService extends NS {
   getNotificationsObservable(): Observable<Notification[]> {
     return this.notificationsSubject.asObservable();
   }
+
+  // Toast notification wrapper, used for notifications
+  // that are not persistent and do not have actions associated
+  popNotification(notification) {
+    this.message(
+      notification.type,
+      notification.header,
+      notification.message,
+      false,
+      null,
+      []
+    );
+  }
 }
