@@ -373,6 +373,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-aop</artifactId>
+        <version>${spring.version}</version>
         <exclusions>
           <exclusion>
             <groupId>aopalliance</groupId>
