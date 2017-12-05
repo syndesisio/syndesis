@@ -212,6 +212,7 @@
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
         <configuration>
+          <cleanup>remove</cleanup>
           <generator>
             <config>
               <spring-boot>
