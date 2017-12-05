@@ -18,6 +18,7 @@ ARGS="$@"
 
 # All modules, in the right build order
 ALL_MODULES="connectors verifier runtime rest s2i ui"
+POD_MODULES="verifier rest ui"
 MODULES=(
   "ui"
   "connectors"
@@ -52,7 +53,12 @@ and the following options:
                               - "openshift" : Build for OpenShift image streams
                               - "docker"    : Build against a plain Docker daemon
                               - "auto"      : Automatically detect whether to use "s2i" or "docker"
--n  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
+    --docker                  == --image-mode docker
+    --openshift               == --image-mode openshift
+
+-p  --project <project>       Specifies the project to create images in when using '--images s2i'
+-k  --kill-pods               Kill pods after the image has been created.
+                              Useful when building with image-mode docker
 
 -c  --clean                   Run clean builds (mvn clean)
 -b  --batch-mode              Run mvn in batch mode
@@ -64,17 +70,20 @@ With "--system-test" the system tests are triggered which know these additional 
 
     --test-namespace <ns>     The test namespace to use
     --test-token <token>      The token for the test namespace
-    --pool-namespace <ns>     Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
-    --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
+    --pool-namespace <ns>     Specify the pool namespace to use for testing
+                              (mutually exclusive with --test-namespace)
+    --create-lock <prefix>    Create project pool locks for system-tests for the projects
+                              with the given prefix
 
 With "--minishift" Minishift can be initialized and installed with Syndesis
 
     --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
     --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
-    --memory                  How much memory to use when doing a reset. Default: 4GB
-    --cpus                    How many CPUs to use when doing a reset. Default: 2
-    --disk-size               How many disk space to use when doing a reset. Default: 20GB
-    --install                 Install templates into a running Minishift
+    --memory <mem>            How much memory to use when doing a reset. Default: 4GB
+    --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
+    --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+    --install                 Install templates into a running Minishift.
+-p  --project                 Install into this project. Delete this project if already existing
     --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
@@ -348,6 +357,18 @@ teardown_project_pool() {
 }
 
 # ======================================================
+# OpenShift helper functions
+
+kill_pods() {
+    for pod in $@; do
+        if [ "${POD_MODULES/$pod/}" != "${POD_MODULES}" ]; then
+            echo "Killing pods "$(oc get pod -o name | grep "syndesis-$pod")
+            oc get pod -o name | grep "syndesis-$pod" | xargs oc delete
+        fi
+    done
+}
+
+# ======================================================
 # Build functions
 
 extract_modules() {
@@ -431,6 +452,13 @@ get_maven_args() {
     fi
 
     local image_mode="$(readopt --image-mode -i)"
+    if [ -z "${image_mode}" ]; then
+      if [ $(hasflag --docker) ]; then
+          image_mode="docker"
+      elif [ $(hasflag --openshift --s2i) ]; then
+          image_mode="openshift"
+      fi
+    fi
     if [ "${image_mode}" != "none" ]; then
         if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
             #Build images
@@ -450,7 +478,7 @@ get_maven_args() {
 
     local ns="$namespace"
     if [ -z "$ns" ]; then
-        ns="$(readopt --namespace -n)"
+        ns="$(readopt --project -p)"
     fi
     if [ -n "${ns}" ]; then
         args="$args -Dfabric8.namespace=${ns}"
@@ -480,6 +508,9 @@ run_mvnw() {
         echo "./mvnw $args"
         echo "=============================================================================="
         ./mvnw $args
+        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
+          kill_pods $POD_MODULES
+        fi
     else
       echo "Modules: $maven_modules"
       if [ $(hasflag --init) ]; then
@@ -492,6 +523,9 @@ run_mvnw() {
         echo "./mvnw $args -f $module"
         echo "=============================================================================="
         ./mvnw -f $module $args
+        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
+            kill_pods $module
+        fi
       done
     fi
 }
@@ -595,6 +629,24 @@ run_minishift() {
         local cpus=$(readopt --cpus)
         local disksize=$(readopt --disk-size)
         minishift start --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
+    fi
+
+    local project=$(readopt --project -p)
+    if [ -n "${project}" ]; then
+        # Delete project if existing
+        if oc get project "${project}" >/dev/null 2>&1 ; then
+            echo "Deleting project ${project}"
+            oc delete project "${project}"
+        fi
+        echo "Creating project ${project}"
+        for i in {1..10}; do
+            if oc new-project "${project}" >/dev/null 2>&1 ; then
+              break
+            fi
+            echo "Project still exist. Waiting 10s ..."
+            sleep 10
+        done
+        oc project "${project}"
     fi
 
     local image_mode=$(readopt --image-mode -i)
