@@ -43,6 +43,7 @@ and the following options:
 -d  --dependencies            Build also all project the specified module depends on
     --init                    Install top-level parent pom, too. Only needed when used with -m
 
+-c  --checks                  Enable extended checks
     --skip-tests              Skip unit and system test execution
     --skip-checks             Disable all checks
 -f  --flash                   Skip checks and tests execution (fastest mode)
@@ -54,7 +55,7 @@ and the following options:
                               - "auto"      : Automatically detect whether to use "s2i" or "docker"
 -n  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
 
--c  --clean                   Run clean builds (mvn clean)
+    --clean                   Run clean builds (mvn clean)
 -b  --batch-mode              Run mvn in batch mode
 -r  --rebase                  Fetch origin/master and try a rebase
 
@@ -430,6 +431,10 @@ get_maven_args() {
         args="$args --batch-mode"
     fi
 
+    if [ -n "$(hasflag --checks -c)" ]; then
+        args="$args -Pchecks"
+    fi
+
     local image_mode="$(readopt --image-mode -i)"
     if [ "${image_mode}" != "none" ]; then
         if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
@@ -456,7 +461,7 @@ get_maven_args() {
         args="$args -Dfabric8.namespace=${ns}"
     fi
 
-    if [ -n "$(hasflag --clean -c)" ]; then
+    if [ -n "$(hasflag --clean)" ]; then
         args="$args clean"
     fi
 
@@ -620,7 +625,7 @@ run_minishift() {
     fi
 }
 
-dev_tasks() {
+run_dev_tasks() {
     if [ $(hasflag --debug) ]; then
         local name=$(readopt --debug)
         if [ -z "${name}" ]; then
@@ -663,7 +668,7 @@ fi
 
 # Developer helper tasks
 if [ -n "$(hasflag --dev)" ]; then
-    dev_tasks
+    run_dev_tasks
     exit 0
 fi
 
@@ -693,7 +698,7 @@ case $mode in
         exit 0
         ;;
     "dev")
-        dev_tasks
+        run_dev_tasks
         exit 0
         ;;
     **)

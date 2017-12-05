@@ -75,7 +75,7 @@ jobs:
       - run:
           name: Build UI
           command: |
-            ./app/build.sh --batch-mode --module ui --image-mode=docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --checks --image-mode=docker --module ui | tee build_log.txt | grep -v " Download"
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
@@ -102,7 +102,7 @@ jobs:
       - run:
           name: Build Connectors
           command: |
-            ./app/build.sh --init --batch-mode --module connectors | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --init --batch-mode --checks --module connectors | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect junit reports
           command: |
@@ -134,7 +134,7 @@ jobs:
       - run:
           name: Build Verifier
           command: |
-            ./app/build.sh --batch-mode --module verifier --image-mode=docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --checks --image-mode=docker --module verifier | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect junit reports
           command: |
@@ -164,7 +164,7 @@ jobs:
       - run:
           name: Build Runtime
           command: |
-            ./app/build.sh --batch-mode --module runtime | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --checks --module runtime | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect junit reports
           command: |
@@ -195,7 +195,7 @@ jobs:
       - run:
           name: Build S2I Builder image
           command: |
-            ./app/build.sh --batch-mode --module s2i --image-mode docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --checks --image-mode=docker --module s2i | tee build_log.txt | grep -v " Download"
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -220,7 +220,7 @@ jobs:
       - run:
           name: Build Rest
           command: |
-            ./app/build.sh --batch-mode --module rest --image-mode docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --checks --image-mode docker --module rest | tee build_log.txt | grep -v " Download"
       - run:
           name: Collect API docs
           command: |
