@@ -16,7 +16,7 @@
   "inputDataType" : "java:File",
   "outputDataType" : "none",
   "componentOptions" : [ ],
-  "endpointOptions" : [ "bucketName", "accessKey", "secretKey", "deleteAfterWrite", "region" ],
+  "endpointOptions" : [ "bucketNameOrArn", "accessKey", "secretKey", "deleteAfterWrite", "region" ],
   "endpointValues" : {
     "deleteAfterWrite" : false
   }

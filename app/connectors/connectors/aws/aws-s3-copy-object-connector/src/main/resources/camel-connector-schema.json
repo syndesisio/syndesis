@@ -20,6 +20,17 @@
     
   },
   "properties":{
+    "bucketNameOrArn":{
+      "kind":"path",
+      "displayName":"Bucket Name Or Arn",
+      "group":"common",
+      "required":true,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"Bucket name or ARN"
+    },
     "accessKey":{
       "kind":"parameter",
       "displayName":"Access Key",

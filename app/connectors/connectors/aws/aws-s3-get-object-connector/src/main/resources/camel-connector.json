@@ -16,7 +16,7 @@
   "inputDataType" : "none",
   "outputDataType" : "java:com.amazonaws.services.s3.model.S3Object",
   "componentOptions" : [ ],
-  "endpointOptions" : [ "bucketName", "accessKey", "secretKey", "deleteAfterRead", "region", "fileName" ],
+  "endpointOptions" : [ "bucketNameOrArn", "accessKey", "secretKey", "deleteAfterRead", "region", "fileName" ],
   "endpointValues" : {
     "deleteAfterRead" : false
   }
