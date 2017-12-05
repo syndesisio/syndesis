@@ -40,6 +40,10 @@ import org.apache.commons.io.IOUtils;
 
 public class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
+    private String accessToken;
+
+    private AuthenticationType authenticationType;
+
     private String specification;
 
     public SwaggerConnectorComponent() {
@@ -47,15 +51,60 @@ public class SwaggerConnectorComponent extends DefaultConnectorComponent {
     }
 
     public SwaggerConnectorComponent(final String componentSchema) {
-        super("swagger-connector", componentSchema, SwaggerConnectorComponent.class.getName());
+        super("swagger-connector", componentSchema, SwaggerConnectorComponent.class);
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
     }
 
     public String getSpecification() {
         return specification;
     }
 
+    public void setAccessToken(final String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setAuthenticationType(final AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
+    }
+
     public void setSpecification(final String specification) {
         this.specification = specification;
+    }
+
+    /* default */ void addAuthenticationHeadersTo(final Map<String, Object> headers) {
+        if (authenticationType == AuthenticationType.oauth2) {
+            headers.put("Authorization", "Bearer " + accessToken);
+        }
+    }
+
+    /* default */ Map<String, Object> determineHeaders(final Map<String, Object> parameters) {
+        final Map<String, Object> headers = new HashMap<>();
+        final ClassInfo classInfo = IntrospectionSupport.cacheClass(RestSwaggerEndpoint.class);
+
+        final Set<String> knownParameters = Arrays.stream(classInfo.methods).map(i -> i.getterOrSetterShorthandName)
+            .filter(Objects::nonNull).collect(Collectors.toSet());
+
+        for (final Iterator<Entry<String, Object>> i = parameters.entrySet().iterator(); i.hasNext();) {
+            final Entry<String, Object> entry = i.next();
+            final String name = entry.getKey();
+
+            if (!knownParameters.contains(name)) {
+                headers.put(name, entry.getValue());
+
+                i.remove();
+            }
+        }
+
+        addAuthenticationHeadersTo(headers);
+
+        return headers;
     }
 
     @Override
@@ -81,25 +130,4 @@ public class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
         return endpoint;
     }
-
-    /* default */ static Map<String, Object> determineHeaders(final Map<String, Object> parameters) {
-        final Map<String, Object> headers = new HashMap<>();
-        final ClassInfo classInfo = IntrospectionSupport.cacheClass(RestSwaggerEndpoint.class);
-
-        final Set<String> knownParameters = Arrays.stream(classInfo.methods).map(i -> i.getterOrSetterShorthandName)
-            .filter(Objects::nonNull).collect(Collectors.toSet());
-
-        for (final Iterator<Entry<String, Object>> i = parameters.entrySet().iterator(); i.hasNext();) {
-            final Entry<String, Object> entry = i.next();
-            final String name = entry.getKey();
-
-            if (!knownParameters.contains(name)) {
-                headers.put(name, entry.getValue());
-
-                i.remove();
-            }
-        }
-        return headers;
-    }
-
 }

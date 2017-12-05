@@ -77,4 +77,17 @@ public class SwaggerConnectorComponentTest {
             assertThat(restSwagger.getOperationId()).isEqualTo("addPet");
         });
     }
+
+    @Test
+    public void shouldSetOAuth2AuthorizationHeader() {
+        final SwaggerConnectorComponent component = new SwaggerConnectorComponent();
+
+        component.setAuthenticationType(AuthenticationType.oauth2);
+        component.setAccessToken("the-token");
+
+        final HashMap<String, Object> headers = new HashMap<>();
+        component.addAuthenticationHeadersTo(headers);
+
+        assertThat(headers).containsEntry("Authorization", "Bearer the-token");
+    }
 }
