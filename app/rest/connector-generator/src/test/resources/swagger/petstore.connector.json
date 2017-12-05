@@ -162,11 +162,11 @@
   },
   "actions": [
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:updatePet",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:updatePet",
       "name": "PUT /pet",
       "description": "Update an existing pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -206,11 +206,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:addPet",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:addPet",
       "name": "POST /pet",
       "description": "Add a new pet to the store",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -250,11 +250,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:findPetsByStatus",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:findPetsByStatus",
       "name": "Finds Pets by status",
       "description": "Multiple status values can be provided with comma separated strings",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -308,11 +308,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:findPetsByTags",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:findPetsByTags",
       "name": "Finds Pets by tags",
       "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -366,11 +366,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:getPetById",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:getPetById",
       "name": "Find pet by ID",
       "description": "Returns a single pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -424,11 +424,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:updatePetWithForm",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:updatePetWithForm",
       "name": "POST /pet/{petId}",
       "description": "Updates a pet in the store with form data",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -509,11 +509,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:deletePet",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:deletePet",
       "name": "DELETE /pet/{petId}",
       "description": "Deletes a pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -579,11 +579,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:uploadFile",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:uploadFile",
       "name": "POST /pet/{petId}/uploadImage",
       "description": "uploads an image",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -665,11 +665,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:getInventory",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:getInventory",
       "name": "Returns pet inventories by status",
       "description": "Returns a map of status codes to quantities",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -709,11 +709,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:placeOrder",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:placeOrder",
       "name": "POST /store/order",
       "description": "Place an order for a pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -754,11 +754,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:getOrderById",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:getOrderById",
       "name": "Find purchase order by ID",
       "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -812,11 +812,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:deleteOrder",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:deleteOrder",
       "name": "Delete purchase order by ID",
       "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -869,11 +869,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:createUser",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:createUser",
       "name": "Create user",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -913,11 +913,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:createUsersWithArrayInput",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:createUsersWithArrayInput",
       "name": "POST /user/createWithArray",
       "description": "Creates list of users with given input array",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -957,11 +957,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:createUsersWithListInput",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:createUsersWithListInput",
       "name": "POST /user/createWithList",
       "description": "Creates list of users with given input array",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -1001,11 +1001,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:loginUser",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:loginUser",
       "name": "GET /user/login",
       "description": "Logs user into the system",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -1072,11 +1072,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:logoutUser",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:logoutUser",
       "name": "GET /user/logout",
       "description": "Logs out current logged in user session",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -1115,11 +1115,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:getUserByName",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:getUserByName",
       "name": "GET /user/{username}",
       "description": "Get user by user name",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -1173,11 +1173,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:updateUser",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:updateUser",
       "name": "Updated user",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:swagger-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -1231,7 +1231,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:swagger-connector:1.2-SNAPSHOT:_id_:deleteUser",
+      "id": "io.syndesis:rest-swagger-connector:1.2-SNAPSHOT:_id_:deleteUser",
       "name": "Delete user",
       "description": "This can only be done by the logged in user.",
       "descriptor": {

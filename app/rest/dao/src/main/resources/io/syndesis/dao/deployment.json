@@ -1409,7 +1409,7 @@
       "name": "Swagger API Connector",
       "description": "Swagger API Connector",
       "icon": "fa-link",
-      "camelConnectorGAV": "io.syndesis:swagger-connector:@syndesis.version@",
+      "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
       "properties": {
         "specification": {
