@@ -279,7 +279,10 @@ workflows:
   version: 2
   syndesis:
     jobs:
-      - system-test
+      - system-test:
+          filters:
+            branches:
+              only: master
       - ui
       - connectors
       - runtime:
