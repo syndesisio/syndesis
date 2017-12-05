@@ -22,6 +22,7 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.spring.provider.SpringEmbeddedCacheManager;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,15 +37,15 @@ public class InfinispanCacheConfiguration {
     private int maxEntries;
 
     @Bean
+    @ConditionalOnProperty(name = "JAVA_DEBUG", havingValue = "false", matchIfMissing = true)
     public EmbeddedCacheManager embeddedCacheManager() {
-        if (embeddedCacheManager == null) {
-            embeddedCacheManager = new DefaultCacheManager(
-                    new GlobalConfigurationBuilder().nonClusteredDefault().globalJmxStatistics().enable()
-                            .defaultCacheName("syndesis-cache").build(),
-                    new ConfigurationBuilder().simpleCache(true).memory().evictionType(EvictionType.COUNT)
-                            .size(maxEntries).jmxStatistics().enable().build());
-        }
-        return embeddedCacheManager;
+        return cacheManager(maxEntries);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "JAVA_DEBUG", havingValue = "true")
+    public EmbeddedCacheManager embeddedNonCachingManager() {
+        return cacheManager(0);
     }
 
     @Bean
@@ -53,5 +54,16 @@ public class InfinispanCacheConfiguration {
             cacheManager = new SpringEmbeddedCacheManager(nativeCacheManager);
         }
         return cacheManager;
+    }
+
+    private static EmbeddedCacheManager cacheManager(final int maxEntries) {
+        if (embeddedCacheManager == null) {
+            embeddedCacheManager = new DefaultCacheManager(
+                    new GlobalConfigurationBuilder().nonClusteredDefault().globalJmxStatistics().enable()
+                            .defaultCacheName("syndesis-cache").build(),
+                    new ConfigurationBuilder().simpleCache(true).memory().evictionType(EvictionType.COUNT)
+                            .size(maxEntries).jmxStatistics().enable().build());
+        }
+        return embeddedCacheManager;
     }
 }
