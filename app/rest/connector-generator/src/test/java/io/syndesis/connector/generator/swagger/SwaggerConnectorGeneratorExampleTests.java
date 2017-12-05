@@ -17,6 +17,8 @@ package io.syndesis.connector.generator.swagger;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.core.Json;
@@ -57,10 +59,15 @@ public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGener
 
         final Connector generated = new SwaggerConnectorGenerator().generate(SWAGGER_TEMPLATE, connectorSettings);
 
-        assertThat(generated.getConfiguredProperties()).containsKey("specification").hasSize(1);
-        final String generatedSpecification = generated.getConfiguredProperties().get("specification");
-        final String expectedSpecification = expected.getConfiguredProperties().get("specification");
+        final Map<String, String> generatedConfiguredProperties = generated.getConfiguredProperties();
+        final String generatedSpecification = generatedConfiguredProperties.get("specification");
+
+        final Map<String, String> expectedConfiguredProperties = expected.getConfiguredProperties();
+        final String expectedSpecification = expectedConfiguredProperties.get("specification");
         assertThat(reformatJson(generatedSpecification)).isEqualTo(reformatJson(expectedSpecification));
+
+        assertThat(without(generatedConfiguredProperties, "specification"))
+            .containsAllEntriesOf(without(expectedConfiguredProperties, "specification"));
 
         assertThat(generated.getProperties().keySet()).as("Expecting the same properties to be generated")
             .containsOnlyElementsOf(expected.getProperties().keySet());
@@ -104,7 +111,15 @@ public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGener
 
     @Parameters(name = "{0}")
     public static Iterable<String> parameters() {
-        return Arrays.asList("concur", "petstore");
+        return Arrays.asList("concur", "petstore", "reverb");
+    }
+
+    private static Map<String, String> without(final Map<String, String> map, final String key) {
+        final Map<String, String> ret = new HashMap<>(map);
+
+        ret.remove(key);
+
+        return ret;
     }
 
 }

@@ -1427,6 +1427,82 @@
           "secret": false,
           "componentProperty": true,
           "description": "Upload the Swagger specification for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented swagger is available and conforms to OpenAPI standards."
+        },
+        "host": {
+          "kind": "property",
+          "displayName": "Host",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+        },
+        "basePath": {
+          "kind": "property",
+          "displayName": "Base path",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
+        },
+        "authenticationType": {
+          "kind": "property",
+          "displayName": "Authentication Type",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "authentication-type"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Type of authentication used to connect to the API"
+        },
+        "authorizationUrl": {
+          "kind": "property",
+          "displayName": "OAuth Authorization URL",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-authorization-url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL for the start of the OAuth flow"
+        },
+        "accessTokenUrl": {
+          "kind": "property",
+          "displayName": "OAuth Access token URL",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-access-token-url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL to fetch the OAuth Access token"
         }
       },
       "connectorProperties": {
@@ -1521,6 +1597,22 @@
           "secret": true,
           "componentProperty": true,
           "description": "OAuth Access token"
+        },
+        "authorizationUrl": {
+          "kind": "property",
+          "displayName": "OAuth Authorization URL",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-authorization-url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL for the start of the OAuth flow"
         },
         "accessTokenUrl": {
           "kind": "property",
