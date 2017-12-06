@@ -325,6 +325,10 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>io.syndesis:sql-common</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>junit:junit</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>commons-io:commons-io</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.assertj:assertj-core</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>com.paypal.springboot:resteasy-spring-boot-starter</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-web:</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-undertow</ignoredUnusedDeclaredDependency>
