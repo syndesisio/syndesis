@@ -58,6 +58,14 @@ save_m2: &save_m2
     paths:
       - repository/io/syndesis
 
+save_junit: &save_junit
+  run:
+    name: Collect junit reports
+    when: always
+    command: |
+      mkdir -p /workspace/junit/
+      find . -type f -regextype posix-extended -regex ".*/target/(surefire|failsafe)-reports/.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
+
 jobs:
   # UI has no dependencies, just load cache
   ui:
@@ -103,13 +111,9 @@ jobs:
           name: Build Connectors
           command: |
             ./app/build.sh --init --batch-mode --module connectors | tee build_log.txt | grep -v " Download"
-      - run:
-          name: Collect junit reports
-          command: |
-            mkdir ./junit/
-            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
-      - store_artifacts:
-          path: junit
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - save_cache:
@@ -135,13 +139,9 @@ jobs:
           name: Build Verifier
           command: |
             ./app/build.sh --batch-mode --module verifier --image-mode=docker | tee build_log.txt | grep -v " Download"
-      - run:
-          name: Collect junit reports
-          command: |
-            mkdir ./junit/
-            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
-      - store_artifacts:
-          path: junit
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -165,13 +165,9 @@ jobs:
           name: Build Runtime
           command: |
             ./app/build.sh --batch-mode --module runtime | tee build_log.txt | grep -v " Download"
-      - run:
-          name: Collect junit reports
-          command: |
-            mkdir ./junit/
-            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
-      - store_artifacts:
-          path: junit
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - <<: *save_m2
@@ -230,13 +226,9 @@ jobs:
               cp app/runtime/runtime/target/classes/static/swagger.json ./apidocs
               cp app/runtime/runtime/target/classes/static/swagger.yaml ./apidocs
             fi
-      - run:
-          name: Collect junit reports
-          command: |
-            mkdir ./junit/
-            find . -type f -regex '.*-reports/.*xml' -exec cp {} ./junit/ \;
-      - store_artifacts:
-          path: junit
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
       - store_artifacts:
           path: apidocs
       - store_artifacts:
