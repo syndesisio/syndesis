@@ -1677,7 +1677,7 @@
           "kind": "parameter",
           "displayName": "Access Key",
           "group": "common",
-          "required": false,
+          "required": true,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
@@ -1688,7 +1688,7 @@
           "kind": "parameter",
           "displayName": "Secret Key",
           "group": "common",
-          "required": false,
+          "required": true,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
@@ -1700,12 +1700,23 @@
           "displayName": "Region",
           "group": "producer",
           "label": "producer",
-          "required": false,
+          "required": true,
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
           "description": "The region where the bucket is located. This option is used in the com.amazonaws.services.s3.model.CreateBucketRequest."
+        },
+        "bucketNameOrArn": {
+          "kind": "path",
+          "displayName": "Bucket Name Or Arn",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Bucket name or ARN"
         }
       },
       "actions": [
@@ -1726,8 +1737,8 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Operation name",
-                "description": "Select the operation to do on AWS S3",
+                "name": "Copy an object on AWS S3",
+                "description": "Set if you want to delete the file once it has been written on S3",
                 "properties": {
                   "deleteAfterWrite": {
                     "kind": "property",
@@ -1741,6 +1752,133 @@
                     "secret": false,
                     "defaultValue": false,
                     "description": "Delete file object after the S3 file has been uploaded"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Object",
+          "description": "Get an object from an AWS S3 Bucket",
+          "id": "io.syndesis:aws-s3-get-object-connector:latest",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:aws-s3-get-object-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "aws-s3-get-object",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java:com.amazonaws.services.s3.model.S3Object"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "name": "Get an Object from AWS S3",
+                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "properties": {
+                  "deleteAfterRead": {
+                    "kind": "parameter",
+                    "displayName": "Delete After Read",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": false,
+                    "description": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header."
+                  },
+                  "fileName": {
+                    "kind": "parameter",
+                    "displayName": "File Name",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "description": "To get the object from the bucket with the given file name"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Poll an AWS S3 Bucket",
+          "description": "Polling an AWS S3 Bucket",
+          "id": "io.syndesis:aws-s3-polling-bucket-connector:latest",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:aws-s3-polling-bucket-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "aws-s3-polling-bucket",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java:List"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "name": "Polling an AWS S3 Bucket",
+                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "properties": {
+                  "deleteAfterRead": {
+                    "kind": "parameter",
+                    "displayName": "Delete After Read",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": false,
+                    "description": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header."
+                  },
+                  "maxMessagesPerPoll": {
+                    "kind": "parameter",
+                    "displayName": "Max Messages Per Poll",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "int",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 10,
+                    "description": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited."
+                  },
+                  "prefix": {
+                    "kind": "parameter",
+                    "displayName": "Prefix",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "description": "The prefix which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only consume objects we are interested in."
+                  },
+                  "delay": {
+                    "kind": "parameter",
+                    "displayName": "Delay",
+                    "group": "scheduler",
+                    "label": "consumer,scheduler",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "long",
+                    "optionalPrefix": "consumer.",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 500,
+                    "description": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour)."
                   }
                 }
               }
