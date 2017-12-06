@@ -15,11 +15,14 @@
  */
 package io.syndesis.runtime.connector;
 
+import java.util.List;
+
 import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.runtime.BaseITCase;
@@ -36,7 +39,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration
 public class CustomConnectorITCase extends BaseITCase {
 
+    private static final String SECOND_TEMPLATE_ID = "second-connector-template";
+    private static final String TEMPLATE_ID = "connector-template";
+    private final Connector connector1;
+
+    private final Connector connector2;
+
+    private final Connector connector3;
+
     private final ConnectorTemplate template;
+
+    public static class ConnectorResultList {
+        public List<Connector> items;
+
+        public int totalCount;
+    }
 
     @Configuration
     public static class TestConfiguration {
@@ -45,7 +62,7 @@ public class CustomConnectorITCase extends BaseITCase {
 
         private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
 
-        @Bean("connector-template")
+        @Bean(TEMPLATE_ID)
         public static final ConnectorGenerator testGenerator() {
             return new ConnectorGenerator() {
                 @Override
@@ -84,17 +101,33 @@ public class CustomConnectorITCase extends BaseITCase {
     }
 
     public CustomConnectorITCase() {
-        template = createConnectorTemplate();
+        template = createConnectorTemplate(TEMPLATE_ID, "connector template");
+
+        connector1 = new Connector.Builder().id("connector-from-template-1")
+            .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
+
+        connector2 = new Connector.Builder().id("connector-from-template-2")
+            .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
+
+        connector3 = new Connector.Builder().id("connector-from-second-template")
+            .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
     }
 
     @Before
     public void createConnectorTemplates() {
         dataManager.create(template);
+        final ConnectorTemplate secondTemplate = createConnectorTemplate(SECOND_TEMPLATE_ID, "connector template");
+
+        dataManager.create(secondTemplate);
+
+        dataManager.create(connector1);
+        dataManager.create(connector2);
+        dataManager.create(connector3);
     }
 
     @Test
     public void shouldCreateNewCustomConnectors() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId("connector-template").build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
         final ResponseEntity<Connector> response = post("/api/v1/connectors/custom", connectorSettings, Connector.class);
 
@@ -105,11 +138,26 @@ public class CustomConnectorITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldOfferCustomConnectorInfo() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId("connector-template").build();
+    public void shouldListCustomConnectorsGeneratedFromFirstTemplate() {
+        final ResponseEntity<ConnectorResultList> response = get("/api/v1/connectors/custom?templateId=" + TEMPLATE_ID,
+            ConnectorResultList.class);
 
-        final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info", connectorSettings,
-            ConnectorSummary.class);
+        assertThat(response.getBody().items).containsOnly(connector1, connector2);
+    }
+
+    @Test
+    public void shouldListCustomConnectorsGeneratedFromSecondTemplate() {
+        final ResponseEntity<ConnectorResultList> response = get("/api/v1/connectors/custom?templateId=" + SECOND_TEMPLATE_ID,
+            ConnectorResultList.class);
+
+        assertThat(response.getBody().items).containsOnly(connector3);
+    }
+
+    @Test
+    public void shouldOfferCustomConnectorInfo() {
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
+
+        final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info", connectorSettings, ConnectorSummary.class);
 
         final ConnectorSummary expected = new ConnectorSummary.Builder()// \
             .name("test-name")//
@@ -121,10 +169,10 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(response.getBody()).isEqualTo(expected);
     }
 
-    private static ConnectorTemplate createConnectorTemplate() {
+    private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {
         return new ConnectorTemplate.Builder()//
-            .id("connector-template")//
-            .name("connector template")//
+            .id(id)//
+            .name(name)//
             .build();
     }
 }
