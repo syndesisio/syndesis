@@ -28,8 +28,10 @@ import org.immutables.value.Value;
 public interface ConnectorSettings extends WithName, WithProperties {
 
     class Builder extends ImmutableConnectorSettings.Builder {
-        // make ImmutableCustomConnector accessible
+        // make ImmutableConnectorSettings accessible
     }
+
+    String getConnectorTemplateId();
 
     String getDescription();
 

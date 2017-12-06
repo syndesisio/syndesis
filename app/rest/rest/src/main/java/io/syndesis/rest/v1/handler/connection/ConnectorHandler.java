@@ -52,6 +52,7 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import okhttp3.OkHttpClient;
@@ -69,15 +70,17 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Inspectors inspectors;
     private final ClientSideState state;
     private final Verifier verifier;
+    private final ApplicationContext applicationContext;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
-        final ClientSideState state, final EncryptionComponent encryptionComponent) {
+        final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
         this.inspectors = inspectors;
         this.state = state;
         this.encryptionComponent = encryptionComponent;
+        this.applicationContext = applicationContext;
     }
 
     @Path("/{id}/credentials")
@@ -166,4 +169,10 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         final Map<String, String> props) {
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
+
+    @Path("/custom")
+    public CustomConnectorHandler customConnectorHandler() {
+        return new CustomConnectorHandler(getDataManager(), applicationContext);
+    }
+
 }

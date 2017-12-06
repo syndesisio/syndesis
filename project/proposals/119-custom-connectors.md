@@ -1,42 +1,58 @@
 # Custom connectors
 
- * Issue: https://github.com/syndesisio/syndesis-project/issues/119
- * Sprint: 20
+* Issue: https://github.com/syndesisio/syndesis-project/issues/119
+* Sprint: 20
 
 ## Background
 
-Allow expert integrators define custom connectors providing a set of properties defined by the connector template and connector generator implementation that uses the specified properties to create a new connector definition. This does not create new Camel connector implementation, but relies on existing Camel connectors.
+Allow expert integrators define custom connectors providing a set of properties
+defined by the connector template and connector generator implementation that
+uses the specified properties to create a new connector definition. This does
+not create new Camel connector implementation, but relies on existing Camel
+connectors.
 
-An example of such custom connector is the REST API connector backed by a Swagger specification. Rather than specifying a number of parameters at the action or connection level, user can opt to create a custom connector from the Swagger specification and than create multiple connections (if needed) specifying typical connection parameters like authentication and have to define only the action parameters specific to a particular REST endpoint.
+An example of such custom connector is the REST API connector backed by a
+Swagger specification. Rather than specifying a number of parameters at the
+action or connection level, user can opt to create a custom connector from the
+Swagger specification and than create multiple connections (if needed)
+specifying typical connection parameters like authentication and have to define
+only the action parameters specific to a particular REST endpoint.
 
 ## User Story
 
- See https://github.com/syndesisio/syndesis-project/issues/173
+See https://github.com/syndesisio/syndesis-project/issues/173
 
 ## Data flow outline
 
-Defining custom connectors should follow the same steps regardless of the backing connector technology (Camel connector implementation).
+Defining custom connectors should follow the same steps regardless of the
+backing connector technology (Camel connector implementation).
 
-First step is to provide values for the properties defined by the connector template, for example for a custom Swagger connector: a Swagger specification.
+First step is to provide values for the properties defined by the connector
+template, for example for a custom Swagger connector: a Swagger specification.
 
-Next these parameters are validated, and response that includes an optional list of errors/warnings, `icon`, `name` and `description` and any additional connector properties as suggestions are returned.
+Next these parameters are validated, and response that includes an optional list
+of errors/warnings, `icon`, `name` and `description` and any additional
+connector properties as suggestions are returned.
 
-Finally a payload defining the new connector is submitted containing the properties defined by the connector template, `icon`, `name` and `description` properties.
+Finally a payload defining the new connector is submitted containing the
+properties defined by the connector template, `icon`, `name` and `description`
+properties.
 
 ## API
 
 New API endpoints for defining custom connectors:
 
-| HTTP Verb | Path | Description |
-| --------- | ---- | ----------- |
-| GET       | /api/**{version}**/custom/connectors | Returns a list of known connector templates |
-| GET       | /api/**{version}**/custom/connectors/**{id}** | Returns a specific connector template identified by the given **id** |
-| POST      | /api/**{version}**/custom/connectors/**{id}**/info | Provides information like proposed name, icon and description for new connector |
-| POST      | /api/**{version}**/custom/connectors/**{id}**| Create a new custom connector |
+| HTTP Verb | Path                                            | Description                                                                     |
+| --------- | ----------------------------------------------- | ------------------------------------------------------------------------------- |
+| GET       | /api/**{version}**/connector-templates          | Returns a list of known connector templates                                     |
+| GET       | /api/**{version}**/connector-templates/**{id}** | Returns a specific connector template identified by the given **id**            |
+| POST      | /api/**{version}**/connectors/custom/info       | Provides information like proposed name, icon and description for new connector |
+| POST      | /api/**{version}**/connectors/custom/           | Create a new custom connector                                                   |
 
 ### New custom connector based on Swagger specification example
 
-Given that the Syndesis database contains a connector template, presented here with some properties omitted:
+Given that the Syndesis database contains a connector template, presented here
+with some properties omitted:
 
 ```json
 {
@@ -83,12 +99,15 @@ Given that the Syndesis database contains a connector template, presented here w
 }
 ```
 
-The REST API supports multiple connector templates, we'll be focusing on the connector template with the id `swagger-connector-template` as this is the first use case we support.
+The REST API supports multiple connector templates, we'll be focusing on the
+connector template with the id `swagger-connector-template` as this is the first
+use case we support.
 
-UI fetches the definition of the connector template by using the `swagger-connector-template` identifier:
+UI fetches the definition of the connector template by using the
+`swagger-connector-template` identifier:
 
 ```http
-GET /api/v1/custom/connectors/swagger-connector-template
+GET /api/v1/connector-templates/swagger-connector-template
 Accept: application/json
 
 HTTP/1.1 200 OK
@@ -115,15 +134,24 @@ Content-Length: 1895
 ...} // the connector template presented above
 ```
 
-Based on the connector template property `specification`, tagged with `upload`, `url` as hints to on how to present the form item, from the above response the UI can offer the user to upload or provide a URL to the specification.
+Based on the connector template property `specification`, tagged with `upload`,
+`url` as hints to on how to present the form item, from the above response the
+UI can offer the user to upload or provide a URL to the specification.
 
-The user opts to specify the Swagger specification via URL of the specification, but mistakenly selects the URL of the HTML document instead of the specification, the UI can perform validation before proceeding by invoking:
-
+The user opts to specify the Swagger specification via URL of the specification,
+but mistakenly selects the URL of the HTML document instead of the
+specification, the UI can perform validation before proceeding by invoking:
 
 ```http
-POST /api/v1/custom/connectors/swagger-connector-template/info
+POST /api/v1/connectors/custom/info
 Content-Type: application/json
 Accept: application/json
+
+{
+  "connectorTemplateId": "swagger-connector-template"
+}
+
+HTTP/1.1 400 Bad Request
 
 {
   "errors" : [
@@ -136,14 +164,16 @@ Accept: application/json
 }
 ```
 
-The user provides the correct URL, now the response is positive and information fetched from the specification is returned:
+The user provides the correct URL, now the response is positive and information
+fetched from the specification is returned:
 
 ```http
-POST /api/v1/custom/connectors/swagger-connector-template/info
+POST /api/v1/connectors/custom/info
 Content-Type: application/json
 Accept: application/json
 
 {
+  "connectorTemplateId": "swagger-connector-template",
   "configuredProperties": {
     "specification": "http://petstore.swagger.io/v2/swagger.json"
   }
@@ -246,14 +276,17 @@ HTTP/1.1 200 OK
 }
 ```
 
-With that the user can opt to change some of the data, here the user opted to change the name of the new connector from the suggested *"Swagger Petstore"* to *"Petstore API"*, and the new connector can be created:
+With that the user can opt to change some of the data, here the user opted to
+change the name of the new connector from the suggested _"Swagger Petstore"_ to
+_"Petstore API"_, and the new connector can be created:
 
 ```http
-POST /api/v1/custom/connectors/swagger-connector-template
+POST /api/v1/connectors/custom
 Content-Type: application/json
 Accept: application/json
 
 {
+  "connectorTemplateId": "swagger-connector-template",
   "name": "Petstore API",
   "description": "This is a sample server Petstore server. You can find out more about Swagger at http://swagger.io or on irc.freenode.net, #swagger. For this sample, you can use the api key special-key to test the authorization filters.",
   "icon": "data:image/svg+xml;utf8,<svg ...",
@@ -275,4 +308,3 @@ Content-Type: application/json
   ... // connector data
 }
 ```
-
