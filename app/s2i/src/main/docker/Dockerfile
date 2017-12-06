@@ -1,14 +1,14 @@
 FROM fabric8/s2i-java:2.0.2
 
-RUN mkdir -p /tmp/artifacts
-ADD repo /tmp/artifacts/m2
-ADD project /deployments/project
-USER root
-RUN chown -R jboss /deployments/project /tmp/artifacts/m2
-USER 1000
+COPY m2 /tmp/artifacts/m2/
 
-RUN \
-  cd /deployments/project; \
-  mvn --batch-mode -Dmaven.repo.local=/tmp/artifacts/m2 package -DskipTests -e -Dfabric8.skip=true; \
-  rm -rf /deployments/project;
+USER 0
+
+RUN cd /tmp/artifacts/m2/project \
+ && mvn --batch-mode -Dmaven.repo.local=/tmp/artifacts/m2 package -DskipTests -e -Dfabric8.skip=true \
+ && rm -rf /tmp/artifacts/m2/project \
+ && chgrp -R 0 /tmp/artifacts/m2 \
+ && chmod -R g=u /tmp/artifacts/m2
+
+USER 1000
 
