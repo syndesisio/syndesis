@@ -8,7 +8,7 @@ import { ApiConnector, ApiConnectors } from './api-connector.model';
 @Injectable()
 export class ApiConnectorService extends RESTService<ApiConnector, ApiConnectors> {
   constructor(restangular: Restangular) {
-    super(restangular.service('../v1/custom/connectors'), 'connector');
+    super(restangular.service('custom/connectors'), 'apiConnector');
   }
 
   public list(): Observable<ApiConnectors> {

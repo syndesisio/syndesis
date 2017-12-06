@@ -9,9 +9,9 @@ export class ApiConnectorStore extends AbstractStore<
   ApiConnector,
   ApiConnectors,
   ApiConnectorService
-  > {
-  constructor(apiConnectorService: ApiConnectorService, eventService: EventsService) {
-    super(apiConnectorService, eventService, [], <ApiConnector>{ kind: undefined, data: undefined });
+> {
+  constructor(extensionService: ApiConnectorService, eventService: EventsService) {
+    super(extensionService, eventService, [], <ApiConnector>{ name: undefined });
   }
 
   protected get kind() {
