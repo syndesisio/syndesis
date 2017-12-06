@@ -15,6 +15,11 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityNotFoundException;
+
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
@@ -27,10 +32,6 @@ import io.syndesis.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -46,24 +47,6 @@ public class CustomConnectorHandlerTest {
     private final DataManager dataManager = mock(DataManager.class);
 
     @Test
-    public void shouldProvideInfoAboutAppliedConnectorSettings() {
-        final CustomConnectorHandler handler = new CustomConnectorHandler(dataManager, applicationContext);
-        final ConnectorGenerator connectorGenerator = mock(ConnectorGenerator.class);
-
-        final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId("connector-template").build();
-        final ConnectorSummary preparedSummary = new ConnectorSummary.Builder().build();
-
-        when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
-        when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
-        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
-
-        final ConnectorSummary info = handler.info(connectorSettings);
-
-        assertThat(info).isSameAs(preparedSummary);
-    }
-
-    @Test
     public void shouldCreateNewConnectorsBasedOnConnectorTemplates() {
         final Map<String, ConfigurationProperty> properties = new HashMap<>();
         properties.put("prop1", new ConfigurationProperty.Builder().build());
@@ -75,6 +58,7 @@ public class CustomConnectorHandlerTest {
         final ConnectorGroup group = new ConnectorGroup.Builder().name("connector template group").build();
 
         final ConnectorTemplate connectorTemplate = new ConnectorTemplate.Builder()//
+            .id("connector-template-id")//
             .name("connector template")//
             .properties(properties).connectorProperties(connectorProperties)//
             .connectorGroup(group)//
@@ -98,9 +82,9 @@ public class CustomConnectorHandlerTest {
             }
         });
 
-        final Connector created = new CustomConnectorHandler(dataManager, applicationContext).create(
+        final Connector created = new CustomConnectorHandler(dataManager, applicationContext).create(//
             new ConnectorSettings.Builder()//
-                .connectorTemplateId("connector-template-id")
+                .connectorTemplateId("connector-template-id")//
                 .name("new connector")//
                 .description("new connector description")//
                 .icon("new connector icon")//
@@ -123,9 +107,27 @@ public class CustomConnectorHandlerTest {
     }
 
     @Test
+    public void shouldProvideInfoAboutAppliedConnectorSettings() {
+        final CustomConnectorHandler handler = new CustomConnectorHandler(dataManager, applicationContext);
+        final ConnectorGenerator connectorGenerator = mock(ConnectorGenerator.class);
+
+        final ConnectorTemplate template = new ConnectorTemplate.Builder().build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId("connector-template").build();
+        final ConnectorSummary preparedSummary = new ConnectorSummary.Builder().build();
+
+        when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
+        when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
+        when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
+
+        final ConnectorSummary info = handler.info(connectorSettings);
+
+        assertThat(info).isSameAs(preparedSummary);
+    }
+
+    @Test
     public void shouldThrowEntityNotFoundIfNoConnectorTemplateExists() {
-        assertThatThrownBy(() -> new CustomConnectorHandler(dataManager, applicationContext).create(
-            new ConnectorSettings.Builder().connectorTemplateId("non-existent").build())
+        assertThatThrownBy(() -> new CustomConnectorHandler(dataManager, applicationContext).create(//
+            new ConnectorSettings.Builder().connectorTemplateId("non-existent").build())//
         ).isInstanceOf(EntityNotFoundException.class).hasMessage("Connector template: non-existent");
     }
 

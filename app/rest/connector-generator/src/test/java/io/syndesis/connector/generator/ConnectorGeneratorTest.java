@@ -17,6 +17,7 @@ package io.syndesis.connector.generator;
 
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
 
@@ -50,9 +51,12 @@ public class ConnectorGeneratorTest {
         }
     };
 
-    private final ConnectorTemplate template = new ConnectorTemplate.Builder()
+    private final ConnectorTemplate template = new ConnectorTemplate.Builder()//
+        .id("template-id")//
+        .connectorGroup(new ConnectorGroup.Builder().id("template-group").build())
         .putProperty("property1", new ConfigurationProperty.Builder().build())
-        .putProperty("property2", new ConfigurationProperty.Builder().build()).build();
+        .putProperty("property2", new ConfigurationProperty.Builder().build())//
+        .build();
 
     @Test
     public void shouldCreateBaseConnectors() {
@@ -60,8 +64,15 @@ public class ConnectorGeneratorTest {
 
         final Connector connector = generator.baseConnectorFrom(template, settings);
 
-        assertThat(connector).isEqualToIgnoringGivenFields(new Connector.Builder().name("test-name").description("test-description")
-            .properties(template.getConnectorProperties()).putConfiguredProperty("property2", "value2").build(), "id");
+        assertThat(connector).isEqualToIgnoringGivenFields(//
+            new Connector.Builder()//
+                .name("test-name")//
+                .description("test-description")//
+                .connectorGroup(template.getConnectorGroup())//
+                .properties(template.getConnectorProperties())//
+                .putConfiguredProperty("property2", "value2")//
+                .build(),
+            "id");
     }
 
     @Test
@@ -71,7 +82,13 @@ public class ConnectorGeneratorTest {
 
         final Connector connector = generator.baseConnectorFrom(template, settings);
 
-        assertThat(connector).isEqualToIgnoringGivenFields(new Connector.Builder().name("given-name").description("given-description")
-            .properties(template.getConnectorProperties()).putConfiguredProperty("property2", "value2").build(), "id");
+        assertThat(connector).isEqualToIgnoringGivenFields(//
+            new Connector.Builder()//
+                .name("given-name")//
+                .description("given-description")//
+                .connectorGroup(template.getConnectorGroup())//
+                .properties(template.getConnectorProperties())//
+                .putConfiguredProperty("property2", "value2").build(),
+            "id");
     }
 }
