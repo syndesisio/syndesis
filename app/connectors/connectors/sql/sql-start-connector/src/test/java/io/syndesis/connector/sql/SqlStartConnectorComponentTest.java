@@ -16,6 +16,18 @@
  */
 package io.syndesis.connector.sql;
 
+import io.syndesis.connector.sql.SqlParam.SqlSampleValue;
+import io.syndesis.connector.sql.stored.JSONBeanUtil;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,21 +36,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
-import org.apache.commons.dbcp.BasicDataSource;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import io.syndesis.connector.sql.SqlParam.SqlSampleValue;
-import io.syndesis.connector.sql.stored.JSONBeanUtil;
 
 public class SqlStartConnectorComponentTest {
 
@@ -73,16 +70,16 @@ public class SqlStartConnectorComponentTest {
         stmt.executeUpdate(createTable);
         stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
         stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
-        
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUsername(properties.getProperty("sql-connector.user"));
-        ds.setPassword(properties.getProperty("sql-connector.password"));
-        ds.setUrl(     properties.getProperty("sql-connector.url"));
 
-        SimpleRegistry registry = new SimpleRegistry();
-        registry.put("dataSource", ds);
+        CamelContext context = new DefaultCamelContext();
 
-        CamelContext context = new DefaultCamelContext(registry);
+        SqlStartConnectorComponent component = new SqlStartConnectorComponent();
+        component.addOption("user", properties.getProperty("sql-connector.user"));
+        component.addOption("password", properties.getProperty("sql-connector.password"));
+        component.addOption("url", properties.getProperty("sql-connector.url"));
+
+        // bind the component to the camel context
+        context.addComponent("sql-start-connector", component);
 
         CountDownLatch latch = new CountDownLatch(1);
         final Result result = new Result();
@@ -120,14 +117,15 @@ public class SqlStartConnectorComponentTest {
                 "dateType DATE, timeType TIME )";
         stmt.executeUpdate(createTable);
         
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUsername(properties.getProperty("sql-connector.user"));
-        ds.setPassword(properties.getProperty("sql-connector.password"));
-        ds.setUrl(     properties.getProperty("sql-connector.url"));
+        CamelContext context = new DefaultCamelContext();
 
-        SimpleRegistry registry = new SimpleRegistry();
-        registry.put("dataSource", ds);
-        CamelContext context = new DefaultCamelContext(registry);
+        SqlStartConnectorComponent component = new SqlStartConnectorComponent();
+        component.addOption("user", properties.getProperty("sql-connector.user"));
+        component.addOption("password", properties.getProperty("sql-connector.password"));
+        component.addOption("url", properties.getProperty("sql-connector.url"));
+
+        // bind the component to the camel context
+        context.addComponent("sql-start-connector", component);
 
         CountDownLatch latch = new CountDownLatch(1);
 

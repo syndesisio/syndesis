@@ -16,28 +16,21 @@
  */
 package io.syndesis.connector.sql.stored;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
+import io.syndesis.connector.sql.SqlCommon;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import io.syndesis.connector.sql.SqlCommon;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
 
-public class SqlStoredStartConnectorComponentTest {
-
+public class SqlStoredStartConnectorComponentTest extends CamelTestSupport {
     private static Connection connection;
     private static Properties properties = new Properties();
     private static SqlCommon sqlCommon;
@@ -56,52 +49,38 @@ public class SqlStoredStartConnectorComponentTest {
 
     @Test
     public void camelConnectorTest() throws Exception {
+        MockEndpoint mock = getMockEndpoint("mock:result");
 
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUsername(properties.getProperty("sql-connector.user"));
-        ds.setPassword(properties.getProperty("sql-connector.password"));
-        ds.setUrl(     properties.getProperty("sql-connector.url"));
+        mock.expectedMinimumMessageCount(1);
+        mock.expectedBodiesReceived("{\"c\":60}");
 
-        SimpleRegistry registry = new SimpleRegistry();
-        registry.put("dataSource", ds);
-        CamelContext context = new DefaultCamelContext(registry);
-
-        CountDownLatch latch = new CountDownLatch(1);
-
-        final Result result = new Result();
-
-        try {
-            context.addRoutes(new RouteBuilder() {
-                @Override
-                public void configure() throws Exception {
-                    from("sql-stored-start-connector:DEMO_OUT( OUT INTEGER c)")
-                    .process(new Processor() {
-                        @Override
-                        public void process(Exchange exchange)
-                                throws Exception {
-                            String jsonBean = (String) exchange.getIn().getBody();
-                            result.setResult(jsonBean);
-                            latch.countDown();
-                        }
-                    }).to("stream:out");
-                }
-            });
-            context.start();
-            latch.await(5l,TimeUnit.SECONDS);
-            Assert.assertEquals("{\"c\":60}", result.getJsonBean());
-        } finally {
-            context.stop();
-        }
+        mock.assertIsSatisfied();
     }
 
-    class Result {
-        String jsonBean;
+    @Override
+    protected RoutesBuilder createRouteBuilder() throws Exception {
+        return new RouteBuilder() {
+            public void configure() {
+                from("sql-stored-start-connector:DEMO_OUT( OUT INTEGER c)")
+                    .to("mock:result");
+            }
+        };
+    }
 
-        public String getJsonBean() {
-            return jsonBean;
-        }
-        public void setResult(String jsonBean) {
-            this.jsonBean = jsonBean;
-        }
+    @Override
+    protected CamelContext createCamelContext() throws Exception {
+        CamelContext context = super.createCamelContext();
+
+        // set up the component so the data source is built using
+        // test properties
+        SqlStoredStartConnectorComponent component = new SqlStoredStartConnectorComponent();
+        component.addOption("user", properties.getProperty("sql-connector.user"));
+        component.addOption("password", properties.getProperty("sql-connector.password"));
+        component.addOption("url", properties.getProperty("sql-connector.url"));
+
+        // bind the component to the camel context
+        context.addComponent("sql-stored-start-connector", component);
+
+        return context;
     }
 }

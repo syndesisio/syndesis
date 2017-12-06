@@ -1291,7 +1291,7 @@
                     "tags": [],
                     "deprecated": false,
                     "secret": true,
-                    "componentProperty": false,
+                    "componentProperty": true,
                     "description": "Name of the Store Procedure"
                   },
                   "template": {
@@ -1346,7 +1346,7 @@
                     "tags": [],
                     "deprecated": false,
                     "secret": false,
-                    "componentProperty": false,
+                    "componentProperty": true,
                     "description": "Name of the Store Procedure"
                   },
                   "template": {
