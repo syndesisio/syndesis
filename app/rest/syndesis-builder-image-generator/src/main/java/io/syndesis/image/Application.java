@@ -38,8 +38,11 @@ import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.dao.manager.DaoConfiguration;
 import io.syndesis.model.Kind;
 import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
@@ -103,6 +106,24 @@ public class Application implements ApplicationRunner {
                             .build()
                     );
                 }
+            }
+
+            if (model.getKind() == Kind.ConnectorTemplate) {
+                final ConnectorTemplate template = (ConnectorTemplate) model.getData();
+                steps.add(
+                    new SimpleStep.Builder()
+                        .stepKind("endpoint")
+                        .connection(new Connection.Builder()
+                            .connectorId("connector-" + template.getId())
+                            .build())
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .camelConnectorGAV(template.getCamelConnectorGAV())
+                                .camelConnectorPrefix(template.getCamelConnectorPrefix())
+                                .build())
+                            .build())
+                        .build()
+                );
             }
         }
 
