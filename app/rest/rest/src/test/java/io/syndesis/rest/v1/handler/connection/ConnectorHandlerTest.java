@@ -15,20 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.awt.Dimension;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
@@ -36,19 +22,30 @@ import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
-
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ConnectorHandlerTest {
 
@@ -64,8 +61,10 @@ public class ConnectorHandlerTest {
 
     private final DataManager dataManager = mock(DataManager.class);
 
+    private final ApplicationContext applicationContext = mock(ApplicationContext.class);
+
     private final ConnectorHandler handler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
-        NO_ENCRYPTION_COMPONENT);
+        NO_ENCRYPTION_COMPONENT, applicationContext);
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {

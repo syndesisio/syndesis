@@ -21,21 +21,38 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
-public final class ConnectorSettingsHandler extends BaseConnectorGeneratorHandler {
+@Api(tags = {"custom-connector", "connector-template"})
+public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {
 
-    private final String templateId;
-
-    /* default */ ConnectorSettingsHandler(final String templateId, final DataManager dataManager,
-        final ApplicationContext applicationContext) {
+    /* default */ CustomConnectorHandler(final DataManager dataManager,
+                                         final ApplicationContext applicationContext) {
         super(dataManager, applicationContext);
-        this.templateId = templateId;
+    }
+
+    @POST
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in`connectorSettings`")
+    @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
+    public Connector create(final ConnectorSettings connectorSettings) {
+
+        final Connector connector = withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
+            (generator, template) -> generator.generate(template, connectorSettings));
+
+        return getDataManager().create(connector);
     }
 
     @POST
@@ -44,7 +61,7 @@ public final class ConnectorSettingsHandler extends BaseConnectorGeneratorHandle
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
     public ConnectorSummary info(final ConnectorSettings connectorSettings) {
-        return withGeneratorAndTemplate(templateId, (generator, template) -> generator.info(template, connectorSettings));
+        return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(), (generator, template) -> generator.info(template, connectorSettings));
     }
 
 }
