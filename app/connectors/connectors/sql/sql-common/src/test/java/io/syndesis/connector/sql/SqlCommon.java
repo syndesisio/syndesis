@@ -16,16 +16,15 @@
  */
 package io.syndesis.connector.sql;
 
-import static org.junit.Assert.fail;
-
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class SqlCommon {
+import static org.junit.Assert.fail;
 
+public class SqlCommon {
     public Connection setupConnection(Connection connection, Properties properties) throws Exception {
 
         InputStream is = SqlCommon.class.getClassLoader().getResourceAsStream("application.properties");
