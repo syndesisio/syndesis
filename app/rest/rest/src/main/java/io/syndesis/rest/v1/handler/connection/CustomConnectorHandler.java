@@ -31,7 +31,6 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 @Api(tags = {"custom-connector", "connector-template"})
 public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {

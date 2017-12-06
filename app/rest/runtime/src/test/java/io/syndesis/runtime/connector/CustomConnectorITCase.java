@@ -15,8 +15,6 @@
  */
 package io.syndesis.runtime.connector;
 
-import java.util.List;
-
 import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.ConnectorSummary;
