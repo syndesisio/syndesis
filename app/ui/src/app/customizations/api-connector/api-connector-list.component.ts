@@ -33,12 +33,12 @@ export class ApiConnectorListComponent implements OnInit {
 
   constructor(
     public config: ConfigService,
-    private store: ApiConnectorStore,
+    private apiConnectorStore: ApiConnectorStore,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.apiConnectors$ = this.store.list;
-    this.loading$ = this.store.loading;
+    this.apiConnectors$ = this.apiConnectorStore.list;
+    this.loading$ = this.apiConnectorStore.loading;
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -75,6 +75,6 @@ export class ApiConnectorListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.loadAll();
+    this.apiConnectorStore.loadAll();
   }
 }
