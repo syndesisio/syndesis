@@ -54,6 +54,8 @@ public class CustomConnectorITCase extends BaseITCase {
 
     private final ConnectorTemplate template = createConnectorTemplate(TEMPLATE_ID, "connector template");
 
+    private String firstConnectorId;
+
     public static class ConnectorResultList {
         public List<Connector> items;
 
@@ -112,7 +114,7 @@ public class CustomConnectorITCase extends BaseITCase {
 
         dataManager.create(secondTemplate);
 
-        dataManager.create(connector1);
+        firstConnectorId = dataManager.create(connector1).getId().get();
         dataManager.create(connector2);
         dataManager.create(connector3);
     }
@@ -127,6 +129,13 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(created).isNotNull();
         assertThat(created.getDescription()).isEqualTo("test-description");
         assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
+    }
+
+    @Test
+    public void shouldFetchCustomConnectorsById() {
+        final ResponseEntity<Connector> response = get("/api/v1/connectors/custom/" + firstConnectorId, Connector.class);
+
+        assertThat(response.getBody()).isEqualTo(connector1);
     }
 
     @Test
