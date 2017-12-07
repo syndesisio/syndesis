@@ -1,0 +1,44 @@
+@import 'syndesis-sass';
+
+.swagger-actions {
+  padding-bottom: .5em;
+
+  &__header {
+    display: flex;
+    background-color: $color-pf-black-200;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: .4em .6em;
+  }
+
+  &__operations {
+    list-style-type: none;
+    padding-left: 2em;
+  }
+  
+  &__operations &__operations li:before {
+    display: inline;
+    content: '-';
+    margin: 0 .3em;
+  }
+
+  &__label {
+    background: $color-pf-black-300;
+    color: white;
+    font-size: 11px;
+    margin: 0 1em;
+    padding: .2em .6em;
+    
+    &--error{
+      background: $color-pf-red-100;
+    }
+    
+    &--warning{
+      background: $color-pf-orange-300;
+    }
+  }
+}
+
+.btn {
+  @extend %syn-submit-btn;
+}

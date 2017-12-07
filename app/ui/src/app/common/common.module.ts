@@ -20,11 +20,11 @@ import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
-import { ModalComponent } from './modal/modal.component';
-import { ModalService } from './modal/modal.service';
+import { ModalComponent, ModalService } from './modal';
 import { TagInputModule } from 'ngx-chips';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 import { WizardProgressBarComponent } from './wizard_progress_bar';
+import { CancelConfirmationModalComponent } from './cancel_confirmation_modal';
 
 @NgModule({
   imports: [
@@ -48,6 +48,7 @@ import { WizardProgressBarComponent } from './wizard_progress_bar';
     EditableTextComponent,
     EditableTextareaComponent,
     WizardProgressBarComponent,
+    CancelConfirmationModalComponent,
   ],
   exports: [
     CommonModule,
@@ -64,7 +65,8 @@ import { WizardProgressBarComponent } from './wizard_progress_bar';
     EditableTagsComponent,
     EditableTextComponent,
     EditableTextareaComponent,
-    WizardProgressBarComponent
+    WizardProgressBarComponent,
+    CancelConfirmationModalComponent
   ],
   providers: [FormFactoryService]
 })

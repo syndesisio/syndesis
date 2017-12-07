@@ -1,0 +1,45 @@
+<div class="card-pf-heading">
+  <h2 class="card-pf-title">
+    Review Swagger Actions
+  </h2>
+</div>
+<div class="card-pf-body">
+  <div class="swagger-actions">
+    <h5 class="swagger-actions__header">
+      Imported
+    </h5>
+    <ol class="swagger-actions__operations">
+      <li><strong>167</strong> operations</li>
+      <ol class="swagger-actions__operations">
+          <li><strong>4</strong> dealing with orders</li>
+          <li><strong>5</strong> dealing with categories</li>
+      </ol>
+    </ol>
+  </div>
+  
+  <div class="swagger-actions">
+    <h5 class="swagger-actions__header">
+      Errors
+      <span class="swagger-actions__label swagger-actions__label--error">1</span>
+    </h5>
+    <ol>
+      <li>Semantic error at paths./orders/order_id/feedback/seller.post.security.0.0: Security scope definition write_feedback could not be resolved</li>
+      <li>Required security specification is missing (Missing OAuth auth URL, can be specified on the next screen)</li>
+    </ol>
+  </div>
+  
+  <div class="swagger-actions">
+    <h5 class="swagger-actions__header">
+      Warnings
+      <span class="swagger-actions__label swagger-actions__label--warning">2</span>
+    </h5>
+    <ol>
+      <li>Several operations don't provide output syntax (157 out of 157)</li>
+      <li>Required security specification is missing (Missing OAuth auth URL, can be specified on the next screen)</li>
+    </ol>
+  </div>
+  
+  <button type="button" class="swagger-form__submit btn btn-primary" (click)="next.emit()">
+    Next
+  </button>
+</div>

@@ -1,0 +1,9 @@
+/// Centralized set of Application SASS variables
+
+// This is the darker gray we are using as a result of the lighter grays in PatternFly
+// getting washed out on projectors, demo recordings, and BlueJeans screenshares.
+$color-pf-custom-gray: #e1e1e1;
+
+// Generic styles for wizard and card CTA buttons
+$submit-top-gutter: .8em;
+$submit-min-width: 100px;

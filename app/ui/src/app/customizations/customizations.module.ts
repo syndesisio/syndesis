@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ToolbarModule, ListModule } from 'patternfly-ng';
@@ -11,7 +11,9 @@ import { CustomizationsComponent } from './customizations.component';
 import {
   ApiConnectorListComponent,
   ApiConnectorCreateComponent,
-  ApiConnectorDetailComponent
+  ApiConnectorDetailComponent,
+  ApiConnectorSwaggerUploadComponent,
+  ApiConnectorSwaggerReviewComponent
 } from './api-connector';
 
 import {
@@ -82,11 +84,14 @@ const routes: Routes = [
     ApiConnectorListComponent,
     ApiConnectorCreateComponent,
     ApiConnectorDetailComponent,
+    ApiConnectorSwaggerUploadComponent,
+    ApiConnectorSwaggerReviewComponent,
+
     TechExtensionsListComponent,
     TechExtensionImportComponent,
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
   ],
-  providers: []
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class CustomizationsModule { }

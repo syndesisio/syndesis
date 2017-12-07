@@ -35,6 +35,7 @@
       ],
       "stylePreprocessorOptions": {
         "includePaths": [
+          "../src/scss/base",
           "../node_modules"
         ]
       },

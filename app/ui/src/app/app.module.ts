@@ -2,7 +2,8 @@ import {
   APP_INITIALIZER,
   NgModule,
   NgZone,
-  InjectionToken
+  InjectionToken,
+  NO_ERRORS_SCHEMA
 } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -135,6 +136,7 @@ export function mapperRestangularProvider(
     UserService,
     CanDeactivateGuard
   ],
+  schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

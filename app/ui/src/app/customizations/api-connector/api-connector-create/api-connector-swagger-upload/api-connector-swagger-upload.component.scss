@@ -1,0 +1,27 @@
+@import 'syndesis-sass';
+
+.swagger-upload {
+  &__fieldset {
+    padding-bottom: 1em;
+    
+    &--textinput {
+      input[type=text] {
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+
+  &__option {
+    margin-right: 2em;
+    font-weight: normal;
+  }
+
+  &__submit {
+    @extend %syn-submit-btn;
+  }
+
+  input[type='radio'] {
+    margin-right: .8em;
+  }
+}
