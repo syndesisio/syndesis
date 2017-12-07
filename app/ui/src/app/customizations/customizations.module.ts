@@ -8,6 +8,9 @@ import { FileUploadModule } from 'ng2-file-upload-base/src';
 
 import { CustomizationsComponent } from './customizations.component';
 
+import { ApiConnectorService } from './api-connector/api-connector.service';
+import { ApiConnectorStore } from './api-connector/api-connector.store';
+
 import {
   ApiConnectorListComponent,
   ApiConnectorCreateComponent,
@@ -83,6 +86,9 @@ const routes: Routes = [
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
   ],
-  providers: []
+  providers: [
+    ApiConnectorService,
+    ApiConnectorStore
+  ]
 })
 export class CustomizationsModule {}
