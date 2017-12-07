@@ -69,6 +69,8 @@
 		<basepom.test.fork-count>1</basepom.test.fork-count>
 		<basepom.failsafe.fork-count>1</basepom.failsafe.fork-count>
 		<basepom.failsafe.reuse-vm>true</basepom.failsafe.reuse-vm>
+        <!-- takes a really long time -->
+        <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
 
 		<!-- Plugin versions -->
 		<exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
