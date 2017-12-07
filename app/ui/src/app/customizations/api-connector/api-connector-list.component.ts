@@ -30,6 +30,11 @@ export class ApiConnectorListComponent implements OnInit {
   filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
   loading$: Observable<boolean>;
   listConfig: ListConfig;
+  itemUseMapping: { [valueComparator: string]: string } = {
+    '=1': '<strong>1</strong> time',
+    'other': '<strong>#</strong> times'
+  };
+
 
   constructor(
     public config: ConfigService,

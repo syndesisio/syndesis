@@ -46,8 +46,8 @@
                 </div>
               </div>
               <div class="list-pf-additional-content">
-                <div *ngIf="item.apiConnectors$">
-                  <strong>Used by {{ item.apiConnectors$ }}</strong>
+                <div *ngIf="item.uses">
+                  <strong>Used by integrations <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span></strong>
                 </div>
               </div>
             </div>
