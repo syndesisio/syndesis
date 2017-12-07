@@ -1411,6 +1411,9 @@
       "icon": "fa-link",
       "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
+      "connectorGroup" : {
+        "id": "swagger-connector-template"
+      },
       "properties": {
         "specification": {
           "kind": "property",

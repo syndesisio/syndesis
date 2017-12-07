@@ -15,31 +15,18 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Path("/connector-templates")
