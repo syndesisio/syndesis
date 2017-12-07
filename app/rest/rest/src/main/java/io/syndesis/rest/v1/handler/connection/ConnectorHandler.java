@@ -49,6 +49,7 @@ import io.syndesis.model.filter.Op;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
@@ -63,7 +64,7 @@ import okio.Okio;
 @Path("/connectors")
 @Api(value = "connectors")
 @Component
-public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
+public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector> {
 
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
