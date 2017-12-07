@@ -27,7 +27,7 @@ const category = getCategory('ApiConnectors');
 })
 export class ApiConnectorListComponent implements OnInit {
   apiConnectors$: Observable<ApiConnectors>;
-  filteredApiConnectors$: Subject<ApiConnectors> = new BehaviorSubject(<ApiConnectors>{});
+  filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
   loading$: Observable<boolean>;
   listConfig: ListConfig;
 
