@@ -22,7 +22,6 @@ export interface ApiConnectorProperties extends BaseEntity {
     required: boolean;
     type: string;
     javaType: string;
-    //tags: Array<Tag>;
     description: string
   };
   specificationUrl: {

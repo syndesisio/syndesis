@@ -66,10 +66,6 @@ export class ApiConnectorListComponent implements OnInit {
     };
   }
 
-  getAppName() {
-    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
-  }
-
   handleAction(event: any) {
     if (event.id === 'createApiConnector') {
       this.router.navigate(['create'], { relativeTo: this.route });
@@ -82,7 +78,7 @@ export class ApiConnectorListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAppName();
+    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
     this.apiConnectorStore.loadAll();
   }
 }

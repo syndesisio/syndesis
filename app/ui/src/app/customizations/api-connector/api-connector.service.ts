@@ -12,7 +12,7 @@ export class ApiConnectorService extends RESTService<ApiConnector, ApiConnectors
   }
 
   public list(): Observable<ApiConnectors> {
-    return super.list().map( apiConnectors => {
+    return super.list().map(apiConnectors => {
       return apiConnectors;
     });
   }
