@@ -11,10 +11,8 @@ import { ApiConnectorStore } from './api-connector.store';
 import { ApiConnector, ApiConnectors } from './api-connector.model';
 
 import {
-  Action,
   ActionConfig,
   ListConfig,
-  ListEvent,
   EmptyStateConfig,
 } from 'patternfly-ng';
 
@@ -30,6 +28,7 @@ export class ApiConnectorListComponent implements OnInit {
   filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
   loading$: Observable<boolean>;
   listConfig: ListConfig;
+  appName;
   itemUseMapping: { [valueComparator: string]: string } = {
     '=1': '<strong>1</strong> time',
     'other': '<strong>#</strong> times'
@@ -68,6 +67,10 @@ export class ApiConnectorListComponent implements OnInit {
     };
   }
 
+  getAppName() {
+    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
+  }
+
   handleAction(event: any) {
     if (event.id === 'createApiConnector') {
       this.router.navigate(['create'], { relativeTo: this.route });
@@ -80,6 +83,7 @@ export class ApiConnectorListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAppName();
     this.apiConnectorStore.loadAll();
   }
 }
