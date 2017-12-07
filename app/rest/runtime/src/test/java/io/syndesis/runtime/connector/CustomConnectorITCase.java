@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -117,6 +118,14 @@ public class CustomConnectorITCase extends BaseITCase {
         firstConnectorId = dataManager.create(connector1).getId().get();
         dataManager.create(connector2);
         dataManager.create(connector3);
+    }
+
+    @Test
+    public void shouldBeAbleToDeleteCustomConnectors() {
+        final ResponseEntity<Void> response = delete("/api/v1/connectors/custom/" + firstConnectorId, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(dataManager.fetch(Connector.class, firstConnectorId)).isNull();
     }
 
     @Test

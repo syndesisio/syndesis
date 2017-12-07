@@ -41,6 +41,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
+import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
@@ -49,7 +50,7 @@ import io.syndesis.rest.v1.util.PredicateFilter;
 import org.springframework.context.ApplicationContext;
 
 @Api(tags = {"custom-connector", "connector-template"})
-public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler implements Getter<Connector> {
+public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler implements Getter<Connector>, Deleter<Connector> {
 
     /* default */ CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext) {
         super(dataManager, applicationContext);
