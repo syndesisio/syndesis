@@ -67,14 +67,12 @@ export class ConnectionsListComponent implements OnInit {
       },
       (err: any) => {
         sub.unsubscribe();
-        this.notificationService.message(
-          NotificationType.DANGER,
-          'Delete Failed',
-          `Failed to delete connection: ${err}`,
-          true,
-          null,
-          []
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Delete Failed',
+          message: `Failed to delete connection: ${err}`,
+          isPersistent: true
+        });
       }
     );
   }

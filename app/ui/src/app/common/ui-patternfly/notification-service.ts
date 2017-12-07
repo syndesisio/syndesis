@@ -42,7 +42,7 @@ export class NotificationService extends NS {
 
   // Toast notification wrapper, used for notifications
   // that are not persistent and do not have actions associated
-  popNotification({type, header, message}): void {
-    this.message(type, header, message);
+  popNotification({type, header, message, isPersistent = false}): void {
+    this.message(type, header, message, isPersistent);
   }
 }
