@@ -217,7 +217,6 @@ jobs:
           name: Build Rest
           command: |
             ./app/build.sh --batch-mode --module rest --image-mode docker | tee build_log.txt
-          no_output_timeout: 20m
       - run:
           name: Collect API docs
           command: |
