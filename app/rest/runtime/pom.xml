@@ -182,6 +182,22 @@
             <artifactId>sql-stored-connector</artifactId>
             <version>${syndesis-connectors.version}</version>
           </dependency>
+          <!-- ==== AWS S3 ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>aws-s3-copy-object-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>aws-s3-get-object-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>aws-s3-polling-bucket-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
         </dependencies>
       </plugin>
 
