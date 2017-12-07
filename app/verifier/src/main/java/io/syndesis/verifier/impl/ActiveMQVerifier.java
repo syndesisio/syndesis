@@ -33,7 +33,7 @@ public class ActiveMQVerifier extends BaseVerifier {
     @Override
     protected String getConnectorAction() {
         // default to arbitrary action connector for stateless connection verification
-        return "activemq-publish-connector";
+        return "activemq-publish";
     }
 
 }

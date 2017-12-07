@@ -28,3 +28,8 @@ management:
 endpoints:
   health:
     sensitive: false
+
+# Disable ActiveMQ auto-configuration of an embedded Broker
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration

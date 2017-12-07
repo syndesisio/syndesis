@@ -67,6 +67,7 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
         final String brokerUrl = (String) parameters.get("brokerUrl");
         final String username = (String) parameters.get("username");
         final String password = (String) parameters.get("password");
+        LOG.debug("Validating AMQ connection to " + brokerUrl);
         ActiveMQConnectionFactory connectionFactory = ObjectHelper.isEmpty(username) ?
                 new ActiveMQConnectionFactory(brokerUrl) : new ActiveMQConnectionFactory(username, password, brokerUrl);
         Connection connection = null;
@@ -85,6 +86,14 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
                     .parameterKey("username")
                     .parameterKey("password")
                     .build());
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (JMSException e) {
+                    // ignore close errors
+                }
+            }
         }
     }
 }
