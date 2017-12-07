@@ -83,7 +83,7 @@ jobs:
       - run:
           name: Build UI
           command: |
-            ./app/build.sh --batch-mode --module ui --image-mode=docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module ui --image-mode=docker | tee build_log.txt
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
@@ -110,7 +110,7 @@ jobs:
       - run:
           name: Build Connectors
           command: |
-            ./app/build.sh --init --batch-mode --module connectors | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --init --batch-mode --module connectors | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -138,7 +138,7 @@ jobs:
       - run:
           name: Build Verifier
           command: |
-            ./app/build.sh --batch-mode --module verifier --image-mode=docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module verifier --image-mode=docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -164,7 +164,7 @@ jobs:
       - run:
           name: Build Runtime
           command: |
-            ./app/build.sh --batch-mode --module runtime | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module runtime | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -191,7 +191,7 @@ jobs:
       - run:
           name: Build S2I Builder image
           command: |
-            ./app/build.sh --batch-mode --module s2i --image-mode docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module s2i --image-mode docker | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -216,7 +216,7 @@ jobs:
       - run:
           name: Build Rest
           command: |
-            ./app/build.sh --batch-mode --module rest --image-mode docker | tee build_log.txt | grep -v " Download"
+            ./app/build.sh --batch-mode --module rest --image-mode docker | tee build_log.txt
           no_output_timeout: 20m
       - run:
           name: Collect API docs
@@ -259,7 +259,7 @@ jobs:
             if [ -n "${OPENSHIFT_TOKEN}" ]; then
               curl -fsSL https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
               oc login --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}"
-              ./app/build.sh --batch-mode --mode system-test | tee test_log.txt | grep -v " Download"
+              ./app/build.sh --batch-mode --mode system-test | tee test_log.txt
             fi
       - store_artifacts:
           path: test_log.txt
