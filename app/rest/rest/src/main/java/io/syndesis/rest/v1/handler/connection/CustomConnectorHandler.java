@@ -35,11 +35,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
+import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.rest.v1.util.PredicateFilter;
@@ -47,7 +49,7 @@ import io.syndesis.rest.v1.util.PredicateFilter;
 import org.springframework.context.ApplicationContext;
 
 @Api(tags = {"custom-connector", "connector-template"})
-public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {
+public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler implements Getter<Connector> {
 
     /* default */ CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext) {
         super(dataManager, applicationContext);
@@ -101,5 +103,10 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
             new PredicateFilter<>(c -> c.getConnectorGroup().map(g -> g.idEquals(templateId)).orElse(false)),
             new ReflectiveSorter<>(Connector.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
+    }
+
+    @Override
+    public Kind resourceKind() {
+        return Kind.Connector;
     }
 }
