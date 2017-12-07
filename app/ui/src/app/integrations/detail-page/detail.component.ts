@@ -182,7 +182,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         this.notificationService.popNotification({
           type: NotificationType.WARNING,
           header: 'Update Failed',
-          message: 'Failed to update description: ' + reason
+          message: `Failed to update description: ${reason}`
         });
       });
   }
@@ -196,14 +196,14 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
         this.notificationService.popNotification({
           type: NotificationType.SUCCESS,
           header: 'Update Successful',
-          message: 'Updated ' + attr
+          message: `Updated ${attr}`
         });
       })
       .catch(reason => {
         this.notificationService.popNotification({
           type: NotificationType.WARNING,
           header: 'Update Failed',
-          message: 'Failed to update ' + attr + ': ' + reason
+          message: `Failed to update ${attr}: ${reason}`
         });
       });
   }
@@ -223,7 +223,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     this.notificationService.popNotification({
       type: NotificationType.INFO,
       header: 'Duplicating revision',
-      message: 'Duplicating revision ' + revision.version
+      message: `Duplicating revision ${revision.version}`
     });
     const sub = this.store.create(integration).subscribe(
       created => {
@@ -248,14 +248,14 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     this.notificationService.popNotification({
       type: NotificationType.INFO,
       header: 'Deploying revision',
-      message: 'Deploying revision ' + revision.version
+      message: `Deploying revision ${revision.version}`
     });
     const sub = this.store.update(integration).subscribe(
       updated => {
         this.notificationService.popNotification({
           type: NotificationType.SUCCESS,
           header: 'Deployment successful',
-          message: 'Deployed revision ' + revision.version
+          message: `Deployed revision ${revision.version}`
         });
         sub.unsubscribe();
       },

@@ -37,7 +37,7 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
           this.notificationService.popNotification({
             type: NotificationType.SUCCESS,
             header: 'Deleted!',
-            message: 'The technical extension "' + this.extension.name + '" has been deleted'
+            message: `The technical extension "${this.extension.name}" has been deleted`
           });
           if ('id' in this.route.snapshot.params) {
             this.router.navigate(['..'], { relativeTo: this.route });
@@ -46,7 +46,7 @@ export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
           this.notificationService.popNotification({
             type: NotificationType.WARNING,
             header: 'Deleted!',
-            message: 'The technical extension "' + this.extension.name + '" could not be deleted due to: ' + err.userMsg || 'Unknown error'
+            message: `The technical extension "${this.extension.name}" could not be deleted due to: ${err.userMsg || 'Unknown error'}`
           });
         });
       } else {
