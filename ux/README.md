@@ -24,7 +24,7 @@ Access UX design resource and documentation for Syndesis.
 ## Create a Connection
 * ### [OAuth FLow](designs/oauth/oauth.md)
 * ### [AMQ Connection](designs/amq/amq.md)
-
+* ### [Database Connection](designs/databaseconnection/databaseconnection.md)
 
 ## Customizations
 * ### [API Client Connector](designs/apiconnector/apiconnector.md)

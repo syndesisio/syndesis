@@ -19,7 +19,6 @@ import io.syndesis.dao.extension.ExtensionDataAccessObject;
 import io.syndesis.filestore.impl.SqlFileStore;
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,7 +26,6 @@ import org.springframework.context.annotation.Configuration;
  * Creates and configures the file store
  */
 @Configuration
-@ConditionalOnProperty(value = "features.filestore.enabled")
 public class FileStoreConfiguration {
 
     @Bean(initMethod = "init")
@@ -35,5 +33,4 @@ public class FileStoreConfiguration {
     public ExtensionDataAccessObject fileStore(DBI dbi) {
         return new SqlFileStore(dbi);
     }
-
 }

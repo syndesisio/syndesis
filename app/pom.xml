@@ -440,10 +440,9 @@
 							<exclude>**/.gitkeep</exclude>
 							<exclude>**/*.webapp</exclude>
 							<exclude>**/browserconfig.xml</exclude>
-							<exclude>connectors/connectors/**/springboot/*Configuration.java
-							</exclude> <!-- auto generated without headers -->
-							<exclude>connectors/connectors/**/springboot/*Common.java
-							</exclude> <!-- auto generated without headers -->
+							<exclude>connectors/connectors/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
+							<exclude>connectors/connectors/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
+							<exclude>rest/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
 						</excludes>
 					</configuration>
 					<dependencies>

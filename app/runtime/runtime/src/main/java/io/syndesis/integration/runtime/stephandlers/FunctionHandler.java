@@ -15,9 +15,6 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Function;
 import io.syndesis.integration.model.steps.Step;
@@ -28,6 +25,10 @@ import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @AutoService(StepHandler.class)
 public class FunctionHandler implements StepHandler<Function> {
@@ -58,6 +59,7 @@ public class FunctionHandler implements StepHandler<Function> {
         Map<String, Object> headers = step.getProperties();
         if (ObjectHelper.isNotEmpty(headers)) {
             options = headers.entrySet().stream()
+                .filter(entry -> Objects.nonNull(entry.getValue()))
                 .map(entry -> asBeanParameter(converter, entry))
                 .collect(Collectors.joining("&"));
         }

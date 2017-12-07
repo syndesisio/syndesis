@@ -1411,6 +1411,9 @@
       "icon": "fa-link",
       "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
+      "connectorGroup" : {
+        "id": "swagger-connector-template"
+      },
       "properties": {
         "specification": {
           "kind": "property",
@@ -1728,7 +1731,7 @@
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:aws-s3-copy-object-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "aws-s3-copy-object",
+            "camelConnectorPrefix": "aws-s3-copy-object-connector",
             "inputDataShape": {
               "kind": "java:File"
             },
@@ -1766,7 +1769,7 @@
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:aws-s3-get-object-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "aws-s3-get-object",
+            "camelConnectorPrefix": "aws-s3-get-object-connector",
             "inputDataShape": {
               "kind": "none"
             },
@@ -1816,7 +1819,7 @@
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:aws-s3-polling-bucket-connector:@syndesis-connectors.version@",
-            "camelConnectorPrefix": "aws-s3-polling-bucket",
+            "camelConnectorPrefix": "aws-s3-polling-bucket-connector",
             "inputDataShape": {
               "kind": "none"
             },
