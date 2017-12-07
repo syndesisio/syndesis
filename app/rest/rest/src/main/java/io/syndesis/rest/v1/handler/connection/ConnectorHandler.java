@@ -15,9 +15,43 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.credential.Credentials;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.inspector.Inspectors;
+import io.syndesis.integration.support.Strings;
+import io.syndesis.model.Kind;
+import io.syndesis.model.ListResult;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.filter.FilterOptions;
+import io.syndesis.model.filter.Op;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.rest.v1.handler.BaseHandler;
+import io.syndesis.rest.v1.operations.Deleter;
+import io.syndesis.rest.v1.operations.Getter;
+import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.operations.Updater;
+import io.syndesis.rest.v1.state.ClientSideState;
+import io.syndesis.verifier.Verifier;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
+import okio.BufferedSink;
+import okio.Okio;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -29,50 +63,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.credential.Credentials;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.inspector.Inspectors;
-import io.syndesis.integration.support.Strings;
-import io.syndesis.model.Kind;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.filter.FilterOptions;
-import io.syndesis.model.filter.Op;
-import io.syndesis.rest.v1.handler.BaseHandler;
-import io.syndesis.rest.v1.operations.Deleter;
-import io.syndesis.rest.v1.operations.Getter;
-import io.syndesis.rest.v1.operations.Lister;
-import io.syndesis.rest.v1.operations.Updater;
-import io.syndesis.rest.v1.state.ClientSideState;
-import io.syndesis.verifier.Verifier;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okio.BufferedSink;
-import okio.Okio;
 
 @Path("/connectors")
 @Api(value = "connectors")
 @Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
+    private final ApplicationContext applicationContext;
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
     private final ClientSideState state;
     private final Verifier verifier;
-    private final ApplicationContext applicationContext;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
         final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext) {
@@ -88,6 +94,16 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Path("/{id}/credentials")
     public ConnectorCredentialHandler credentials(@NotNull final @PathParam("id") String connectorId) {
         return new ConnectorCredentialHandler(credentials, state, connectorId);
+    }
+
+    @Path("/custom")
+    public CustomConnectorHandler customConnectorHandler() {
+        return new CustomConnectorHandler(getDataManager(), applicationContext);
+    }
+
+    @Override
+    public Connector get(final String id) {
+        return augmentedWithUsage(Getter.super.get(id));
     }
 
     @Path("/{id}/actions")
@@ -159,6 +175,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     }
 
     @Override
+    public ListResult<Connector> list(final UriInfo uriInfo) {
+        final List<Connector> connectors = Lister.super.list(uriInfo).getItems();
+
+        return ListResult.of(augmentedWithUsage(connectors));
+    }
+
+    @Override
     public Kind resourceKind() {
         return Kind.Connector;
     }
@@ -172,9 +195,25 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 
-    @Path("/custom")
-    public CustomConnectorHandler customConnectorHandler() {
-        return new CustomConnectorHandler(getDataManager(), applicationContext);
+    /* default */ Connector augmentedWithUsage(final Connector connector) {
+        return augmentedWithUsage(Collections.singletonList(connector)).get(0);
     }
 
+    /* default */ List<Connector> augmentedWithUsage(final List<Connector> connectors) {
+        final Map<String, Long> connectorUsage = getDataManager().fetchAll(Integration.class).getItems().stream()//
+            .filter(i -> !i.isInactive())//
+            .flatMap(i -> i.getUsedConnectorIds().stream())//
+            .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
+
+        return connectors.stream().map(c -> {
+            final Long uses = connectorUsage.get(c.getId().get());
+            if (uses != null) {
+                return new Connector.Builder()//
+                    .createFrom(c)//
+                    .uses(uses.intValue()).build();
+            }
+
+            return c;
+        }).collect(Collectors.toList());
+    }
 }

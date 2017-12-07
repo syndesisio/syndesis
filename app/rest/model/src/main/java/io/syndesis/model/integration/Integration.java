@@ -21,19 +21,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
+import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.user.User;
 import io.syndesis.model.validation.UniqueProperty;
 import io.syndesis.model.validation.UniquenessRequired;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -107,6 +112,27 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<Date> getCreatedDate();
 
     Optional<BigInteger> getTimesUsed();
+
+    @Value.Derived
+    default boolean isInactive() {
+        return getCurrentStatus()
+            .map(s -> s == Status.Deleted || s == Status.Deactivated)
+            .orElse(getDesiredStatus().map(s -> s == Status.Deleted || s == Status.Deactivated)
+                .orElse(false));
+    }
+
+    @Value.Derived
+    default Set<String> getUsedConnectorIds() {
+        return getSteps().stream()//
+            .map(s -> s.getAction())//
+            .filter(Optional::isPresent)//
+            .map(Optional::get)//
+            .filter(ConnectorAction.class::isInstance)//
+            .map(ConnectorAction.class::cast)//
+            .map(a -> a.getDescriptor().getConnectorId())//
+            .filter(Objects::nonNull)//
+            .collect(Collectors.toSet());
+    }
 
     @JsonIgnore
     default IntegrationRevisionState getStatus() {

@@ -19,7 +19,13 @@ import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.inspector.Inspectors;
+import io.syndesis.model.ListResult;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
@@ -37,7 +43,10 @@ import org.springframework.context.ApplicationContext;
 import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -83,6 +92,7 @@ public class ConnectorHandlerTest {
             final Connector connector = new Connector.Builder().id("connector-id").icon(mockWebServer.url("/u/23079786").toString())
                 .build();
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
+            when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
 
             final Response response = handler.getConnectorIcon("connector-id");
 
@@ -112,4 +122,42 @@ public class ConnectorHandlerTest {
         }
     }
 
+    @Test
+    public void shouldAugmentWithConnectorUsage() {
+        final Connector connector1 = newConnector("1");
+        final Connector connector2 = newConnector("2");
+        final Connector connector3 = newConnector("3");
+
+        final Step step1a = new SimpleStep.Builder().action(newActionBy(connector1)).build();
+        final Step step1b = new SimpleStep.Builder().action(newActionBy(connector1)).build();
+
+        final Step step2 = new SimpleStep.Builder().action(newActionBy(connector2)).build();
+
+        final Integration integration1 = new Integration.Builder().steps(Arrays.asList(step1a, step1b)).build();
+        final Integration integration2 = new Integration.Builder().steps(Collections.singletonList(step2)).build();
+        final Integration integration3 = new Integration.Builder().steps(Collections.singletonList(step2)).build();
+        when(dataManager.fetchAll(Integration.class))
+            .thenReturn(new ListResult.Builder<Integration>().addItem(integration1, integration2, integration3).build());
+
+        final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
+
+        assertThat(augmented).contains(usedConnector(connector1, 1), usedConnector(connector2, 2), connector3);
+    }
+
+    private static ConnectorAction newActionBy(final Connector connector) {
+        return new ConnectorAction.Builder()//
+            .descriptor(//
+                new ConnectorDescriptor.Builder()//
+                    .connectorId(connector.getId().get())//
+                    .build())//
+            .build();
+    }
+
+    private static Connector newConnector(final String id) {
+        return new Connector.Builder().id(id).build();
+    }
+
+    private static Connector usedConnector(final Connector connector, final int usage) {
+        return new Connector.Builder().createFrom(connector).uses(usage).build();
+    }
 }

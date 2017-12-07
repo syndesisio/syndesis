@@ -142,7 +142,7 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public final <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model) {
+    public <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model) {
         return fetchAll(model, noOperators());
     }
 
