@@ -40,14 +40,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CustomConnectorITCase extends BaseITCase {
 
     private static final String SECOND_TEMPLATE_ID = "second-connector-template";
+
     private static final String TEMPLATE_ID = "connector-template";
-    private final Connector connector1;
 
-    private final Connector connector2;
+    private final Connector connector1 = new Connector.Builder().id("connector-from-template-1")
+        .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
 
-    private final Connector connector3;
+    private final Connector connector2 = new Connector.Builder().id("connector-from-template-2")
+        .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
 
-    private final ConnectorTemplate template;
+    private final Connector connector3 = new Connector.Builder().id("connector-from-second-template")
+        .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
+
+    private final ConnectorTemplate template = createConnectorTemplate(TEMPLATE_ID, "connector template");
 
     public static class ConnectorResultList {
         public List<Connector> items;
@@ -98,19 +103,6 @@ public class CustomConnectorITCase extends BaseITCase {
             };
 
         }
-    }
-
-    public CustomConnectorITCase() {
-        template = createConnectorTemplate(TEMPLATE_ID, "connector template");
-
-        connector1 = new Connector.Builder().id("connector-from-template-1")
-            .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
-
-        connector2 = new Connector.Builder().id("connector-from-template-2")
-            .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
-
-        connector3 = new Connector.Builder().id("connector-from-second-template")
-            .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
     }
 
     @Before
