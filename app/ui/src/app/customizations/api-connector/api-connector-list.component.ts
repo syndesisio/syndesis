@@ -34,7 +34,6 @@ export class ApiConnectorListComponent implements OnInit {
     'other': '<strong>#</strong> times'
   };
 
-
   constructor(
     public config: ConfigService,
     private apiConnectorStore: ApiConnectorStore,
