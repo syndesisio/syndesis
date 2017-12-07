@@ -30,7 +30,7 @@ enum SupportedAuthenticationTypes {
 
     final String label;
 
-    private final ConfigurationProperty.PropertyValue propertyValue;
+    private final transient ConfigurationProperty.PropertyValue propertyValue;
 
     private SupportedAuthenticationTypes(final String label) {
         this.label = label;
