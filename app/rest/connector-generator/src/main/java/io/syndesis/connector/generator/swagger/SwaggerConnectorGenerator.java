@@ -110,6 +110,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings);
 
+        // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
 
         if (specification.startsWith("http")) {

@@ -148,14 +148,19 @@ import org.apache.commons.lang3.StringUtils;
         } else if (schemes.contains(Scheme.HTTPS)) {
             schemeToUse = "https";
         } else {
-            schemeToUse = schemes.get(0).toValue();
+            schemeToUse = schemes.stream()//
+                .filter(s -> s.toValue().startsWith("http"))//
+                .findFirst()//
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "Unable to find a supported scheme within the schemes given in the Swagger specification: " + schemes))//
+                .toValue();
         }
 
         final String host = swagger.getHost();
         String hostToUse;
         if (StringUtils.isEmpty(host)) {
             hostToUse = requireNonNull(specificationUrl, "Swagger specification does not provide a `host` definition "
-                + "and the Swagger specification was uploaded so the originating URL is lost to determine the scheme to use").getHost();
+                + "and the Swagger specification was uploaded so it is impossible to determine the originating URL").getHost();
         } else {
             hostToUse = swagger.getHost();
         }

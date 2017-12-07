@@ -56,6 +56,13 @@ public class PropertyGeneratorsTest {
     }
 
     @Test
+    public void shouldFailIfNoHttpSchemesFound() {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> determineHost(new Swagger().scheme(Scheme.WS).scheme(Scheme.WSS)))
+            .withMessageStartingWith("Unable to find a supported scheme");
+    }
+
+    @Test
     public void shouldFailToDetermineIfNoHostGivenAnywhere() {
         assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> determineHost(new Swagger()))
             .withMessageStartingWith("Swagger specification does not provide");
