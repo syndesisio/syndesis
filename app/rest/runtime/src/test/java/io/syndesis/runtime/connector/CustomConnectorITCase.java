@@ -31,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -53,6 +54,8 @@ public class CustomConnectorITCase extends BaseITCase {
         .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
 
     private final ConnectorTemplate template = createConnectorTemplate(TEMPLATE_ID, "connector template");
+
+    private String firstConnectorId;
 
     public static class ConnectorResultList {
         public List<Connector> items;
@@ -112,9 +115,17 @@ public class CustomConnectorITCase extends BaseITCase {
 
         dataManager.create(secondTemplate);
 
-        dataManager.create(connector1);
+        firstConnectorId = dataManager.create(connector1).getId().get();
         dataManager.create(connector2);
         dataManager.create(connector3);
+    }
+
+    @Test
+    public void shouldBeAbleToDeleteCustomConnectors() {
+        final ResponseEntity<Void> response = delete("/api/v1/connectors/custom/" + firstConnectorId, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(dataManager.fetch(Connector.class, firstConnectorId)).isNull();
     }
 
     @Test
@@ -127,6 +138,13 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(created).isNotNull();
         assertThat(created.getDescription()).isEqualTo("test-description");
         assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
+    }
+
+    @Test
+    public void shouldFetchCustomConnectorsById() {
+        final ResponseEntity<Connector> response = get("/api/v1/connectors/custom/" + firstConnectorId, Connector.class);
+
+        assertThat(response.getBody()).isEqualTo(connector1);
     }
 
     @Test
