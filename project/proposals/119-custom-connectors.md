@@ -50,6 +50,7 @@ New API endpoints for defining custom connectors:
 | POST      | /api/**{version}**/connectors/custom/                            | Create a new custom connector                                                         |
 | GET       | /api/**{version}**/connectors/custom?templateId=**{templateId}** | Lists all connectors that were created from a template identified with **templateId** |
 | GET       | /api/**{version}**/connectors/custom/**{id}**                    | Fetches custom connector with the provided **id**                                     |
+| DELETE    | /api/**{version}**/connectors/custom/**{id}**                    | Deletes custom connector with the provided **id**                                     |
 
 ### New custom connector based on Swagger specification example
 
