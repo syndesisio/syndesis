@@ -6,25 +6,6 @@
     text-decoration: none;
   }
 
-  /**
-  So that first table column is not indented
-   */
-  tr {
-
-    th {
-      border: none;
-      max-width: 35px;
-      padding: 15px 0;
-      text-align: right;
-    }
-
-    td {
-      border: none;
-      padding: 15px 0 15px 40px;
-    }
-  }
-
-
   .content {
     margin-top: 30px;
 
@@ -35,6 +16,25 @@
 
       .fa {
         padding: 0 10px;
+      }
+    }
+  }
+
+  .table {
+    margin-top: 20px;
+
+    tr {
+
+      th {
+        border: none;
+        max-width: 35px;
+        padding: 15px 0;
+        text-align: right;
+      }
+
+      td {
+        border: none;
+        padding: 15px 0 15px 40px;
       }
     }
   }
