@@ -21,9 +21,9 @@ export class NotificationService extends NS {
     type: string,
     header: string,
     message: string,
-    isPersistent: boolean,
-    primaryAction: Action,
-    moreActions: Action[]
+    isPersistent: boolean = false,
+    primaryAction?: Action,
+    moreActions: Action[] = []
   ): void {
     super.message(
       type,
@@ -38,5 +38,11 @@ export class NotificationService extends NS {
 
   getNotificationsObservable(): Observable<Notification[]> {
     return this.notificationsSubject.asObservable();
+  }
+
+  // Toast notification wrapper, used for notifications
+  // that are not persistent and do not have actions associated
+  popNotification({type, header, message, isPersistent = false}): void {
+    this.message(type, header, message, isPersistent);
   }
 }

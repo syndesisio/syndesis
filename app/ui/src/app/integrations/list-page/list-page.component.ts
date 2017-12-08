@@ -63,32 +63,23 @@ export class IntegrationsListPage implements OnInit {
       headers: ParsedResponseHeaders
     ) => {
       if (status === 204) {
-        this.notificationService.message(
-          NotificationType.SUCCESS,
-          'Imported!',
-          'Your integration has been imported',
-          false,
-          null,
-          []
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Imported!',
+          message: 'Your integration has been imported'
+        });
       } else if (status === 400) {
-        this.notificationService.message(
-          NotificationType.DANGER,
-          'Import Failed!',
-          JSON.parse(response).userMsg,
-          false,
-          null,
-          []
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Import Failed!',
+          message: JSON.parse(response).userMsg
+        });
       } else {
-        this.notificationService.message(
-          NotificationType.DANGER,
-          'Import Failed!',
-          'Your integration could not be imported.',
-          false,
-          null,
-          []
-        );
+        this.notificationService.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Import Failed!',
+          message: 'Your integration could not be imported.'
+        });
       }
     };
   }
