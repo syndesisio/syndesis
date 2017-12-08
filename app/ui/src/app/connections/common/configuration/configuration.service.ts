@@ -14,7 +14,7 @@ export class ConnectionConfigurationService {
     switch (id) {
       case 'salesforce':
       case 'twitter':
-      case 'sql-stored-connector':
+      case 'sql':
       case 'activemq':
         return true;
       default:

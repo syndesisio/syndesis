@@ -18,6 +18,7 @@ ARGS="$@"
 
 # All modules, in the right build order
 ALL_MODULES="connectors verifier runtime rest s2i ui tests"
+POD_MODULES="verifier rest ui"
 MODULES=(
   "ui"
   "connectors"
@@ -53,7 +54,12 @@ and the following options:
                               - "openshift" : Build for OpenShift image streams
                               - "docker"    : Build against a plain Docker daemon
                               - "auto"      : Automatically detect whether to use "s2i" or "docker"
--n  --namespace <ns>          Specifies the namespace to create images in when using '--images s2i'
+    --docker                  == --image-mode docker
+    --openshift               == --image-mode openshift
+
+-p  --project <project>       Specifies the project to create images in when using '--images s2i'
+-k  --kill-pods               Kill pods after the image has been created.
+                              Useful when building with image-mode docker
 
 -c  --clean                   Run clean builds (mvn clean)
 -b  --batch-mode              Run mvn in batch mode
@@ -78,13 +84,19 @@ With "--minishift" Minishift can be initialized and installed with Syndesis
 
     --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
     --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
-    --memory                  How much memory to use when doing a reset. Default: 4GB
-    --cpus                    How many CPUs to use when doing a reset. Default: 2
-    --disk-size               How many disk space to use when doing a reset. Default: 20GB
-    --install                 Install templates into a running Minishift
+    --memory <mem>            How much memory to use when doing a reset. Default: 4GB
+    --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
+    --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+    --install                 Install templates into a running Minishift.
+-p  --project                 Install into this project. Delete this project if already existing
     --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
+
+With "--dev" common development tasks are simplified
+
+    --debug <name>            Setup a port forwarding to <name> pod (example: rest)
+
 Examples:
 
 * Build only backend modules, fast               build.sh --backend --flash
@@ -93,6 +105,7 @@ Examples:
 * Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
 * Build for system test                          build.sh --system-test
 * Start Minishift afresh                         build.sh --minishift --full-reset --install --watch
+* Setup debug port forward for rest pod          build.sh --dev --debug rest
 
 EOT
 }
@@ -428,6 +441,18 @@ release_project() {
 }
 
 # ======================================================
+# OpenShift helper functions
+
+kill_pods() {
+    for pod in $@; do
+        if [ "${POD_MODULES/$pod/}" != "${POD_MODULES}" ]; then
+            echo "Killing pods "$(oc get pod -o name | grep "syndesis-$pod")
+            oc get pod -o name | grep "syndesis-$pod" | xargs oc delete
+        fi
+    done
+}
+
+# ======================================================
 # Build functions
 
 extract_modules() {
@@ -511,6 +536,13 @@ get_maven_args() {
     fi
 
     local image_mode="$(readopt --image-mode -i)"
+    if [ -z "${image_mode}" ]; then
+      if [ $(hasflag --docker) ]; then
+          image_mode="docker"
+      elif [ $(hasflag --openshift --s2i) ]; then
+          image_mode="openshift"
+      fi
+    fi
     if [ "${image_mode}" != "none" ]; then
         if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
             #Build images
@@ -559,6 +591,9 @@ run_mvnw() {
         echo "./mvnw $args"
         echo "=============================================================================="
         ./mvnw $args
+        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
+          kill_pods $POD_MODULES
+        fi
     else
       echo "Modules: $maven_modules"
       if [ $(hasflag --init) ]; then
@@ -571,6 +606,9 @@ run_mvnw() {
         echo "./mvnw $args -f $module"
         echo "=============================================================================="
         ./mvnw -f $module $args
+        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
+            kill_pods $module
+        fi
       done
     fi
 }
@@ -640,7 +678,25 @@ run_minishift() {
         local memory=$(readopt --memory)
         local cpus=$(readopt --cpus)
         local disksize=$(readopt --disk-size)
-        minishift start --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
+        minishift start --show-libmachine-logs=true --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
+    fi
+
+    local project=$(readopt --project -p)
+    if [ -n "${project}" ]; then
+        # Delete project if existing
+        if oc get project "${project}" >/dev/null 2>&1 ; then
+            echo "Deleting project ${project}"
+            oc delete project "${project}"
+        fi
+        echo "Creating project ${project}"
+        for i in {1..10}; do
+            if oc new-project "${project}" >/dev/null 2>&1 ; then
+              break
+            fi
+            echo "Project still exist. Waiting 10s ..."
+            sleep 10
+        done
+        oc project "${project}"
     fi
 
     local image_mode=$(readopt --image-mode -i)
@@ -663,6 +719,18 @@ run_minishift() {
     fi
     if [ $(hasflag --watch) ]; then
         watch oc get pods
+    fi
+}
+
+dev_tasks() {
+    if [ $(hasflag --debug) ]; then
+        local name=$(readopt --debug)
+        if [ -z "${name}" ]; then
+            name="rest"
+        fi
+
+        local pod=$(oc get -o name pod -l component=syndesis-${name})
+        oc port-forward ${pod//*\//} 5005:5005
     fi
 }
 
@@ -690,6 +758,12 @@ if [ -n "$(hasflag --system-test)" ]; then
     exit 0
 fi
 
+# Developer helper tasks
+if [ -n "$(hasflag --dev)" ]; then
+    dev_tasks
+    exit 0
+fi
+
 # Check for the mode to use
 mode=$(readopt --mode)
 if [ -z "${mode}" ]; then
@@ -707,6 +781,10 @@ case $mode in
         ;;
     "minishift")
         run_minishift
+        exit 0
+        ;;
+    "dev")
+        dev_tasks
         exit 0
         ;;
     **)

@@ -23,4 +23,9 @@
     box-shadow: none;
     border-bottom-color: transparent;
   }
+
+  a, a:visited, a:active, a:hover {
+    cursor: pointer;
+    text-decoration: none;
+  }
 }

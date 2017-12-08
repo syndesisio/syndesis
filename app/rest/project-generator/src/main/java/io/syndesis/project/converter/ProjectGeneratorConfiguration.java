@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,7 @@ import io.syndesis.project.converter.visitor.ExtensionStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
 import io.syndesis.project.converter.visitor.StepVisitorFactory;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +42,7 @@ public class ProjectGeneratorConfiguration {
     private ProjectGeneratorProperties properties;
     @Autowired
     private DataManager dataManager;
-    @Autowired(required = false)
+    @Autowired
     private ExtensionDataManager extensionDataManager;
 
     @Bean

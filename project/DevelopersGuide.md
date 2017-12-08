@@ -190,3 +190,65 @@ syndesis-ui/scripts/syndesis-install --clean --form .
 - from https://github.com/fabric8io-images/s2i/tree/master/java/images/jboss
 > This image also supports detecting jars with Spring Boot devtools included, which allows automatic restarts when files on the classpath are updated. Files can be easily updated in OpenShift using command oc rsync.
 - Follow the instruction in `README.MD`. 
+
+
+
+## Invoke REST APIs from `curl`
+Current configuration doesn't allow that, but the template can be easily modified, at Syndesis deploy time, to enable it:
+ 
+```bash
+oc login -u system:admin
+# add some permission to a system user
+oc adm policy add-cluster-role-to-user system:auth-delegator -z default
+oc login -u developer
+
+# this just add this line to the pod configuration
+#    --openshift-delegate-urls={"/api":{"resource":"projects","verb":"get","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}
+#
+oc create -f <( sed -E -e  's#((\s+)- --pass-access-token)#\1\n\2- --openshift-delegate-urls={"/api":{"resource":"projects","verb":"get","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}#' <(curl https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml 2>/dev/null) )
+
+```
+
+Now you can use curl or this helper bash function:
+
+```bash
+curlsyn() {
+	OS_TOKEN=$(oc whoami -t);
+    curl -L --insecure -N -H "Authorization: Bearer $OS_TOKEN" -H "X-Forwarded-Access-Token: $OS_TOKEN"  2> /dev/null "$@"
+}
+
+# sample invocation
+curlsyn https://syndesis.$(minishift ip).nip.io/api/v1/connections  
+
+{"items":[{"connectorId":"sql-stored-connector","configuredProperties":{"password":"»ENC:7b47cd269b1514981440966f0d3d99f545758ec6e18c88e6864f7e86210457ac2497dca5ac72f672db4bd55a7d54d1aa","schema":"sampledb","url":"jdbc:postgresql://syndesis-db:5432/sampledb","user":"sampledb"},"options":{},"icon":"fa-database","description":"Sample Database Connection for Stored Procedure Invocation","id":"5","tags":["sampledb"],"name":"PostgresDB","isDerived":false}],"totalCount":1}
+```
+
+see comment here: https://github.com/syndesisio/syndesis/issues/99#issuecomment-348017381
+
+
+## Delete `syndesis-db` content
+If you need to force `syndesis-db` to delete it's content and having it recreated upon a `syndesis-rest` pod restart, you can invoke this one liner:
+```bash
+oc exec -it  $(oc get pods --selector=deploymentconfig=syndesis-db  -o jsonpath="{..metadata.name}") -- bash -c 'psql -d syndesis -c "DELETE FROM jsondb;"'
+```
+
+## Remove health and readiness probes
+During development, readiness and health probes might get into your way, if you are using a debugger. For example, if you block the execution of a jvm process with a break point, the process might fail to respond to health check pings; if this happens, OpenShift will consider the pod as being unhealthy and it will kill it and deploy a new one.  
+You can patch the `DeploymentConfig` definitions to disable these checks.
+
+```bash
+# disable health and readiness probes
+for DC in syndesis-atlasmap syndesis-rest syndesis-ui
+do
+oc patch dc $DC  --type json   -p='[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]'
+oc patch dc $DC  --type json   -p='[{"op": "remove", "path": "/spec/template/spec/containers/0/readinessProbe"}]'
+done
+
+# or pick the ones that you need here
+# oc patch dc syndesis-atlasmap --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]
+# oc patch dc syndesis-atlasmap --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/readinessProbe"}]
+# oc patch dc syndesis-rest --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]
+# oc patch dc syndesis-rest --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/readinessProbe"}]
+# oc patch dc syndesis-ui --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]
+# oc patch dc syndesis-ui --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/readinessProbe"}]
+```

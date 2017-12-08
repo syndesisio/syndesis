@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,6 +66,8 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 @SuppressWarnings("PMD.ExcessiveImports")
 public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
+    static final String URL_EXTENSION = "x-syndesis-swagger-url";
+
     private static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerConnectorGenerator.class);
@@ -107,18 +110,34 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings);
 
+        // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
+
+        if (specification.startsWith("http")) {
+            swagger.vendorExtension(URL_EXTENSION, URI.create(specification));
+        }
 
         final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
 
-        final Connector.Builder builder = new Connector.Builder()//
-            .createFrom(baseConnector)//
-            .putConfiguredProperty("specification", specification);
+        final Connector.Builder builder = new Connector.Builder().createFrom(baseConnector);
+
+        final Map<String, String> alreadyConfiguredProperties = ((Connector) builder.build()).getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
+            if (alreadyConfiguredProperties.containsKey(propertyName)) {
+                return;
+            }
+
             final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template);
 
-            maybeProperty.map(property -> builder.putProperty(propertyName, property));
+            maybeProperty.ifPresent(property -> {
+                builder.putProperty(propertyName, property);
+
+                final String defaultValue = property.getDefaultValue();
+                if (defaultValue != null) {
+                    builder.putConfiguredProperty(propertyName, defaultValue);
+                }
+            });
         });
 
         return builder.build();

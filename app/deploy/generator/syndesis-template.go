@@ -83,6 +83,7 @@ type Context struct {
 	Registry                      string
 	Images                        images
 	Tags                          tags
+	Debug						  bool
 }
 
 // TODO: Could be added from a local configuration file
@@ -160,6 +161,7 @@ func init() {
 	flags.StringVar(&context.Tags.Atlasmap, "atlasmap-tag", "latest", "Atlasmap image to use")
 	flags.BoolVar(&context.Productized, "product", false, "Generate product templates?")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
+	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 

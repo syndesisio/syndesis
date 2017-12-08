@@ -745,6 +745,8 @@ objects:
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
+          - name: JAVA_DEBUG
+            value: "true"
           image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
 
           imagePullPolicy: IfNotPresent
@@ -887,6 +889,8 @@ objects:
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
+          - name: JAVA_DEBUG
+            value: "true"
           image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
 
           imagePullPolicy: IfNotPresent

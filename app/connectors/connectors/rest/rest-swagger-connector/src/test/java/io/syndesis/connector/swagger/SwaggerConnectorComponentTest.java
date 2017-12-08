@@ -1,11 +1,11 @@
-/**
- * Copyright (C) 2017 Red Hat, Inc.
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -76,5 +76,18 @@ public class SwaggerConnectorComponentTest {
             assertThat(restSwagger.getSpecificationUri()).isNotNull();
             assertThat(restSwagger.getOperationId()).isEqualTo("addPet");
         });
+    }
+
+    @Test
+    public void shouldSetOAuth2AuthorizationHeader() {
+        final SwaggerConnectorComponent component = new SwaggerConnectorComponent();
+
+        component.setAuthenticationType(AuthenticationType.oauth2);
+        component.setAccessToken("the-token");
+
+        final HashMap<String, Object> headers = new HashMap<>();
+        component.addAuthenticationHeadersTo(headers);
+
+        assertThat(headers).containsEntry("Authorization", "Bearer the-token");
     }
 }

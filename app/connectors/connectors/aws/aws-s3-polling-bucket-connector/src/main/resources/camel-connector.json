@@ -16,7 +16,7 @@
   "inputDataType" : "none",
   "outputDataType" : "java:List",
   "componentOptions" : [ ],
-  "endpointOptions" : [ "bucketName", "accessKey", "secretKey", "deleteAfterRead", "region", "delay", "maxMessagesPerPoll", "prefix" ],
+  "endpointOptions" : [ "bucketNameOrArn", "accessKey", "secretKey", "deleteAfterRead", "region", "delay", "maxMessagesPerPoll", "prefix" ],
   "endpointValues" : {
     "deleteAfterRead" : false
   }

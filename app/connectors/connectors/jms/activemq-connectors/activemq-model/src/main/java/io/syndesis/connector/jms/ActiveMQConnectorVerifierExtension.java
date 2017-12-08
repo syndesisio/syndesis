@@ -1,12 +1,11 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,6 +66,7 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
         final String brokerUrl = (String) parameters.get("brokerUrl");
         final String username = (String) parameters.get("username");
         final String password = (String) parameters.get("password");
+        LOG.debug("Validating AMQ connection to " + brokerUrl);
         ActiveMQConnectionFactory connectionFactory = ObjectHelper.isEmpty(username) ?
                 new ActiveMQConnectionFactory(brokerUrl) : new ActiveMQConnectionFactory(username, password, brokerUrl);
         Connection connection = null;
@@ -85,6 +85,14 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
                     .parameterKey("username")
                     .parameterKey("password")
                     .build());
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (JMSException e) {
+                    // ignore close errors
+                }
+            }
         }
     }
 }

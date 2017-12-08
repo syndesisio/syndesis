@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,11 +47,14 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.rest.v1.handler.BaseHandler;
+import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import okhttp3.OkHttpClient;
@@ -62,22 +65,24 @@ import okio.Okio;
 @Path("/connectors")
 @Api(value = "connectors")
 @Component
-public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector> {
+public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
     private final ClientSideState state;
     private final Verifier verifier;
+    private final ApplicationContext applicationContext;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
-        final ClientSideState state, final EncryptionComponent encryptionComponent) {
+        final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
         this.inspectors = inspectors;
         this.state = state;
         this.encryptionComponent = encryptionComponent;
+        this.applicationContext = applicationContext;
     }
 
     @Path("/{id}/credentials")
@@ -166,4 +171,10 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         final Map<String, String> props) {
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
+
+    @Path("/custom")
+    public CustomConnectorHandler customConnectorHandler() {
+        return new CustomConnectorHandler(getDataManager(), applicationContext);
+    }
+
 }

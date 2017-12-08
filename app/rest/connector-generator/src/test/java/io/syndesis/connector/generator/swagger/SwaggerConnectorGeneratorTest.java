@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -77,6 +77,22 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
         assertThat(generated.getProperties().keySet()).contains("accessToken", "accessTokenUrl", "clientId", "clientSecret");
         assertThat(generated.getProperties().get("authenticationType").getEnum())
             .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2").label("OAuth 2.0").build());
+    }
+
+    @Test
+    public void shouldIncorporateGivenConfiguredProperties() throws IOException {
+        final String specification = resource("/swagger/reverb.swagger.json");
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
+            .name("Reverb API")//
+            .description("Invokes Reverb API")//
+            .icon("fa-music")//
+            .putConfiguredProperty("specification", specification)//
+            .putConfiguredProperty("accessTokenUrl", "http://some.token.url").build();
+
+        final Connector connector = new SwaggerConnectorGenerator().generate(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(connector.getConfiguredProperties()).containsEntry("accessTokenUrl", "http://some.token.url");
     }
 
     @Test
