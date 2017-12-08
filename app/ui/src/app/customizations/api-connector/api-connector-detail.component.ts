@@ -13,12 +13,7 @@ import { ApiConnectorStore } from './api-connector.store';
 export class ApiConnectorDetailComponent implements OnInit {
   apiConnector$: Observable<ApiConnector>;
   loading$: Observable<boolean>;
-  integrationLengthMapping: { [valueComparator: string]: string } = {
-    '=0': 'No integrations are using this extension.',
-    '=1': 'Currently used by <strong>1</strong> integration.',
-    'other': 'Currently used by <strong>#</strong> integrations.'
-  };
-
+  
   constructor(private apiConnectorStore: ApiConnectorStore,
               private router: Router,
               private route: ActivatedRoute) {
