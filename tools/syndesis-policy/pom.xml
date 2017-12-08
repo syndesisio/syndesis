@@ -21,7 +21,7 @@
 	<groupId>io.syndesis</groupId>
 	<artifactId>syndesis-policy</artifactId>
 	<packaging>jar</packaging>
-	<version>1</version>
+	<version>2</version>
 	<name>Syndesis :: Build Policy</name>
 	<description>
 		Code policies and and other configuration used by Syndesis
