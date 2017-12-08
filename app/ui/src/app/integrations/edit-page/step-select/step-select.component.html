@@ -20,7 +20,7 @@
                      [routerLink]="['/integrations', currentFlow.integration.id]">{{ integrationName }}</a>
                   <ng-container *ngIf="!integrationName">New Integration</ng-container>
                 </li>
-                <li class="active">Add a Step</li>
+                <li class="active">Choose a Step</li>
               </ol>
             </div>
             <div class="toolbar-pf-action-right">
@@ -32,7 +32,7 @@
     </div>
     <div class="wizard-pf-body clearfix">
       <div class="title">
-        <h1>Add a Step</h1>
+        <h1>Choose a Step</h1>
       </div>
       <p>A step specifies an operation on the data in the integration.  Click one to add it.</p>
       <syndesis-loading [loading]="loading$ | async">
