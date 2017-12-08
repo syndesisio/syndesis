@@ -30,7 +30,7 @@ import org.apache.camel.util.ObjectHelper;
  */
 public abstract class AbstractActiveMQConnector extends DefaultConnectorComponent {
 
-    @Metadata(label = "basic", description = "ActiveMQ Broker URL")
+    @Metadata(label = "basic", description = "AMQ Broker URL")
     private String brokerUrl;
 
     @Metadata(label = "basic", description = "User name for authorization credential")
@@ -38,6 +38,15 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
 
     @Metadata(label = "basic", description = "Password for authorization credential")
     private String password;
+
+    @Metadata(label = "basic", description = "Client ID for durable subscriptions")
+    private String clientID;
+
+    @Metadata(label = "basic", description = "AMQ Broker X.509 PEM Certificate")
+    private String brokerCertificate;
+
+    @Metadata(label = "basic", description = "AMQ Client X.509 PEM Certificate")
+    private String clientCertificate;
 
     public AbstractActiveMQConnector(String componentName, String componentSchema, String className) {
         super(componentName, componentSchema, className);
@@ -59,8 +68,7 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
         }
 
         // create ActiveMQ Connection Factory
-        ActiveMQConnectionFactory connectionFactory = ObjectHelper.isEmpty(username) ?
-                new ActiveMQConnectionFactory(this.brokerUrl) : new ActiveMQConnectionFactory(username, password, this.brokerUrl);
+        final ActiveMQConnectionFactory connectionFactory = ActiveMQUtil.createActiveMQConnectionFactory(this.brokerUrl, username, this.password, this.brokerCertificate, clientCertificate);
         SjmsComponent delegate = getCamelContext().getComponent(scheme, SjmsComponent.class);
         delegate.setConnectionFactory(connectionFactory);
 
@@ -98,5 +106,38 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getClientID() {
+        return clientID;
+    }
+
+    /**
+     * Client ID for durable subscriptions.
+     */
+    public void setClientID(String clientID) {
+        this.clientID = clientID;
+    }
+
+    public String getBrokerCertificate() {
+        return brokerCertificate;
+    }
+
+    /**
+     * AMQ Broker X.509 PEM Certificate.
+     */
+    public void setBrokerCertificate(String brokerCertificate) {
+        this.brokerCertificate = brokerCertificate;
+    }
+
+    public String getClientCertificate() {
+        return clientCertificate;
+    }
+
+    /**
+     * Client X.509 PEM Certificate
+     */
+    public void setClientCertificate(String clientCertificate) {
+        this.clientCertificate = clientCertificate;
     }
 }
