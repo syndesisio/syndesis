@@ -21,4 +21,7 @@ public class Strings {
         return value == null || value.length() == 0 || value.trim().length() == 0;
     }
 
+    public static boolean isNotEmpty(String value) {
+        return !isEmpty(value);
+    }
 }

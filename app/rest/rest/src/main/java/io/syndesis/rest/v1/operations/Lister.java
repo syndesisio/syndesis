@@ -25,6 +25,7 @@ import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
 import io.syndesis.rest.util.PaginationFilter;
+import io.syndesis.rest.util.ReflectiveFilterer;
 import io.syndesis.rest.util.ReflectiveSorter;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,13 +44,16 @@ public interface Lister<T extends WithId<T>> extends Resource, WithDataManager {
         @ApiImplicitParam(
             name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
         @ApiImplicitParam(
-            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20")
+            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
+        @ApiImplicitParam(
+            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
 
     })
     default ListResult<T> list(@Context UriInfo uriInfo) {
         Class<T> clazz = resourceKind().getModelClass();
         return getDataManager().fetchAll(
             clazz,
+            new ReflectiveFilterer<>(clazz, new FilterOptionsFromQueryParams(uriInfo).getFilters()),
             new ReflectiveSorter<>(clazz, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
