@@ -409,7 +409,7 @@
                     <inherited>false</inherited>
 					<configuration>
 						<header>license/syndesis-license.txt</header>
-						<skipExistingHeaders>true</skipExistingHeaders>
+						<skipExistingHeaders>false</skipExistingHeaders>
 						<!-- Reduce this even further. Vote for https://github.com/mycila/license-maven-plugin/pull/133
 								 to make this a fixed thread number value -->
 						<concurrencyFactor>1</concurrencyFactor>
