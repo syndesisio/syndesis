@@ -15,10 +15,6 @@
  */
 package io.syndesis.rest.util;
 
-/**
- * @author roland
- * @since 14/12/16
- */
 public interface SortOptions {
 
     String getSortField();

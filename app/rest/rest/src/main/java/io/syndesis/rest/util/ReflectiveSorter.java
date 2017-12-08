@@ -20,16 +20,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Function;
 
 import io.syndesis.model.ListResult;
 
 /**
  * Generic comparator which sorts based on fields. Fields are retrieved by reflections
- *
- * @author roland
- * @since 13/12/16
  */
 public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T>>, Comparator<T> {
 
@@ -74,7 +70,7 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
     }
 
     private Comparator<T> getStringComparator(Class<T> modelClass, String fieldName) {
-        Method stringGetMethod = getGetMethodOfType(modelClass, fieldName, String.class);
+        Method stringGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, fieldName, String.class);
         if (stringGetMethod != null) {
             return Comparator.comparing(k -> {
                 try {
@@ -88,7 +84,7 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
     }
 
     private Comparator<T> getIntComparator(Class<T> modelClass, String fieldName) {
-        Method intGetMethod = getGetMethodOfType(modelClass, fieldName, int.class, Integer.class);
+        Method intGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, fieldName, int.class, Integer.class);
         if (intGetMethod != null) {
             return Comparator.comparingInt(k -> {
                         try {
@@ -101,41 +97,6 @@ public class ReflectiveSorter<T> implements Function<ListResult<T>, ListResult<T
         return null;
     }
 
-
-    private Method getGetMethodOfType(Class<?> clazz, String fieldName, Class<?> ... types) {
-        // Check direct:
-        Method ret = extractMethod(clazz, fieldName, types);
-        if (ret != null) {
-            return ret;
-        }
-
-        // Check interfaces :
-        for (Class<?> intf : clazz.getInterfaces()) {
-            ret = extractMethod(intf, fieldName, types);
-            if (ret != null) {
-                return ret;
-            }
-        }
-
-        // Check parent:
-        Class<?> superClass = clazz.getSuperclass();
-        return superClass != null ? getGetMethodOfType(superClass, fieldName, types) : null;
-    }
-
-    private Method extractMethod(Class<?> clazz, String fieldName, Class<?>... types) {
-        try {
-            Method method = clazz.getDeclaredMethod("get" + fieldName.substring(0, 1).toUpperCase(Locale.US) + fieldName.substring(1));
-            Class<?> returnType = method.getReturnType();
-            for (Class<?> type : types) {
-                if (returnType.isAssignableFrom(type)) {
-                    return method;
-                }
-            }
-            return null;
-        } catch (NoSuchMethodException exp) {
-            return null;
-        }
-    }
 
     @Override
     public int compare(T o1, T o2) {
