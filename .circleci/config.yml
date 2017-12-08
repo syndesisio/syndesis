@@ -266,7 +266,10 @@ jobs:
             if [ -n "${OPENSHIFT_TOKEN}" ]; then
               curl -fsSL https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
               oc login --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}"
-              ./app/build.sh --batch-mode --mode system-test | tee test_log.txt | grep -v " Download"
+              test_id="${CIRCLE_JOB}-${CIRCLE_BUILD_NUM}"
+              ./app/build.sh --batch-mode --system-test --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}" --test-id "$test_id" | tee test_log.txt | grep -v " Download"
+              # Always cleanup
+              ./app/build.sh --system-test --release-project --test-id "$test_id"
             fi
       - store_artifacts:
           path: test_log.txt

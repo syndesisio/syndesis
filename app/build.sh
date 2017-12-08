@@ -17,7 +17,7 @@ set -eu
 ARGS="$@"
 
 # All modules, in the right build order
-ALL_MODULES="connectors verifier runtime rest s2i ui"
+ALL_MODULES="connectors verifier runtime rest s2i ui tests"
 MODULES=(
   "ui"
   "connectors"
@@ -25,6 +25,7 @@ MODULES=(
   "verifier:connectors"
   "rest:connectors runtime"
   "s2i:rest runtime connectors"
+  "tests:connectors runtime rest s2i"
 )
 
 # Display a help message.
@@ -62,10 +63,16 @@ and the following options:
 
 With "--system-test" the system tests are triggered which know these additional options:
 
-    --test-namespace <ns>     The test namespace to use
-    --test-token <token>      The token for the test namespace
-    --pool-namespace <ns>     Specify the pool namespace to use for testing (mutually exclusive with --test-namespace)
-    --create-lock <prefix>    Create project pool locks for system-tests for the projects with the given prefix
+    --project <project>       The test project to use
+    --token <token>           Token for connecting to the server
+    --server <url>            OpenShift Server url to use for the tests. If not given, use the currently connected
+                              server
+    --pool <project>          If no project is given use, a pooling mechanism. This pool has to be created
+                              before with --create-pool
+    --test-id <id>            Id to identify the test run
+    --create-pool <prefix>    Create project pool for system-tests with all projects with the given prefix
+    --list-pool               Show all locks for the pool
+    --release-project <t-id>  Release project for given test id (or all if no test id is given)
 
 With "--minishift" Minishift can be initialized and installed with Syndesis
 
@@ -197,35 +204,35 @@ base64_decode_option() {
 }
 
 find_secret() {
-    local namespace=$1
+    local project=$1
     local service_account=$2
-    oc get sa $service_account -n $namespace -o yaml | grep ${service_account}-token- | awk -F ": " '{print $2}'
+    oc get sa $service_account -n $project -o yaml | grep "${service_account}-token-" | awk -F ": " '{print $2}'
 }
 
 read_token() {
     local secret=$1
-    local namespace=$2
+    local project=$2
     base64_opt=$(base64_decode_option)
     check_error $base64_opt
-    oc get secret $secret -n $namespace -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
+    oc get secret $secret -n $project -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
 }
 
 read_token_of_sa() {
-    local namespace=$1
+    local project=$1
     local service_account=$2
-    local secret=$(find_secret $namespace $service_account)
-    local token=$(read_token $secret $namespace)
+    local secret=$(find_secret $project $service_account)
+    local token=$(read_token $secret $project)
     echo $token
 }
 
 # Create a lock for all projects with the given prefix
-create_lock() {
+create_pool() {
     local prefix=$1
     local service_account="default"
-    local pool_namespace=$(readopt --pool-namespace)
+    local pool=$(readopt --pool)
 
-    if [ -z "$pool_namespace" ]; then
-        pool_namespace="syndesis-ci"
+    if [ -z "$pool" ]; then
+        pool="syndesis-ci"
     fi
 
     for p in $(oc get projects | grep $prefix | awk -F " " '{print $1}'); do
@@ -234,10 +241,10 @@ create_lock() {
         echo "Found secret: $secret"
         local token=$(read_token_of_sa $p $service_account)
         echo "Found token: $token"
-        oc delete  secret project-lock-$p -n $pool_namespace || true
-        oc create secret generic project-lock-$p --from-literal=token=$token -n $pool_namespace
-        oc annotate secret project-lock-$p syndesis.io/lock-for-project=$p -n $pool_namespace
-        oc annotate secret project-lock-$p syndesis.io/allocated-by="" -n $pool_namespace
+        oc delete secret project-lock-$p -n $pool_project || true
+        oc create secret generic project-lock-$p --from-literal=token=$token -n $pool_project
+        oc annotate secret project-lock-$p syndesis.io/lock-for-project=$p -n $pool_project
+        oc annotate secret project-lock-$p syndesis.io/allocated-by="" -n $pool_project
 
         oc adm policy add-role-to-user edit system:serviceaccount:$p:$service_account -n $p
         oc adm policy add-role-to-user system:image-puller system:serviceaccount:$p:$service_account -n $p
@@ -264,81 +271,160 @@ current_server() {
 # 2. data:
 #    i)  connection information for the project (token)
 project_lock_data() {
-    local secret_name=$1
-    local pool_namespace=$2
-    oc get secret $secret_name -n $pool_namespace -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}~{{.metadata.resourceVersion}}~{{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
+    local secret=$1
+    local pool=$2
+    oc get $secret -n $pool -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}~{{.metadata.resourceVersion}}~{{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
 }
+
+# Extract test id used for system tests
+calc_test_id() {
+    local test_id=$(readopt --test-id)
+
+    if [ -z "${test_id}" ]; then
+      if [ -n "${JOB_NAME:-}" ]; then
+          # Jenkins Job
+          test_id="${JOB_NAME:-}${BUILD_NUMBER:-}"
+      elif [ -n "${CIRCLE_JOB:-}" ]; then
+          # Circle CI Job
+          test_id="${CIRCLE_JOB:-}${CIRCLE_BUILD_NUM:-}"
+      else
+          test_id="cli"
+      fi
+    fi
+    echo $test_id
+}
+
 
 #
 # Obtains a project lock. (See above).
-obtain_project_lock() {
-    local build_name=$1
-    local pool_namespace=$2
-    for lock in $(oc get secret -n $pool_namespace | grep project-lock- | awk -F " " '{print $1}'); do
-        echo "Trying to obtain lock data from secret $lock" > /tmp/log
-        local status=$(project_lock_data $lock $pool_namespace)
-        local project=`echo $status | awk -F "~" '{print $1}'`
-        local version=`echo $status | awk -F "~" '{print $2}'`
-        local allocator=`echo $status | awk -F "~" '{print $3}'`
+lock_project() {
+    local test_id=$1
+    local pool=$2
+    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+        local status=$(project_lock_data "$lock" "$pool")
+        local project=$(echo $status | awk -F "~" '{print $1}')
+        local version=$(echo $status | awk -F "~" '{print $2}')
+        local allocator=$(echo $status | awk -F "~" '{print $3}')
 
-        if [ -z "$allocator" ] || [ "$build_name" == "$allocator" ]; then
-            oc annotate secret $lock syndesis.io/allocated-by=$build_name --resource-version=$version --overwrite -n $pool_namespace > /dev/null
-            local newstatus=$(project_lock_data $lock $pool_namespace)
-            local newallocator=`echo $newstatus | awk -F "~" '{print $3}'`
-            if [ "$newallocator" == "$build_name" ]; then
-                echo $lock
+        if [ "${test_id}" == "${allocator}" ]; then
+           # Already occupied by the given test ID. No actionr required
+           echo $project;
+           return
+        fi
+
+        # Lock is free
+        if [ -z "$allocator" ]; then
+            oc annotate $lock syndesis.io/allocated-by=$test_id --resource-version=$version --overwrite -n $pool > /dev/null
+            local newstatus=$(project_lock_data "$lock" "$pool")
+            local newallocator=$(echo $newstatus | awk -F "~" '{print $3}')
+            if [ "$newallocator" == "$test_id" ]; then
+                echo $project
                 return
             fi
         fi
     done
+
+    # Nothing found, empty return value
 }
 
-project_lock_token() {
-    local secret_name=$1
-    local pool_namespace=$2
-    local base64_opt=$(base64_decode_option)
-    check_error $base64_opt
-    oc get secret $secret_name -n $pool_namespace -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
+check_project_status() {
+    local pool=$1
+    # Checking active status of pool project
+    local pool_status=$(oc get projects | grep $pool | awk -F " " '{print $2}')
+    if [ "$pool_status" != "Active" ]; then
+        echo "ERROR: No active project $pool: $pool_status"
+        exit 1
+    fi
+}
+
+get_free_pool_project() {
+
+    # The pool project. See below.
+    local pool=$(readopt --pool)
+
+    # Calculate the test ID used for locking
+    local test_id=$(calc_test_id)
+
+    # The calculated project to use
+    local project
+    echo "Trying to allocate project for: $test_id" >&2
+
+    # Project holding secrets for all projects used for testing.
+    # These secrets are updated with locks to reflect the current
+    # status of all parallel running tests
+    if [ -z "$pool" ]; then
+        pool="syndesis-ci"
+    fi
+
+    # Is the poo project active ?
+    check_error $(check_project_status $pool)
+
+    echo "Using pool: $pool" >&2
+
+    # Get the lock for the given (or calculated) test_id. Retry 10 times if every projects
+    # is locked
+    local project=$(lock_project "$test_id" "$pool")
+    if [ -z "$project" ]; then
+        for r in {1..10}; do
+            project=$(lock_project "$test_id" "$pool_project")
+            if [ -n "${project}" ]; then
+                break
+            fi
+            echo "Couldn't obtain lock for a single project. Retrying in 1 minute." >&2
+            sleep 1m
+        done
+    fi
+
+    if [ -n "$project" ]; then
+        echo "Obtained project $project" >&2
+        echo $project
+    else
+        echo "ERROR: Failed to allocate project. Exiting."
+    fi
 }
 
 project_lock_name() {
     local secret_name=$1
-    local pool_namespace=$2
-    oc get secret $secret_name -n $pool_namespace -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}{{"\n"}}'
+    local pool=$2
+    if [ -n "${secret}" ]; then
+      oc get secret $secret_name -n $pool -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}{{"\n"}}'
+    fi
 }
 
 release_project_lock() {
-    local lock="project-lock-$1"
-    local pool_namespace=$2
-    oc annotate secret $lock syndesis.io/allocated-by="" --overwrite -n $pool_namespace > /dev/null
+    local lock=$1
+    local pool_project=$2
+    oc annotate $lock syndesis.io/allocated-by="" --overwrite -n $pool_project > /dev/null
 }
 
+list_pool() {
+    local pool=$1
+    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+        local status=$(project_lock_data "$lock" "$pool")
+        local project=$(echo $status | awk -F "~" '{print $1}')
+        local version=$(echo $status | awk -F "~" '{print $2}')
+        local allocator=$(echo $status | awk -F "~" '{print $3}')
 
-teardown_project_pool() {
-    local namespace=${1:-}
-    local pool_namespace=${2:-}
-    local initial_namespace=${3:-}
-    local initial_token=${4:-}
-    echo "Cleaning up namespace: $namespace using pool namespace: $pool_namespace and switching back to namespace: $initial_namespace."
+        echo -e "$project:\t${allocator:----}"
+    done
+}
 
-    #1. We need to login to the original project first, before releasing the lock.
-    if [ -n "${initial_token:-}" ]; then
-        oc login --token=${initial_token} --server=$(current_server) || true
-        oc project ${pool_namespace}
-    else
-        echo "Warning: No initial token found!"
-    fi
+release_project() {
+    local pool=$1
+    local test_id=$2
 
-    if [ -n "${namespace:-}" ]; then
-        echo "Releasing project: ${namespace}"
-        $(release_project_lock ${namespace} ${pool_namespace}) || echo "Failed to release project: ${namespace}"
-    else
-        echo "Warning: No project was passed to release! Project will not get released! "
-    fi
+    oc project $pool
+    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+        local status=$(project_lock_data "$lock" "$pool")
+        local project=$(echo $status | awk -F "~" '{print $1}')
+        local version=$(echo $status | awk -F "~" '{print $2}')
+        local allocator=$(echo $status | awk -F "~" '{print $3}')
 
-    if [ -n "${initial_namespace}" ]; then
-        oc project ${initial_namespace} || true
-    fi
+        if [ -z "${test_id:-}" ] || [ "${test_id}" == "${allocator:-}" ]; then
+          echo "Releasing $lock"
+          release_project_lock $lock $pool
+        fi
+    done
 }
 
 # ======================================================
@@ -405,7 +491,7 @@ join_comma() {
 }
 
 get_maven_args() {
-    local namespace=${1:-}
+    local project=${1:-}
     local args=""
 
     if [ -n "$(hasflag --flash -f)" ]; then
@@ -442,12 +528,11 @@ get_maven_args() {
         fi
     fi
 
-    local ns="$namespace"
-    if [ -z "$ns" ]; then
-        ns="$(readopt --namespace -n)"
+    if [ -z "$project" ]; then
+        project="$(readopt --project -p)"
     fi
-    if [ -n "${ns}" ]; then
-        args="$args -Dfabric8.namespace=${ns}"
+    if [ -n "${project}" ]; then
+        args="$args -Dfabric8.namespace=${project}"
     fi
 
     if [ -n "$(hasflag --clean -c)" ]; then
@@ -494,85 +579,52 @@ run_build() {
     run_mvnw "$(get_maven_args)"
 }
 
-run_test() {
-    local initial_token=$(current_token)
-    local initial_namespace=$(oc project -q)
-    local pool_namespace=$(readopt --pool-namespace)
-
-    local test_namespace=$(readopt --test-namespace)
-    local test_token=$(readopt --test-token)
-
-    local build_id=${JOB_NAME:-}${BUILD_NUMBER:-}
-    if [ -z "$build_id" ] && [ -n "${CIRCLE_JOB:-}" ]; then
-       build_id="${CIRCLE_JOB}${CIRCLE_BUILD_NUM:-}"
+run_system_test() {
+    local server=$(readopt --server)
+    local pool=$(readopt --pool)
+    if [ -z "${pool}" ]; then
+        pool="syndesis-ci"
     fi
-
-    if [ -z "$build_id" ]; then
-        build_id="cli"
-    fi
-
-    if [ -z "$test_namespace" ] || [ -z "$test_token" ]; then
-        echo "Trying to allocate project for: $build_id"
-
-        if [ -z "$pool_namespace" ]; then
-            pool_namespace="syndesis-ci"
-        fi
-
-        local pool_namespace_status=$(oc get projects | grep $pool_namespace | awk -F " " '{print $2}')
-        if [ "$pool_namespace_status" != "Active" ]; then
-            echo "No active namespace $pool_namespace: $pool_namespace_status"
+    if [ -n "${server:-}" ]; then
+        local token=$(readopt --token)
+        if [ -z "${token:-}" ]; then
+            echo "--server provided for sytem tests but no --token for credentials"
             exit 1
         fi
-
-        echo "Using pool namespace: $pool_namespace"
-
-        local lock=$(obtain_project_lock $build_id $pool_namespace)
-        if [ -n "${lock:-}" ]; then
-            echo "Obtained lock: $lock"
+        local log
+        log=$(oc login --server $server --token $token)
+        if [ $? -ne 0 ]; then
+           echo bla
+           echo $log
+           exit 1
         fi
+    fi
 
-        local namespace=$(project_lock_name $lock $pool_namespace)
-        local token=$(project_lock_token $lock $pool_namespace)
-        for r in {1..10}; do
-            if [ -z "$namespace" ]; then
-                echo "Couldn't obtain lock. Retrying in 1 minute."
-                sleep 1m
-                if [ -n "${lock:-}" ]; then
-                    lock=$(obtain_project_lock $build_id $pool_namespace)
-                    namespace=$(project_lock_name $lock $pool_namespace)
-                    token=$(project_lock_token $lock $pool_namespace)
-                fi
-            fi
-        done
-
-        if [ -z "$namespace" ]; then
-            echo "Failed to allocate lock! Exiting!"
-            exit -1
-        fi
-
-        echo "Allocated project: $namespace for: $build_id"
-        oc login --token=$token --server=$(current_server)
-
-        if [ -z "${namespace}" ]; then
-            echo "Could not determine test namespace"
-            exit 1
-        fi
-
-        trap "teardown_project_pool $namespace $pool_namespace $initial_namespace $initial_token" EXIT
+    local lock_prefix=$(readopt --create-pool)
+    if [ -n "${lock_prefix}" ]; then
+        create_pool $lock_prefix
+    elif [ -n "$(hasflag --list-pool)" ]; then
+        list_pool "$pool"
+    elif [ -n "$(hasflag --release-project)" ]; then
+        release_project "$pool" "$(readopt --test-id)"
     else
-        echo "Using test namespace: $test_namespace"
-        namespace=$test_namespace
-        oc login --token=$test_token --server=$(current_server)
-        trap "oc login --token=$initial_token --server=$(current_server) && oc project $initial_namespace" EXIT
+       run_test_build $pool
+    fi
+}
+
+run_test_build() {
+    local pool=$1
+    # Test project given directly
+    local project=$(readopt --project)
+    if [ -z "$project" ]; then
+        project=$(get_free_pool_project)
+        check_error $project
+        local test_id=$(calc_test_id)
+        trap "release_project "$pool" "$test_id"" EXIT
     fi
 
-    oc project $namespace
-    export NAMESPACE_USE_EXISTING=$namespace
-    export KUBERNETES_NAMESPACE=$namespace
-    export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
-    export WORKSPACE=deploy
-
-    local maven_args=$(get_maven_args $namespace)
+    oc project $project
+    local maven_args=$(get_maven_args $project)
     check_error $maven_args
     maven_args="-Psystem-tests -Pimages -Dfabric8.mode=openshift $maven_args"
     run_mvnw "$maven_args"
@@ -634,12 +686,7 @@ fi
 
 # Run system tests
 if [ -n "$(hasflag --system-test)" ]; then
-    lock_prefix=$(readopt --create-lock)
-    if [ -n "${lock_prefix}" ]; then
-        create_lock $lock_prefix
-        exit 0
-    fi
-    run_test
+    run_system_test
     exit 0
 fi
 
@@ -655,13 +702,7 @@ case $mode in
         exit 0
         ;;
     "system-test")
-        lock_prefix=$(readopt --create-lock)
-        if [ -n "${lock_prefix}" ]; then
-            create_lock $lock_prefix
-            exit 0
-        fi
-
-        run_test
+        run_system_test
         exit 0
         ;;
     "minishift")
