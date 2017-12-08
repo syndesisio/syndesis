@@ -42,13 +42,13 @@ properties.
 
 New API endpoints for defining custom connectors:
 
-| HTTP Verb | Path                                                             | Description                                                                           |
-| --------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| GET       | /api/**{version}**/connector-templates                           | Returns a list of known connector templates                                           |
-| GET       | /api/**{version}**/connector-templates/**{templateId}**          | Returns a specific connector template identified by the given **templateId**          |
-| POST      | /api/**{version}**/connectors/custom/info                        | Provides information like proposed name, icon and description for new connector       | 
-| POST      | /api/**{version}**/connectors/custom/                            | Create a new custom connector                                                         |
-| GET       | /api/**{version}**/connectors/custom?templateId=**{templateId}** | Lists all connectors that were created from a template identified with **templateId** |
+| HTTP Verb | Path                                                                    | Description                                                                           |
+| --------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| GET       | /api/**{version}**/connector-templates                                  | Returns a list of known connector templates                                           |
+| GET       | /api/**{version}**/connector-templates/**{templateId}**                 | Returns a specific connector template identified by the given **templateId**          |
+| POST      | /api/**{version}**/connectors/custom/info                               | Provides information like proposed name, icon and description for new connector       |
+| POST      | /api/**{version}**/connectors/custom                                    | Create a new custom connector                                                         |
+| GET       | /api/**{version}**/connectors?query=connectorGroupId%3D**{templateId}** | Lists all connectors that were created from a template identified with **templateId** |
 
 ### New custom connector based on Swagger specification example
 
