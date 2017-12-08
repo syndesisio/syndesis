@@ -267,6 +267,28 @@ jobs:
           paths:
           - ~/.m2
 
+  license-check:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - run:
+          name: Prep for Maven cache load
+          command: |
+            cat $(find app -name pom.xml ! -path */src/* | sort) > all-poms
+      - restore_cache:
+          key: syndesis-license-check-{{ checksum "all-poms" }}
+      - run:
+          name: License check
+          command: |
+            cd app
+            ./mvnw license:check
+      - save_cache:
+          key: syndesis-license-check-{{ checksum "all-poms" }}
+          paths:
+          - ~/.m2
+
 workflows:
   version: 2
   syndesis:
@@ -275,6 +297,7 @@ workflows:
           filters:
             branches:
               only: master
+      - license-check
       - ui
       - connectors
       - runtime:

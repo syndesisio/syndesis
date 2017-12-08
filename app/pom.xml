@@ -38,7 +38,7 @@
 	<properties>
 		<!-- Global Syndesis version -->
 		<syndesis.version>${project.version}</syndesis.version>
-		<syndesis.policy.version>1</syndesis.policy.version>
+		<syndesis.policy.version>2</syndesis.policy.version>
 
 		<!-- Image names -->
 		<image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
