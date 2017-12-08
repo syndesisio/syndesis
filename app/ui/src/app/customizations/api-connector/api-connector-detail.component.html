@@ -1,39 +1,78 @@
 <div class="api-connector-detail">
-  <div class="col-xs-12">
-    <div class="col-xs-4">
-      <div class="card-pf card-pf-view ">
-        <div class="card-pf-body">
-          <div class="card-pf-top-element">
-            <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
-          </div>
-          <h2 class="card-pf-title text-center">
-            Connector Name
-          </h2>
-          <div class="card-pf-items text-center">
-            <div class="card-pf-item">
-              <span class="pficon pficon-screen"></span>
-              <span class="card-pf-item-text">8</span>
-            </div>
-            <div class="card-pf-item">
-              <span class="fa fa-check"></span>
-            </div>
-          </div>
-          <p class="card-pf-info text-center"><strong>Created On</strong> 2015-03-01 02:00 AM <br/> Never Expires</p>
+  <div class="row toolbar-pf">
+    <div class="col-sm-12">
+      <div class="toolbar-pf-actions">
+        <div class="inline-block">
+          <ol class="breadcrumb no-bottom-margin">
+            <li>
+              <a [routerLink]="['/customizations']">
+                Customizations
+              </a>
+            </li>
+            <li>
+              <a [routerLink]="['..']">
+                API Client Connector
+              </a>
+            </li>
+            <li class="active">
+              <strong>
+                Connector Details
+              </strong>
+            </li>
+          </ol>
         </div>
-        <div class="card-pf-view-checkbox">
-          <input type="checkbox">
-        </div>
-      </div>
-    </div>
-    <div class="col-xs-8">
-      <div>
-        <h2>Connector Name</h2>
-        <p>Icon, name, description, host, base URL.</p>
-      </div>
-      <div>
-        <h2>Connector Actions</h2>
-        <p>Action 1, 2, 3 name and description.</p>
       </div>
     </div>
   </div>
+  <syndesis-loading [loading]="loading$ | async">
+    <div class="row content" *ngIf="apiConnector$ | async; let apiConnector">
+      <div class="col-xs-12">
+        <div class="col-xs-4">
+          <div class="card-pf card-pf-view ">
+            <div class="card-pf-body">
+              <div class="card-pf-top-element">
+                <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
+              </div>
+              <h2 class="card-pf-title text-center">
+                {{ apiConnector.name }}
+              </h2>
+              <div class="card-pf-items text-center">
+                <div class="card-pf-item">
+                  {{ apiConnector.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-8">
+          <div>
+            <h2>{{ apiConnector.name }}</h2>
+            <table class="table">
+              <tr>
+                <th scope="row">Connector Icon</th>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <th scope="row">Connector Name</th>
+                <td>{{ apiConnector.name }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Description</th>
+                <td>{{ apiConnector.description }}</td>
+              </tr>
+              <tr>
+                <th scope="row">Host</th>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <th scope="row">Base URL</th>
+                <td>N/A</td>
+              </tr>
+            </table>
+          </div>
+          <!-- Swagger Actions Review -->
+        </div>
+      </div>
+    </div>
+  </syndesis-loading>
 </div>

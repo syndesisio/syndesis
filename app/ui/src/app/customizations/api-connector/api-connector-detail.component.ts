@@ -13,7 +13,7 @@ import { ApiConnectorStore } from './api-connector.store';
 export class ApiConnectorDetailComponent implements OnInit {
   apiConnector$: Observable<ApiConnector>;
   loading$: Observable<boolean>;
-  
+
   constructor(private apiConnectorStore: ApiConnectorStore,
               private router: Router,
               private route: ActivatedRoute) {
