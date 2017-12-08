@@ -239,11 +239,6 @@
     <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-broker</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
     </dependency>
 
