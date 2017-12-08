@@ -628,7 +628,7 @@ run_minishift() {
         local memory=$(readopt --memory)
         local cpus=$(readopt --cpus)
         local disksize=$(readopt --disk-size)
-        minishift start --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
+        minishift start --show-libmachine-logs=true --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
     fi
 
     local project=$(readopt --project -p)
