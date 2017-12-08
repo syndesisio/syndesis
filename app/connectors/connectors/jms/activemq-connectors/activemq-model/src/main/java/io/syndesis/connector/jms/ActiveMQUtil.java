@@ -72,7 +72,7 @@ public class ActiveMQUtil {
     public static ActiveMQConnectionFactory createActiveMQConnectionFactory(String brokerUrl, String username, String
             password, String brokerCertificate, String clientCertificate) {
         final ActiveMQConnectionFactory connectionFactory;
-        if (brokerUrl.contains("ssl")) {
+        if (brokerUrl.contains("ssl:")) {
             if (ObjectHelper.isEmpty(username)) {
                 connectionFactory = new ActiveMQSslConnectionFactory(brokerUrl);
             }
