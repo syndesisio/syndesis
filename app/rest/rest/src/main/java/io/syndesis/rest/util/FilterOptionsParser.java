@@ -15,8 +15,9 @@
  */
 package io.syndesis.rest.util;
 
-import io.syndesis.integration.support.Strings;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -32,8 +33,12 @@ public class FilterOptionsParser {
     }
 
     public static List<Filter> fromString(String query) {
+        if (StringUtils.isBlank(query)) {
+            return Collections.emptyList();
+        }
+
         return Stream.of(query.split(","))
-            .filter(Strings::isNotEmpty)
+            .filter(StringUtils::isNotBlank)
             .flatMap(q -> {
                 Matcher m = VALID_QUERY_PATTERN.matcher(q);
                 if (!m.matches()) {
