@@ -1,64 +1,38 @@
 #!/bin/bash
 
-PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
-NAMESPACE="syndesis"
-FROM="${PROJECT_DIR}/deploy"
-ROUTE_HOSTNAME="syndesis.$(minishift ip).xip.io"
+# ============================
+# Install minishift
+# Delegat to syndesis --minishift
 
-while [ $# -gt 0 ]; do
-case $1 in
-    --pull) 
-        docker pull syndesis/syndesis-ui && \
-        docker pull syndesis/syndesis-rest && \
-        docker pull syndesis/syndesis-verifier && \
-        docker pull syndesis/syndesis-s2i && \
-        docker pull atlasmap/atlasmap || exit 1
-        shift 1
-    ;;
-    --clean) 
-        echo "Deleting project ${NAMESPACE}"
-        oc delete project ${NAMESPACE} 2> /dev/null > /dev/null
-        while : ; do 
-            oc new-project ${NAMESPACE} 2> /dev/null > /dev/null
-            [[ $? != 0 ]] || break ;
-            echo "Waiting for project ${NAMESPACE} to be deleted."
-            sleep 2
-        done
-        shift 1     
-    ;;
-    --from) 
-        FROM=$2 
-        shift 2
-    ;;
-    --namespace) 
-        NAMESPACE=$2 
-        shift 2
-    ;;
-    --hostname) 
-        ROUTE_HOSTNAME=$2 
-        shift 2
-    ;;
-    *)
-        echo "Invalid Syntax. Unsupported arg: $1"
-        exit 1
-    ;;
-esac
-done
+# Dir where this script is located
+basedir() {
+    local script=${BASH_SOURCE[0]}
+    local dir=$(dirname "$script")
+    local full_dir=$(cd "${dir}" && pwd)
+    echo ${full_dir}
+}
 
-set -euo pipefail
+if [ -z "$*" ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
 
-echo
-echo "Installing templates from: ${FROM}"
-oc create -f ${FROM}/support/serviceaccount-as-oauthclient-restricted.yml
-oc create -f ${FROM}/syndesis-dev-restricted.yml
-oc new-app syndesis-dev-restricted \
-    -p ROUTE_HOSTNAME=${ROUTE_HOSTNAME} \
-    -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-    -p OPENSHIFT_PROJECT=$(oc project -q) \
-    -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
-    -p TEST_SUPPORT_ENABLED=true \
-    # -p INSECURE_SKIP_VERIFY=true
+    cat <<EOT
+Install Syndesis on Minishift
 
-echo "Syndesis will be available at https://${ROUTE_HOSTNAME}"
+Usage: syndesis-install <options>
 
+with options
 
+    --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
+    --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
+    --memory <mem>            How much memory to use when doing a reset. Default: 4GB
+    --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
+    --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+    --install                 Install templates into a running Minishift.
+-p  --project                 Install into this project. Delete this project if already existing
+    --watch                   Watch startup of pods
+-i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for
+                              image streams (default: "openshift")
+EOT
+    exit 0
+fi
+
+exec $(basedir)/../../app/syndesis --minishift $@
