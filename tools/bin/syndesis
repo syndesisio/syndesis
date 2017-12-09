@@ -134,6 +134,11 @@ basedir() {
     echo ${full_dir}
 }
 
+appdir() {
+  local dir=$(basedir)
+  local full_dir=$(cd "$dir/../../app" && pwd)
+  echo ${full_dir}
+}
 
 # Checks if a flag is present in the arguments.
 hasflag() {
@@ -585,7 +590,7 @@ run_mvnw() {
     local args=$1
     local maven_modules=$(extract_modules)
     check_error $maven_modules
-    cd $(basedir)
+    cd $(appdir)
     if [ -z "${maven_modules}" ]; then
         echo "=============================================================================="
         echo "./mvnw $args"
@@ -707,7 +712,7 @@ run_minishift() {
         template="syndesis-dev-restricted"
     fi
     if [ $(hasflag --install) ]; then
-        basedir=$(basedir)
+        basedir=$(appdir)
         check_error "$basedir"
         oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
         oc create -f ${basedir}/deploy/${template}.yml
@@ -718,7 +723,7 @@ run_minishift() {
           -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
     fi
     if [ $(hasflag --watch) ]; then
-        watch oc get pods
+        exec watch oc get pods
     fi
 }
 
