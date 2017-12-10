@@ -13,7 +13,7 @@
         sleep 1
       done
       echo "----- creating sampledb"
-      psql <<EOF 
+      psql <<EOF
         CREATE DATABASE sampledb;
         CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
         GRANT ALL PRIVILEGES ON DATABASE sampledb to sampledb;
@@ -26,7 +26,7 @@
           first_and_last_name varchar,
           company varchar,
           phone varchar,
-          email varchar, 
+          email varchar,
           lead_source varchar,
           lead_status varchar,
           rating varchar)
@@ -70,7 +70,6 @@
     type: ClusterIP
   status:
     loadBalancer: {}
-{{^Ephemeral}}
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
@@ -84,7 +83,6 @@
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
-{{/Ephemeral}}    
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -152,8 +150,7 @@
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
             requests:
-              memory: ${POSTGRESQL_MEMORY_LIMIT}              
-{{^Ephemeral}}
+              memory: ${POSTGRESQL_MEMORY_LIMIT}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
@@ -167,7 +164,6 @@
             defaultMode: 511
             name: syndesis-sampledb-config
           name: syndesis-sampledb-config
-{{/Ephemeral}}
     triggers:
     - imageChangeParams:
         automatic: true

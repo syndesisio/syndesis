@@ -7,7 +7,6 @@ metadata:
 #
 # Allow localhost refs: {{AllowLocalHost}}
 # Use docker images: {{WithDockerImages}}
-# Ephemeral: {{Ephemeral}}
 # Without Probes: {{Probeless}}
 # Atlasmap Tag: {{Tags.Atlasmap}}
 # Syndesis Tag: {{Tags.Syndesis}}
@@ -92,8 +91,13 @@ parameters:
 - description: Registry from where to fetch Syndesis images
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
-  required: true
   value: '{{ Registry }}'
+- description: |-
+    Separator charactater to separare registry from image. By default '/',
+    but  set this to '' if you don't use any registry
+  displayName: Syndesis Image Registry Seperator
+  name: SYNDESIS_REGISTRY_SEP
+  value: '/'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
