@@ -1,9 +1,0 @@
-{
-  "id": "2",
-  "kind": "Step",
-  "stepKind": "filter",
-  "configuredProperties": {
-    "filter": "${body.text} contains '#RHSummit'"
-  }
-}
-

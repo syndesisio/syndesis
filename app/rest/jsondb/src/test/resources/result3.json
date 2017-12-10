@@ -1,8 +1,0 @@
-{
-  "admin" : true,
-  "age" : 25,
-  "developer" : false,
-  "gpa" : 3.52,
-  "name" : "Joe",
-  "token" : null
-}

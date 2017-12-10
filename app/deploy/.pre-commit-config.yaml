@@ -1,7 +1,0 @@
-- repo: local
-  hooks:
-  - id: validate-generated-templates
-    name: Validate generated templates
-    entry: ./support/validate-generated-templates.sh
-    language: script
-    files: \.mustache$

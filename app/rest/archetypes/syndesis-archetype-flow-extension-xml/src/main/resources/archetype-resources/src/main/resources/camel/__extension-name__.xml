@@ -1,6 +1,0 @@
-<routes xmlns="http://camel.apache.org/schema/spring">
-  <route>
-    <from uri="direct:my-step"/>
-    <log message="Body is: ${body})"/>
-  </route>
-</routes>
