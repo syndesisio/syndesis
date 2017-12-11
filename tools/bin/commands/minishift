@@ -11,6 +11,7 @@ minishift::usage() {
     --memory <mem>            How much memory to use when doing a reset. Default: 4GB
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
     --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+    --show-logs               Show minishift logs during startup
     --install                 Install templates into a running Minishift.
 -p  --project                 Install into this project. Delete this project if already existing
     --watch                   Watch startup of pods
@@ -29,7 +30,11 @@ minishift::run() {
         local memory=$(readopt --memory)
         local cpus=$(readopt --cpus)
         local disksize=$(readopt --disk-size)
-        minishift start --show-libmachine-logs=true --memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
+        local show_logs_arg=""
+        if [ $(hasflag --show-logs --show-log) ]; then
+            show_logs_args="--show-libmachine-logs=true "
+        fi
+        minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
     fi
 
     local project=$(readopt --project -p)
