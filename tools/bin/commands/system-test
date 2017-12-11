@@ -307,6 +307,11 @@ test_build() {
         trap "release_project "$pool" "$test_id"" EXIT
     fi
 
+    export NAMESPACE_USE_EXISTING=$project
+    export KUBERNETES_NAMESPACE=$project
+    export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
+    export WORKSPACE=deploy
+
     oc project $project
     local maven_args=$(maven_args $project)
     check_error $maven_args
