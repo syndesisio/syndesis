@@ -163,7 +163,7 @@ function run {
     local first_arg=${1:-}
     local cmd_dir="$(basedir)/commands"
     local command
-    if [ -n "${first_arg}" ] && [ "${first_arg//^\-/}" == "${first_arg}" ]; then
+    if [ -n "${first_arg}" ] && [[ ${first_arg} != -* ]]; then
         command="$first_arg"
         if [ ! -f "$cmd_dir/$command" ]; then
             echo
