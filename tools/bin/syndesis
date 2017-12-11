@@ -37,22 +37,24 @@ EOT
         done
         cat - <<EOT
 
-The following global options are available:
+"build" is the default command if no command is specified.
+
+Global options:
 
 -r  --rebase                  Fetch origin/master and try a rebase
 -h  --help                    Display this help message
 
-Call "syndesis <module> --help" for module specific options
+Call "syndesis <module> --help" for module specific options.
 
 Examples:
 
 * Build only backend modules, fast               build.sh --backend --flash
-* Build only UI                                  build.sh --module ui
-* Build only images with OpenShift S2I, fast     build.sh --images --image-mode s2i --flash
-* Build only the rest and verifier image         build.sh --module rest,verifier --image-mode s2i
-* Build for system test                          build.sh --system-test
-* Start Minishift afresh                         build.sh --minishift --full-reset --install --watch
-* Setup debug port forward for rest pod          build.sh --dev --debug rest
+* Build only UI                                  build.sh -m ui
+* Build only images with OpenShift S2I, fast     build.sh --images --s2i -f
+* Build only the rest and verifier image         build.sh --module rest,verifier --s2i
+* Build for system test                          build.sh system-test
+* Start Minishift afresh                         build.sh minishift --full-reset --install
+* Setup debug port forward for rest pod          build.sh dev --debug rest
 EOT
     else
         cat <<EOT
