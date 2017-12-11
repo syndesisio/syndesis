@@ -793,6 +793,12 @@
         <version>2.2.8</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>json-schema-core</artifactId>
+        <version>1.2.8</version>
+      </dependency>
+
       <!-- Only here to exclude commons-logging transitive dependency - not direct dependency-->
       <dependency>
         <groupId>org.apache.james</groupId>
@@ -909,6 +915,8 @@
             <ignoredResourcePattern>org/infinispan/.*</ignoredResourcePattern>
             <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
             <ignoredResourcePattern>about.html</ignoredResourcePattern>
+            <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
+            <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
           </ignoredResourcePatterns>
         </configuration>
       </plugin>

@@ -75,6 +75,11 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>me.andrz.jackson</groupId>
       <artifactId>jackson-json-reference-core</artifactId>
     </dependency>
@@ -138,6 +143,12 @@
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
       <scope>test</scope>
     </dependency>
 
