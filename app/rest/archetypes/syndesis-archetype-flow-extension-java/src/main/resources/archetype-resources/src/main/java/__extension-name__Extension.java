@@ -17,21 +17,41 @@
 package ${package};
 
 import org.apache.camel.Body;
+import org.apache.camel.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.syndesis.integration.runtime.api.SyndesisActionProperty;
 import io.syndesis.integration.runtime.api.SyndesisExtensionAction;
 
+@SyndesisExtensionAction(
+    id = "my-step",
+    name = "My Logging Step",
+    description = "A simple logging step"
+)
 public class ${extension-name}Extension {
-    private static final Logger LOGGER = LoggerFactory.getLogger( ${extension-name}Extension.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(${extension-name}Extension.class);
 
-    @SyndesisExtensionAction(
-        id = "my-step",
-        name = "My Step",
-        description = "A simple step",
-        entrypoint = "direct:my-step"
-    )
-    public void log(@Body Object body) {
-        LOGGER.info("Body is: {}", body);
+    @SyndesisActionProperty(
+        name = "trace",
+        displayName = "Trace",
+        description = "Log the body as TRACE level, default INFO")
+    private boolean trace;
+
+    public void setTrace(boolean trace) {
+        this.trace = trace;
+    }
+
+    public boolean isTrace() {
+        return this.trace;
+    }
+
+    @Handler
+    public void log(@Body Object body){
+        if(trace) {
+            LOGGER.trace("Body is: {}",body);
+        } else {
+            LOGGER.info("Body is: {}",body);
+        }
     }
 }
