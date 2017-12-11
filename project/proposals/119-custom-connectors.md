@@ -49,6 +49,10 @@ New API endpoints for defining custom connectors:
 | POST      | /api/**{version}**/connectors/custom/info                               | Provides information like proposed name, icon and description for new connector       |
 | POST      | /api/**{version}**/connectors/custom                                    | Create a new custom connector                                                         |
 | GET       | /api/**{version}**/connectors?query=connectorGroupId%3D**{templateId}** | Lists all connectors that were created from a template identified with **templateId** |
+| GET       | /api/**{version}**/connectors/**{connectorId}**                         | Fetches a connector with the id **{connectorId}**                                     |
+| GET       | /api/**{version}**/connectors/**{connectorId}**/details                 | Fetches details in same form as the `/custom/info` endpoint above                     |
+| DELETE    | /api/**{version}**/connectors/**{connectorId}**                         | Deletes a connector with the id **{connectorId}**                                     |
+| PUT       | /api/**{version}**/connectors/**{connectorId}**                         | Updates a connector with the id **{connectorId}**                                     |
 
 ### New custom connector based on Swagger specification example
 
