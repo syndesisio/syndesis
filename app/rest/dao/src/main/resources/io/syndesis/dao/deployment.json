@@ -1695,7 +1695,7 @@
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
-          "secret": false,
+          "secret": true,
           "description": "Amazon AWS Secret Key"
         },
         "region": {
