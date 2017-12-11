@@ -8,7 +8,7 @@ import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 import { ApiConnectorStore } from './api-connector.store';
-import { ApiConnector, ApiConnectors } from './api-connector.model';
+import { ApiConnector, ApiConnectors } from './api-connector.models';
 
 import {
   ActionConfig,

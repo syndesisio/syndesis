@@ -13,7 +13,7 @@ import {
   ApiConnectorCreateComponent,
   ApiConnectorDetailComponent,
   ApiConnectorSwaggerUploadComponent,
-  ApiConnectorSwaggerReviewComponent
+  ApiConnectorReviewComponent
 } from './api-connector';
 
 import {
@@ -85,7 +85,7 @@ const routes: Routes = [
     ApiConnectorCreateComponent,
     ApiConnectorDetailComponent,
     ApiConnectorSwaggerUploadComponent,
-    ApiConnectorSwaggerReviewComponent,
+    ApiConnectorReviewComponent,
 
     TechExtensionsListComponent,
     TechExtensionImportComponent,

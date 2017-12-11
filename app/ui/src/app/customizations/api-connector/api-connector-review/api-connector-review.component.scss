@@ -1,6 +1,10 @@
 @import 'syndesis-sass';
 
-.swagger-actions {
+.connector-fallback {
+  padding-bottom: 1.4em;
+}
+
+.connector-actions {
   padding-bottom: .5em;
 
   &__header {

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 
 import { RESTService } from '../../store/entity/rest.service';
-import { ApiConnector, ApiConnectors } from './api-connector.model';
+import { ApiConnector, ApiConnectors } from './api-connector.models';
 
 @Injectable()
 export class ApiConnectorService extends RESTService<ApiConnector, ApiConnectors> {

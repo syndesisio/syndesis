@@ -9,7 +9,7 @@ import { ModalService } from '@syndesis/ui/common';
   templateUrl: './api-connector-create.component.html'
 })
 export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
-  TEMP_STEP = 2;
+  TEMP_STEP = 1;
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
 
   private cancelModalId = 'create-cancellation-modal';

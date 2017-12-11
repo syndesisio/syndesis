@@ -44,10 +44,11 @@
           *ngIf="TEMP_STEP == 1"
           (next)="onFetchComplete()">
         </syndesis-api-connector-swagger-upload>
-        <syndesis-api-connector-swagger-review 
-          *ngIf="TEMP_STEP == 2"
+        <syndesis-api-connector-review *ngIf="TEMP_STEP == 2"
+          [apiConnectorTemplateName]="'Swagger'"
+          [apiConnectorData]="{}"
           (next)="onReviewComplete()">
-        </syndesis-api-connector-swagger-review>
+        </syndesis-api-connector-review>
       </div>
     </div>
   </section>
