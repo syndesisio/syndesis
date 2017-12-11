@@ -194,7 +194,7 @@ function run {
     fi
 
     if [ "${command:-}" == "help" ] || [ $(hasflag --help -h) ]; then
-        display_help $command
+        display_help ${command:-}
         exit 0
     fi
 
