@@ -61,6 +61,9 @@ public class ExtensionsITCase extends BaseITCase {
 
         assertThat(created.getBody().getId()).isNotEmpty();
         assertThat(created.getBody().getName()).isNotBlank();
+        assertThat(created.getBody().getCreatedDate()).isNotEmpty();
+        assertThat(created.getBody().getLastUpdated()).isNotEmpty();
+        assertThat(created.getBody().getUserId()).contains("someone_important");
 
         assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();

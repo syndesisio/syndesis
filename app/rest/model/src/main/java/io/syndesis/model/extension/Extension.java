@@ -16,6 +16,7 @@
 package io.syndesis.model.extension;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.SortedSet;
@@ -67,6 +68,12 @@ public interface Extension extends WithId<Extension>, WithActions<ExtensionActio
     SortedSet<String> getDependencies();
 
     OptionalInt getUses();
+
+    Optional<String> getUserId();
+
+    Optional<Date> getLastUpdated();
+
+    Optional<Date> getCreatedDate();
 
     @Override
     default Extension withId(String id) {
