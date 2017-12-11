@@ -1218,6 +1218,7 @@
       "description": "Day Trade API connector",
       "icon": "fa-usd",
       "configuredProperties": {},
+      "connectorGroupId": "trade",
       "properties": {
         "host": {
           "kind": "property",
@@ -1449,6 +1450,7 @@
       "name": "Trade Insight",
       "description": "Trade Insight API connector",
       "icon": "fa-usd",
+      "connectorGroupId": "trade",
       "configuredProperties": {},
       "properties": {
         "host": {

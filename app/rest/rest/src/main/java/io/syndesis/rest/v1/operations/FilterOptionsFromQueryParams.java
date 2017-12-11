@@ -15,32 +15,24 @@
  */
 package io.syndesis.rest.v1.operations;
 
-import java.util.Locale;
+import io.syndesis.rest.util.FilterOptionsParser;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
-import io.syndesis.rest.util.SortOptions;
+public class FilterOptionsFromQueryParams {
 
-public class SortOptionsFromQueryParams implements SortOptions {
+    private final List<FilterOptionsParser.Filter> queryFilters;
 
-    private final String sortField;
-    private final SortDirection sortDirection;
-
-    public SortOptionsFromQueryParams(UriInfo uri) {
+    FilterOptionsFromQueryParams(UriInfo uri) {
         MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
-        sortField = queryParams.getFirst("sort");
-        String dir = queryParams.getFirst("direction");
-        sortDirection = dir == null ?  SortOptions.SortDirection.ASC : SortOptions.SortDirection.valueOf(dir.toUpperCase(Locale.US));
+        String query = queryParams.getFirst("query");
+        this.queryFilters = FilterOptionsParser.fromString(query);
     }
 
-    @Override
-    public String getSortField() {
-        return sortField;
+    public List<FilterOptionsParser.Filter> getFilters() {
+        return queryFilters;
     }
 
-    @Override
-    public SortDirection getSortDirection() {
-        return sortDirection;
-    }
 }

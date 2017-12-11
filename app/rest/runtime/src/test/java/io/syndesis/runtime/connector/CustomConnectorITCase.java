@@ -54,12 +54,6 @@ public class CustomConnectorITCase extends BaseITCase {
 
     private final ConnectorTemplate template = createConnectorTemplate(TEMPLATE_ID, "connector template");
 
-    public static class ConnectorResultList {
-        public List<Connector> items;
-
-        public int totalCount;
-    }
-
     @Configuration
     public static class TestConfiguration {
         private static final ActionsSummary ACTIONS_SUMMARY = new ActionsSummary.Builder().totalActions(5).putActionCountByTag("foo", 3)
@@ -127,22 +121,6 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(created).isNotNull();
         assertThat(created.getDescription()).isEqualTo("test-description");
         assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
-    }
-
-    @Test
-    public void shouldListCustomConnectorsGeneratedFromFirstTemplate() {
-        final ResponseEntity<ConnectorResultList> response = get("/api/v1/connectors/custom?templateId=" + TEMPLATE_ID,
-            ConnectorResultList.class);
-
-        assertThat(response.getBody().items).containsOnly(connector1, connector2);
-    }
-
-    @Test
-    public void shouldListCustomConnectorsGeneratedFromSecondTemplate() {
-        final ResponseEntity<ConnectorResultList> response = get("/api/v1/connectors/custom?templateId=" + SECOND_TEMPLATE_ID,
-            ConnectorResultList.class);
-
-        assertThat(response.getBody().items).containsOnly(connector3);
     }
 
     @Test

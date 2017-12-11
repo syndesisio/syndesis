@@ -104,4 +104,15 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(result.getErrors()).isNotEmpty();
     }
 
+    @Test
+    public void filterConnectorList() {
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        Class<ListResult<Connector>> type = (Class) ListResult.class;
+        ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors?query=connectorGroupId=trade", type);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        ListResult<Connector> result = response.getBody();
+        assertThat(result.getTotalCount()).as("connectors total").isEqualTo(2);
+        assertThat(result.getItems().size()).as("connector list").isEqualTo(2);
+    }
+
 }
