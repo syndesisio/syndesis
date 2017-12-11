@@ -57,6 +57,18 @@
       "deprecated" : false,
       "secret" : true,
       "description" : "Authorization credential password"
+    },
+    "clientID" : {
+      "kind" : "property",
+      "displayName" : "Client ID",
+      "group" : "security",
+      "label" : "common,security",
+      "required" : false,
+      "type" : "string",
+      "javaType" : "java.lang.String",
+      "deprecated" : false,
+      "secret" : false,
+      "description" : "Client ID for durable subscriptions"
     }
   }
 }

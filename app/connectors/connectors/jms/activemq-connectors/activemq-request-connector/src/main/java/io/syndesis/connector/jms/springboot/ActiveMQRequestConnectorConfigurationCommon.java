@@ -53,6 +53,10 @@ public class ActiveMQRequestConnectorConfigurationCommon {
      * Authorization credential password
      */
     private String password;
+    /**
+     * Client ID for durable subscriptions
+     */
+    private String clientID;
 
     public Integer getConnectionCount() {
         return connectionCount;
@@ -132,5 +136,13 @@ public class ActiveMQRequestConnectorConfigurationCommon {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(String clientID) {
+        this.clientID = clientID;
     }
 }

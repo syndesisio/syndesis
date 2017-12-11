@@ -519,12 +519,6 @@
 			<!-- ActiveMQ deps to override Spring Boot imported pom -->
 			<dependency>
 				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-broker</artifactId>
-				<version>${activemq.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
 				<artifactId>activemq-client</artifactId>
 				<version>${activemq.version}</version>
 			</dependency>
