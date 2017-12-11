@@ -1,0 +1,17 @@
+#!/bin/bash
+
+doc::description() {
+    echo "Generate Syndesis Developer Handbook"
+}
+
+doc::usage() {
+    cat <<EOT
+
+
+EOT
+}
+
+doc::run() {
+     echo "doc"
+
+}

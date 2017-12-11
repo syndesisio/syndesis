@@ -1,0 +1,23 @@
+#!/bin/bash
+
+dev::description() {
+    echo "Developer tools"
+}
+
+dev::usage() {
+    cat <<EOT
+    --debug <name>            Setup a port forwarding to <name> pod (example: rest)
+EOT
+}
+
+dev::run() {
+    if [ $(hasflag --debug) ]; then
+        local name=$(readopt --debug)
+        if [ -z "${name}" ]; then
+            name="rest"
+        fi
+
+        local pod=$(oc get -o name pod -l component=syndesis-${name})
+        oc port-forward ${pod//*\//} 5005:5005
+    fi
+}
