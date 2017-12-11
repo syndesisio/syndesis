@@ -16,7 +16,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -30,7 +30,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -44,7 +44,9 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":["oauth-client-id"],
+          "tags": [
+            "oauth-client-id"
+          ],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -58,7 +60,9 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":["oauth-client-secret"],
+          "tags": [
+            "oauth-client-secret"
+          ],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -76,11 +80,11 @@
             "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis.version@",
             "camelConnectorPrefix": "twitter-mention-connector",
             "inputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
             "outputDataShape": {
-               "kind": "java",
-               "type": "twitter4j.Status"
+              "kind": "java",
+              "type": "twitter4j.Status"
             },
             "propertyDefinitionSteps": []
           }
@@ -95,61 +99,63 @@
             "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis.version@",
             "camelConnectorPrefix": "twitter-search-connector",
             "inputDataShape": {
-               "kind" : "none"
+              "kind": "none"
             },
             "outputDataShape": {
-               "kind" : "java",
-               "type" : "twitter4j.Status"
+              "kind": "java",
+              "type": "twitter4j.Status"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Search criteria",
-              "description": "Specify criteria for search",
-              "properties": {
-                "filterOld": {
-                  "kind": "parameter",
-                  "displayName": "Ignore tweets previously found",
-                  "group": "filter",
-                  "label": "consumer,filter",
-                  "required": false,
-                  "type": "boolean",
-                  "javaType": "boolean",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "defaultValue": true,
-                  "componentProperty": false,
-                  "description": "Filter out old tweets that have previously been polled"
-                },
-                "keywords": {
-                  "kind": "path",
-                  "displayName": "Keywords",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "Multiple search values can be separated with comma"
-                },
-                "delay": {
-                  "kind": "parameter",
-                  "displayName": "Delay",
-                  "group": "scheduler",
-                  "label": "consumer,scheduler",
-                  "required": false,
-                  "type": "integer",
-                  "javaType": "long",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "defaultValue": 5000,
-                  "componentProperty": false,
-                  "description": "Milliseconds before the next poll"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Search criteria",
+                "description": "Specify criteria for search",
+                "properties": {
+                  "filterOld": {
+                    "kind": "parameter",
+                    "displayName": "Ignore tweets previously found",
+                    "group": "filter",
+                    "label": "consumer,filter",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": true,
+                    "componentProperty": false,
+                    "description": "Filter out old tweets that have previously been polled"
+                  },
+                  "keywords": {
+                    "kind": "path",
+                    "displayName": "Keywords",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "Multiple search values can be separated with comma"
+                  },
+                  "delay": {
+                    "kind": "parameter",
+                    "displayName": "Delay",
+                    "group": "scheduler",
+                    "label": "consumer,scheduler",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "long",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 5000,
+                    "componentProperty": false,
+                    "description": "Milliseconds before the next poll"
+                  }
                 }
               }
-            }]
+            ]
           }
         }
       ]
@@ -172,7 +178,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -187,7 +193,9 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":["oauth-client-id"],
+          "tags": [
+            "oauth-client-id"
+          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -201,7 +209,9 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":["oauth-client-secret"],
+          "tags": [
+            "oauth-client-secret"
+          ],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -215,7 +225,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -229,7 +239,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -243,7 +253,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -255,435 +265,487 @@
           "id": "io.syndesis:salesforce-create-sobject-connector:latest",
           "name": "New record",
           "description": "Create a new record like Account, Contact or Order on Salesforce.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-create-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-create-sobject",
             "inputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
             "outputDataShape": {
-               "kind": "java",
-               "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+              "kind": "java",
+              "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to create",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to create",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-delete-sobject-connector:latest",
           "name": "Delete record",
           "description": "Delete a record from Salesforce.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-delete-sobject",
             "inputDataShape": {
-               "kind": "java",
-               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+              "kind": "java",
+              "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to delete",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to delete",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-delete-sobject-with-id-connector:latest",
           "name": "Delete record by external identifier",
           "description": "Delete a record from Salesforce based on the value of an external identifier.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-delete-sobject-with-id-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-delete-sobject-with-id",
             "inputDataShape": {
-               "kind": "java",
-               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+              "kind": "java",
+              "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to delete",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to delete",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
+                }
+              },
+              {
+                "name": "External identifier field name",
+                "description": "Specify the field name of the external identifier",
+                "properties": {
+                  "sObjectIdName": {
+                    "kind": "parameter",
+                    "displayName": "External identifier field",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "",
+                    "description": "Field name of the external identifier"
+                  }
                 }
               }
-            },{
-              "name": "External identifier field name",
-              "description": "Specify the field name of the external identifier",
-              "properties": {
-                "sObjectIdName": {
-                  "kind": "parameter",
-                  "displayName": "External identifier field",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "",
-                  "description": "Field name of the external identifier"
-                }
-              }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-get-sobject-connector:latest",
           "name": "Fetch record",
           "description": "Fetches a record from Salesforce by its identifier value.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-get-sobject",
             "inputDataShape": {
-               "kind": "java",
-               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+              "kind": "java",
+              "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to fetch",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to fetch",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-get-sobject-with-id-connector:latest",
           "name": "Fetch record by external identifier",
           "description": "Fetches a record from Salesforce by the value of an external identifier.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-get-sobject-with-id-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-get-sobject-with-id",
             "inputDataShape": {
-               "kind": "java",
-               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+              "kind": "java",
+              "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
             "outputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to fetch",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to fetch",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
+                }
+              },
+              {
+                "name": "External identifier field name",
+                "description": "Specify the field name of the external identifier",
+                "properties": {
+                  "sObjectIdName": {
+                    "kind": "parameter",
+                    "displayName": "External identifier field",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "",
+                    "description": "Field name of the external identifier"
+                  }
                 }
               }
-            },{
-              "name": "External identifier field name",
-              "description": "Specify the field name of the external identifier",
-              "properties": {
-                "sObjectIdName": {
-                  "kind": "parameter",
-                  "displayName": "External identifier field",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "",
-                  "description": "Field name of the external identifier"
-                }
-              }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-update-sobject-connector:latest",
           "name": "Update record",
           "description": "Update a record on Salesforce.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-update-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-update-sobject",
             "inputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
             "outputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to update",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to update",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-upsert-sobject-connector:latest",
           "name": "Create or update record",
           "description": "Create or update a record on Salesforce.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-upsert-sobject-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-upsert-sobject",
             "inputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
             "outputDataShape": {
-               "kind": "java",
-               "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+              "kind": "java",
+              "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name of the record to create or update",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name of the record to create or update",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
+                }
+              },
+              {
+                "name": "Identifier field name",
+                "description": "Specify the field name that holds the identifying value",
+                "properties": {
+                  "sObjectIdName": {
+                    "kind": "parameter",
+                    "displayName": "Identifier field",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "",
+                    "description": "Field name of the identifier"
+                  }
                 }
               }
-            },{
-              "name": "Identifier field name",
-              "description": "Specify the field name that holds the identifying value",
-              "properties": {
-                "sObjectIdName": {
-                  "kind": "parameter",
-                  "displayName": "Identifier field",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "",
-                  "description": "Field name of the identifier"
-                }
-              }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-on-create-connector:latest",
           "name": "On create",
           "description": "Get notified when an Salesforce record is created.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-on-create-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-on-create",
             "inputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
             "outputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name for which to receive notification when records are created",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name for which to receive notification when records are created",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-on-update-connector:latest",
           "name": "On update",
           "description": "Get notified when an Salesforce record is updated.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-on-update-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-on-update",
             "inputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
             "outputDataShape": {
-               "kind": "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name for which to receive notification when records are updated",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name for which to receive notification when records are updated",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
-        },{
+        },
+        {
           "id": "io.syndesis:salesforce-on-delete-connector:latest",
           "name": "On delete",
           "description": "Get notified when an Salesforce record is deleted.",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:salesforce-on-delete-connector:@syndesis.version@",
             "camelConnectorPrefix": "salesforce-on-delete",
             "inputDataShape": {
-               "kind": "none"
+              "kind": "none"
             },
             "outputDataShape": {
-               "kind": "java",
-               "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+              "kind": "java",
+              "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Name of the object",
-              "description": "Specify the Salesforce object name for which to receive notification when records are deleted",
-              "properties": {
-                "sObjectName": {
-                  "kind": "parameter",
-                  "displayName": "Object name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "Contact",
-                  "description": "Name of the Salesforce object"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Name of the object",
+                "description": "Specify the Salesforce object name for which to receive notification when records are deleted",
+                "properties": {
+                  "sObjectName": {
+                    "kind": "parameter",
+                    "displayName": "Object name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "Contact",
+                    "description": "Name of the Salesforce object"
+                  }
                 }
               }
-            }]
+            ]
           }
         }
       ]
@@ -699,19 +761,19 @@
       "configuredProperties": {},
       "properties": {
         "brokerUrl": {
-          "kind" : "property",
-          "displayName" : "Broker URL",
-          "group" : "common",
-          "label" : "common",
-          "required" : true,
+          "kind": "property",
+          "displayName": "Broker URL",
+          "group": "common",
+          "label": "common",
+          "required": true,
           "componentProperty": true,
-          "type" : "string",
-          "javaType" : "java.lang.String",
+          "type": "string",
+          "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
-          "description" : "Broker URL"
+          "description": "Broker URL"
         },
-        "username" : {
+        "username": {
           "kind": "property",
           "displayName": "User Name",
           "group": "security",
@@ -724,9 +786,9 @@
           "secret": false,
           "description": "Authorization credential user name"
         },
-        "password" : {
-          "kind" : "property",
-          "displayName" : "Password",
+        "password": {
+          "kind": "property",
+          "displayName": "Password",
           "group": "security",
           "label": "common,security",
           "required": false,
@@ -735,7 +797,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
-          "description" : "Authorization credential password"
+          "description": "Authorization credential password"
         }
       },
       "actions": [
@@ -755,56 +817,64 @@
             "outputDataShape": {
               "kind": "none"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Select the JMS Destination",
-              "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
-              "properties": {
-                "destinationName": {
-                  "kind": "path",
-                  "displayName": "Destination Name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
-                },
-                "destinationType":{
-                  "kind":"path",
-                  "displayName":"Destination Type",
-                  "group":"common",
-                  "required":false,
-                  "type":"string",
-                  "javaType":"java.lang.String",
-                  "enum":[
-                    {"value": "topic", "label": "Topic"},
-                    {"value": "queue", "label": "Queue"}
-                  ],
-                  "deprecated":false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue":"queue",
-                  "description":"The kind of destination to use"
-                },
-                "persistent":{
-                  "kind":"parameter",
-                  "displayName":"Persistent",
-                  "group":"producer",
-                  "label":"producer",
-                  "required":false,
-                  "type":"boolean",
-                  "javaType":"boolean",
-                  "deprecated":false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue":true,
-                  "description":"Flag used to enable\/disable message persistence."
+            "propertyDefinitionSteps": [
+              {
+                "name": "Select the JMS Destination",
+                "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+                "properties": {
+                  "destinationName": {
+                    "kind": "path",
+                    "displayName": "Destination Name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                  },
+                  "destinationType": {
+                    "kind": "path",
+                    "displayName": "Destination Type",
+                    "group": "common",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "enum": [
+                      {
+                        "value": "topic",
+                        "label": "Topic"
+                      },
+                      {
+                        "value": "queue",
+                        "label": "Queue"
+                      }
+                    ],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "queue",
+                    "description": "The kind of destination to use"
+                  },
+                  "persistent": {
+                    "kind": "parameter",
+                    "displayName": "Persistent",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": true,
+                    "description": "Flag used to enable/disable message persistence."
+                  }
                 }
               }
-            }]
+            ]
           }
         },
         {
@@ -823,82 +893,90 @@
             "outputDataShape": {
               "type": "*"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Select the JMS Destination",
-              "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
-              "properties": {
-                "destinationName": {
-                  "kind": "path",
-                  "displayName": "Destination Name",
-                  "group": "common",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags": [],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
-                },
-                "destinationType": {
-                  "kind": "path",
-                  "displayName": "Destination Type",
-                  "group": "common",
-                  "required": false,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "enum": [
-                    {"value": "topic", "label": "Topic"},
-                    {"value": "queue", "label": "Queue"}
-                  ],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "queue",
-                  "description": "The kind of destination to use"
-                },
-                "durableSubscriptionId": {
-                  "kind": "parameter",
-                  "displayName": "Durable Subscription Id",
-                  "group": "consumer",
-                  "label": "consumer",
-                  "required": false,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "Sets the durable subscription Id required for durable topics."
-                },
-                "messageSelector": {
-                  "kind": "parameter",
-                  "displayName": "Message Selector",
-                  "group": "consumer (advanced)",
-                  "label": "consumer,advanced",
-                  "required": false,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "Sets the JMS Message selector syntax."
-                },
-                "durable": {
-                  "kind": "parameter",
-                  "displayName": "Durable",
-                  "group":"consumer",
-                  "label":"consumer",
-                  "required": false,
-                  "type": "boolean",
-                  "javaType": "boolean",
-                  "deprecated": false,
-                  "secret": false,
-                  "defaultValue": false,
-                  "componentProperty": false,
-                  "description":"Sets topic consumer to durable."
+            "propertyDefinitionSteps": [
+              {
+                "name": "Select the JMS Destination",
+                "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+                "properties": {
+                  "destinationName": {
+                    "kind": "path",
+                    "displayName": "Destination Name",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                  },
+                  "destinationType": {
+                    "kind": "path",
+                    "displayName": "Destination Type",
+                    "group": "common",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "enum": [
+                      {
+                        "value": "topic",
+                        "label": "Topic"
+                      },
+                      {
+                        "value": "queue",
+                        "label": "Queue"
+                      }
+                    ],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "queue",
+                    "description": "The kind of destination to use"
+                  },
+                  "durableSubscriptionId": {
+                    "kind": "parameter",
+                    "displayName": "Durable Subscription Id",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "Sets the durable subscription Id required for durable topics."
+                  },
+                  "messageSelector": {
+                    "kind": "parameter",
+                    "displayName": "Message Selector",
+                    "group": "consumer (advanced)",
+                    "label": "consumer,advanced",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "description": "Sets the JMS Message selector syntax."
+                  },
+                  "durable": {
+                    "kind": "parameter",
+                    "displayName": "Durable",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": false,
+                    "componentProperty": false,
+                    "description": "Sets topic consumer to durable."
+                  }
                 }
               }
-            }]
+            ]
           }
         },
         {
@@ -996,7 +1074,7 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": true,
-                    "description": "Flag used to enable\/disable message persistence."
+                    "description": "Flag used to enable/disable message persistence."
                   },
                   "responseTimeOut": {
                     "kind": "parameter",
@@ -1020,7 +1098,7 @@
       ]
     }
   },
-    {
+  {
     "kind": "connector",
     "data": {
       "id": "sql",
@@ -1037,7 +1115,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -1052,7 +1130,7 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -1067,7 +1145,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
@@ -1081,7 +1159,7 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags":[],
+          "tags": [],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
@@ -1094,196 +1172,212 @@
           "id": "sql-connector",
           "name": "Invoke SQL",
           "description": "Invoke SQL to get data in and/or out",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:sql-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-connector",
             "inputDataShape": {
-               "kind" : "json-schema"
+              "kind": "json-schema"
             },
             "outputDataShape": {
-               "kind" : "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "SQL Statement",
-              "description": "Enter a SQL Statement starting with INSERT, SELECT, UPDATE or DELETE",
-              "properties": {
-                  "query":{
-                    "kind":"path",
-                    "displayName":"Query",
-                    "group":"common",
-                    "required":true,
-                    "type":"string",
-                    "javaType":"java.lang.String",
-                    "deprecated":false,
-                    "secret":false,
-                   "description":"SQL Statement to be executed. Can contain input parameters prefixed by ':#' i.e. ':#MYPARAMNAME'"
-                 }
-               }
-            }]
+            "propertyDefinitionSteps": [
+              {
+                "name": "SQL Statement",
+                "description": "Enter a SQL Statement starting with INSERT, SELECT, UPDATE or DELETE",
+                "properties": {
+                  "query": {
+                    "kind": "path",
+                    "displayName": "Query",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "description": "SQL Statement to be executed. Can contain input parameters prefixed by ':#' i.e. ':#MYPARAMNAME'"
+                  }
+                }
+              }
+            ]
           }
         },
         {
           "id": "sql-start-connector",
           "name": "Periodic SQL Invocation",
           "description": "Invoke SQL to periodically get data out",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:sql-start-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-start-connector",
             "inputDataShape": {
-               "kind" : " none"
+              "kind": " none"
             },
             "outputDataShape": {
-               "kind" : "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "SQL Statement",
-              "description": "Enter a SQL Statement starting with SELECT",
-              "properties": {
-                  "query":{
-                    "kind":"path",
-                    "displayName":"Query",
-                    "group":"common",
-                    "required":true,
-                    "type":"string",
-                    "javaType":"java.lang.String",
-                    "deprecated":false,
-                    "secret":false,
-                   "description":"SQL Select Statement to be executed"
-                 },
-                  "schedulerPeriod":{
-                    "kind":"parameter",
-                    "displayName":"Period",
-                    "group":"consumer",
-                    "required":false,
-                    "type":"integer",
-                    "javaType":"long",
-                    "deprecated":false,
-                    "secret":false,
-                    "defaultValue":1000,
-                    "description":"Delay in milli seconds between scheduling (executing)"
+            "propertyDefinitionSteps": [
+              {
+                "name": "SQL Statement",
+                "description": "Enter a SQL Statement starting with SELECT",
+                "properties": {
+                  "query": {
+                    "kind": "path",
+                    "displayName": "Query",
+                    "group": "common",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "description": "SQL Select Statement to be executed"
+                  },
+                  "schedulerPeriod": {
+                    "kind": "parameter",
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "long",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 1000,
+                    "description": "Delay in milli seconds between scheduling (executing)"
                   }
-               }
-            }]
+                }
+              }
+            ]
           }
         },
         {
           "id": "sql-stored-connector",
           "name": "Invoke Stored Procedure",
           "description": "Invoke a Stored Procedure to get Data in and/or out",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:sql-stored-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-stored-connector",
             "inputDataShape": {
-               "kind" : "json-schema"
+              "kind": "json-schema"
             },
             "outputDataShape": {
-               "kind" : "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Procedure Name",
-              "description": "Select the Stored Procedure",
-              "properties": {
-                "procedureName": {
-                  "kind": "property",
-                  "group": "common",
-                  "displayName": "Procedure Name",
-                  "required": false,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": true,
-                  "componentProperty": false,
-                  "description": "Name of the Store Procedure"
-                },
-                "template": {
-                  "kind": "path",
-                  "displayName": "Template",
-                  "group": "producer",
-                  "required": true,
-                  "type": "hidden",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "",
-                  "description": "StoredProcedure template to perform"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Procedure Name",
+                "description": "Select the Stored Procedure",
+                "properties": {
+                  "procedureName": {
+                    "kind": "property",
+                    "group": "common",
+                    "displayName": "Procedure Name",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": true,
+                    "componentProperty": true,
+                    "description": "Name of the Store Procedure"
+                  },
+                  "template": {
+                    "kind": "path",
+                    "displayName": "Template",
+                    "group": "producer",
+                    "required": true,
+                    "type": "hidden",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "",
+                    "description": "StoredProcedure template to perform"
+                  }
                 }
               }
-            }]
+            ]
           }
         },
         {
           "id": "sql-stored-start-connector",
           "name": "Periodic Stored Procedure Invocation",
           "description": "Periodically Invoke a Stored Procedure to get Data out",
-          "tags": [ "dynamic" ],
+          "tags": [
+            "dynamic"
+          ],
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:sql-stored-start-connector:@syndesis.version@",
             "camelConnectorPrefix": "sql-stored-start-connector",
             "inputDataShape": {
-               "kind" : "none"
+              "kind": "none"
             },
             "outputDataShape": {
-               "kind" : "json-schema"
+              "kind": "json-schema"
             },
-            "propertyDefinitionSteps": [{
-              "name": "Procedure Name",
-              "description": "Select the Stored Procedure",
-              "properties": {
-                "procedureName": {
-                  "kind": "path",
-                  "displayName": "Procedure Name",
-                  "group": "producer",
-                  "required": true,
-                  "type": "string",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "description": "Name of the Store Procedure"
-                },
-                "template": {
-                  "kind": "path",
-                  "displayName": "Template",
-                  "group": "producer",
-                  "required": true,
-                  "type": "hidden",
-                  "javaType": "java.lang.String",
-                  "tags":[],
-                  "deprecated": false,
-                  "secret": false,
-                  "componentProperty": false,
-                  "defaultValue": "",
-                  "description": "Stored Procedure template to perform"
-                },
-                  "schedulerPeriod":{
-                  "kind":"parameter",
-                  "displayName":"Period",
-                  "group":"consumer",
-                  "required":false,
-                  "type":"integer",
-                  "javaType":"long",
-                  "deprecated":false,
-                  "secret":false,
-                  "defaultValue":1000,
-                  "description":"Delay in milli seconds between scheduling (executing)"
+            "propertyDefinitionSteps": [
+              {
+                "name": "Procedure Name",
+                "description": "Select the Stored Procedure",
+                "properties": {
+                  "procedureName": {
+                    "kind": "path",
+                    "displayName": "Procedure Name",
+                    "group": "producer",
+                    "required": true,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": true,
+                    "description": "Name of the Store Procedure"
+                  },
+                  "template": {
+                    "kind": "path",
+                    "displayName": "Template",
+                    "group": "producer",
+                    "required": true,
+                    "type": "hidden",
+                    "javaType": "java.lang.String",
+                    "tags": [],
+                    "deprecated": false,
+                    "secret": false,
+                    "componentProperty": false,
+                    "defaultValue": "",
+                    "description": "Stored Procedure template to perform"
+                  },
+                  "schedulerPeriod": {
+                    "kind": "parameter",
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "long",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 1000,
+                    "description": "Delay in milli seconds between scheduling (executing)"
+                  }
                 }
               }
-            }]
+            ]
           }
         }
       ]
@@ -1295,7 +1389,9 @@
       "id": "5",
       "name": "PostgresDB",
       "description": "Connection to SampleDB",
-      "tags":["sampledb"],
+      "tags": [
+        "sampledb"
+      ],
       "icon": "fa-database",
       "connectorId": "sql",
       "configuredProperties": {
@@ -1313,8 +1409,11 @@
       "name": "Swagger API Connector",
       "description": "Swagger API Connector",
       "icon": "fa-link",
-      "camelConnectorGAV": "io.syndesis:swagger-connector:@syndesis.version@",
+      "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
+      "connectorGroup" : {
+        "id": "swagger-connector-template"
+      },
       "properties": {
         "specification": {
           "kind": "property",
@@ -1324,15 +1423,15 @@
           "required": true,
           "type": "file",
           "javaType": "java.lang.String",
-          "tags": [ "blob" ],
+          "tags": [
+            "blob"
+          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
           "description": "Upload the Swagger specification for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented swagger is available and conforms to OpenAPI standards."
-        }
-      },
-      "connectorProperties": {
-        "host":{
+        },
+        "host": {
           "kind": "property",
           "displayName": "Host",
           "group": "producer",
@@ -1344,9 +1443,9 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description":"Scheme hostname and port to direct the HTTP requests to in the form of https:\/\/hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
         },
-        "basePath":{
+        "basePath": {
           "kind": "property",
           "displayName": "Base path",
           "group": "producer",
@@ -1358,9 +1457,9 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description":"API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
         },
-        "authenticationType":{
+        "authenticationType": {
           "kind": "property",
           "displayName": "Authentication Type",
           "group": "producer",
@@ -1368,13 +1467,93 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags": [ "authentication-type" ],
+          "tags": [
+            "authentication-type"
+          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description":"Type of authentication used to connect to the API"
+          "description": "Type of authentication used to connect to the API"
         },
-        "clientId":{
+        "authorizationUrl": {
+          "kind": "property",
+          "displayName": "OAuth Authorization URL",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-authorization-url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL for the start of the OAuth flow"
+        },
+        "accessTokenUrl": {
+          "kind": "property",
+          "displayName": "OAuth Access token URL",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-access-token-url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL to fetch the OAuth Access token"
+        }
+      },
+      "connectorProperties": {
+        "host": {
+          "kind": "property",
+          "displayName": "Host",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+        },
+        "basePath": {
+          "kind": "property",
+          "displayName": "Base path",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
+        },
+        "authenticationType": {
+          "kind": "property",
+          "displayName": "Authentication Type",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "authentication-type"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Type of authentication used to connect to the API"
+        },
+        "clientId": {
           "kind": "property",
           "displayName": "OAuth Client ID",
           "group": "producer",
@@ -1382,13 +1561,15 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags": [ "oauth-client-id" ],
+          "tags": [
+            "oauth-client-id"
+          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description":"OAuth Client ID, sometimes called Consumer Key"
+          "description": "OAuth Client ID, sometimes called Consumer Key"
         },
-        "clientSecret":{
+        "clientSecret": {
           "kind": "property",
           "displayName": "OAuth Client Secret",
           "group": "producer",
@@ -1396,13 +1577,15 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags": [ "oauth-client-secret" ],
+          "tags": [
+            "oauth-client-secret"
+          ],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
-          "description":"OAuth Client Secret, sometimes called Consumer Secret"
+          "description": "OAuth Client Secret, sometimes called Consumer Secret"
         },
-        "accessToken":{
+        "accessToken": {
           "kind": "property",
           "displayName": "OAuth Access token",
           "group": "producer",
@@ -1410,13 +1593,31 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags": [ "oauth-access-token" ],
+          "tags": [
+            "oauth-access-token"
+          ],
           "deprecated": false,
           "secret": true,
           "componentProperty": true,
-          "description":"OAuth Access token"
+          "description": "OAuth Access token"
         },
-        "accessTokenUrl":{
+        "authorizationUrl": {
+          "kind": "property",
+          "displayName": "OAuth Authorization URL",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-authorization-url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL for the start of the OAuth flow"
+        },
+        "accessTokenUrl": {
           "kind": "property",
           "displayName": "OAuth Access token URL",
           "group": "producer",
@@ -1424,11 +1625,13 @@
           "required": false,
           "type": "string",
           "javaType": "java.lang.String",
-          "tags": [ "oauth-access-token-url" ],
+          "tags": [
+            "oauth-access-token-url"
+          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description":"URL to fetch the OAuth Access token"
+          "description": "URL to fetch the OAuth Access token"
         },
         "operationId": {
           "kind": "property",
@@ -1452,13 +1655,240 @@
           "required": false,
           "type": "hidden",
           "javaType": "java.lang.String",
-          "tags": [ "upload", "url" ],
+          "tags": [
+            "upload",
+            "url"
+          ],
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
           "description": "Swagger specification of the service"
         }
       }
+    }
+  },
+  {
+    "kind": "connector",
+    "data": {
+      "id": "aws-s3",
+      "name": "AWS-S3",
+      "description": "Direct AWS S3",
+      "icon": "fa-puzzle-piece",
+      "configuredProperties": {},
+      "properties": {
+        "accessKey": {
+          "kind": "parameter",
+          "displayName": "Access Key",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Amazon AWS Access Key"
+        },
+        "secretKey": {
+          "kind": "parameter",
+          "displayName": "Secret Key",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Amazon AWS Secret Key"
+        },
+        "region": {
+          "kind": "parameter",
+          "displayName": "Region",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "The region where the bucket is located. This option is used in the com.amazonaws.services.s3.model.CreateBucketRequest."
+        },
+        "bucketNameOrArn": {
+          "kind": "path",
+          "displayName": "Bucket Name Or Arn",
+          "group": "common",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "description": "Bucket name or ARN"
+        }
+      },
+      "actions": [
+        {
+          "name": "Copy Object",
+          "description": "Copy an object on AWS S3",
+          "id": "io.syndesis:aws-s3-copy-object-connector:latest",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:aws-s3-copy-object-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "aws-s3-copy-object-connector",
+            "inputDataShape": {
+              "kind": "java:File"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "name": "Copy an object on AWS S3",
+                "description": "Set if you want to delete the file once it has been written on S3",
+                "properties": {
+                  "deleteAfterWrite": {
+                    "kind": "property",
+                    "displayName": "Delete After Write",
+                    "group": "producer",
+                    "label": "producer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": false,
+                    "description": "Delete file object after the S3 file has been uploaded"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Object",
+          "description": "Get an object from an AWS S3 Bucket",
+          "id": "io.syndesis:aws-s3-get-object-connector:latest",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:aws-s3-get-object-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "aws-s3-get-object-connector",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java:com.amazonaws.services.s3.model.S3Object"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "name": "Get an Object from AWS S3",
+                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "properties": {
+                  "deleteAfterRead": {
+                    "kind": "parameter",
+                    "displayName": "Delete After Read",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": false,
+                    "description": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header."
+                  },
+                  "fileName": {
+                    "kind": "parameter",
+                    "displayName": "File Name",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "description": "To get the object from the bucket with the given file name"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Poll an AWS S3 Bucket",
+          "description": "Polling an AWS S3 Bucket",
+          "id": "io.syndesis:aws-s3-polling-bucket-connector:latest",
+          "pattern": "To",
+          "actionType": "connector",
+          "descriptor": {
+            "camelConnectorGAV": "io.syndesis:aws-s3-polling-bucket-connector:@syndesis-connectors.version@",
+            "camelConnectorPrefix": "aws-s3-polling-bucket-connector",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "java:List"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "name": "Polling an AWS S3 Bucket",
+                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "properties": {
+                  "deleteAfterRead": {
+                    "kind": "parameter",
+                    "displayName": "Delete After Read",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "boolean",
+                    "javaType": "boolean",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": false,
+                    "description": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header."
+                  },
+                  "maxMessagesPerPoll": {
+                    "kind": "parameter",
+                    "displayName": "Max Messages Per Poll",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "int",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 10,
+                    "description": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited."
+                  },
+                  "prefix": {
+                    "kind": "parameter",
+                    "displayName": "Prefix",
+                    "group": "consumer",
+                    "label": "consumer",
+                    "required": false,
+                    "type": "string",
+                    "javaType": "java.lang.String",
+                    "deprecated": false,
+                    "secret": false,
+                    "description": "The prefix which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only consume objects we are interested in."
+                  },
+                  "delay": {
+                    "kind": "parameter",
+                    "displayName": "Delay",
+                    "group": "scheduler",
+                    "label": "consumer,scheduler",
+                    "required": false,
+                    "type": "integer",
+                    "javaType": "long",
+                    "optionalPrefix": "consumer.",
+                    "deprecated": false,
+                    "secret": false,
+                    "defaultValue": 500,
+                    "description": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour)."
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   }
 ]

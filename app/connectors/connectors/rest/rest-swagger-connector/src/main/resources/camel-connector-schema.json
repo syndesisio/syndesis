@@ -16,6 +16,18 @@
     "version":"1.2-SNAPSHOT"
   },
   "componentProperties":{
+    "basePath":{
+      "kind":"property",
+      "displayName":"Base Path",
+      "group":"producer",
+      "label":"producer",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"API basePath for example \/v2. Default is unset if set overrides the value present in Swagger specification."
+    },
     "host":{
       "kind":"property",
       "displayName":"Host",
@@ -47,6 +59,24 @@
     "specification":{
       "kind":"property",
       "displayName":"Swagger specification",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
+    "authenticationType":{
+      "kind":"property",
+      "displayName":"Authentication type",
+      "required":false,
+      "type":"object",
+      "javaType":"io.syndesis.connector.swagger.AuthenticationType",
+      "deprecated":false,
+      "secret":false
+    },
+    "accessToken":{
+      "kind":"property",
+      "displayName":"OAuth access token",
       "required":false,
       "type":"string",
       "javaType":"java.lang.String",

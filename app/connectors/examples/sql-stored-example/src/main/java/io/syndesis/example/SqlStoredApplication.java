@@ -1,11 +1,11 @@
-/**
- * Copyright (C) 2017 Red Hat, Inc.
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,7 +29,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.syndesis.connector.sql.DatabaseProduct;
-import io.syndesis.connector.sql.stored.SampleStoredProcedures;
 
 
 //CHECKSTYLE:OFF
@@ -38,19 +37,19 @@ public class SqlStoredApplication {
 
     /**
      * A main method to start this application.
-     * @throws IOException 
-     * @throws FileNotFoundException 
-     * @throws SQLException 
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws SQLException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, SQLException {
-        
+
         Properties properties = new Properties();
         InputStream is = SqlStoredApplication.class.getClassLoader().getResourceAsStream("application.properties");
         properties.load(is);
         String url      = properties.getProperty("sql-stored-connector.url");
         String user     = properties.getProperty("sql-stored-connector.user");
         String password = properties.getProperty("sql-stored-connector.password");
-        
+
         //create the stored procedure in the Derby
         try (Connection connection = DriverManager.getConnection(url,user,password)) {
             connection.setAutoCommit(true);

@@ -1,11 +1,11 @@
-/**
+/*
  * Copyright (C) 2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -63,7 +63,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactly("gmail", "activemq", "github", "ftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "http", "trade-insight");
+            .containsExactly("gmail", "activemq", "github", "ftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "aws-s3", "http", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -87,7 +87,7 @@ public class DataManagerTest {
             resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
         );
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactly("gmail", "activemq");
-        Assert.assertEquals(15, connectors.getTotalCount());
+        Assert.assertEquals(16, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 

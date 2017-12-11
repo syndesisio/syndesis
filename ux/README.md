@@ -22,7 +22,8 @@ Access UX design resource and documentation for Syndesis.
 
 
 ## Create a Connection
-* ### [OAuth FLow](designs/oauth/oauth.md)
+* ### [OAuth Flow](designs/oauth/oauth.md)
+* ### [Database Connection](designs/databaseconnection/databaseconnection.md)
 
 
 ## Customizations

@@ -48,7 +48,10 @@
             value: /deployments
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-{{^WithDockerImages}}
+{{#Debug}}
+          - name: JAVA_DEBUG
+            value: "true"
+{{/Debug}}{{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
           image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}

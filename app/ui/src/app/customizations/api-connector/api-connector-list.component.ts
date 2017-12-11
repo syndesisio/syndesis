@@ -4,20 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { ConfigService } from '../../config.service';
-import { ConnectorStore } from '../../store/connector/connector.store';
-import { log, getCategory } from '../../logging';
-import { Connectors } from '../../model';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { log, getCategory } from '@syndesis/ui/logging';
+
+import { ApiConnectorStore } from './api-connector.store';
+import { ApiConnector, ApiConnectors } from './api-connector.model';
 
 import {
-  Action,
   ActionConfig,
   ListConfig,
-  ListEvent,
   EmptyStateConfig,
 } from 'patternfly-ng';
-
-const category = getCategory('ApiConnectors');
 
 @Component({
   selector: 'syndesis-api-connector-list',
@@ -25,19 +22,24 @@ const category = getCategory('ApiConnectors');
   styleUrls: ['./api-connector-list.component.scss']
 })
 export class ApiConnectorListComponent implements OnInit {
-  connectors$: Observable<Connectors>;
-  filteredConnectors$: Subject<Connectors> = new BehaviorSubject(<Connectors>{});
+  apiConnectors$: Observable<ApiConnectors>;
+  filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
   loading$: Observable<boolean>;
   listConfig: ListConfig;
+  appName;
+  itemUseMapping: { [valueComparator: string]: string } = {
+    '=1': '<strong>1</strong> time',
+    'other': '<strong>#</strong> times'
+  };
 
   constructor(
     public config: ConfigService,
-    private store: ConnectorStore,
+    private apiConnectorStore: ApiConnectorStore,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.connectors$ = this.store.list;
-    this.loading$ = this.store.loading;
+    this.apiConnectors$ = this.apiConnectorStore.list;
+    this.loading$ = this.apiConnectorStore.loading;
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -51,7 +53,7 @@ export class ApiConnectorListComponent implements OnInit {
         actions: {
           primaryActions: [
             {
-              id: 'importApiConnector',
+              id: 'createApiConnector',
               title: 'Create API Connector',
               tooltip: 'Create API Connector'
             }
@@ -63,17 +65,18 @@ export class ApiConnectorListComponent implements OnInit {
   }
 
   handleAction(event: any) {
-    if (event.id === 'importApiConnector') {
+    if (event.id === 'createApiConnector') {
       this.router.navigate(['create'], { relativeTo: this.route });
     }
   }
 
   handleClick(event: any) {
-    const connector = event.item;
-    this.router.navigate([connector.id], { relativeTo: this.route });
+    const apiConnector = event.item;
+    this.router.navigate([apiConnector.id], { relativeTo: this.route });
   }
 
   ngOnInit() {
-    this.store.loadAll();
+    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
+    this.apiConnectorStore.loadAll();
   }
 }

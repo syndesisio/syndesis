@@ -2,13 +2,13 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ToolbarModule, ListModule } from 'patternfly-ng';
-import { SyndesisCommonModule } from '../common/common.module';
-import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { FileUploadModule } from 'ng2-file-upload-base/src';
 
+import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { CustomizationsComponent } from './customizations.component';
 
 import {
+  ApiConnectorService, ApiConnectorStore,
   ApiConnectorListComponent,
   ApiConnectorCreateComponent,
   ApiConnectorDetailComponent,
@@ -92,6 +92,10 @@ const routes: Routes = [
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
   ],
-  schemas: [NO_ERRORS_SCHEMA]
+  schemas: [NO_ERRORS_SCHEMA],
+  providers: [
+    ApiConnectorService,
+    ApiConnectorStore
+  ]
 })
 export class CustomizationsModule { }
