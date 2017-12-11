@@ -82,4 +82,14 @@ public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
         assertThat(info.getErrors().get(0).error()).contains("validation");
     }
 
+    @Test
+    public void testThatWarningPetstoreSwaggerContainsWarnings() throws IOException {
+        String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
+        SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
+
+        assertThat(info.getErrors()).isEmpty();
+        assertThat(info.getWarnings()).hasSize(2);
+        System.out.println(info.getWarnings());
+    }
+
 }
