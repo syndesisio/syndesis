@@ -185,8 +185,8 @@ function run {
 
     if [ -z "${command:-}" ]; then
         # Try to detect command
-        for cand in "$(ls $cmd_dir)"; do
-            if [ -f "$cmd_dir/$cand" ] && [ $(hasflag --$cand) ]; then
+        for cand in $(ls $cmd_dir); do
+            if [ $(hasflag "--$cand") ]; then
                 command=$cand
                 break
             fi
