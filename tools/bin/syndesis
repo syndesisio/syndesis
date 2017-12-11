@@ -181,7 +181,7 @@ function run {
     fi
 
 
-    if [ -z "${command}" ]; then
+    if [ -z "${command:-}" ]; then
         # Try to detect command
         for cand in "$(ls $cmd_dir)"; do
             if [ -f "$cmd_dir/$cand" ] && [ $(hasflag --$cand) ]; then
@@ -191,12 +191,12 @@ function run {
         done
     fi
 
-    if [ x"$command" == xhelp ] || [ $(hasflag --help -h) ]; then
+    if [ "${command:-}" == "help" ] || [ $(hasflag --help -h) ]; then
         display_help $command
         exit 0
     fi
 
-    if [ -z "${command}" ]; then
+    if [ -z "${command:-}" ]; then
         command="build"
     fi
 
