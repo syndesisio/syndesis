@@ -312,11 +312,10 @@ workflows:
           filters:
             branches:
               only: master
-      - doc
-#      - doc:
-#          filters:
-#            branches:
-#              only: master
+      - doc:
+          filters:
+            branches:
+              only: master
       - license-check
       - ui
       - connectors
