@@ -38,7 +38,7 @@ public class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo
 
     private static final SyndesisSwaggerValidationRules INSTANCE = new SyndesisSwaggerValidationRules();
 
-    private static final String[] SUPPORTED_AUTH_TYPES = {"basic", "apiKey", "oauth2"};
+    private static final String[] SUPPORTED_AUTH_TYPES = {"basic", "oauth2"};
 
     private List<Function<SwaggerModelInfo, SwaggerModelInfo>> rules = new ArrayList<>();
 

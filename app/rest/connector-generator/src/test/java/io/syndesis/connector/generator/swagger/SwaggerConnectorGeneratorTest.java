@@ -112,7 +112,7 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
             .name("Swagger Petstore")//
             .actionsSummary(actionsSummary)//
             .build();
-        assertThat(summary).isEqualToIgnoringGivenFields(expected, "description", "properties");
+        assertThat(summary).isEqualToIgnoringGivenFields(expected, "description", "properties", "warnings");
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
         assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "clientId", "clientSecret",
             "accessToken", "accessTokenUrl", "operationId", "specification");

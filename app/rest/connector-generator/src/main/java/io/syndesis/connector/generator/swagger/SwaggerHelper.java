@@ -73,8 +73,13 @@ public final class SwaggerHelper {
         final Swagger swagger = ofNullable(parser.read(specification)).orElseGet(() -> parser.parse(specification));
         if (swagger == null) {
             LOG.debug("Unable to read Swagger specification\n{}\n", specification);
-            throw new IllegalArgumentException(
-                "Unable to read Swagger specification from: " + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse(""));
+            return new SwaggerModelInfo.Builder()
+                .addError(new Violation.Builder()
+                    .error("error")
+                    .property("")
+                    .message("Unable to read Swagger specification from: " + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse(""))
+                    .build())
+                .build();
         }
 
         if (validate) {
@@ -104,7 +109,14 @@ public final class SwaggerHelper {
                 .build();
 
         } catch (IOException | ProcessingException ex) {
-            throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
+            LOG.error("Unable to load the schema file embedded in the artifact", ex);
+            return new SwaggerModelInfo.Builder()
+                .addError(new Violation.Builder()
+                    .error("error")
+                    .property("")
+                    .message("Unable to load the swagger schema file embedded in the artifact")
+                    .build())
+                .build();
         }
     }
 

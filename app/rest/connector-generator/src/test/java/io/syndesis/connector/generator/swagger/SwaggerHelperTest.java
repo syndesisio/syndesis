@@ -39,10 +39,6 @@ public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
             assertThat(info.getErrors())
                 .withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors())
                 .isEmpty();
-
-            assertThat(info.getWarnings())
-                .withFailMessage("Specification " + specificationFile + " has warnings: " + info.getWarnings())
-                .isEmpty();
         }
     }
 
@@ -88,7 +84,7 @@ public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
         SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).isEmpty();
-        assertThat(info.getWarnings()).hasSize(2);
+        assertThat(info.getWarnings()).hasSize(3);
         System.out.println(info.getWarnings());
     }
 
