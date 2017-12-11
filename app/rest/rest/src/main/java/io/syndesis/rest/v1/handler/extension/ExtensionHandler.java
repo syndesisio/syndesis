@@ -30,6 +30,7 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
+import io.syndesis.rest.v1.SyndesisRestException;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
@@ -54,6 +55,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
@@ -114,8 +116,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 // Update
                 Extension replacedExtension = getDataManager().fetch(Extension.class, updatedId);
                 if (!replacedExtension.getExtensionId().equals(embeddedExtension.getExtensionId())) {
-                    throw new IllegalArgumentException("The uploaded extensionId (" + embeddedExtension.getExtensionId() +
-                        ") does not match the existing extensionId (" + replacedExtension.getExtensionId() + ")");
+                    String message = "The uploaded extensionId (" + embeddedExtension.getExtensionId() +
+                        ") does not match the existing extensionId (" + replacedExtension.getExtensionId() + ")";
+                    throw new SyndesisRestException(message, message, null, Response.Status.BAD_REQUEST.getStatusCode());
                 }
             } else {
                 // New import
@@ -124,8 +127,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                     "status", Extension.Status.Installed.name());
 
                 if (!ids.isEmpty()) {
-                    throw new IllegalArgumentException("An extension with the same extensionId (" + embeddedExtension.getExtensionId() +
-                        ") is already installed. Please update the existing extension instead of importing a new one");
+                    String message = "An extension with the same extensionId (" + embeddedExtension.getExtensionId() +
+                        ") is already installed. Please update the existing extension instead of importing a new one";
+                    throw new SyndesisRestException(message, message, null, Response.Status.BAD_REQUEST.getStatusCode());
                 }
 
             }
