@@ -83,8 +83,8 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
     public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Connector connector = basicConnector(connectorTemplate, connectorSettings);
 
-        final Swagger swagger = parseSpecification(connectorSettings);
-        final Map<String, Path> paths = swagger.getPaths();
+        final SwaggerModelInfo swaggerInfo = parseSpecification(connectorSettings, true);
+        final Map<String, Path> paths = swaggerInfo.getModel().getPaths();
 
         int total = 0;
         final Map<String, AtomicInteger> tagCounts = new HashMap<>();
@@ -104,11 +104,15 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
             .totalActions(total)//
             .actionCountByTags(tagCounts.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> e.getValue().intValue())))
             .build();
-        return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).build();
+        return new ConnectorSummary.Builder().createFrom(connector)
+            .actionsSummary(actionsSummary)
+            .errors(swaggerInfo.getErrors())
+            .warnings(swaggerInfo.getWarnings())
+            .build();
     }
 
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
@@ -145,7 +149,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected String determineConnectorDescription(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         final Info info = swagger.getInfo();
         if (info == null) {
@@ -162,7 +166,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         final Info info = swagger.getInfo();
         if (info == null) {
@@ -193,7 +197,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
         addGlobalParameters(builder, swagger);
 
         final Map<String, Path> paths = swagger.getPaths();
@@ -356,18 +360,9 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
-    /* default */ static Swagger parseSpecification(final ConnectorSettings connectorSettings) {
+    /* default */ static SwaggerModelInfo parseSpecification(final ConnectorSettings connectorSettings, final boolean validate) {
         final String specification = requiredSpecification(connectorSettings);
-
-        final SwaggerParser parser = new SwaggerParser();
-        final Swagger swagger = ofNullable(parser.read(specification)).orElseGet(() -> parser.parse(specification));
-        if (swagger == null) {
-            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
-            throw new IllegalArgumentException(
-                "Unable to read Swagger specification from: " + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)));
-        }
-
-        return swagger;
+        return SwaggerHelper.parse(specification, validate);
     }
 
     /* default */ static String requiredSpecification(final ConnectorSettings connectorSettings) {

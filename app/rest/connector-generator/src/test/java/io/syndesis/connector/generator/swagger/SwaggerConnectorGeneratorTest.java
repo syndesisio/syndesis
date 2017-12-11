@@ -118,4 +118,18 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
             "accessToken", "accessTokenUrl", "operationId", "specification");
     }
 
+    @Test
+    public void shouldReportErrorsFromInvalidPetstoreSwagger() throws IOException {
+        final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .putConfiguredProperty("specification", specification)//
+            .build();
+
+        final ConnectorSummary summary = new SwaggerConnectorGenerator().info(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(summary.getErrors()).hasSize(1);
+        assertThat(summary.getWarnings()).isEmpty();
+    }
+
 }
