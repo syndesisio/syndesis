@@ -70,6 +70,16 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-validator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>me.andrz.jackson</groupId>
       <artifactId>jackson-json-reference-core</artifactId>
     </dependency>
@@ -133,6 +143,19 @@
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Need mail api for validation (com.sun.mail:javax.mail is provided at runtime) -->
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mailapi</artifactId>
       <scope>test</scope>
     </dependency>
 
