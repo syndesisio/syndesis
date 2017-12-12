@@ -17,12 +17,17 @@ package io.syndesis.openshift;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.openshift.api.model.Build;
+import io.fabric8.openshift.api.model.BuildConfig;
+import io.fabric8.openshift.api.model.BuildStatus;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.ImageStream;
@@ -30,11 +35,14 @@ import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
+    public static final Logger LOG = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties config) {
         this.openShiftClient = openShiftClient;
@@ -47,43 +55,18 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         ensureImageStreams(sName);
         ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
         openShiftClient.buildConfigs().withName(sName)
-                       .instantiateBinary()
-                       .fromInputStream(tarInputStream);
+            .instantiateBinary()
+            .fromInputStream(tarInputStream);
     }
 
     @Override
     public void deploy(String name, DeploymentData deploymentData) {
         String sName = Names.sanitize(name);
+        LOG.debug("Deploy {}", sName);
         ensureDeploymentConfig(sName, deploymentData);
-        updateImageName(sName);
         ensureSecret(sName, deploymentData);
 
         openShiftClient.deploymentConfigs().withName(sName).deployLatest();
-    }
-
-    // Only required temporarily while image triggers do not work
-    // We are updating the image name with the latest image reference before increasing
-    // the latestVersion number
-    private void updateImageName(String sName) {
-        ImageStream is = openShiftClient.imageStreams().withName(sName).get();
-        if (is != null) {
-            is.getStatus().getTags()
-              .stream()
-              .filter(t -> "latest".equals(t.getTag()))
-              .findFirst().ifPresent(t -> {
-                String image = t.getItems().get(0).getDockerImageReference();
-                updateImageNameInDeployment(sName, image);
-            });
-        }
-    }
-
-    private void updateImageNameInDeployment(String name, String image) {
-        openShiftClient.deploymentConfigs()
-                       .withName(name)
-                       .edit().editOrNewSpec().editOrNewTemplate().editOrNewSpec().editFirstContainer()
-                       .withImage(image)
-                       .endContainer().endSpec().endTemplate().endSpec()
-                       .done();
     }
 
     @Override
@@ -163,15 +146,18 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 //==================================================================================================
 
     private void ensureImageStreams(String name) {
+        LOG.debug("Create or Replace ImageStream {}", name);
         openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
                        .withNewMetadata().withName(name).endMetadata().done();
     }
 
     private boolean removeImageStreams(String name) {
+        LOG.debug("Remove ImageStream {}", name);
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
     private void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
+        LOG.debug("Create or Replace Deployment Config {}", name);
         openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
             .withName(name)
@@ -193,7 +179,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewMetadata().addToLabels("integration", name).endMetadata()
             .withNewSpec()
             .addNewContainer()
-            .withImage(" ").withImagePullPolicy("Always").withName(name)
+                .withImage("")
+                .withImagePullPolicy("Always")
+                .withName(name)
             .withEnv(new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null))
             .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
             .addNewVolumeMount()
@@ -210,15 +198,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endVolume()
             .endSpec()
             .endTemplate()
-            .addNewTrigger().withType("ConfigChange").endTrigger()
-// Disabled for now since we trigger the deployment directly
-//            .addNewTrigger().withType("ImageChange")
-//            .withNewImageChangeParams()
-//            // set automatic to 'true' when not performing the deployments on our own
-//            .withAutomatic(false).addToContainerNames(name)
-//            .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
-//            .endImageChangeParams()
-//            .endTrigger()
+            //.addNewTrigger().withType("ConfigChange").endTrigger()
+            .addNewTrigger().withType("ImageChange")
+            .withNewImageChangeParams()
+            // set automatic to 'true' when not performing the deployments on our own
+            .withAutomatic(true).addToContainerNames(name)
+            .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
+            .endImageChangeParams()
+            .endTrigger()
             .endSpec()
             .done();
     }
@@ -226,28 +213,37 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 
     private boolean removeDeploymentConfig(String projectName) {
+        LOG.debug("Remove Deployment Config {}", projectName);
         return openShiftClient.deploymentConfigs().withName(projectName).delete();
     }
 
     private void ensureBuildConfig(String name, DeploymentData deploymentData, String builderStreamTag, String imageStreamNamespace) {
+        LOG.debug("Create or Replace Build Config {}", name);
+
+        // propagate log level to the build pod
+        List<EnvVar> envVarList = new ArrayList<>();
+        envVarList.add(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null));
+        if(LOG.isDebugEnabled()){
+            envVarList.add(new EnvVar("BUILD_LOGLEVEL", "5", null));
+        };
         openShiftClient.buildConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
-                .withName(name)
-                .addToAnnotations(deploymentData.getAnnotations())
-                .addToLabels(deploymentData.getLabels())
+            .withName(name)
+            .addToAnnotations(deploymentData.getAnnotations())
+            .addToLabels(deploymentData.getLabels())
             .endMetadata()
             .withNewSpec()
             .withRunPolicy("SerialLatestOnly")
             .withNewSource().withType("Binary").endSource()
             .withNewStrategy()
-              .withType("Source")
-              .withNewSourceStrategy()
-                .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).withNamespace(imageStreamNamespace).endFrom()
-                .withIncremental(false)
-                // TODO: This environment setup needs to be externalized into application.properties
-                // https://github.com/syndesisio/syndesis-rest/issues/682
-                .withEnv(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null))
-              .endSourceStrategy()
+            .withType("Source")
+            .withNewSourceStrategy()
+            .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).withNamespace(imageStreamNamespace).endFrom()
+            .withIncremental(false)
+            // TODO: This environment setup needs to be externalized into application.properties
+            // https://github.com/syndesisio/syndesis-rest/issues/682
+            .withEnv(envVarList)
+            .endSourceStrategy()
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(name + ":latest").endTo().endOutput()
             .endSpec()
@@ -255,6 +251,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private boolean removeBuildConfig(String projectName) {
+        LOG.debug("Remove Build Config {}", projectName);
         return openShiftClient.buildConfigs().withName(projectName).delete();
     }
 
