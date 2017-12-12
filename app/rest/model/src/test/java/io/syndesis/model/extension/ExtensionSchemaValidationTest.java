@@ -28,7 +28,7 @@ import io.syndesis.model.action.ExtensionDescriptor;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Optional;
+import java.util.OptionalInt;
 
 import static org.junit.Assert.assertFalse;
 
@@ -57,7 +57,7 @@ public class ExtensionSchemaValidationTest {
             .extensionId("my-extension")
             .name("Name")
             .description("Description")
-            .uses(Optional.empty())
+            .uses(OptionalInt.empty())
             .version("1.0.0")
             .addAction(new ExtensionAction.Builder()
                 .id("action-1")
