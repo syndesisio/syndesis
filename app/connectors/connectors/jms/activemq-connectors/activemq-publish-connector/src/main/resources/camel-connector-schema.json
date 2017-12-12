@@ -120,6 +120,42 @@
       "deprecated":false,
       "secret":false,
       "description":"Client ID for durable subscriptions"
+    },
+    "skipCertificateCheck":{
+      "kind":"property",
+      "displayName":"Skip Certificate Check",
+      "group":"security",
+      "label":"common,security",
+      "required":false,
+      "type":"boolean",
+      "javaType":"java.lang.Boolean",
+      "deprecated":false,
+      "secret":false,
+      "description":"Skip Certificate check for development environment"
+    },
+    "brokerCertificate":{
+      "kind":"property",
+      "displayName":"Broker Certificate",
+      "group":"security",
+      "label":"common,security",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"AMQ Broker X.509 PEM Certificate"
+    },
+    "clientCertificate":{
+      "kind":"property",
+      "displayName":"Client Certificate",
+      "group":"security",
+      "label":"common,security",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false,
+      "description":"AMQ Client X.509 PEM Certificate"
     }
   }
 }

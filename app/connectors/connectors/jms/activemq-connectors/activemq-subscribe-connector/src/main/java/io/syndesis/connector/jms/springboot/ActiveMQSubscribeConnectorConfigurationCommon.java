@@ -48,6 +48,18 @@ public class ActiveMQSubscribeConnectorConfigurationCommon {
      * Client ID for durable subscriptions
      */
     private String clientID;
+    /**
+     * Skip Certificate check for development environment
+     */
+    private Boolean skipCertificateCheck;
+    /**
+     * AMQ Broker X.509 PEM Certificate
+     */
+    private String brokerCertificate;
+    /**
+     * AMQ Client X.509 PEM Certificate
+     */
+    private String clientCertificate;
 
     public Integer getConnectionCount() {
         return connectionCount;
@@ -119,5 +131,29 @@ public class ActiveMQSubscribeConnectorConfigurationCommon {
 
     public void setClientID(String clientID) {
         this.clientID = clientID;
+    }
+
+    public Boolean getSkipCertificateCheck() {
+        return skipCertificateCheck;
+    }
+
+    public void setSkipCertificateCheck(Boolean skipCertificateCheck) {
+        this.skipCertificateCheck = skipCertificateCheck;
+    }
+
+    public String getBrokerCertificate() {
+        return brokerCertificate;
+    }
+
+    public void setBrokerCertificate(String brokerCertificate) {
+        this.brokerCertificate = brokerCertificate;
+    }
+
+    public String getClientCertificate() {
+        return clientCertificate;
+    }
+
+    public void setClientCertificate(String clientCertificate) {
+        this.clientCertificate = clientCertificate;
     }
 }
