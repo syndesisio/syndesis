@@ -297,6 +297,9 @@ jobs:
       - image: syndesis/builder-doc
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "d8:49:be:71:ed:d9:d3:dc:7a:dd:35:ac:81:30:c5:d8"
       - run:
           name: Generate docs
           command: |
