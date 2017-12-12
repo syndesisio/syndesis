@@ -1,47 +1,38 @@
-properties([
-    buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
-])
-
-//We need a node so that we can have access to environemnt variables.
-//The allocated node will actually be the Jenkins master (which is expected to provide these variables) as long as it has available executors.
-node {
-
-    def branch = "${env.BRANCH_NAME}"
-    echo "Using branch: ${branch}."
-
-    slave {
-        withOpenshift {
-            withMaven(
-                envVars: [
-                    containerEnvVar(key:'GITHUB_OAUTH_CLIENT_ID', value: "${env.GITHUB_OAUTH_CLIENT_ID}"),
-                    containerEnvVar(key:'GITHUB_OAUTH_CLIENT_SECRET', value: "${env.GITHUB_OAUTH_CLIENT_SECRET}")
-                ],
-                serviceAccount: "jenkins", mavenSettingsXmlSecret: 'm2-settings') {
-                inside {
-                    def testingNamespace = generateProjectName()
-
-                    checkout scm
-
-                    stage('Build') {
-                        container(name: 'maven') {
-                            sh "mvn -B -U clean install fabric8:build -Pci -Duser.home=/home/jenkins"
-                        }
-                    }
-
-                    stage('System Tests') {
-                        test(component: 'syndesis-rest', namespace: "${testingNamespace}", serviceAccount: 'jenkins')
-                    }
-
-                    if ("master" == branch) {
-                        stage('Rollout') {
-                            tag(sourceProject: 'syndesis-ci', imageStream: 'syndesis-rest')
-                            rollout(deploymentConfig: 'syndesis-rest', namespace: 'syndesis-staging')
-                        }
-                    } else {
-                        echo "Branch: ${branch} is not master. Skipping rollout"
-                    }
+pipeline {
+    agent any
+    tools {
+        jdk 'JDK8'
+        maven 'maven-3.3.9'
+        nodejs 'node 8.9.1'
+    }
+    environment {
+        PATH="${tool('oc')}:$PATH"
+        KUBE_CONFIG="${WORKSPACE}/.kubr/config"
+    }
+    stages {
+        stage('prepare') {
+            steps {
+             withCredentials([string(credentialsId: "api.rh-idev.openshift.com", variable: 'TOKEN')]) {
+                    sh """
+                    oc login --server=https://api.rh-idev.openshift.com --token=$TOKEN
+                    oc project syndesis-ci
+                    """
                 }
             }
+        }
+        stage('build') {
+            steps {
+                checkout scm
+                sh """
+                echo $PATH
+                ./tools/bin/syndesis system-test --batch-mode
+                """
+            }
+        }
+    }
+    post {
+        always {
+            sh 'oc logout'
         }
     }
 }
