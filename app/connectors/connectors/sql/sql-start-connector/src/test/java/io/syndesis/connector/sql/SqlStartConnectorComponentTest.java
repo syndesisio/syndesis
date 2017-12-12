@@ -15,8 +15,9 @@
  */
 package io.syndesis.connector.sql;
 
-import io.syndesis.connector.sql.SqlParam.SqlSampleValue;
 import io.syndesis.connector.sql.stored.JSONBeanUtil;
+import lombok.Data;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -30,7 +31,10 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -41,7 +45,6 @@ public class SqlStartConnectorComponentTest {
     private static Connection connection;
     private static Properties properties = new Properties();
     private static SqlCommon sqlCommon;
-    private static String schema;
     private static Map<String, Object> parameters = new HashMap<String, Object>();
 
     @BeforeClass
@@ -51,8 +54,6 @@ public class SqlStartConnectorComponentTest {
         for (final String name : properties.stringPropertyNames()) {
             parameters.put(name.substring(name.indexOf(".") + 1), properties.getProperty(name));
         }
-        schema = DatabaseMetaDataHelper.getDefaultSchema(
-                connection.getMetaData().getDatabaseProductName(), parameters.get("user").toString());
     }
 
     @AfterClass
@@ -69,6 +70,7 @@ public class SqlStartConnectorComponentTest {
         stmt.executeUpdate(createTable);
         stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
         stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
+        int numberOfRecords = 2;
 
         CamelContext context = new DefaultCamelContext();
 
@@ -80,19 +82,19 @@ public class SqlStartConnectorComponentTest {
         // bind the component to the camel context
         context.addComponent("sql-start-connector", component);
 
-        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch latch = new CountDownLatch(numberOfRecords);
         final Result result = new Result();
 
         try {
             context.addRoutes(new RouteBuilder() {
                 @Override
                 public void configure() throws Exception {
-                    from("sql-start-connector:SELECT * FROM NAME ORDER BY id")
+                    from("sql-start-connector:SELECT * FROM NAME ORDER BY id?schedulerPeriod=31000")
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange)
                                 throws Exception {
-                            result.setResult(exchange.getIn().getBody(String.class));
+                            result.add(exchange.getIn().getBody(String.class));
                             latch.countDown();
                         }
                     }).to("stream:out");
@@ -100,85 +102,24 @@ public class SqlStartConnectorComponentTest {
             });
             context.start();
             latch.await(30l,TimeUnit.SECONDS);
-            Assert.assertEquals("[{\"LASTNAME\":\"Jackson\",\"FIRSTNAME\":\"Joe\",\"ID\":1},{\"LASTNAME\":\"Waters\",\"FIRSTNAME\":\"Roger\",\"ID\":2}]", result.getJsonBean());
+            Assert.assertEquals(numberOfRecords, result.getJsonBeans().size());
+            Collection<Object> values = new ArrayList<>();
+            for (String  jsonBean: result.getJsonBeans()) {
+                values.addAll(JSONBeanUtil.parsePropertiesFromJSONBean(jsonBean).values());
+            }
+            Assert.assertTrue(values.contains("1"));
+            Assert.assertTrue(values.contains("2"));
         } finally {
             context.stop();
         }
     }
 
-    @Test
-    public void camelConnectorInputParamTest() throws Exception {
-
-        Statement stmt = connection.createStatement();
-        
-        String createTable = "CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), " + 
-                "numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT," +
-                "dateType DATE, timeType TIME )";
-        stmt.executeUpdate(createTable);
-        
-        CamelContext context = new DefaultCamelContext();
-
-        SqlStartConnectorComponent component = new SqlStartConnectorComponent();
-        component.addOption("user", properties.getProperty("sql-connector.user"));
-        component.addOption("password", properties.getProperty("sql-connector.password"));
-        component.addOption("url", properties.getProperty("sql-connector.url"));
-
-        // bind the component to the camel context
-        context.addComponent("sql-start-connector", component);
-
-        CountDownLatch latch = new CountDownLatch(1);
-
-        final Result result = new Result();
-
-        Map<String,Object> values = new HashMap<>();
-        values.put("CHARVALUE", SqlSampleValue.charValue);
-        values.put("VARCHARVALUE", SqlSampleValue.stringValue);
-        values.put("NUMERICVALUE", SqlSampleValue.decimalValue);
-        values.put("DECIMALVALUE", SqlSampleValue.decimalValue);
-        values.put("SMALLINTVALUE", SqlSampleValue.integerValue);
-
-        String jsonBody = JSONBeanUtil.toJSONBean(values);
-
-        final String insertStatement = "INSERT INTO ALLTYPES "
-                + "(charType, varcharType, numericType, decimalType, smallType) VALUES "
-                + "(:#CHARVALUE, :#VARCHARVALUE, :#NUMERICVALUE, :#DECIMALVALUE, :#SMALLINTVALUE)";
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, insertStatement);
-        String camelStatement = parser.parse().getCamelSqlStatement();
-
-        try {
-            context.addRoutes(new RouteBuilder() {
-                @Override
-                public void configure() throws Exception {
-                    from("timer://myTimer?period=2000")
-                    .setBody().constant(jsonBody)
-                    .to("sql-start-connector:" + camelStatement)
-                    .process(new Processor() {
-                        @Override
-                        public void process(Exchange exchange)
-                                throws Exception {
-                            result.setResult(exchange.getIn().getBody(String.class));
-                            latch.countDown();
-                        }
-                    }).to("stream:out");
-                }
-            });
-            context.start();
-            latch.await(5l,TimeUnit.SECONDS);
-            Properties props = JSONBeanUtil.parsePropertiesFromJSONBean(result.getJsonBean());
-            Assert.assertEquals(values.size(),props.size());
-        } finally {
-            context.stop();
-        }
-    }
-
+    @Data
     class Result {
-        String jsonBean;
-
-        public String getJsonBean() {
-            return jsonBean;
-        }
-        public void setResult(String jsonBean) {
-            this.jsonBean = jsonBean;
+        List<String> jsonBeans = new ArrayList<>();
+        
+        public void add(String jsonBean) {
+            jsonBeans.add(jsonBean);
         }
     }
 }

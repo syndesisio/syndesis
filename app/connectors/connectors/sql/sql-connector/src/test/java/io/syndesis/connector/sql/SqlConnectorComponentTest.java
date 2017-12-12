@@ -17,12 +17,13 @@ package io.syndesis.connector.sql;
 
 import io.syndesis.connector.sql.SqlParam.SqlSampleValue;
 import io.syndesis.connector.sql.stored.JSONBeanUtil;
+import lombok.Data;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -31,7 +32,9 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -69,13 +72,9 @@ public class SqlConnectorComponentTest {
                              "lastName VARCHAR(255))";
         stmt.executeUpdate(createTable);
         stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
-        //stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
+        stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
 
-
-        SimpleRegistry registry = new SimpleRegistry();
-        registry.put("query", "myquery");
-
-        CamelContext context = new DefaultCamelContext(registry);
+        CamelContext context = new DefaultCamelContext();
 
         SqlConnectorComponent component = new SqlConnectorComponent();
         component.addOption("user", properties.getProperty("sql-connector.user"));
@@ -92,20 +91,22 @@ public class SqlConnectorComponentTest {
             context.addRoutes(new RouteBuilder() {
                 @Override
                 public void configure() throws Exception {
-                    from("sql-connector:SELECT * FROM NAME ORDER BY id")
+                    from("timer://myTimer?period=2000")
+                    .to("sql-connector:SELECT * FROM NAME ORDER BY id")
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange)
                                 throws Exception {
-                            result.setResult(exchange.getIn().getBody(String.class));
+                            result.setJsonBean(exchange.getIn().getBody(String.class));
                             latch.countDown();
                         }
                     }).to("stream:out");
                 }
             });
             context.start();
-            latch.await(5l,TimeUnit.SECONDS);
-            Assert.assertEquals("{ID=1, FIRSTNAME=Joe, LASTNAME=Jackson}", result.getJsonBean());
+            latch.await(30l,TimeUnit.SECONDS);
+            Properties props = JSONBeanUtil.parsePropertiesFromJSONBean(result.getJsonBean());
+            Assert.assertTrue(props.getProperty("ID").equals("1"));
         } finally {
             context.stop();
         }
@@ -148,6 +149,7 @@ public class SqlConnectorComponentTest {
                 + "(charType, varcharType, numericType, decimalType, smallType) VALUES "
                 + "(:#CHARVALUE, :#VARCHARVALUE, :#NUMERICVALUE, :#DECIMALVALUE, :#SMALLINTVALUE)";
         SqlStatementParser parser = new SqlStatementParser(connection, schema, insertStatement);
+        parser.parse();
 
         try {
             context.addRoutes(new RouteBuilder() {
@@ -160,7 +162,7 @@ public class SqlConnectorComponentTest {
                         @Override
                         public void process(Exchange exchange)
                                 throws Exception {
-                            result.setResult(exchange.getIn().getBody(String.class));
+                            result.setJsonBean(exchange.getIn().getBody(String.class));
                             latch.countDown();
                         }
                     }).to("stream:out");
@@ -175,14 +177,13 @@ public class SqlConnectorComponentTest {
         }
     }
 
+    @Data
     class Result {
-        String jsonBean;
-
-        public String getJsonBean() {
-            return jsonBean;
-        }
-        public void setResult(String jsonBean) {
-            this.jsonBean = jsonBean;
+        private String jsonBean;
+        private List<String> jsonBeans = new ArrayList<>();
+        
+        public void add(String jsonBean) {
+            jsonBeans.add(jsonBean);
         }
     }
 }
