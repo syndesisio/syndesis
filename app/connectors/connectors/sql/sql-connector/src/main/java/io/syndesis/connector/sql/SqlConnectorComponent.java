@@ -15,7 +15,11 @@
  */
 package io.syndesis.connector.sql;
 
-import io.syndesis.connector.sql.stored.JSONBeanUtil;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.function.Consumer;
+
 import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.Processor;
 import org.apache.camel.TypeConverter;
@@ -24,10 +28,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.function.Consumer;
+import io.syndesis.connector.sql.stored.JSONBeanUtil;
 
 /**
  * Camel SqlConnector connector
@@ -61,14 +62,17 @@ public class SqlConnectorComponent extends DefaultConnectorComponent {
         };
         return processor;
     }
-
+    
     @Override
     public Processor getAfterProducer() {
         @SuppressWarnings("unchecked")
         final Processor processor = exchange -> {
             String jsonBean = "";
             if (exchange.getIn().getBody(List.class) != null) {
-                jsonBean = JSONBeanUtil.toJSONBean(exchange.getIn().getBody(List.class));
+                //Only grabbing the first record (map) in the list
+                @SuppressWarnings("rawtypes")
+                List<Map> maps = exchange.getIn().getBody(List.class);
+                jsonBean = JSONBeanUtil.toJSONBean(maps.iterator().next());
             } else {
                 jsonBean = JSONBeanUtil.toJSONBean(exchange.getIn().getBody(Map.class));
             }
