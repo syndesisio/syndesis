@@ -107,11 +107,11 @@
   <properties>
 
     <arquillian.version>1.1.13.Final</arquillian.version>
-    <arquillian-cube.version>1.9.1</arquillian-cube.version>
+    <arquillian-cube.version>1.11.0</arquillian-cube.version>
 
     <junit.version>4.12</junit.version>
-    <kubernetes-client.version>2.6.3</kubernetes-client.version>
-    <kubernetes-model.version>1.1.4</kubernetes-model.version>
+    <kubernetes-client.version>3.1.8</kubernetes-client.version>
+    <kubernetes-model.version>2.0.8</kubernetes-model.version>
     <okhttp.version>3.8.1</okhttp.version>
   </properties>
 
@@ -198,8 +198,6 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
     </dependency>
-
-
 
   </dependencies>
 

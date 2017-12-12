@@ -11,7 +11,7 @@ metadata:
 # Allow localhost refs: false
 # Use docker images: false
 # Without Probes: false
-# Atlasmap Tag: 
+# Atlasmap Tag:
 # Syndesis Tag: latest
 # Prometheus Tag: v2.0.0
 # Restricted environment: true
@@ -352,7 +352,7 @@ objects:
         echo "Waiting for Postgres server..."
         sleep 1
       done
-      echo "----- creating sampledb"
+      echo "-- creating sampledb"
       psql <<EOF
         CREATE DATABASE sampledb;
         CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
@@ -384,7 +384,7 @@ objects:
         $BODY$;
       EOF
 
-      echo "----- sampledb created"
+      echo "-- sampledb created"
     postStart.sh: |
       #!/bin/bash
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1

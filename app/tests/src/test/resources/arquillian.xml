@@ -5,11 +5,10 @@
     http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <extension qualifier="kubernetes">
-      <property name="namespace.init.enabled">true</property>
-      <property name="namespace.cleanup.enabled">true</property>
-      <property name="env.setup.script.url">setup.sh</property>
-      <property name="env.teardown.script.url">teardown.sh</property>
-      <property name="wait.for.service.list">syndesis-rest syndesis-ui syndesis-keycloak</property>
+      <!-- This is blocked by https://github.com/openshift/origin/issues/13197 -->
+      <property name="env.dependencies">file:../deploy/support/serviceaccount-as-oauthclient-restricted.yml</property>
+      <property name="env.config.url">file:../deploy/syndesis-restricted.yml</property>
+      <property name="template.parameters.file">file:./src/test/resources/template.properties</property>
       <property name="wait.timeout">600000</property>
       <property name="logs.copy">true</property>
     </extension>

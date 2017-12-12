@@ -10,6 +10,7 @@ system-test::usage() {
     --token <token>           Token for connecting to the server
     --server <url>            OpenShift Server url to use for the tests. If not given, use the currently connected
                               server
+    --route-hostname          The route host to use for Openshift routes
     --pool <project>          If no project is given use, a pooling mechanism. This pool has to be created
                               before with --create-pool
     --test-id <id>            Id to identify the test run
@@ -317,6 +318,17 @@ test_build() {
     oc project $project
     local maven_args=$(maven_args $project)
     check_error $maven_args
+
     maven_args="-Psystem-tests -Pimages -Dfabric8.mode=openshift $maven_args"
+
+    local routeHost=$(readopt --route-hostname)
+    tmp_params=$(mktemp /tmp/syndesis-system-tests-params.XXXX)
+    if [ -n "$routeHost" ]; then
+        echo ROUTE_HOSTNAME=$routeHost > $tmp_params
+        echo OPENSHIFT_PROJECT=$(oc project -q) >> $tmp_params
+        cat $tmp_params
+        maven_args=" -Dtemplate.parameters.file=$tmp_params $maven_args"
+    fi
+
     call_maven "$maven_args"
 }
