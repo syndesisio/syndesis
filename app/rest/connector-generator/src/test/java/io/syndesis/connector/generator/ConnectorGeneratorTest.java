@@ -69,6 +69,7 @@ public class ConnectorGeneratorTest {
                 .name("test-name")//
                 .description("test-description")//
                 .connectorGroup(template.getConnectorGroup())//
+                .connectorGroupId("template-group")//
                 .properties(template.getConnectorProperties())//
                 .putConfiguredProperty("property2", "value2")//
                 .build(),
@@ -87,6 +88,7 @@ public class ConnectorGeneratorTest {
                 .name("given-name")//
                 .description("given-description")//
                 .connectorGroup(template.getConnectorGroup())//
+                .connectorGroupId("template-group")//
                 .properties(template.getConnectorProperties())//
                 .putConfiguredProperty("property2", "value2").build(),
             "id");

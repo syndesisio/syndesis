@@ -15,19 +15,6 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
-
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
@@ -38,7 +25,6 @@ import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
 import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.parser.SwaggerParser;
 import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.ConnectorSummary;
@@ -55,9 +41,21 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorTemplate;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
@@ -106,19 +104,13 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
                 .totalActions(total)//
                 .actionCountByTags(tagCounts.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> e.getValue().intValue())))
                 .build();
-            return new ConnectorSummary.Builder().createFrom(connector)
-                .actionsSummary(actionsSummary)
-                .errors(swaggerInfo.getErrors())
-                .warnings(swaggerInfo.getWarnings())
-                .build();
-        } catch (Exception ex) {
+            return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
+                .warnings(swaggerInfo.getWarnings()).build();
+        } catch (final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
                 // Just log and return the validation errors if any
                 LOG.error("An error occurred while trying to create a swagger connector", ex);
-                return new ConnectorSummary.Builder()
-                    .errors(swaggerInfo.getErrors())
-                    .warnings(swaggerInfo.getWarnings())
-                    .build();
+                return new ConnectorSummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
             } else {
                 throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
             }
