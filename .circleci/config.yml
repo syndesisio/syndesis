@@ -292,11 +292,27 @@ jobs:
           paths:
           - ~/.m2
 
+  doc:
+    docker:
+      - image: syndesis/builder-doc
+    steps:
+      - checkout
+      - run:
+          name: Generate docs
+          command: |
+            git config --global user.email "circleci@syndesis.io"
+            git config --global user.name "CircleCI"
+            ./tools/bin/syndesis doc --local --html --pdf --gh-pages
+
 workflows:
   version: 2
   syndesis:
     jobs:
       - system-test:
+          filters:
+            branches:
+              only: master
+      - doc:
           filters:
             branches:
               only: master

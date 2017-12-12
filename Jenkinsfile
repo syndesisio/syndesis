@@ -25,7 +25,7 @@ pipeline {
                 checkout scm
                 sh """
                 echo $PATH
-                ./app/build.sh --batch-mode --mode system-test
+                ./tools/bin/syndesis system-test --batch-mode
                 """
             }
         }
