@@ -1,0 +1,53 @@
+<div class="card-pf-heading">
+  <h2 class="card-pf-title">
+    Security
+  </h2>
+</div>
+<div class="card-pf-body">
+  <p>
+    <strong>Authentication Type</strong>
+  </p>
+  <form class="syn-form syn-form--card syn-form--auth-setup">
+    <fieldset class="syn-form__body">
+      <div class="syn-form-input-list">
+        <label class="syn-form-input-list__option">
+          <input type="radio" name="security" checked="checked" #noSecurity> No Security
+        </label>
+        <label class="syn-form-input-list__option">
+          <input type="radio" name="security" #httpBasicAuth> HTTP Basic Authentication
+        </label>
+        <label class="syn-form-input-list__option">
+          <input type="radio" name="security" #oauth> OAuth
+        </label>
+      </div>
+
+      <div class="syn-form-row syn-form-row--oauth" *ngIf="oauth.checked">
+        <label class="syn-form-row__label" for="authenticationUrl">Authentication URL</label>
+        <input class="syn-form-row__input" type="text" name="authenticationUrl">
+      </div>
+      
+      <div class="syn-form-row syn-form-row--oauth" *ngIf="oauth.checked">
+        <label class="syn-form-row__label" for="authorizationUrl">Authorization URL</label>
+        <input class="syn-form-row__input" type="text" name="authorizationUrl">
+      </div>
+
+      <div class="syn-form-row syn-form-row--oauth" *ngIf="oauth.checked">
+        <strong class="syn-form-row__label syn-form-row__label--list">Scopes</strong>
+        <div class="syn-form-input-list">
+          <label class="syn-form-input-list__option">
+            <input type="checkbox" name="scopes"> write:pets
+          </label>
+          <label class="syn-form-input-list__option">
+            <input type="checkbox" name="scopes"> read:pets
+          </label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="syn-form__buttons">
+      <button type="button" class="submit syn-form__submit btn btn-primary" (click)="next.emit()">
+        Next
+      </button>
+    </fieldset>
+  </form>
+</div>

@@ -46,4 +46,12 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   onReviewComplete(): void {
     this.TEMP_STEP = 3;
   }
+
+  onAuthSetup(): void {
+    this.TEMP_STEP = 4;
+  }
+
+  onCreateComplete(): void {
+    alert('ACTION DISPATCHED');
+  }
 }

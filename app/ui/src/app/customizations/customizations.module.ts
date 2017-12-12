@@ -1,4 +1,4 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ToolbarModule, ListModule } from 'patternfly-ng';
@@ -8,12 +8,14 @@ import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { CustomizationsComponent } from './customizations.component';
 
 import {
-  ApiConnectorService, ApiConnectorStore,
-  ApiConnectorListComponent,
-  ApiConnectorCreateComponent,
-  ApiConnectorDetailComponent,
+  ApiConnectorAuthComponent,
   ApiConnectorSwaggerUploadComponent,
-  ApiConnectorReviewComponent
+  ApiConnectorCreateComponent,
+  ApiConnectorInfoComponent,
+  ApiConnectorReviewComponent,
+  ApiConnectorListComponent,
+  ApiConnectorDetailComponent,
+  ApiConnectorService, ApiConnectorStore,
 } from './api-connector';
 
 import {
@@ -84,7 +86,10 @@ const routes: Routes = [
     ApiConnectorListComponent,
     ApiConnectorCreateComponent,
     ApiConnectorDetailComponent,
+    ApiConnectorAuthComponent,
     ApiConnectorSwaggerUploadComponent,
+    ApiConnectorCreateComponent,
+    ApiConnectorInfoComponent,
     ApiConnectorReviewComponent,
 
     TechExtensionsListComponent,
@@ -92,7 +97,6 @@ const routes: Routes = [
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
   ],
-  schemas: [NO_ERRORS_SCHEMA],
   providers: [
     ApiConnectorService,
     ApiConnectorStore

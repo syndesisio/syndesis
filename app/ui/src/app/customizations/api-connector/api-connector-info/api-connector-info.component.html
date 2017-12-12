@@ -1,0 +1,46 @@
+<div class="card-pf-heading">
+    <h2 class="card-pf-title">
+      General Connector Info
+    </h2>
+  </div>
+  <div class="card-pf-body">
+    <form class="syn-form syn-form--card syn-form--api-connector">
+      <fieldset class="syn-form__body">
+        <div class="syn-form-row">
+          <label class="syn-form-row__label" for="connectorName">Connector Icon</label>
+          <div class="syn-form-column syn-form-filebrowser">
+            <span class="syn-form-filebrowser__default-file">
+              <i class="fa fa-times"></i>
+            </span>
+            <input class="syn-form-filebrowser__input" type="file" name="connectorIcon">
+          </div>
+        </div>
+
+        <div class="syn-form-row">
+          <label class="syn-form-row__label" for="connectorName">Connector Name</label>
+          <input class="syn-form-row__input" type="text" name="connectorName">
+        </div>
+        
+        <div class="syn-form-row">
+          <label class="syn-form-row__label" for="description">Description</label>
+          <input class="syn-form-row__input" type="text" name="description">
+        </div>
+        
+        <div class="syn-form-row">
+          <label class="syn-form-row__label" for="host">Host</label>
+          <input class="syn-form-row__input" type="text" name="host">
+        </div>
+        
+        <div class="syn-form-row">
+          <label class="syn-form-row__label" for="baseUrl">Base URL</label>
+          <input class="syn-form-row__input" type="text" name="baseUrl">
+        </div>
+      </fieldset>
+
+      <fieldset class="syn-form__buttons syn-form__buttons--pushed">
+        <button type="button" class="submit syn-form__submit btn btn-primary" (click)="next.emit()">
+          Next
+        </button>
+      </fieldset>
+    </form>
+  </div>

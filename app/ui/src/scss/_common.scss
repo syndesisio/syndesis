@@ -17,8 +17,7 @@
 //----- Disable Anchor / Link That Uses routerLink/routerActiveClass ----------------->>
 
 a.disabled {
-  pointer-events: none;
-  cursor: default;
+  @include preventclick;
 }
 
 //----- Vertically Align Contents in a Division ----------------->>
@@ -37,10 +36,10 @@ a.disabled {
 
 //----- Convenience helpers mapping custom SASS mixins ----------------->>
 
-.visuallyhidden {
+.syn-visuallyhidden {
   @include visuallyhidden;
 }
 
-.preventclick {
+.syn-preventclick {
   @include preventclick;
 }

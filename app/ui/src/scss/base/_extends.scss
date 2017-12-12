@@ -1,15 +1,15 @@
 /// Centralized set of extended SASS classNames
 
-%visuallyhidden {
+%syn-visuallyhidden {
   @include visuallyhidden;
 }
 
-%preventclick {
+%syn-preventclick {
   @include preventclick;
 }
 
-%syn-submit-btn {
+%syn-cta-btn {
   display: block;
-  margin-top: $submit-top-gutter;
-  min-width: $submit-min-width;
+  margin-top: $button-top-gutter;
+  min-width: $button-min-width;
 }

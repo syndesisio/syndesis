@@ -20,7 +20,7 @@
             <button class="wizard-nav__button btn btn-default" (click)="showCancelModal()">
               Cancel
             </button>
-            <button class="wizard-nav__button btn btn-primary visuallyhidden">
+            <button class="wizard-nav__button btn btn-primary syn-visuallyhidden">
               Create Connector
             </button>
           </div>
@@ -46,9 +46,14 @@
         </syndesis-api-connector-swagger-upload>
         <syndesis-api-connector-review *ngIf="TEMP_STEP == 2"
           [apiConnectorTemplateName]="'Swagger'"
-          [apiConnectorData]="{}"
+          [apiConnectorValidation]="{}"
+          [showNext]="true"
           (next)="onReviewComplete()">
         </syndesis-api-connector-review>
+        <syndesis-api-connector-auth *ngIf="TEMP_STEP == 3" (next)="onAuthSetup()">
+        </syndesis-api-connector-auth>
+        <syndesis-api-connector-info *ngIf="TEMP_STEP == 4" (next)="onCreateComplete()">
+        </syndesis-api-connector-info>
       </div>
     </div>
   </section>
@@ -56,13 +61,10 @@
 
 <ng-template #cancelModalTemplate>
   <cancel-confirmation-modal (cancel)="onCancel($event)">
-    <modal-title>
-      <h3>Do you really wish to cancel?</h3>
-    </modal-title>
-    <modal-content>
-      <p>
-        You have not completed the API Connector Create process. If you leave now you will loose all the data you entered already.
-      </p>
-    </modal-content>
+    <h3>Do you really wish to cancel?</h3>
+    <p>
+      You have not completed the API Connector Create process. 
+      If you leave now you will loose all the data you entered already.
+    </p>
   </cancel-confirmation-modal>
 </ng-template>

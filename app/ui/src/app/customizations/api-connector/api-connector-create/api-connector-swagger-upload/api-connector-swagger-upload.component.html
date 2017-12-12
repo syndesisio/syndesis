@@ -9,28 +9,34 @@
   <p>
     <strong>Choose how you want to create your connector?</strong>
   </p>
-  <form class="swagger-upload">
-    <fieldset class="swagger-upload__fieldset swagger-upload__fieldset--options">
-      <label class="swagger-upload__option">
-        <input type="radio" checked="checked" name="connector-source" #uploadFileOption> Upload a Swagger file
+  <form class="syn-form syn-form--swagger-upload">
+    <fieldset class="syn-form__body">
+
+    <div class="syn-form-input-list syn-form-input-list--horizontal">
+      <label class="syn-form-input-list__option">
+          <input type="radio" checked="checked" name="connector-source" #uploadFileOption> Upload a Swagger file
       </label>
-      <label class="swagger-upload__option">
-        <input type="radio" name="connector-source" #fetchUrlOption> Use a URL
+      <label class="syn-form-input-list__option">
+          <input type="radio" name="connector-source" #fetchUrlOption> Use a URL
       </label>
-    </fieldset>
+    </div>
 
-    <fieldset class="swagger-upload__fieldset swagger-upload__fieldset--uploader" *ngIf="uploadFileOption.checked">
-      <input type="file">
-    </fieldset>
+    <div class="syn-form-row syn-form-row--upload-file" *ngIf="uploadFileOption.checked">
+      <input type="file" name="swaggerFile">
+    </div>
+    
+    <div class="syn-form-row syn-form-row--fetch-file" *ngIf="fetchUrlOption.checked">
+      <input class="syn-form-row__input" type="text" name="swaggerFileUrl">
+      <em>
+        * Please note, we will download this for you but any updates to the online version will not e updated in our app
+      </em>
+    </div>
+  </fieldset>
 
-    <fieldset class="swagger-upload__fieldset swagger-upload__fieldset--textinput" *ngIf="fetchUrlOption.checked">
-      <input type="text">
-      <em>* Please note, we will download this for you but any updates to the online version will not e updated in our
-        app</em>
+  <fieldset class="syn-form__buttons">
+      <button type="button" class="submit syn-form__submit btn btn-primary" (click)="next.emit()">
+        Next
+      </button>
     </fieldset>
-
-    <button type="button" class="swagger-upload__submit btn btn-primary" (click)="next.emit()">
-      Next
-    </button>
   </form>
 </div>

@@ -15,8 +15,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   <div class="modal-body">
     <div class="row">
       <div class="col-xs-12">
-        <ng-content select="modal-title"></ng-content>
-        <ng-content select="modal-content"></ng-content>
+        <ng-content></ng-content>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ import { ApiConnectorValidation } from '@syndesis/ui/customizations/api-connecto
   styleUrls: ['./api-connector-review.component.scss']
 })
 export class ApiConnectorReviewComponent {
-  @Input() connectorTemplateName: string;
+  @Input() apiConnectorTemplateName: string;
   @Input() apiConnectorValidation: ApiConnectorValidation;
   @Input() showNext: boolean;
 
