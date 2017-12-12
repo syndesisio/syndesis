@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public class FilterOptionsParser {
 
-    private static final Pattern VALID_QUERY_PATTERN = Pattern.compile("(?<property>\\w+)(?:(?<operation>(?:\\s*=\\s*))(?<value>\\w+))?");
+    private static final Pattern VALID_QUERY_PATTERN = Pattern.compile("(?<property>\\w+)(?:(?<operation>(?:\\s*=\\s*))(?<value>\\p{Print}+))?");
 
     private FilterOptionsParser() {
     }
@@ -57,7 +57,7 @@ public class FilterOptionsParser {
 
         private final Optional<String> value;
 
-        private Filter(String property, String operation, String value) {
+        /* default */ Filter(String property, String operation, String value) {
             this.property = property;
             this.operation = Optional.ofNullable(operation);
             this.value = Optional.ofNullable(value);
