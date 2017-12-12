@@ -4,7 +4,9 @@
     </h2>
   </div>
   <div class="card-pf-body">
-    <form class="syn-form syn-form--card syn-form--api-connector">
+    <form class="syn-form syn-form--card syn-form--api-connector" 
+      [formGroup]="apiConnectorInfoForm"
+      (submit)="onSubmit()" novalidate>
       <fieldset class="syn-form__body">
         <div class="syn-form-row">
           <label class="syn-form-row__label" for="connectorName">Connector Icon</label>
@@ -12,33 +14,33 @@
             <span class="syn-form-filebrowser__default-file">
               <i class="fa fa-times"></i>
             </span>
-            <input class="syn-form-filebrowser__input" type="file" name="connectorIcon">
+            <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="onChange($event)">
           </div>
         </div>
 
         <div class="syn-form-row">
-          <label class="syn-form-row__label" for="connectorName">Connector Name</label>
-          <input class="syn-form-row__input" type="text" name="connectorName">
+          <label class="syn-form-row__label" for="name">Connector Name</label>
+          <input class="syn-form-row__input" type="text" formControlName="name" (keyup.enter)="onChange()">
         </div>
         
         <div class="syn-form-row">
           <label class="syn-form-row__label" for="description">Description</label>
-          <input class="syn-form-row__input" type="text" name="description">
+          <input class="syn-form-row__input" type="text" formControlName="description" (keyup.enter)="onChange()">
         </div>
         
         <div class="syn-form-row">
           <label class="syn-form-row__label" for="host">Host</label>
-          <input class="syn-form-row__input" type="text" name="host">
+          <input class="syn-form-row__input" type="text" formControlName="host" (keyup.enter)="onChange()">
         </div>
         
         <div class="syn-form-row">
           <label class="syn-form-row__label" for="baseUrl">Base URL</label>
-          <input class="syn-form-row__input" type="text" name="baseUrl">
+          <input class="syn-form-row__input" type="text" formControlName="baseUrl" (keyup.enter)="onChange()">
         </div>
       </fieldset>
 
-      <fieldset class="syn-form__buttons syn-form__buttons--pushed">
-        <button type="button" class="submit syn-form__submit btn btn-primary" (click)="next.emit()">
+      <fieldset class="syn-form__buttons syn-form__buttons--pushed" *ngIf="!enableEditing">
+        <button type="submit" class="submit syn-form__submit btn btn-primary">
           Next
         </button>
       </fieldset>

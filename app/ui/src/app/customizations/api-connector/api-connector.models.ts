@@ -13,8 +13,11 @@ export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
   name: string;
   description: string;
   icon: string;
+  fileIcon?: File;
   properties: ApiConnectorProperties;
   connectorProperties: any;
+  host: string;
+  baseUrl: string;
 }
 
 export interface ApiConnectorValidation {

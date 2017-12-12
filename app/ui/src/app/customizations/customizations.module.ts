@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ToolbarModule, ListModule } from 'patternfly-ng';
 import { FileUploadModule } from 'ng2-file-upload-base/src';
@@ -78,6 +79,8 @@ const routes: Routes = [
     ListModule,
     RouterModule.forChild(routes),
     FileUploadModule,
+    ReactiveFormsModule,  // FIXME: This should be made available from SyndesisCommonModule
+    FormsModule,          // FIXME: This should be made available from SyndesisCommonModule
     SyndesisCommonModule
   ],
   exports: [],

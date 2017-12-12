@@ -52,7 +52,7 @@
         </syndesis-api-connector-review>
         <syndesis-api-connector-auth *ngIf="TEMP_STEP == 3" (next)="onAuthSetup()">
         </syndesis-api-connector-auth>
-        <syndesis-api-connector-info *ngIf="TEMP_STEP == 4" (next)="onCreateComplete()">
+        <syndesis-api-connector-info *ngIf="TEMP_STEP == 4" (update)="onCreateComplete()">
         </syndesis-api-connector-info>
       </div>
     </div>

@@ -51,7 +51,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.TEMP_STEP = 4;
   }
 
-  onCreateComplete(): void {
-    alert('ACTION DISPATCHED');
+  onCreateComplete(event): void {
+    console.log(event);
   }
 }
