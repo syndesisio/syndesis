@@ -1,1 +1,10 @@
 version: 2
+jobs:
+  build:
+    branches:
+      ignore:
+      - gh-pages
+    steps:
+      - run:
+          command:
+            echo "Nothing to be done"
