@@ -1,6 +1,5 @@
 import {
   NotificationService as NS,
-  NotificationType,
   Notification,
   Action
 } from 'patternfly-ng';
@@ -21,7 +20,7 @@ export class NotificationService extends NS {
     type: string,
     header: string,
     message: string,
-    isPersistent: boolean = false,
+    isPersistent: boolean,
     primaryAction?: Action,
     moreActions: Action[] = []
   ): void {
