@@ -52,6 +52,6 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   onCreateComplete(event): void {
-    console.log(event);
+    //console.log(event);
   }
 }
