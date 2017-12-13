@@ -49,7 +49,7 @@ public class ExtensionSchemaValidationTest {
 
         ObjectMapper mapper = Json.mapper();
 
-        String syndesisExtensionSchema = "/syndesis-extension-definition-schema.json";
+        String syndesisExtensionSchema = "/syndesis/syndesis-extension-definition-schema.json";
         JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + syndesisExtensionSchema);
 
 
