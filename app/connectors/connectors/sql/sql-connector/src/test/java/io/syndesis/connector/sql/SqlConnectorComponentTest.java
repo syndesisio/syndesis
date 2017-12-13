@@ -106,7 +106,7 @@ public class SqlConnectorComponentTest {
             context.start();
             latch.await(30l,TimeUnit.SECONDS);
             Properties props = JSONBeanUtil.parsePropertiesFromJSONBean(result.getJsonBean());
-            Assert.assertTrue(props.getProperty("ID").equals("1"));
+            Assert.assertTrue(props.getProperty("ID").equals("1") || props.getProperty("ID").equals("2"));
         } finally {
             context.stop();
         }
