@@ -206,14 +206,10 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
 
         return connectors.stream().map(c -> {
-            final Long uses = connectorUsage.get(c.getId().get());
-            if (uses != null) {
-                return new Connector.Builder()//
-                    .createFrom(c)//
-                    .uses(uses.intValue()).build();
-            }
-
-            return c;
+            final int uses = connectorUsage.getOrDefault(c.getId().get(), 0L).intValue();
+            return (Connector) new Connector.Builder()//
+                .createFrom(c)//
+                .uses(uses).build();
         }).collect(Collectors.toList());
     }
 }

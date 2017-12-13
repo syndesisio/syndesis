@@ -141,7 +141,7 @@ public class ConnectorHandlerTest {
 
         final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
 
-        assertThat(augmented).contains(usedConnector(connector1, 1), usedConnector(connector2, 2), connector3);
+        assertThat(augmented).contains(usedConnector(connector1, 1), usedConnector(connector2, 2), usedConnector(connector3, 0));
     }
 
     private static ConnectorAction newActionBy(final Connector connector) {
