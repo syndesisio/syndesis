@@ -15,12 +15,6 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.ConnectorAction;
@@ -31,6 +25,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static io.syndesis.connector.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;

@@ -57,7 +57,7 @@ New API endpoints for defining custom connectors:
 ### New custom connector based on Swagger specification example
 
 Given that the Syndesis database contains a connector template, presented here
-with some properties omitted:
+with some properties omitted in the form expected by :
 
 ```json
 {
@@ -67,6 +67,11 @@ with some properties omitted:
     "name": "Swagger API Connector",
     "description": "Swagger API Connector",
     "icon": "fa-link",
+    "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis.version@",
+    "camelConnectorPrefix": "swagger-operation",
+    "connectorGroup" : {
+      "id": "swagger-connector-template" // inherited by all custom connectors generated from this template as `connectorGroup` and `connectorGroupId`
+    },
     ...
     "properties": {
       "specification": {
@@ -74,21 +79,26 @@ with some properties omitted:
         "displayName": "Specification file",
         "required": true,
         "type": "string",
-        "javaType": "java.lang.String",
         "tags": [ "blob" ],
         "description": "Upload the Swagger specification",
         ...
       },
-      "specificationUrl": {
+      "host": {
         "kind": "property",
-        "displayName": "Specification URL",
-        "required": true,
+        "displayName": "Host",
+        "required": false,
         "type": "string",
-        "javaType": "java.lang.String",
-        "description": "Provide the URL for the Swagger specification",
-        ...
-      }
-    },
+        "description": "Scheme hostname and port..."
+      },
+      "basePath": {
+        "kind": "property",
+        "displayName": "Base path",
+        "required": false,
+        "type": "string",
+        "description": "API basePath for example /v2..."
+      },
+      //...
+   },
     "connectorProperties": {
       "host":{
         ...
@@ -119,7 +129,9 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Length: 1895
 
-{...
+{
+  // the connector template presented above in the `data` property
+  //...
   "properties": {
     "specification": {
       "kind": "property",
@@ -136,7 +148,8 @@ Content-Length: 1895
       "description": "Upload the swagger fore for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented swagger is available and conforms to OpenAPI standards."
     }
   },
-...} // the connector template presented above
+  //...
+} 
 ```
 
 Based on the connector template property `specification`, tagged with `upload`,
@@ -154,18 +167,23 @@ Accept: application/json
 
 {
   "connectorTemplateId": "swagger-connector-template"
+  "configuredProperties": {
+    "specification": "http://petstore.swagger.io/index.html"
+  }
 }
 
-HTTP/1.1 400 Bad Request
+HTTP/1.1 200 OK
 
 {
-  "errors" : [
+  "errors": [
     {
-      "property": "specification",
-      "error": "ValidSpecification",
-      "message": "Given specification is not readable"
+      "error": "error",
+      "message": "Unable to read Swagger specification from: http://petstore.swagger.io/index.html",
+      "property": ""
     }
-  ]
+  ],
+  "warnings": [],
+  "properties": {}
 }
 ```
 
@@ -187,9 +205,39 @@ Accept: application/json
 HTTP/1.1 200 OK
 
 {
-  "name": "Petstore",
+  // information needed for the 'Review Swagger Actions' step
+  "actionsSummary": {
+    "actionCountByTags": {
+      "store": 4,
+      "user": 8,
+      "pet": 8
+    },
+    "totalActions": 20
+  },
+
+  // suggestion for the 'Description' input on the 'General Connector Info' step
   "description": "Petstore API connector",
+
+  // no errors, yay!
+  "errors": [],
+
+  // one warning
+  "warnings": [
+    {
+      "error": "unsupported-auth",
+      "message": "Authentication type apiKey is currently not supported",
+      "property": ""
+    }
+  ],
+
+  // suggestion for the 'Name' input on the 'General Connector Info' step
+  "name": "Petstore",
+
+  // set of properties that are used on 'Security' and 'General Connector Info' steps
   "properties": {
+
+    // part of the connector-template, so it's included here, not used by the UI
+    // will be used when connection is generated from the newly created connector
     "accessToken": {
       "componentProperty": true,
       "deprecated": false,
@@ -207,7 +255,9 @@ HTTP/1.1 200 OK
       ],
       "enum": []
     },
-    "accessTokenUrl": {
+
+    // suggestion for the 'Token Endpoint' (OAuth2 Token endpoint) no 'defaultValue' property here nothing can be suggested
+    "tokenEndpoint": {
       "componentProperty": true,
       "deprecated": false,
       "description": "URL to fetch the OAuth Access token",
@@ -224,6 +274,9 @@ HTTP/1.1 200 OK
       ],
       "enum": []
     },
+
+    // supported authentication types, influences the selection presented on the 'Security' step
+    // based on the 'enum' property: the values present specify what can be offered
     "authenticationType": {
       "componentProperty": true,
       "defaultValue": "oauth2",
@@ -247,37 +300,145 @@ HTTP/1.1 200 OK
         }
       ]
     },
+
+    // suggestion for the 'Authorization Endpoint' (OAuth2 Authorization endpoint), 'defaultValue' is the value suggested
+    // the UI should prefil the input with: http://petstore.swagger.io/oauth/dialog
+    "authorizationEndpoint": {
+      "componentProperty": true,
+      "defaultValue": "http://petstore.swagger.io/oauth/dialog",
+      "deprecated": false,
+      "description": "URL for the start of the OAuth flow",
+      "displayName": "OAuth Authorization URL",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": true,
+      "secret": false,
+      "type": "string",
+      "tags": [
+        "oauth-authorization-url"
+      ],
+      "enum": []
+    },
+
+    // suggestion for the 'Base URL' (API Base Path), 'defaultValue' is the value suggested
+    // the UI should prefil the input with: /v2
     "basePath": {
-        //...
+      "componentProperty": true,
+      "defaultValue": "/v2",
+      "deprecated": false,
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification.",
+      "displayName": "Base path",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string",
+      "tags": [],
+      "enum": []
     },
+
+    // part of the connector-template, so it's included here, not used by the UI
+    // will be used when connection is generated from the newly created connector
     "clientId": {
-        //...
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OAuth Client ID, sometimes called Consumer Key",
+      "displayName": "OAuth Client ID",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string",
+      "tags": [
+        "oauth-client-id"
+      ],
+      "enum": []
     },
+
+    // part of the connector-template, so it's included here, not used by the UI
+    // will be used when connection is generated from the newly created connector
     "clientSecret": {
-        //...
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OAuth Client Secret, sometimes called Consumer Secret",
+      "displayName": "OAuth Client Secret",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": true,
+      "type": "string",
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "enum": []
     },
+
+    // suggestion for the 'Host' (API Scheme and hostname), 'defaultValue' is the value suggested
+    // the UI should prefil the input with: http://petstore.swagger.io
     "host": {
-        //...
+      "componentProperty": true,
+      "defaultValue": "http://petstore.swagger.io",
+      "deprecated": false,
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration.",
+      "displayName": "Host",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string",
+      "tags": [],
+      "enum": []
     },
+
+    // part of the connector-template, so it's included here, not used by the UI
+    // will be used in the integration when action is added to integration step
     "operationId": {
-        //...
+      "componentProperty": false,
+      "deprecated": false,
+      "description": "ID of operation to invoke",
+      "displayName": "Operation ID",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "hidden",
+      "tags": [],
+      "enum": []
     },
+
+    // part of the connector-template, so it's included here, not used by the UI
+    // used at runtime
     "specification": {
-        //...
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Swagger specification of the service",
+      "displayName": "Specification",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "hidden",
+      "tags": [
+        "upload",
+        "url"
+      ],
+      "enum": []
     }
-  },
-  "actionsSummary": {
-    "actionCountByTags": {
-      "store": 4,
-      "user": 8,
-      "pet": 8
-    },
-    "totalActions": 20
-  },
-  "warnings": [
-  ],
-  "errors": [
-  ]
+  }
 }
 ```
 
@@ -292,17 +453,16 @@ Accept: application/json
 
 {
   "connectorTemplateId": "swagger-connector-template",
-  "name": "Petstore API",
-  "description": "This is a sample server Petstore server. You can find out more about Swagger at http://swagger.io or on irc.freenode.net, #swagger. For this sample, you can use the api key special-key to test the authorization filters.",
-  "icon": "data:image/svg+xml;utf8,<svg ...",
+  "name": "Petstore API", // 'Connector Name' from 'General Connector Info' step
+  "description": "This is...", // 'Description' from 'General Connector Info' step
+  "icon": "data:image/svg+xml;utf8,<svg ...", // TODO
   "configuredProperties": {
-    "specification": "http://petstore.swagger.io/v2/swagger.yaml",
-    "host": "http://petstore.swagger.io",
-    "basePath": "/v2",
-    "authentication": {
-      "type": "oauth2",
-      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog"
-    }
+    "specification": "http://petstore.swagger.io/v2/swagger.yaml", // Specification from 'Upload Swagger' step
+    "host": "http://petstore.swagger.io", // 'Host' from 'General Connector Info' step
+    "basePath": "/v2", // 'Base URL' from 'General Connector Info' step
+    "authenticationType": "oauth2", // the 'value' from the 'enum' of 'authenticationType' property beget from /info endpoint
+    "authorizationEndpoint": "http://petstore.swagger.io/oauth/dialog", // 'Authorization Endpoint URL' from 'General Connector Info' step
+    "tokenEndpoint": "http://petstore.swagger.io/oauth/token" // 'Token Endpoint URL' from 'General Connector Info' step
   }
 }
 

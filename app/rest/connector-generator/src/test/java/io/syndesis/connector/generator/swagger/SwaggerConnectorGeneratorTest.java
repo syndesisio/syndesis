@@ -15,9 +15,6 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.parser.SwaggerParser;
@@ -28,6 +25,9 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Optional;
 
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;
 
@@ -74,7 +74,8 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
 
         final Connector generated = new SwaggerConnectorGenerator().generate(SWAGGER_TEMPLATE, connectorSettings);
 
-        assertThat(generated.getProperties().keySet()).contains("accessToken", "accessTokenUrl", "clientId", "clientSecret");
+        assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
+            "clientSecret");
         assertThat(generated.getProperties().get("authenticationType").getEnum())
             .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2").label("OAuth 2.0").build());
     }
@@ -88,11 +89,11 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
             .description("Invokes Reverb API")//
             .icon("fa-music")//
             .putConfiguredProperty("specification", specification)//
-            .putConfiguredProperty("accessTokenUrl", "http://some.token.url").build();
+            .putConfiguredProperty("tokenEndpoint", "http://some.token.url").build();
 
         final Connector connector = new SwaggerConnectorGenerator().generate(SWAGGER_TEMPLATE, connectorSettings);
 
-        assertThat(connector.getConfiguredProperties()).containsEntry("accessTokenUrl", "http://some.token.url");
+        assertThat(connector.getConfiguredProperties()).containsEntry("tokenEndpoint", "http://some.token.url");
     }
 
     @Test
@@ -115,15 +116,14 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
         assertThat(summary).isEqualToIgnoringGivenFields(expected, "description", "properties", "warnings");
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
         assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "clientId", "clientSecret",
-            "accessToken", "accessTokenUrl", "operationId", "specification");
+            "accessToken", "authorizationEndpoint", "operationId", "specification");
     }
 
     @Test
     public void shouldReportErrorsFromInvalidPetstoreSwagger() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
 
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
-            .putConfiguredProperty("specification", specification)//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().putConfiguredProperty("specification", specification)//
             .build();
 
         final ConnectorSummary summary = new SwaggerConnectorGenerator().info(SWAGGER_TEMPLATE, connectorSettings);
