@@ -1513,9 +1513,9 @@
           "componentProperty": true,
           "description": "Type of authentication used to connect to the API"
         },
-        "authorizationUrl": {
+        "authorizationEndpoint": {
           "kind": "property",
-          "displayName": "OAuth Authorization URL",
+          "displayName": "OAuth Authorization Endpoint URL",
           "group": "producer",
           "label": "producer",
           "required": true,
@@ -1529,9 +1529,9 @@
           "componentProperty": true,
           "description": "URL for the start of the OAuth flow"
         },
-        "accessTokenUrl": {
+        "tokenEndpoint": {
           "kind": "property",
-          "displayName": "OAuth Access token URL",
+          "displayName": "OAuth Token Endpoint URL",
           "group": "producer",
           "label": "producer",
           "required": true,
@@ -1639,9 +1639,9 @@
           "componentProperty": true,
           "description": "OAuth Access token"
         },
-        "authorizationUrl": {
+        "authorizationEndpoint": {
           "kind": "property",
-          "displayName": "OAuth Authorization URL",
+          "displayName": "OAuth Authorization Endpoint URL",
           "group": "producer",
           "label": "producer",
           "required": true,
@@ -1655,9 +1655,9 @@
           "componentProperty": true,
           "description": "URL for the start of the OAuth flow"
         },
-        "accessTokenUrl": {
+        "tokenEndpoint": {
           "kind": "property",
-          "displayName": "OAuth Access token URL",
+          "displayName": "OAuth Token Endpoint URL",
           "group": "producer",
           "label": "producer",
           "required": false,
