@@ -43,7 +43,7 @@ Global options:
 
 -r  --rebase                  Fetch origin/master and try a rebase
 -h  --help                    Display this help message
-    --debug                   Debug this script (set -x)
+    --verbose                 Verbouse script output (set -x)
 
 Call "syndesis <module> --help" for module specific options.
 
@@ -212,7 +212,7 @@ function run {
     eval "${command}::run"
 }
 
-if [ $(hasflag --debug) ]; then
+if [ $(hasflag --verbose) ]; then
     set -x
 fi
 
