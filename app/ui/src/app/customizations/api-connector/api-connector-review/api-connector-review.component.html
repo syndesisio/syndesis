@@ -1,0 +1,48 @@
+<div class="card-pf-heading">
+  <h2 class="card-pf-title">
+    Review {{ apiConnectorTemplateName }} Actions
+  </h2>
+</div>
+<div class="card-pf-body" *ngIf="apiConnectorValidation; else apiConnectorValidationFallback">
+  <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.actionsSummary as actionsSummary">
+    <h5 class="connector-actions__header">
+      Imported
+    </h5>
+    <ol class="connector-actions__operations">
+      <li><strong>{{ actionsSummary.totalActions }}</strong> operations</li>
+      <ol class="connector-actions__operations">
+        <li *ngFor="let actionTagCount of actionSummary.actionTagCount">
+          <strong>{{ actionTagCount.count }}</strong> dealing with {{ actionTagCount.tag }}
+        </li>
+      </ol>
+    </ol>
+  </div>
+
+  <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.errors as errors">
+    <h5 class="connector-actions__header">
+      Errors
+      <span class="connector-actions__label connector-actions__label--error">1</span>
+    </h5>
+    <ol>
+      <li *ngFor="let error of errors">{{ error | json }}</li>
+    </ol>
+  </div>
+
+  <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.warnings as warnings">
+    <h5 class="connector-actions__header">
+      Warnings
+      <span class="connector-actions__label connector-actions__label--warning">2</span>
+    </h5>
+    <ol>
+      <li *ngFor="let warning of warnings">{{ warning | json }}</li>
+    </ol>
+  </div>
+
+  <button *ngIf="showNext" (click)="next.emit()" type="button" class="connector-form__submit btn btn-primary">
+    Next
+  </button>
+
+</div>
+<ng-template #apiConnectorValidationFallback>
+  <h5 class="connector-fallback">No connector details are currently available.</h5>
+</ng-template>

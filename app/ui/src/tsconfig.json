@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "",
+    "baseUrl": ".",
     "plugins": [
       { 
         "name": "tslint-language-service",
@@ -35,6 +35,9 @@
     "paths": {
       "@angular/*": [
         "../node_modules/@angular/*"
+      ],
+      "@syndesis/ui/*": [
+        "app/*"
       ]
     }
   }

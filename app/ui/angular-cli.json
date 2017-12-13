@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "version": "1.2.8",
     "name": "syndesis-ui"
   },
   "apps": [
@@ -27,8 +26,7 @@
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
-      "prefix": "app",
-      "mobile": false,
+      "prefix": "syndesis",
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap.css",
         "../node_modules/patternfly/dist/css/patternfly.css",
@@ -37,6 +35,7 @@
       ],
       "stylePreprocessorOptions": {
         "includePaths": [
+          "../src/scss/base",
           "../node_modules"
         ]
       },
@@ -56,8 +55,6 @@
       }
     }
   ],
-  "addons": [],
-  "packages": [],
   "lint": [
     {
       "files": "src/**/*.ts",
@@ -70,19 +67,6 @@
     }
   },
   "defaults": {
-    "styleExt": "scss",
-    "prefixInterfaces": false,
-    "inline": {
-      "style": false,
-      "template": false
-    },
-    "spec": {
-      "class": false,
-      "component": true,
-      "directive": true,
-      "module": false,
-      "pipe": true,
-      "service": true
-    }
+    "styleExt": "scss"
   }
 }

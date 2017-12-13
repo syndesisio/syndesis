@@ -1,21 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { ToolbarModule, ListModule } from 'patternfly-ng';
-import { SyndesisCommonModule } from '../common/common.module';
-import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { FileUploadModule } from 'ng2-file-upload-base/src';
+import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
+import { ApiConnectorModule, ApiConnectorListComponent } from './api-connector';
 import { CustomizationsComponent } from './customizations.component';
-
-import { ApiConnectorService } from './api-connector/api-connector.service';
-import { ApiConnectorStore } from './api-connector/api-connector.store';
-
-import {
-  ApiConnectorListComponent,
-  ApiConnectorCreateComponent,
-  ApiConnectorDetailComponent
-} from './api-connector';
 
 import {
   TechExtensionsListComponent,
@@ -42,53 +33,36 @@ const routes: Routes = [
         redirectTo: 'api-connector'
       }
     ]
-  },
-  {
+  // TODO: Move to its own NgRoutingModule
+  }, {
     path: 'tech-extensions/import/:id',
     component: TechExtensionImportComponent
-  },
-  {
+  }, {
     path: 'tech-extensions/import',
     component: TechExtensionImportComponent
-  },
-  {
+  }, {
     path: 'tech-extensions/:id',
     component: TechExtensionDetailComponent
-  },
-  {
-    path: 'api-connector/create',
-    component: ApiConnectorCreateComponent
-  },
-  {
-    path: 'api-connector/:id',
-    component: ApiConnectorDetailComponent
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    SyndesisCommonModule,
     PatternflyUIModule,
-    ToolbarModule,
-    ListModule,
-    RouterModule.forChild(routes),
     FileUploadModule,
-    SyndesisCommonModule
+    RouterModule.forChild(routes),
+    ApiConnectorModule,
   ],
-  exports: [],
+  exports: [RouterModule],
   declarations: [
     CustomizationsComponent,
-    ApiConnectorListComponent,
-    ApiConnectorCreateComponent,
-    ApiConnectorDetailComponent,
+    // TODO: Move this out into its own NgModule
     TechExtensionsListComponent,
     TechExtensionImportComponent,
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
-  ],
-  providers: [
-    ApiConnectorService,
-    ApiConnectorStore
   ]
 })
-export class CustomizationsModule {}
+export class CustomizationsModule { }

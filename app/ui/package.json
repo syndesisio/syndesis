@@ -2,8 +2,7 @@
   "name": "syndesis-ui",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description":
-    "Presentation layer for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service.",
+  "description": "Presentation layer for Syndesis - a flexible, customizable, cloud-hosted platform that provides core integration capabilities as a service.",
   "homepage": "https://github.com/syndesisio/syndesis-ui",
   "bugs": "https://github.com/syndesisio/syndesis-ui/issues",
   "scripts": {
@@ -37,6 +36,9 @@
     "@atlasmap/atlasmap.data.mapper": "1.32.0-SNAPSHOT.20171018190510",
     "@ng-dynamic-forms/core": "1.4.31",
     "@ng-dynamic-forms/ui-bootstrap": "1.4.31",
+    "@ngrx/effects": "^4.1.1",
+    "@ngrx/store": "^4.1.1",
+    "@ngrx/store-devtools": "^4.1.1",
     "angular2-text-mask": "^8.0.1",
     "better-npm-run": "^0.0.15",
     "bootstrap": "3.3.7",
@@ -52,7 +54,7 @@
     "ngx-restangular": "1.0.9",
     "ngx-tour-ngx-bootstrap": "^1.0.4",
     "patternfly": "3.26.1",
-    "patternfly-ng": "0.13.3",
+    "patternfly-ng": "^0.13.3",
     "pluralize": "5.0.0",
     "rxjs": "5.4.2",
     "tether": "1.4.0",

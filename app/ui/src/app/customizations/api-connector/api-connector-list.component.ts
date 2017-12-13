@@ -4,19 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { ConfigService } from '../../config.service';
-import { log, getCategory } from '../../logging';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 import { ApiConnectorStore } from './api-connector.store';
-import { ApiConnector, ApiConnectors } from './api-connector.model';
+import { ApiConnector, ApiConnectors } from './api-connector.models';
 
 import {
   ActionConfig,
   ListConfig,
   EmptyStateConfig,
 } from 'patternfly-ng';
-
-const category = getCategory('ApiConnectors');
 
 @Component({
   selector: 'syndesis-api-connector-list',

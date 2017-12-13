@@ -1,0 +1,16 @@
+/// Centralized set of Application SASS variables
+
+// Generic styles for wizard and card CTA buttons
+$button-top-gutter: .8em;
+$button-min-width: 100px;
+
+// Generic style config for forms
+$forms-label-column-width: 120px;
+$forms-row-height: 20px;
+$forms-default-card-height: 250px;
+$forms-default-file-thumb-size: 50px;
+$forms-grid-gutter: 1em;
+
+// This is the darker gray we are using as a result of the lighter grays in PatternFly
+// getting washed out on projectors, demo recordings, and BlueJeans screenshares.
+$color-pf-custom-gray: #e1e1e1;

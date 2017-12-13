@@ -7,10 +7,7 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-
       <syndesis-loading [loading]="loading$ | async">
-
-        <!-- List Toolbar -->
 
         <syndesis-list-toolbar [items]="apiConnectors$"
                                [filterTags]="false"
@@ -20,14 +17,12 @@
             <div class="toolbar-pf-action-right">
               <button type="button"
                       class="btn btn-primary"
-                      [routerLink]="['/customizations/api-connectors/create']">
+                      routerLink="/customizations/api-connector/create/swagger-connector">
                 Create API Connector
               </button>
             </div>
           </ng-template>
         </syndesis-list-toolbar>
-
-        <!-- PatternFly List -->
 
         <pfng-list [items]="filteredApiConnectors$ | async"
                    [config]="listConfig"

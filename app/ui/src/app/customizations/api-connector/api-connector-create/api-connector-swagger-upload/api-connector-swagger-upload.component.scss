@@ -1,0 +1,12 @@
+@import 'syndesis-sass';
+
+.syn-form--swagger-upload {
+  .syn-form-row--fetch-file {
+    display: block;
+
+    input[type=text] {
+      display: block;
+      width: 100%;
+    }
+  }
+}

@@ -50,7 +50,7 @@
                    class="step-block inline-block text-center">
                 <ng-container [ngSwitch]="step.stepKind">
                   <ng-container *ngSwitchCase="'endpoint'">
-                    <div id="{{ step.connection.name | toId }}"
+                    <div id="{{ step.connection.name | synSlugify }}"
                          class="text-center connection"
                          (click)="viewDetails(step)"
                          title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
@@ -63,7 +63,7 @@
                     </div>
                   </ng-container>
                   <ng-container *ngSwitchDefault>
-                    <div id="{{ (step.name || step.stepKind) | toId }}"
+                    <div id="{{ (step.name || step.stepKind) | synSlugify }}"
                          class="text-center step">
                       <div class="step-line"></div>
                       <div class="icon not-connection">

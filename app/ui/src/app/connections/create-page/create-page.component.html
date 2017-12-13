@@ -41,37 +41,11 @@
 </div>
 
 <!-- Wizard Progress Bar-->
-
-<div class="row toolbar-pf steps">
-  <!-- hidden -->
-  <ul class="wizard-pf-steps-indicator center">
-    <li class="wizard-pf-step"
-        tourAnchor="connections.type">
-      <a class="disabled"
-          [routerLink]=" ['connection-basics'] "
-          routerLinkActive="active">
-        <span class="wizard-pf-step-number">1</span>
-        <span class="wizard-pf-step-title">Select Connection Type</span>
-      </a>
-    </li>
-    <li class="wizard-pf-step">
-      <a class="disabled"
-          [routerLink]=" ['configure-fields'] "
-          routerLinkActive="active">
-        <span class="wizard-pf-step-number">2</span>
-        <span class="wizard-pf-step-title">Configure Connection</span>
-      </a>
-    </li>
-    <li class="wizard-pf-step">
-      <a class="disabled"
-          [routerLink]=" ['review'] "
-          routerLinkActive="active">
-        <span class="wizard-pf-step-number">3</span>
-        <span class="wizard-pf-step-title">Name Connection</span>
-      </a>
-    </li>
-  </ul>
-</div>
+<syndesis-wizard-progress-bar class="has-half-width"
+  [steps]="['Select Connection Type', 'Configure Connection', 'Name Connection']"
+  stepUrlPrefix="connections/create/"
+  [stepUrls]="['connection-basics', 'configure-fields', 'review']">
+</syndesis-wizard-progress-bar>
 
 <!-- debug section -->
 <!--

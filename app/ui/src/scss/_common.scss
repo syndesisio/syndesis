@@ -17,8 +17,7 @@
 //----- Disable Anchor / Link That Uses routerLink/routerActiveClass ----------------->>
 
 a.disabled {
-  pointer-events: none;
-  cursor: default;
+  @include preventclick;
 }
 
 //----- Vertically Align Contents in a Division ----------------->>
@@ -33,4 +32,14 @@ a.disabled {
     align-items: center;
     //justify-content: center; /* Optional, to align inner items horizontally inside the column */
   }
+}
+
+//----- Convenience helpers mapping custom SASS mixins ----------------->>
+
+.syn-visuallyhidden {
+  @include visuallyhidden;
+}
+
+.syn-preventclick {
+  @include preventclick;
 }

@@ -1,0 +1,13 @@
+@import 'syndesis-sass';
+
+.syn-form--auth-setup {
+  .syn-form-row--oauth {
+    .syn-form-row__label {
+      width: 165px;
+    }
+
+    .syn-form-input-list {
+      padding-left: 0;
+    }
+  }
+}

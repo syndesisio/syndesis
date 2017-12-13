@@ -1,12 +1,18 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-//import { HttpModule } from '@angular/http';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NotificationModule } from 'patternfly-ng';
+import { TagInputModule } from 'ngx-chips';
 
-import { EditableTagsComponent } from './editable/editable-tags.component';
-import { EditableTextComponent } from './editable/editable-text.component';
-import { EditableTextareaComponent } from './editable/editable-textarea.component';
+import { CancelConfirmationModalComponent } from './cancel_confirmation_modal';
+import { SYNDESYS_EDITABLE_DIRECTIVES } from './editable';
+import { LoadingComponent } from './loading/loading.component';
+import { ModalComponent, ModalService } from './modal';
+import { NotificationService } from './ui-patternfly';
+import { SYNDESYS_VALIDATION_DIRECTIVES } from './validation';
+import { WizardProgressBarComponent } from './wizard_progress_bar';
+
 import { DerpPipe } from './derp.pipe';
 import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
 import { ObjectPropertySortPipe } from './object-property-sort.pipe';
@@ -14,23 +20,18 @@ import { TruncateCharactersPipe } from './truncate-characters.pipe';
 import { TruncateWordsPipe } from './truncate-words.pipe';
 import { CapitalizePipe } from './capitalize.pipe';
 import { TitleizePipe } from './titleize.pipe';
-import { ToIdPipe } from './to-id.pipe';
-import { LoadingComponent } from './loading/loading.component';
+import { SlugifyPipe } from './slugify.pipe';
+// TODO: Move these services out to a CoreModule
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
 import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
-import { ModalComponent } from './modal/modal.component';
-import { ModalService } from './modal/modal.service';
-import { TagInputModule } from 'ngx-chips';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
-
 @NgModule({
   imports: [
-    //HttpModule,
-    FormsModule,
     CommonModule,
-    TagInputModule
+    ReactiveFormsModule, FormsModule,
+    TagInputModule,
+    RouterModule
   ],
   declarations: [
     DerpPipe,
@@ -41,13 +42,16 @@ import { NotificationService } from 'app/common/ui-patternfly/notification-servi
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
-    ToIdPipe,
+    SlugifyPipe,
     ModalComponent,
-    EditableTagsComponent,
-    EditableTextComponent,
-    EditableTextareaComponent
+    WizardProgressBarComponent,
+    CancelConfirmationModalComponent,
+    ...SYNDESYS_EDITABLE_DIRECTIVES,
+    ...SYNDESYS_VALIDATION_DIRECTIVES
   ],
   exports: [
+    CommonModule,
+    ReactiveFormsModule, FormsModule,
     DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
@@ -56,11 +60,12 @@ import { NotificationService } from 'app/common/ui-patternfly/notification-servi
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
-    ToIdPipe,
+    SlugifyPipe,
     ModalComponent,
-    EditableTagsComponent,
-    EditableTextComponent,
-    EditableTextareaComponent
+    WizardProgressBarComponent,
+    CancelConfirmationModalComponent,
+    ...SYNDESYS_EDITABLE_DIRECTIVES,
+    ...SYNDESYS_VALIDATION_DIRECTIVES
   ],
   providers: [FormFactoryService]
 })
