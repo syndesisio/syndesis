@@ -43,7 +43,7 @@ Global options:
 
 -r  --rebase                  Fetch origin/master and try a rebase
 -h  --help                    Display this help message
-    --verbose                 Verbouse script output (set -x)
+    --verbose                 Verbose script output (set -x)
 
 Call "syndesis <module> --help" for module specific options.
 
