@@ -1206,7 +1206,7 @@
                 "properties": {
                   "query": {
                     "kind": "path",
-                    "displayName": "Query",
+                    "displayName": "SQL Statement",
                     "group": "common",
                     "required": true,
                     "type": "string",
@@ -1245,7 +1245,7 @@
                 "properties": {
                   "query": {
                     "kind": "path",
-                    "displayName": "Query",
+                    "displayName": "SQL Statement",
                     "group": "common",
                     "required": true,
                     "type": "string",
