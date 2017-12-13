@@ -33,4 +33,17 @@ public final class Optionals {
         }
         return Optional.empty();
     }
+
+    /**
+     * Returns true if none of the options is present.
+     */
+    @SafeVarargs
+    public static <T> boolean none(Optional<T>... optionals) {
+        for (int i = 0; i < optionals.length; i++) {
+            if (optionals[i].isPresent()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

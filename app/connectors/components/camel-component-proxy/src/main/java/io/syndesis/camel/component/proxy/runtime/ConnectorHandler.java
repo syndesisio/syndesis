@@ -18,6 +18,7 @@ package io.syndesis.camel.component.proxy.runtime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.syndesis.camel.component.proxy.ComponentProxyComponent;
@@ -41,7 +42,7 @@ public class ConnectorHandler implements StepHandler<Connector> {
     }
 
     @Override
-    public ProcessorDefinition handle(Connector step, ProcessorDefinition definition, SyndesisRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Connector step, ProcessorDefinition definition, SyndesisRouteBuilder builder) {
         try {
             final CamelContext context = builder.getContext();
             final TypeConverter converter = context.getTypeConverter();
@@ -101,7 +102,7 @@ public class ConnectorHandler implements StepHandler<Connector> {
             throw new RuntimeException(e);
         }
 
-        return definition;
+        return Optional.of(definition);
     }
 
     // *************************

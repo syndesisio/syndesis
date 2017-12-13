@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 import io.syndesis.integration.model.Flow;
@@ -84,12 +85,13 @@ public class SyndesisRouteBuilder extends RouteBuilder {
                     throw new IllegalStateException("No endpoint found as first step (found: " + step.getKind() + ")");
                 } else if (FromStep.class.isInstance(step)) {
                     boolean setId = route == null;
-                    route = findHandler(step).handle(step, route, this);
+
+                    route = findHandler(step).handle(step, route, this).orElse(route);
                     if (setId) {
                         route.id(name);
                     }
                 } else {
-                    addStep(route, step);
+                    route = addStep(route, step).orElse(route);
                 }
             }
 
@@ -104,17 +106,17 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         }
     }
 
-    public ProcessorDefinition addSteps(ProcessorDefinition route, Iterable<Step> steps) {
+    public Optional<ProcessorDefinition> addSteps(ProcessorDefinition route, Iterable<? extends Step> steps) {
         if (route != null && steps != null) {
             for (Step item : steps) {
-                route = addStep(route, item);
+                route = addStep(route, item).orElse(route);
             }
         }
-        return route;
+        return Optional.of(route);
     }
 
     @SuppressWarnings("unchecked")
-    public ProcessorDefinition addStep(ProcessorDefinition route, Step item) {
+    public <T extends Step> Optional<ProcessorDefinition> addStep(ProcessorDefinition route, T item) {
         if (route == null) {
             throw new IllegalArgumentException("You cannot use a " + item.getKind() + " step before you have started a flow");
         }
@@ -122,7 +124,7 @@ public class SyndesisRouteBuilder extends RouteBuilder {
         return findHandler(item).handle(item, route, this);
     }
 
-    private StepHandler findHandler(Step item) {
+    private <T extends Step> StepHandler<T> findHandler(T item) {
         for (StepHandler handler : ServiceLoader.load(StepHandler.class, getClass().getClassLoader())) {
             if (handler.canHandle(item)) {
                 return handler;

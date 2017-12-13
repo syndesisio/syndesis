@@ -46,7 +46,10 @@ public class ComponentProxyRuntimeCustomizerTest extends CamelTestSupport {
 
     @Override
     protected RoutesBuilder createRouteBuilder() throws Exception {
-        return new SyndesisRouteBuilder("classpath:ComponentProxyRuntimeCustomizerTest.yaml");
+        final String path = getClass().getSimpleName() + ".yaml";
+        final RoutesBuilder builder = new SyndesisRouteBuilder("classpath:" + path);
+
+        return builder;
     }
 
     // ***************************

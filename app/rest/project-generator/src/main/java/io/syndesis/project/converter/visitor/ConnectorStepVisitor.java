@@ -15,15 +15,18 @@
  */
 package io.syndesis.project.converter.visitor;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.core.Optionals;
 import io.syndesis.core.Predicates;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.Split;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connection;
@@ -66,6 +69,7 @@ public class ConnectorStepVisitor implements StepVisitor {
 
     @Override
     public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext visitorContext) {
+        final List<io.syndesis.integration.model.steps.Step> steps = new ArrayList<>();
         final Step step = visitorContext.getStep();
         final Connection connection = step.getConnection().orElseThrow(() -> new IllegalArgumentException("Missing connection for step:" + step));
         final Connector connector = resolveConnector(connection, visitorContext.getGeneratorContext().getDataManager());
@@ -75,26 +79,33 @@ public class ConnectorStepVisitor implements StepVisitor {
             .orElseThrow(() -> new IllegalArgumentException("Missing action for step:" + step));
 
         if (Optionals.first(action.getDescriptor().getComponentScheme(), connector.getComponentScheme()).isPresent()) {
-            return Collections.singletonList(
-                createConnector(
-                    visitorContext,
-                    step,
-                    connection,
-                    connector,
-                    action
-                )
-            );
+            // Connector
+            steps.add(createConnector(visitorContext, step, connection, connector, action));
         } else {
-            return Collections.singletonList(
-                createEndpoint(
-                    visitorContext,
-                    step,
-                    connection,
-                    connector,
-                    action
-                )
-            );
+            // Endpoint
+            steps.add(createEndpoint(visitorContext, step, connection, connector, action));
         }
+
+        // Add an inline splitter if defined
+        action.getDescriptor().getSplit()
+            .map(this::createSplitter)
+            .ifPresent(steps::add);
+
+        return steps;
+    }
+
+    // ***************************
+    // Splitter
+    // ***************************
+
+    @SuppressWarnings("unchecked")
+    private io.syndesis.integration.model.steps.Step createSplitter(Split splitter) {
+        final Optional<String> language = splitter.getLanguage();
+        final Optional<String> expression = splitter.getExpression();
+
+        return Optionals.none(language, expression)
+            ? new io.syndesis.integration.model.steps.SplitInline()
+            : new io.syndesis.integration.model.steps.SplitInline(language.orElse("simple"), expression.orElse(null));
     }
 
     // ***************************
@@ -102,7 +113,7 @@ public class ConnectorStepVisitor implements StepVisitor {
     // ***************************
 
     @SuppressWarnings("unchecked")
-    private io.syndesis.camel.component.proxy.runtime.Connector createConnector(StepVisitorContext visitorContext, Step step, Connection connection, Connector connector, ConnectorAction action) {
+    private io.syndesis.integration.model.steps.Step createConnector(StepVisitorContext visitorContext, Step step, Connection connection, Connector connector, ConnectorAction action) {
         final Map<String, String> properties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final String scheme = Optionals.first(action.getDescriptor().getComponentScheme(), connector.getComponentScheme()).get();
 
@@ -133,7 +144,7 @@ public class ConnectorStepVisitor implements StepVisitor {
     // ***************************
 
     @SuppressWarnings("unchecked")
-    private io.syndesis.integration.model.steps.Endpoint createEndpoint(StepVisitorContext visitorContext, Step step, Connection connection, Connector connector, ConnectorAction action) {
+    private io.syndesis.integration.model.steps.Step createEndpoint(StepVisitorContext visitorContext, Step step, Connection connection, Connector connector, ConnectorAction action) {
         final Map<String, String> configuredProperties = aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, String> properties = aggregate(connector.filterEndpointProperties(configuredProperties), action.filterEndpointProperties(configuredProperties));
         final String componentScheme = action.getDescriptor().getCamelConnectorPrefix();

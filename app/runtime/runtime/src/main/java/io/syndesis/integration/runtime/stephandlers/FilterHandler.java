@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Optional;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.integration.model.steps.Step;
@@ -34,12 +36,14 @@ public class FilterHandler implements StepHandler<Filter> {
     }
 
     @Override
-    public ProcessorDefinition handle(Filter step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(Filter step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
         CamelContext context = routeBuilder.getContext();
         Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, step, step.getExpression());
         FilterDefinition filter = route.filter(predicate);
 
-        return routeBuilder.addSteps(filter, step.getSteps());
+        routeBuilder.addSteps(filter, step.getSteps());
+
+        return Optional.empty();
     }
 }
 

@@ -18,6 +18,7 @@ package io.syndesis.integration.runtime.stephandlers;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Endpoint;
@@ -37,7 +38,7 @@ public class EndpointHandler implements StepHandler<Endpoint> {
     }
 
     @Override
-    public ProcessorDefinition handle(Endpoint step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(Endpoint step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
       final String uri = buildUri(step);
 
       if (!Strings.isEmpty(uri)) {
@@ -49,7 +50,7 @@ public class EndpointHandler implements StepHandler<Endpoint> {
 
       }
 
-      return route;
+      return Optional.of(route);
     }
 
     private static String buildUri(Endpoint step) {

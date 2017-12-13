@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.api;
+package io.syndesis.model;
 
-import java.util.Map;
 import java.util.Optional;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.model.ProcessorDefinition;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.core.immutable.ImmutablesStyle;
+import org.immutables.value.Value;
 
-@FunctionalInterface
-public interface SyndesisStepExtension {
-    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
+@ImmutablesStyle
+@Value.Immutable
+@JsonDeserialize(builder = Split.Builder.class)
+public interface Split {
+
+    Optional<String> getLanguage();
+
+    Optional<String> getExpression();
+
+    final class Builder extends ImmutableSplit.Builder {
+    }
 }

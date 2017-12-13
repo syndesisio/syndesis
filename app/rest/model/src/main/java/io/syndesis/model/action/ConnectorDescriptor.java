@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.Split;
 import io.syndesis.model.WithConfiguredProperties;
 import io.syndesis.model.connection.ConfigurationProperty;
 import org.immutables.value.Value;
@@ -106,4 +107,6 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
     default List<String> getConnectorCustomizers() {
         return Collections.emptyList();
     }
+
+    Optional<Split> getSplit();
 }

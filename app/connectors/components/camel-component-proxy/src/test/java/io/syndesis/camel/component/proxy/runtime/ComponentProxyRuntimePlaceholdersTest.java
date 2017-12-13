@@ -42,16 +42,19 @@ public class ComponentProxyRuntimePlaceholdersTest extends CamelTestSupport {
     }
 
     @Override
-    protected RoutesBuilder createRouteBuilder() throws Exception {
-        return new SyndesisRouteBuilder("classpath:ComponentProxyRuntimePlaceholdersTest.yaml");
-    }
-
-    @Override
     protected Properties useOverridePropertiesWithPropertiesComponent() {
         Properties properties = new Properties();
         properties.put("bean.name", "my-bean");
 
         return properties;
+    }
+
+    @Override
+    protected RoutesBuilder createRouteBuilder() throws Exception {
+        final String path = getClass().getSimpleName() + ".yaml";
+        final RoutesBuilder builder = new SyndesisRouteBuilder("classpath:" + path);
+
+        return builder;
     }
 
     // ***************************

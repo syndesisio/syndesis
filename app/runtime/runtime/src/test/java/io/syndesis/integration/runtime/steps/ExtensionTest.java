@@ -16,6 +16,7 @@
 package io.syndesis.integration.runtime.steps;
 
 import java.util.Map;
+import java.util.Optional;
 
 import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
@@ -24,8 +25,6 @@ import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import io.syndesis.integration.runtime.api.SyndesisStepExtension;
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -95,18 +94,18 @@ public class ExtensionTest extends CamelTestSupport {
         }
 
         @Override
-        public ProcessorDefinition configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters) {
-            return definition.process(new Processor() {
-                @Override
-                public void process(Exchange exchange) throws Exception {
-                    exchange.getIn().setBody(
-                        String.join("-",
-                            exchange.getIn().getBody(String.class),
-                            exchange.getIn().getHeader("ExtensionHeader", String.class),
-                            message)
-                    );
-                }
+        public Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters) {
+            ProcessorDefinition processor = definition.process(exchange -> {
+                exchange.getIn().setBody(
+                    String.join(
+                        "-",
+                        exchange.getIn().getBody(String.class),
+                        exchange.getIn().getHeader("ExtensionHeader", String.class),
+                        message)
+                );
             });
+
+            return Optional.of(processor);
         }
     }
 }

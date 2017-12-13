@@ -15,6 +15,25 @@
  */
 package io.syndesis.project.converter;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -25,7 +44,11 @@ import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.support.Strings;
 import io.syndesis.model.Dependency;
-import io.syndesis.model.action.*;
+import io.syndesis.model.Split;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.action.ExtensionAction;
+import io.syndesis.model.action.ExtensionDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -37,7 +60,12 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
-import io.syndesis.project.converter.visitor.*;
+import io.syndesis.project.converter.visitor.ConnectorStepVisitor;
+import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
+import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
+import io.syndesis.project.converter.visitor.ExtensionStepVisitor;
+import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
+import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
@@ -49,17 +77,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
@@ -628,6 +645,129 @@ public class DefaultProjectGeneratorTest {
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
+    @Test
+    public void testConnectorConvertWithSplitter() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
+                .build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
+            .build();
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TWITTER_CONNECTOR)
+                .build())
+            .action(new ConnectorAction.Builder()
+                .id("twitter-mention-action")
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .componentScheme("twitter-timeline")
+                    .putConfiguredProperty("timelineType", "MENTIONS")
+                    .putConfiguredProperty("delay", "30000")
+                    .split(new Split.Builder()
+                        .language("tokenize")
+                        .expression(",")
+                        .build())
+                    .build())
+                .build())
+            .putConfiguredProperty("accessToken", "at")
+            .putConfiguredProperty("accessTokenSecret", "ats")
+            .putConfiguredProperty("consumerKey", "ck")
+            .putConfiguredProperty("consumerSecret", "cs")
+            .build();
+
+        testConnectorConvertWithSplitter(newIntegration(step1, step2));
+    }
+
+    @Test
+    public void testConnectorConvertWithSplitterFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-with-splitter-integration.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
+        }
+    }
+
+    public void testConnectorConvertWithSplitter(Integration integration) throws Exception {
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Path runtimeDir = generate(integration, generatorProperties);
+
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-with-splitter-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
+    @Test
+    public void testConnectorConvertWithDefaultSplitter() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
+                .build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
+            .build();
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TWITTER_CONNECTOR)
+                .build())
+            .action(new ConnectorAction.Builder()
+                .id("twitter-mention-action")
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .componentScheme("twitter-timeline")
+                    .putConfiguredProperty("timelineType", "MENTIONS")
+                    .putConfiguredProperty("delay", "30000")
+                    .split(new Split.Builder().build())
+                    .build())
+                .build())
+            .putConfiguredProperty("accessToken", "at")
+            .putConfiguredProperty("accessTokenSecret", "ats")
+            .putConfiguredProperty("consumerKey", "ck")
+            .putConfiguredProperty("consumerSecret", "cs")
+            .build();
+
+        testConnectorConvertWithDefaultSplitter(newIntegration(step1, step2));
+    }
+
+    @Test
+    public void testConnectorConvertWithDefaultSplitterFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-with-default-splitter-integration.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
+        }
+    }
+
+    public void testConnectorConvertWithDefaultSplitter(Integration integration) throws Exception {
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Path runtimeDir = generate(integration, generatorProperties);
+
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-with-default-splitter-syndesis.yml");
         assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
 
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {

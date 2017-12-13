@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.api;
+package io.syndesis.integration.runtime.steps;
 
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.model.ProcessorDefinition;
+import io.syndesis.integration.model.SyndesisModel;
 
-@FunctionalInterface
-public interface SyndesisStepExtension {
-    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
+public class SplitInlineYamlTest extends SplitInlineTest {
+
+    @Override
+    protected SyndesisModel createSyndesis() throws IOException {
+        return loadTestYaml();
+    }
 }
