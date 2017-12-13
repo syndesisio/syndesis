@@ -61,7 +61,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -339,8 +338,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             return false;
         }
 
-        List<Integration.Status> inactiveStatus = Arrays.asList(Integration.Status.Deleted, Integration.Status.Deactivated);
-        if (integration.getDesiredStatus().isPresent() && inactiveStatus.contains(integration.getDesiredStatus().get())) {
+        if (integration.getDesiredStatus().isPresent() && Integration.Status.Deleted.equals(integration.getDesiredStatus().get())) {
             return false;
         }
 
