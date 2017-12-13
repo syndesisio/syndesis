@@ -17,10 +17,21 @@ minishift::usage() {
     --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
+-o  --open                    Open Syndesis in the browser
 EOT
 }
 
 minishift::run() {
+    if [ $(hasflag --open -o) ]; then
+        local cmd="$(probe_commands open xdg-open chrome firefox)"
+        local url="$(minishift openshift service syndesis-oauthproxy --url)"
+        if [ -z "$cmd" ]; then
+            echo "Cannot find command for opening URL:"
+            echo $url
+            exit 1
+        fi
+        exec $cmd $url
+    fi
     if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
         # Only warning if minishift is not installed
         minishift delete --clear-cache --force
@@ -76,4 +87,14 @@ minishift::run() {
     if [ $(hasflag --watch) ]; then
         exec watch oc get pods
     fi
+}
+
+probe_commands() {
+    for cmd in $@; do
+      local ret=$(which $cmd 2>/dev/null)
+      if [ $? -eq 0 ]; then
+          echo $ret
+          return
+      fi
+    done
 }

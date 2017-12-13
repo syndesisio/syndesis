@@ -43,6 +43,7 @@ Global options:
 
 -r  --rebase                  Fetch origin/master and try a rebase
 -h  --help                    Display this help message
+    --debug                   Debug this script (set -x)
 
 Call "syndesis <module> --help" for module specific options.
 
@@ -210,5 +211,9 @@ function run {
     source "$cmd_dir/$command"
     eval "${command}::run"
 }
+
+if [ $(hasflag --debug) ]; then
+    set -x
+fi
 
 run $@
