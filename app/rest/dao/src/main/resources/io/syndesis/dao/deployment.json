@@ -823,7 +823,7 @@
           "javaType" : "java.lang.Boolean",
           "deprecated" : false,
           "secret" : false,
-          "description" : "Skip Certificate check for development environment"
+          "description" : "For convenience in only development environments. Do not set for secure production environments."
         },
         "brokerCertificate" : {
           "kind" : "property",
