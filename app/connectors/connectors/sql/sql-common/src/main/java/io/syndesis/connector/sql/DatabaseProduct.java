@@ -25,7 +25,7 @@ package io.syndesis.connector.sql;
  *
  */
 public enum DatabaseProduct {
-    APACHE_DERBY, ORACLE, POSTGRESQL;
+    APACHE_DERBY, ORACLE, POSTGRESQL, MYSQL;
 
     /**
      * Can be used to convert '_' to ' ' in the enum name.

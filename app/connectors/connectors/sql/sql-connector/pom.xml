@@ -95,8 +95,12 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
     <!-- The Oracle Driver needs to be added manually by user, for licensing compliance
-    it can not be shipped. We need to provide some mechnism so the integrator can upload
+    it can not be shipped. We need to provide some mechanism so the integrator can upload
     this jar. (http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html)
     <dependency>
       <groupId>oracle</groupId>
