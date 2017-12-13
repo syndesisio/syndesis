@@ -173,7 +173,7 @@ Here a brief descriptions of the options a developer has:
 
 ##### Annotated POJO
 This is the simplest form of integration. You are allowed to write your code as you prefer and to be plugged as a Syndesis Extension, you just need to annotate the method you want to be invoked, with ` @SyndesisExtensionAction( id = "myId", name = "myExtension",  description = "bla" )`.  
-When you are building your extension project, using `syndesis-maven-plugin`, the plugin will look for annotated methods, and when it will find one, it will generated metadata, that it will put inside a `META-INF/syndesis/extension-definition.json` file, defining all the important information, for Syndesis Runtime to recognize your code as a Syndesis Extension and allow you to reference it in the UI.  
+When you are building your extension project, using `syndesis-maven-plugin`, the plugin will look for annotated methods, and when it will find one, it will generated metadata, that it will put inside a `META-INF/syndesis/syndesis-extension-definition.json` file, defining all the important information, for Syndesis Runtime to recognize your code as a Syndesis Extension and allow you to reference it in the UI.  
 From a runtime point of view, methods annotated this way, behaves entirely as Camel `bean` component, that allows you to use both static and non-static methods in your Camel routes.
 
 ##### Implementing `SyndesisStepExtension` Interface

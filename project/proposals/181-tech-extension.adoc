@@ -87,7 +87,7 @@ The archive is bundled with an `Extension Metadata` that should be placed in
 
 [source]
 ----
-META-INF/syndesis/extension-definition.json
+META-INF/syndesis/syndesis-extension-definition.json
 ----
 
 An example of complete extension metadata is provided below (it contains properties that will be filled in server-side):
@@ -139,7 +139,7 @@ The archive layout should then looks like:
 
 [source]
 ----
-META-INF/syndesys/extension-definition.json
+META-INF/syndesys/syndesis-extension-definition.json
 com/example/MyExtension.class
 ...
 lib/oracle-jdbc.jar

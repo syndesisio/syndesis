@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExtensionAnalyzer {
 
-    private static final String MANIFEST_LOCATION = "META-INF/syndesis/extension-definition.json";
+    private static final String MANIFEST_LOCATION = "META-INF/syndesis/syndesis-extension-definition.json";
     private static final ObjectMapper MAPPER = Json.mapper();
 
     /**
