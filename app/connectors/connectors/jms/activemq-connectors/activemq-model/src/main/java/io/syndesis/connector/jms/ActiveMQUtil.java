@@ -32,8 +32,9 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSslConnectionFactory;
-import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for ActiveMQ Connection factory configuration.
@@ -41,6 +42,8 @@ import org.apache.camel.util.ObjectHelper;
  * @author dhirajsb
  */
 public class ActiveMQUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ActiveMQUtil.class);
 
     public static KeyManager[] createKeyManagers(String clientCertificate) throws GeneralSecurityException, IOException {
         final KeyStore clientKs = createKeyStore("amq-client", clientCertificate);
@@ -69,8 +72,7 @@ public class ActiveMQUtil {
         return keyStore;
     }
 
-    public static ActiveMQConnectionFactory createActiveMQConnectionFactory(String brokerUrl, String username, String
-            password, String brokerCertificate, String clientCertificate) {
+    public static ActiveMQConnectionFactory createActiveMQConnectionFactory(String brokerUrl, String username, String password, String brokerCertificate, String clientCertificate, boolean skipCertificateCheck) {
         final ActiveMQConnectionFactory connectionFactory;
         if (brokerUrl.contains("ssl:")) {
             if (ObjectHelper.isEmpty(username)) {
@@ -94,8 +96,14 @@ public class ActiveMQUtil {
                 // create client trust manager
                 final TrustManager[] trustManagers;
                 if (ObjectHelper.isEmpty(brokerCertificate)) {
-                    // use a trust all TrustManager
-                    trustManagers = new TrustManager[] {new TrustAllTrustManager()};
+                    if (skipCertificateCheck) {
+                        // use a trust all TrustManager
+                        LOG.warn("Skipping Certificate check for Broker " + brokerUrl);
+                        trustManagers = new TrustManager[]{new TrustAllTrustManager()};
+                    } else {
+                        LOG.debug("Using default JVM Trust Manager for Broker " + brokerUrl);
+                        trustManagers = null;
+                    }
                 } else {
                     trustManagers = createTrustManagers(brokerCertificate);
                 }
@@ -103,7 +111,7 @@ public class ActiveMQUtil {
                 ((ActiveMQSslConnectionFactory)connectionFactory).setKeyAndTrustManagers(keyManagers, trustManagers, new SecureRandom());
 
             } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeCamelException("SSL configuration error: " + e.getMessage(), e);
+                throw new IllegalArgumentException("SSL configuration error: " + e.getMessage(), e);
             }
         } else {
             // non-ssl connection

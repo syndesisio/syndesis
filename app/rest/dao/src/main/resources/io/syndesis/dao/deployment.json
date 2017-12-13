@@ -771,7 +771,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
-          "description": "Broker URL"
+          "description": "Location to send data to or obtain data from."
         },
         "username": {
           "kind": "property",
@@ -784,7 +784,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
-          "description": "Authorization credential user name"
+          "description": "Access the broker with this user’s authorization credentials."
         },
         "password": {
           "kind": "property",
@@ -797,7 +797,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
-          "description": "Authorization credential password"
+          "description": "Password for the specified user account."
         },
         "clientID" : {
           "kind" : "property",
@@ -810,14 +810,53 @@
           "javaType" : "java.lang.String",
           "deprecated" : false,
           "secret" : false,
-          "description" : "Client ID for durable subscriptions"
+          "description" : "Required for connections to close and reopen without missing messages. Connection destination must be a topic."
+        },
+        "skipCertificateCheck" : {
+          "kind" : "property",
+          "displayName" : "Skip Certificate Check",
+          "group" : "security",
+          "label" : "common,security",
+          "required" : false,
+          "componentProperty": true,
+          "type" : "boolean",
+          "javaType" : "java.lang.Boolean",
+          "deprecated" : false,
+          "secret" : false,
+          "description" : "Skip Certificate check for development environment"
+        },
+        "brokerCertificate" : {
+          "kind" : "property",
+          "displayName" : "Broker Certificate",
+          "group" : "security",
+          "label" : "common,security",
+          "required" : false,
+          "componentProperty": true,
+          "type" : "boolean",
+          "javaType" : "java.lang.String",
+          "deprecated" : false,
+          "secret" : false,
+          "description" : "AMQ Broker X.509 PEM Certificate"
+        },
+        "clientCertificate" : {
+          "kind" : "property",
+          "displayName" : "Client Certificate",
+          "group" : "security",
+          "label" : "common,security",
+          "required" : false,
+          "componentProperty": true,
+          "type" : "boolean",
+          "javaType" : "java.lang.String",
+          "deprecated" : false,
+          "secret" : false,
+          "description" : "AMQ Client X.509 PEM Certificate"
         }
       },
       "actions": [
         {
           "id": "io.syndesis:activemq-publish-connector:latest",
           "name": "Publish messages",
-          "description": "Publish one-way messages on an AMQ Queue or Topic.",
+          "description": "Send data to the destination you specify.",
           "tags": [],
           "pattern": "To",
           "actionType": "connector",
@@ -846,7 +885,7 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                    "description": "Name of the queue or topic to send data to."
                   },
                   "destinationType": {
                     "kind": "path",
@@ -869,7 +908,7 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": "queue",
-                    "description": "The kind of destination to use"
+                    "description": "By default, the destination is a queue."
                   },
                   "persistent": {
                     "kind": "parameter",
@@ -883,7 +922,7 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": true,
-                    "description": "Flag used to enable/disable message persistence."
+                    "description": "Message delivery is guaranteed when Persistent is selected."
                   }
                 }
               }
@@ -893,7 +932,7 @@
         {
           "id": "io.syndesis:activemq-subscribe-connector:latest",
           "name": "Subscribe for messages",
-          "description": "Receive messages that are sent to a queue or topic you specify.",
+          "description": "Receive data from the destination you specify.",
           "tags": [],
           "pattern": "From",
           "actionType": "connector",
@@ -922,7 +961,7 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "description": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name."
+                    "description": "Name of the queue or topic to receive data from."
                   },
                   "destinationType": {
                     "kind": "path",
@@ -945,11 +984,11 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": "queue",
-                    "description": "The kind of destination to use"
+                    "description": "By default, the destination is a queue."
                   },
                   "durableSubscriptionId": {
                     "kind": "parameter",
-                    "displayName": "Durable Subscription Id",
+                    "displayName": "Durable Subscription ID",
                     "group": "consumer",
                     "label": "consumer",
                     "required": false,
@@ -958,7 +997,7 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "description": "Sets the durable subscription Id required for durable topics."
+                    "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic."
                   },
                   "messageSelector": {
                     "kind": "parameter",
@@ -971,21 +1010,7 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "description": "Sets the JMS Message selector syntax."
-                  },
-                  "durable": {
-                    "kind": "parameter",
-                    "displayName": "Durable",
-                    "group": "consumer",
-                    "label": "consumer",
-                    "required": false,
-                    "type": "boolean",
-                    "javaType": "boolean",
-                    "deprecated": false,
-                    "secret": false,
-                    "defaultValue": false,
-                    "componentProperty": false,
-                    "description": "Sets topic consumer to durable."
+                    "description": "Specify a filter expression to receive only data that meets certain criteria."
                   }
                 }
               }
@@ -995,7 +1020,7 @@
         {
           "id": "io.syndesis:activemq-request-connector:latest",
           "name": "Request response using messages",
-          "description": "Request response using two-way messages on an AMQ Queue or Topic.",
+          "description": "Send data to the destination you specify and receive a response.",
           "tags": [],
           "pattern": "To",
           "actionType": "connector",
@@ -1015,7 +1040,7 @@
                 "properties": {
                   "destinationName": {
                     "kind": "path",
-                    "displayName": "Destination Name",
+                    "displayName": "Name of the queue or topic to send data to.",
                     "group": "common",
                     "required": true,
                     "type": "string",
@@ -1047,7 +1072,7 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": "queue",
-                    "description": "The kind of destination to use"
+                    "description": "By default, the destination is a queue."
                   },
                   "messageSelector": {
                     "kind": "parameter",
@@ -1060,7 +1085,7 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "description": "Sets the JMS Message selector syntax."
+                    "description": "Specify a filter expression to receive only responses that meet certain criteria."
                   },
                   "namedReplyTo": {
                     "kind": "parameter",
@@ -1073,7 +1098,7 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "description": "Sets the reply to destination name used for InOut producer endpoints."
+                    "description": "The destination sends the response to this queue or topic."
                   },
                   "persistent": {
                     "kind": "parameter",
@@ -1087,7 +1112,7 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": true,
-                    "description": "Flag used to enable/disable message persistence."
+                    "description": "Message delivery is guaranteed when Persistent is selected."
                   },
                   "responseTimeOut": {
                     "kind": "parameter",
@@ -1101,7 +1126,7 @@
                     "secret": false,
                     "componentProperty": false,
                     "defaultValue": 5000,
-                    "description": "Sets the amount of time we should wait before timing out a InOut response."
+                    "description": "Amount of time a connection waits for a response message before throwing a runtime exception."
                   }
                 }
               }

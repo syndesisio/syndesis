@@ -42,6 +42,9 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
     @Metadata(label = "basic", description = "Client ID for durable subscriptions")
     private String clientID;
 
+    @Metadata(label = "basic", description = "Skip Certificate check for development environment")
+    private boolean skipCertificateCheck;
+
     @Metadata(label = "basic", description = "AMQ Broker X.509 PEM Certificate")
     private String brokerCertificate;
 
@@ -68,7 +71,7 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
         }
 
         // create ActiveMQ Connection Factory
-        final ActiveMQConnectionFactory connectionFactory = ActiveMQUtil.createActiveMQConnectionFactory(this.brokerUrl, username, this.password, this.brokerCertificate, clientCertificate);
+        final ActiveMQConnectionFactory connectionFactory = ActiveMQUtil.createActiveMQConnectionFactory(this.brokerUrl, username, this.password, this.brokerCertificate, clientCertificate, skipCertificateCheck);
         SjmsComponent delegate = getCamelContext().getComponent(scheme, SjmsComponent.class);
         delegate.setConnectionFactory(connectionFactory);
 
@@ -121,6 +124,17 @@ public abstract class AbstractActiveMQConnector extends DefaultConnectorComponen
 
     public String getBrokerCertificate() {
         return brokerCertificate;
+    }
+
+    public boolean isSkipCertificateCheck() {
+        return skipCertificateCheck;
+    }
+
+    /**
+     * Skip Certificate check for development environment.
+     */
+    public void setSkipCertificateCheck(boolean skipCertificateCheck) {
+        this.skipCertificateCheck = skipCertificateCheck;
     }
 
     /**
