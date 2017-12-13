@@ -57,7 +57,11 @@ public class ExtensionAnalyzer {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
 
-        return MAPPER.readValue(entry, Extension.class);
+        Extension extension = MAPPER.readValue(entry, Extension.class);
+        if (extension == null) {
+            throw new IllegalArgumentException("Cannot extract Extension from manifest file (" + MANIFEST_LOCATION + ") inside JAR");
+        }
+        return extension;
     }
 
     @SuppressWarnings("PMD.EmptyCatchBlock")
