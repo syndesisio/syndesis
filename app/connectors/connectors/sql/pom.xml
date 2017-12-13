@@ -28,7 +28,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <camel.version>2.20.1</camel.version>
+        <postgresql.version>9.4-1206-jdbc4</postgresql.version>
+        <mysql.version>6.0.6</mysql.version>
     </properties>
 
     <modules>
