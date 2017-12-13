@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NotificationModule } from 'patternfly-ng';
 import { TagInputModule } from 'ngx-chips';
@@ -28,8 +28,8 @@ import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
 @NgModule({
   imports: [
-    FormsModule,
     CommonModule,
+    ReactiveFormsModule, FormsModule,
     TagInputModule,
     RouterModule
   ],
@@ -51,6 +51,7 @@ import { NavigationService } from './navigation.service';
   ],
   exports: [
     CommonModule,
+    ReactiveFormsModule, FormsModule,
     DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,

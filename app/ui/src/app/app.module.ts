@@ -1,14 +1,11 @@
 import {
   APP_INITIALIZER,
   NgModule,
-  NgZone,
   InjectionToken,
-  NO_ERRORS_SCHEMA
 } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import {
   AlertModule,
@@ -27,7 +24,7 @@ import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './approuting.module';
+import { AppRoutingModule } from './app.routing';
 import { CanDeactivateGuard, SyndesisCommonModule } from './common';
 import { UserService } from './common/user.service';
 import { ConfigService } from './config.service';
@@ -78,27 +75,10 @@ export function mapperRestangularProvider(
   });
 }
 
-/**
- * The main module of this library. Example usage:
- *
- * ```typescript
- * import { AppModule } from 'syndesis-ui';
- *
- * &commat;NgModule({
- *   imports: [
- *     AppModule.forRoot()
- *   ]
- * })
- * class AppModule {}
- * ```
- *
- */
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    // TODO - commenting this out for now as it seems to prevent the angular router from clearing it's child elements on route changes
-    //BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
@@ -136,7 +116,6 @@ export function mapperRestangularProvider(
     UserService,
     CanDeactivateGuard
   ],
-  schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -2,22 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { ToolbarModule, ListModule } from 'patternfly-ng';
 import { FileUploadModule } from 'ng2-file-upload-base/src';
-
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
-import { CustomizationsComponent } from './customizations.component';
 
-import {
-  ApiConnectorAuthComponent,
-  ApiConnectorSwaggerUploadComponent,
-  ApiConnectorCreateComponent,
-  ApiConnectorInfoComponent,
-  ApiConnectorReviewComponent,
-  ApiConnectorListComponent,
-  ApiConnectorDetailComponent,
-  ApiConnectorService, ApiConnectorStore,
-} from './api-connector';
+import { ApiConnectorModule, ApiConnectorListComponent } from './api-connector';
+import { CustomizationsComponent } from './customizations.component';
 
 import {
   TechExtensionsListComponent,
@@ -44,65 +33,36 @@ const routes: Routes = [
         redirectTo: 'api-connector'
       }
     ]
-  },
-  {
+  // TODO: Move to its own NgRoutingModule
+  }, {
     path: 'tech-extensions/import/:id',
     component: TechExtensionImportComponent
-  },
-  {
+  }, {
     path: 'tech-extensions/import',
     component: TechExtensionImportComponent
-  },
-  {
+  }, {
     path: 'tech-extensions/:id',
     component: TechExtensionDetailComponent
-  },
-  {
-    path: 'api-connector/create/:template',
-    component: ApiConnectorCreateComponent
-  },
-  {
-    path: 'api-connector/create/:template/:step',
-    component: ApiConnectorCreateComponent
-  },
-  {
-    path: 'api-connector/:id',
-    component: ApiConnectorDetailComponent
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    SyndesisCommonModule,
     PatternflyUIModule,
-    ToolbarModule,
-    ListModule,
-    RouterModule.forChild(routes),
     FileUploadModule,
-    ReactiveFormsModule,  // FIXME: This should be made available from SyndesisCommonModule
-    FormsModule,          // FIXME: This should be made available from SyndesisCommonModule
-    SyndesisCommonModule
+    RouterModule.forChild(routes),
+    ApiConnectorModule,
   ],
-  exports: [],
+  exports: [RouterModule],
   declarations: [
     CustomizationsComponent,
-    ApiConnectorListComponent,
-    ApiConnectorCreateComponent,
-    ApiConnectorDetailComponent,
-    ApiConnectorAuthComponent,
-    ApiConnectorSwaggerUploadComponent,
-    ApiConnectorCreateComponent,
-    ApiConnectorInfoComponent,
-    ApiConnectorReviewComponent,
-
+    // TODO: Move this out into its own NgModule
     TechExtensionsListComponent,
     TechExtensionImportComponent,
     TechExtensionDeleteModalComponent,
     TechExtensionDetailComponent
-  ],
-  providers: [
-    ApiConnectorService,
-    ApiConnectorStore
   ]
 })
 export class CustomizationsModule { }

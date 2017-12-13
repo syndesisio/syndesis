@@ -1,1 +1,1 @@
-export * from './generics';
+export * from './platform.models';

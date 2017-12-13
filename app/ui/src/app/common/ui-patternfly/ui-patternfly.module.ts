@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { TextMaskModule } from 'angular2-text-mask';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ToolbarModule, CardModule } from 'patternfly-ng';
+import { ToolbarModule, CardModule, ListModule } from 'patternfly-ng';
 import { SyndesisFormComponent } from './syndesis-form-control.component';
 import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
 
@@ -18,7 +18,8 @@ import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
     TooltipModule.forRoot(),
     RouterModule,
     ToolbarModule,
-    CardModule
+    CardModule,
+    ListModule
   ],
   declarations: [
     SyndesisFormComponent,
@@ -28,7 +29,9 @@ import { ListToolbarComponent } from './list-toolbar/list-toolbar.component';
     DynamicFormsCoreModule,
     SyndesisFormComponent,
     ListToolbarComponent,
-    CardModule
+    ToolbarModule,
+    CardModule,
+    ListModule
   ]
 })
 export class PatternflyUIModule {}
