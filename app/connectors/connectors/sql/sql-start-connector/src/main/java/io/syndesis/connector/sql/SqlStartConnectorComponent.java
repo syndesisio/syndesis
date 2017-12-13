@@ -16,15 +16,17 @@
 package io.syndesis.connector.sql;
 
 import io.syndesis.connector.sql.stored.JSONBeanUtil;
+
+import org.apache.camel.Endpoint;
 import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.Processor;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.component.connector.DefaultConnectorComponent;
+import org.apache.camel.component.connector.SchedulerTimerConnectorEndpoint;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -48,6 +50,11 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
         super(COMPONENT_NAME, SqlStartConnectorComponent.class.getName());
     }
 
+    @Override
+    protected Endpoint createEndpoint(final String uri, final String remaining, final Map<String, Object> parameters) throws Exception {
+        final SchedulerTimerConnectorEndpoint endpoint = (SchedulerTimerConnectorEndpoint) super.createEndpoint(uri, remaining, parameters);
+        return new RecordSplitterEndpoint(uri, this, endpoint, null, null);
+    }
 
     @Override
     public Processor getBeforeProducer() {
@@ -58,21 +65,6 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
                 final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
                 exchange.getIn().setBody(properties);
             }
-        };
-        return processor;
-    }
-
-    @Override
-    public Processor getAfterProducer() {
-        @SuppressWarnings("unchecked")
-        final Processor processor = exchange -> {
-            String jsonBean = "";
-            if (exchange.getIn().getBody(List.class) != null) {
-                jsonBean = JSONBeanUtil.toJSONBean(exchange.getIn().getBody(List.class));
-            } else {
-                jsonBean = JSONBeanUtil.toJSONBean(exchange.getIn().getBody(Map.class));
-            }
-            exchange.getIn().setBody(jsonBean);
         };
         return processor;
     }

@@ -25,6 +25,8 @@ hs_err_pid*
 /.idea
 .idea
 *.iml
+*.ipr
+*.iws
 .project
 .classpath
 *.launch

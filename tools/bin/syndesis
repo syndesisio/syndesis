@@ -1,0 +1,214 @@
+#!/bin/bash
+
+# ===================================================================================================
+# Syndesis Build Script
+#
+# See `build.sh --help` for usage information
+# ==================================================================================================
+
+# Exit if any error occurs
+# Fail on a single failed command in a pipeline (if supported)
+set -o pipefail
+
+# Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
+set -eu
+
+# Save global script args
+ARGS="$@"
+
+# Display a help message.
+display_help() {
+    local command="${1:-}"
+    local cmd_dir="$(basedir)/commands"
+    cat - <<EOT
+Syndesis Developer Tool
+EOT
+    if [ -z "${command}" ]; then
+        cat <<EOT
+
+Usage: syndesis <command> [... options ...]
+
+with the following commands
+
+EOT
+        for cmd in $(ls $cmd_dir); do
+          source $cmd_dir/$cmd
+          printf "   %-15s  %s\n" $cmd "$($cmd::description)"
+        done
+        cat - <<EOT
+
+"build" is the default command if no command is specified.
+
+Global options:
+
+-r  --rebase                  Fetch origin/master and try a rebase
+-h  --help                    Display this help message
+
+Call "syndesis <module> --help" for module specific options.
+
+Examples:
+
+* Build only backend modules, fast               build.sh --backend --flash
+* Build only UI                                  build.sh -m ui
+* Build only images with OpenShift S2I, fast     build.sh --images --s2i -f
+* Build only the rest and verifier image         build.sh --module rest,verifier --s2i
+* Build for system test                          build.sh system-test
+* Start Minishift afresh                         build.sh minishift --full-reset --install
+* Setup debug port forward for rest pod          build.sh dev --debug rest
+EOT
+    else
+        cat <<EOT
+
+Usage: syndesis $command [... options ...]
+
+EOT
+        source $cmd_dir/$command
+        echo "Options for $command:"
+        echo -e "$($command::usage)"
+    fi
+}
+
+# Dir where this script is located
+basedir() {
+    # Default is current directory
+    local script=${BASH_SOURCE[0]}
+
+    # Resolve symbolic links
+    if [ -L $script ]; then
+        if readlink -f $script >/dev/null 2>&1; then
+            script=$(readlink -f $script)
+        elif readlink $script >/dev/null 2>&1; then
+            script=$(readlink $script)
+        elif realpath $script >/dev/null 2>&1; then
+            script=$(realpath $script)
+        else
+            echo "ERROR: Cannot resolve symbolic link $script"
+            exit 1
+        fi
+    fi
+
+    local dir=$(dirname "$script")
+    local full_dir=$(cd "${dir}" && pwd)
+    echo ${full_dir}
+}
+
+appdir() {
+  local dir=$(basedir)
+  local full_dir=$(cd "$dir/../../app" && pwd)
+  echo ${full_dir}
+}
+
+# Checks if a flag is present in the arguments.
+hasflag() {
+    filters="$@"
+    for var in $ARGS; do
+        for filter in $filters; do
+          if [ "$var" = "$filter" ]; then
+              echo 'true'
+              return
+          fi
+        done
+    done
+}
+
+# Read the value of an option.
+readopt() {
+    filters="$@"
+    next=false
+    for var in $ARGS; do
+        if $next; then
+            echo $var
+            break;
+        fi
+        for filter in $filters; do
+            if [[ "$var" = ${filter}* ]]; then
+                local value="${var//${filter}=/}"
+                if [ "$value" != "$var" ]; then
+                    echo $value
+                    return
+                fi
+                next=true
+            fi
+        done
+    done
+}
+
+
+check_error() {
+    local msg="$*"
+    if [ "${msg//ERROR/}" != "${msg}" ]; then
+        echo $msg
+        exit 1
+    fi
+}
+
+# ======================================================
+# Git update functions
+git_rebase_upstream() {
+  echo "git fetch upstream master"
+  git fetch upstream master
+  echo -n "git rebase upstream/master"
+  if ! git rebase upstream/master; then
+    echo " (failed)"
+    echo "git stash"
+    git stash
+    echo "git rebase upstream/master"
+    git rebase upstream/master
+    echo "git stash pop"
+    git stash pop
+  else
+    echo
+  fi
+}
+
+function run {
+    local first_arg=${1:-}
+    local cmd_dir="$(basedir)/commands"
+    local command
+    if [ -n "${first_arg}" ] && [[ ${first_arg} != -* ]]; then
+        command="$first_arg"
+        if [ ! -f "$cmd_dir/$command" ]; then
+            echo
+            echo ">>>> Unknown command '$command'"
+            echo
+            display_help
+            exit 1
+        fi
+    fi
+
+    # Check for the mode (backwards compatibility)
+    mode=$(readopt --mode)
+    if [ -n "${mode}" ]; then
+      command="${mode}"
+    fi
+
+
+    if [ -z "${command:-}" ]; then
+        # Try to detect command
+        for cand in $(ls $cmd_dir); do
+            if [ $(hasflag "--$cand") ]; then
+                command=$cand
+                break
+            fi
+        done
+    fi
+
+    if [ "${command:-}" == "help" ] || [ $(hasflag --help -h) ]; then
+        display_help ${command:-}
+        exit 0
+    fi
+
+    if [ -z "${command:-}" ]; then
+        command="build"
+    fi
+
+    # Git rebase if requested
+    if [ $(hasflag --rebase -r) ]; then
+        git_rebase_upstream
+    fi
+
+    source "$cmd_dir/$command"
+    eval "${command}::run"
+}
+
+run $@

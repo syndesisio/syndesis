@@ -18,6 +18,7 @@ package io.syndesis.model.connection;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
@@ -52,6 +53,8 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
 
     @Override
     Map<String, String> getConfiguredProperties();
+
+    OptionalInt getUses();
 
     default Builder builder() {
         return new Builder().createFrom(this);

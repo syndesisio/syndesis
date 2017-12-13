@@ -1,0 +1,211 @@
+#!/bin/bash
+
+# All modules, in the right build order
+ALL_MODULES="connectors verifier runtime rest s2i ui tests"
+POD_MODULES="verifier rest ui"
+MODULES=(
+  "ui"
+  "connectors"
+  "runtime:connectors"
+  "verifier:connectors"
+  "rest:connectors runtime"
+  "s2i:rest runtime connectors"
+  "tests:connectors runtime rest s2i"
+)
+
+build::description() {
+    echo "Build Syndesis"
+}
+
+build::usage() {
+    cat <<EOT
+-b  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
+    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-m  --module <m1>,<m2>, ..    Build modules
+                              Modules: ui, rest, connectors, s2i, verifier, runtime
+-d  --dependencies            Build also all project the specified module depends on
+    --init                    Install top-level parent pom, too. Only needed when used with -m
+    --skip-tests              Skip unit and system test execution
+    --skip-checks             Disable all checks
+-f  --flash                   Skip checks and tests execution (fastest mode)
+-i  --image-mode  <mode>      <mode> can be
+                              - "none"      : No images are build (default)
+                              - "openshift" : Build for OpenShift image streams
+                              - "docker"    : Build against a plain Docker daemon
+                              - "auto"      : Automatically detect whether to use "s2i" or "docker"
+    --docker                  == --image-mode docker
+    --openshift               == --image-mode openshift
+-p  --project <project>       Specifies the project to create images in when using '--images s2i'
+-k  --kill-pods               Kill pods after the image has been created.
+                              Useful when building with image-mode docker
+-c  --clean                   Run clean builds (mvn clean)
+-b  --batch-mode              Run mvn in batch mode
+EOT
+
+}
+
+build::run() {
+    call_maven "$(maven_args)"
+}
+
+maven_args() {
+    local project=${1:-}
+    local args=""
+
+    if [ -n "$(hasflag --flash -f)" ]; then
+        args="$args -Pflash"
+    fi
+
+    if [ -n "$(hasflag --skip-tests)" ]; then
+        args="$args -DskipTests"
+    fi
+
+    if [ -n "$(hasflag --skip-checks)" ]; then
+        args="$args -Pskip-checks"
+    fi
+
+    if [ -n "$(hasflag --batch-mode -b)" ]; then
+        args="$args --batch-mode"
+    fi
+
+    local image_mode="$(readopt --image-mode -i)"
+    if [ -z "${image_mode}" ]; then
+      if [ $(hasflag --docker) ]; then
+          image_mode="docker"
+      elif [ $(hasflag --openshift --s2i) ]; then
+          image_mode="openshift"
+      fi
+    fi
+    if [ "${image_mode}" != "none" ]; then
+        if [ -n "$(hasflag --images)" ] || [ -n "${image_mode}" ]; then
+            #Build images
+            args="$args -Pimage"
+            if [ -n "${image_mode}" ]; then
+                if [ "${image_mode}" == "openshift" ] || [ "${image_mode}" == "s2i" ]; then
+                    args="$args -Dfabric8.mode=openshift"
+                elif [ "${image_mode}" == "docker" ]; then
+                    args="$args -Dfabric8.mode=kubernetes"
+                elif [ "${image_mode}" != "auto" ]; then
+                    echo "ERROR: Invalid --image-mode ${image_mode}. Only 'none', 'openshift', 'docker' or 'auto' supported".
+                    exit 1
+                fi
+            fi
+        fi
+    fi
+
+    if [ -z "$project" ]; then
+        project="$(readopt --project -p)"
+    fi
+    if [ -n "${project}" ]; then
+        args="$args -Dfabric8.namespace=${project}"
+    fi
+
+    if [ -n "$(hasflag --clean -c)" ]; then
+        args="$args clean"
+    fi
+
+    local goals="$(readopt --goals)"
+    if [ -n "${goals}" ]; then
+        args="$args ${goals//,/ }"
+    else
+        args="$args install"
+    fi
+
+    echo $args
+}
+
+extract_modules() {
+    local modules=""
+
+    if [ "$(hasflag --backend -b)" ]; then
+        modules="$modules connectors runtime rest verifier"
+    fi
+
+    if [ "$(hasflag --images)" ]; then
+        modules="$modules ui rest verifier s2i"
+    fi
+
+    local arg_modules=$(readopt --module -m);
+    if [ -n "${arg_modules}" ]; then
+        modules="$modules ${arg_modules//,/ }"
+    fi
+
+    if [ "$(hasflag --dependencies -d)" ]; then
+        local extra_modules=""
+        for module in $modules; do
+            for m in "${MODULES[@]}"; do
+              local k=${m%%:*}
+              if [ "$module" == $k ]; then
+                  local v=${m#*:}
+                  extra_modules="${extra_modules} $v"
+              fi
+            done
+        done
+        modules="$modules $extra_modules"
+    fi
+    if [ -z "$modules" ]; then
+      return
+    fi
+    # Unique modules
+    local unique_modules=$(echo $modules | xargs -n 1 | sort -u | xargs | awk '$1=$1')
+    echo $(order_modules "$unique_modules")
+}
+
+order_modules() {
+    # Fix order
+    local modules="$1"
+    # All modules in the proper order
+    local ret=$ALL_MODULES
+    for cm in "${MODULES[@]}"; do
+      local check_module=${cm%%:*}
+      # Check if $check_module is in the module list
+      if [ -n "${modules##*${check_module}*}" ]; then
+        # No, so remove it from the return value
+        ret=${ret//$check_module/}
+      fi
+    done
+
+    # Normalize return value
+    echo $ret | awk '$1=$1'
+}
+
+kill_pods() {
+    for pod in $@; do
+        if [ "${POD_MODULES/$pod/}" != "${POD_MODULES}" ]; then
+            echo "Killing pods "$(oc get pod -o name | grep "syndesis-$pod")
+            oc get pod -o name | grep "syndesis-$pod" | xargs oc delete
+        fi
+    done
+}
+
+call_maven() {
+    local args=$1
+    local maven_modules=$(extract_modules)
+    check_error $maven_modules
+    cd $(appdir)
+    if [ -z "${maven_modules}" ]; then
+        echo "=============================================================================="
+        echo "./mvnw $args"
+        echo "=============================================================================="
+        ./mvnw $args
+        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
+          kill_pods $POD_MODULES
+        fi
+    else
+      echo "Modules: $maven_modules"
+      if [ $(hasflag --init) ]; then
+        echo "=============================================================================="
+        echo "./mvnw -N install"
+        ./mvnw -N install
+      fi
+      for module in $maven_modules; do
+        echo "=============================================================================="
+        echo "./mvnw $args -f $module"
+        echo "=============================================================================="
+        ./mvnw -f $module $args
+        if [ $(hasflag --kill-pods --kill-pod -k) ]; then
+            kill_pods $module
+        fi
+      done
+    fi
+}

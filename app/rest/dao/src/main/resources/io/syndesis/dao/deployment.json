@@ -755,8 +755,8 @@
     "kind": "connector",
     "data": {
       "id": "activemq",
-      "name": "ActiveMQ",
-      "description": "ActiveMQ Message Broker",
+      "name": "AMQ",
+      "description": "AMQ Message Broker",
       "icon": "fa-puzzle-piece",
       "configuredProperties": {},
       "properties": {
@@ -798,13 +798,26 @@
           "deprecated": false,
           "secret": true,
           "description": "Authorization credential password"
+        },
+        "clientID" : {
+          "kind" : "property",
+          "displayName" : "Client ID",
+          "group" : "security",
+          "label" : "common,security",
+          "required" : false,
+          "componentProperty": true,
+          "type" : "string",
+          "javaType" : "java.lang.String",
+          "deprecated" : false,
+          "secret" : false,
+          "description" : "Client ID for durable subscriptions"
         }
       },
       "actions": [
         {
           "id": "io.syndesis:activemq-publish-connector:latest",
-          "name": "Publish Messages",
-          "description": "Publish one-way Text messages on an ActiveMQ Queue or Topic.",
+          "name": "Publish messages",
+          "description": "Publish one-way messages on an AMQ Queue or Topic.",
           "tags": [],
           "pattern": "To",
           "actionType": "connector",
@@ -820,7 +833,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Select the JMS Destination",
-                "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+                "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
                 "properties": {
                   "destinationName": {
                     "kind": "path",
@@ -879,8 +892,8 @@
         },
         {
           "id": "io.syndesis:activemq-subscribe-connector:latest",
-          "name": "Subscribe for Messages",
-          "description": "Subscribe for one-way Text messages on an ActiveMQ Queue or Topic.",
+          "name": "Subscribe for messages",
+          "description": "Receive messages that are sent to a queue or topic you specify.",
           "tags": [],
           "pattern": "From",
           "actionType": "connector",
@@ -896,7 +909,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Select the JMS Destination",
-                "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+                "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
                 "properties": {
                   "destinationName": {
                     "kind": "path",
@@ -981,8 +994,8 @@
         },
         {
           "id": "io.syndesis:activemq-request-connector:latest",
-          "name": "Request response using Messages",
-          "description": "Request response using two-way Text messages on an ActiveMQ Queue or Topic.",
+          "name": "Request response using messages",
+          "description": "Request response using two-way messages on an AMQ Queue or Topic.",
           "tags": [],
           "pattern": "To",
           "actionType": "connector",
@@ -998,7 +1011,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Select the JMS Destination",
-                "description": "Specify ActiveMQ Connection Factory properties, including Queue or Topic Name",
+                "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
                 "properties": {
                   "destinationName": {
                     "kind": "path",
@@ -1695,7 +1708,7 @@
           "type": "string",
           "javaType": "java.lang.String",
           "deprecated": false,
-          "secret": false,
+          "secret": true,
           "description": "Amazon AWS Secret Key"
         },
         "region": {

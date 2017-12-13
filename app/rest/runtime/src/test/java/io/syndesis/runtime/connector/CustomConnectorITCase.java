@@ -15,8 +15,6 @@
  */
 package io.syndesis.runtime.connector;
 
-import java.util.List;
-
 import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.ConnectorSummary;
@@ -53,12 +51,6 @@ public class CustomConnectorITCase extends BaseITCase {
         .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
 
     private final ConnectorTemplate template = createConnectorTemplate(TEMPLATE_ID, "connector template");
-
-    public static class ConnectorResultList {
-        public List<Connector> items;
-
-        public int totalCount;
-    }
 
     @Configuration
     public static class TestConfiguration {
@@ -127,22 +119,6 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(created).isNotNull();
         assertThat(created.getDescription()).isEqualTo("test-description");
         assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
-    }
-
-    @Test
-    public void shouldListCustomConnectorsGeneratedFromFirstTemplate() {
-        final ResponseEntity<ConnectorResultList> response = get("/api/v1/connectors/custom?templateId=" + TEMPLATE_ID,
-            ConnectorResultList.class);
-
-        assertThat(response.getBody().items).containsOnly(connector1, connector2);
-    }
-
-    @Test
-    public void shouldListCustomConnectorsGeneratedFromSecondTemplate() {
-        final ResponseEntity<ConnectorResultList> response = get("/api/v1/connectors/custom?templateId=" + SECOND_TEMPLATE_ID,
-            ConnectorResultList.class);
-
-        assertThat(response.getBody().items).containsOnly(connector3);
     }
 
     @Test

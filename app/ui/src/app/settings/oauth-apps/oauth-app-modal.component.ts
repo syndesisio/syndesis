@@ -28,14 +28,14 @@ export class OAuthAppModalComponent {
           ? this.removeCredentials()
               .then(app => (this.item.client = app))
               .then(_ =>
-                this.popNotification({
+                this.notificationService.popNotification({
                   type: NotificationType.SUCCESS,
                   header: 'Delete Successful',
                   message: 'Settings successfully deleted.'
                 })
               )
               .catch(error =>
-                this.popNotification({
+                this.notificationService.popNotification({
                   type: NotificationType.DANGER,
                   header: 'Delete Failed',
                   message: `Failed to delete settings: ${error}`
@@ -52,16 +52,5 @@ export class OAuthAppModalComponent {
       .update(app)
       .take(1)
       .toPromise();
-  }
-
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      []
-    );
   }
 }

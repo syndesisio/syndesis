@@ -25,7 +25,6 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
-import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +65,11 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
         final String brokerUrl = (String) parameters.get("brokerUrl");
         final String username = (String) parameters.get("username");
         final String password = (String) parameters.get("password");
+        final String brokerCertificate = (String) parameters.get("brokerCertificate");
+        final String clientCertificate = (String) parameters.get("clientCertificate");
         LOG.debug("Validating AMQ connection to " + brokerUrl);
-        ActiveMQConnectionFactory connectionFactory = ObjectHelper.isEmpty(username) ?
-                new ActiveMQConnectionFactory(brokerUrl) : new ActiveMQConnectionFactory(username, password, brokerUrl);
+        ActiveMQConnectionFactory connectionFactory = ActiveMQUtil.createActiveMQConnectionFactory(
+                brokerUrl, username, password, brokerCertificate, clientCertificate);
         Connection connection = null;
         try {
             // try to create and start the JMS connection

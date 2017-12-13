@@ -22,11 +22,6 @@ import javax.ws.rs.core.UriInfo;
 
 import io.syndesis.rest.util.SortOptions;
 
-
-/**
- * @author roland
- * @since 14/12/16
- */
 public class SortOptionsFromQueryParams implements SortOptions {
 
     private final String sortField;

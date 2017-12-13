@@ -11,6 +11,7 @@
       <property name="env.teardown.script.url">teardown.sh</property>
       <property name="wait.for.service.list">syndesis-rest syndesis-ui syndesis-keycloak</property>
       <property name="wait.timeout">600000</property>
+      <property name="logs.copy">true</property>
     </extension>
 
 </arquillian>

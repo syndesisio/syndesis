@@ -75,7 +75,6 @@ type Context struct {
 	Name                          string
 	AllowLocalHost                bool
 	WithDockerImages              bool
-	Ephemeral                     bool
 	Restricted                    bool
 	Probeless                     bool
 	Productized                   bool
@@ -155,7 +154,6 @@ func init() {
 	flags.BoolVar(&context.AllowLocalHost, "allow-localhost", false, "Allow localhost")
 	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
-	flags.BoolVar(&context.Ephemeral, "ephemeral", false, "Ephemeral mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
 	flags.StringVar(&context.Tags.Atlasmap, "atlasmap-tag", "latest", "Atlasmap image to use")

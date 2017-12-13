@@ -195,21 +195,36 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 new ExtensionDescriptor.Builder()
                     .kind(ExtensionAction.Kind.valueOf(actionKind))
                     .entrypoint(actionEntry)
-                    .inputDataShape(
-                        new DataShape.Builder()
-                            .kind(p.getProperty("inputDataShape"))
-                            .build()
-                    )
-                    .outputDataShape(
-                        new DataShape.Builder()
-                            .kind(p.getProperty("outputDataShape"))
-                            .build()
-                    )
+                    .inputDataShape(buildDataShape(p.getProperty("inputDataShape")))
+                    .outputDataShape(buildDataShape(p.getProperty("outputDataShape")))
                     .propertyDefinitionSteps(propertyDefinitionSteps)
                     .build()
             );
 
         actions.put(actionId, actionBuilder.build());
+    }
+
+    protected DataShape buildDataShape(String dataShape) {
+        DataShape.Builder builder = new DataShape.Builder();
+        if (StringUtils.isNotEmpty(dataShape)) {
+            int separator = dataShape.indexOf(':');
+            if (separator == -1) {
+                builder.kind(dataShape);
+            } else {
+                String kind = dataShape.substring(0, separator);
+                if (StringUtils.isNotEmpty(kind)) {
+                    builder.kind(kind);
+                }
+                String type = dataShape.substring(separator + 1);
+                if (StringUtils.isNotEmpty(type)) {
+                    builder.type(type);
+                }
+            }
+        } else {
+            builder.kind("any");
+        }
+
+        return builder.build();
     }
 
     protected List<ActionDescriptor.ActionDescriptorStep> createPropertiesDefinitionSteps(Properties p) {

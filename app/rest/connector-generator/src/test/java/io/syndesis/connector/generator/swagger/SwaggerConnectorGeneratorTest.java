@@ -112,10 +112,24 @@ public class SwaggerConnectorGeneratorTest extends SwaggerConnectorGeneratorBase
             .name("Swagger Petstore")//
             .actionsSummary(actionsSummary)//
             .build();
-        assertThat(summary).isEqualToIgnoringGivenFields(expected, "description", "properties");
+        assertThat(summary).isEqualToIgnoringGivenFields(expected, "description", "properties", "warnings");
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
         assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "clientId", "clientSecret",
             "accessToken", "accessTokenUrl", "operationId", "specification");
+    }
+
+    @Test
+    public void shouldReportErrorsFromInvalidPetstoreSwagger() throws IOException {
+        final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .putConfiguredProperty("specification", specification)//
+            .build();
+
+        final ConnectorSummary summary = new SwaggerConnectorGenerator().info(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(summary.getErrors()).hasSize(1);
+        assertThat(summary.getWarnings()).isEmpty();
     }
 
 }

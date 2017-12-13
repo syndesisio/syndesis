@@ -10,7 +10,6 @@ metadata:
 #
 # Allow localhost refs: true
 # Use docker images: true
-# Ephemeral: false
 # Without Probes: false
 # Atlasmap Tag: latest
 # Syndesis Tag: latest
@@ -84,8 +83,13 @@ parameters:
 - description: Registry from where to fetch Syndesis images
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
-  required: true
   value: 'docker.io'
+- description: |-
+    Separator charactater to separare registry from image. By default '/',
+    but  set this to '' if you don't use any registry
+  displayName: Syndesis Image Registry Seperator
+  name: SYNDESIS_REGISTRY_SEP
+  value: '/'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -385,7 +389,7 @@ objects:
         sleep 1
       done
       echo "----- creating sampledb"
-      psql <<EOF 
+      psql <<EOF
         CREATE DATABASE sampledb;
         CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
         GRANT ALL PRIVILEGES ON DATABASE sampledb to sampledb;
@@ -398,7 +402,7 @@ objects:
           first_and_last_name varchar,
           company varchar,
           phone varchar,
-          email varchar, 
+          email varchar,
           lead_source varchar,
           lead_status varchar,
           rating varchar)
@@ -455,7 +459,6 @@ objects:
     resources:
       requests:
         storage: ${POSTGRESQL_VOLUME_CAPACITY}
-    
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -523,7 +526,7 @@ objects:
             limits:
               memory: ${POSTGRESQL_MEMORY_LIMIT}
             requests:
-              memory: ${POSTGRESQL_MEMORY_LIMIT}              
+              memory: ${POSTGRESQL_MEMORY_LIMIT}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
@@ -537,7 +540,6 @@ objects:
             defaultMode: 511
             name: syndesis-sampledb-config
           name: syndesis-sampledb-config
-
     triggers:
     - imageChangeParams:
         automatic: true

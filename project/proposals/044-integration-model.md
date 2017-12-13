@@ -170,8 +170,8 @@ public class Integration {
 ```java
 public class IntegrationDeployment {
   
-    // A copy of the integration locked at a specifc version.
-    Integration integration;
+    // Reference to the revision id of an Integration.
+    String integrationRevisionId;
   
     // Current state of this revision
     IntegrationState currentState;
@@ -196,6 +196,20 @@ public class IntegrationDeployment {
     // ....
 }
 ```
+
+```java
+public class IntegrationStatus {
+  List<IntegrationDeployment> deployments;
+  List<String> messages;
+}
+```
+
+### REST API
+
+* You can get an `Integration` by doing an HTTP on `GET /api/v1/integrations/{integration-id}`.
+* You can get an `IntegrationStatus` and it's assoicated `IntegrationDeployment` objects by doing an HTTP on `GET /api/v1/integrations-status/{integration-id}`.
+
+To keep the `IntegrationDeployment` objects smaller, the actual copy of the integration version can be accessed by doing a `GET /api/v1/integrations-revision/{integration-revision-id}`.  This reurns an `Integration` object.  
 
 ## Use cases
 

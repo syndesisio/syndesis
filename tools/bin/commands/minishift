@@ -1,0 +1,79 @@
+#!/bin/bash
+
+minishift::description() {
+    echo "Initialize and manage a Minishift developer environment"
+}
+
+minishift::usage() {
+    cat <<EOT
+    --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
+    --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
+    --memory <mem>            How much memory to use when doing a reset. Default: 4GB
+    --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
+    --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+    --show-logs               Show minishift logs during startup
+    --install                 Install templates into a running Minishift.
+-p  --project                 Install into this project. Delete this project if already existing
+    --watch                   Watch startup of pods
+-i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
+                              (default: "openshift")
+EOT
+}
+
+minishift::run() {
+    if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
+        # Only warning if minishift is not installed
+        minishift delete --clear-cache --force
+        if [ $(hasflag --full-reset) ] && [ -d ~/.minishift ]; then
+            rm -rf ~/.minishift
+        fi
+        local memory=$(readopt --memory)
+        local cpus=$(readopt --cpus)
+        local disksize=$(readopt --disk-size)
+        local show_logs_arg=""
+        if [ $(hasflag --show-logs --show-log) ]; then
+            show_logs_args="--show-libmachine-logs=true "
+        fi
+        minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB}
+    fi
+
+    local project=$(readopt --project -p)
+    if [ -n "${project}" ]; then
+        # Delete project if existing
+        if oc get project "${project}" >/dev/null 2>&1 ; then
+            echo "Deleting project ${project}"
+            oc delete project "${project}"
+        fi
+        echo "Creating project ${project}"
+        for i in {1..10}; do
+            if oc new-project "${project}" >/dev/null 2>&1 ; then
+              break
+            fi
+            echo "Project still exist. Waiting 10s ..."
+            sleep 10
+        done
+        oc project "${project}"
+    fi
+
+    local image_mode=$(readopt --image-mode -i)
+    local template="syndesis-restricted"
+    if [ "$image_mode" == "openshift" ]; then
+        template="syndesis-restricted"
+    elif [ "$image_mode" == "docker" ]; then
+        template="syndesis-dev-restricted"
+    fi
+    if [ $(hasflag --install) ]; then
+        basedir=$(appdir)
+        check_error "$basedir"
+        oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+        oc create -f ${basedir}/deploy/${template}.yml
+        oc new-app ${template} \
+          -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
+          -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+          -p OPENSHIFT_PROJECT=$(oc project -q) \
+          -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+    fi
+    if [ $(hasflag --watch) ]; then
+        exec watch oc get pods
+    fi
+}

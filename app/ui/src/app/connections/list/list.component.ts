@@ -59,25 +59,20 @@ export class ConnectionsListComponent implements OnInit {
     const sub = this.store.delete(connection).subscribe(
       () => {
         sub.unsubscribe();
-        setTimeout(() => {
-          this.popNotification({
-            type: NotificationType.SUCCESS,
-            header: 'Delete Successful',
-            message: 'Connection successfully deleted.',
-            showClose: true
-          });
-        }, 10);
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Delete Successful',
+          message: 'Connection successfully deleted.'
+        });
       },
       (err: any) => {
         sub.unsubscribe();
-        setTimeout(() => {
-          this.popNotification({
-            type: NotificationType.DANGER,
-            header: 'Delete Failed',
-            message: `Failed to delete connection: ${err}`,
-            showClose: true
-          });
-        }, 10);
+        this.notificationService.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Delete Failed',
+          message: `Failed to delete connection: ${err}`,
+          isPersistent: true
+        });
       }
     );
   }
@@ -107,16 +102,4 @@ export class ConnectionsListComponent implements OnInit {
     return connection.id === this.selectedId;
   }
 
-  //-----  Toast ------------------->>
-
-  popNotification(notification) {
-    this.notificationService.message(
-      notification.type,
-      notification.header,
-      notification.message,
-      false,
-      null,
-      []
-    );
-  }
 }

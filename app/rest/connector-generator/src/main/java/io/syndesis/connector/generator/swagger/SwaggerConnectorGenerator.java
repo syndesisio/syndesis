@@ -15,6 +15,35 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import io.swagger.models.HttpMethod;
+import io.swagger.models.Info;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.Response;
+import io.swagger.models.Swagger;
+import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.Parameter;
+import io.swagger.models.parameters.RefParameter;
+import io.swagger.models.parameters.SerializableParameter;
+import io.syndesis.connector.generator.ActionsSummary;
+import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.ConnectorSummary;
+import io.syndesis.connector.generator.util.ActionComparator;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ActionDescriptor;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorTemplate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,36 +56,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-
-import io.swagger.models.HttpMethod;
-import io.swagger.models.Info;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Response;
-import io.swagger.models.Swagger;
-import io.swagger.models.parameters.BodyParameter;
-import io.swagger.models.parameters.Parameter;
-import io.swagger.models.parameters.RefParameter;
-import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.parser.SwaggerParser;
-import io.syndesis.connector.generator.ActionsSummary;
-import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.connector.generator.ConnectorSummary;
-import io.syndesis.connector.generator.util.ActionComparator;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorSettings;
-import io.syndesis.model.connection.ConnectorTemplate;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
 import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
@@ -81,34 +80,45 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Connector connector = basicConnector(connectorTemplate, connectorSettings);
+        final SwaggerModelInfo swaggerInfo = parseSpecification(connectorSettings, true);
+        try {
+            // No matter if the validation fails, try to process the swagger
+            final Connector connector = basicConnector(connectorTemplate, connectorSettings);
+            final Map<String, Path> paths = swaggerInfo.getModel().getPaths();
 
-        final Swagger swagger = parseSpecification(connectorSettings);
-        final Map<String, Path> paths = swagger.getPaths();
+            int total = 0;
+            final Map<String, AtomicInteger> tagCounts = new HashMap<>();
+            for (final Entry<String, Path> pathEntry : paths.entrySet()) {
+                final Path path = pathEntry.getValue();
 
-        int total = 0;
-        final Map<String, AtomicInteger> tagCounts = new HashMap<>();
-        for (final Entry<String, Path> pathEntry : paths.entrySet()) {
-            final Path path = pathEntry.getValue();
+                final Map<HttpMethod, Operation> operationMap = path.getOperationMap();
 
-            final Map<HttpMethod, Operation> operationMap = path.getOperationMap();
+                for (final Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
+                    final Operation operation = entry.getValue();
+                    total++;
+                    operation.getTags().forEach(tag -> tagCounts.computeIfAbsent(tag, x -> new AtomicInteger(0)).incrementAndGet());
+                }
+            }
 
-            for (final Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
-                final Operation operation = entry.getValue();
-                total++;
-                operation.getTags().forEach(tag -> tagCounts.computeIfAbsent(tag, x -> new AtomicInteger(0)).incrementAndGet());
+            final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
+                .totalActions(total)//
+                .actionCountByTags(tagCounts.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> e.getValue().intValue())))
+                .build();
+            return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
+                .warnings(swaggerInfo.getWarnings()).build();
+        } catch (final Exception ex) {
+            if (!swaggerInfo.getErrors().isEmpty()) {
+                // Just log and return the validation errors if any
+                LOG.error("An error occurred while trying to create a swagger connector", ex);
+                return new ConnectorSummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
+            } else {
+                throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
             }
         }
-
-        final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
-            .totalActions(total)//
-            .actionCountByTags(tagCounts.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> e.getValue().intValue())))
-            .build();
-        return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).build();
     }
 
     /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
@@ -145,7 +155,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected String determineConnectorDescription(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         final Info info = swagger.getInfo();
         if (info == null) {
@@ -162,7 +172,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         final Info info = swagger.getInfo();
         if (info == null) {
@@ -193,7 +203,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
-        final Swagger swagger = parseSpecification(connectorSettings);
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
         addGlobalParameters(builder, swagger);
 
         final Map<String, Path> paths = swagger.getPaths();
@@ -356,18 +366,9 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
-    /* default */ static Swagger parseSpecification(final ConnectorSettings connectorSettings) {
+    /* default */ static SwaggerModelInfo parseSpecification(final ConnectorSettings connectorSettings, final boolean validate) {
         final String specification = requiredSpecification(connectorSettings);
-
-        final SwaggerParser parser = new SwaggerParser();
-        final Swagger swagger = ofNullable(parser.read(specification)).orElseGet(() -> parser.parse(specification));
-        if (swagger == null) {
-            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
-            throw new IllegalArgumentException(
-                "Unable to read Swagger specification from: " + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)));
-        }
-
-        return swagger;
+        return SwaggerHelper.parse(specification, validate);
     }
 
     /* default */ static String requiredSpecification(final ConnectorSettings connectorSettings) {

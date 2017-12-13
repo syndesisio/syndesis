@@ -30,6 +30,7 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
+import io.syndesis.rest.v1.SyndesisRestException;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
@@ -53,11 +54,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -100,8 +105,8 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    public Extension upload(MultipartFormDataInput dataInput, @QueryParam("updatedId") String updatedId) {
-
+    public Extension upload(MultipartFormDataInput dataInput, @Context SecurityContext sec, @QueryParam("updatedId") String updatedId) {
+        Date rightNow = new Date();
         String id = KeyGenerator.createKey();
         String fileLocation = "/extensions/" + id;
 
@@ -114,8 +119,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 // Update
                 Extension replacedExtension = getDataManager().fetch(Extension.class, updatedId);
                 if (!replacedExtension.getExtensionId().equals(embeddedExtension.getExtensionId())) {
-                    throw new IllegalArgumentException("The uploaded extensionId (" + embeddedExtension.getExtensionId() +
-                        ") does not match the existing extensionId (" + replacedExtension.getExtensionId() + ")");
+                    String message = "The uploaded extensionId (" + embeddedExtension.getExtensionId() +
+                        ") does not match the existing extensionId (" + replacedExtension.getExtensionId() + ")";
+                    throw new SyndesisRestException(message, message, null, Response.Status.BAD_REQUEST.getStatusCode());
                 }
             } else {
                 // New import
@@ -124,8 +130,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                     "status", Extension.Status.Installed.name());
 
                 if (!ids.isEmpty()) {
-                    throw new IllegalArgumentException("An extension with the same extensionId (" + embeddedExtension.getExtensionId() +
-                        ") is already installed. Please update the existing extension instead of importing a new one");
+                    String message = "An extension with the same extensionId (" + embeddedExtension.getExtensionId() +
+                        ") is already installed. Please update the existing extension instead of importing a new one";
+                    throw new SyndesisRestException(message, message, null, Response.Status.BAD_REQUEST.getStatusCode());
                 }
 
             }
@@ -135,6 +142,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .id(id)
                 .status(Extension.Status.Draft)
                 .uses(OptionalInt.empty())
+                .lastUpdated(rightNow)
+                .createdDate(rightNow)
+                .userId(sec.getUserPrincipal().getName())
                 .build();
 
             return getDataManager().create(extension);
@@ -191,6 +201,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             response = Violation.class)
     })
     public void install(@NotNull @PathParam("id") final String id) {
+        Date rightNow = new Date();
         Extension extension = getDataManager().fetch(Extension.class, id);
         doValidate(extension);
 
@@ -199,6 +210,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
         getDataManager().update(new Extension.Builder().createFrom(extension)
             .status(Extension.Status.Installed)
+            .lastUpdated(rightNow)
             .build());
     }
 
@@ -299,9 +311,11 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     private void doDelete(Extension extension) {
+        Date rightNow = new Date();
         getDataManager().update(new Extension.Builder()
             .createFrom(extension)
             .status(Extension.Status.Deleted)
+            .lastUpdated(rightNow)
             .build());
     }
 

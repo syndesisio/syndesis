@@ -22,6 +22,7 @@ import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 
+import io.syndesis.rest.v1.handler.exception.RestError;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -60,6 +61,9 @@ public class ExtensionsITCase extends BaseITCase {
 
         assertThat(created.getBody().getId()).isNotEmpty();
         assertThat(created.getBody().getName()).isNotBlank();
+        assertThat(created.getBody().getCreatedDate()).isNotEmpty();
+        assertThat(created.getBody().getLastUpdated()).isNotEmpty();
+        assertThat(created.getBody().getUserId()).contains("someone_important");
 
         assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
@@ -109,8 +113,10 @@ public class ExtensionsITCase extends BaseITCase {
         String id = created.getBody().getId().get();
 
         // Using wrong extensionId="extension2"
-        post("/api/v1/extensions?updatedId=" + id, multipartBody(extensionData(2)),
-            Void.class, tokenRule.validToken(), HttpStatus.BAD_REQUEST, multipartHeaders());
+        ResponseEntity<RestError> res = post("/api/v1/extensions?updatedId=" + id, multipartBody(extensionData(2)),
+            RestError.class, tokenRule.validToken(), HttpStatus.BAD_REQUEST, multipartHeaders());
+
+        assertThat(res.getBody().getUserMsg()).startsWith("The uploaded extensionId");
     }
 
     @Test
