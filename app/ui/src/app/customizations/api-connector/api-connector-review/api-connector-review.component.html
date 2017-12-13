@@ -1,6 +1,6 @@
 <div class="card-pf-heading">
   <h2 class="card-pf-title">
-    Review {{ connectorTemplateName }} Actions
+    Review {{ apiConnectorTemplateName }} Actions
   </h2>
 </div>
 <div class="card-pf-body" *ngIf="apiConnectorValidation; else apiConnectorValidationFallback">
@@ -17,7 +17,7 @@
       </ol>
     </ol>
   </div>
-  
+
   <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.errors as errors">
     <h5 class="connector-actions__header">
       Errors
@@ -27,7 +27,7 @@
       <li *ngFor="let error of errors">{{ error | json }}</li>
     </ol>
   </div>
-  
+
   <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.warnings as warnings">
     <h5 class="connector-actions__header">
       Warnings
@@ -37,7 +37,7 @@
       <li *ngFor="let warning of warnings">{{ warning | json }}</li>
     </ol>
   </div>
-  
+
   <button *ngIf="showNext" (click)="next.emit()" type="button" class="connector-form__submit btn btn-primary">
     Next
   </button>
