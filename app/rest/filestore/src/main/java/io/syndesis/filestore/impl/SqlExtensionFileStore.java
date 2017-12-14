@@ -47,7 +47,7 @@ import org.skife.jdbi.v2.exceptions.CallbackFailedException;
  * Implementation of a {@code ExtensionDataAccessObject} backed by a SQL database.
  */
 @SuppressWarnings("PMD.GodClass")
-public class SqlFileStore implements ExtensionDataAccessObject {
+public class SqlExtensionFileStore implements ExtensionDataAccessObject {
 
     enum DatabaseKind {
         PostgreSQL, H2, Apache_Derby
@@ -57,7 +57,7 @@ public class SqlFileStore implements ExtensionDataAccessObject {
 
     private DatabaseKind databaseKind;
 
-    public SqlFileStore(DBI dbi) {
+    public SqlExtensionFileStore(DBI dbi) {
         this.dbi = dbi;
 
         this.databaseKind = dbi.inTransaction((h, s) -> {
