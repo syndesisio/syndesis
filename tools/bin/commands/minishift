@@ -50,6 +50,8 @@ minishift::run() {
         minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.6.0}
     fi
 
+    eval $(minishift oc-env)
+
     local project=$(readopt --project -p)
     if [ -n "${project}" ]; then
         # Delete project if existing
