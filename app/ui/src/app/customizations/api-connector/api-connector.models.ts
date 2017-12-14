@@ -16,8 +16,6 @@ export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
   fileIcon?: File;
   properties: ApiConnectorProperties;
   connectorProperties: any;
-  host: string;
-  baseUrl: string;
 }
 
 export interface ApiConnectorProperties extends BaseEntity {

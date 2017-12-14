@@ -34,10 +34,10 @@
                 <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
               </div>
               <h2 class="card-pf-title text-center">
-                {{ apiConnectorData.name }}
+                {{ apiConnectorData.name || 'N/A' }}
               </h2>
               <div class="card-pf-items text-center">
-                {{ apiConnectorData.description }}
+                {{ apiConnectorData.description || 'N/A' }}
               </div>
             </div>
           </div>
@@ -55,24 +55,24 @@
               </tr>
               <tr>
                 <th scope="row">Connector Name</th>
-                <td>{{ apiConnectorData.name }}</td>
+                <td>{{ apiConnectorData.name || 'N/A' }}</td>
               </tr>
               <tr>
                 <th scope="row">Description</th>
-                <td>{{ apiConnectorData.description }}</td>
+                <td>{{ apiConnectorData.description || 'N/A' }}</td>
               </tr>
               <tr>
                 <th scope="row">Host</th>
-                <td>N/A</td>
+                <td>{{ apiConnectorData.configuredProperties.host || 'N/A' }}</td>
               </tr>
               <tr>
                 <th scope="row">Base URL</th>
-                <td>N/A</td>
+                <td>{{ apiConnectorData.configuredProperties.basePath || 'N/A' }}</td>
               </tr>
             </table>
           </div>
 
-          <syndesis-api-connector-review 
+          <syndesis-api-connector-review
             [apiConnectorTemplateName]="'Swagger'"
             [apiConnectorValidation]="apiConnectorData$ | async">
           </syndesis-api-connector-review>
