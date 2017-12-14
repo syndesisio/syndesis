@@ -48,7 +48,7 @@
       "displayName" : "DB URL",
       "group": "common",
       "label" : "",
-      "required" : false,
+      "required" : true,
       "type" : "string",
       "javaType" : "java.lang.String",
       "deprecated" : false,
