@@ -1,0 +1,24 @@
+
+## GitHub Labels
+
+We use GitHub labels in order to categorize epics, issues and tasks.
+They are the foundation of our process, so please use labels for issues.
+
+
+Labels themselves are also grouped.
+Each label consists of two part:
+A *Group* and a *Name* which are separated by a slash (`/`).
+For example the label `module/ui` is used to mark issue which are relevant to the Syndesis UI module.
+
+We distinguish the following groups:
+
+[cols="1,5",options="header"]
+|===
+| Group
+| Description
+
+| **cat**
+| Misc categories which are can be added freely
+
+| **prio**
+| Priority of the issue. Only one `prio/` label must be added per issue
