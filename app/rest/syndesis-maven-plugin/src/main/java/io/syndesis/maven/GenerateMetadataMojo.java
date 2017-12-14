@@ -86,7 +86,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter
     private String tags;
 
-    @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/extension-definition.json")
+    @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/syndesis-extension-definition.json")
     private String metadataDestination;
 
     /**

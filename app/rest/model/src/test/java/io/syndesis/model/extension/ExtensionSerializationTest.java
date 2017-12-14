@@ -29,7 +29,7 @@ public class ExtensionSerializationTest {
     public void testSerializeDeserialize() throws IOException {
         final ObjectMapper mapper = Json.mapper();
 
-        try (InputStream source = getClass().getResourceAsStream("extension-definition.json")) {
+        try (InputStream source = getClass().getResourceAsStream("syndesis-extension-definition.json")) {
             try {
                 mapper.readValue(
                     mapper.writeValueAsString(

@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExtensionAnalyzer {
 
-    private static final String MANIFEST_LOCATION = "META-INF/syndesis/extension-definition.json";
+    private static final String MANIFEST_LOCATION = "META-INF/syndesis/syndesis-extension-definition.json";
     private static final ObjectMapper MAPPER = Json.mapper();
 
     /**
@@ -57,7 +57,11 @@ public class ExtensionAnalyzer {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
 
-        return MAPPER.readValue(entry, Extension.class);
+        Extension extension = MAPPER.readValue(entry, Extension.class);
+        if (extension == null) {
+            throw new IllegalArgumentException("Cannot extract Extension from manifest file (" + MANIFEST_LOCATION + ") inside JAR");
+        }
+        return extension;
     }
 
     @SuppressWarnings("PMD.EmptyCatchBlock")

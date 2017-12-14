@@ -57,6 +57,10 @@ public class ExtensionDataManager {
             throw new IllegalStateException("Too many extensions found with extensionId=" + extensionId);
         }
 
-        return ids.iterator().next();
+        String res = ids.iterator().next();
+        if (res == null) {
+            throw new IllegalStateException("Found empty id for extensionId=" + extensionId);
+        }
+        return res;
     }
 }

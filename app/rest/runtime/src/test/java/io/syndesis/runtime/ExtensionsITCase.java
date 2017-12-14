@@ -15,6 +15,7 @@
  */
 package io.syndesis.runtime;
 
+import io.syndesis.core.Json;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.Violation;
@@ -35,14 +36,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
 
 public class ExtensionsITCase extends BaseITCase {
 
@@ -347,10 +349,24 @@ public class ExtensionsITCase extends BaseITCase {
     // ===========================================================
 
     private byte[] extensionData(int prg) throws IOException {
-        try (InputStream in = getClass().getResourceAsStream("/extension" + prg + ".bin")) {
-            // they are jar file
-            assertNotNull(in);
-            return IOUtils.toByteArray(in);
+        try (ByteArrayOutputStream data = new ByteArrayOutputStream();
+             JarOutputStream jar = new JarOutputStream(data)) {
+
+            JarEntry definition = new JarEntry("META-INF/syndesis/syndesis-extension-definition.json");
+            jar.putNextEntry(definition);
+
+            Extension extension = new Extension.Builder()
+                .extensionId("com.company:extension" + prg)
+                .name("Extension " + prg)
+                .description("Extension Description " + prg)
+                .version("1.0")
+                .build();
+
+            byte[] content = Json.mapper().writeValueAsBytes(extension);
+            IOUtils.write(content, jar);
+            jar.closeEntry();
+            jar.flush();
+            return data.toByteArray();
         }
     }
 
