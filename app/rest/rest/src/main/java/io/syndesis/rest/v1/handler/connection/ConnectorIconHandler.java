@@ -40,8 +40,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
@@ -80,8 +82,17 @@ public final class ConnectorIconHandler extends BaseHandler {
                 throw new IllegalArgumentException("Can't find a valid 'file' part in the multipart request");
             }
 
+            MediaType mediaType = filePart.getMediaType();
+            if (!mediaType.getType().equals("image")) {
+                String guessedMediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(result));
+                if (!guessedMediaType.startsWith("image/")) {
+                    throw new IllegalArgumentException("Invalid file contents for an image");
+                }
+                mediaType = MediaType.valueOf(guessedMediaType);
+            }
+
             Icon.Builder iconBuilder = new Icon.Builder()
-                .mediaType(filePart.getMediaType().getType());
+                .mediaType(mediaType.toString());
 
             Icon icon;
             String connectorIcon = connector.getIcon();
