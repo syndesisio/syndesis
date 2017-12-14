@@ -76,6 +76,13 @@
               memory: 255Mi
             requests:
               memory: 50Mi
+        initContainers:
+        - name: init-syndesis-rest
+          image: busybox
+          command: ['sh', '-c', 'until nslookup syndesis-rest; do echo waiting for service; sleep 2; done;']
+        - name: init-syndesis-atlasmap
+          image: busybox
+          command: ['sh', '-c', 'until nslookup syndesis-atlasmap; do echo waiting for service; sleep 2; done;']
         volumes:
         - configMap:
             name: syndesis-ui-config

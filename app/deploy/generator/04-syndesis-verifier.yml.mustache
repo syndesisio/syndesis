@@ -90,6 +90,10 @@
           volumeMounts:
           - name: config-volume
             mountPath: /deployments/config
+        initContainers:
+        - name: init-syndesis-db
+          image: busybox
+          command: ['sh', '-c', 'until nslookup syndesis-db; do echo waiting for service; sleep 2; done;']
         volumes:
         - name: config-volume
           configMap:
