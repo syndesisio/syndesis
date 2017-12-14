@@ -21,6 +21,7 @@ Users can add a "Describe Data" step to an integration flow that declares the cu
 2. Then user can import schema by either “Upload a file” or “Use a URL”.
 
     Upload file validation:
+
     - JSON Schema - .json
     - JSON instance - .json
     - XML Schema - .xsd
@@ -49,7 +50,7 @@ Users can add a "Describe Data" step to an integration flow that declares the cu
 
 ![Image of import via url](img/describeData_configStep_URL.png)
 
-1. User can also import schema via a valid URL. Provide “http://“ as syntax hint for users. Once users start typing, they can override the syntax hint.
+1. User can also import schema via a valid URL. Provide “https://“ as syntax hint for users. Once users start typing, they can override the syntax hint.
 
 2. Inline action button “Import” placed to the right of the field that it affects.
 
