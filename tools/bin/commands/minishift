@@ -18,7 +18,7 @@ minishift::usage() {
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
 -o  --open                    Open Syndesis in the browser
-    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.6.1)
+    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.6.0)
 EOT
 }
 
@@ -47,7 +47,7 @@ minishift::run() {
         if [ $(hasflag --show-logs --show-log) ]; then
             show_logs_args="--show-libmachine-logs=true "
         fi
-        minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.6.1}
+        minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.6.0}
     fi
 
     local project=$(readopt --project -p)
