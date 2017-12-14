@@ -68,23 +68,28 @@ minishift::run() {
         oc project "${project}"
     fi
 
-    local image_mode=$(readopt --image-mode -i)
-    local template="syndesis-restricted"
-    if [ "$image_mode" == "openshift" ]; then
-        template="syndesis-restricted"
-    elif [ "$image_mode" == "docker" ]; then
-        template="syndesis-dev-restricted"
-    fi
     if [ $(hasflag --install) ]; then
         basedir=$(appdir)
         check_error "$basedir"
         oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
-        oc create -f ${basedir}/deploy/${template}.yml
-        oc new-app ${template} \
-          -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
-          -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-          -p OPENSHIFT_PROJECT=$(oc project -q) \
-          -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+        local image_mode=$(readopt --image-mode -i)
+        if [ "$image_mode" == "docker" ]; then
+            oc create -f ${basedir}/deploy/syndesis-dev-restricted.yml
+            oc new-app syndesis-dev-restricted \
+              -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
+              -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+              -p OPENSHIFT_PROJECT=$(oc project -q) \
+              -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+        else
+            oc create -f ${basedir}/deploy/syndesis-restricted.yml
+            oc new-app syndesis-restricted \
+              -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
+              -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
+              -p OPENSHIFT_PROJECT=$(oc project -q) \
+              -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
+              -p SYNDESIS_REGISTRY="" \
+              -p SYNDESIS_REGISTRY_SEP=""
+        fi
     fi
     if [ $(hasflag --watch) ]; then
         exec watch oc get pods
