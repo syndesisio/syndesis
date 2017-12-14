@@ -118,6 +118,13 @@
                 value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
             imagePullPolicy: Always
             name: todo
+            initContainers:
+            - name: init-syndesis-db
+              image: busybox
+              command: ['sh', '-c', 'until nslookup syndesis-db; do echo waiting for service; sleep 2; done;']
+            - name: init-syndesis-ui
+              image: busybox
+              command: ['sh', '-c', 'until nslookup syndesis-ui; do echo waiting for service; sleep 2; done;']
             image: ' '
             resources:
               limits:

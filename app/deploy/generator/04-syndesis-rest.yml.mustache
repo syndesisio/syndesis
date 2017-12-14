@@ -132,7 +132,13 @@
               memory: 612Mi
             requests:
               memory: 256Mi
-
+        initContainers:
+        - name: init-syndesis-db
+          image: busybox
+          command: ['sh', '-c', 'until nslookup syndesis-db; do echo waiting for service; sleep 2; done;']
+        - name: init-syndesis-verifier
+          image: busybox
+          command: ['sh', '-c', 'until nslookup syndesis-verifier; do echo waiting for service; sleep 2; done;']
         volumes:
         - name: config-volume
           configMap:
