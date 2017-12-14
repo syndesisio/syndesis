@@ -151,6 +151,9 @@ public class SqlStatementParser {
             if (word.startsWith(":#")) {
                 SqlParam param = new SqlParam(word.substring(2));
                 String column = sqlArray.get(i-1);
+                if ("LIKE".equals(column)) {
+                    column = sqlArray.get(i-2);
+                }
                 if (column.startsWith(":#") || "VALUES".equals(column)) {
                     param.setColumnPos(columnPos++);
                 } else {
