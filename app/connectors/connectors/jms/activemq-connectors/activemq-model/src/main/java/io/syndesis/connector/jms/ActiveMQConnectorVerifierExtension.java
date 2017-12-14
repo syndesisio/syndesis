@@ -66,13 +66,13 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
         final String brokerUrl = (String) parameters.get("brokerUrl");
         final String username = (String) parameters.get("username");
         final String password = (String) parameters.get("password");
-        final String skipCertificateCheck = String.valueOf(parameters.get("skipCertificateCheck"));
+        final boolean skipCertificateCheck = parameters.containsKey("skipCertificateCheck");
         final String brokerCertificate = (String) parameters.get("brokerCertificate");
         final String clientCertificate = (String) parameters.get("clientCertificate");
 
         LOG.debug("Validating AMQ connection to " + brokerUrl);
         ActiveMQConnectionFactory connectionFactory = ActiveMQUtil.createActiveMQConnectionFactory(
-                brokerUrl, username, password, brokerCertificate, clientCertificate, "true".equals(skipCertificateCheck));
+                brokerUrl, username, password, brokerCertificate, clientCertificate, skipCertificateCheck);
         Connection connection = null;
         try {
             // try to create and start the JMS connection
