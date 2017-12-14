@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Restangular } from 'ngx-restangular';
 
-import { RESTService } from '../../store/entity/rest.service';
+import { RESTService } from '../../store/entity';
 import { ApiConnector, ApiConnectors } from './api-connector.models';
 
 @Injectable()
