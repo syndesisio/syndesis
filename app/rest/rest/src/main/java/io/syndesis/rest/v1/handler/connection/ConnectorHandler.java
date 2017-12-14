@@ -27,6 +27,7 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
@@ -51,6 +52,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -103,7 +105,16 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Override
     public Connector get(final String id) {
-        return augmentedWithUsage(Getter.super.get(id));
+        final Connector connector = augmentedWithUsage(Getter.super.get(id));
+
+        final Optional<String> connectorGroupId = connector.getConnectorGroupId();
+        if (!connectorGroupId.map(applicationContext::containsBean).orElse(false)) {
+            return connector;
+        }
+
+        final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(connector).build();
+
+        return new Connector.Builder().createFrom(connector).summary(summary).build();
     }
 
     @Path("/{id}/actions")

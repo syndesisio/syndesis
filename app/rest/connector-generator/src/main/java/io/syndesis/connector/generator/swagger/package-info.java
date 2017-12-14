@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 @ImmutablesStyle
-package io.syndesis.connector.generator;
+package io.syndesis.connector.generator.swagger;
 
 import io.syndesis.core.immutable.ImmutablesStyle;

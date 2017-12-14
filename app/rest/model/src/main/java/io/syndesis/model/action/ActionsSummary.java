@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.generator;
+package io.syndesis.model.action;
+
+import org.immutables.value.Value;
 
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ActionsSummary.Builder.class)

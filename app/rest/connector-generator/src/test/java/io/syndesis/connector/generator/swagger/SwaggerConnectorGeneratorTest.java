@@ -18,11 +18,11 @@ package io.syndesis.connector.generator.swagger;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.parser.SwaggerParser;
-import io.syndesis.connector.generator.ActionsSummary;
-import io.syndesis.connector.generator.ConnectorSummary;
+import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
 
 import org.junit.Test;
 
