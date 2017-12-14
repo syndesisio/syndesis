@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.generator;
-
-import java.util.List;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+package io.syndesis.model.connection;
 
 import io.syndesis.model.Violation;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
-import io.syndesis.model.connection.Connector;
+import io.syndesis.model.action.ActionsSummary;
 
 import org.immutables.value.Value;
+
+import java.util.List;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorSummary.Builder.class)

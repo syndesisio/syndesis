@@ -21,13 +21,13 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.connector.generator.ConnectorSummary;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
