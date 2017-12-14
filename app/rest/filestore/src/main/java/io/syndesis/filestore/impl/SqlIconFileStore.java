@@ -65,7 +65,7 @@ public class SqlIconFileStore implements IconDataAccessObject {
 
     @Override
     public void init() {
-        boolean needsInitialization = !dbi.inTransaction((h, s) -> tableExists(h, "filestore"));
+        boolean needsInitialization = !dbi.inTransaction((h, s) -> tableExists(h, "icon_filestore"));
 
         if (needsInitialization) {
             try {
