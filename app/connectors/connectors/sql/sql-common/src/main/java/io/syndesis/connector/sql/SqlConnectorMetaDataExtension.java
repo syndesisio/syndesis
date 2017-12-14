@@ -35,16 +35,16 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
         if (sqlStatement!=null) {
             try (Connection connection = DriverManager.getConnection(String.valueOf(properties.get("url")),
                     String.valueOf(properties.get("user")), String.valueOf(properties.get("password")));) {
-    
+
                 final DatabaseMetaData meta = connection.getMetaData();
                 final String defaultSchema = DatabaseMetaDataHelper.getDefaultSchema(
                         meta.getDatabaseProductName(), String.valueOf(properties.get("user")));
                 final String schemaPattern = (String) properties.getOrDefault("schema-pattern", defaultSchema);
                 final SqlStatementParser parser = new SqlStatementParser(connection, schemaPattern, sqlStatement);
-                final SqlStatementMetaData sqlStatementMetaData = parser.parse();
+                final SqlStatementMetaData sqlStatementMetaData = parseStatement(parser);
                 final MetaData metaData = new DefaultMetaData(null, null, sqlStatementMetaData);
                 return Optional.of(metaData);
-    
+
             } catch (final SQLException e) {
                 throw new IllegalStateException(e);
             }
@@ -52,5 +52,9 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
             final MetaData metaData = new DefaultMetaData(null, null, null);
             return Optional.of(metaData);
         }
+    }
+    
+    protected  SqlStatementMetaData parseStatement(SqlStatementParser parser) throws SQLException {
+        return parser.parse();
     }
 }
