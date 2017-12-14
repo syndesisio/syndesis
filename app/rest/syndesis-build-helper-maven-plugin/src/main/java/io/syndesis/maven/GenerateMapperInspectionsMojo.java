@@ -122,7 +122,6 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
         generateInspectionsMojo.setSystem(system);
         generateInspectionsMojo.setRemoteRepos(remoteRepos);
         generateInspectionsMojo.setRepoSession(repoSession);
-        generateInspectionsMojo.setGav(action.getDescriptor().getCamelConnectorGAV());
         generateInspectionsMojo.setClassName(shape.getType());
         generateInspectionsMojo.setOutputFile(outputFile);
         generateInspectionsMojo.execute();
