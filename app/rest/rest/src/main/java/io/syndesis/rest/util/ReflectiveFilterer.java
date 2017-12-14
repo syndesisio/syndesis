@@ -72,12 +72,22 @@ public class ReflectiveFilterer<T> implements Function<ListResult<T>, ListResult
         if (optionalStringGetMethod != null) {
             return new PredicateFilter<>(o -> {
                 try {
-                    return Optional.ofNullable(value).equals(optionalStringGetMethod.invoke(o));
+                    return Optional.ofNullable(value).equals(((Optional<?>) optionalStringGetMethod.invoke(o)).map(Object::toString));
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     throw new IllegalArgumentException("Cannot extract String value from " + optionalStringGetMethod + " for object " + o, e);
                 }
             });
         }
-        throw new IllegalArgumentException(String.format("Cannot find field %s in %s as String field", property, modelClass.getName()));
+        Method objectGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, property, Object.class);
+        if (objectGetMethod != null) {
+            return new PredicateFilter<>(o -> {
+                try {
+                    return value.equals(Optional.ofNullable(objectGetMethod.invoke(o)).map(Object::toString).orElse(null));
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    throw new IllegalArgumentException("Cannot extract Object value from " + objectGetMethod + " for object " + o, e);
+                }
+            });
+        }
+        throw new IllegalArgumentException(String.format("Cannot find field %s in %s as field", property, modelClass.getName()));
     }
 }
