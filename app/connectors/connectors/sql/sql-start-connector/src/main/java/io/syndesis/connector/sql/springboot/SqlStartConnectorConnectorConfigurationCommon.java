@@ -21,10 +21,6 @@ public class SqlStartConnectorConnectorConfigurationCommon {
      */
     private String query;
     /**
-     * Delay in milli seconds between scheduling (executing)
-     */
-    private long schedulerPeriod = 1000L;
-    /**
      * DB User Name
      */
     private String user;
@@ -44,6 +40,10 @@ public class SqlStartConnectorConnectorConfigurationCommon {
      * DB Catalog
      */
     private String catalog;
+    /**
+     * Delay in milli seconds between scheduling (executing)
+     */
+    private long schedulerPeriod = 1000L;
 
     public DataSource getDataSource() {
         return dataSource;
@@ -59,14 +59,6 @@ public class SqlStartConnectorConnectorConfigurationCommon {
 
     public void setQuery(String query) {
         this.query = query;
-    }
-
-    public long getSchedulerPeriod() {
-        return schedulerPeriod;
-    }
-
-    public void setSchedulerPeriod(long schedulerPeriod) {
-        this.schedulerPeriod = schedulerPeriod;
     }
 
     public String getUser() {
@@ -107,5 +99,13 @@ public class SqlStartConnectorConnectorConfigurationCommon {
 
     public void setCatalog(String catalog) {
         this.catalog = catalog;
+    }
+
+    public long getSchedulerPeriod() {
+        return schedulerPeriod;
+    }
+
+    public void setSchedulerPeriod(long schedulerPeriod) {
+        this.schedulerPeriod = schedulerPeriod;
     }
 }

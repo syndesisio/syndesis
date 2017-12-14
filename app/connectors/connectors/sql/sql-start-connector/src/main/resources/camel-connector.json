@@ -17,7 +17,7 @@
   "inputDataType" : "none",
   "outputDataType" : "json",
   "componentOptions" : [ "dataSource" ],
-  "endpointOptions" : [ "query", "schedulerPeriod" ],
+  "endpointOptions" : [ "query" ],
   "connectorProperties" : {
     "user" : {
       "kind" : "property",
@@ -78,6 +78,19 @@
       "deprecated" : false,
       "secret" : false,
       "description" : "DB Catalog"
+    },
+    "schedulerPeriod": {
+      "kind": "parameter",
+      "displayName": "Period",
+      "group": "consumer",
+      "required": false,
+      "type": "integer",
+      "javaType": "long",
+      "deprecated": false,
+      "secret": false,
+      "defaultValue": "1000",
+      "description": "Delay in milli seconds between scheduling (executing)"
     }
   }
 }
+
