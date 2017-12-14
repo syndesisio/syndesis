@@ -35,6 +35,7 @@ import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -149,7 +150,10 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(updated.getBody().getId()).isPresent();
         assertThat(updated.getBody().getIcon()).isNotBlank().startsWith("db:");
 
-        try (ImageInputStream iis = ImageIO.createImageInputStream(iconDao.read(updated.getBody().getIcon().substring(3)));) {
+        ResponseEntity<ByteArrayResource> got = get("/api/v1/connectors/twitter/icon", ByteArrayResource.class);
+        assertThat(got.getHeaders().getFirst("Content-Type")).isEqualTo("image/png");
+
+        try (ImageInputStream iis = ImageIO.createImageInputStream(got.getBody().getInputStream());) {
             final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
             if (readers.hasNext()) {
                 final ImageReader reader = readers.next();
