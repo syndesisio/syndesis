@@ -77,7 +77,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(got.getBody().getName()).isEqualTo(created.getBody().getName());
 
         // LIST
-        ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions",
+        ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions?query=status=" + Extension.Status.Draft,
             new ParameterizedTypeReference<ListResult<Extension>>() {}, tokenRule.validToken(), HttpStatus.OK);
 
         assertThat(list.getBody().getTotalCount()).as("extensions size").isGreaterThan(0);
@@ -301,6 +301,10 @@ public class ExtensionsITCase extends BaseITCase {
 
         assertThat(created.getBody().getId()).isPresent();
         String id = created.getBody().getId().get();
+
+        // Install it
+        post("/api/v1/extensions/" + id + "/install", null, Void.class,
+            tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Get extension details
         ResponseEntity<Extension> got1 = get("/api/v1/extensions/" + id,

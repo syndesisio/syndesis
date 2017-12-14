@@ -30,12 +30,18 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
+import io.syndesis.rest.util.FilterOptionsParser;
+import io.syndesis.rest.util.PaginationFilter;
+import io.syndesis.rest.util.ReflectiveFilterer;
+import io.syndesis.rest.util.ReflectiveSorter;
 import io.syndesis.rest.v1.SyndesisRestException;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
 import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.model.Violation;
+import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -228,7 +234,18 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     @Override
     public ListResult<Extension> list(UriInfo uriInfo) {
-        ListResult<Extension> extensions = Lister.super.list(uriInfo);
+        // Defaulting to display only Installed extensions
+        String query = uriInfo.getQueryParameters().getFirst("query");
+        if (query == null) {
+            query = "status=" + Extension.Status.Installed;
+        }
+
+        ListResult<Extension> extensions = getDataManager().fetchAll(
+            Extension.class,
+            new ReflectiveFilterer<>(Extension.class, FilterOptionsParser.fromString(query)),
+            new ReflectiveSorter<>(Extension.class, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+        );
 
         List<Extension> enhanced = extensions.getItems().stream()
             .map(this::enhance)
