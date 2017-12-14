@@ -40,18 +40,6 @@
       "deprecated":false,
       "secret":false,
       "description":"Sets the StoredProcedure template to perform"
-    },
-    "schedulerPeriod":{
-      "kind":"parameter",
-      "displayName":"Period",
-      "group":"consumer",
-      "required":false,
-      "type":"integer",
-      "javaType":"long",
-      "deprecated":false,
-      "secret":false,
-      "defaultValue":1000,
-      "description":"Delay in milli seconds between scheduling (executing)"
     }
   },
   "connectorProperties":{
@@ -120,6 +108,18 @@
       "deprecated":false,
       "secret":true,
       "description":"Stored Procedure Name"
+    },
+    "schedulerPeriod":{
+      "kind":"parameter",
+      "displayName":"Period",
+      "group":"consumer",
+      "required":false,
+      "type":"integer",
+      "javaType":"long",
+      "deprecated":false,
+      "secret":false,
+      "defaultValue":1000,
+      "description":"Delay in milli seconds between scheduling (executing)"
     }
   }
 }
