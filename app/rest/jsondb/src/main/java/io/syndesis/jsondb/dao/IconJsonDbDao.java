@@ -13,32 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.runtime;
+package io.syndesis.jsondb.dao;
 
-import io.syndesis.dao.extension.ExtensionDataAccessObject;
-import io.syndesis.dao.icon.IconDataAccessObject;
-import io.syndesis.filestore.impl.SqlExtensionFileStore;
-import io.syndesis.filestore.impl.SqlIconFileStore;
-import org.skife.jdbi.v2.DBI;
+import io.syndesis.dao.IconDao;
+import io.syndesis.jsondb.JsonDB;
+import io.syndesis.model.icon.Icon;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
-/**
- * Creates and configures the file store
- */
+@Service
 @Configuration
-public class FileStoreConfiguration {
+@ConditionalOnProperty(value = "dao.kind", havingValue = "jsondb")
+public class IconJsonDbDao extends JsonDbDao<Icon> implements IconDao {
 
-    @Bean(initMethod = "init")
     @Autowired
-    public ExtensionDataAccessObject extensionFileStore(DBI dbi) {
-        return new SqlExtensionFileStore(dbi);
+    public IconJsonDbDao(JsonDB jsondb) {
+        super(jsondb);
     }
 
-    @Bean(initMethod = "init")
-    @Autowired
-    public IconDataAccessObject iconFileStore(DBI dbi) {
-        return new SqlIconFileStore(dbi);
-    }
 }

@@ -17,12 +17,11 @@ package io.syndesis.rest.v1.handler.connection;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.core.SyndesisServerException;
 import io.syndesis.credential.Credentials;
+import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.inspector.Inspectors;
-import io.syndesis.integration.support.Strings;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.action.ConnectorAction;
@@ -38,16 +37,9 @@ import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-
-import okio.BufferedSink;
-import okio.Okio;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +53,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 
 @Path("/connectors")
 @Api(value = "connectors")
@@ -74,6 +61,7 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
     private final ApplicationContext applicationContext;
+    private final IconDataAccessObject iconDao;
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
@@ -81,7 +69,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Verifier verifier;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
-        final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext) {
+                            final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext, final IconDataAccessObject iconDao) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -89,6 +77,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         this.state = state;
         this.encryptionComponent = encryptionComponent;
         this.applicationContext = applicationContext;
+        this.iconDao = iconDao;
     }
 
     @Path("/{id}/credentials")
@@ -111,45 +100,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return new ConnectorActionHandler(getDataManager(), connectorId);
     }
 
-    @GET
     @Path("/{id}/icon")
-    public Response getConnectorIcon(@NotNull @PathParam("id") final String connectorId) {
+    public ConnectorIconHandler getConnectorIcon(@NotNull @PathParam("id") final String connectorId) {
         final Connector connector = get(connectorId);
-        final String connectorIcon = connector.getIcon();
 
-        // If there is no specified icon, return 404
-        if (connectorIcon == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        // If the specified icon is a data URL, or a non-URL like value (e.g.
-        // font awesome class name), return 404
-        if (connectorIcon.startsWith("data:") || !connectorIcon.contains("/")) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        final OkHttpClient httpClient = new OkHttpClient();
-        try {
-            final okhttp3.Response externalResponse = httpClient.newCall(new Request.Builder().get().url(connectorIcon).build()).execute();
-            final String contentType = externalResponse.header(CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM);
-            final String contentLength = externalResponse.header(CONTENT_LENGTH);
-
-            final StreamingOutput streamingOutput = (out) -> {
-                final BufferedSink sink = Okio.buffer(Okio.sink(out));
-                sink.writeAll(externalResponse.body().source());
-                sink.close();
-            };
-
-            final Response.ResponseBuilder actualResponse = Response.ok(streamingOutput, contentType);
-            if (!Strings.isEmpty(contentLength)) {
-                actualResponse.header(CONTENT_LENGTH, contentLength);
-            }
-
-            return actualResponse.build();
-        } catch (final IOException e) {
-            throw new SyndesisServerException(e);
-        }
-
+        return new ConnectorIconHandler(getDataManager(), connector, iconDao);
     }
 
     @GET

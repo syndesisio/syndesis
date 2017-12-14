@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import io.syndesis.credential.Credentials;
+import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.inspector.Inspectors;
@@ -77,8 +78,10 @@ public class ConnectorHandlerTest {
 
     private final DataManager dataManager = mock(DataManager.class);
 
+    private final IconDataAccessObject NO_ICON_DAO = null;
+
     private final ConnectorHandler handler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
-        NO_ENCRYPTION_COMPONENT, applicationContext);
+        NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO);
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {
@@ -94,7 +97,7 @@ public class ConnectorHandlerTest {
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
             when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
 
-            final Response response = handler.getConnectorIcon("connector-id");
+            final Response response = handler.getConnectorIcon("connector-id").get();
 
             assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK).as("Wrong status code");
             assertThat(response.getHeaderString(CONTENT_TYPE)).isEqualTo("image/png").as("Wrong content type");

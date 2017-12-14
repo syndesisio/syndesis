@@ -30,6 +30,7 @@ public enum Kind {
     ConnectorAction(io.syndesis.model.action.ConnectorAction.class),
     ConnectorGroup(io.syndesis.model.connection.ConnectorGroup.class),
     ConnectorTemplate(io.syndesis.model.connection.ConnectorTemplate.class),
+    Icon(io.syndesis.model.icon.Icon.class),
 
     Environment(io.syndesis.model.environment.Environment.class),
     EnvironmentType(io.syndesis.model.environment.EnvironmentType.class),
