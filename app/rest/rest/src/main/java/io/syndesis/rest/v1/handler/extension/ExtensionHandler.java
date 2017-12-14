@@ -153,13 +153,21 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .build();
 
             return getDataManager().create(extension);
+        } catch (SyndesisRestException ex) {
+            try {
+                delete(id);
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception dex) {
+                // ignore
+            }
+            throw ex;
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
             try {
                 delete(id);
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception dex) {
                 // ignore
             }
-            throw SyndesisServerException.launderThrowable(ex);
+            String message = "An error has occurred while trying to process the technical extension. Please, check the input file.";
+            throw new SyndesisRestException(message + " " + ex.getMessage(), message, null, Response.Status.BAD_REQUEST.getStatusCode(), ex);
         }
     }
 
