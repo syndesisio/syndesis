@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { StoreModule } from '@ngrx/store';
 
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
@@ -17,6 +18,7 @@ import { ApiConnectorDetailComponent } from './api-connector-detail.component';
 
 import { ApiConnectorService } from './api-connector.service';
 import { ApiConnectorStore } from './api-connector.store';
+import { apiConnectorReducer } from './api-connector.reducer';
 
 const routes: Routes = [{
   path: 'api-connector/create/:template',
@@ -34,7 +36,10 @@ const routes: Routes = [{
     CommonModule,
     PatternflyUIModule,
     RouterModule.forChild(routes),
-    SyndesisCommonModule
+    SyndesisCommonModule,
+    StoreModule.forFeature('apiConnectorState', {
+      apiConnectorState: apiConnectorReducer
+    })
   ],
   exports: [RouterModule],
   declarations: [

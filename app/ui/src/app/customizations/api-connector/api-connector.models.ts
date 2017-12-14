@@ -1,5 +1,6 @@
+import { ApiConnector } from './api-connector.models';
 import { BaseEntity } from '@syndesis/ui/model';
-import { StringMap, BaseReducerModel } from '@syndesis/ui/platform';
+import { StringMap, BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
 
 export interface ApiConnector extends BaseEntity {
   kind: string;
@@ -8,7 +9,7 @@ export interface ApiConnector extends BaseEntity {
 
 export type ApiConnectors = Array<ApiConnector>;
 
-export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
+export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation, CustomSwaggerConnectorRequest {
   id: string;
   name: string;
   description: string;
@@ -69,3 +70,11 @@ export interface CustomSwaggerConnectorRequest extends CustomApiConnectorRequest
   };
   file: File;
 }
+
+export interface ApiConnectorState extends BaseReducerModel {
+  list: ApiConnectors;
+  createRequest: CustomSwaggerConnectorRequest;
+}
+
+/* tslint:disable:no-empty-interface */
+export interface ApiConnectorStore extends ApiConnectorState { }
