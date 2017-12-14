@@ -22,9 +22,19 @@ This design covers the following workflows:
 
 4. Once all required field is filled. The “Next” button becomes active for users to proceed to the next step.
 
-See PatternFly “Help on Forms” for more:
-http://www.patternfly.org/pattern-library/forms-and-controls/help-on-forms/#/design
+    See PatternFly “Help on Forms” for more:
+    http://www.patternfly.org/pattern-library/forms-and-controls/help-on-forms/#/design
 
+
+![Image of configure connection ssl](img/AMQ_configureConnection-ssl.png)
+
+1.	If users type in a Broker URL with a “ssl:” substring, display the security settings section.
+
+2.	“Skip Certificate” is a boolean checkbox.
+
+3.	 Both “Broker Certificate” and “Client Certificate” are text areas.
+
+4.	 Users can expand the text areas.
 
 ![Image of name connection](img/AMQ_nameConnection.png)
 
@@ -48,15 +58,15 @@ User select AMQ connection as the start connection.
 
 2. Default Destination Type to “Topic”.  
 
-3. For Durability, the checkbox is unchecked by default.
+3. Provide durable subscription ID.
 
 4. Action buttons align left. “Done” button is disabled until user has entered all required information. User has the option to go back to the prior step by clicking “Cancel”.
 
 ![Image of AMQ start connection configure action durable](img/AMQ_integration_startConnection_configAction_durable.png)
 
-1. If user selected “Durable”, the field “Durable Subscription ID” appears and becomes available.
+1. Users fill in Durable Subscription ID.
 
-2. “Done” action button becomes active.  
+2. “Done” action button becomes active.   
 
 
 ## Create integration with AMQ as finish connection
