@@ -84,6 +84,8 @@ public final class ConnectorIconHandler extends BaseHandler {
 
             MediaType mediaType = filePart.getMediaType();
             if (!mediaType.getType().equals("image")) {
+                // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
+                // can continue to be used, rather than being consumed.
                 String guessedMediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(result));
                 if (!guessedMediaType.startsWith("image/")) {
                     throw new IllegalArgumentException("Invalid file contents for an image");
@@ -119,14 +121,14 @@ public final class ConnectorIconHandler extends BaseHandler {
     public Response get() {
         String connectorIcon = connector.getIcon();
         if (connectorIcon == null) {
-            return Response.status(javax.ws.rs.core.Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         if (connectorIcon.startsWith("db:")) {
             String connectorIconId = connectorIcon.substring(3);
             Icon icon = getDataManager().fetch(Icon.class, connectorIconId);
             if (icon == null) {
-                return Response.status(javax.ws.rs.core.Response.Status.NOT_FOUND).build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
 
             final StreamingOutput streamingOutput = (out) -> {
