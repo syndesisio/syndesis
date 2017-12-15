@@ -25,6 +25,7 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
+import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +67,9 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
         final String brokerUrl = (String) parameters.get("brokerUrl");
         final String username = (String) parameters.get("username");
         final String password = (String) parameters.get("password");
-        final boolean skipCertificateCheck = parameters.containsKey("skipCertificateCheck");
-        final String brokerCertificate = (String) parameters.get("brokerCertificate");
-        final String clientCertificate = (String) parameters.get("clientCertificate");
+        final boolean skipCertificateCheck = "true".equals(parameters.get("skipCertificateCheck"));
+        final String brokerCertificate = getMultilineCertificate((String) parameters.get("brokerCertificate"));
+        final String clientCertificate = getMultilineCertificate((String) parameters.get("clientCertificate"));
 
         LOG.debug("Validating AMQ connection to " + brokerUrl);
         ActiveMQConnectionFactory connectionFactory = ActiveMQUtil.createActiveMQConnectionFactory(
@@ -97,6 +98,20 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
                     // ignore close errors
                 }
             }
+        }
+    }
+
+    // X.509 PEM parser requires a newline after the header
+    private String getMultilineCertificate(String certificate) {
+        if (ObjectHelper.isEmpty(certificate)) {
+            return null;
+        }
+        // is this a multi line certificate?
+        if (certificate.indexOf('\n') != -1) {
+            return certificate;
+        } else {
+            // insert newline after header
+            return certificate.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n");
         }
     }
 }
