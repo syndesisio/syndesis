@@ -11,7 +11,8 @@
     "authorizationEndpoint": "https://reverb.com/oauth/authorize",
     "authenticationType": "oauth2",
     "basePath": "/api",
-    "host": "https://api.reverb.com"
+    "host": "https://api.reverb.com",
+    "oauthScopes": "read_profile write_profile read_orders write_orders read_feedback write_feedback write_reviews write_listings read_listings write_messages read_messages read_lists write_lists write_offers read_offers read_payouts public"
   },
   "properties": {
     "accessToken": {
@@ -155,6 +156,23 @@
       "type": "string",
       "tags": [],
       "enum": []
+    },
+    "oauthScopes": {
+      "kind": "property",
+      "defaultValue": "read_profile write_profile read_orders write_orders read_feedback write_feedback write_reviews write_listings read_listings write_messages read_messages read_lists write_lists write_offers read_offers read_payouts public",
+      "displayName": "OAuth Scopes",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-scope"
+      ],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "URL to fetch the OAuth Access token"
     },
     "specification": {
       "componentProperty": true,

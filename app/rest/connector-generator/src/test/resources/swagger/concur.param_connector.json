@@ -148,6 +148,22 @@
       "componentProperty": true,
       "defaultValue": "https://www.concursolutions.com",
       "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+    },
+    "oauthScopes": {
+      "kind": "property",
+      "displayName": "OAuth Scopes",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-scope"
+      ],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "URL to fetch the OAuth Access token"
     }
   },
   "actions": [

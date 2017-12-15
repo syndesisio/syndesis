@@ -41,12 +41,13 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
         final String accessTokenUrl = oauth2Properties.getAccessTokenUrl();
         final boolean useParametersForClientCredentials = oauth2Properties.isUseParametersForClientCredentials();
         final TokenStrategy tokenStrategy = oauth2Properties.getTokenStrategy();
+        final String scope = oauth2Properties.getScope();
 
-        final OAuth2ServiceProvider<RestOperations> serviceProvider = new GenericOAuth2ServiceProvider(appId, appSecret,
-            authorizationUrl, authenticationUrl, accessTokenUrl, useParametersForClientCredentials, tokenStrategy);
+        final OAuth2ServiceProvider<RestOperations> serviceProvider = new GenericOAuth2ServiceProvider(appId, appSecret, authorizationUrl,
+            authenticationUrl, accessTokenUrl, useParametersForClientCredentials, tokenStrategy);
 
-        final OAuth2ConnectionFactory<RestOperations> connectionFactory = new OAuth2ConnectionFactory<>("oauth2",
-            serviceProvider, null);
+        final OAuth2ConnectionFactory<RestOperations> connectionFactory = new OAuth2ConnectionFactory<>("oauth2", serviceProvider, null);
+        connectionFactory.setScope(scope);
 
         final OAuth2Applicator applicator = new OAuth2Applicator(properties);
         applicator.setAccessTokenProperty("accessToken");

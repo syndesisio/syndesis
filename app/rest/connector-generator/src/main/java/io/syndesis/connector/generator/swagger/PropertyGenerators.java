@@ -98,6 +98,13 @@ import org.apache.commons.lang3.StringUtils;
             return withDefaultValue(PropertyGenerators::determineHost);
         }
     },
+    oauthScopes {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return (swagger, template) -> oauthProperty(swagger, template,
+                d -> d.getScopes().keySet().stream().collect(Collectors.joining(" ")));
+        }
+    },
     tokenEndpoint {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
