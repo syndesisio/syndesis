@@ -54,7 +54,7 @@
 {{/Debug}}{{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -90,10 +90,6 @@
           volumeMounts:
           - name: config-volume
             mountPath: /deployments/config
-        initContainers:
-        - name: init-syndesis-db
-          image: busybox
-          command: ['sh', '-c', 'until nslookup syndesis-db; do echo waiting for service; sleep 2; done;']
         volumes:
         - name: config-volume
           configMap:

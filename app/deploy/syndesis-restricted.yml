@@ -84,12 +84,6 @@ parameters:
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
   value: 'docker.io'
-- description: |-
-    Separator charactater to separare registry from image. By default '/',
-    but  set this to '' if you don't use any registry
-  displayName: Syndesis Image Registry Seperator
-  name: SYNDESIS_REGISTRY_SEP
-  value: '/'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -122,7 +116,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}syndesis/syndesis-rest:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
       importPolicy:
         scheduled: true
       name: "latest"
@@ -137,7 +131,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}syndesis/syndesis-ui:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
       importPolicy:
         scheduled: true
       name: "latest"
@@ -152,7 +146,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}atlasmap/atlasmap:latest
+        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
       importPolicy:
         scheduled: true
       name: "latest"
@@ -167,7 +161,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}syndesis/syndesis-verifier:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
       importPolicy:
         scheduled: true
       name: "latest"
@@ -182,7 +176,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}openshift/oauth-proxy:v1.1.0
+        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
       importPolicy:
         scheduled: true
       name: "v1.1.0"
@@ -877,7 +871,6 @@ objects:
               memory: 612Mi
             requests:
               memory: 256Mi
-
         volumes:
         - name: config-volume
           configMap:
@@ -1136,7 +1129,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: 'todo:latest'      
+        name: 'todo:latest'
     strategy:
       sourceStrategy:
         from:
