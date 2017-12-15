@@ -13,7 +13,8 @@ minishift::usage() {
     --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
     --show-logs               Show minishift logs during startup
     --install                 Install templates into a running Minishift.
--p  --project                 Install into this project. Delete this project if already existing
+-p  --project                 Install into this project. Delete this project if already existing for --install.
+                              Default project: "syndesis"
     --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
@@ -50,49 +51,57 @@ minishift::run() {
         minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.6.0}
     fi
 
-    local project=$(readopt --project -p)
-    if [ -n "${project}" ]; then
-        # Delete project if existing
-        if oc get project "${project}" >/dev/null 2>&1 ; then
-            echo "Deleting project ${project}"
-            oc delete project "${project}"
-        fi
-        echo "Creating project ${project}"
-        for i in {1..10}; do
-            if oc new-project "${project}" >/dev/null 2>&1 ; then
-              break
-            fi
-            echo "Project still exist. Waiting 10s ..."
-            sleep 10
-        done
-        oc project "${project}"
-    fi
-
     if [ $(hasflag --install) ]; then
+
+        # Switch to minishift to be safe when deleting projects
+        oc config use-context minishift
+
+        local project=$(readopt --project -p)
+        if [ -n "${project}" ]; then
+            recreate_project $project
+        fi
+
         basedir=$(appdir)
         check_error "$basedir"
         oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+        local template="syndesis-restricted"
         local image_mode=$(readopt --image-mode -i)
-        if [ "$image_mode" == "docker" ]; then
-            oc create -f ${basedir}/deploy/syndesis-dev-restricted.yml
-            oc new-app syndesis-dev-restricted \
-              -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
-              -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-              -p OPENSHIFT_PROJECT=$(oc project -q) \
-              -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
-        else
-            oc create -f ${basedir}/deploy/syndesis-restricted.yml
-            oc new-app syndesis-restricted \
-              -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io \
-              -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
-              -p OPENSHIFT_PROJECT=$(oc project -q) \
-              -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
-              -p SYNDESIS_REGISTRY="" \
-              -p SYNDESIS_REGISTRY_SEP=""
+        if [ "$image_mode" == "docker" ] || [ $(hasflag --docker) ]; then
+            template="syndesis-dev-restricted"
+        fi
+        oc create -f ${basedir}/deploy/$template.yml
+        oc new-app $template \
+          -p ROUTE_HOSTNAME="syndesis.$(minishift ip).nip.io" \
+          -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
+          -p OPENSHIFT_PROJECT="$(oc project -q)" \
+          -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+
+        if [ ${template} = "syndesis-restricted" ]; then
+          # Wait a bit to start image fetching
+          # Patch imagestreams from "DockerImage" to "ImageStreamTag"
+          for dc in "syndesis-rest" "syndesis-ui" "syndesis-verifier"; do
+              echo "Waiting for $dc to be started"
+              local replicas="$(oc get dc $dc -o jsonpath='{.status.availableReplicas}')"
+              while [ "$replicas" -lt 1 ]; do
+                  echo "Sleeping 10s ..."
+                  sleep 10
+                  replicas=$(oc get dc $dc -o jsonpath="{.status.availableReplicas}")
+              done
+          done
+          for is in "syndesis-rest" "syndesis-ui" "syndesis-verifier" "syndesis-s2i"; do
+              echo "Patching imagestream $is"
+              local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'
+              local replace_name="{\"op\": \"replace\", \"path\": \"/spec/tags/0/from/name\", \"value\": \"$is:latest\"}"
+              local remove_import_policy='{"op": "remove", "path": "/spec/tags/0/importPolicy"}'
+              oc patch is $is --type json -p="[$replace_kind, $replace_name, $remove_import_policy]"
+          done
         fi
     fi
+    # Disabled for now as minishift is killed when the watch is stopped with CTRL-C
+    # No idea why this happens yet ?
     if [ $(hasflag --watch) ]; then
-        exec watch oc get pods
+    #    exec watch oc get pods
+         echo "--watch is currently not supported"
     fi
 }
 
@@ -104,4 +113,23 @@ probe_commands() {
           return
       fi
     done
+}
+
+recreate_project() {
+    # Delete project if existing
+    if oc get project "${project}" >/dev/null 2>&1 ; then
+        echo "Deleting project ${project}"
+        oc delete project "${project}"
+    fi
+
+    # Create project afresh
+    echo "Creating project ${project}"
+    for i in {1..10}; do
+        if oc new-project "${project}" >/dev/null 2>&1 ; then
+            break
+        fi
+        echo "Project still exists. Sleeping 10s ..."
+        sleep 10
+    done
+    oc project "${project}"
 }
