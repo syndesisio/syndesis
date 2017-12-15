@@ -15,7 +15,6 @@ minishift::usage() {
     --install                 Install templates into a running Minishift.
 -p  --project                 Install into this project. Delete this project if already existing for --install.
                               Default project: "syndesis"
-    --watch                   Watch startup of pods
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
                               (default: "openshift")
 -o  --open                    Open Syndesis in the browser
@@ -96,12 +95,6 @@ minishift::run() {
               oc patch is $is --type json -p="[$replace_kind, $replace_name, $remove_import_policy]"
           done
         fi
-    fi
-    # Disabled for now as minishift is killed when the watch is stopped with CTRL-C
-    # No idea why this happens yet ?
-    if [ $(hasflag --watch) ]; then
-    #    exec watch oc get pods
-         echo "--watch is currently not supported"
     fi
 }
 
