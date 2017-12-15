@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<settings>
+  <profiles>
+    <profile>
+      <id>syndesis-repos</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>apache-snapshot</id>
+          <url>http://repository.apache.org/snapshots/</url>
+        </repository>
+        <repository>
+          <id>ea-repo</id>
+          <name>ea-repo</name>
+          <url>http://origin-repository.jboss.org/nexus/content/groups/ea</url>
+        </repository>
+        <repository>
+          <id>central</id>
+          <name>Maven Central Repo</name>
+          <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+          <id>oss-sonatype-staging</id>
+          <name>Sonatype Snapshot Repository</name>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>apache-snapshot</id>
+          <url>http://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>fuse-ea</id>
+          <name>Fuse EA Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>enterprise</id>
+          <name>Enterprise Releases</name>
+          <url>http://maven.repository.redhat.com/techpreview/all/</url>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>syndesis-repos</activeProfile>
+  </activeProfiles>
+
+</settings>
+
