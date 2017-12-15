@@ -84,6 +84,10 @@ doc::run() {
         echo "SDH: Publishing documents to $syndesis_git_url"
         gh_pages "$docdir/$outdir" "$syndesis_git_url" "$gh_comment"
     fi
+
+    if [ $(hasflag --open -o) ]; then
+        open_url "$docdir/$outdir/$(basename $input_file .adoc).html"
+    fi
 }
 
 call_asciidoctor() {

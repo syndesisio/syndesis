@@ -14,3 +14,9 @@ ifdef::basebackend-html[toc::[]]
 :numbered:
 
 include::introduction.adoc[]
+
+# Building Syndesis
+include::build/syndesis_sh.adoc[]
+
+# Syndesis Development Process
+include::process/labels.adoc[]
