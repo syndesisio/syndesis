@@ -528,6 +528,23 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toctitle">Syndesis Developer Handbook</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">1. Introduction</a></li>
+<li><a href="#_building_syndesis">2. Building Syndesis</a>
+<ul class="sectlevel2">
+<li><a href="#_one_tool_to_rule_them_all">2.1. One tool to rule them all</a></li>
+</ul>
+</li>
+<li><a href="#_syndesis_development_process">3. Syndesis Development Process</a>
+<ul class="sectlevel2">
+<li><a href="#_issue_and_pull_request_labels">3.1. Issue and Pull-Request Labels</a>
+<ul class="sectlevel3">
+<li><a href="#_modules">3.1.1. Modules</a></li>
+<li><a href="#_categories">3.1.2. Categories</a></li>
+<li><a href="#_notification">3.1.3. Notification</a></li>
+<li><a href="#_external_references">3.1.4. External references</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -545,11 +562,345 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_building_syndesis">2. Building Syndesis</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_one_tool_to_rule_them_all">2.1. One tool to rule them all</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_syndesis_development_process">3. Syndesis Development Process</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_issue_and_pull_request_labels">3.1. Issue and Pull-Request Labels</h3>
+<div class="paragraph">
+<p>We use GitHub labels in order to categorize epics, issues and tasks.
+They are the foundation of our process, so please use labels for issues.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Label are living entities. This document describes the current status and might be slightly outdated. Please send a PR to adapt this document if the label structure changes. Also feel free to discuss the label structure anytime. It&#8217;s essential that labels describe our process, not that we have to adapt our process for these labels.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Labels are  grouped.
+Each label consists of two part:
+A <strong>Group</strong> and a <strong>Name</strong> which are separated by a slash (<code>/</code>).
+For example the label <code>module/ui</code> is used to mark issue which are relevant to the Syndesis UI module.</p>
+</div>
+<div class="paragraph">
+<p>The following label groups are available.
+There must be only at most one label from the "Exclusive" groups.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 15.7894%;">
+<col style="width: 78.9473%;">
+<col style="width: 5.2633%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Group</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-center valign-top">Excl.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Misc categories which are can be added freely</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>prio/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Priority of the issue. Only one <code>prio/</code> label must be added per issue. <code>prio/p0</code> is of highest priority, <code>prio/p4</code> the lowest one.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">✔︎</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reference to external projects</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>d/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Day labels for tagging an Epic to talk about at specific day in the daily meeting</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>module/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal Syndesis modules</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>notif/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Notification label which can be added and removed to ping certain subteams</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>size/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tee shirt size for issues. This is a subjective assesment and should be done relative to other issues.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">✔︎</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Status of an issue or PR.</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>target/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target milestone for an Epic. These are the Technicla Preview (TP) targets and GA.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">✔︎</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each label group serves a certain purpose and for each issue and PR it should be considered whether a label from a group applies.</p>
+</div>
+<div class="sect3">
+<h4 id="_modules">3.1.1. Modules</h4>
+<div class="paragraph">
+<p>Labels from this group reference our application components like "rest", "ui", "uxd" or "connectors".
+Each sub team is responsible for one or more modules, and every module has a 'owning' team.
+That does not mean that members of other teams are allowed to work on such modules.
+Contrary, this is even encouraged.
+But its just there so that teams can filter on issues and PRs which are relevant to them.</p>
+</div>
+<div class="paragraph">
+<p>An issue can carry many module labels.
+Especially Epics will carry more than such label as they touches more than one module (otherwise it wouldn&#8217;t be an epic).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_categories">3.1.2. Categories</h4>
+<div class="paragraph">
+<p>Labels from the <code>cat/</code> group are labels which can be always applied and which does not fit in other category.
+Currently we have these categories:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/bug</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A bug which needs fixing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/blocker</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A blocker, which is a bug which needs to be fixed as soon as possible.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/enhancement</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PR label for an enhancement of an existing feature.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/feature</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PR label for a new feature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/discussion</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This issues requires a discussion.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/question</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For issues holding a question.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/build</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For issues which has relevance for the build system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/design</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A concrete UX design. Use this for PRs containing UX designs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/process</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Development process related issues carry this label.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/research</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label used for issues which describe some research work</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/retro</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label for action items which are the result of a retrospective.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/starter</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An issue which is easy to solve and can be used for ramping up new developers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/techdebt</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Label for issues identifying technical debt.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/techdoc</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Technical deceloper information (likes this hanbook ;-) related issues.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/tooling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Issues used for tooling around the development process (note: could be merged with "build")</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_notification">3.1.3. Notification</h4>
+<div class="paragraph">
+<p>Notification labels from the <code>notif/</code> group serve a special purpose.
+They are used when one team wants to notify another team that a certain issue might have them relevance to them.</p>
+</div>
+<div class="paragraph">
+<p>Currently we have two notifcation labels:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Notification</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>notif/doc</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This issue needs some attention from the docs team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a documentation already exists.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>notif/uxd</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This label should be used for issues which needs some attention from the UX team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a a UX design already exists.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>It is important to note that these labels also be removed when the notification has been received.</p>
+</div>
+<div class="paragraph">
+<p>For example, when an UI feature like a input form changes.
+Then the UI team attaches a <code>notif/uxd</code> label to the PR which introduces this change.
+The UX team, detects with a filter search on this label, that there is a new notification.
+It then decides, whether UX design needs to be updated or not.
+In any case they are removing the <code>notif/uxd</code> label and add a <code>module/uxd</code> label if this PR indeed requires an UX design update.
+If no update is required, then the label is removed without replacement.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_external_references">3.1.4. External references</h4>
+<div class="paragraph">
+<p>This label group should be used if an external system is referenced, which is not part of the Syndesis mono repo.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">External Project</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/atlasmap</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/atlasmap/atlasmap">atlasmap</a> data mapper</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/camel</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://camel.apache.org">Camel</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/qe</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/syndesisio/syndesis-qe">syndesis-qe</a> suite</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/docs</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/syndesisio/syndesis-documentation">syndesis-documentation</a> End user documentation</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For the future we plan to add more of these external repos into the Syndesis mono repo (like documentation or QE).
+If this happens, then labels should be converted to <code>module/</code> kind of labels.</p>
+</div>
+<div class="sect4">
+<h5 id="_daily_meeting_labels">Daily Meeting Labels</h5>
+<div class="paragraph">
+<p>This category holds five labels: <code>d/mon</code>, <code>d/tue</code>, <code>d/wed</code>, <code>d/thu</code>, <code>d/fri</code>, one for each working day.
+They are used to mark an Epic so that it is talked about the daily meeting at that day.
+The reason for this selection is, that we want to keep the daily meetings still at 15 mins but dont yet want to split up.
+More than one of such label can and actually should be added to one Epic.
+At least two day labels must be added to an epic.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_status">Status</h5>
+<div class="paragraph">
+<p>Status labels are special since they may trigger some automatic actions.</p>
+</div>
+<div class="paragraph">
+<p>The current status labels are:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/blocked</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current issue is blocked by another issuer. Refer to the issue itself to see what is blocking this issued. This label is purely informal.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Approved</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This label will be automatically applied to an an PR as soon as the PR has been approved in a review. It is an indicator for our PR bot to automatically merge the pull request if it passes all required tests. (Note: Should probably be renamed to <code>status/approved</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/wip</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is "Approved"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/2s2f</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use this label to mark issues which should be self-merged without requiring a PR review, because its "too small too fail". Be very careful with this label, and remember a review is a service to you to help in your code quality. It alone your responsibility when you chose this label. It&#8217;s useful for minor doc updates or one line where you are 100% sure that it doesn&#8217;t break the system. Please use it sparingly and responsibly. (<em>Need still to be implemented</em>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version <br>
-Last updated 2017-12-15 09:48:34 UTC
+Last updated 2017-12-15 12:57:02 UTC
 </div>
 </div>
 </body>
