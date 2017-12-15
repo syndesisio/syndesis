@@ -211,6 +211,12 @@
             <artifactId>aws-s3-polling-bucket-connector</artifactId>
             <version>${syndesis-connectors.version}</version>
           </dependency>
+          <!-- ==== REST Swagger ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>rest-swagger-connector</artifactId>
+            <version>${syndesis-connectors.version}</version>
+          </dependency>
         </dependencies>
       </plugin>
 
