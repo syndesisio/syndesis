@@ -145,11 +145,11 @@ public class CustomConnectorITCase extends BaseITCase {
     public void shouldProvideSummaryForCustomConnectors() {
         final ResponseEntity<Connector> responseForCustomConnector = get("/api/v1/connectors/connector-from-template-1", Connector.class);
 
-        assertThat(responseForCustomConnector.getBody().summary()).isPresent();
+        assertThat(responseForCustomConnector.getBody().getSummary()).isPresent();
 
         final ResponseEntity<Connector> responseForNonCustomConnector = get("/api/v1/connectors/non-custom-connector", Connector.class);
 
-        assertThat(responseForNonCustomConnector.getBody().summary()).isNotPresent();
+        assertThat(responseForNonCustomConnector.getBody().getSummary()).isNotPresent();
     }
 
     private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {

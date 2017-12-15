@@ -15,22 +15,12 @@
  */
 package io.syndesis.runtime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Properties;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 import io.syndesis.dao.icon.IconDataAccessObject;
-import okio.Buffer;
-import okio.BufferedSink;
-import okio.BufferedSource;
-import okio.Okio;
+import io.syndesis.model.ListResult;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.verifier.AlwaysOkVerifier;
+import io.syndesis.verifier.Verifier;
+
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,17 +31,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import io.syndesis.model.ListResult;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.verifier.AlwaysOkVerifier;
-import io.syndesis.verifier.Verifier;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.awt.Dimension;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorsITCase extends BaseITCase {
 
