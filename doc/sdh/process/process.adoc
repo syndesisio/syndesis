@@ -1,0 +1,4 @@
+[[process]]
+# Syndesis Development Process
+
+include::labels.adoc[]

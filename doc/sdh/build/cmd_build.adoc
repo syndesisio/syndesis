@@ -1,0 +1,36 @@
+[[syndesis-build]]
+## `syndesis build`
+
+The main goal of `syndesis` is to build Syndesis.
+It is mainly a wrapper around Maven but adds some convenience for common developer workflows.
+
+As with any other command you can get easy help with `syndesis build -h`:
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+Usage: syndesis build [... options ...]
+
+Options for build:
+-b  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
+    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-m  --module <m1>,<m2>, ..    Build modules
+                              Modules: ui, rest, connectors, s2i, verifier, runtime
+-d  --dependencies            Build also all project the specified module depends on
+    --init                    Install top-level parent pom, too. Only needed when used with -m
+    --skip-tests              Skip unit and system test execution
+    --skip-checks             Disable all checks
+-f  --flash                   Skip checks and tests execution (fastest mode)
+-i  --image-mode  <mode>      <mode> can be
+                              - "none"      : No images are build (default)
+                              - "openshift" : Build for OpenShift image streams
+                              - "docker"    : Build against a plain Docker daemon
+                              - "auto"      : Automatically detect whether to
+                                              use "openshift" or "docker"
+    --docker                  == --image-mode docker
+    --openshift               == --image-mode openshift
+-p  --project <project>       Specifies the project to create images in when using '--images s2i'
+-k  --kill-pods               Kill pods after the image has been created.
+                              Useful when building with image-mode docker
+-c  --clean                   Run clean builds (mvn clean)
+-b  --batch-mode              Run mvn in batch mode
+----

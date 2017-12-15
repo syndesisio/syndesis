@@ -1,0 +1,2 @@
+[[syndesis-release]]
+## `syndesis release`

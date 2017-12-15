@@ -1,0 +1,2 @@
+[[syndesis-minishift]]
+## `syndesis minishift`

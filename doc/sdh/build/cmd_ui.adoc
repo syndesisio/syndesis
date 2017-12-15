@@ -1,0 +1,4 @@
+[[syndesis-ui]]
+## `syndesis ui`
+
+_this is just a placeholder, still in planning_
