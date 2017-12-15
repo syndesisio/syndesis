@@ -819,8 +819,19 @@
           "label" : "common,security",
           "required" : false,
           "componentProperty": true,
-          "type" : "boolean",
-          "javaType" : "java.lang.Boolean",
+          "type" : "string",
+          "javaType" : "java.lang.String",
+          "enum": [
+            {
+              "value": "false",
+              "label": "Disable"
+            },
+            {
+              "value": "true",
+              "label": "Enable"
+            }
+          ],
+          "defaultValue" : "false",
           "deprecated" : false,
           "secret" : false,
           "description" : "For convenience in only development environments. Do not set for secure production environments."

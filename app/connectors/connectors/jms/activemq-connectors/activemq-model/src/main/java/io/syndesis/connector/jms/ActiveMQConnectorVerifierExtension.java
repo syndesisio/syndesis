@@ -66,7 +66,7 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
         final String brokerUrl = (String) parameters.get("brokerUrl");
         final String username = (String) parameters.get("username");
         final String password = (String) parameters.get("password");
-        final boolean skipCertificateCheck = parameters.containsKey("skipCertificateCheck");
+        final boolean skipCertificateCheck = "true".equals(parameters.get("skipCertificateCheck"));
         final String brokerCertificate = (String) parameters.get("brokerCertificate");
         final String clientCertificate = (String) parameters.get("clientCertificate");
 
@@ -99,4 +99,5 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
             }
         }
     }
+
 }
