@@ -70,12 +70,12 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
     @Override
     Map<String, ConfigurationProperty> getProperties();
 
+    Optional<ConnectorSummary> getSummary();
+
     OptionalInt getUses();
 
     default Optional<String> propertyTaggedWith(final String tag) {
         return propertyTaggedWith(getConfiguredProperties(), tag);
     }
-
-    Optional<ConnectorSummary> summary();
 
 }
