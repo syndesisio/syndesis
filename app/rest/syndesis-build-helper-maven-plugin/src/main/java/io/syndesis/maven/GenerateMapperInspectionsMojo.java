@@ -17,17 +17,19 @@ package io.syndesis.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import io.atlasmap.maven.GenerateInspectionsMojo;
-import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ModelData;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
 import org.apache.maven.model.Resource;
@@ -116,6 +118,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
             getLog().debug("Created dir: " + outputFile.getParentFile());
         }
 
+
         final GenerateInspectionsMojo generateInspectionsMojo = new GenerateInspectionsMojo();
         generateInspectionsMojo.setLog(getLog());
         generateInspectionsMojo.setPluginContext(getPluginContext());
@@ -123,6 +126,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
         generateInspectionsMojo.setRemoteRepos(remoteRepos);
         generateInspectionsMojo.setRepoSession(repoSession);
         generateInspectionsMojo.setClassName(shape.getType());
+        generateInspectionsMojo.setArtifacts(Collections.singletonList(action.getDescriptor().getCamelConnectorGAV()));
         generateInspectionsMojo.setOutputFile(outputFile);
         generateInspectionsMojo.execute();
         generated.add(outputFile);
