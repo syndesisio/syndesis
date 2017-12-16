@@ -24,7 +24,6 @@ build::usage() {
 -m  --module <m1>,<m2>, ..    Build modules
                               Modules: ui, rest, connectors, s2i, verifier, runtime
 -d  --dependencies            Build also all project the specified module depends on
-    --init                    Install top-level parent pom, too. Only needed when used with -m
     --skip-tests              Skip unit and system test execution
     --skip-checks             Disable all checks
 -f  --flash                   Skip checks and tests execution (fastest mode)
@@ -36,7 +35,7 @@ build::usage() {
                                               "openshift" or "docker"
     --docker                  == --image-mode docker
     --openshift               == --image-mode openshift
--p  --project <project>       Specifies the project to create images in when using '--images s2i'
+-p  --project <project>       Specifies the project to create images in when using '--openshift'
 -k  --kill-pods               Kill pods after the image has been created.
                               Useful when building with image-mode docker
 -c  --clean                   Run clean builds (mvn clean)
@@ -194,14 +193,12 @@ call_maven() {
         fi
     else
       echo "Modules: $maven_modules"
-      if [ $(hasflag --init) ]; then
-        echo "=============================================================================="
-        echo "./mvnw -N install"
-        ./mvnw -N install
-      fi
+      echo "=============================================================================="
+      echo "./mvnw -N install -Pflash ### Installing parent pom.xml"
+      ./mvnw -N install -Pflash
       for module in $maven_modules; do
         echo "=============================================================================="
-        echo "./mvnw $args -f $module"
+        echo "./mvnw $args -f $module ### Processing module $module"
         echo "=============================================================================="
         ./mvnw -f $module $args
         if [ $(hasflag --kill-pods --kill-pod -k) ]; then
