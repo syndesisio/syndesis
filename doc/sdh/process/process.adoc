@@ -1,4 +1,4 @@
 [[process]]
-# Syndesis Development Process
+# Development Process
 
 include::labels.adoc[]

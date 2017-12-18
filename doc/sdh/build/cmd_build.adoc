@@ -1,11 +1,12 @@
 [[syndesis-build]]
-## `syndesis build`
+## syndesis build
 
 The main goal of `syndesis` is to build Syndesis.
 It is mainly a wrapper around Maven but adds some convenience for common developer workflows.
 
-As with any other command you can get easy help with `syndesis build -h`:
 
+[[syndesis-build-usage]]
+### Usage
 [source,indent=0,subs="verbatim,quotes"]
 ----
 Usage: syndesis build [... options ...]
@@ -35,7 +36,8 @@ Options for build:
 -b  --batch-mode              Run mvn in batch mode
 ----
 
-.Selecting modules to build
+[[syndesis-build-modules]]
+### Modules
 When you use the `build` command and don't use any options a plain `mvn install` will be performed over all modules.
 This compiles all Java and Javascript artefacts and also runs all tests and code checks.
 
@@ -71,13 +73,14 @@ In addition to specify each module individually, you can also use some module gr
 
 When the option `--dependencies` (short: `-d`) is given in addition to `--modules`, also all modules which the specified modules depend on are build, too.
 
-.Tuning build time
+[[syndesis-build-tuning]]
+### Tuning
 By default all checks like license or code quality checks are performed.
 Also all unit and local integration tests are run.
 This eats up quite some time, but you should always run a full build before submitting a pull request.
 
 However, to speed up the turn around, several speed-up options are available.
-The following table shows these options, and also how long a full clean build over all modules takes with these:
+The following table shows these options, and also how long a full clean build over all modules takes: (but without building images)
 
 [cols="3,15,2",options="header"]
 |===
@@ -103,7 +106,8 @@ The following table shows these options, and also how long a full clean build ov
 |
 |===
 
-.Building Docker images
+[[syndesis-build-image]]
+### Images
 As described in <<syndesis-dev-modes,Development Modes>> there are two ways how Syndesis Docker images can be created and deployed.
 
 You can decide which mode to use with the option `--image-mode` (short: `-i`) and the following options are available:
@@ -129,6 +133,10 @@ You can decide which mode to use with the option `--image-mode` (short: `-i`) an
 | `-i s2i`
 | `--s2i`
 | Shortcut for `--openshift`
+
+| `-i none`
+|
+| Don't build Docker images even when implicitly enabled (e.g. when using `--images`)
 |===
 
 Specifying the mode also enables building the Docker images which otherwise would not be build.

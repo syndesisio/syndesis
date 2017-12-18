@@ -1,2 +1,2 @@
 [[syndesis-dev]]
-## `syndesis dev`
+## syndesis dev
