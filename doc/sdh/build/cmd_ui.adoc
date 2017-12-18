@@ -1,4 +1,10 @@
 [[syndesis-ui]]
 ## syndesis ui
 
-_this is just a placeholder, still in planning_
+."syndesis ui" is not implemented yet
+****
+This is just a placeholder, still in the planning phased.
+Nevertheless we already start to document the feature for an "UX first" approach.
+****
+
+### Usage

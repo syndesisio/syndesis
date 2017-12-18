@@ -22,11 +22,11 @@ Options for doc:
 ----
 
 `syndesis doc` uses by default a Docker container to create the documentation.
-Therefor a Docker daemon must be accessible and it must allow [bind volume mounts] to the local `doc/sdh` directory.
-This is possible for Linux Docker daemons and for "Docker for Mac".
+Therefore a Docker daemon must be accessible, and it must allow https://docs.docker.com/engine/admin/volumes/bind-mounts/[bind volume mounts] to the local `doc/sdh` directory.
+Bind mounts are possible for Linux Docker daemons and for "Docker for Mac".
 But it is not the case for the Minishift exposed Docker daemon, as this daemon is running isolated in a VM.
 
-You can always run `asciidoctor` locally with the `--local` (short: `-l`) options. See the [Asciidoctor manual] for more information how to install asciidoctor.
+You can always run `asciidoctor` locally with the `--local` (short: `-l`) options. See the https://asciidoctor.org/#installation[Asciidoctor manual] for more information how to install Asciidoctor.
 
 [[syndesis-doc-output]]
 ### Output

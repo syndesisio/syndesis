@@ -5,9 +5,9 @@ Syndesis uses a single tool for controlling various aspects of the build and dev
 This script can be found in `$SYNDESIS_DIR/tools/bin` and is called `syndesis`.
 It requires bash and can be used on any Unix or macOS.
 
-In order to have this script handy all the time it is recommended to either but this `bin/` directory into the path or add symlink from `syndesis` into a directory which is already on your execution path.
+To have this script handy all the time it is recommended to either but this `bin/` directory into the path or add a symlink from `syndesis` into a directory which is already on your execution path.
 
-The script can be used for various task which are selected by a so called _subcommand_ which is the first argument to the script.
+The script can be used for various tasks which are selected by a so-called command_ which is the first argument to the script.
 
 Just type `syndesis -h` to get an overview of the commands available:
 
@@ -39,7 +39,7 @@ There are a handful of global options which can be used:
 
 | `--rebase`
 | `-r`
-| Rebase you project directory before building to integrate upstream changes to your local repository. See <<syndesis-rebase,below>> for details how this works.
+| Rebase your project directory before building to integrate upstream changes to your local repository. See <<syndesis-rebase,below>> for details how this works.
 
 | `--verbose`
 |
@@ -48,7 +48,7 @@ There are a handful of global options which can be used:
 
 [[syndesis-rebase]]
 .Rebase to upstream
-In order to easily rebase on changes which has been merged upstream to master, you can use the option `--rebase` (short: `-r`).
+To easily rebase on changes which have been merged upstream to master, you can use the option `--rebase` (short: `-r`).
 This command assumes that you have forked the Syndesis GitHub repositories and you have "origin" and "upstream" remotes like
 
 [source,indent=0,subs="verbatim,quotes"]
@@ -60,35 +60,35 @@ upstream  https://github.com/syndesisio/syndesis (fetch)
 upstream  https://github.com/syndesisio/syndesis (push)
 ----
 
-With this in place a `--rebase` performs the following steps:
+With this in place, a `--rebase` performs the following steps:
 
 * Refresh upstream remote: `git fetch upstream master`
 * Try a `git rebase upstream/master` which rebases your current local working branch.
 * If this fails because you have uncommitted work:
   - A `git stash` is performed
   - The rebase is retried and should succeed
-  - `git stash pop` brings back your changes. This can fail with conflicts which you would have to resolve on your own.
+  - `git stash pop` brings back your changes. Stashing can fail with conflicts which you would have to resolve on your own.
 
 [[syndesis-dev-modes]]
 .Development Modes
 
 The Syndesis application consists of a set of Docker images OpenShift resources descriptors for installing Syndesis.
-For development, https://www.openshift.org/minishift/[minishift] is used and most of the commands assume that you have minishift installed locally and executable directly from your path.
+For development, https://www.openshift.org/minishift/[minishift] is used, and most of the commands assume that you have minishift installed locally and executable directly from your path.
 Minishift can be downloaded and installed from https://github.com/minishift/minishift/releases
 
-Actually, you can choose from two different modes how Docker images are installed and updated:
+You can choose from two different modes how Docker images are installed and updated:
 
 .Docker mode
-The Docker mode avoid OpenShift specific image stream and used plain Docker image references in the deployment descriptors.
-Without an extra Docker registry push, this only works smoothely on single node OpenShift installation like with Minishift or `oc cluster up`.
+The Docker mode avoids OpenShift specific image stream and uses plain Docker image references in the deployment descriptors.
+Without an extra Docker registry push, this only works smoothly on single node OpenShift installation like with Minishift or `oc cluster up`.
 For Minishift, the Docker daemon exposed with `minishift docker-env` is used.
-The advantage of this mode is, that building is a bit faster and you avoid the overhead of image streams.
-On the other side you have to kill pods when images are upated so that the new images are picked up.
+The advantage of this mode is that building is a bit faster and you avoid the overhead of image streams.
+On the other side, you have to kill pods when images are updated so that the new images are picked up.
 
 .OpenShift mode
-The OpenShift mode uses OpenShift S2I builds and imagestreams.
-This works also when running with a real OpenShift cluster and is not restricted on Minishift usage.
-Another advantage is that a build automatically triggers a redeployment so you don't have to kill any pods manually (or with this script).
+The OpenShift mode uses OpenShift S2I builds and image streams.
+This mode works also when running with a real OpenShift cluster and is not restricted to Minishift usage.
+Another advantage is that a build automatically triggers a redeployment, so you don't have to kill any pods manually (or with this script).
 On the con side is a slightly slower build.
 
 Both modes are currently supported, but the OpenShift mode is recommended.
@@ -134,11 +134,11 @@ The following commands are available:
 If no command is given, `build` is the default.
 Remember a command must be the first argument, but there are additional possibilities to specify commands:
 
-* You can use the form `--command` anywhere as option, too. E.g. using  `--minishift` is the same as specifyin "minishift" as first argument.
+* You can use the form `--command` anywhere as an option, too. E.g. using  `--minishift` is the same as specifying "minishift" as the first argument.
 * A `--mode command` can be used, too (e.g. `--mode sytem-test`)
 
-The next sections describe now the commands in detail.
-In order to add a new command, just drop a script file into
+The next sections describe the commands in detail.
+To add a new command, just drop a script file into
 
 include::cmd_build.adoc[]
 include::cmd_ui.adoc[]
