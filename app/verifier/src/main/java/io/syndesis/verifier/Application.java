@@ -18,9 +18,14 @@ package io.syndesis.verifier;
 
 import javax.servlet.Filter;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.ExplicitCamelContextNameStrategy;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 /**
@@ -44,5 +49,15 @@ public class Application {
         loggingFilter.setMaxPayloadLength(512);
 
         return loggingFilter;
+    }
+
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    @Bean(name = "verifier-context", initMethod = "start", destroyMethod = "stop")
+    public static CamelContext verifierContext() {
+        CamelContext context = new DefaultCamelContext();
+        context.setNameStrategy(new ExplicitCamelContextNameStrategy("verifier-context"));
+        context.disableJMX();
+
+        return context;
     }
 }

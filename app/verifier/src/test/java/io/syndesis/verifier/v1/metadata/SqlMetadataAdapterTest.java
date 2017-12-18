@@ -29,13 +29,11 @@ import java.util.Properties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-
-
 import io.syndesis.connector.sql.DatabaseProduct;
 import io.syndesis.connector.sql.SqlConnectorMetaDataExtension;
 import io.syndesis.connector.sql.stored.SampleStoredProcedures;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
-
+import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -79,8 +77,8 @@ public class SqlMetadataAdapterTest {
                 }
             }
             Statement stmt = connection.createStatement();
-            String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
-                    "lastName VARCHAR(255))"; 
+            String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " +
+                    "lastName VARCHAR(255))";
             stmt.executeUpdate(createTable);
         } catch (Exception ex) {
             fail("Exception", ex);
@@ -93,7 +91,7 @@ public class SqlMetadataAdapterTest {
             connection.close();
         }
     }
-    
+
     @Test
     public void adaptForSqlTest() throws IOException {
 
@@ -107,7 +105,7 @@ public class SqlMetadataAdapterTest {
         SqlMetadataAdapter adapter = new SqlMetadataAdapter();
 
         ObjectMapper mapper = new ObjectMapper();
-        
+
         SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8);
         String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);

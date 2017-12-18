@@ -15,6 +15,28 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.credential.Credentials;
@@ -25,6 +47,7 @@ import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.filter.FilterOptions;
@@ -41,27 +64,6 @@ import io.syndesis.verifier.Verifier;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Path("/connectors")
 @Api(value = "connectors")
@@ -169,8 +171,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}/verifier")
-    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId,
-                                                            final Map<String, String> props) {
+    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId, final Map<String, String> props) {
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 

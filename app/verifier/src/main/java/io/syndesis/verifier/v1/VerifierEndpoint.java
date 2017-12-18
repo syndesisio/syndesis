@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,33 +27,67 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.syndesis.verifier.Verifier;
-import io.syndesis.verifier.VerifierRegistry;
-import io.syndesis.verifier.VerifierResponse;
+import io.syndesis.verifier.api.Verifier;
+import io.syndesis.verifier.api.VerifierResponse;
+import org.apache.camel.CamelContext;
+import org.apache.camel.NoSuchBeanException;
+import org.apache.camel.spi.FactoryFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 
 @Component
 @Path("/verifier")
 public class VerifierEndpoint {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VerifierEndpoint.class);
+    private static final String RESOURCE_PATH = "META-INF/syndesis/connector/verifier/";
 
-    private VerifierRegistry verifierRegistry;
-
-    public VerifierEndpoint(VerifierRegistry verifierRegistry) {
-        this.verifierRegistry = verifierRegistry;
-    }
+    @Autowired
+    private ApplicationContext applicationContext;
+    @Autowired
+    private CamelContext camelContext;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public List<VerifierResponse> verify(@PathParam("id") String connectorId,
-                                         Map<String, Object> parameters) {
-        Verifier verifier = verifierRegistry.getVerifier(connectorId);
-        if (verifier == null) {
-            return Collections.singletonList(createUnsupportedResponse(connectorId));
+    public List<VerifierResponse> verify(@PathParam("id") String connectorId, Map<String, Object> parameters) {
+        List<VerifierResponse> answer;
+        Verifier verifier;
+
+        try {
+            // First find try to lookup the verifier from the application context
+            verifier = applicationContext.getBean(connectorId, Verifier.class);
+        } catch (NoSuchBeanDefinitionException|NoSuchBeanException ignored) {
+            LOGGER.debug("No bean of type: {} with id: {} found in application context, switch to factory finder", Verifier.class.getName(), connectorId);
+
+            verifier = null;
+
+            try {
+                // Then fallback to camel's factory finder
+                final FactoryFinder finder = camelContext.getFactoryFinder(RESOURCE_PATH);
+                final Class<?> type = finder.findClass(connectorId);
+
+                verifier = (Verifier) camelContext.getInjector().newInstance(type);
+            } catch (Exception e) {
+                LOGGER.warn("No factory finder of type: {} for id: {}", Verifier.class.getName(), connectorId, e);
+            }
         }
-        return filterExceptions(verifier.verify(parameters));
+
+
+        if (verifier != null) {
+            answer = verifier.verify(camelContext, connectorId, parameters);
+            answer = filterExceptions(answer);
+        } else {
+            answer = Collections.singletonList(createUnsupportedResponse(connectorId));
+        }
+
+
+        return answer;
     }
 
     private List<VerifierResponse> filterExceptions(List<VerifierResponse> responses) {
@@ -64,7 +97,7 @@ public class VerifierEndpoint {
                 for (VerifierResponse.Error error : errors) {
                     Map<String,Object> attributes = error.getAttributes();
                     if (attributes != null) {
-                        Set<String> toRemove = new HashSet<String>();
+                        Set<String> toRemove = new HashSet<>();
                         for (Map.Entry<String, Object> entry : attributes.entrySet()) {
                             if (entry.getValue() instanceof Exception) {
                                 toRemove.add(entry.getKey());
@@ -81,8 +114,7 @@ public class VerifierEndpoint {
     }
 
     private VerifierResponse createUnsupportedResponse(String connectorId) {
-        return new VerifierResponse.Builder(Verifier.Status.UNSUPPORTED,
-                                            Verifier.Scope.PARAMETERS)
+        return new VerifierResponse.Builder(Verifier.Status.UNSUPPORTED, Verifier.Scope.PARAMETERS)
             .error("unknown-connector", String.format("No connector for ID %s registered", connectorId))
             .build();
     }

@@ -42,13 +42,21 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.validation.Validator;
 import java.io.IOException;
 import java.util.List;
 
-@SpringBootApplication(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
-    LinkedInAutoConfiguration.class, SocialWebAutoConfiguration.class})
+@SpringBootApplication(
+    exclude = {
+        TwitterAutoConfiguration.class,
+        FacebookAutoConfiguration.class,
+        LinkedInAutoConfiguration.class,
+        SocialWebAutoConfiguration.class
+    })
 @EnableConfigurationProperties({ClientSideStateProperties.class, MavenProperties.class})
 public class Application extends SpringBootServletInitializer {
 
@@ -69,6 +77,23 @@ public class Application extends SpringBootServletInitializer {
             factory.addDeploymentInfoCustomizers(customizer);
         }
         return factory;
+    }
+
+    @Bean
+    public WebMvcConfigurer staticResourceConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                registry
+                    .addResourceHandler("/mapper/**")
+                    .addResourceLocations(
+                        "classpath:/META-INF/syndesis/mapper/",
+                        "classpath:/META-INF/resources/mapper/",
+                        "classpath:/static/mapper/",
+                        "classpath:/resources/mapper/"
+                    );
+            }
+        };
     }
 
     @Bean

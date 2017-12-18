@@ -19,11 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-
-import io.syndesis.verifier.v1.metadata.MetadataAdapter;
-import io.syndesis.verifier.v1.metadata.PropertyPair;
-import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
-
+import io.syndesis.verifier.api.MetadataAdapter;
+import io.syndesis.verifier.api.PropertyPair;
+import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 
 import static org.assertj.core.api.Assertions.assertThat;

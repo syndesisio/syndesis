@@ -101,6 +101,11 @@
 
     <dependency>
       <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
     </dependency>
 
@@ -190,13 +195,25 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>http-get-connector</artifactId>
+      <artifactId>connector-verifier</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>twitter-mention-connector</artifactId>
+      <artifactId>http-get-connector</artifactId>
+      <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-http4-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>twitter-connector</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -215,24 +232,48 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-connector</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-start-connector</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-start-connector</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
@@ -256,6 +297,12 @@
       <groupId>io.syndesis</groupId>
       <artifactId>activemq-publish-connector</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sjms-starter</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -328,7 +375,7 @@
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.camel:camel-salesforce</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:http-get-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:twitter-mention-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:twitter-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-start-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-connector</ignoredUnusedDeclaredDependency>

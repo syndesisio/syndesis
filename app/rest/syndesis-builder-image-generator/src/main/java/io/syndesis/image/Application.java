@@ -17,6 +17,7 @@ package io.syndesis.image;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.syndesis.core.Json;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.extension.ExtensionDataManager;
@@ -48,11 +50,16 @@ import io.syndesis.project.converter.ProjectGenerator;
 import io.syndesis.project.converter.ProjectGeneratorConfiguration;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
 import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
 
 @SpringBootApplication(
     exclude = {
@@ -61,6 +68,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
     }
 )
 public class Application implements ApplicationRunner {
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     @Value("${to:image}")
     private String to;
@@ -82,12 +91,12 @@ public class Application implements ApplicationRunner {
     }
 
 
-    private static void generateIntegrationProject(File project) throws IOException {
+    private void generateIntegrationProject(File project) throws IOException {
         final ReadApiClientData reader = new ReadApiClientData();
-        ArrayList<Step> steps = new ArrayList<>();
+        final ArrayList<Step> steps = new ArrayList<>();
 
         String deploymentText;
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("io/syndesis/dao/deployment.json")) {
+        try (InputStream is = resourceLoader.getResource("io/syndesis/dao/deployment.json").getInputStream()) {
             deploymentText = reader.from(is);
         }
 
@@ -126,6 +135,34 @@ public class Application implements ApplicationRunner {
                         .build()
                 );
             }
+        }
+
+        try {
+            final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
+            final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
+
+            if (resources != null) {
+                for (Resource resource: resources) {
+                    Connector connector = Json.mapper().readValue(resource.getInputStream(), Connector.class);
+
+                    if (connector != null) {
+                        for (final Action<?> action : connector.getActions()) {
+                            steps.add(
+                                new SimpleStep.Builder()
+                                    .stepKind("endpoint")
+                                    .connection(new Connection.Builder()
+                                        .connector(connector)
+                                        .connectorId(connector.getId())
+                                        .build())
+                                    .action(action)
+                                    .build()
+                            );
+                        }
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // ignore
         }
 
         Integration integration = new Integration.Builder()

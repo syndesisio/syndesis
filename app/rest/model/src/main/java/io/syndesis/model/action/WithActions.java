@@ -16,12 +16,26 @@
 package io.syndesis.model.action;
 
 import java.util.List;
+import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
+import io.syndesis.model.WithId;
 import io.syndesis.model.validation.AllValidations;
 
 public interface WithActions<T extends Action<? extends ActionDescriptor>> {
 
     @NotNull(groups = AllValidations.class)
     List<T> getActions();
+
+    default Optional<T> findActionById(String actionId) {
+        if (getActions() == null) {
+            return Optional.empty();
+        }
+
+        return getActions().stream()
+            .filter(WithId.class::isInstance)
+            .filter(action -> ((WithId)action).getId().isPresent())
+            .filter(action -> actionId.equals(((WithId)action).getId().get()))
+            .findFirst();
+    }
 }

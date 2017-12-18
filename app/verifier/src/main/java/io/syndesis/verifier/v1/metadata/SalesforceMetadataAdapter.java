@@ -28,7 +28,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.SimpleTypeSchema;
-
+import io.syndesis.verifier.api.MetadataAdapter;
+import io.syndesis.verifier.api.PropertyPair;
+import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
 import org.apache.camel.component.salesforce.api.utils.JsonUtils;

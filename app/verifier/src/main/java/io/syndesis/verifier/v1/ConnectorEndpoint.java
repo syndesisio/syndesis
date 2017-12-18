@@ -15,30 +15,36 @@
  */
 package io.syndesis.verifier.v1;
 
-import java.util.Map;
-
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import io.syndesis.verifier.v1.metadata.MetadataAdapter;
-
+import io.syndesis.verifier.api.MetadataAdapter;
+import org.apache.camel.CamelContext;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 @Path("/connectors")
 public class ConnectorEndpoint {
 
-    private final Map<String, MetadataAdapter<?>> adapters;
-
-    public ConnectorEndpoint(final Map<String, MetadataAdapter<?>> adapters) {
-        this.adapters = adapters;
-    }
+    @Autowired
+    private ApplicationContext applicationContext;
+    @Autowired
+    private CamelContext camelContext;
 
     @Path("/{connectorId}/actions")
     public ActionDefinitionEndpoint actions(@PathParam("connectorId") final String connectorId) throws Exception {
-        final MetadataAdapter<?> adapter = MetadataEndpoint.adapterFor(adapters, connectorId);
+        MetadataAdapter<?> adapter;
 
-        return new ActionDefinitionEndpoint(connectorId, adapter);
+        try {
+            adapter = applicationContext.getBean(connectorId + "-adapter", MetadataAdapter.class);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new IllegalStateException("Unable to find adapter for:" + connectorId, e);
+        }
+
+        return new ActionDefinitionEndpoint(camelContext, connectorId, adapter);
     }
 
 }

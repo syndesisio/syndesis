@@ -59,8 +59,11 @@
   </properties>
 
   <modules>
+    <module>connector-verifier</module>
     <module>components</module>
+    <module>connectors-maven-plugin</module>
     <module>connectors</module>
+    <module>connectors-catalog</module>
     <module>connector-verify</module>
     <module>catalog</module>
   </modules>

@@ -32,7 +32,7 @@
     <module>aws</module>
     <module>http</module>
     <module>timer</module>
-    <module>twitter</module>
+    <module>twitter-connector</module>
     <module>salesforce</module>
     <module>sql</module>
     <module>rest</module>
@@ -41,5 +41,4 @@
     <module>jms</module>
     <module>odata</module>
   </modules>
-
 </project>

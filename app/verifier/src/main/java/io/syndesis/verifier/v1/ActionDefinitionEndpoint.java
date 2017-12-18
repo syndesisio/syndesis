@@ -16,7 +16,6 @@
 package io.syndesis.verifier.v1;
 
 import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -24,13 +23,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.syndesis.verifier.v1.metadata.MetadataAdapter;
-import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
+import io.syndesis.verifier.api.MetadataAdapter;
+import io.syndesis.verifier.api.SyndesisMetadata;
+import org.apache.camel.CamelContext;
+
 
 public class ActionDefinitionEndpoint extends MetadataEndpoint {
 
-    public ActionDefinitionEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
-        super(connectorId, adapter);
+    public ActionDefinitionEndpoint(final CamelContext camelContext, final String connectorId, final MetadataAdapter<?> adapter) {
+        super(camelContext, connectorId, adapter);
     }
 
     @POST
@@ -38,7 +39,7 @@ public class ActionDefinitionEndpoint extends MetadataEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{actionId}")
     public SyndesisMetadata<?> definition(@PathParam("actionId") final String actionId,
-        final Map<String, Object> properties) throws Exception {
+                                          final Map<String, Object> properties) throws Exception {
         return fetchMetadata(actionId, properties);
     }
 }

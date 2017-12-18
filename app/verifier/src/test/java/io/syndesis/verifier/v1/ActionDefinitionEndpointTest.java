@@ -21,10 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-
-import io.syndesis.verifier.v1.metadata.PropertyPair;
-import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
-
+import io.syndesis.verifier.api.PropertyPair;
+import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
@@ -41,24 +39,24 @@ public class ActionDefinitionEndpointTest {
     private static final Map<String, List<PropertyPair>> PROPERTIES = Collections.singletonMap("property",
         Arrays.asList(new PropertyPair("value1", "First Value"), new PropertyPair("value2", "Second Value")));
 
-    private final ActionDefinitionEndpoint endpoint = new ActionDefinitionEndpoint("petstore",
-        new PetstoreAdapter(PAYLOAD, PROPERTIES, INPUT, OUTPUT)) {
-        @Override
-        protected CamelContext camelContext() {
-            final DefaultCamelContext camelContext = new DefaultCamelContext();
-            camelContext.addComponent("petstore", new PetstoreComponent(PAYLOAD));
-
-            return camelContext;
-        }
-
-    };
 
     @Test
     public void shouldMetadata() throws Exception {
-        final SyndesisMetadata<?> metadata = endpoint.definition("dog-food", Collections.emptyMap());
+        final CamelContext context = new DefaultCamelContext();
+        context.addComponent("petstore", new PetstoreComponent(PAYLOAD));
 
-        assertThat(metadata.properties).isSameAs(PROPERTIES);
-        assertThat(metadata.inputSchema).isSameAs(INPUT);
-        assertThat(metadata.outputSchema).isSameAs(OUTPUT);
+        try {
+            context.start();
+
+            final PetstoreAdapter adapter = new PetstoreAdapter(PAYLOAD, PROPERTIES, INPUT, OUTPUT);
+            final ActionDefinitionEndpoint endpoint = new ActionDefinitionEndpoint(context, "petstore", adapter);
+            final SyndesisMetadata<?> metadata = endpoint.definition("dog-food", Collections.emptyMap());
+
+            assertThat(metadata.properties).isSameAs(PROPERTIES);
+            assertThat(metadata.inputSchema).isSameAs(INPUT);
+            assertThat(metadata.outputSchema).isSameAs(OUTPUT);
+        } finally {
+            context.stop();
+        }
     }
 }
