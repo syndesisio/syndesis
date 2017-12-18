@@ -70,8 +70,8 @@ export class TechExtensionImportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.extensionId = this.route.snapshot.paramMap.get('id');
-    this.extensionName = this.route.snapshot.paramMap.get('name');
+    this.extensionId = this.route.snapshot.paramMap.get('extensionId');
+    this.extensionName = this.route.snapshot.queryParamMap.get('name');
     if (!this.extensionName) {
       // safety net
       this.extensionId = undefined;
