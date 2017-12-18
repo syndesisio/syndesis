@@ -15,17 +15,29 @@
  */
 package io.syndesis.connector.salesforce;
 
-/**
- * Camel salesforce-delete-sobject connector
- */
-public class SalesforceDeleteSObjectComponent extends SalesforceConnector {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public SalesforceDeleteSObjectComponent() {
-        this(null);
+public final class SalesforceIdentifier {
+
+    @JsonProperty("Id")
+    private String id;
+
+    @JsonCreator
+    public SalesforceIdentifier(@JsonProperty("Id") final String id) {
+        this.id = id;
     }
 
-    public SalesforceDeleteSObjectComponent(final String componentSchema) {
-        super("salesforce-delete-sobject", componentSchema, SalesforceDeleteSObjectComponent.class);
+    public String getId() {
+        return id;
     }
 
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

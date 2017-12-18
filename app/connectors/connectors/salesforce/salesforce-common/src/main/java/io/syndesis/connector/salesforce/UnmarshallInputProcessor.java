@@ -15,17 +15,19 @@
  */
 package io.syndesis.connector.salesforce;
 
-/**
- * Camel salesforce-delete-sobject connector
- */
-public class SalesforceDeleteSObjectComponent extends SalesforceConnector {
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.component.connector.DataType;
 
-    public SalesforceDeleteSObjectComponent() {
-        this(null);
+/* default */ final class UnmarshallInputProcessor extends UnmarshallProcessor {
+
+    public UnmarshallInputProcessor(final DataType dataType) {
+        super(dataType);
     }
 
-    public SalesforceDeleteSObjectComponent(final String componentSchema) {
-        super("salesforce-delete-sobject", componentSchema, SalesforceDeleteSObjectComponent.class);
+    @Override
+    /* default */ Message message(final Exchange exchange) {
+        return exchange.getIn();
     }
 
 }

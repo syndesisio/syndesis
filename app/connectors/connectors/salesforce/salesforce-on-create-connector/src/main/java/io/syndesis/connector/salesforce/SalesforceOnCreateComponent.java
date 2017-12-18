@@ -15,14 +15,14 @@
  */
 package io.syndesis.connector.salesforce;
 
-public class SalesforceOnCreateComponent extends AbstractSalesforceStreamingConnector {
+public class SalesforceOnCreateComponent extends SalesforceStreamingConnector {
 
     public SalesforceOnCreateComponent() {
         this(null);
     }
 
-    public SalesforceOnCreateComponent(String componentSchema) {
-        super("salesforce-on-create", componentSchema, SalesforceOnCreateComponent.class.getName(), "syndesis_", "_create");
+    public SalesforceOnCreateComponent(final String componentSchema) {
+        super("salesforce-on-create", componentSchema, SalesforceOnCreateComponent.class);
     }
 
 }

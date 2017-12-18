@@ -1,0 +1,7 @@
+{
+  "baseScheme": "salesforce",
+  "name": "SalesforceConnector",
+  "javaType": "io.syndesis.connector.salesforce.SalesforceConnector",
+  "inputDataType": "java:io.syndesis.connector.salesforce.SalesforceIdentifier",
+  "outputDataType": "java:org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+}

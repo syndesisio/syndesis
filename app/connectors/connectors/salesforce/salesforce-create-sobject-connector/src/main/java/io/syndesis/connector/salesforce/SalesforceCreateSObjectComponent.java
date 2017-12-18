@@ -15,37 +15,17 @@
  */
 package io.syndesis.connector.salesforce;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.camel.Message;
-import org.apache.camel.component.connector.DefaultConnectorComponent;
-import org.apache.camel.component.salesforce.api.dto.CreateSObjectResult;
-import org.apache.camel.component.salesforce.api.utils.JsonUtils;
-
 /**
  * Camel salesforce-create-sobject connector
  */
-public class SalesforceCreateSObjectComponent extends DefaultConnectorComponent {
-
+public class SalesforceCreateSObjectComponent extends SalesforceConnector {
 
     public SalesforceCreateSObjectComponent() {
         this(null);
     }
 
-    public SalesforceCreateSObjectComponent(String componentSchema) {
-        super("salesforce-create-sobject", componentSchema, SalesforceCreateSObjectComponent.class.getName());
-
-        setAfterProducer( exchange -> {
-
-            // map json response back to CreateSObjectResult POJO
-            ObjectMapper mapper = JsonUtils.createObjectMapper();
-            if (!exchange.isFailed()) {
-                Message out = exchange.getOut();
-                CreateSObjectResult result = mapper.readValue(out.getBody(String.class),
-                        CreateSObjectResult.class);
-                out.setBody(result);
-            }
-        });
+    public SalesforceCreateSObjectComponent(final String componentSchema) {
+        super("salesforce-create-sobject", componentSchema, SalesforceCreateSObjectComponent.class);
     }
 
 }

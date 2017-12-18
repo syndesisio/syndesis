@@ -15,17 +15,12 @@
  */
 package io.syndesis.connector.salesforce;
 
-/**
- * Camel salesforce-delete-sobject connector
- */
-public class SalesforceDeleteSObjectComponent extends SalesforceConnector {
+public abstract class UpdatingSalesforceConnector extends SalesforceConnector {
 
-    public SalesforceDeleteSObjectComponent() {
-        this(null);
-    }
+    protected UpdatingSalesforceConnector(final String componentName, final String componentScheme, final Class<?> componentClass) {
+        super(componentName, componentScheme, componentClass);
 
-    public SalesforceDeleteSObjectComponent(final String componentSchema) {
-        super("salesforce-delete-sobject", componentSchema, SalesforceDeleteSObjectComponent.class);
+        setBeforeProducer(new AdaptObjectForUpdateProcessor(getOptions()));
     }
 
 }

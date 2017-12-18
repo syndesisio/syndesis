@@ -15,14 +15,14 @@
  */
 package io.syndesis.connector.salesforce;
 
-public class SalesforceOnUpdateComponent extends AbstractSalesforceStreamingConnector {
+public class SalesforceOnUpdateComponent extends SalesforceStreamingConnector {
 
     public SalesforceOnUpdateComponent() {
         this(null);
     }
 
-    public SalesforceOnUpdateComponent(String componentSchema) {
-        super("salesforce-on-update", componentSchema, SalesforceOnUpdateComponent.class.getName(), "syndesis_", "_update");
+    public SalesforceOnUpdateComponent(final String componentSchema) {
+        super("salesforce-on-update", componentSchema, SalesforceOnUpdateComponent.class);
     }
 
 }

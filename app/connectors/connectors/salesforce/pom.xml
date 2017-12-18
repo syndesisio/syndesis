@@ -29,7 +29,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>salesforce-model</module>
+    <module>salesforce-common</module>
     <module>salesforce-create-sobject-connector</module>
     <module>salesforce-delete-sobject-connector</module>
     <module>salesforce-delete-sobject-with-id-connector</module>
@@ -37,7 +37,6 @@
     <module>salesforce-get-sobject-with-id-connector</module>
     <module>salesforce-update-sobject-connector</module>
     <module>salesforce-upsert-sobject-connector</module>
-    <module>salesforce-upsert-contact-connector</module>
     <module>salesforce-on-create-connector</module>
     <module>salesforce-on-update-connector</module>
     <module>salesforce-on-delete-connector</module>
@@ -57,6 +56,11 @@
             <artifactId>validation-api</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>salesforce-common</artifactId>
+        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
