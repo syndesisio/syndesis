@@ -69,7 +69,7 @@
       "kind":"property",
       "displayName":"DB URL",
       "group":"common",
-      "required":false,
+      "required":true,
       "type":"string",
       "javaType":"java.lang.String",
       "deprecated":false,
