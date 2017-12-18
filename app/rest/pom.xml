@@ -39,7 +39,7 @@
     <basepom.compiler.fail-warnings>true</basepom.compiler.fail-warnings>
     <dep.plugin.compiler.version>3.7.0</dep.plugin.compiler.version>
 
-    <syndesis-connectors.version>1.2-SNAPSHOT</syndesis-connectors.version>
+    <syndesis-connectors.version>${project.version}</syndesis-connectors.version>
     <syndesis-integration-runtime.version>${project.version}</syndesis-integration-runtime.version>
 
     <assertj-core.version>3.6.2</assertj-core.version>
@@ -300,7 +300,7 @@
       <dependency>
         <groupId>io.syndesis.integration-runtime</groupId>
         <artifactId>model</artifactId>
-        <version>${syndesis-integration-runtime.version}</version>
+        <version>${project.version}</version>
       </dependency>
 
       <dependency>
