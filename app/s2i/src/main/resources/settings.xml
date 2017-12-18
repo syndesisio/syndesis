@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright (C) 2017 Red Hat, Inc.
+   Copyright (C) 2016 Red Hat, Inc.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,56 +14,93 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<settings>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <profiles>
     <profile>
-      <id>syndesis-repos</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
+      <id>fusesource.repo</id>
       <repositories>
         <repository>
-          <id>apache-snapshot</id>
-          <url>http://repository.apache.org/snapshots/</url>
+          <id>maven.central</id>
+          <name>Maven Central</name>
+          <url>https://repo1.maven.org/maven2</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
         </repository>
         <repository>
-          <id>ea-repo</id>
-          <name>ea-repo</name>
-          <url>http://origin-repository.jboss.org/nexus/content/groups/ea</url>
+          <id>redhat.ga</id>
+          <name>Red Hat General Availability Repository</name>
+          <url>https://maven.repository.redhat.com/ga</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
         </repository>
         <repository>
-          <id>central</id>
-          <name>Maven Central Repo</name>
-          <url>http://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-          <id>oss-sonatype-staging</id>
-          <name>Sonatype Snapshot Repository</name>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+          <id>jboss.ea</id>
+          <name>JBoss Community Early Access Release Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
         </repository>
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>apache-snapshot</id>
-          <url>http://repository.apache.org/snapshots/</url>
+          <id>maven.central</id>
+          <name>Maven Central</name>
+          <url>https://repo1.maven.org/maven2</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
         </pluginRepository>
         <pluginRepository>
-          <id>fuse-ea</id>
-          <name>Fuse EA Repository</name>
+          <id>redhat.ga</id>
+          <name>Red Hat General Availability Repository</name>
+          <url>https://maven.repository.redhat.com/ga</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+        </pluginRepository>
+        <pluginRepository>
+          <id>jboss.ea</id>
+          <name>JBoss Community Early Access Release Repository</name>
           <url>https://repository.jboss.org/nexus/content/groups/ea</url>
-        </pluginRepository>
-        <pluginRepository>
-          <id>enterprise</id>
-          <name>Enterprise Releases</name>
-          <url>http://maven.repository.redhat.com/techpreview/all/</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
         </pluginRepository>
       </pluginRepositories>
     </profile>
   </profiles>
+
   <activeProfiles>
-    <!--make the profile active all the time -->
-    <activeProfile>syndesis-repos</activeProfile>
+    <activeProfile>fusesource.repo</activeProfile>
   </activeProfiles>
 
 </settings>
-
