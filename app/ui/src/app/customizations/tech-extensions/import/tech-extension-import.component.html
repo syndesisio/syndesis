@@ -10,13 +10,13 @@
           </li>
           <li>
             <a [routerLink]="['..']">
-              Technical Extensions
+              Extensions
             </a>
           </li>
           <li class="active">
             <strong>
               <ng-container *ngIf="!extensionId && !extensionName">
-                Import Technical Extension
+                Import Extension
               </ng-container>
               <ng-container *ngIf="extensionId && extensionName">
                 Update {{ extensionName }} <small>(ID: {{ extensionId }})</small>
@@ -43,7 +43,7 @@
       <div class="panel-heading">
         <h3 class="panel-title">
           <ng-container *ngIf="!extensionId && !extensionName">
-            Import Technical Extension
+            Import Extension
           </ng-container>
           <ng-container *ngIf="extensionId && extensionName">
             Update {{ extensionName }} <small>(ID: {{ extensionId }})</small>
@@ -53,12 +53,11 @@
       <div class="panel-body">
         <p>
           <ng-container *ngIf="!extensionId && !extensionName">
-            To import a technical extension, it must be packaged as a .jar file. To update a technical extension in the breadcrumbs above,
-            click Technical Extensions and in the list of technical extensions, click Update for the appropriate technical
-            extension.
+            To import an extension, it must be packaged as a .jar file. To update an extension in the breadcrumbs above,
+            click Extensions and in the list of extensions, click Update for the appropriate extension.
           </ng-container>
           <ng-container *ngIf="extensionId && extensionName">
-            To update a technical extension, you must ensure that the new version you are uploading is compatible with the previously uploaded version.
+            To update an extension, you must ensure that the new version you are uploading is compatible with the previously uploaded version.
           </ng-container>
         </p>
         <ng-container *ngIf="error">
