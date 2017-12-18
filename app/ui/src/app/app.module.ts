@@ -21,6 +21,7 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { CanDeactivateGuard, SyndesisCommonModule } from './common';
@@ -95,9 +96,7 @@ export function mapperRestangularProvider(
     AppRoutingModule,
     LegacyStoreModule,
     StoreModule.forRoot(platformReducer),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25
-    }),
+    !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,
     NotificationModule,
