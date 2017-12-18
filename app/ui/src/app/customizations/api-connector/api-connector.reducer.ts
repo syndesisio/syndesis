@@ -1,16 +1,19 @@
-import { ApiConnectorState, ApiConnectors } from './api-connector.models';
+import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
+import { BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
+import { ApiConnectorState } from './api-connector.models';
 import {
   ApiConnectorActions,
   ApiConnectorFetchComplete,
   ApiConnectorFetchFail
 } from './api-connector.actions';
 
+
 const initialState: ApiConnectorState = {
   list             : [],
   createRequest    : null,
-  onSync           : true,
-  isInitialized    : false,
+  loading          : true,
+  loaded           : false,
   hasErrors        : false,
   errors           : []
 };
@@ -20,7 +23,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     case ApiConnectorActions.FETCH: {
       return {
         ...state,
-        onSync: true,
+        loading: true,
         hasErrors: false,
         errors: []
       };
@@ -31,8 +34,8 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       return {
         ...state,
         list,
-        onSync: false,
-        isInitialized: true,
+        loading: false,
+        loaded: true,
         hasErrors: false,
         errors: []
       };
@@ -42,8 +45,8 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       const error = (action as ApiConnectorFetchFail).payload;
       return {
         ...state,
-        onSync: false,
-        isInitialized: true,
+        loading: false,
+        loaded: true,
         hasErrors: true,
         errors: [error]
       };
@@ -54,3 +57,9 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     }
   }
 }
+
+export interface ApiConnectorStore extends PlatformStore {
+  apiConnectorState: ApiConnectorState;
+}
+
+export const getApiConnectorState = createFeatureSelector<ApiConnectorState>('apiConnectorState');

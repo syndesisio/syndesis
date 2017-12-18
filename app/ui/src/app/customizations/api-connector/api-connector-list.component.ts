@@ -3,21 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 
-import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { ConfigService } from '@syndesis/ui/config.service';
 
-import { ApiConnector, ApiConnectors, ApiConnectorStore as ApiStore } from './api-connector.models';
-
-import {
-  ActionConfig,
-  ListConfig,
-  EmptyStateConfig,
-} from 'patternfly-ng';
-
-import { Store } from '@ngrx/store';
-import { PlatformStore, MetadataState } from '@syndesis/ui/platform';
-import { ApiConnectorStore } from '@syndesis/ui/customizations/api-connector/api-connector.store';
+import { ApiConnector, ApiConnectors } from './api-connector.models';
+import { ApiConnectorStore } from './api-connector.store';
 
 @Component({
   selector: 'syndesis-api-connector-list',
@@ -36,8 +28,6 @@ export class ApiConnectorListComponent implements OnInit {
   };
 
   constructor(
-    private store: Store<PlatformStore>,
-    private apiStore: Store<ApiStore>,
     public config: ConfigService,
     private apiConnectorStore: ApiConnectorStore,
     private router: Router,
@@ -75,7 +65,7 @@ export class ApiConnectorListComponent implements OnInit {
     }
   }
 
-  handleClick(event: any) {
+  handleClick(event: { item: ApiConnector }) {
     const apiConnector = event.item;
     this.router.navigate([apiConnector.id], { relativeTo: this.route });
   }
@@ -83,14 +73,5 @@ export class ApiConnectorListComponent implements OnInit {
   ngOnInit() {
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
     this.apiConnectorStore.loadAll();
-
-    const apiConnectorState$ = this.apiStore.select('apiConnectorState');
-    apiConnectorState$.subscribe(apiConnectorState => {
-      console.log(apiConnectorState);
-    });
-    const metadataState$ = this.store.select('metadataState');
-    metadataState$.subscribe(metadataState => {
-      console.log(metadataState);
-    });
   }
 }

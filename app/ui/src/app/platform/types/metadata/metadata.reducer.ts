@@ -1,12 +1,20 @@
-import { MetadataState } from './metadata.models';
+/**
+ * POC: the implementation below serves as a blueprint for coding slices of state
+ * consumed by any application domain, either eagerly or lazy loaded. It contains
+ * the usual implementation of a default initial state and associated reducer,
+ * plus a convenience state slice selector at the bottom.
+ * See: './../platform.reducer.ts'
+ */
+import { createFeatureSelector } from '@ngrx/store';
 
+import { MetadataState } from './metadata.models';
 import { MetadataActions } from './metadata.actions';
 
 const initialState: MetadataState = {
   appName          : 'Syndesis',
   locale           : 'en-us',
-  onSync           : false,
-  isInitialized    : true,
+  loading          : false,
+  loaded           : true,
   hasErrors        : false,
   errors           : []
 };
@@ -29,3 +37,5 @@ export function metadataReducer(state = initialState, action: any): MetadataStat
     }
   }
 }
+
+export const getMetadataState = createFeatureSelector<MetadataState>('metadataState');

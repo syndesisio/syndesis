@@ -37,9 +37,7 @@ const routes: Routes = [{
     PatternflyUIModule,
     RouterModule.forChild(routes),
     SyndesisCommonModule,
-    StoreModule.forFeature('apiConnectorState', {
-      apiConnectorState: apiConnectorReducer
-    })
+    StoreModule.forFeature('apiConnectorState', apiConnectorReducer)
   ],
   exports: [RouterModule],
   declarations: [

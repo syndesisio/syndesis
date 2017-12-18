@@ -1,27 +1,7 @@
-import { ApiConnector } from './api-connector.models';
-import { BaseEntity } from '@syndesis/ui/model';
 import { StringMap, BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
+import { BaseEntity } from '@syndesis/ui/model';
 
-export interface ApiConnector extends BaseEntity {
-  kind: string;
-  data: ApiConnectorData;
-}
-
-export type ApiConnectors = Array<ApiConnector>;
-
-export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation, CustomSwaggerConnectorRequest {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  fileIcon?: File;
-  properties: ApiConnectorProperties;
-  connectorProperties: any;
-  host: string;
-  baseUrl: string;
-}
-
-export interface ApiConnectorProperties extends BaseEntity {
+export interface ApiConnectorProperties {
   specification: {
     kind: string;
     displayName: string;
@@ -40,6 +20,24 @@ export interface ApiConnectorProperties extends BaseEntity {
   };
 }
 
+export interface ApiConnectorData extends ApiConnectorValidation, CustomSwaggerConnectorRequest {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  fileIcon?: File;
+  properties: ApiConnectorProperties;
+  connectorProperties: any;
+  host: string;
+  baseUrl: string;
+}
+
+export interface ApiConnector extends BaseEntity {
+  data: ApiConnectorData;
+}
+
+export type ApiConnectors = Array<ApiConnector>;
+
 // XXX: The following models are designed to fit into the Redux container
 //      and will eventually replace the ones above
 
@@ -54,7 +52,7 @@ export interface ApiConnectorValidation {
   };
 }
 
-export interface CustomApiConnectorRequest extends BaseReducerModel {
+export interface CustomApiConnectorRequest {
   connectorTemplateId: string;
   name?: string;
   description?: string;
@@ -75,6 +73,3 @@ export interface ApiConnectorState extends BaseReducerModel {
   list: ApiConnectors;
   createRequest: CustomSwaggerConnectorRequest;
 }
-
-/* tslint:disable:no-empty-interface */
-export interface ApiConnectorStore extends ApiConnectorState { }

@@ -21,8 +21,8 @@ export interface ActionReducerError {
  * a NgRX-managed slice of state featuring its own reducer.
  */
 export interface BaseReducerModel {
-  onSync?: boolean;
-  isInitialized?: boolean;
+  loading?: boolean;
+  loaded?: boolean;
   hasErrors?: boolean;
   errors?: Array<ActionReducerError>;
 }

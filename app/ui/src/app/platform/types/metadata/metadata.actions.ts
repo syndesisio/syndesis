@@ -3,8 +3,9 @@ import { Action } from '@ngrx/store';
 import { MetadataState } from './metadata.models';
 
 /**
- * The MetadataActions class provides convenient static methods to access action
+ * POC: The MetadataActions class provides convenient static methods to access action
  * type tokens and helper methods to return and dispatch statically typed actions.
+ * See: './metadata.reducer.ts'
  */
 export class MetadataActions {
   // Action type tokens
