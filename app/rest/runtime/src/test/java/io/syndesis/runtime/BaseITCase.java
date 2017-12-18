@@ -59,7 +59,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {
 		Application.class,
-        InfinispanCacheConfiguration.class,
+        CacheConfiguration.class,
         DataStoreConfiguration.class,
         FileStoreConfiguration.class,
         ExtensionConfiguration.class,

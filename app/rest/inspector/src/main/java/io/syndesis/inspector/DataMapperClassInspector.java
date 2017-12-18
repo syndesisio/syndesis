@@ -20,15 +20,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
+import io.syndesis.core.cache.CacheManager;
 import io.syndesis.core.Json;
 import io.syndesis.core.SyndesisServerException;
-
-import org.infinispan.Cache;
-import org.infinispan.manager.CacheContainer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -55,12 +53,12 @@ public class DataMapperClassInspector implements Inspector {
 
     private static final String CACHE_NAME = Inspector.class.getName();
 
-    private final CacheContainer caches;
+    private final CacheManager caches;
     private final RestTemplate restTemplate;
     private final ClassInspectorConfigurationProperties config;
 
 
-    protected DataMapperClassInspector(CacheContainer caches, RestTemplate restTemplate, ClassInspectorConfigurationProperties config) {
+    protected DataMapperClassInspector(CacheManager caches, RestTemplate restTemplate, ClassInspectorConfigurationProperties config) {
         this.caches = caches;
         this.restTemplate = restTemplate;
         this.config = config;
@@ -68,7 +66,7 @@ public class DataMapperClassInspector implements Inspector {
 
     @Override
     public List<String> getPaths(String kind, String type, String specification, Optional<byte[]> exemplar) {
-        Cache<String, List<String>> cache = caches.getCache(CACHE_NAME);
+        Map<String, List<String>> cache = caches.getCache(CACHE_NAME);
         if (cache.containsKey(type)) {
             return cache.get(type);
         }

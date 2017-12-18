@@ -21,8 +21,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.syndesis.core.Json;
+import io.syndesis.core.cache.CacheManager;
+import io.syndesis.core.cache.LRUCacheManager;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
@@ -32,10 +35,8 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,16 +45,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DataManagerTest {
-
-    @Rule
-    public InfinispanCache infinispan = new InfinispanCache();
-
+    private CacheManager cacheManager;
     private DataManager dataManager = null;
 
     @Before
     public void setup() {
+        cacheManager = new LRUCacheManager(100);
+
         //Create Data Manager
-        dataManager = new DataManager(infinispan.getCaches(), new ArrayList<>(), null, new EncryptionComponent(null));
+        dataManager = new DataManager(cacheManager, new ArrayList<>(), null, new EncryptionComponent(null));
         dataManager.init();
         dataManager.resetDeploymentData();
     }
@@ -63,7 +63,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactly("gmail", "activemq", "github", "ftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "aws-s3", "http", "trade-insight");
+            .containsExactlyInAnyOrder("gmail", "activemq", "github", "ftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "aws-s3", "http", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -73,7 +73,7 @@ public class DataManagerTest {
     public void getConnections() {
         @SuppressWarnings("unchecked")
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactly("1", "2", "3", "4", "5");
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactlyInAnyOrder("1", "2", "3", "4", "5");
         Assert.assertEquals(5, connections.getTotalCount());
         Assert.assertEquals(5, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
@@ -84,9 +84,15 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(
             Connector.class,
-            resultList -> new ListResult.Builder<Connector>().createFrom(resultList).items(resultList.getItems().subList(0, 2)).build()
+            resultList -> new ListResult.Builder<Connector>()
+                .createFrom(resultList)
+                .items(resultList.getItems().stream()
+                    .filter(connector -> connector.getId().get().equals("gmail") || connector.getId().get().equals("activemq"))
+                    .collect(Collectors.toList()))
+                .build()
         );
-        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactly("gmail", "activemq");
+
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("gmail", "activemq");
         Assert.assertEquals(16, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
@@ -126,7 +132,7 @@ public class DataManagerTest {
 
         assertThat(got).isEqualToIgnoringGivenFields(given, "id");
         assertThat(got.getId()).isPresent();
-        assertThat(infinispan.getCaches().getCache(Kind.Connector.modelName).get(got.getId().get())).isSameAs(got);
+        assertThat(cacheManager.getCache(Kind.Connector.modelName).get(got.getId().get())).isSameAs(got);
     }
 
     @Test
@@ -135,7 +141,7 @@ public class DataManagerTest {
         final Connector got = dataManager.create(connector);
 
         assertThat(got).isSameAs(connector);
-        assertThat(infinispan.getCaches().getCache(Kind.Connector.modelName).get("custom-id")).isSameAs(connector);
+        assertThat(cacheManager.getCache(Kind.Connector.modelName).get("custom-id")).isSameAs(connector);
     }
 
     @Test
