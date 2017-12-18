@@ -1,0 +1,149 @@
+#!/bin/bash
+
+NEXUS_URL="https://oss.sonatype.org"
+NEXUS_STAGING_PLUGIN_VERSION="1.6.7"
+NEXUS_SERVER_ID="oss-sonatype-staging"
+NEXUS_STAGING_REPO_PREFIX="iosyndesis" #This is the parent groupId with dots removed.
+NEXUS_DEFAULT_STAGING_PROFILE_ID="61015c63f807ce" #This this is the id of the staging profile. Just go to the list of staging profiles, click the one u need and grab that id from the url (its not displayed in the actual list).
+
+REPO_ANNOUNCEMENT_PREFIX="OpenedStagingProfile"
+
+release::description() {
+    echo "Perform a release"
+}
+
+release::usage() {
+    cat - <<EOT
+    --dry-run                 Dry run. This will stage and drop a release
+    --release-version         The release version
+    --dev-version             The development version
+    --profiles                Additional profiles to specify
+    --settings-xml            Path to a custom settings.xml to use for the reelase
+
+    --sonatype-username       The sonatype username
+    --sonatype-password       The sonatype password
+
+    --docker-registry         The docker registry
+    --docker-server-id        The docker server id (as defined in settings.xml)
+    --docker-username         The docker username
+    --docker-email            The docker email
+    --docker-password         The docker password
+
+
+EOT
+}
+
+release::run() {
+    source "$(basedir)/commands/build"
+    local dry_run=$(hasflag --dry-run)
+    local release_version=$(readopt --release-version)
+    local dev_version=$(readopt --dev-version)
+    local maven_opts=""
+
+    if [ -z "${release_version}" ]; then
+        echo "Please specify --release-version"
+        exit 1
+    fi
+
+    if [ -z "${dev_version}" ]; then
+        echo "Please specify --dev-version"
+        exit 1
+    fi
+
+    local profiles=$(readopt --profiles)
+    if [ -n "${profiles}" ]; then
+        maven_opts="$maven_opts -P${profiles}"
+    else
+        maven_opts="-Prelease"
+    fi
+
+    local settings_xml=$(readopt --settings-xml)
+    if [ -n "${settings_xml}" ]; then
+        maven_opts="$maven_opts -s $settings_xml"
+    fi
+
+    echo "Creating new staging repository..."
+    local repo_id=$(open_staging_repository "$maven_opts")
+    echo "Opened staging repository: $repo_id"
+    trap "do_cleanup \"$repo_id\" \"none\" \"$maven_opts\"" EXIT
+
+    do_release "$release_version" "$dev_version" "$maven_opts"
+    local tag=$(find_tag)
+    trap "do_cleanup \"$repo_id\" \"none\" \"$maven_opts\"" EXIT
+
+    echo "Closing staging repository: $repo_id"
+    close_staging_repository "$repo_id" "$maven_opts"
+
+    if [ -n "$dry_run" ]; then
+        echo "This is a dry run ..."
+        echo "Droping tag $tag"
+        git tag -d $tag
+        echo "Droping staging repository: $repo_id"
+        drop_staging_repository "$repo_id" "$maven_opts"
+    else
+        echo "Releasing staging repository: $repo_id"
+        trap "echo Done!" EXIT
+        exit
+        release_staging_repository "$repo_id" "$maven_opts"
+        git push origin master
+        git push orign $tag
+    fi
+}
+
+# ======================================================
+# Staging / Release Helper Functions
+
+latest_release() {
+    git log | grep "prepare release $artifactId-" | head -n 1 | awk -F "$artifactId-" '{print \$2}'
+}
+
+open_staging_repository() {
+    local maven_opts=$1
+    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-open -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingProfileId=${NEXUS_DEFAULT_STAGING_PROFILE_ID} -DopenedRepositoryMessageFormat='$REPO_ANNOUNCEMENT_PREFIX:%s' $maven_opts"
+    #Call maven and just grab the last line that contains $REPO_ANNOUNCEMENT_PREFIX discard the line that displays the whole command and get the string that is between `:` and `'`.
+    call_maven "$maven_args" tail -n 1 | grep -v maven | grep $REPO_ANNOUNCEMENT_PREFIX | awk -F ":" '{print $2}' | awk -F "'" '{print $1}'
+}
+
+close_staging_repository() {
+    local repo_id=$1
+    local maven_opts=$2
+    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-close -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingRepositoryId=$repo_id $maven_opts"
+    call_maven "$maven_args" > /dev/null
+}
+
+drop_staging_repository() {
+    local repo_id=$1
+    local maven_opts=$2
+    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-drop -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingRepositoryId=$repo_id $maven_opts"
+    call_maven "$maven_args" > /dev/null
+}
+
+do_release() {
+    local release_version=$1
+    local dev_version=$2
+    local maven_opts=$3
+    local maven_args="-B release:clean release:prepare release:perform -DpushChanges=false -Dtag=$release_version $maven_opts"
+    call_maven "$maven_args"
+}
+
+
+
+do_cleanup() {
+    echo "Cleaning up ..."
+    local repo_id=$1
+    local tag=$2
+    local maven_opts=$3
+    if [ "none" == "$tag" ]; then
+        echo "No tag has been specified. Skipping!"
+    else
+        echo "Droping tag $tag"
+        git tag -d $tag || echo "Failed to drop tag: tag."
+    fi
+    echo "Droping staging repository: $repo_id"
+    drop_staging_repository "$repo_id" "$maven_opts"
+}
+
+find_tag() {
+    local $releave_version=$1
+    git tag -l | grep $release_version | tail -n 1
+}
