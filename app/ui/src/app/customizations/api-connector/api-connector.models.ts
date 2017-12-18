@@ -9,7 +9,7 @@ export interface ApiConnector extends BaseEntity {
 //export type ApiConnectors = Array<ApiConnector>;
 
 export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   icon: string;
