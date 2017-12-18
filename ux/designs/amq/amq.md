@@ -30,7 +30,7 @@ This design covers the following workflows:
 
 1.	If users type in a Broker URL with a “ssl:” substring, display the security settings section.
 
-2.	“Skip Certificate” is a boolean checkbox.
+2.	“Skip Certificate Check” is a dropdown menu with Enable/Disable option.
 
 3.	 Both “Broker Certificate” and “Client Certificate” are text areas.
 
