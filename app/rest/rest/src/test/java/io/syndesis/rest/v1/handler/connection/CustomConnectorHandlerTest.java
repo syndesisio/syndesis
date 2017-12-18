@@ -15,11 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityNotFoundException;
-
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.action.ConnectorAction;
@@ -32,6 +27,11 @@ import io.syndesis.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -72,8 +72,8 @@ public class CustomConnectorHandlerTest {
         when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class)).thenReturn(new ConnectorGenerator() {
             @Override
             public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-                return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings)).addAction(action)
-                    .build();
+                return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings))
+                    .putAllProperties(connectorProperties).putConfiguredProperty("prop1", "value1").addAction(action).build();
             }
 
             @Override

@@ -33,78 +33,6 @@
       ],
       "description": "Type of authentication used to connect to the API"
     },
-    "clientId":{
-      "kind": "property",
-      "displayName": "OAuth Client ID",
-      "group": "producer",
-      "label": "producer",
-      "required": false,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [ "oauth-client-id" ],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "description":"OAuth Client ID, sometimes called Consumer Key"
-    },
-    "clientSecret":{
-      "kind": "property",
-      "displayName": "OAuth Client Secret",
-      "group": "producer",
-      "label": "producer",
-      "required": false,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [ "oauth-client-secret" ],
-      "deprecated": false,
-      "secret": true,
-      "componentProperty": true,
-      "description":"OAuth Client Secret, sometimes called Consumer Secret"
-    },
-    "accessToken":{
-      "kind": "property",
-      "displayName": "OAuth Access token",
-      "group": "producer",
-      "label": "producer",
-      "required": false,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [ "oauth-access-token" ],
-      "deprecated": false,
-      "secret": true,
-      "componentProperty": true,
-      "description":"OAuth Access token"
-    },
-    "authorizationEndpoint": {
-      "kind": "property",
-      "displayName": "OAuth Authorization Endpoint URL",
-      "group": "producer",
-      "label": "producer",
-      "required": true,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [
-        "oauth-authorization-url"
-      ],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "description": "URL for the start of the OAuth flow"
-    },
-    "tokenEndpoint":{
-      "kind": "property",
-      "displayName": "OAuth Token Endpoint URL",
-      "group": "producer",
-      "label": "producer",
-      "required": false,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [ "oauth-access-token-url" ],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "description":"URL to fetch the OAuth Access token"
-    },
     "specification": {
       "kind": "property",
       "displayName": "Specification",
@@ -148,22 +76,6 @@
       "componentProperty": true,
       "defaultValue": "https://www.concursolutions.com",
       "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
-    },
-    "oauthScopes": {
-      "kind": "property",
-      "displayName": "OAuth Scopes",
-      "group": "producer",
-      "label": "producer",
-      "required": false,
-      "type": "string",
-      "javaType": "java.lang.String",
-      "tags": [
-        "oauth-scope"
-      ],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": true,
-      "description": "URL to fetch the OAuth Access token"
     }
   },
   "actions": [

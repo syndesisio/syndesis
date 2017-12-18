@@ -17,12 +17,10 @@ package io.syndesis.connector.generator.swagger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -86,6 +84,12 @@ import org.apache.commons.lang3.StringUtils;
             return withDefaultValue(Swagger::getBasePath);
         }
     },
+    clientId {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return PropertyGenerators::ifHasOAuthSecurityDefinition;
+        }
+    },
     clientSecret {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
@@ -105,14 +109,18 @@ import org.apache.commons.lang3.StringUtils;
                 d -> d.getScopes().keySet().stream().collect(Collectors.joining(" ")));
         }
     },
+    specification {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return PropertyGenerators::fromTemplate;
+        }
+    },
     tokenEndpoint {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
             return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getTokenUrl);
         }
     };
-
-    private static final Set<String> KNOWN_PROPERTIES = Arrays.stream(values()).map(PropertyGenerators::name).collect(Collectors.toSet());
 
     private static final ConfigurationProperty.PropertyValue NO_SECURITY = new ConfigurationProperty.PropertyValue.Builder().value("none")
         .label("No Security").build();
@@ -129,13 +137,9 @@ import org.apache.commons.lang3.StringUtils;
 
     /* default */ static Optional<ConfigurationProperty> createProperty(final String propertyName, final Swagger swagger,
         final ConfigurationProperty template) {
-        if (!KNOWN_PROPERTIES.contains(propertyName)) {
-            return Optional.ofNullable(template);
-        }
+        final PropertyGenerators propertyGenerator = PropertyGenerators.valueOf(propertyName);
 
-        final PropertyGenerators defaultPropertyValue = PropertyGenerators.valueOf(propertyName);
-
-        return defaultPropertyValue.propertyValueExtractor().apply(swagger, template);
+        return propertyGenerator.propertyValueExtractor().apply(swagger, template);
     }
 
     /* default */ static String determineHost(final Swagger swagger) {
@@ -175,6 +179,11 @@ import org.apache.commons.lang3.StringUtils;
         return createHostUri(schemeToUse, hostToUse);
     }
 
+    private static Optional<ConfigurationProperty> fromTemplate(@SuppressWarnings("unused") final Swagger swagger,
+        final ConfigurationProperty template) {
+        return Optional.of(template);
+    }
+
     private static boolean hasOAuth2Definition(final Swagger swagger) {
         return oauth2Definition(swagger).isPresent();
     }
@@ -195,7 +204,8 @@ import org.apache.commons.lang3.StringUtils;
             return Optional.empty();
         }
 
-        return Optional.ofNullable((OAuth2Definition) securityDefinitions.get("oauth2"));
+        return securityDefinitions.values().stream().filter(OAuth2Definition.class::isInstance).map(OAuth2Definition.class::cast)
+            .findFirst();
     }
 
     private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,

@@ -55,7 +55,6 @@ public abstract class ConnectorGenerator {
             .name(name)//
             .description(description)//
             .icon(connectorSettings.getIcon())//
-            .properties(connectorTemplate.getConnectorProperties())//
             .configuredProperties(configuredProperties)//
             .connectorGroup(connectorGroup)//
             .connectorGroupId(connectorGroup.map(ConnectorGroup::getId).orElse(Optional.empty()))//
