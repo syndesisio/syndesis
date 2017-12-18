@@ -1,12 +1,14 @@
 #!/bin/bash
 
 NEXUS_URL="https://oss.sonatype.org"
-NEXUS_STAGING_PLUGIN_VERSION="1.6.7"
+NEXUS_STAGING_PLUGIN_VERSION="1.6.8"
 NEXUS_SERVER_ID="oss-sonatype-staging"
 NEXUS_STAGING_REPO_PREFIX="iosyndesis" #This is the parent groupId with dots removed.
 NEXUS_DEFAULT_STAGING_PROFILE_ID="61015c63f807ce" #This this is the id of the staging profile. Just go to the list of staging profiles, click the one u need and grab that id from the url (its not displayed in the actual list).
 
 REPO_ANNOUNCEMENT_PREFIX="OpenedStagingProfile"
+
+NO_TAG=`notag`
 
 release::description() {
     echo "Perform a release"
@@ -65,11 +67,15 @@ release::run() {
     echo "Creating new staging repository..."
     local repo_id=$(open_staging_repository "$maven_opts")
     echo "Opened staging repository: $repo_id"
-    trap "do_cleanup \"$repo_id\" \"none\" \"$maven_opts\"" EXIT
+
+    #There is no tag yet, so let's pass $NO_TAG instead.
+    trap "do_cleanup \"$repo_id\" \"$NO_TAG\" \"$maven_opts\"" EXIT
 
     do_release "$release_version" "$dev_version" "$maven_opts"
+
+    #Update the trap with the tag created.
     local tag=$(find_tag)
-    trap "do_cleanup \"$repo_id\" \"none\" \"$maven_opts\"" EXIT
+    trap "do_cleanup \"$repo_id\" \"$tag\" \"$maven_opts\"" EXIT
 
     echo "Closing staging repository: $repo_id"
     close_staging_repository "$repo_id" "$maven_opts"
@@ -92,10 +98,6 @@ release::run() {
 
 # ======================================================
 # Staging / Release Helper Functions
-
-latest_release() {
-    git log | grep "prepare release $artifactId-" | head -n 1 | awk -F "$artifactId-" '{print \$2}'
-}
 
 open_staging_repository() {
     local maven_opts=$1
@@ -126,14 +128,12 @@ do_release() {
     call_maven "$maven_args"
 }
 
-
-
 do_cleanup() {
     echo "Cleaning up ..."
     local repo_id=$1
     local tag=$2
     local maven_opts=$3
-    if [ "none" == "$tag" ]; then
+    if [ "$NO_TAG" == "$tag" ]; then
         echo "No tag has been specified. Skipping!"
     else
         echo "Droping tag $tag"
