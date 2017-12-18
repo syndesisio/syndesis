@@ -57,7 +57,7 @@ export class TechExtensionImportComponent implements OnInit {
       this.notificationService.popNotification({
         type: NotificationType.SUCCESS,
         header: 'Imported!',
-        message: 'Your technical extension has been imported'
+        message: 'Your extension has been imported'
       });
       const id = this.extensionId || this.response.id;
       this.router.navigate(['/customizations/tech-extensions', id], { relativeTo: this.route });
