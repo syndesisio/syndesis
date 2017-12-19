@@ -1,0 +1,56 @@
+[id='how-you-use']
+= How you use {prodname} 
+
+The best way to learn about how to use {prodname} is to create the sample
+integrations by following the instructions in the
+https://access.qa.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/[sample integration tutorials].
+
+One of the sample integrations captures updates in Salesforce and
+calls a database stored procedure to synchronize the database with the
+Salesforce updates. The main steps for doing this are:
+
+. Register your installation of {prodname} as an application that can access
+Salesforce. You need to do this only once to be able to create any number of 
+integrations that connect to Salesforce. 
+
+. Create a Salesforce connection. To configure this connection, you follow
+prompts for logging in to the desired Salesforce account. You can use 
+the same Salesforce connection in any number of integrations. 
+
+. Choose your Salesforce connection as the connection that starts the
+integration. 
+
+. Choose the action that you want the Salesforce connection to perform. In 
+the sample integration, you choose the *On create* action for the
+*Lead* object. After connecting to Salesforce, the integration watches for
+notifications that a Salesforce lead was created. When the integration
+finds such a notification, it passes the new lead's data to the next
+step in the integration. However, before you can add the next step, you
+must choose the integration's finish connection. 
+
+. Choose the *PostgresDB* connection as the connection that completes
+the integration. 
+
+. Choose the action that you want the *PostgresDB* connection to perform. 
+In the sample integration, you choose *add_lead* as the procedure
+you want to invoke. This is a provided stored procedure that runs in 
+the sample database. This procedure determines the requirements
+for which Salesforce fields need to be mapped to which database fields. 
+
+. Add a step between the Salesforce connection and the database connection. 
+This step maps Salesforce fields to database fields. 
+
+. Give the integration a name. Optionally, enter a description of what
+the integration does. 
+
+. Click *Publish* to start running the integration. 
+
+. On the {prodname} dashboard, confirm that the Salesforce to database 
+integration is designated as *Active*, which means that it is running.
+
+. Confirm that the integration is working as expected by creating a new
+lead in Salesforce. 
+
+. For this sample integration, in a browser, insert `todo-` in 
+front of the URL for your {prodname} installation. This displays the 
+notification that a new lead was created in the database. 

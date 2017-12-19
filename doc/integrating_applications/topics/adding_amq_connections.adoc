@@ -1,0 +1,4 @@
+[id='adding-amq-connections']
+= Adding an AMQ connection to an integration
+
+TBA

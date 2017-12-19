@@ -1,0 +1,18 @@
+[id='copying-integrations-to-other-environments']
+= Copying integrations to other environments
+
+To publish integrations across development, staging and 
+production environments, you can export and import integrations.
+The environments can all be on a single OpenShift cluster, 
+or they can be spread out across multiple OpenShift clusters.
+See the following topics:
+
+* <<about-copying-integrations>>
+* <<exporting-integrations>>
+* <<importing-integrations>>
+
+include::about_copying_integrations.adoc[leveloffset=+1]
+
+include::exporting_integrations.adoc[leveloffset=+1]
+
+include::importing_integrations.adoc[leveloffset=+1]

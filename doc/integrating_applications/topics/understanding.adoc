@@ -1,0 +1,33 @@
+[id='understanding']
+= Understanding {prodname} 
+
+{prodname} is an integration platform. With {prodname}, you 
+can obtain data from an
+application or service, operate on that data if you need to, and then 
+send the 
+data to a completely different application or service.  No coding is 
+required to accomplish this. 
+
+For a high-level overview of {prodname}, see:
+
+* <<how-it-works>>
+* <<audience>>
+* <<benefits>>
+* <<understanding-terms>>
+* <<planning>>
+* <<workflow-overview>>
+* <<how-you-use>>
+
+include::how_it_works.adoc[leveloffset=+1]
+
+include::user_types.adoc[leveloffset=+1]
+
+include::benefits.adoc[leveloffset=+1]
+
+include::term_definitions.adoc[leveloffset=+1]
+
+include::planning_integrations.adoc[leveloffset=+1]
+
+include::workflow_overview.adoc[leveloffset=+1]
+
+include::how_you_use.adoc[leveloffset=+1]

@@ -1,0 +1,9 @@
+:prodname: Fuse Ignite
+:prodversion: 7.0-TP
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+
+[id='managing_environments']
+= Managing {prodname} Environments
+
+include::topics/admin_tasks.adoc[leveloffset=+1]

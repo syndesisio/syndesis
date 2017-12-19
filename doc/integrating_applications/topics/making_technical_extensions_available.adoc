@@ -1,0 +1,41 @@
+[id='making-tech-extensions-available']
+= Making custom steps available
+
+TBA
+Some draft doc from Melissa:
+Adding a technical extension
+
+Import the extension into the Ignite platform.
+
+Select Customizations to see the extension in the list.
+
+Select an integration. Edit it.
+
+Add a step.
+
+From the list of available steps, select the custom extension (listed by name).
+
+Configure the extension - provide values for the listed properties (as defined in the jar file), then click Next.
+
+Note: If you delete or update an extension that is used by an integration, you should then check the integration to determine whether you need to update and deploy the integration.
+
+Deleting a technical extension
+
+Click on Customization to see a list of Technical Extensions.
+
+Select an extension, and then click Delete. If you try to delete one that is used by an integration, a warning message appears.
+
+You should check each integrations that used the deleted extension to determine whether you need to update and deploy the integration.
+
+
+Updating a technical extension
+
+From Customization list, select an extension, and then click Update.
+
+Select the jar file that contains the updated extension.
+
+Click import.
+
+The UI shows a list of integrations that use the extension.  
+
+Check each integrations that used the deleted extension to determine whether you need to update and deploy the integration.

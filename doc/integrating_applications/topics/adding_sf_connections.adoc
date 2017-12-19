@@ -1,0 +1,16 @@
+[id='adding-sf-connections']
+= Adding a Salesforce connection to an integration
+
+Add intro. 
+
+To add a Salesforce connection to an integration:
+
+. Click the Salesforce
+connection you created. If you gave it the example name, you
+would click *SF Connect 1*. 
+This integration finishes by using the credentials 
+defined in this connection to connect to Salesforce. 
+. On the *Choose an Action* page, click *New record*.
+. On the next page, accept *Contact* as the
+Salesforce record to create. 
+. Click  *Done* to add the connection to the integration.  

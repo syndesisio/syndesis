@@ -1,0 +1,16 @@
+[id='adding-customizations']
+= Adding and managing customizations
+
+{prodname} lets you add  API client connectors and custom operations on data
+to integrations. 
+
+
+include::about_api_connectors.adoc[leveloffset=+1]
+
+include::creating_api_connectors.adoc[leveloffset=+1]
+
+include::updating_api_connectors.adoc[leveloffset=+1]
+
+include::deleting_api_connectors.adoc[leveloffset=+1]
+
+include::making_technical_extensions_available.adoc[leveloffset=+1]

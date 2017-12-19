@@ -1,0 +1,17 @@
+[id='sfdb-create-database-connection']
+= Create a database connection
+
+To create an Oracle EBS connection:
+
+. In the left pane, click *Connections* to display available connections. 
+. In the upper right, click *Create Connection* to display
+{prodname} connection types. 
+. Click the *SQL stored procedure* connection type. 
+. Configure the connection:
+.. In the *Password* field, enter `*????*`.
+.. In the *Username* field, enter `*????*`.
+.. Accept the connection URL `jdbc:postgresql:database`. 
+. Click *Next*. 
+. In the *Connection Name* field, enter `*Oracle EBS*`.
+. In the upper right, click *Create* to make the 
+*Oracle EBS* connection available for use in an integration. 

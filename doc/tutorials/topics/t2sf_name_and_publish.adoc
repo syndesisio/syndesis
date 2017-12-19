@@ -1,0 +1,13 @@
+[id='t2sf-name-and-publish']
+= Give the integration a name and deploy it
+
+The sample integration is complete. To deploy it:
+                                                                                                                                                                                                                                                                                                                           
+. At the top of the left panel, in the *Integration Name* field, 
+enter a name of your choice that distinguishes this integration
+from any other integration. For 
+example: `*Twitter to Salesforce Sample Integration*`.
+. In the upper right corner, click *Publish*. 
+
+{prodname} starts to deploy your integration immediately. 
+Deployment takes a few moments. 

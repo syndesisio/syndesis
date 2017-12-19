@@ -1,0 +1,22 @@
+:prodname: Fuse Ignite
+:prodversion: 7.0-TP
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+
+// This is a convenience document for generating all doc.
+// Images will not appear because each "book" has its own
+// topics/images folder inside its own folder. 
+
+= Skeleton for {prodname} User Documentation 
+
+This document contains the very preliminary state of 
+planned topics. Some topics contain draft documentation and/or
+notes. Other topics are empty.
+
+include::tutorials/master.adoc[offsetlevel=+1]
+
+include::integrating_applications/master.adoc[offsetlevel=+1]
+
+include::developing_customizations/master.adoc[offsetlevel=+1]
+
+include::managing_environments/master.adoc[offsetlevel=+1]

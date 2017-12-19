@@ -1,0 +1,4 @@
+[id='trace-data'] 
+= Trace data in a running integration
+
+Add the topic contents here.

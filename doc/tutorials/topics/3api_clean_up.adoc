@@ -1,0 +1,18 @@
+[id='clean-up-3api']
+= Clean up after running the three-API sample integration
+
+To monitor and manage the three-API integration:
+
+. In the left pane, click *Dashboard* to see that  
+*Three API Sample* is an *Active* integration, 
+which means that it is running. 
+. To trigger the integration, .... TBA
+ 
+. In the {prodname} dashboard, select the 
+*Three API Sample* integration and click the three vertical
+dots to the right. 
+. Select *Deactivate* to stop running the integration. At any time,
+you can click the vertical dots and select *Activate*. 
+. After testing the integration, select it in the dashboard, click
+the three vertical dots and select *Delete*. In this release, only
+one active integration is allowed. 

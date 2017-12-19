@@ -1,0 +1,44 @@
+[id='create-database-connection']
+= Create a database connection
+
+Before you create a database connection, ensure that the JDBC driver for
+the database is on your classpath. 
+
+After you create a database connection, you can use the same database connection
+in any number of integrations. 
+
+To create a database connection:
+
+. In {prodname}, in the left pane, click *Connections* to 
+display any available connections. 
+. In the upper right, click *Create Connection* to display
+{prodname} connectors.  
+. Click the *Database* connector. 
+. Configure the connection by entering: 
++
+.. In the *Password* field, enter the password associated with the 
+user account you want to use to access the database.
+.. In the *Schema* field, enter the name of the schema for the database.
+If the connection URL specifies the schema, ensure that this field
+indicates the same schema as the connection URL. For example, enter
+`sampledb`.
+.. In the *Connection URL* field, enter the JDBC URL for the database you want
+to connect to. For example, enter `jdbc:postgresql:/ignite-db1234/sampledb`.
+.. In the *Username* field, enter the name of the account you want to use
+to access the database. Ensure that the specified password and username 
+are for the same account. 
+. Click *Validate*. {prodname} immediately tries to validate the 
+connection and displays a message that indicates whether or not
+validation is successful. If validation fails, revise the configuration
+details as needed and try again. 
+. If validation is successful, click *Next*. 
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connection. 
+For example, enter `PostgreSQL DB 1`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample PostgreSQL connection
+that uses my log-in credentials.*`
+. In the upper right, click *Create* to see that the connection you 
+created is now available. If you entered the example name, you would 
+see that *PostgreSQL DB 1* is now available. 

@@ -1,0 +1,42 @@
+:prodname: Ignite
+:prodversion: 7.0-TP
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+
+[id='tutorials']
+= {prodname} Sample Integration Tutorials
+
+{prodname} lets you obtain data from an
+application or service, operate on that data if you need to, and then send the 
+data to a completely different application or service. You can do all this
+without writing code. 
+
+[IMPORTANT]
+====
+{prodname} is a Technology Preview feature only. Technology Preview features
+are not supported with Red Hat production service level agreements (SLAs), might
+not be functionally complete, and Red Hat does not recommend to use them for
+production. These features provide early access to upcoming product features,
+enabling customers to test functionality and provide feedback during the
+development process.
+For more information on Red Hat Technology Preview features support scope, 
+see https://access.redhat.com/support/offerings/techpreview/. 
+====
+
+In this Technology Preview, consider the names Red Hat Fuse Online and 
+Fuse Ignite as interchangeable. 
+
+In this Technology Preview, only one integration at a time can 
+be running. If you create another integration, it is automatically inactive. 
+
+Explore the {prodname} Technology Preview by creating these
+sample integrations: 
+
+* <<twitter-to-salesforce>>
+* <<salesforce-to-db>>
+
+include::topics/shared/log_in.adoc[leveloffset=+1]
+
+include::topics/t2sf_intro.adoc[leveloffset=+1]
+
+include::topics/sf2db_intro.adoc[leveloffset=+1]

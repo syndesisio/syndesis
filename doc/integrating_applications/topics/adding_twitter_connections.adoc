@@ -1,0 +1,19 @@
+[id='adding-twitter-connections']
+= Adding a Twitter connection to an integration
+
+Add intro. 
+
+To add a Twitter connection to an integration:
+
+. Click the Twitter connection
+you created. If you gave it the example name, you would 
+click *Twitter Connect 1*.
+When the integration starts it uses the credentials defined in 
+this connection to connect to Twitter.
+. On the *Choose an Action* page, click *Mention*. 
+
+After 
+connecting to Twitter, the integration monitors Twitter for mentions
+that include your Twitter screen name. A match triggers the
+first step in the integration. However, before you add steps to the integration,
+you choose the connection that the integration uses to finish its work.

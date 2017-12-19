@@ -1,0 +1,17 @@
+[id='benefits']
+= Benefits of {prodname}
+
+The benefits of {prodname} include:
+
+* No coding required to integrate data from different applications or 
+services.
+
+* Run the integration on OpenShift in the public cloud or on-premise.
+
+* {prodname} provides a visual data mapper for mapping fields in one 
+application to fields in another application. 
+
+* All the benefits of open source software. You can extend features,
+and customize interfaces. If {prodname} does not provide a 
+connector for an application or service you want to integrate then a 
+developer can create the connector you need. 

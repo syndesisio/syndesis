@@ -1,0 +1,43 @@
+[id='about-api-client-connectors']
+= About API client connectors
+
+{prodname} can create connectors for REST APIs 
+(representational state transfer application programming interfaces) 
+that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
+To do this, {prodname} requires a valid
+Swagger 2.0 specification that describes a REST API you want to connect to. 
+If the API service provider does not make a Swagger specification available
+then you must create the Swagger specification.
+ 
+After you upload a Swagger specification to {prodname}, a connector to the API
+becomes available. An integrator can select the connector, create
+an API client connection and then add that connection to an integration. 
+
+When {prodname} creates an API client connector, it maps each resource
+operation in the Swagger specification to an action. The action name
+and action description comes from documentation in the Swagger specification. 
+
+The more detail that the Swagger specification provides the more support
+{prodname} can offer when connecting to the API. For example, 
+the API definition is not required to declare data types for requests
+and responses. Without type declarations, {prodname}
+defines the corresponding connection action as typeless. However, in an
+integration, you cannot add a data mapping step immediately before or 
+immediately after an API connection that performs a typeless action. 
+
+One remedy for this is to add more information to the Swagger specification
+before you upload it to {prodname}. Identify the Swagger resource operations that
+will map to the actions you want the API connection to perform. In the
+Swagger specification, ensure that there is a JSON schema that specifies
+each operation's request and response types.
+
+{prodname} connectors support OAuth 2.0 and HTTP Basic
+Authorization. If access to the API requires Transport Layer Security (TLS)
+then the API needs to use a valid certificate that is issued by
+a recognized Certificate Authority (CA).
+
+{prodname} cannot create connectors for APIs that support the HTTP 2.0
+protocol. 
+
+See <<creating-api-connectors>> for instructions for
+uploading a Swagger specification. 

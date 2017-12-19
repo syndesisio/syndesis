@@ -1,0 +1,4 @@
+[id='about-the-console']
+= Explore the {prodname} console
+
+Add the topic contents here.
