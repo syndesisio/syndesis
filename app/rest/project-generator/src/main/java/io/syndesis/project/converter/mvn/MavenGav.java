@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 import io.syndesis.integration.support.Strings;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
-@SuppressWarnings("PMD")
 public final class MavenGav implements Comparable<MavenGav> {
     private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
     private static final char SEPARATOR_COORDINATE = ':';
@@ -181,7 +180,7 @@ public final class MavenGav implements Comparable<MavenGav> {
     // Helpers
     // *****************************
 
-    private int numberOfOccurrences(final CharSequence haystack, char needle) {
+    private static int numberOfOccurrences(final CharSequence haystack, char needle) {
         int counter = 0;
         for (int i = 0; i < haystack.length(); i++) {
             if (haystack.charAt(i) == needle) {

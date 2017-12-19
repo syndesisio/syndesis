@@ -15,36 +15,22 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.ListResult;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorSettings;
-import io.syndesis.model.connection.ConnectorSummary;
-import io.syndesis.rest.util.PaginationFilter;
-import io.syndesis.rest.util.ReflectiveSorter;
-import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
-import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
-import io.syndesis.rest.v1.util.PredicateFilter;
-
-import org.springframework.context.ApplicationContext;
-
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
+
+import org.springframework.context.ApplicationContext;
 
 @Api(tags = {"custom-connector", "connector-template"})
 public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {

@@ -54,5 +54,6 @@ public interface StepVisitorContext extends Iterator<StepVisitorContext> {
     }
 
     class Builder extends ImmutableStepVisitorContext.Builder {
+        // make ImmutableStepVisitorContext accessible
     }
 }

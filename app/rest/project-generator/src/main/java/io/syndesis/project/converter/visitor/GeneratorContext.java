@@ -47,6 +47,7 @@ public interface GeneratorContext {
     Optional<ExtensionDataManager> getExtensionDataManager();
 
     default void addTarEntry(String path, byte[] content) throws IOException {
+        @SuppressWarnings("resource")
         TarArchiveOutputStream tos = getTarArchiveOutputStream();
         TarArchiveEntry entry = new TarArchiveEntry(path);
         entry.setSize(content.length);
@@ -56,5 +57,6 @@ public interface GeneratorContext {
     }
 
     class Builder extends ImmutableGeneratorContext.Builder {
+        // make ImmutableGeneratorContext accessible
     }
 }

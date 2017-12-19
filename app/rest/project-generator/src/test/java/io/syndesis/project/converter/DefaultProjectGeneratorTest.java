@@ -246,7 +246,7 @@ public class DefaultProjectGeneratorTest {
         });
     }
 
-    public DefaultProjectGeneratorTest(String basePath, List<Templates.Resource> additionalResources) throws IOException {
+    public DefaultProjectGeneratorTest(String basePath, List<Templates.Resource> additionalResources) {
         this.basePath = basePath;
         this.additionalResources = additionalResources;
         this.resources = new ConcurrentHashMap<>();
