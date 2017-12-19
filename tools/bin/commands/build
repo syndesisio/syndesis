@@ -118,7 +118,7 @@ extract_modules() {
     local modules=""
 
     if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules connectors runtime rest verifier"
+        modules="$modules runtime connectors rest verifier"
     fi
 
     if [ "$(hasflag --images)" ]; then
