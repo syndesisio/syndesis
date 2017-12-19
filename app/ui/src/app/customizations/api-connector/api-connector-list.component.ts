@@ -3,18 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 
-import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { ConfigService } from '@syndesis/ui/config.service';
 
-import { ApiConnectorStore } from './api-connector.store';
 import { ApiConnector, ApiConnectors } from './api-connector.models';
-
-import {
-  ActionConfig,
-  ListConfig,
-  EmptyStateConfig,
-} from 'patternfly-ng';
+import { ApiConnectorStore } from './api-connector.store';
 
 @Component({
   selector: 'syndesis-api-connector-list',
@@ -70,7 +65,7 @@ export class ApiConnectorListComponent implements OnInit {
     }
   }
 
-  handleClick(event: any) {
+  handleClick(event: { item: ApiConnector }) {
     const apiConnector = event.item;
     this.router.navigate([apiConnector.id], { relativeTo: this.route });
   }

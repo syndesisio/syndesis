@@ -20,7 +20,6 @@
     ],
     "no-inferrable-types": true,
     "class-name": true,
-    "no-unused-variable": true,
     "indent": [
       true,
       "spaces",

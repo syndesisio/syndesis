@@ -1,11 +1,9 @@
-import {
-  APP_INITIALIZER,
-  NgModule,
-  InjectionToken,
-} from '@angular/core';
+import { APP_INITIALIZER, NgModule, InjectionToken } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import {
   AlertModule,
@@ -23,12 +21,14 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { CanDeactivateGuard, SyndesisCommonModule } from './common';
 import { UserService } from './common/user.service';
 import { ConfigService } from './config.service';
-import { StoreModule } from './store/store.module';
+import { StoreModule as LegacyStoreModule } from './store/store.module';
+import { platformReducer } from './platform';
 
 export function appInitializer(configService: ConfigService) {
   return () => {
@@ -94,7 +94,9 @@ export function mapperRestangularProvider(
     TypeaheadModule.forRoot(),
     TagInputModule,
     AppRoutingModule,
-    StoreModule,
+    LegacyStoreModule,
+    StoreModule.forRoot(platformReducer),
+    !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,
     NotificationModule,
