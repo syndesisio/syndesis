@@ -53,19 +53,6 @@
       "secret":false,
       "description":"Amazon AWS Secret Key"
     },
-    "deleteAfterWrite":{
-      "kind":"parameter",
-      "displayName":"Delete After Write",
-      "group":"producer",
-      "label":"producer",
-      "required":false,
-      "type":"boolean",
-      "javaType":"boolean",
-      "deprecated":false,
-      "secret":false,
-      "defaultValue":false,
-      "description":"Delete file object after the S3 file has been uploaded"
-    },
     "region":{
       "kind":"parameter",
       "displayName":"Region",

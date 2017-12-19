@@ -1802,23 +1802,6 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Copy an object on AWS S3",
-                "description": "Set if you want to delete the file once it has been written on S3",
-                "properties": {
-                  "deleteAfterWrite": {
-                    "kind": "property",
-                    "displayName": "Delete After Write",
-                    "group": "producer",
-                    "label": "producer",
-                    "required": false,
-                    "type": "boolean",
-                    "javaType": "boolean",
-                    "deprecated": false,
-                    "secret": false,
-                    "defaultValue": false,
-                    "description": "Delete file object after the S3 file has been uploaded"
-                  }
-                }
               }
             ]
           }
