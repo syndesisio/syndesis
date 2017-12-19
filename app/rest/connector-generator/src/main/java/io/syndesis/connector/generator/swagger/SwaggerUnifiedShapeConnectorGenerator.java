@@ -27,9 +27,9 @@ import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Response;
+import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
-import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
@@ -52,6 +52,9 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConnectorGenerator {
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Class<AbstractSerializableParameter<?>> PARAM_CLASS = (Class) AbstractSerializableParameter.class;
+
     @Override
     ConnectorDescriptor.Builder createDescriptor(final String specification, final Operation operation) {
         final ObjectNode unifiedSchema = JsonNodeFactory.instance.objectNode();
@@ -60,9 +63,9 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
         final ObjectNode unifiedProperties = unifiedSchema.putObject("properties");
 
         final List<Parameter> operationParameters = operation.getParameters();
-        final List<SerializableParameter> serializableParameters = operationParameters.stream()
-            .filter(SerializableParameter.class::isInstance)//
-            .map(SerializableParameter.class::cast)//
+        final List<AbstractSerializableParameter<?>> serializableParameters = operationParameters.stream()//
+            .filter(PARAM_CLASS::isInstance)//
+            .map(PARAM_CLASS::cast)//
             .collect(Collectors.toList());
 
         if (!serializableParameters.isEmpty()) {
@@ -70,7 +73,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
             parameters.put("type", "object");
             final ObjectNode parameterProperties = parameters.putObject("properties");
 
-            for (final SerializableParameter serializableParameter : serializableParameters) {
+            for (final AbstractSerializableParameter<?> serializableParameter : serializableParameters) {
                 final String type = serializableParameter.getType();
                 final String name = trimToNull(serializableParameter.getName());
                 final String description = trimToNull(serializableParameter.getDescription());
@@ -91,6 +94,11 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
 
                 if (description != null) {
                     parameterParameter.put("description", description);
+                }
+
+                final Object defaultValue = serializableParameter.getDefault();
+                if (defaultValue != null) {
+                    parameterParameter.put("default", String.valueOf(defaultValue));
                 }
 
                 if (serializableParameter.getItems() != null) {

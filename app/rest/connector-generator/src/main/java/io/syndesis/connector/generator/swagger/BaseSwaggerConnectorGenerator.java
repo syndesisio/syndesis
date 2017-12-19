@@ -33,10 +33,10 @@ import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
-import io.swagger.models.parameters.SerializableParameter;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.util.ActionComparator;
 import io.syndesis.core.SyndesisServerException;
@@ -299,7 +299,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             return Optional.empty();
         }
 
-        if (!(parameter instanceof SerializableParameter)) {
+        if (!(parameter instanceof AbstractSerializableParameter<?>)) {
             throw new IllegalArgumentException("Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
         }
 
@@ -317,7 +317,12 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             .deprecated(false)//
             .secret(false);
 
-        final SerializableParameter serializableParameter = (SerializableParameter) parameter;
+        final AbstractSerializableParameter<?> serializableParameter = (AbstractSerializableParameter<?>) parameter;
+
+        final Object defaultValue = serializableParameter.getDefaultValue();
+        if (defaultValue != null) {
+            propertyBuilder.defaultValue(String.valueOf(defaultValue));
+        }
 
         final String type = serializableParameter.getType();
         propertyBuilder.type(type).javaType(JsonSchemaHelper.javaTypeFor(serializableParameter));
