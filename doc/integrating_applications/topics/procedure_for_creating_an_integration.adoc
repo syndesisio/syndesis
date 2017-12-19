@@ -1,0 +1,59 @@
+[id='procedure-for-creating-an-integration']
+= Procedure for creating an integration
+
+To create an integration:
+
+. In the left pane in {prodname}, click *Integrations*.
+
+. In the upper right, click *Create Integration*.
+
+. Choose and configure the start connection:
+
+.. On the *Choose a Start Connection* page, click the connection you want
+to use to start the integration. When this integration is running, 
+{prodname} will connect to this application and obtain data that you want
+the integration to operate on. 
+
+.. On the *Choose an Action* page, click the action you want this connection
+to perform. The available actions vary for each connection. 
+
+.. On the page for configuring the action, enter values in the fields. 
+.. Click *Done* to add the start connection. 
+
+. Choose and configure the finish connection:
+
+.. On the *Choose a Finish Connection* page, click the connection you want
+to use to complete the integration. When this integration is running, 
+{prodname} will connect to this application with the data the integration
+has been operating on.
+
+.. On the *Choose an Action* page, click the action you want this connection
+to perform. The available actions vary for each connection. 
+
+.. On the page for configuring the action, enter values in the fields. 
+.. Click *Done* to add the finish connection. 
+
+. Optionally, add one or more connections between the start connection and 
+the finish connections. For each connection, choose its action and enter
+any required configuration details. 
+
+. Optionally, add one or more data operation steps between connections. See
+<<add-steps>>. 
+
+. When the integration contains the needed connections and steps, 
+click *Save as Draft* or *Publish* according to whether you are want
+to start running the integration.
+
+.. In the *Integration Name* field, enter a name that distinguishes this
+integration from any other integration. 
+
+.. In the *Description* field, enter a description, for example, you can
+indicate what this integration does.
+
+.. If you are ready to start running the integration, in the upper right, 
+click *Publish*. Otherwise, click *Save as Draft*. 
+
+In the {prodname} *Integrations* page, you can see your new integration
+in the list of integrations. Click it to see details about your integration.
+On the integration details page, you can start or stop the integration, 
+edit it, or delete it. 

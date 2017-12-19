@@ -1,0 +1,11 @@
+[id='add-advanced-filter-step']
+= Add an advanced filter step
+
+. On the *Create an Integration* page, click *Add a Step*
+
+. Select *Advanced Filter* from the *Add a Step* page. 
+
+The Advanced filter uses Camel Simple language. You can enter Simple scripts in the edit box provided. 
+For more information about Camel Simple language see http://camel.apache.org/simple.html.
+
+When you have completed your filter, click *Next >*.

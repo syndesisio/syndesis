@@ -1,0 +1,14 @@
+[id='connecting-to-twitter']
+= Connecting to Twitter
+
+To connect to Twitter in an integration, see the following topics:
+
+* <<register-with-twitter>>
+* <<create-twitter-connection>>
+* <<adding-twitter-connections>>
+
+include::shared/register_with_twitter.adoc[leveloffset=+1]
+
+include::shared/create_twitter_connection.adoc[leveloffset=+1]
+
+include::adding_twitter_connections.adoc[leveloffset=+1]

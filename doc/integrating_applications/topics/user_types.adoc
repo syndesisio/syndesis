@@ -1,0 +1,9 @@
+[id='audience']
+= Who {prodname} is for
+
+{prodname} is for business experts in, for example, 
+finance, human resources, or
+marketing, who do not want to write code in order 
+to share data between two different applications. Their use of a
+variety of software-as-a-service (SaaS) applications gives them an
+understanding of business requirements, workflows, and relevant data.

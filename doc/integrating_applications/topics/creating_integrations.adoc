@@ -1,0 +1,29 @@
+[id='creating-integrations']
+= Creating integrations
+
+After some planning and preparation, you are ready to create an 
+integration. In the {prodname} web interface, when you 
+click btn:[Create Integration], {prodname} guides you
+through the procedure to create an integration.  
+
+It is assumed that you are familiar with the information in these topics:
+
+* <<planning>>
+* <<workflow-overview>>
+
+The following topics provide information and instructions for creating
+an integration:
+
+* <<preparing-to-create-an-integration>>
+* <<procedure-for-creating-an-integration>>
+* <<add-steps>>
+
+include::preparing_to_create_an_integration.adoc[leveloffset=+1]
+
+include::procedure_for_creating_an_integration.adoc[leveloffset=+1]
+
+include::add_steps.adoc[leveloffset=+1]
+
+
+
+Y

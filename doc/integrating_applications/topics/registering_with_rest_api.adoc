@@ -1,0 +1,34 @@
+[id='register-with-rest-api']
+= Register {prodname} as an API client
+
+Before {prodname} creates an API client
+connector, it prompts you to indicate the API's security requirements.
+For APIs that use OAuth, when {prodname} creates the connector it also 
+adds an entry for the API to the {prodname} *Settings* page. This is
+where you provide the API client ID and the API client secret that
+authorize {prodname} to access the API. 
+
+If the API you want to connect to does not use OAuth, skip this 
+section and see <<create-rest-api-connection>>.  
+
+To register {prodname} as an authorized API client:
+
+. Prepare the {prodname} callback URL that the API will use:
+.. In {prodname}, in the left pane, click *Home*.
+.. Copy the {prodname} URL from the browser address bar and paste it in 
+a text file. 
+.. In the text file, remove `dashboard` from the end of the URL.
+.. Append `api/v1/credentials/callback`. For example, your callback URL
+might look like this:
+`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+. In {prodname}, in the left pane, click *Settings*. 
+. Look for the name of the API you want to connect to and click its 
+*Register* button to display its client ID and client secret fields. 
+. In another browser window, go the URL for specifying client settings
+for access to the API you want to connect to. The API service should
+provide this URL. 
+. Follow the prompts there to obtain the API client ID and API client secret
+that {prodname} will use to access the API.  
+. Paste the API client ID and the API client secret into their
+respective fields in the {prodname} *Settings* page. 
+. Click *Save*. 

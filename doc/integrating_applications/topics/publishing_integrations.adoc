@@ -1,0 +1,8 @@
+[id='publishing-integrations']
+= Publishing integrations
+
+The publish step does several thingsa:
+
+* Building integration runtime
+* Deploying integration runtime
+* Running

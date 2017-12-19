@@ -1,0 +1,20 @@
+[id='connecting-to-rest-apis']
+= Connecting to REST APIs
+
+In an integration, to connect to a REST API, you must have created a
+connector for that API by uploading a Swagger specification that 
+describes the API. See <<creating-api-connectors>>. 
+
+When a connector for the REST API you want to connect to
+ is available in {prodname}, 
+the steps for connecting to that REST API are:
+
+* <<register-with-rest-api>> if required
+* <<create-rest-api-connection>>
+* <<add-api-client-connection>>
+
+include::registering_with_rest_api.adoc[leveloffset=+1]
+
+include::creating_rest_api_connections.adoc[leveloffset=+1]
+
+include::add_api_client_connection.adoc[leveloffset=+1]

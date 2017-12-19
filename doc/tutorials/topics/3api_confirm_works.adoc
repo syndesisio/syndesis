@@ -1,0 +1,15 @@
+[id='confirm-3api-works']
+= Confirm that the three-API integration works
+
+To deploy the integration of three APIs:
+
+TBA
+
+This separate topic might not be needed if the integrator
+clicks Publish after giving the integration a name. 
+This assumes everything works correctly. 
+The Monitoring and Managing topic would provide steps for
+making sure the integration is running and doing what it is supposed to do. 
+
+But if clicking Publish does not result in a running integration, then
+this topic might be needed for troubleshooting information. 

@@ -1,0 +1,18 @@
+[id='connecting-to-databases']
+= Connecting to SQL databases
+
+In an integration, you can connect to any of the following types of 
+databases:
+
+* Apache Derby
+* MySQL
+* PostgreSQL
+
+See the following topics for details:
+
+* <<create-database-connection>>
+* <<add-database-connection>>
+
+include::create_database_connection.adoc[leveloffset=+1]
+
+include::adding_database_connections.adoc[leveloffset=+1]

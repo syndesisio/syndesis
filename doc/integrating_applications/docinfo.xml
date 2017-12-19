@@ -1,0 +1,13 @@
+<productname>Red Hat JBoss Fuse</productname>
+<productnumber>7.0-TP</productnumber>
+<subtitle>User's guide to integrating applications with Ignite</subtitle>
+<abstract>
+ <para>Ignite provides integration as a service on the OpenShift Pro tier.</para>
+</abstract>
+<authorgroup>
+  <org>
+    <orgname>JBoss Fuse Documentation Team</orgname>
+    <email>fuse-docs-support@redhat.com</email>
+  </org>
+</authorgroup>
+<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

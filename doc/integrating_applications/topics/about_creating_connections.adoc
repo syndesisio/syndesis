@@ -1,0 +1,14 @@
+[id='about-creating-connections']
+= About creating connections
+
+To create a connection, you 
+select a connector and respond to prompts to configure the connection. 
+The configuration details you need to provide vary for each application. 
+After configuring the connection, you give it a name that helps you 
+distinguish it from any other connections to the same application. 
+Optionally, you can specify a description of the connection.
+
+You can use the same connector to create any number of connections to that
+application. For example, you can use the Salesforce connector to create
+three different connections. Each connection to Salesforce can specify a 
+different user's Salesforce log-in credentials. 

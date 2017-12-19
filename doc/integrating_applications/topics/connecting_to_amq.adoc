@@ -1,0 +1,8 @@
+[id='connecting-to-amq']
+= Connecting to AMQ
+
+Add intro. 
+
+include::create_amq_connection.adoc[leveloffset=+1]
+
+include::adding_amq_connections.adoc[leveloffset=+1]

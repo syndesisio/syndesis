@@ -1,0 +1,36 @@
+:prodname: Ignite
+:prodversion: 7.0-TP
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+
+[id='integrating_applications']
+= Integrating Applications with Ignite
+
+This guide provides information and instructions for using 
+{prodname}'s web interface to integrate applications. 
+The content is organized as follows:
+
+* <<understanding>>
+* <<logging-in-and-out>>
+* <<connecting-to-applications>>
+* <<adding-customizations>>
+* <<creating-integrations>>
+* <<testing-integrations>>
+* <<publishing-integrations>>
+* <<managing-integrations>>
+
+include::topics/understanding.adoc[leveloffset=+1]
+
+include::topics/shared/log_in.adoc[leveloffset=+1]
+
+include::topics/connecting_to_applications.adoc[leveloffset=+1]
+
+include::topics/adding_customizations.adoc[leveloffset=+1]
+
+include::topics/creating_integrations.adoc[leveloffset=+1]
+
+include::topics/testing_integrations.adoc[leveloffset=+1]
+
+include::topics/publishing_integrations.adoc[leveloffset=+1]
+
+include::topics/managing_integrations.adoc[leveloffset=+1]
