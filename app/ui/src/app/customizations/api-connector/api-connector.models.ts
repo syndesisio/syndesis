@@ -1,6 +1,7 @@
+import { BaseEntity } from '@syndesis/ui/model';
 import { StringMap, BaseReducerModel } from '@syndesis/ui/platform';
 
-export interface ApiConnector  {
+export interface ApiConnector extends BaseEntity {
   kind: string;
   data: ApiConnectorData;
 }
