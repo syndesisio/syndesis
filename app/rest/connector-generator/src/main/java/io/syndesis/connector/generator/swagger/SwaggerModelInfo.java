@@ -15,13 +15,15 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.models.Swagger;
-import io.syndesis.model.Violation;
-import org.immutables.value.Value;
-
 import java.util.Collections;
 import java.util.List;
+
+import io.swagger.models.Swagger;
+import io.syndesis.model.Violation;
+
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Class holding information about a swagger model and related validations.
@@ -30,32 +32,20 @@ import java.util.List;
 @JsonDeserialize(builder = SwaggerModelInfo.Builder.class)
 public interface SwaggerModelInfo {
 
-    Swagger getModel();
+    class Builder extends ImmutableSwaggerModelInfo.Builder {
+        // make ImmutableSwaggerModelInfo.Builder accessible
+    }
 
     @Value.Default
     default List<Violation> getErrors() {
         return Collections.emptyList();
     }
 
+    Swagger getModel();
+
     @Value.Default
     default List<Violation> getWarnings() {
         return Collections.emptyList();
     }
-
-    default SwaggerModelInfo withError(Violation violation) {
-        return new Builder()
-            .createFrom(this)
-            .addError(violation)
-            .build();
-    }
-
-    default SwaggerModelInfo withWarning(Violation violation) {
-        return new Builder()
-            .createFrom(this)
-            .addWarning(violation)
-            .build();
-    }
-
-    class Builder extends ImmutableSwaggerModelInfo.Builder {}
 
 }

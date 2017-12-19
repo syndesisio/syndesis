@@ -15,6 +15,10 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import io.swagger.models.parameters.SerializableParameter;
+import io.swagger.models.properties.Property;
+import io.syndesis.core.Json;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,10 +27,6 @@ import java.net.URL;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.models.properties.Property;
-import io.syndesis.core.Json;
 
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
@@ -81,8 +81,7 @@ final class JsonSchemaHelper {
         }
     }
 
-    /* default */ static String resolveSchemaForReference(final String specification, final String title,
-        final String reference) {
+    /* default */ static String resolveSchemaForReference(final String specification, final String title, final String reference) {
         final JsonNode resolved;
         try {
             final URL inMemoryUrl = inMemory(specification);

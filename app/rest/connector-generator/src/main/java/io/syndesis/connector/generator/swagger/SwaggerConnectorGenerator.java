@@ -111,9 +111,9 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
                 // Just log and return the validation errors if any
                 LOG.error("An error occurred while trying to create a swagger connector", ex);
                 return new ConnectorSummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
-            } else {
-                throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
             }
+
+            throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
         }
     }
 

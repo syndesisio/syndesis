@@ -15,14 +15,14 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import java.io.IOException;
-
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.model.DataShape;
 
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static io.syndesis.connector.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;

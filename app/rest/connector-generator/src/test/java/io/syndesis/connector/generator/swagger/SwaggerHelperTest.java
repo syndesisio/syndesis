@@ -20,44 +20,30 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
 
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {
-        String[] specifications = {
-            "/swagger/concur.swagger.json",
-            "/swagger/petstore.swagger.json",
+        final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json",
             // "/swagger/reverb.swagger.json" // reverb is invalid
         };
 
-        for (String specificationFile : specifications) {
-            String specification = resource(specificationFile);
-            SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
+        for (final String specificationFile : specifications) {
+            final String specification = resource(specificationFile);
+            final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
-            assertThat(info.getErrors())
-                .withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors())
+            assertThat(info.getErrors()).withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors())
                 .isEmpty();
         }
     }
 
     @Test
-    public void testThatInvalidSchemePetstoreSwaggerIsInvalid() throws IOException {
-        String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
-        SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
-
-        assertThat(info.getErrors()).hasSize(1);
-        assertThat(info.getWarnings()).isEmpty();
-        assertThat(info.getErrors().get(0).message()).startsWith("instance value (\"httpz\") not found in enum");
-        assertThat(info.getErrors().get(0).property()).contains("/schemes/0");
-        assertThat(info.getErrors().get(0).error()).contains("validation");
-    }
-
-    @Test
     public void testThatInvalidFieldPetstoreSwaggerIsInvalid() throws IOException {
-        String specification = resource("/swagger/invalid/invalid-field.petstore.swagger.json");
-        SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
+        final String specification = resource("/swagger/invalid/invalid-field.petstore.swagger.json");
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -67,9 +53,21 @@ public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
     }
 
     @Test
+    public void testThatInvalidSchemePetstoreSwaggerIsInvalid() throws IOException {
+        final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
+
+        assertThat(info.getErrors()).hasSize(1);
+        assertThat(info.getWarnings()).isEmpty();
+        assertThat(info.getErrors().get(0).message()).startsWith("instance value (\"httpz\") not found in enum");
+        assertThat(info.getErrors().get(0).property()).contains("/schemes/0");
+        assertThat(info.getErrors().get(0).error()).contains("validation");
+    }
+
+    @Test
     public void testThatInvalidTypePetstoreSwaggerIsInvalid() throws IOException {
-        String specification = resource("/swagger/invalid/invalid-type.petstore.swagger.json");
-        SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
+        final String specification = resource("/swagger/invalid/invalid-type.petstore.swagger.json");
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -80,12 +78,11 @@ public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
 
     @Test
     public void testThatWarningPetstoreSwaggerContainsWarnings() throws IOException {
-        String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
-        SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
+        final String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).isEmpty();
         assertThat(info.getWarnings()).hasSize(3);
-        System.out.println(info.getWarnings());
     }
 
 }

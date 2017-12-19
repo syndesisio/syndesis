@@ -15,12 +15,12 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import java.net.URI;
-
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 
 import org.junit.Test;
+
+import java.net.URI;
 
 import static io.syndesis.connector.generator.swagger.PropertyGenerators.createHostUri;
 import static io.syndesis.connector.generator.swagger.PropertyGenerators.determineHost;

@@ -15,14 +15,14 @@
  */
 package io.syndesis.connector.generator.util;
 
+import io.syndesis.model.action.ConnectorAction;
+
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import io.syndesis.model.action.ConnectorAction;
-
-import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

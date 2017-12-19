@@ -15,15 +15,6 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import io.swagger.models.Scheme;
-import io.swagger.models.Swagger;
-import io.swagger.models.auth.OAuth2Definition;
-import io.swagger.models.auth.SecuritySchemeDefinition;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -37,6 +28,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+
+import io.swagger.models.Scheme;
+import io.swagger.models.Swagger;
+import io.swagger.models.auth.OAuth2Definition;
+import io.swagger.models.auth.SecuritySchemeDefinition;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
+
+import org.apache.commons.lang3.StringUtils;
 
 /* default */ enum PropertyGenerators {
 

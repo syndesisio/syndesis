@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import io.syndesis.core.Json;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +28,6 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
-
-import io.syndesis.core.Json;
 
 /* default */ final class TestHelper {
 

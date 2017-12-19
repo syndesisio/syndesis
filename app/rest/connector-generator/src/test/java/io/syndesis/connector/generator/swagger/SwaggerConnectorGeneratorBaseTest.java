@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import io.syndesis.core.Json;
+import io.syndesis.model.connection.ConnectorTemplate;
+
 import java.util.List;
 
 import com.jayway.jsonpath.Configuration;
@@ -22,9 +25,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-
-import io.syndesis.core.Json;
-import io.syndesis.model.connection.ConnectorTemplate;
 
 abstract class SwaggerConnectorGeneratorBaseTest {
 
