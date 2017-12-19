@@ -52,7 +52,7 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 public final class ConnectorIconHandler extends BaseHandler {
 
     private final Connector connector;
-    private IconDataAccessObject iconDao;
+    private final IconDataAccessObject iconDao;
 
     /* default */ ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao) {
         super(dataMgr);
