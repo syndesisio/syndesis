@@ -20,10 +20,10 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         SYNDESIS_PROVIDERS.ApiHttpProviderService,
-
-        { provide: ApiHttpService, useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService },
-
-        { provide: Window, useValue: window }
+        {
+          provide: ApiHttpService,
+          useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService
+        },
       ]},
     ];
   }
