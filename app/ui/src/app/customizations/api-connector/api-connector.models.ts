@@ -1,14 +1,11 @@
-import { BaseEntity } from '@syndesis/ui/model';
 import { StringMap, BaseReducerModel } from '@syndesis/ui/platform';
 
-export interface ApiConnector extends BaseEntity {
+export interface ApiConnector  {
   kind: string;
   data: ApiConnectorData;
 }
 
-//export type ApiConnectors = Array<ApiConnector>;
-
-export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
+export interface ApiConnectorData extends ApiConnectorValidation {
   id: string;
   name: string;
   description: string;
@@ -20,7 +17,7 @@ export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
 
 export type ApiConnectors = Array<ApiConnectorData>;
 
-export interface ApiConnectorProperties extends BaseEntity {
+export interface ApiConnectorProperties {
   specification: {
     kind: string;
     displayName: string;
