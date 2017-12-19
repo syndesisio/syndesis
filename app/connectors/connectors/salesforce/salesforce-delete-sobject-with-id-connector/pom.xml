@@ -75,12 +75,6 @@
       <artifactId>spring-boot-configuration-processor</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>salesforce-model</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
   </dependencies>
 
   <build>
