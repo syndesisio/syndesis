@@ -77,6 +77,7 @@ export class TechExtensionImportComponent implements OnInit {
     if (!this.extensionName) {
       // safety net
       this.extensionId = undefined;
+      this.id = undefined;
     }
     const uploadUrl = this.extensionStore.getUploadUrl(this.id);
     this.uploader = new FileUploader({
