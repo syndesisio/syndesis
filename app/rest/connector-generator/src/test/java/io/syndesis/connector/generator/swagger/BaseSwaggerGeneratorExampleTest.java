@@ -15,41 +15,34 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import static io.syndesis.connector.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
-public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGeneratorBaseTest {
+abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorTest {
 
     private final Connector expected;
 
     private final String specification;
 
-    public SwaggerConnectorGeneratorExampleTests(final String name) throws IOException {
+    public BaseSwaggerGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
         specification = resource("/swagger/" + name + ".swagger.json");
-        expected = Json.mapper().readValue(resource("/swagger/" + name + ".connector.json"), Connector.class);
+        expected = Json.mapper().readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"), Connector.class);
     }
 
-    @Test
     @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
     public void shouldGenerateAsExpected() throws IOException {
 
@@ -57,7 +50,7 @@ public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGener
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector generated = new SwaggerConnectorGenerator().generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector generated = generator().generate(SWAGGER_TEMPLATE, connectorSettings);
 
         final Map<String, String> generatedConfiguredProperties = generated.getConfiguredProperties();
         final String generatedSpecification = generatedConfiguredProperties.get("specification");
@@ -85,16 +78,19 @@ public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGener
                 "descriptor");
 
             assertThat(generatedAction.getDescriptor().getPropertyDefinitionSteps())
-                .as("Generated and expected action definition property definition steps for action with id: " + actionId + " differ")
+                .as("Generated and expected action definition property definition steps for action with id: " + actionId + " differs")
                 .isEqualTo(expectedAction.getDescriptor().getPropertyDefinitionSteps());
 
             if (expectedAction.getDescriptor().getInputDataShape().isPresent()) {
                 final DataShape generatedInputDataShape = generatedAction.getDescriptor().getInputDataShape().get();
                 final DataShape expectedInputDataShape = expectedAction.getDescriptor().getInputDataShape().get();
 
-                assertThat(generatedInputDataShape).isEqualToIgnoringGivenFields(expectedInputDataShape, "specification");
+                assertThat(generatedInputDataShape)
+                    .as("Generated and expected input data shape for action with id: " + actionId + " differs")
+                    .isEqualToIgnoringGivenFields(expectedInputDataShape, "specification");
 
                 assertThat(reformatJson(generatedInputDataShape.getSpecification()))
+                    .as("Input data shape specification for action with id: " + actionId + " differ")
                     .isEqualTo(reformatJson(expectedInputDataShape.getSpecification()));
             }
 
@@ -109,10 +105,7 @@ public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGener
         }
     }
 
-    @Parameters(name = "{0}")
-    public static Iterable<String> parameters() {
-        return Arrays.asList("concur", "petstore", "reverb");
-    }
+    /* default */ abstract ConnectorGenerator generator();
 
     private static Map<String, String> without(final Map<String, String> map, final String key) {
         final Map<String, String> ret = new HashMap<>(map);
@@ -121,5 +114,4 @@ public class SwaggerConnectorGeneratorExampleTests extends SwaggerConnectorGener
 
         return ret;
     }
-
 }

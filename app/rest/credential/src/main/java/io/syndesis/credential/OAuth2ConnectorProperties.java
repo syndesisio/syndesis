@@ -27,6 +27,8 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
 
     private final String authorizationUrl;
 
+    private final String scope;
+
     private final TokenStrategy tokenStrategy;
 
     private final boolean useParameters;
@@ -39,8 +41,8 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
         authorizationUrl = requiredProperty(connector, Credentials.AUTHORIZATION_URL_TAG);
         tokenStrategy = optionalProperty(connector, Credentials.TOKEN_STRATEGY_TAG).map(TokenStrategy::valueOf)
             .orElse(TokenStrategy.AUTHORIZATION_HEADER);
-        useParameters = optionalProperty(connector, Credentials.AUTHORIZE_USING_PARAMETERS_TAG).map(Boolean::valueOf)
-            .orElse(false);
+        useParameters = optionalProperty(connector, Credentials.AUTHORIZE_USING_PARAMETERS_TAG).map(Boolean::valueOf).orElse(false);
+        scope = optionalProperty(connector, Credentials.SCOPE_TAG).orElse(null);
     }
 
     public String getAccessTokenUrl() {
@@ -53,6 +55,10 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
 
     public String getAuthorizationUrl() {
         return authorizationUrl;
+    }
+
+    public String getScope() {
+        return scope;
     }
 
     public TokenStrategy getTokenStrategy() {

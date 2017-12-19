@@ -15,6 +15,13 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.syndesis.core.Json;
@@ -23,13 +30,6 @@ import io.syndesis.model.Violation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,20 +46,38 @@ public final class SwaggerHelper {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private static final String SWAGGER_2_0_SCHEMA_FILE = "/schema/swagger-2.0-schema.json";
-
     private static final JsonSchema SWAGGER_2_0_SCHEMA;
+
+    private static final String SWAGGER_2_0_SCHEMA_FILE = "/schema/swagger-2.0-schema.json";
 
     static {
         try {
             SWAGGER_2_0_SCHEMA = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + SWAGGER_2_0_SCHEMA_FILE);
-        } catch (ProcessingException ex) {
+        } catch (final ProcessingException ex) {
             throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
         }
     }
 
     private SwaggerHelper() {
         // utility class
+    }
+
+    /* default */ static SwaggerModelInfo parse(final String specification, final boolean validate) {
+        final SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = ofNullable(parser.read(specification)).orElseGet(() -> parser.parse(specification));
+        if (swagger == null) {
+            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
+            return new SwaggerModelInfo.Builder()
+                .addError(new Violation.Builder().error("error").property("").message("Unable to read Swagger specification from: "
+                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
+                .build();
+        }
+
+        if (validate) {
+            final SwaggerModelInfo swaggerModelInfo = validateJSonSchema(specification, swagger);
+            return SyndesisSwaggerValidationRules.getInstance().apply(swaggerModelInfo);
+        }
+        return new SwaggerModelInfo.Builder().model(swagger).build();
     }
 
     /* default */ static String serialize(final Swagger swagger) {
@@ -70,62 +88,9 @@ public final class SwaggerHelper {
         }
     }
 
-    /* default */ static SwaggerModelInfo parse(final String specification, boolean validate) {
-        final SwaggerParser parser = new SwaggerParser();
-        final Swagger swagger = ofNullable(parser.read(specification)).orElseGet(() -> parser.parse(specification));
-        if (swagger == null) {
-            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
-            return new SwaggerModelInfo.Builder()
-                .addError(new Violation.Builder()
-                    .error("error")
-                    .property("")
-                    .message("Unable to read Swagger specification from: " + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse(""))
-                    .build())
-                .build();
-        }
-
-        if (validate) {
-            SwaggerModelInfo swaggerModelInfo = validateJSonSchema(specification, swagger);
-            return SyndesisSwaggerValidationRules.getInstance().apply(swaggerModelInfo);
-        }
-        return new SwaggerModelInfo.Builder().model(swagger).build();
-    }
-
-    private static SwaggerModelInfo validateJSonSchema(String specification, Swagger model) {
-        try {
-            JsonNode specRoot = OBJECT_MAPPER.readTree(specification);
-            ProcessingReport report = SWAGGER_2_0_SCHEMA.validate(specRoot);
-            List<Violation> errors = new ArrayList<>();
-            List<Violation> warnings = new ArrayList<>();
-            for (ProcessingMessage message : report) {
-                boolean added = append(errors, message, Optional.of("error"));
-                if (!added) {
-                    append(warnings, message, Optional.empty());
-                }
-            }
-
-            return new SwaggerModelInfo.Builder()
-                .errors(errors)
-                .warnings(warnings)
-                .model(model)
-                .build();
-
-        } catch (IOException | ProcessingException ex) {
-            LOG.error("Unable to load the schema file embedded in the artifact", ex);
-            return new SwaggerModelInfo.Builder()
-                .addError(new Violation.Builder()
-                    .error("error")
-                    .property("")
-                    .message("Unable to load the swagger schema file embedded in the artifact")
-                    .build())
-                .build();
-        }
-    }
-
-    private static boolean append(List<Violation> violations, ProcessingMessage message, Optional<String> requiredLevel) {
+    private static boolean append(final List<Violation> violations, final ProcessingMessage message, final Optional<String> requiredLevel) {
         if (requiredLevel.isPresent()) {
-            Optional<String> level = ofNullable(message.asJson())
-                .flatMap(node -> ofNullable(node.get("level")))
+            final Optional<String> level = ofNullable(message.asJson()).flatMap(node -> ofNullable(node.get("level")))
                 .flatMap(node -> ofNullable(node.textValue()));
 
             if (!level.equals(requiredLevel)) {
@@ -133,21 +98,36 @@ public final class SwaggerHelper {
             }
         }
 
-        Optional<String> property = ofNullable(message.asJson())
-            .flatMap(node -> ofNullable(node.get("instance")))
-            .flatMap(node -> ofNullable(node.get("pointer")))
+        final Optional<String> property = ofNullable(message.asJson()).flatMap(node -> ofNullable(node.get("instance")))
+            .flatMap(node -> ofNullable(node.get("pointer"))).flatMap(node -> ofNullable(node.textValue()));
+
+        final Optional<String> error = ofNullable(message.asJson()).flatMap(node -> ofNullable(node.get("domain")))
             .flatMap(node -> ofNullable(node.textValue()));
 
-        Optional<String> error = ofNullable(message.asJson())
-            .flatMap(node -> ofNullable(node.get("domain")))
-            .flatMap(node -> ofNullable(node.textValue()));
-
-        violations.add(new Violation.Builder()
-            .error(error.orElse(""))
-            .message(message.getMessage())
-            .property(property.orElse(""))
-            .build());
+        violations.add(new Violation.Builder().error(error.orElse("")).message(message.getMessage()).property(property.orElse("")).build());
 
         return true;
+    }
+
+    private static SwaggerModelInfo validateJSonSchema(final String specification, final Swagger model) {
+        try {
+            final JsonNode specRoot = OBJECT_MAPPER.readTree(specification);
+            final ProcessingReport report = SWAGGER_2_0_SCHEMA.validate(specRoot);
+            final List<Violation> errors = new ArrayList<>();
+            final List<Violation> warnings = new ArrayList<>();
+            for (final ProcessingMessage message : report) {
+                final boolean added = append(errors, message, Optional.of("error"));
+                if (!added) {
+                    append(warnings, message, Optional.empty());
+                }
+            }
+
+            return new SwaggerModelInfo.Builder().errors(errors).warnings(warnings).model(model).build();
+
+        } catch (IOException | ProcessingException ex) {
+            LOG.error("Unable to load the schema file embedded in the artifact", ex);
+            return new SwaggerModelInfo.Builder().addError(new Violation.Builder().error("error").property("")
+                .message("Unable to load the swagger schema file embedded in the artifact").build()).build();
+        }
     }
 }

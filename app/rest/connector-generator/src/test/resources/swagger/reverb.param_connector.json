@@ -1,7 +1,7 @@
 {
   "name": "reverb",
   "description": "reverb",
-  "connectorGroup" : {
+  "connectorGroup": {
     "id": "swagger-connector-template"
   },
   "connectorGroupId": "swagger-connector-template",
@@ -11,7 +11,8 @@
     "authorizationEndpoint": "https://reverb.com/oauth/authorize",
     "authenticationType": "oauth2",
     "basePath": "/api",
-    "host": "https://api.reverb.com"
+    "host": "https://api.reverb.com",
+    "oauthScopes": "read_profile write_profile read_orders write_orders read_feedback write_feedback write_reviews write_listings read_listings write_messages read_messages read_lists write_lists write_offers read_offers read_payouts public"
   },
   "properties": {
     "accessToken": {
@@ -156,20 +157,22 @@
       "tags": [],
       "enum": []
     },
-    "operationId": {
-      "componentProperty": false,
-      "deprecated": false,
-      "description": "ID of operation to invoke",
-      "displayName": "Operation ID",
-      "group": "producer",
-      "javaType": "java.lang.String",
+    "oauthScopes": {
       "kind": "property",
+      "defaultValue": "read_profile write_profile read_orders write_orders read_feedback write_feedback write_reviews write_listings read_listings write_messages read_messages read_lists write_lists write_offers read_offers read_payouts public",
+      "displayName": "OAuth Scopes",
+      "group": "producer",
       "label": "producer",
       "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-scope"
+      ],
+      "deprecated": false,
       "secret": false,
-      "type": "hidden",
-      "tags": [],
-      "enum": []
+      "componentProperty": true,
+      "description": "URL to fetch the OAuth Access token"
     },
     "specification": {
       "componentProperty": true,
@@ -208,13 +211,11 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -228,6 +229,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -278,24 +280,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-63",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-63"
+        }
       },
       "tags": [
         "articles"
@@ -317,31 +308,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-7",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-7"
+        }
       },
       "tags": [
         "categories"
@@ -362,31 +331,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-5",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-5"
+        }
       },
       "tags": [
         "categories"
@@ -412,9 +359,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "uuid": {
                 "componentProperty": false,
@@ -428,24 +372,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-6",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-6"
+        }
       },
       "tags": [
         "categories"
@@ -471,9 +404,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "product_type": {
                 "componentProperty": false,
@@ -500,24 +430,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-8",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-8"
+        }
       },
       "tags": [
         "categories"
@@ -539,31 +458,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-4",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-4"
+        }
       },
       "tags": [
         "categories"
@@ -588,9 +485,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -604,24 +498,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-70",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-70"
+        }
       },
       "tags": [
         "comparison_shopping_pages"
@@ -647,9 +530,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -681,6 +561,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -694,6 +575,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -716,24 +598,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-71",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-71"
+        }
       },
       "tags": [
         "comparison_shopping_pages"
@@ -755,31 +626,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-68",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-68"
+        }
       },
       "tags": [
         "comparison_shopping_pages"
@@ -805,9 +654,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -836,24 +682,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-69",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-69"
+        }
       },
       "tags": [
         "comparison_shopping_pages"
@@ -879,9 +714,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -895,24 +727,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-72",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-72"
+        }
       },
       "tags": [
         "comparison_shopping_pages"
@@ -939,9 +760,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "conversation_id": {
                 "componentProperty": false,
@@ -955,24 +773,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-39",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-39"
+        }
       },
       "tags": [
         "conversations"
@@ -999,9 +806,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -1015,24 +819,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-40",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-40"
+        }
       },
       "tags": [
         "conversations"
@@ -1054,31 +847,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-153",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-153"
+        }
       },
       "tags": [
         "countries"
@@ -1103,9 +874,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -1119,24 +887,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-38",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-38"
+        }
       },
       "tags": [
         "curated_sets"
@@ -1158,31 +915,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-74",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-74"
+        }
       },
       "tags": [
         "currencies"
@@ -1204,31 +939,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-73",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-73"
+        }
       },
       "tags": [
         "currencies"
@@ -1254,9 +967,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "feedback_id": {
                 "componentProperty": false,
@@ -1270,24 +980,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-48",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-48"
+        }
       },
       "tags": [
         "feedback"
@@ -1313,9 +1012,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -1753,6 +1449,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -1766,6 +1463,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -1788,24 +1486,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-9",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-9"
+        }
       },
       "tags": [
         "handpicked"
@@ -1827,31 +1514,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-67",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-67"
+        }
       },
       "tags": [
         "listing_conditions"
@@ -1877,9 +1542,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "query": {
                 "componentProperty": false,
@@ -2304,6 +1966,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -2317,6 +1980,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -2339,24 +2003,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-19",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-19"
+        }
       },
       "tags": [
         "listings"
@@ -2382,9 +2035,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -2411,24 +2061,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-18",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-18"
+        }
       },
       "tags": [
         "listings"
@@ -2451,31 +2090,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-11",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-11"
+        }
       },
       "tags": [
         "listings"
@@ -2501,9 +2118,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -2517,24 +2131,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-24",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-24"
+        }
       },
       "tags": [
         "listings"
@@ -2561,9 +2164,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "query": {
                 "componentProperty": false,
@@ -2988,6 +2588,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -3001,6 +2602,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -3023,24 +2625,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-10",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-10"
+        }
       },
       "tags": [
         "listings"
@@ -3066,9 +2657,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3082,24 +2670,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-22",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-22"
+        }
       },
       "tags": [
         "listings"
@@ -3125,9 +2702,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -3154,24 +2728,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-15",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-15"
+        }
       },
       "tags": [
         "listings"
@@ -3197,9 +2760,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3213,24 +2773,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-26",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-26"
+        }
       },
       "tags": [
         "listings"
@@ -3256,9 +2805,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -3286,24 +2832,13 @@
                 "type": "boolean",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-16",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-16"
+        }
       },
       "tags": [
         "listings"
@@ -3330,9 +2865,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3346,24 +2878,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-25",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-25"
+        }
       },
       "tags": [
         "listings"
@@ -3385,31 +2906,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-28",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-28"
+        }
       },
       "tags": [
         "listings"
@@ -3435,9 +2934,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3451,24 +2947,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-20",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-20"
+        }
       },
       "tags": [
         "listings"
@@ -3494,9 +2979,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3510,24 +2992,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-27",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-27"
+        }
       },
       "tags": [
         "listings"
@@ -3554,9 +3025,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -3570,24 +3038,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-29",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-29"
+        }
       },
       "tags": [
         "listings"
@@ -3613,9 +3070,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -3629,24 +3083,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-30",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-30"
+        }
       },
       "tags": [
         "listings"
@@ -3672,9 +3115,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -3688,24 +3128,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-13",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-13"
+        }
       },
       "tags": [
         "listings"
@@ -3732,9 +3161,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -3748,24 +3174,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-12",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-12"
+        }
       },
       "tags": [
         "listings"
@@ -3792,9 +3207,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3808,24 +3220,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-21",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-21"
+        }
       },
       "tags": [
         "listings"
@@ -3851,9 +3252,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -3867,24 +3265,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-17",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-17"
+        }
       },
       "tags": [
         "listings"
@@ -3910,9 +3297,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -3926,24 +3310,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-23",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-23"
+        }
       },
       "tags": [
         "listings"
@@ -3969,9 +3342,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "listing_id": {
                 "componentProperty": false,
@@ -3985,24 +3355,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-14",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-14"
+        }
       },
       "tags": [
         "listings"
@@ -4029,9 +3388,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -4045,24 +3401,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-106",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-106"
+        }
       },
       "tags": [
         "my"
@@ -4088,9 +3433,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -4104,24 +3446,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-111",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-111"
+        }
       },
       "tags": [
         "my"
@@ -4148,9 +3479,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -4164,24 +3492,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-108",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-108"
+        }
       },
       "tags": [
         "my"
@@ -4203,31 +3520,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-146",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-146"
+        }
       },
       "tags": [
         "my"
@@ -4252,9 +3547,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "product_id": {
                 "componentProperty": false,
@@ -4268,24 +3560,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-97",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-97"
+        }
       },
       "tags": [
         "my"
@@ -4310,9 +3591,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "follow_id": {
                 "componentProperty": false,
@@ -4326,24 +3604,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-128",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-128"
+        }
       },
       "tags": [
         "my"
@@ -4369,9 +3636,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -4385,24 +3649,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-109",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-109"
+        }
       },
       "tags": [
         "my"
@@ -4428,9 +3681,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "follow_id": {
                 "componentProperty": false,
@@ -4444,24 +3694,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-129",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-129"
+        }
       },
       "tags": [
         "my"
@@ -4487,9 +3726,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "address_id": {
                 "componentProperty": false,
@@ -4503,24 +3739,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-148",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-148"
+        }
       },
       "tags": [
         "my"
@@ -4546,9 +3771,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -4562,24 +3784,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-101",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-101"
+        }
       },
       "tags": [
         "my"
@@ -4606,9 +3817,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -4622,24 +3830,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-91",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-91"
+        }
       },
       "tags": [
         "my"
@@ -4665,9 +3862,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -4681,24 +3875,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-138",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-138"
+        }
       },
       "tags": [
         "my"
@@ -4724,9 +3907,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "identifier": {
                 "componentProperty": false,
@@ -4740,24 +3920,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-116",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-116"
+        }
       },
       "tags": [
         "my"
@@ -4783,9 +3952,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -4799,24 +3965,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-135",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-135"
+        }
       },
       "tags": [
         "my"
@@ -4842,9 +3997,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -4858,24 +4010,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-122",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-122"
+        }
       },
       "tags": [
         "my"
@@ -4898,31 +4039,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-131",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-131"
+        }
       },
       "tags": [
         "my"
@@ -4948,9 +4067,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -4964,24 +4080,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-125",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-125"
+        }
       },
       "tags": [
         "my"
@@ -5007,9 +4112,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "category": {
                 "componentProperty": false,
@@ -5036,24 +4138,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-119",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-119"
+        }
       },
       "tags": [
         "my"
@@ -5079,9 +4170,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -5095,24 +4183,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-137",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-137"
+        }
       },
       "tags": [
         "my"
@@ -5138,9 +4215,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "identifier": {
                 "componentProperty": false,
@@ -5154,24 +4228,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-115",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-115"
+        }
       },
       "tags": [
         "my"
@@ -5197,9 +4260,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -5213,24 +4273,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-134",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-134"
+        }
       },
       "tags": [
         "my"
@@ -5256,9 +4305,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -5272,24 +4318,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-121",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-121"
+        }
       },
       "tags": [
         "my"
@@ -5311,31 +4346,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-130",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-130"
+        }
       },
       "tags": [
         "my"
@@ -5361,9 +4374,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -5377,24 +4387,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-124",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-124"
+        }
       },
       "tags": [
         "my"
@@ -5420,9 +4419,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "category": {
                 "componentProperty": false,
@@ -5449,24 +4445,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-118",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-118"
+        }
       },
       "tags": [
         "my"
@@ -5492,13 +4477,11 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -5512,6 +4495,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -5534,24 +4518,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-105",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-105"
+        }
       },
       "tags": [
         "my"
@@ -5577,13 +4550,11 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -5597,6 +4568,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -5619,24 +4591,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-90",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-90"
+        }
       },
       "tags": [
         "my"
@@ -5658,31 +4619,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-149",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-149"
+        }
       },
       "tags": [
         "my"
@@ -5704,31 +4643,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-94",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-94"
+        }
       },
       "tags": [
         "my"
@@ -5750,31 +4667,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-110",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-110"
+        }
       },
       "tags": [
         "my"
@@ -5800,9 +4695,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "search": {
                 "componentProperty": false,
@@ -5835,6 +4727,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -5848,6 +4741,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -5870,24 +4764,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-98",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-98"
+        }
       },
       "tags": [
         "my"
@@ -5909,31 +4792,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-113",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-113"
+        }
       },
       "tags": [
         "my"
@@ -5955,31 +4816,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-143",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-143"
+        }
       },
       "tags": [
         "my"
@@ -6001,31 +4840,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-151",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-151"
+        }
       },
       "tags": [
         "my"
@@ -6051,9 +4868,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "created_start_date": {
                 "componentProperty": false,
@@ -6114,6 +4928,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6127,6 +4942,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6149,24 +4965,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-76",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-76"
+        }
       },
       "tags": [
         "my"
@@ -6188,31 +4993,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-140",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-140"
+        }
       },
       "tags": [
         "my"
@@ -6238,9 +5021,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -6254,24 +5034,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-107",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-107"
+        }
       },
       "tags": [
         "my"
@@ -6297,9 +5066,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -6313,24 +5079,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-93",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-93"
+        }
       },
       "tags": [
         "my"
@@ -6356,13 +5111,11 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6376,6 +5129,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6468,24 +5222,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-92",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-92"
+        }
       },
       "tags": [
         "my"
@@ -6511,9 +5254,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "created_start_date": {
                 "componentProperty": false,
@@ -6574,6 +5314,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6587,6 +5328,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6609,24 +5351,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-79",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-79"
+        }
       },
       "tags": [
         "my"
@@ -6652,9 +5383,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "created_start_date": {
                 "componentProperty": false,
@@ -6715,6 +5443,7 @@
               "page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "1",
                 "displayName": "page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6728,6 +5457,7 @@
               "per_page": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "24",
                 "displayName": "per_page",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -6750,24 +5480,13 @@
                 "type": "integer",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-78",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-78"
+        }
       },
       "tags": [
         "my"
@@ -6789,31 +5508,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-144",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-144"
+        }
       },
       "tags": [
         "my"
@@ -6839,9 +5536,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "order_id": {
                 "componentProperty": false,
@@ -6855,24 +5549,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-77",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-77"
+        }
       },
       "tags": [
         "my"
@@ -6894,31 +5577,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-75",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-75"
+        }
       },
       "tags": [
         "my"
@@ -6940,31 +5601,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-104",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-104"
+        }
       },
       "tags": [
         "my"
@@ -6986,31 +5625,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-103",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-103"
+        }
       },
       "tags": [
         "my"
@@ -7037,9 +5654,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -7053,24 +5667,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-102",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-102"
+        }
       },
       "tags": [
         "my"
@@ -7097,9 +5700,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -7113,24 +5713,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-82",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-82"
+        }
       },
       "tags": [
         "my"
@@ -7156,9 +5745,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -7172,24 +5758,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-87",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-87"
+        }
       },
       "tags": [
         "my"
@@ -7216,9 +5791,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -7232,24 +5804,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-81",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-81"
+        }
       },
       "tags": [
         "my"
@@ -7274,9 +5835,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "product_id": {
                 "componentProperty": false,
@@ -7290,24 +5848,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-96",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-96"
+        }
       },
       "tags": [
         "my"
@@ -7332,9 +5879,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "follow_id": {
                 "componentProperty": false,
@@ -7348,24 +5892,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-127",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-127"
+        }
       },
       "tags": [
         "my"
@@ -7391,9 +5924,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -7407,24 +5937,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-150",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-150"
+        }
       },
       "tags": [
         "my"
@@ -7450,9 +5969,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -7466,24 +5982,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-112",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-112"
+        }
       },
       "tags": [
         "my"
@@ -7509,9 +6014,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "query": {
                 "componentProperty": false,
@@ -7936,6 +6438,7 @@
               "state": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "live",
                 "description": "Available: [\"all\", \"draft\", \"ended\", \"live\", \"ordered\", \"sold_out\", \"suspended\", \"seller_unavailable\"]. Defaults to 'live'",
                 "displayName": "state",
                 "group": "producer",
@@ -7960,24 +6463,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-88",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-88"
+        }
       },
       "tags": [
         "my"
@@ -8003,9 +6495,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "query": {
                 "componentProperty": false,
@@ -8426,24 +6915,13 @@
                 "type": "array",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-89",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-89"
+        }
       },
       "tags": [
         "my"
@@ -8465,31 +6943,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-132",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-132"
+        }
       },
       "tags": [
         "my"
@@ -8511,31 +6967,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-84",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-84"
+        }
       },
       "tags": [
         "my"
@@ -8561,9 +6995,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -8577,24 +7008,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-86",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-86"
+        }
       },
       "tags": [
         "my"
@@ -8620,9 +7040,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -8636,24 +7053,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-80",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-80"
+        }
       },
       "tags": [
         "my"
@@ -8675,31 +7081,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-85",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-85"
+        }
       },
       "tags": [
         "my"
@@ -8721,31 +7105,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-145",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-145"
+        }
       },
       "tags": [
         "my"
@@ -8771,9 +7133,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "buyer_id": {
                 "componentProperty": false,
@@ -8787,24 +7146,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-83",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-83"
+        }
       },
       "tags": [
         "my"
@@ -8826,31 +7174,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-114",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-114"
+        }
       },
       "tags": [
         "my"
@@ -8877,9 +7203,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "conversation_id": {
                 "componentProperty": false,
@@ -8893,24 +7216,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-100",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-100"
+        }
       },
       "tags": [
         "my"
@@ -8933,31 +7245,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-133",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-133"
+        }
       },
       "tags": [
         "my"
@@ -8980,31 +7270,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-99",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-99"
+        }
       },
       "tags": [
         "my"
@@ -9030,9 +7298,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -9046,24 +7311,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-139",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-139"
+        }
       },
       "tags": [
         "my"
@@ -9089,9 +7343,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "identifier": {
                 "componentProperty": false,
@@ -9105,24 +7356,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-117",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-117"
+        }
       },
       "tags": [
         "my"
@@ -9148,9 +7388,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -9164,24 +7401,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-136",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-136"
+        }
       },
       "tags": [
         "my"
@@ -9207,9 +7433,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -9223,24 +7446,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-123",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-123"
+        }
       },
       "tags": [
         "my"
@@ -9266,9 +7478,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -9282,24 +7491,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-126",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-126"
+        }
       },
       "tags": [
         "my"
@@ -9325,9 +7523,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "category": {
                 "componentProperty": false,
@@ -9354,24 +7549,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-120",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-120"
+        }
       },
       "tags": [
         "my"
@@ -9397,9 +7581,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -9413,24 +7594,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-95",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-95"
+        }
       },
       "tags": [
         "my"
@@ -9453,31 +7623,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-152",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-152"
+        }
       },
       "tags": [
         "my"
@@ -9503,9 +7651,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "address_id": {
                 "componentProperty": false,
@@ -9519,24 +7664,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-147",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-147"
+        }
       },
       "tags": [
         "my"
@@ -9558,31 +7692,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-141",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-141"
+        }
       },
       "tags": [
         "my"
@@ -9604,31 +7716,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-142",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-142"
+        }
       },
       "tags": [
         "my"
@@ -9654,9 +7744,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "order_id": {
                 "componentProperty": false,
@@ -9670,24 +7757,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-3",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-3"
+        }
       },
       "tags": [
         "orders"
@@ -9713,9 +7789,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "order_id": {
                 "componentProperty": false,
@@ -9729,24 +7802,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-1",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-1"
+        }
       },
       "tags": [
         "orders"
@@ -9772,9 +7834,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "order_id": {
                 "componentProperty": false,
@@ -9788,24 +7847,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-2",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-2"
+        }
       },
       "tags": [
         "orders"
@@ -9831,9 +7879,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "order_id": {
                 "componentProperty": false,
@@ -9847,24 +7892,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-0",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-0"
+        }
       },
       "tags": [
         "orders"
@@ -9886,31 +7920,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-66",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-66"
+        }
       },
       "tags": [
         "payment_methods"
@@ -9936,9 +7948,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -9956,6 +7965,7 @@
               "condition": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "used",
                 "displayName": "condition",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -9965,24 +7975,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-43",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-43"
+        }
       },
       "tags": [
         "priceguide"
@@ -10008,9 +8007,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -10028,6 +8024,7 @@
               "number_of_months": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "3",
                 "displayName": "number_of_months",
                 "group": "producer",
                 "javaType": "java.lang.Integer",
@@ -10041,6 +8038,7 @@
               "condition": {
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "used",
                 "displayName": "condition",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -10050,24 +8048,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-44",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-44"
+        }
       },
       "tags": [
         "priceguide"
@@ -10093,9 +8080,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -10109,24 +8093,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-42",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-42"
+        }
       },
       "tags": [
         "priceguide"
@@ -10152,9 +8125,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "query": {
                 "componentProperty": false,
@@ -10169,24 +8139,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-41",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-41"
+        }
       },
       "tags": [
         "priceguide"
@@ -10212,9 +8171,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -10228,24 +8184,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-57",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-57"
+        }
       },
       "tags": [
         "products"
@@ -10272,9 +8217,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -10288,24 +8230,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-55",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-55"
+        }
       },
       "tags": [
         "products"
@@ -10331,9 +8262,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -10347,24 +8275,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-54",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-54"
+        }
       },
       "tags": [
         "products"
@@ -10390,9 +8307,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -10406,24 +8320,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-56",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-56"
+        }
       },
       "tags": [
         "products"
@@ -10449,9 +8352,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "sale_id": {
                 "componentProperty": false,
@@ -10465,24 +8365,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-61",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-61"
+        }
       },
       "tags": [
         "sales"
@@ -10507,9 +8396,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -10523,24 +8409,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-59",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-59"
+        }
       },
       "tags": [
         "sales"
@@ -10566,9 +8441,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "sale_id": {
                 "componentProperty": false,
@@ -10582,24 +8454,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-62",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-62"
+        }
       },
       "tags": [
         "sales"
@@ -10621,31 +8482,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-58",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-58"
+        }
       },
       "tags": [
         "sales"
@@ -10667,31 +8506,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-60",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-60"
+        }
       },
       "tags": [
         "sales"
@@ -10712,31 +8529,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-64",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-64"
+        }
       },
       "tags": [
         "shipping"
@@ -10758,31 +8553,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-65",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-65"
+        }
       },
       "tags": [
         "shipping"
@@ -10804,31 +8577,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-37",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-37"
+        }
       },
       "tags": [
         "shop"
@@ -10850,31 +8601,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-36",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-36"
+        }
       },
       "tags": [
         "shop"
@@ -10896,31 +8625,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-33",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-33"
+        }
       },
       "tags": [
         "shop"
@@ -10942,31 +8649,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-31",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-31"
+        }
       },
       "tags": [
         "shop"
@@ -10988,31 +8673,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-34",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-34"
+        }
       },
       "tags": [
         "shop"
@@ -11034,31 +8697,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-35",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-35"
+        }
       },
       "tags": [
         "shop"
@@ -11081,31 +8722,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-32",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-32"
+        }
       },
       "tags": [
         "shop"
@@ -11131,9 +8750,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -11161,24 +8777,13 @@
                 "type": "boolean",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-49",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-49"
+        }
       },
       "tags": [
         "shops"
@@ -11204,9 +8809,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -11220,24 +8822,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-50",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-50"
+        }
       },
       "tags": [
         "shops"
@@ -11263,9 +8854,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -11279,24 +8867,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-52",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-52"
+        }
       },
       "tags": [
         "shops"
@@ -11322,9 +8899,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "slug": {
                 "componentProperty": false,
@@ -11338,24 +8912,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-51",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-51"
+        }
       },
       "tags": [
         "shops"
@@ -11381,9 +8944,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "shop_id": {
                 "componentProperty": false,
@@ -11397,24 +8957,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-53",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-53"
+        }
       },
       "tags": [
         "shops"
@@ -11436,31 +8985,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-45",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-45"
+        }
       },
       "tags": [
         "wants"
@@ -11486,9 +9013,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -11502,24 +9026,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-46",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-46"
+        }
       },
       "tags": [
         "wants"
@@ -11545,9 +9058,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -11561,24 +9071,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-47",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-47"
+        }
       },
       "tags": [
         "wants"
@@ -11604,9 +9103,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -11620,24 +9116,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-156",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-156"
+        }
       },
       "tags": [
         "webhooks"
@@ -11659,31 +9144,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-154",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-154"
+        }
       },
       "tags": [
         "webhooks"
@@ -11706,31 +9169,9 @@
         "outputDataShape": {
           "kind": "none"
         },
-        "propertyDefinitionSteps": [
-          {
-            "description": "Specify query parameters",
-            "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
-            "properties": {
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-155",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
-              }
-            }
-          }
-        ]
+        "configuredProperties": {
+          "operationId": "operation-155"
+        }
       },
       "tags": [
         "webhooks"
@@ -11756,9 +9197,6 @@
           {
             "description": "Specify query parameters",
             "name": "Query parameters",
-            "configuredProperties": {
-              
-            },
             "properties": {
               "id": {
                 "componentProperty": false,
@@ -11772,24 +9210,13 @@
                 "type": "string",
                 "tags": [],
                 "enum": []
-              },
-              "operationId": {
-                "componentProperty": false,
-                "defaultValue": "operation-157",
-                "deprecated": false,
-                "displayName": "operationId",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "required": true,
-                "secret": false,
-                "type": "hidden",
-                "tags": [],
-                "enum": []
               }
             }
           }
-        ]
+        ],
+        "configuredProperties": {
+          "operationId": "operation-157"
+        }
       },
       "tags": [
         "webhooks"

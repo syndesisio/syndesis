@@ -17,19 +17,19 @@ package io.syndesis.connector.generator.swagger;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import io.swagger.models.ArrayModel;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Response;
-import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import static io.syndesis.connector.generator.swagger.JsonSchemaHelper.determineSchemaReference;
 
 final class DataShapeHelper {
 
@@ -48,8 +48,7 @@ final class DataShapeHelper {
             return createShapeFromModelImpl(schema);
         }
 
-        final String title = Optional.ofNullable(schema.getTitle())
-            .orElse(schema.getReference().replaceAll("^.*/", ""));
+        final String title = Optional.ofNullable(schema.getTitle()).orElse(schema.getReference().replaceAll("^.*/", ""));
 
         return createShapeFromReference(specification, title, schema.getReference());
     }
@@ -66,8 +65,7 @@ final class DataShapeHelper {
 
             return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
         } catch (final JsonProcessingException e) {
-            throw new IllegalStateException(
-                "Unable to serialize given JSON specification in response schema: " + schema, e);
+            throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
         }
     }
 
@@ -78,8 +76,7 @@ final class DataShapeHelper {
 
                 return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
             } catch (final JsonProcessingException e) {
-                throw new IllegalStateException(
-                    "Unable to serialize given JSON specification in response schema: " + schema, e);
+                throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
             }
         } else if (schema instanceof StringProperty) {
             return DATA_SHAPE_NONE;
@@ -92,23 +89,10 @@ final class DataShapeHelper {
         return createShapeFromReference(specification, title, reference);
     }
 
-    private static DataShape createShapeFromReference(final String specification, final String title,
-        final String reference) {
+    private static DataShape createShapeFromReference(final String specification, final String title, final String reference) {
         final String jsonSchema = JsonSchemaHelper.resolveSchemaForReference(specification, title, reference);
 
         return new DataShape.Builder().kind("json-schema").specification(jsonSchema).build();
-    }
-
-    private static String determineSchemaReference(final Property schema) {
-        if (schema instanceof RefProperty) {
-            return ((RefProperty) schema).get$ref();
-        } else if (schema instanceof ArrayProperty) {
-            final Property property = ((ArrayProperty) schema).getItems();
-
-            return determineSchemaReference(property);
-        }
-
-        throw new IllegalArgumentException("Only references to schemas are supported");
     }
 
 }

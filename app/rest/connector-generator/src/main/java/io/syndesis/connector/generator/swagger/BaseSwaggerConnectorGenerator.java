@@ -15,35 +15,6 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import io.swagger.models.HttpMethod;
-import io.swagger.models.Info;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Response;
-import io.swagger.models.Swagger;
-import io.swagger.models.parameters.BodyParameter;
-import io.swagger.models.parameters.Parameter;
-import io.swagger.models.parameters.RefParameter;
-import io.swagger.models.parameters.SerializableParameter;
-import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.connector.generator.util.ActionComparator;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ActionsSummary;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.connection.ConnectorSettings;
-import io.syndesis.model.connection.ConnectorSummary;
-import io.syndesis.model.connection.ConnectorTemplate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,29 +28,66 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
-import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromModel;
-import static io.syndesis.connector.generator.swagger.DataShapeHelper.createShapeFromResponse;
+import io.swagger.models.HttpMethod;
+import io.swagger.models.Info;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.Swagger;
+import io.swagger.models.parameters.AbstractSerializableParameter;
+import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.Parameter;
+import io.swagger.models.parameters.RefParameter;
+import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.util.ActionComparator;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ActionsSummary;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
+import io.syndesis.model.connection.ConnectorTemplate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-@SuppressWarnings("PMD.ExcessiveImports")
-public class SwaggerConnectorGenerator extends ConnectorGenerator {
+abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
-    static final String URL_EXTENSION = "x-syndesis-swagger-url";
+    /* default */ static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
-    private static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
+    /* default */ static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()//
+        .kind("property")//
+        .displayName("Operation ID")//
+        .group("producer")//
+        .label("producer")//
+        .required(true)//
+        .type("hidden")//
+        .javaType("java.lang.String")//
+        .deprecated(false)//
+        .secret(false)//
+        .componentProperty(false)//
+        .description("ID of operation to invoke")//
+        .build();
 
-    private static final Logger LOG = LoggerFactory.getLogger(SwaggerConnectorGenerator.class);
+    /* default */ static final String URL_EXTENSION = "x-syndesis-swagger-url";
+
+    private static final Logger LOG = LoggerFactory.getLogger(BaseSwaggerConnectorGenerator.class);
 
     @Override
-    public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+    public final Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Connector connector = basicConnector(connectorTemplate, connectorSettings);
 
         return configureConnector(connectorTemplate, connector, connectorSettings);
     }
 
     @Override
-    public ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+    public final ConnectorSummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final SwaggerModelInfo swaggerInfo = parseSpecification(connectorSettings, true);
         try {
             // No matter if the validation fails, try to process the swagger
@@ -111,13 +119,15 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
                 // Just log and return the validation errors if any
                 LOG.error("An error occurred while trying to create a swagger connector", ex);
                 return new ConnectorSummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
-            } else {
-                throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
             }
+
+            throw SyndesisServerException.launderThrowable("An error occurred while trying to create a swagger connector", ex);
         }
     }
 
-    /* default */ Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+    abstract ConnectorDescriptor.Builder createDescriptor(String specification, Operation operation);
+
+    protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         // could be either JSON of the Swagger specification or a URL to one
@@ -134,18 +144,16 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         final Map<String, String> alreadyConfiguredProperties = ((Connector) builder.build()).getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
-            if (alreadyConfiguredProperties.containsKey(propertyName)) {
-                return;
-            }
-
             final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template);
 
             maybeProperty.ifPresent(property -> {
                 builder.putProperty(propertyName, property);
 
-                final String defaultValue = property.getDefaultValue();
-                if (defaultValue != null) {
-                    builder.putConfiguredProperty(propertyName, defaultValue);
+                if (!alreadyConfiguredProperties.containsKey(propertyName)) {
+                    final String defaultValue = property.getDefaultValue();
+                    if (defaultValue != null) {
+                        builder.putConfiguredProperty(propertyName, defaultValue);
+                    }
                 }
             });
         });
@@ -153,52 +161,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         return builder.build();
     }
 
-    @Override
-    protected String determineConnectorDescription(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
-
-        final Info info = swagger.getInfo();
-        if (info == null) {
-            return super.determineConnectorDescription(connectorTemplate, connectorSettings);
-        }
-
-        final String description = info.getDescription();
-        if (description == null) {
-            return super.determineConnectorDescription(connectorTemplate, connectorSettings);
-        }
-
-        return description;
-    }
-
-    @Override
-    protected String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
-
-        final Info info = swagger.getInfo();
-        if (info == null) {
-            return super.determineConnectorName(connectorTemplate, connectorSettings);
-        }
-
-        final String title = info.getTitle();
-        if (title == null) {
-            return super.determineConnectorName(connectorTemplate, connectorSettings);
-        }
-
-        return title;
-    }
-
-    /* default */ static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
-        final Map<String, Parameter> globalParameters = swagger.getParameters();
-        if (globalParameters != null) {
-            globalParameters.forEach((name, parameter) -> {
-                createPropertyFromParameter(parameter).ifPresent(property -> {
-                    builder.putProperty(name, property);
-                });
-            });
-        }
-    }
-
-    /* default */ static Connector configureConnector(final ConnectorTemplate connectorTemplate, final Connector connector,
+    protected final Connector configureConnector(final ConnectorTemplate connectorTemplate, final Connector connector,
         final ConnectorSettings connectorSettings) {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
@@ -226,7 +189,8 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
                 }
 
                 final String specification = requiredSpecification(connectorSettings);
-                final ConnectorDescriptor descriptor = createDescriptor(specification, operation).camelConnectorGAV(connectorGav)//
+                final ConnectorDescriptor descriptor = createDescriptor(specification, operation)//
+                    .camelConnectorGAV(connectorGav)//
                     .camelConnectorPrefix(connectorScheme)//
                     .connectorId(connectorId)//
                     .build();
@@ -271,56 +235,58 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         return builder.build();
     }
 
+    @Override
+    protected final String determineConnectorDescription(final ConnectorTemplate connectorTemplate,
+        final ConnectorSettings connectorSettings) {
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
+
+        final Info info = swagger.getInfo();
+        if (info == null) {
+            return super.determineConnectorDescription(connectorTemplate, connectorSettings);
+        }
+
+        final String description = info.getDescription();
+        if (description == null) {
+            return super.determineConnectorDescription(connectorTemplate, connectorSettings);
+        }
+
+        return description;
+    }
+
+    @Override
+    protected final String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
+
+        final Info info = swagger.getInfo();
+        if (info == null) {
+            return super.determineConnectorName(connectorTemplate, connectorSettings);
+        }
+
+        final String title = info.getTitle();
+        if (title == null) {
+            return super.determineConnectorName(connectorTemplate, connectorSettings);
+        }
+
+        return title;
+    }
+
+    /* default */ static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
+        final Map<String, Parameter> globalParameters = swagger.getParameters();
+        if (globalParameters != null) {
+            globalParameters.forEach((name, parameter) -> {
+                createPropertyFromParameter(parameter).ifPresent(property -> {
+                    builder.putProperty(name, property);
+                });
+            });
+        }
+    }
+
     /* default */ static String createActionId(final String connectorId, final String connectorGav, final Operation operation) {
         return connectorGav + ":" + connectorId + ":" + operation.getOperationId();
     }
 
-    /* default */ static ConnectorDescriptor.Builder createDescriptor(final String specification, final Operation operation) {
-        final ConnectorDescriptor.Builder actionDescriptor = new ConnectorDescriptor.Builder();
-
-        final Optional<BodyParameter> maybeRequestBody = operation.getParameters().stream()
-            .filter(p -> p instanceof BodyParameter && ((BodyParameter) p).getSchema() != null).map(BodyParameter.class::cast).findFirst();
-        final DataShape inputDataShape = maybeRequestBody.map(requestBody -> createShapeFromModel(specification, requestBody.getSchema()))
-            .orElse(DATA_SHAPE_NONE);
-        actionDescriptor.inputDataShape(inputDataShape);
-
-        final Optional<Response> maybeResponse = operation.getResponses().values().stream().filter(r -> r.getSchema() != null).findFirst();
-        final DataShape outputDataShape = maybeResponse.map(response -> createShapeFromResponse(specification, response))
-            .orElse(DATA_SHAPE_NONE);
-        actionDescriptor.outputDataShape(outputDataShape);
-
-        final ActionDescriptor.ActionDescriptorStep.Builder step = new ActionDescriptor.ActionDescriptorStep.Builder()
-            .name("Query parameters").description("Specify query parameters");
-
-        for (final Parameter parameter : operation.getParameters()) {
-            final Optional<ConfigurationProperty> property = createPropertyFromParameter(parameter);
-
-            if (property.isPresent()) {
-                step.putProperty(parameter.getName(), property.get());
-            }
-        }
-
-        step.putProperty("operationId",
-            new ConfigurationProperty.Builder()//
-                .kind("property")//
-                .displayName("operationId")//
-                .group("producer")//
-                .required(true)//
-                .type("hidden")//
-                .javaType("java.lang.String")//
-                .deprecated(false)//
-                .secret(false)//
-                .componentProperty(false)//
-                .defaultValue(operation.getOperationId())//
-                .build());
-
-        actionDescriptor.addPropertyDefinitionStep(step.build());
-
-        return actionDescriptor;
-    }
-
     /* default */ static List<PropertyValue> createEnums(final List<String> enums) {
-        return enums.stream().map(SwaggerConnectorGenerator::createPropertyValue).collect(Collectors.toList());
+        return enums.stream().map(BaseSwaggerConnectorGenerator::createPropertyValue).collect(Collectors.toList());
     }
 
     /* default */ static Optional<ConfigurationProperty> createPropertyFromParameter(final Parameter parameter) {
@@ -331,7 +297,7 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
             return Optional.empty();
         }
 
-        if (!(parameter instanceof SerializableParameter)) {
+        if (!(parameter instanceof AbstractSerializableParameter<?>)) {
             throw new IllegalArgumentException("Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
         }
 
@@ -349,7 +315,12 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
             .deprecated(false)//
             .secret(false);
 
-        final SerializableParameter serializableParameter = (SerializableParameter) parameter;
+        final AbstractSerializableParameter<?> serializableParameter = (AbstractSerializableParameter<?>) parameter;
+
+        final Object defaultValue = serializableParameter.getDefaultValue();
+        if (defaultValue != null) {
+            propertyBuilder.defaultValue(String.valueOf(defaultValue));
+        }
 
         final String type = serializableParameter.getType();
         propertyBuilder.type(type).javaType(JsonSchemaHelper.javaTypeFor(serializableParameter));
@@ -382,5 +353,4 @@ public class SwaggerConnectorGenerator extends ConnectorGenerator {
         }
         return specification;
     }
-
 }

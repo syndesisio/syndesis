@@ -15,6 +15,15 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
@@ -24,13 +33,6 @@ import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.syndesis.model.Violation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 /**
  * This class contains Syndesis custom validation rules for swagger definitions.
  */
@@ -38,103 +40,113 @@ public class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo
 
     private static final SyndesisSwaggerValidationRules INSTANCE = new SyndesisSwaggerValidationRules();
 
-    private static final String[] SUPPORTED_AUTH_TYPES = {"basic", "oauth2"};
+    private static final Set<String> SUPPORTED_AUTH_TYPES = new HashSet<>(Arrays.asList("basic", "oauth2"));
 
-    private List<Function<SwaggerModelInfo, SwaggerModelInfo>> rules = new ArrayList<>();
+    private final List<Function<SwaggerModelInfo, SwaggerModelInfo>> rules = new ArrayList<>();
 
     private SyndesisSwaggerValidationRules() {
         rules.add(this::validateResponses);
         rules.add(this::validateAuthTypes);
     }
 
-    public static SyndesisSwaggerValidationRules getInstance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Check if a request/response JSON schema is present
-     */
-    private SwaggerModelInfo validateResponses(SwaggerModelInfo swaggerModelInfo) {
-
-        if (swaggerModelInfo.getModel() != null) {
-
-            for (Map.Entry<String, Path> pathEntry : notNull(swaggerModelInfo.getModel().getPaths()).entrySet()) {
-                for (Map.Entry<HttpMethod, Operation> operationEntry : notNull(pathEntry.getValue().getOperationMap()).entrySet()) {
-
-                    // Check requests
-                    for (Parameter parameter : notNull(operationEntry.getValue().getParameters())) {
-                        if (!(parameter instanceof BodyParameter)) {
-                            continue;
-                        }
-                        BodyParameter bodyParameter = (BodyParameter) parameter;
-                        if (bodyParameter.getSchema() == null) {
-                            swaggerModelInfo = swaggerModelInfo.withWarning(new Violation.Builder()
-                                .property("")
-                                .error("missing-parameter-schema")
-                                .message("Operation " + operationEntry.getKey() + " " + pathEntry.getKey() + " does not provide a schema for the body parameter")
-                                .build());
-                        }
-                    }
-
-                    // Check responses
-                    for (Map.Entry<String, Response> responseEntry : notNull(operationEntry.getValue().getResponses()).entrySet()) {
-                        if (!responseEntry.getKey().startsWith("2")) {
-                            continue; // check only correct responses
-                        }
-
-                        if (responseEntry.getValue().getSchema() == null) {
-                            swaggerModelInfo = swaggerModelInfo.withWarning(new Violation.Builder()
-                                .property("")
-                                .error("missing-response-schema")
-                                .message("Operation " + operationEntry.getKey() + " " + pathEntry.getKey() + " does not provide a response schema for code " + responseEntry.getKey())
-                                .build());
-                        }
-                    }
-                    // Assume that operations without 2xx responses do not provide a response
-
-                }
-            }
-
-        }
-
-        return swaggerModelInfo;
+    @Override
+    public SwaggerModelInfo apply(final SwaggerModelInfo swaggerModelInfo) {
+        return rules.stream().reduce(Function::compose).map(f -> f.apply(swaggerModelInfo)).orElse(swaggerModelInfo);
     }
 
     /**
      * Check if all operations contains valid authentication types
      */
-    private SwaggerModelInfo validateAuthTypes(SwaggerModelInfo swaggerModelInfo) {
+    private SwaggerModelInfo validateAuthTypes(final SwaggerModelInfo swaggerModelInfo) {
 
-        if (swaggerModelInfo.getModel() != null) {
+        if (swaggerModelInfo.getModel() == null) {
+            return swaggerModelInfo;
+        }
 
-            for (Map.Entry<String, SecuritySchemeDefinition> definitionEntry : notNull(swaggerModelInfo.getModel().getSecurityDefinitions()).entrySet()) {
-                String authType = definitionEntry.getValue().getType();
-                if (!Arrays.asList(SUPPORTED_AUTH_TYPES).contains(authType)) {
-                    swaggerModelInfo = swaggerModelInfo.withWarning(new Violation.Builder()
-                        .property("")
-                        .error("unsupported-auth")
-                        .message("Authentication type " + authType + " is currently not supported")
-                        .build());
-                }
+        final SwaggerModelInfo.Builder withWarnings = new SwaggerModelInfo.Builder().createFrom(swaggerModelInfo);
+
+        for (final Map.Entry<String, SecuritySchemeDefinition> definitionEntry : notNull(
+            swaggerModelInfo.getModel().getSecurityDefinitions()).entrySet()) {
+            final String authType = definitionEntry.getValue().getType();
+            if (!SUPPORTED_AUTH_TYPES.contains(authType)) {
+                withWarnings.addWarning(new Violation.Builder()//
+                    .property("")//
+                    .error("unsupported-auth")//
+                    .message("Authentication type " + authType + " is currently not supported")//
+                    .build());
             }
         }
 
-        return swaggerModelInfo;
+        return withWarnings.build();
     }
 
-    @Override
-    public SwaggerModelInfo apply(SwaggerModelInfo swaggerModelInfo) {
-        return rules.stream().reduce(Function::compose)
-            .map(f -> f.apply(swaggerModelInfo))
-            .orElse(swaggerModelInfo);
+    /**
+     * Check if a request/response JSON schema is present
+     */
+    private SwaggerModelInfo validateResponses(final SwaggerModelInfo swaggerModelInfo) {
+        if (swaggerModelInfo.getModel() == null) {
+            return swaggerModelInfo;
+        }
+
+        final SwaggerModelInfo.Builder withWarnings = new SwaggerModelInfo.Builder().createFrom(swaggerModelInfo);
+
+        for (final Map.Entry<String, Path> pathEntry : notNull(swaggerModelInfo.getModel().getPaths()).entrySet()) {
+            for (final Map.Entry<HttpMethod, Operation> operationEntry : notNull(pathEntry.getValue().getOperationMap()).entrySet()) {
+
+                // Check requests
+                for (final Parameter parameter : notNull(operationEntry.getValue().getParameters())) {
+                    if (!(parameter instanceof BodyParameter)) {
+                        continue;
+                    }
+                    final BodyParameter bodyParameter = (BodyParameter) parameter;
+                    if (bodyParameter.getSchema() == null) {
+                        final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getKey()
+                            + " does not provide a schema for the body parameter";
+
+                        withWarnings.addWarning(new Violation.Builder()//
+                            .property("")//
+                            .error("missing-parameter-schema")//
+                            .message(message)//
+                            .build());
+                    }
+                }
+
+                // Check responses
+                for (final Map.Entry<String, Response> responseEntry : notNull(operationEntry.getValue().getResponses()).entrySet()) {
+                    if (!responseEntry.getKey().startsWith("2")) {
+                        continue; // check only correct responses
+                    }
+
+                    if (responseEntry.getValue().getSchema() == null) {
+                        final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getKey()
+                            + " does not provide a response schema for code " + responseEntry.getKey();
+
+                        withWarnings.addWarning(new Violation.Builder()//
+                            .property("")//
+                            .error("missing-response-schema")//
+                            .message(message)//
+                            .build());
+                    }
+                }
+                // Assume that operations without 2xx responses do not provide a
+                // response
+
+            }
+        }
+
+        return withWarnings.build();
     }
 
-    private <K,V> Map<K,V> notNull(Map<K,V> value) {
-        return value != null ? value : Collections.emptyMap();
+    public static SyndesisSwaggerValidationRules getInstance() {
+        return INSTANCE;
     }
 
-    private <T> List<T> notNull(List<T> value) {
+    private static <T> List<T> notNull(final List<T> value) {
         return value != null ? value : Collections.emptyList();
+    }
+
+    private static <K, V> Map<K, V> notNull(final Map<K, V> value) {
+        return value != null ? value : Collections.emptyMap();
     }
 
 }

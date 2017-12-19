@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import io.syndesis.core.Json;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /* default */ final class TestHelper {
 

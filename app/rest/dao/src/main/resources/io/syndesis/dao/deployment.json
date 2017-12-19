@@ -1568,6 +1568,22 @@
           "secret": false,
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token"
+        },
+        "oauthScopes": {
+          "kind": "property",
+          "displayName": "OAuth Scopes",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-scope"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL to fetch the OAuth Access token"
         }
       },
       "connectorProperties": {
@@ -1695,19 +1711,21 @@
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token"
         },
-        "operationId": {
+        "oauthScopes": {
           "kind": "property",
-          "displayName": "Operation ID",
+          "displayName": "OAuth Scopes",
           "group": "producer",
           "label": "producer",
           "required": false,
-          "type": "hidden",
+          "type": "string",
           "javaType": "java.lang.String",
-          "tags": [],
+          "tags": [
+            "oauth-scope"
+          ],
           "deprecated": false,
           "secret": false,
-          "componentProperty": false,
-          "description": "ID of operation to invoke"
+          "componentProperty": true,
+          "description": "URL to fetch the OAuth Access token"
         },
         "specification": {
           "kind": "property",
