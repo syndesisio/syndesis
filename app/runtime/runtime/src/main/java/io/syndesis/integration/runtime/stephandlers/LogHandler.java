@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Optional;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Log;
 import io.syndesis.integration.model.steps.Step;
@@ -25,19 +27,18 @@ import org.apache.camel.model.ProcessorDefinition;
 
 @AutoService(StepHandler.class)
 public class LogHandler implements StepHandler<Log> {
-  @Override
-  public boolean canHandle(Step step) {
-    return step.getClass().equals(Log.class);
-  }
-
-  @Override
-  public ProcessorDefinition handle(Log item, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-    Log step = item;
-    LoggingLevel loggingLevel = LoggingLevel.INFO;
-    if (step.getLoggingLevel() != null) {
-      loggingLevel = LoggingLevel.valueOf(step.getLoggingLevel());
+    @Override
+    public boolean canHandle(Step step) {
+        return step.getClass().equals(Log.class);
     }
-    return route.log(loggingLevel, step.getLogger(), step.getMarker(), step.getMessage());
-  }
 
+    @Override
+    public Optional<ProcessorDefinition> handle(Log step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+        LoggingLevel loggingLevel = LoggingLevel.INFO;
+        if (step.getLoggingLevel() != null) {
+            loggingLevel = LoggingLevel.valueOf(step.getLoggingLevel());
+        }
+
+        return Optional.of(route.log(loggingLevel, step.getLogger(), step.getMarker(), step.getMessage()));
+    }
 }

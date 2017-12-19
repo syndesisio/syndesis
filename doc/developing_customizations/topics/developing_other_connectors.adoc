@@ -1,0 +1,4 @@
+[id='developing-other-connectors']
+= Developing other kinds of connectors
+
+TBA

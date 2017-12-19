@@ -40,18 +40,6 @@
       "deprecated":false,
       "secret":false,
       "description":"Sets the SQL query to perform. You can externalize the query by using file: or classpath: as prefix and specify the location of the file."
-    },
-    "schedulerPeriod":{
-      "kind":"parameter",
-      "displayName":"Period",
-      "group":"consumer",
-      "required":false,
-      "type":"integer",
-      "javaType":"long",
-      "deprecated":false,
-      "secret":false,
-      "defaultValue":1000,
-      "description":"Delay in milli seconds between scheduling (executing)"
     }
   },
   "connectorProperties":{
@@ -109,6 +97,18 @@
       "deprecated":false,
       "secret":false,
       "description":"DB Catalog"
+    },
+    "schedulerPeriod":{
+      "kind":"parameter",
+      "displayName":"Period",
+      "group":"consumer",
+      "required":false,
+      "type":"integer",
+      "javaType":"long",
+      "deprecated":false,
+      "secret":false,
+      "defaultValue":1000,
+      "description":"Delay in milli seconds between scheduling (executing)"
     }
   }
 }

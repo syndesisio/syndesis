@@ -16,9 +16,7 @@
 package io.syndesis.project.converter.visitor;
 
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Queue;
-import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.integration.Step;
@@ -35,8 +33,6 @@ public interface StepVisitorContext extends Iterator<StepVisitorContext> {
     Step getStep();
 
     Queue<Step> getRemaining();
-
-    Function<Step, Optional<String>> getConnectorIdSupplier();
 
     @Override
     default boolean hasNext() {
@@ -58,5 +54,6 @@ public interface StepVisitorContext extends Iterator<StepVisitorContext> {
     }
 
     class Builder extends ImmutableStepVisitorContext.Builder {
+        // make ImmutableStepVisitorContext accessible
     }
 }

@@ -17,7 +17,7 @@
   "inputDataType" : "none",
   "outputDataType" : "json",
   "componentOptions" : [ "dataSource" ],
-  "endpointOptions" : [ "template", "schedulerPeriod" ],
+  "endpointOptions" : [ "template" ],
   "connectorProperties" : {
     "user" : {
       "kind" : "property",
@@ -48,7 +48,7 @@
       "displayName" : "DB URL",
       "group": "common",
       "label" : "",
-      "required" : false,
+      "required" : true,
       "type" : "string",
       "javaType" : "java.lang.String",
       "deprecated" : false,
@@ -90,6 +90,19 @@
       "deprecated" : false,
       "secret" : true,
       "description" : "Stored Procedure Name"
+    },
+    "schedulerPeriod": {
+      "kind": "parameter",
+      "displayName": "Period",
+      "group": "consumer",
+      "required": false,
+      "type": "integer",
+      "javaType": "long",
+      "deprecated": false,
+      "secret": false,
+      "defaultValue": "1000",
+      "description": "Delay in milli seconds between scheduling (executing)"
     }
   }
 }
+

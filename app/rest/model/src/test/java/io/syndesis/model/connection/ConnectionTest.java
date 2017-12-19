@@ -15,6 +15,7 @@
  */
 package io.syndesis.model.connection;
 
+import io.syndesis.core.KeyGenerator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +24,11 @@ public class ConnectionTest {
 
     @Test
     public void byDefaultDerivedShouldBeFalse() {
-        Connection connection = new Connection.Builder().build();
+        Connection connection = new Connection.Builder()
+            .connector(new Connector.Builder()
+                .id(KeyGenerator.createKey())
+                .build())
+            .build();
 
         assertThat(connection.isDerived()).isFalse();
     }

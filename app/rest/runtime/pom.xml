@@ -91,125 +91,119 @@
             <id>generate-mapper-inspections</id>
             <goals>
               <goal>generate-mapper-inspections</goal>
-              <goal>extract-connector-descriptors</goal>
             </goals>
           </execution>
         </executions>
         <dependencies>
-          <!-- ==== Twitter ==== -->
-          <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>twitter-mention-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>twitter-search-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
-          </dependency>
           <!-- ==== Salesforce ==== -->
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-on-create-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-on-update-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-on-delete-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-update-sobject-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-upsert-sobject-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-create-sobject-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-get-sobject-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-get-sobject-with-id-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-delete-sobject-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>salesforce-delete-sobject-with-id-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <!-- ==== JMS ==== -->
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>activemq-publish-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>activemq-subscribe-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>activemq-request-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <!-- ==== SQL ==== -->
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>sql-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>sql-start-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>sql-stored-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>sql-stored-start-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <!-- ==== AWS S3 ==== -->
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>aws-s3-copy-object-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>aws-s3-get-object-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
           </dependency>
           <dependency>
             <groupId>io.syndesis</groupId>
             <artifactId>aws-s3-polling-bucket-connector</artifactId>
-            <version>${syndesis-connectors.version}</version>
+            <version>${project.version}</version>
+          </dependency>
+          <!-- ==== REST Swagger ==== -->
+          <dependency>
+            <groupId>io.syndesis</groupId>
+            <artifactId>rest-swagger-connector</artifactId>
+            <version>${project.version}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -778,16 +772,6 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>spring-cloud-kubernetes-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-spring4-embedded</artifactId>
     </dependency>
 
     <dependency>

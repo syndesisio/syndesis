@@ -191,49 +191,49 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>http-get-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>twitter-mention-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
      <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>salesforce-upsert-contact-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-common</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-start-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-start-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
@@ -250,13 +250,13 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>activemq-model</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>activemq-publish-connector</artifactId>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -265,17 +265,20 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-common</artifactId>
       <type>test-jar</type>
-      <version>${syndesis.version}</version>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>

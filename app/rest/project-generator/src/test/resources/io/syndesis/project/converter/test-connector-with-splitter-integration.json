@@ -1,0 +1,160 @@
+{
+  "revisions" : [ ],
+  "users" : [ ],
+  "connections" : [ ],
+  "steps" : [ {
+    "action" : {
+      "id" : "-L-bzND7D32OKcmKmSD1",
+      "descriptor" : {
+        "connectorId" : "timer",
+        "camelConnectorGAV" : "io.syndesis:timer-connector:1.2-SNAPSHOT",
+        "camelConnectorPrefix" : "periodic-timer-connector",
+        "connectorCustomizers" : [ ],
+        "propertyDefinitionSteps" : [ ],
+        "configuredProperties" : { }
+      },
+      "tags" : [ ],
+      "actionType" : "connector",
+      "dependencies" : [ {
+        "type" : "MAVEN",
+        "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
+      } ]
+    },
+    "connection" : {
+      "connector" : {
+        "id" : "timer",
+        "actions" : [ {
+          "id" : "-L-bzND7D32OKcmKmSD1",
+          "descriptor" : {
+            "connectorId" : "timer",
+            "camelConnectorGAV" : "io.syndesis:timer-connector:1.2-SNAPSHOT",
+            "camelConnectorPrefix" : "periodic-timer-connector",
+            "connectorCustomizers" : [ ],
+            "propertyDefinitionSteps" : [ ],
+            "configuredProperties" : { }
+          },
+          "tags" : [ ],
+          "actionType" : "connector",
+          "dependencies" : [ {
+            "type" : "MAVEN",
+            "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
+          } ]
+        } ],
+        "properties" : {
+          "period" : {
+            "componentProperty" : false,
+            "kind" : "property",
+            "secret" : false,
+            "tags" : [ ],
+            "enum" : [ ]
+          }
+        },
+        "configuredProperties" : { },
+        "dependencies" : [ ]
+      },
+      "options" : { },
+      "id" : "-L-bzOFKD32OKcmKmSD4",
+      "tags" : [ ],
+      "configuredProperties" : { },
+      "isDerived" : false
+    },
+    "stepKind" : "endpoint",
+    "configuredProperties" : {
+      "period" : "5000"
+    }
+  }, {
+    "action" : {
+      "id" : "twitter-mention-action",
+      "descriptor" : {
+        "componentScheme" : "twitter-timeline",
+        "connectorCustomizers" : [ ],
+        "propertyDefinitionSteps" : [ ],
+        "configuredProperties" : {
+          "timelineType" : "MENTIONS",
+          "delay" : "30000"
+        }
+      },
+      "tags" : [ ],
+      "actionType" : "connector",
+      "dependencies" : [ ]
+    },
+    "connection" : {
+      "connector" : {
+        "componentScheme" : "twitter",
+        "id" : "twitter",
+        "actions" : [ {
+          "id" : "twitter-mention-action",
+          "descriptor" : {
+            "componentScheme" : "twitter-timeline",
+            "connectorCustomizers" : [ ],
+            "propertyDefinitionSteps" : [ ],
+            "configuredProperties" : {
+              "timelineType" : "MENTIONS",
+              "delay" : "30000"
+            },
+            "split": {
+              "language": "tokenize",
+              "expression": ","
+            }
+          },
+          "tags" : [ ],
+          "actionType" : "connector",
+          "dependencies" : [ ]
+        } ],
+        "properties" : {
+          "accessToken" : {
+            "componentProperty" : true,
+            "kind" : "property",
+            "secret" : true,
+            "tags" : [ ],
+            "enum" : [ ]
+          },
+          "accessTokenSecret" : {
+            "kind" : "property",
+            "secret" : true,
+            "tags" : [ ],
+            "enum" : [ ]
+          },
+          "consumerKey" : {
+            "kind" : "property",
+            "secret" : true,
+            "tags" : [ ],
+            "enum" : [ ]
+          },
+          "consumerSecret" : {
+            "kind" : "property",
+            "secret" : true,
+            "tags" : [ ],
+            "enum" : [ ]
+          }
+        },
+        "configuredProperties" : { },
+        "dependencies" : [ {
+          "type" : "MAVEN",
+          "id" : "io.syndesis:camel-component-proxy:1.2-SNAPSHOT"
+        }, {
+          "type" : "MAVEN",
+          "id" : "org.apache.camel:camel-twitter:2.20.1"
+        } ]
+      },
+      "options" : { },
+      "id" : "-L-bzOJED32OKcmKmSD5",
+      "tags" : [ ],
+      "configuredProperties" : { },
+      "isDerived" : false
+    },
+    "stepKind" : "endpoint",
+    "configuredProperties" : {
+      "accessToken" : "at",
+      "accessTokenSecret" : "ats",
+      "consumerKey" : "ck",
+      "consumerSecret" : "cs"
+    }
+  } ],
+  "resources" : [ ],
+  "description" : "This is a test integration!",
+  "stepsDone" : [ ],
+  "id" : "test-integration",
+  "tags" : [ ],
+  "name" : "Test Integration"
+}

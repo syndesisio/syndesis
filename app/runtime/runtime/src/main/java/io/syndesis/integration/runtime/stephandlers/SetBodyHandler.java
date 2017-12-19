@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Optional;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.SetBody;
 import io.syndesis.integration.model.steps.Step;
@@ -30,7 +32,7 @@ public class SetBodyHandler implements StepHandler<SetBody> {
     }
 
     @Override
-    public ProcessorDefinition handle(SetBody step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
-        return route.setBody(routeBuilder.constant(step.getBody()));
+    public Optional<ProcessorDefinition> handle(SetBody step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+        return Optional.of(route.setBody(routeBuilder.constant(step.getBody())));
     }
 }

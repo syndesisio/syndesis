@@ -1,0 +1,51 @@
+[id='t2sf-add-data-mapping-step']
+= Add a data mapping step
+
+Add a data mapping step that correlates Twitter mention fields to 
+Salesforce contact fields:
+
+. In the left pane, hover over the plus sign between the filter
+step and the finish connection to display a pop-up in which
+you click *Add a Step*.
+. Click *Data Mapper* and wait a few moments for the data fields
+to appear.
+. Map the Twitter `name` field to the Salesforce
+`FirstName` and `LastName` fields:
+.. In the *Sources* panel, scroll down to see the *user* field. 
+Expand it and scroll down to click 
+the *name* field. (The ability to search directly for
+*name* is expected to be available in a future release.)
+.. In the *Mapping Details* panel, under *Action*, click 
+the down caret and select *Separate*. 
+.. Below that, under *Targets*, highlight *`[None]`* and start to type
+`*FirstName*`. When *FirstName* appears below the field, click it.
+The data mapper displays a line from the Twitter *name* field to the
+Salesforce *FirstName* field. 
+.. In the lower right, click *Add Target*. 
+.. In the new target, highlight *`[None]`* and start to type
+`*LastName*`. When *LastName* appears below the field, click it. 
+The data mapper displays another line from the Twitter
+*name* field, but this time it goes to the Salesforce *LastName* field. 
+Blue lines indicates the current focus. 
+. Map the Twitter `screenName` field to the Salesforce
+`Title` field:
+.. In the Twitter source fields, 
+scroll down to click 
+the *screenName* field. 
+.. On the right, at the top of the list of target fields in Salesforce,
+click the magnifying 
+glass image:images/magnifying-glass.png[title="Magnifying Glass"]
+to display the search field and enter `*Title*`. 
+.. Click the *Title* field. The data mapper displays a line 
+from the Twitter *screenName* field to the Salesforce *Title* field. 
+. Map the Twitter `text` field to the Salesforce
+`Description` field:
+.. In the *Sources* search field, enter `*text*` and under 
+*Status*, click the *text* field. 
+.. In the *Target* search field, enter `*description*` and then click the
+Salesforce *Description* field to create the mapping. 
+.. In the upper right, click 
+the grid icon image:images/grid.png[title="Grid"] to
+display the list of mappings, which should look like this: 
+image:images/t2sf-mappings.png[Data Mappings]
+. In the upper right, click *Done*.

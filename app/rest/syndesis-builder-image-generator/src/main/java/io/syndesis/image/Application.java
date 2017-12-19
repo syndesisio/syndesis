@@ -22,21 +22,18 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.connector.catalog.ConnectorCatalogConfiguration;
-import io.syndesis.connector.catalog.ConnectorCatalogProperties;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.model.ModelData;
+import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.dao.manager.DaoConfiguration;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ModelData;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -57,7 +54,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(exclude = {DaoConfiguration.class, ConnectorCatalogConfiguration.class, ProjectGeneratorConfiguration.class})
+@SpringBootApplication(
+    exclude = {
+        DaoConfiguration.class,
+        ProjectGeneratorConfiguration.class
+    }
+)
 public class Application implements ApplicationRunner {
 
     @Value("${to:image}")
@@ -96,12 +98,11 @@ public class Application implements ApplicationRunner {
                 for (final Action<?> action : connector.getActions()) {
                     steps.add(
                         new SimpleStep.Builder()
-                            .stepKind("endpoint").
-                            connection(new Connection.Builder()
-                                .configuredProperties(map())
+                            .stepKind("endpoint")
+                            .connection(new Connection.Builder()
+                                .connector(connector)
                                 .connectorId(connector.getId())
                                 .build())
-                            .configuredProperties(map())
                             .action(action)
                             .build()
                     );
@@ -141,10 +142,8 @@ public class Application implements ApplicationRunner {
     private static void generate(Integration integration, File targetDir) throws IOException {
         MavenProperties mavenProperties = new MavenProperties();
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
-        ConnectorCatalogProperties catalogProperties = new ConnectorCatalogProperties(mavenProperties);
-        ConnectorCatalog connectorCatalog = new ConnectorCatalog(catalogProperties);
-        StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Arrays.asList());
-        ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, connectorCatalog, registry, null, Optional.empty());
+        StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Collections.emptyList());
+        ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, null, new ExtensionDataManager(null, null));
 
         Path dir =targetDir.toPath();
         Files.createDirectories( dir);

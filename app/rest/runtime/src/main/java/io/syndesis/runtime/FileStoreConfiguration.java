@@ -16,7 +16,9 @@
 package io.syndesis.runtime;
 
 import io.syndesis.dao.extension.ExtensionDataAccessObject;
-import io.syndesis.filestore.impl.SqlFileStore;
+import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.filestore.impl.SqlExtensionFileStore;
+import io.syndesis.filestore.impl.SqlIconFileStore;
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +32,13 @@ public class FileStoreConfiguration {
 
     @Bean(initMethod = "init")
     @Autowired
-    public ExtensionDataAccessObject fileStore(DBI dbi) {
-        return new SqlFileStore(dbi);
+    public ExtensionDataAccessObject extensionFileStore(DBI dbi) {
+        return new SqlExtensionFileStore(dbi);
+    }
+
+    @Bean(initMethod = "init")
+    @Autowired
+    public IconDataAccessObject iconFileStore(DBI dbi) {
+        return new SqlIconFileStore(dbi);
     }
 }

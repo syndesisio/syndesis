@@ -15,9 +15,5 @@
  */
 package io.syndesis.model;
 
-import java.util.Map;
-
-public interface WithProperties extends WithConfigurationProperties {
-
-    Map<String, String> getConfiguredProperties();
+public interface WithProperties extends WithConfigurationProperties, WithConfiguredProperties {
 }

@@ -1,0 +1,4 @@
+:prodname: Fuse Ignite
+:prodversion: 7.0-TP1
+:imagesdir: topics
+:prodnameinurl: fuseignite

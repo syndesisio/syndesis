@@ -15,12 +15,12 @@
  */
 package io.syndesis.runtime.connector;
 
-import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.connector.generator.ConnectorSummary;
+import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.runtime.BaseITCase;
 import org.junit.Before;

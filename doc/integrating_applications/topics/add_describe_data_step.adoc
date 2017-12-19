@@ -1,0 +1,11 @@
+[id='add-describe-data-step']
+= Adding a step to describe data types
+
+ {prodname} provides the *Describe Data* 
+step for declaring data types. In an integration, you 
+can add a *Describe Data* step before an API connection that invokes
+a typeless action. 
+
+
+Description in the list of steps
+Declare data type when not specified by a connection

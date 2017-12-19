@@ -48,65 +48,99 @@ public class SqlStatementParser {
         this.schema = schema;
     }
 
+    public SqlStatementMetaData parseSelectOnly() throws SQLException {
+
+        DatabaseMetaData meta = connection.getMetaData();
+        statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
+        sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
+
+        switch (sqlArray.get(0)) {
+            case "SELECT":
+                parseSelect(meta);
+                if (! statementInfo.getInParams().isEmpty()) {
+                    throw new SQLException("Your statement is invalid and cannot contain input parameters");
+                }
+                break;
+            default:
+                throw new SQLException("Your statement is invalid and should start with SELECT");
+        }
+        return statementInfo;
+    }
+
     public SqlStatementMetaData parse() throws SQLException {
 
         DatabaseMetaData meta = connection.getMetaData();
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
-        
+
         switch (sqlArray.get(0)) {
             case "INSERT":
-                statementInfo.setStatementType(StatementType.INSERT);
-                String tableNameInsert = statementInfo.addTable(sqlArray.get(2));
-                if (statementInfo.hasInputParams()) {
-                    List<SqlParam> inputParams = findInsertParams(tableNameInsert);
-                    if (inputParams.get(0).getColumn() != null) {
-                        statementInfo.setInParams(
-                                DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                                        meta, null, schema, tableNameInsert, inputParams));
-                    } else {
-                        statementInfo.setInParams(
-                                DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
-                                        meta, null, schema, tableNameInsert, inputParams));
-                    }
-                }
+                parseInsert(meta);
                 break;
             case "UPDATE":
-                statementInfo.setStatementType(StatementType.UPDATE);
-                String tableNameUpdate = statementInfo.addTable(sqlArray.get(1));
-                if (statementInfo.hasInputParams()) {
-                    List<SqlParam> inputParams = findInputParams();
-                    statementInfo.setInParams(
-                            DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                                    meta, null, schema, tableNameUpdate, inputParams));
-                }
+                parseUpdate(meta);
                 break;
             case "DELETE":
-                statementInfo.setStatementType(StatementType.DELETE);
-                String tableNameDelete = statementInfo.addTable(sqlArray.get(2));
-                if (statementInfo.hasInputParams()) {
-                    List<SqlParam> inputParams = findInputParams();
-                    statementInfo.setInParams(
-                            DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                                    meta, null, schema, tableNameDelete, inputParams));
-                }
+                parseDelete(meta);
                 break;
             case "SELECT":
-                statementInfo.setStatementType(StatementType.SELECT);
-                if (statementInfo.hasInputParams()) {
-                    List<SqlParam> inputParams = findInputParams();
-                    statementInfo.setTableNames(findTablesInSelectStatement()); //TODO support multiple tables
-                    statementInfo.setInParams(
-                            DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                                    meta, null, schema, statementInfo.getTableNames().get(0), inputParams));
-                }
-                statementInfo.setOutParams(DatabaseMetaDataHelper.getOutputColumnInfo(connection, statementInfo.getDefaultedSqlStatement()));
+                parseSelect(meta);
                 break;
             default:
-                //not implemented command
-        
+                throw new SQLException("Your statement is invalid and should start with SELECT, UPDATE, SELECT or DELETE");
         }
         return statementInfo;
+    }
+
+    private void parseInsert(DatabaseMetaData meta) throws SQLException {
+        statementInfo.setStatementType(StatementType.INSERT);
+        String tableNameInsert = statementInfo.addTable(sqlArray.get(2));
+        if (statementInfo.hasInputParams()) {
+            List<SqlParam> inputParams = findInsertParams(tableNameInsert);
+            if (inputParams.get(0).getColumn() != null) {
+                statementInfo.setInParams(
+                        DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
+                                meta, null, schema, tableNameInsert, inputParams));
+            } else {
+                statementInfo.setInParams(
+                        DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
+                                meta, null, schema, tableNameInsert, inputParams));
+            }
+        }
+    }
+
+    private void parseUpdate(DatabaseMetaData meta) throws SQLException  {
+        statementInfo.setStatementType(StatementType.UPDATE);
+        String tableNameUpdate = statementInfo.addTable(sqlArray.get(1));
+        if (statementInfo.hasInputParams()) {
+            List<SqlParam> inputParams = findInputParams();
+            statementInfo.setInParams(
+                    DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
+                            meta, null, schema, tableNameUpdate, inputParams));
+        }
+    }
+
+    private void parseDelete(DatabaseMetaData meta) throws SQLException  {
+        statementInfo.setStatementType(StatementType.DELETE);
+        String tableNameDelete = statementInfo.addTable(sqlArray.get(2));
+        if (statementInfo.hasInputParams()) {
+            List<SqlParam> inputParams = findInputParams();
+            statementInfo.setInParams(
+                    DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
+                            meta, null, schema, tableNameDelete, inputParams));
+        }
+    }
+
+    private void parseSelect(DatabaseMetaData meta) throws SQLException  {
+        statementInfo.setStatementType(StatementType.SELECT);
+        if (statementInfo.hasInputParams()) {
+            List<SqlParam> inputParams = findInputParams();
+            statementInfo.setTableNames(findTablesInSelectStatement()); //TODO support multiple tables
+            statementInfo.setInParams(
+                    DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
+                            meta, null, schema, statementInfo.getTableNames().get(0), inputParams));
+        }
+        statementInfo.setOutParams(DatabaseMetaDataHelper.getOutputColumnInfo(connection, statementInfo.getDefaultedSqlStatement()));
     }
 
     /* default */ List<String> splitSqlStatement(String sql) {
@@ -151,6 +185,9 @@ public class SqlStatementParser {
             if (word.startsWith(":#")) {
                 SqlParam param = new SqlParam(word.substring(2));
                 String column = sqlArray.get(i-1);
+                if ("LIKE".equals(column)) {
+                    column = sqlArray.get(i-2);
+                }
                 if (column.startsWith(":#") || "VALUES".equals(column)) {
                     param.setColumnPos(columnPos++);
                 } else {

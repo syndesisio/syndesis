@@ -90,11 +90,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>connector-catalog</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
     </dependency>

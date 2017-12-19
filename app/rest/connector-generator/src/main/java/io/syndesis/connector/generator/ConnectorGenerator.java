@@ -19,6 +19,7 @@ import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
 
 import java.util.Map;

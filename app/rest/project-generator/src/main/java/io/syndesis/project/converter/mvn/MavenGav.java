@@ -18,8 +18,10 @@ package io.syndesis.project.converter.mvn;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("PMD")
-public final class MavenGav {
+import io.syndesis.integration.support.Strings;
+import org.apache.commons.lang3.builder.CompareToBuilder;
+
+public final class MavenGav implements Comparable<MavenGav> {
     private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
     private static final char SEPARATOR_COORDINATE = ':';
     private static final String EMPTY_STRING = "";
@@ -102,14 +104,28 @@ public final class MavenGav {
         return artifactId;
     }
 
-    private int numberOfOccurrences(final CharSequence haystack, char needle) {
-        int counter = 0;
-        for (int i = 0; i < haystack.length(); i++) {
-            if (haystack.charAt(i) == needle) {
-                counter++;
-            }
+    public String getId() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getGroupId());
+        sb.append(':');
+        sb.append(getArtifactId());
+        sb.append(':');
+        sb.append(getPackaging());
+
+        if (!Strings.isEmpty(getClassifier())) {
+            sb.append(':');
+            sb.append(getClassifier());
         }
-        return counter;
+
+        sb.append(':');
+        sb.append(getVersion());
+
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getId();
     }
 
     @Override
@@ -146,5 +162,31 @@ public final class MavenGav {
         result = 31 * result + (classifier != null ? classifier.hashCode() : 0);
         result = 31 * result + (version != null ? version.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(MavenGav o) {
+        return new CompareToBuilder()
+            .append(this.groupId, o.groupId)
+            .append(this.artifactId, o.artifactId)
+            .append(this.type, o.type)
+            .append(this.classifier, o.classifier)
+            .append(this.version, o.version)
+            .toComparison();
+    }
+
+
+    // *****************************
+    // Helpers
+    // *****************************
+
+    private static int numberOfOccurrences(final CharSequence haystack, char needle) {
+        int counter = 0;
+        for (int i = 0; i < haystack.length(); i++) {
+            if (haystack.charAt(i) == needle) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }

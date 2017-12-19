@@ -43,7 +43,7 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
     public SqlStartConnectorComponent() {
         super(COMPONENT_NAME, SqlStartConnectorComponent.class.getName());
         registerExtension(new SqlConnectorVerifierExtension(COMPONENT_SCHEME));
-        registerExtension(SqlConnectorMetaDataExtension::new);
+        registerExtension(SqlStartConnectorMetaDataExtension::new);
     }
 
     public SqlStartConnectorComponent(String componentScheme) {

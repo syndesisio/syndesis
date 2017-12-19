@@ -15,35 +15,32 @@
  */
 package io.syndesis.model;
 
-import java.util.Arrays;
-import java.util.TreeSet;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.integration.Integration;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TagFinderTest {
 
     @Test
     public void findTags() {
-
         Integration integration = new Integration.Builder()
-                .tags(new TreeSet<String>(Arrays.asList("tag1", "tag2")))
-                .build();
+            .addTag("tag1")
+            .addTag("tag2")
+            .build();
         Connection connection = new Connection.Builder()
-                .tags(new TreeSet<String>(Arrays.asList("tag2", "tag3")))
-                .build();
+            .addTag("tag2")
+            .addTag("tag3")
+            .build();
         ListResult<String> allTags = new TagFinder()
-                .add(ListResult.of(Arrays.asList(integration)))
-                .add(ListResult.of(Arrays.asList(connection)))
-                .getResult();
+            .add(ListResult.of(integration))
+            .add(ListResult.of(connection))
+            .getResult();
 
         Assert.assertEquals( 3, allTags.getTotalCount());
-        Assert.assertTrue( allTags.getItems().contains("tag1") );
-        Assert.assertTrue( allTags.getItems().contains("tag2") );
-        Assert.assertTrue( allTags.getItems().contains("tag3") );
+        Assert.assertTrue(allTags.getItems().contains("tag1") );
+        Assert.assertTrue(allTags.getItems().contains("tag2") );
+        Assert.assertTrue(allTags.getItems().contains("tag3") );
 
     }
 

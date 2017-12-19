@@ -359,19 +359,21 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     protected void includeDependencies() {
-        Stream<String> artifacts;
+        Stream<Artifact> artifacts;
 
         if (Boolean.TRUE.equals(listAllArtifacts)) {
             artifacts = project.getArtifacts().stream()
-                .filter(artifact -> StringUtils.equals(artifact.getScope(), DefaultArtifact.SCOPE_PROVIDED))
-                .map(Artifact::getId);
+                .filter(artifact -> StringUtils.equals(artifact.getScope(), DefaultArtifact.SCOPE_PROVIDED));
         } else {
             artifacts = this.project.getDependencies().stream()
                 .filter(dependency -> StringUtils.equals(dependency.getScope(), DefaultArtifact.SCOPE_PROVIDED))
-                .map(dependency -> toArtifact(dependency).getId());
+                .map(this::toArtifact);
         }
 
-        artifacts.forEachOrdered(extensionBuilder::addDependency);
+        artifacts.map(Artifact::getId)
+            .sorted()
+            .map(io.syndesis.model.Dependency::maven)
+            .forEachOrdered(extensionBuilder::addDependency);
     }
 
     protected void saveExtensionMetaData(Extension jsonObject) throws MojoExecutionException {

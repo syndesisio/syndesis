@@ -23,23 +23,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
-
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import io.syndesis.core.cache.CacheManager;
 import io.syndesis.core.EventBus;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
+import io.syndesis.model.ModelData;
 import io.syndesis.model.WithId;
-
-import org.infinispan.Cache;
-import org.infinispan.manager.CacheContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +52,7 @@ public class DataManager implements DataAccessObjectRegistry {
     @SuppressWarnings("rawtypes")
     private static final Function[] NO_OPERATORS = new Function[0];
 
-    private final CacheContainer caches;
+    private final CacheManager caches;
     private final EventBus eventBus;
     private final EncryptionComponent encryptionComponent;
 
@@ -71,7 +68,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     // Inject mandatory via constructor injection.
     @Autowired
-    public DataManager(CacheContainer caches,
+    public DataManager(CacheManager caches,
                        List<DataAccessObject<?>> dataAccessObjects,
                        EventBus eventBus,
                        EncryptionComponent encryptionComponent) {
@@ -154,7 +151,7 @@ public class DataManager implements DataAccessObjectRegistry {
             result = doWithDataAccessObject(model, d -> d.fetchAll());
         } else {
             Kind kind = Kind.from(model);
-            Cache<String, T> cache = caches.getCache(kind.getModelName());
+            Map<String, T> cache = caches.getCache(kind.getModelName());
             result = ListResult.of(cache.values());
         }
 
@@ -211,7 +208,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public <T extends WithId<T>> T create(final T entity) {
         Kind kind = entity.getKind();
-        Cache<String, T> cache = caches.getCache(kind.getModelName());
+        Map<String, T> cache = caches.getCache(kind.getModelName());
         Optional<String> id = entity.getId();
         String idVal;
 
@@ -221,7 +218,7 @@ public class DataManager implements DataAccessObjectRegistry {
             entityToCreate = entity.withId(idVal);
         } else {
             idVal = id.get();
-            if (cache.keySet().contains(idVal)) {
+            if (cache.containsKey(idVal)) {
                 throw new EntityExistsException("There already exists a "
                     + kind + " with id " + idVal);
             }

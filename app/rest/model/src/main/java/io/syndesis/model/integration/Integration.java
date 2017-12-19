@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.Kind;
+import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
@@ -91,6 +92,11 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     @Value.Default
     default List<? extends Step> getSteps() {
+        return Collections.emptyList();
+    }
+
+    @Value.Default
+    default List<ResourceIdentifier> getResources() {
         return Collections.emptyList();
     }
 

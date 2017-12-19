@@ -1,0 +1,15 @@
+[id='connecting-to-sf']
+= Connecting to Salesforce
+
+:context: ug
+To connect to Salesforce in an integration, see the following topics:
+
+* <<register-with-salesforce_{context}>>
+* <<create-salesforce-connection_{context}>>
+* <<adding-sf-connections>>
+
+include::shared/register_with_sf.adoc[leveloffset=+1]
+
+include::shared/create_sf_connection.adoc[leveloffset=+1]
+
+include::adding_sf_connections.adoc[leveloffset=+1]

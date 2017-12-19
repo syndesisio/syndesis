@@ -41,4 +41,9 @@ public class MavenProperties {
         this.repositories.putAll(repositories);
     }
 
+
+    public MavenProperties addRepository(String id, String url) {
+        this.repositories.put(id, url);
+        return this;
+    }
 }

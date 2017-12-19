@@ -43,6 +43,10 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>salesforce-common</artifactId>
+    </dependency>
 
     <!-- base component to use for this connector -->
     <dependency>

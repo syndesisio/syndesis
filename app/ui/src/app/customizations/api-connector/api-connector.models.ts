@@ -1,6 +1,23 @@
 import { StringMap, BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
 import { BaseEntity } from '@syndesis/ui/model';
 
+export interface ApiConnector extends BaseEntity {
+  kind: string;
+  data: ApiConnectorData;
+}
+
+export interface ApiConnectorData extends ApiConnectorValidation {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  fileIcon?: File;
+  properties: ApiConnectorProperties;
+  connectorProperties: any;
+}
+
+export type ApiConnectors = Array<ApiConnectorData>;
+
 export interface ApiConnectorProperties {
   specification: {
     kind: string;
@@ -35,8 +52,6 @@ export interface ApiConnectorData extends ApiConnectorValidation, CustomSwaggerC
 export interface ApiConnector extends BaseEntity {
   data: ApiConnectorData;
 }
-
-export type ApiConnectors = Array<ApiConnector>;
 
 // XXX: The following models are designed to fit into the Redux container
 //      and will eventually replace the ones above

@@ -33,7 +33,7 @@ public interface DataShape extends Serializable {
 
     String getSpecification();
     Optional<byte[]> getExemplar();
+
     class Builder extends ImmutableDataShape.Builder {
     }
-
 }

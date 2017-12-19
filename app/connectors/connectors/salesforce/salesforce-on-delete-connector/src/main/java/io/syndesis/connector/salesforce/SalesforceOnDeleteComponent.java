@@ -15,40 +15,13 @@
  */
 package io.syndesis.connector.salesforce;
 
-import java.net.URISyntaxException;
-import java.util.Map;
-
-import org.apache.camel.component.connector.DefaultConnectorComponent;
-import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
-
-import static org.apache.camel.component.salesforce.SalesforceEndpointConfig.SOBJECT_NAME;
-import static org.apache.camel.component.salesforce.SalesforceEndpointConfig.SOBJECT_QUERY;
-
-public class SalesforceOnDeleteComponent extends DefaultConnectorComponent {
+public class SalesforceOnDeleteComponent extends SalesforceStreamingConnector {
 
     public SalesforceOnDeleteComponent() {
         this(null);
     }
 
-    public SalesforceOnDeleteComponent(String componentSchema) {
-        super("salesforce-on-delete", componentSchema, SalesforceOnDeleteComponent.class.getName());
-    }
-
-    @Override
-    public String createEndpointUri(final String scheme, final Map<String, String> options) throws URISyntaxException {
-        final String sObjectName = options.get(SOBJECT_NAME);
-
-        final String query = "SELECT Id FROM " + sObjectName;
-        options.put("topicName", topicNameFor(options));
-        options.put(SOBJECT_QUERY, query);
-        options.remove(SOBJECT_NAME);
-
-        return super.createEndpointUri(scheme, options);
-    }
-
-    private static String topicNameFor(final Map<String, String> options) {
-        final String sObjectName = options.get(SOBJECT_NAME);
-
-        return "syndesis_" + sObjectName + "_delete";
+    public SalesforceOnDeleteComponent(final String componentSchema) {
+        super("salesforce-on-delete", componentSchema, SalesforceOnDeleteComponent.class);
     }
 }

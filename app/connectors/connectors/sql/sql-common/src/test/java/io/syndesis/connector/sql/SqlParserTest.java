@@ -68,6 +68,16 @@ public class SqlParserTest {
     }
 
     @Test
+    public void parseSelectWithLike() throws SQLException {
+        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE FIRSTNAME LIKE :#first");
+        SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("FIRST", info.getInParams().get(0).getName());
+        Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
     public void parseUpdate() throws SQLException {
         SqlStatementParser parser = new SqlStatementParser(connection, schema, "UPDATE NAME0 SET FIRSTNAME=:#first WHERE ID=:#id");
         SqlStatementMetaData info = parser.parse();

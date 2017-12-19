@@ -1,0 +1,24 @@
+// Reused in 
+// "t2sf_intro.adoc", "sf2db_intro.adoc"
+[id='cleanup_{context}']
+= Clean up your integration
+
+In this Technology Preview release, exactly one integration at 
+a time can be running. You can create another sample integration, 
+but you cannot publish it while an integration is running. 
+
+When you are done working with a sample integration, deactivate it:
+
+. In the left panel, click *Integrations*.
+. In the main panel, click the entry for the sample integration 
+you want to deactivate. 
+. In the integration summary, click *Stop Integration* and click 
+*OK* to confirm that you want to stop running the integration.
+
+When there is a deactivated sample integration, 
+you can run another sample integration. 
+
+When you are no longer working with a sample integration you 
+should delete it. Ensure that the sample integration is 
+`Inactive` and then at the bottom of the summary, click 
+*Delete Integration* and *OK* to confirm.

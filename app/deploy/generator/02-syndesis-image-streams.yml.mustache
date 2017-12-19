@@ -11,7 +11,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -26,7 +26,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -41,7 +41,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -56,7 +56,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -71,7 +71,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}${SYNDESIS_REGISTRY_SEP}{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
+        name: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.OAuthProxy }}"

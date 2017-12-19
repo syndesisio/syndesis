@@ -1,0 +1,23 @@
+[id='understanding-terms']
+= Understanding {prodname} terms
+
+When you integrate applications with {prodname}, you create an
+integration by working with connectors, 
+connections, actions and steps. See the following sections to
+learn about each of these constructs. 
+
+* <<about-integrations>>
+* <<about-connectors>>
+* <<about-connections>>
+* <<about-actions>>
+* <<about-steps>>
+
+include::about_integrations.adoc[leveloffset=+1]
+
+include::about_connectors.adoc[leveloffset=+1]
+
+include::about_connections.adoc[leveloffset=+1]
+
+include::about_actions.adoc[leveloffset=+1]
+
+include::about_steps.adoc[leveloffset=+1]

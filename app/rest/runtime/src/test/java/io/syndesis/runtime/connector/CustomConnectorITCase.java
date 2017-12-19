@@ -15,13 +15,13 @@
  */
 package io.syndesis.runtime.connector;
 
-import io.syndesis.connector.generator.ActionsSummary;
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.connector.generator.ConnectorSummary;
+import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
+import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.runtime.BaseITCase;
 
@@ -42,13 +42,16 @@ public class CustomConnectorITCase extends BaseITCase {
     private static final String TEMPLATE_ID = "connector-template";
 
     private final Connector connector1 = new Connector.Builder().id("connector-from-template-1")
-        .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
+        .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).connectorGroupId(TEMPLATE_ID)
+        .build();
 
     private final Connector connector2 = new Connector.Builder().id("connector-from-template-2")
         .connectorGroup(new ConnectorGroup.Builder().id(TEMPLATE_ID).name("connector-template-group").build()).build();
 
     private final Connector connector3 = new Connector.Builder().id("connector-from-second-template")
         .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
+
+    private final Connector nonCustomConnector = new Connector.Builder().id("non-custom-connector").build();
 
     private final ConnectorTemplate template = createConnectorTemplate(TEMPLATE_ID, "connector template");
 
@@ -107,6 +110,7 @@ public class CustomConnectorITCase extends BaseITCase {
         dataManager.create(connector1);
         dataManager.create(connector2);
         dataManager.create(connector3);
+        dataManager.create(nonCustomConnector);
     }
 
     @Test
@@ -135,6 +139,17 @@ public class CustomConnectorITCase extends BaseITCase {
             .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)//
             .build();
         assertThat(response.getBody()).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldProvideSummaryForCustomConnectors() {
+        final ResponseEntity<Connector> responseForCustomConnector = get("/api/v1/connectors/connector-from-template-1", Connector.class);
+
+        assertThat(responseForCustomConnector.getBody().getSummary()).isPresent();
+
+        final ResponseEntity<Connector> responseForNonCustomConnector = get("/api/v1/connectors/non-custom-connector", Connector.class);
+
+        assertThat(responseForNonCustomConnector.getBody().getSummary()).isNotPresent();
     }
 
     private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {

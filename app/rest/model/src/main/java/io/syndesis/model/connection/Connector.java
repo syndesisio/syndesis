@@ -16,12 +16,12 @@
 package io.syndesis.model.connection;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
+import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
@@ -32,33 +32,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
 @SuppressWarnings("immutables")
-public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, Serializable {
-
-    @Override
-    @Value.Default
-    default Kind getKind() {
-        return Kind.Connector;
-    }
-
-    Optional<ConnectorGroup> getConnectorGroup();
-
-    Optional<String> getConnectorGroupId();
-
-    String getIcon();
-
-    @Override
-    Map<String, ConfigurationProperty> getProperties();
-
-    String getDescription();
-
-    @Override
-    Map<String, String> getConfiguredProperties();
-
-    OptionalInt getUses();
-
-    default Builder builder() {
-        return new Builder().createFrom(this);
-    }
+public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, WithDependencies, Serializable {
 
     class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {
         public Builder putOrRemoveConfiguredPropertyTaggedWith(final String tag, final String value) {
@@ -66,12 +40,38 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
         }
     }
 
-    default Optional<ConnectorAction> actionById(String id) {
+    default Optional<ConnectorAction> actionById(final String id) {
         return getActions().stream().filter(a -> a.idEquals(id)).findFirst();
     }
+
+    default Builder builder() {
+        return new Builder().createFrom(this);
+    }
+
+    Optional<ConnectorGroup> getConnectorGroup();
+
+    Optional<String> getConnectorGroupId();
+
+    String getDescription();
+
+    String getIcon();
+
+    @Override
+    @Value.Default
+    default Kind getKind() {
+        return Kind.Connector;
+    }
+
+    // This is set to optional for backward compatibility with camel style connectors
+    Optional<String> getComponentScheme();
+
+    Optional<String> getConnectorFactory();
+
+    Optional<ConnectorSummary> getSummary();
+
+    OptionalInt getUses();
 
     default Optional<String> propertyTaggedWith(final String tag) {
         return propertyTaggedWith(getConfiguredProperties(), tag);
     }
-
 }

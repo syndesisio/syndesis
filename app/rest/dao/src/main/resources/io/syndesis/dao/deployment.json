@@ -6,6 +6,16 @@
       "name": "Twitter",
       "description": "Direct and event-driven interaction with Twitter timelines, searches, and messages",
       "icon": "fa-twitter",
+      "dependencies": [
+        {
+          "type": "MAVEN",
+          "id": "io.syndesis:camel-component-proxy:@syndesis.version@"
+        },
+        {
+          "type": "MAVEN",
+          "id": "org.apache.camel:camel-twitter:@camel.version@"
+        }
+      ],
       "configuredProperties": {},
       "properties": {
         "accessToken": {
@@ -77,14 +87,17 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:twitter-mention-connector:@syndesis.version@",
-            "camelConnectorPrefix": "twitter-mention-connector",
+            "componentScheme": "twitter-timeline",
             "inputDataShape": {
               "kind": "none"
             },
             "outputDataShape": {
               "kind": "java",
               "type": "twitter4j.Status"
+            },
+            "configuredProperties": {
+              "timelineType": "MENTIONS",
+              "delay": "30000"
             },
             "propertyDefinitionSteps": []
           }
@@ -96,8 +109,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis:twitter-search-connector:@syndesis.version@",
-            "camelConnectorPrefix": "twitter-search-connector",
+            "componentScheme": "twitter-search",
             "inputDataShape": {
               "kind": "none"
             },
@@ -105,6 +117,7 @@
               "kind": "java",
               "type": "twitter4j.Status"
             },
+            "configuredProperties": {},
             "propertyDefinitionSteps": [
               {
                 "name": "Search criteria",
@@ -819,8 +832,19 @@
           "label" : "common,security",
           "required" : false,
           "componentProperty": true,
-          "type" : "boolean",
-          "javaType" : "java.lang.Boolean",
+          "type" : "string",
+          "javaType" : "java.lang.String",
+          "enum": [
+            {
+              "value": "false",
+              "label": "Disable"
+            },
+            {
+              "value": "true",
+              "label": "Enable"
+            }
+          ],
+          "defaultValue" : "false",
           "deprecated" : false,
           "secret" : false,
           "description" : "For convenience in only development environments. Do not set for secure production environments."
@@ -1778,23 +1802,6 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Copy an object on AWS S3",
-                "description": "Set if you want to delete the file once it has been written on S3",
-                "properties": {
-                  "deleteAfterWrite": {
-                    "kind": "property",
-                    "displayName": "Delete After Write",
-                    "group": "producer",
-                    "label": "producer",
-                    "required": false,
-                    "type": "boolean",
-                    "javaType": "boolean",
-                    "deprecated": false,
-                    "secret": false,
-                    "defaultValue": false,
-                    "description": "Delete file object after the S3 file has been uploaded"
-                  }
-                }
               }
             ]
           }

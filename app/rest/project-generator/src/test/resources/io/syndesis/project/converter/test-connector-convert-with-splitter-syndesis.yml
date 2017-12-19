@@ -1,0 +1,20 @@
+---
+flows:
+- steps:
+  - kind: endpoint
+    uri: periodic-timer-connector
+    properties:
+      period: "5000"
+  - kind: connector
+    componentId: twitter-timeline-2
+    componentScheme: twitter-timeline
+    properties:
+      accessToken: '{{twitter-timeline-2.accessToken}}'
+      accessTokenSecret: '{{twitter-timeline-2.accessTokenSecret}}'
+      consumerKey: '{{twitter-timeline-2.consumerKey}}'
+      consumerSecret: '{{twitter-timeline-2.consumerSecret}}'
+      delay: "30000"
+      timelineType: MENTIONS
+  - kind: split-inline
+    language: tokenize
+    expression: ','

@@ -1,0 +1,22 @@
+[id='about-steps']
+= About steps
+
+In some integrations, obtaining data from one application and 
+using it in another application is all you want to do. But in other
+integrations, you might want to operate on data after obtaining it from
+one application and before sending it to another application. 
+To operate on data, you add a step. {prodname} provides steps for:
+
+* Filtering data so that the integration continues only when it meets 
+criteria you define. 
+ 
+* Mapping data fields in one application to data fields in another
+application. 
+
+* Describing the data type for requests and responses when connecting
+to a REST API. 
+
+For details, see <<add-steps>>. 
+
+
+ 

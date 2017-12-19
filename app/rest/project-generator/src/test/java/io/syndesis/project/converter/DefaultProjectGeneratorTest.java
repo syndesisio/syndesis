@@ -29,27 +29,27 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.syndesis.connector.catalog.ConnectorCatalog;
-import io.syndesis.connector.catalog.ConnectorCatalogProperties;
+import io.syndesis.core.Json;
+import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.MavenProperties;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.support.Strings;
+import io.syndesis.model.Dependency;
+import io.syndesis.model.Split;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.ExtensionAction;
 import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
@@ -60,8 +60,8 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
+import io.syndesis.project.converter.visitor.ConnectorStepVisitor;
 import io.syndesis.project.converter.visitor.DataMapperStepVisitor;
-import io.syndesis.project.converter.visitor.EndpointStepVisitor;
 import io.syndesis.project.converter.visitor.ExpressionFilterStepVisitor;
 import io.syndesis.project.converter.visitor.ExtensionStepVisitor;
 import io.syndesis.project.converter.visitor.RuleFilterStepVisitor;
@@ -69,46 +69,161 @@ import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class DefaultProjectGeneratorTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProjectGeneratorTest.class);
     private static final String CONNECTORS_VERSION = ResourceBundle.getBundle("test").getString("connectors.version");
-    private static MavenProperties mavenProperties = new MavenProperties(map("maven.central", "https://repo1.maven.org/maven2",
-        "redhat.ga", "https://maven.repository.redhat.com/ga",
-        "jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea"));
-    private static final ConnectorCatalogProperties CATALOG_PROPERTIES = new ConnectorCatalogProperties(mavenProperties);
-    private static Properties properties = new Properties();
-    private static final ObjectMapper OBJECT_MAPPER;
-    private static final TypeReference<HashMap<String, Connector>> CONNECTOR_MAP_TYPE_REF;
+    private static final String CAMEL_VERSION = ResourceBundle.getBundle("test").getString("camel.version");
+
+    private static final MavenProperties MAVEN_PROPERTIES = new MavenProperties()
+        .addRepository("maven.central", "https://repo1.maven.org/maven2")
+        .addRepository("redhat.ga", "https://maven.repository.redhat.com/ga")
+        .addRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
+
+    private static final ConnectorAction PERIODIC_TIMER_ACTION;
+    private static final Connector TIMER_CONNECTOR;
+    private static final ConnectorAction HTTP_GET_ACTION;
+    private static final ConnectorAction HTTP_POST_ACTION;
+    private static final Connector HTTP_CONNECTOR;
+    private static final ConnectorAction TWITTER_MENTION_ACTION;
+    private static final Connector TWITTER_CONNECTOR;
 
     private final StepVisitorFactoryRegistry registry;
     private final String basePath;
     private final List<Templates.Resource> additionalResources;
-    private final Map<String, Connector> connectors;
+    private final ConcurrentMap<String , Object> resources;
 
     static {
-            System.setProperty("groovy.grape.report.downloads", "true");
-            System.setProperty("ivy.message.logger.level", "3");
+        PERIODIC_TIMER_ACTION = new ConnectorAction.Builder()
+            .id(KeyGenerator.createKey())
+            .descriptor(new ConnectorDescriptor.Builder()
+                .connectorId("timer")
+                .camelConnectorPrefix("periodic-timer-connector")
+                .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
+                .build())
+            .build();
 
-            try {
-                properties.load(DefaultProjectGeneratorTest.class.getResourceAsStream("test.properties"));
-            } catch (IOException e) {
-                Assert.fail("Can't read the test.properties");
-            }
+        TIMER_CONNECTOR = new Connector.Builder()
+            .id("timer")
+            .putProperty(
+                "period",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(false)
+                    .componentProperty(false)
+                    .build())
+            .addAction(PERIODIC_TIMER_ACTION)
+            .build();
 
-            OBJECT_MAPPER = new ObjectMapper().registerModule(new Jdk8Module());
-            CONNECTOR_MAP_TYPE_REF = new TypeReference<HashMap<String, Connector>>() {
-            };
+
+        HTTP_GET_ACTION = new ConnectorAction.Builder()
+            .id(KeyGenerator.createKey())
+            .descriptor(new ConnectorDescriptor.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-get-connector")
+                .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
+                .build())
+            .build();
+
+
+        HTTP_POST_ACTION = new ConnectorAction.Builder()
+            .id(KeyGenerator.createKey())
+            .descriptor(new ConnectorDescriptor.Builder()
+                .connectorId("http")
+                .camelConnectorPrefix("http-post-connector")
+                .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
+                .build())
+            .build();
+
+        HTTP_CONNECTOR = new Connector.Builder()
+            .id("http")
+            .putProperty(
+                "httpUri",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(false)
+                    .componentProperty(false)
+                    .build())
+            .putProperty(
+                "username",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .componentProperty(false)
+                    .build())
+            .putProperty(
+                "password",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .build())
+            .putProperty(
+                "token",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .componentProperty(false)
+                    .build())
+            .addAction(HTTP_GET_ACTION)
+            .addAction(HTTP_POST_ACTION)
+            .build();
+
+        TWITTER_MENTION_ACTION = new ConnectorAction.Builder()
+            .id("twitter-mention-action")
+            .descriptor(new ConnectorDescriptor.Builder()
+                .componentScheme("twitter-timeline")
+                .putConfiguredProperty("timelineType", "MENTIONS")
+                .putConfiguredProperty("delay", "30000")
+                .build())
+            .build();
+
+        TWITTER_CONNECTOR = new Connector.Builder()
+            .id("twitter")
+            .putProperty(
+                "accessToken",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .componentProperty(true)
+                    .build())
+            .putProperty(
+                "accessTokenSecret",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .build())
+            .putProperty(
+                "consumerKey",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .build())
+            .putProperty(
+                "consumerSecret",
+                new ConfigurationProperty.Builder()
+                    .kind("property")
+                    .secret(true)
+                    .build())
+            .componentScheme("twitter")
+            .addDependency(Dependency.maven("io.syndesis:camel-component-proxy:" + CONNECTORS_VERSION))
+            .addDependency(Dependency.maven("org.apache.camel:camel-twitter:" + CAMEL_VERSION))
+            .addAction(TWITTER_MENTION_ACTION)
+            .build();
     }
 
     @Rule
@@ -131,19 +246,18 @@ public class DefaultProjectGeneratorTest {
         });
     }
 
-    public DefaultProjectGeneratorTest(String basePath, List<Templates.Resource> additionalResources) throws IOException {
+    public DefaultProjectGeneratorTest(String basePath, List<Templates.Resource> additionalResources) {
         this.basePath = basePath;
         this.additionalResources = additionalResources;
+        this.resources = new ConcurrentHashMap<>();
         this.registry = new StepVisitorFactoryRegistry(
             new DataMapperStepVisitor.Factory(),
-            new EndpointStepVisitor.Factory(),
+            new ConnectorStepVisitor.ConnectorFactory(),
+            new ConnectorStepVisitor.EndpointFactory(),
             new RuleFilterStepVisitor.Factory(),
             new ExpressionFilterStepVisitor.Factory(),
             new ExtensionStepVisitor.Factory()
         );
-
-        this.connectors = new HashMap<>();
-        this.connectors.putAll(OBJECT_MAPPER.readValue(getClass().getResourceAsStream("test-connectors.json"), CONNECTOR_MAP_TYPE_REF));
     }
 
     // ************************************************
@@ -153,62 +267,41 @@ public class DefaultProjectGeneratorTest {
     @Test
     public void testConvert() throws Exception {
         Step step1 = new SimpleStep.Builder()
-            .stepKind("endpoint").
-                connection(new Connection.Builder()
-                    .configuredProperties(map())
-                    .build())
-            .configuredProperties(map("period",5000))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
+                .build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
             .build();
 
         Step step2 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/hello"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-get-connector")
-                    .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
+            .action(HTTP_GET_ACTION)
             .build();
 
         Step step3 = new SimpleStep.Builder()
             .stepKind("log")
-            .configuredProperties(map("message", "Hello World! ${body}"))
+            .putConfiguredProperty("message", "Hello World! ${body}")
             .build();
 
         Step step4 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .configuredProperties(Collections.emptyMap())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/bye"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-post-connector")
-                    .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/bye")
+            .action(HTTP_POST_ACTION)
             .build();
 
-        Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .description("This is a test integration!")
-            .steps( Arrays.asList(step1, step2, step3, step4))
-            .build();
-
+        Integration integration = newIntegration(step1, step2, step3, step4);
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
@@ -217,8 +310,8 @@ public class DefaultProjectGeneratorTest {
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis.yml");
-        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-pom.xml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-convert-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-convert-pom.xml");
 
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
             assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
@@ -226,47 +319,32 @@ public class DefaultProjectGeneratorTest {
     }
 
     @Test
-    public void testConverterWithPasswordMasking() throws Exception {
+    public void testConverterWithSecrets() throws Exception {
         Step step1 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("1")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
                 .build())
-            .configuredProperties(map("period",5000))
-                .action(new ConnectorAction.Builder()
-                    .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
             .build();
 
         Step step2 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("2")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-get-connector")
-                    .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
+            .putConfiguredProperty("username", "admin")
+            .putConfiguredProperty("password", "admin")
+            .putConfiguredProperty("token", "mytoken")
+            .action(HTTP_GET_ACTION)
             .build();
 
-        Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .description("This is a test integration!")
-            .steps(Arrays.asList(step1, step2))
-            .build();
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        Integration integration = newIntegration(step1, step2);
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
@@ -274,83 +352,66 @@ public class DefaultProjectGeneratorTest {
         Path runtimeDir = generate(integration, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-convert-with-secrets-syndesis.yml");
     }
 
     @Test
-    public void testConverterWithPasswordMaskingAndMultipleConnectorOfSameType() throws Exception {
+    public void testConverterWithSecretsAndMultipleConnectorOfSameType() throws Exception {
         Step step1 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("1")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
                 .build())
-            .configuredProperties(map("period",5000))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
             .build();
 
         Step step2 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("2")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/hello", "username", "admin", "password", "admin", "token", "mytoken"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-get-connector")
-                    .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
+            .putConfiguredProperty("username", "admin")
+            .putConfiguredProperty("password", "admin")
+            .putConfiguredProperty("token", "mytoken")
+            .action(HTTP_GET_ACTION)
             .build();
 
         Step step3 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("3")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/bye", "username", "admin", "password", "admin", "token", "mytoken"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-get-connector")
-                    .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/bye")
+            .putConfiguredProperty("username", "admin")
+            .putConfiguredProperty("password", "admin")
+            .putConfiguredProperty("token", "mytoken")
+            .action(HTTP_GET_ACTION)
             .build();
 
-        Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .description("This is a test integration!")
-            .steps(Arrays.asList(step1, step2, step3))
-            .build();
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        Integration integration = newIntegration(step1, step2, step3);
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
-        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.setSecretMaskingEnabled( true);
 
         Path runtimeDir = generate(integration, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis-with-secrets-and-multiple-connector-of-same-type.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-convert-with-secrets-and-multiple-connector-of-same-type-syndesis.yml");
     }
 
+    @Ignore("test-integration.json is outdated")
     @Test
     public void testConvertFromJson() throws Exception {
         JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
         Integration integration = new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class);
 
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -367,45 +428,30 @@ public class DefaultProjectGeneratorTest {
         Step step1 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
                 .build())
-            .configuredProperties(map("period", 5000))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
             .build();
 
         Step step2 = new SimpleStep.Builder()
             .stepKind("mapper")
-            .configuredProperties(map("atlasmapping", "{}"))
+            .putConfiguredProperty("atlasmapping", "{}")
             .build();
 
         Step step3 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .configuredProperties(Collections.emptyMap())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/bye"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-post-connector")
-                    .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/bye")
+            .action(HTTP_POST_ACTION)
             .build();
 
-        Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .steps( Arrays.asList(step1, step2, step3))
-            .build();
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        Integration integration = newIntegration(step1, step2, step3);
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -421,51 +467,34 @@ public class DefaultProjectGeneratorTest {
         Step step1 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
                 .build())
-            .configuredProperties(map("period", 5000))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
             .build();
 
         Step step2 = new RuleFilterStep.Builder()
-            .configuredProperties(map(
-                "predicate", FilterPredicate.AND.toString(),
-                "rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]"
-            ))
+            .putConfiguredProperty("predicate", FilterPredicate.AND.toString())
+            .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]")
             .build();
 
         Step step3 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .configuredProperties(Collections.emptyMap())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/bye"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-post-connector")
-                    .camelConnectorGAV("io.syndesis:http-post-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/bye")
+            .action(HTTP_POST_ACTION)
             .build();
 
         Step step4 = new ExpressionFilterStep.Builder()
-            .configuredProperties(map("filter", "${body.germanSecondLeagueChampion} equals 'FCN'"))
+            .putConfiguredProperty("filter", "${body.germanSecondLeagueChampion} equals 'FCN'")
             .build();
 
-        Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .steps( Arrays.asList(step1, step2, step3, step4))
-            .build();
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        Integration integration = newIntegration(step1, step2, step3, step4);
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
@@ -480,29 +509,25 @@ public class DefaultProjectGeneratorTest {
         Step step1 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("1")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
                 .build())
-            .configuredProperties(map("period",5000))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("timer")
-                    .camelConnectorPrefix("periodic-timer-connector")
-                    .camelConnectorGAV("io.syndesis:timer-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
             .build();
 
         Step step2 = new SimpleStep.Builder()
             .stepKind("extension")
             .extension(new Extension.Builder()
+                .id(KeyGenerator.createKey())
                 .extensionId("my-extension-1")
-                .addDependency("org.slf4j:slf4j-api:1.7.11")
-                .addDependency("org.slf4j:slf4j-simple:1.7.11")
-                .build()
-            )
-            .configuredProperties(map("key-1", "val-1", "key-2", "val-2"))
+                .addDependency(Dependency.maven("org.slf4j:slf4j-api:1.7.11"))
+                .addDependency(Dependency.maven("org.slf4j:slf4j-simple:1.7.11"))
+                .build())
+            .putConfiguredProperty("key-1", "val-1")
+            .putConfiguredProperty("key-2", "val-2")
             .action(new ExtensionAction.Builder()
+                .id(KeyGenerator.createKey())
                 .descriptor(new ExtensionDescriptor.Builder()
                     .kind(ExtensionAction.Kind.ENDPOINT)
                     .entrypoint("direct:extension")
@@ -513,11 +538,13 @@ public class DefaultProjectGeneratorTest {
         Step step3 = new SimpleStep.Builder()
             .stepKind("extension")
             .extension(new Extension.Builder()
+                .id(KeyGenerator.createKey())
                 .extensionId("my-extension-2")
-                .build()
-            )
-            .configuredProperties(map("key-1", "val-1", "key-2", "val-2"))
+                .build())
+            .putConfiguredProperty("key-1", "val-1")
+            .putConfiguredProperty("key-2", "val-2")
             .action(new ExtensionAction.Builder()
+                .id(KeyGenerator.createKey())
                 .descriptor(new ExtensionDescriptor.Builder()
                     .kind(ExtensionAction.Kind.BEAN)
                     .entrypoint("com.example.MyExtension::action")
@@ -528,11 +555,13 @@ public class DefaultProjectGeneratorTest {
         Step step4 = new SimpleStep.Builder()
             .stepKind("extension")
             .extension(new Extension.Builder()
+                .id(KeyGenerator.createKey())
                 .extensionId("my-extension-3")
-                .build()
-            )
-            .configuredProperties(map("key-1", "val-1", "key-2", "val-2"))
+                .build())
+            .putConfiguredProperty("key-1", "val-1")
+            .putConfiguredProperty("key-2", "val-2")
             .action(new ExtensionAction.Builder()
+                .id(KeyGenerator.createKey())
                 .descriptor(new ExtensionDescriptor.Builder()
                     .kind(ExtensionAction.Kind.STEP)
                     .entrypoint("com.example.MyStep")
@@ -543,27 +572,18 @@ public class DefaultProjectGeneratorTest {
         Step step5 = new SimpleStep.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
-                .id("3")
-                .configuredProperties(map())
+                .id(KeyGenerator.createKey())
+                .connector(HTTP_CONNECTOR)
                 .build())
-            .configuredProperties(map("httpUri", "http://localhost:8080/bye", "username", "admin", "password", "admin", "token", "mytoken"))
-            .action(new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("http")
-                    .camelConnectorPrefix("http-get-connector")
-                    .camelConnectorGAV("io.syndesis:http-get-connector:" + CONNECTORS_VERSION)
-                    .build()
-                ).build())
+            .putConfiguredProperty("httpUri", "http://localhost:8080/bye")
+            .putConfiguredProperty("username", "admin")
+            .putConfiguredProperty("password", "admin")
+            .putConfiguredProperty("token", "mytoken")
+            .action(HTTP_GET_ACTION)
             .build();
 
-        Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .description("This is a test integration!")
-            .steps(Arrays.asList(step1, step2, step3, step4, step5))
-            .build();
-
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
+        Integration integration = newIntegration(step1, step2, step3, step4, step5);
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
@@ -580,22 +600,228 @@ public class DefaultProjectGeneratorTest {
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
     }
 
+    @Test
+    public void testConnectorConvert() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
+                .build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
+            .build();
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TWITTER_CONNECTOR)
+                .build())
+            .action(TWITTER_MENTION_ACTION)
+            .putConfiguredProperty("accessToken", "at")
+            .putConfiguredProperty("accessTokenSecret", "ats")
+            .putConfiguredProperty("consumerKey", "ck")
+            .putConfiguredProperty("consumerSecret", "cs")
+            .build();
+
+        testConnectorConvertIntegration(newIntegration(step1, step2));
+    }
+
+    @Test
+    public void testConnectorConvertFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-integration.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
+        }
+    }
+
+    private void testConnectorConvertIntegration(Integration integration) throws Exception {
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Path runtimeDir = generate(integration, generatorProperties);
+
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
+    @Test
+    public void testConnectorConvertWithSplitter() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
+                .build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
+            .build();
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TWITTER_CONNECTOR)
+                .build())
+            .action(new ConnectorAction.Builder()
+                .id("twitter-mention-action")
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .componentScheme("twitter-timeline")
+                    .putConfiguredProperty("timelineType", "MENTIONS")
+                    .putConfiguredProperty("delay", "30000")
+                    .split(new Split.Builder()
+                        .language("tokenize")
+                        .expression(",")
+                        .build())
+                    .build())
+                .build())
+            .putConfiguredProperty("accessToken", "at")
+            .putConfiguredProperty("accessTokenSecret", "ats")
+            .putConfiguredProperty("consumerKey", "ck")
+            .putConfiguredProperty("consumerSecret", "cs")
+            .build();
+
+        testConnectorConvertWithSplitter(newIntegration(step1, step2));
+    }
+
+    @Test
+    public void testConnectorConvertWithSplitterFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-with-splitter-integration.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
+        }
+    }
+
+    public void testConnectorConvertWithSplitter(Integration integration) throws Exception {
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Path runtimeDir = generate(integration, generatorProperties);
+
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-with-splitter-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
+    @Test
+    public void testConnectorConvertWithDefaultSplitter() throws Exception {
+        Step step1 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TIMER_CONNECTOR)
+                .build())
+            .putConfiguredProperty("period", "5000")
+            .action(PERIODIC_TIMER_ACTION)
+            .build();
+        Step step2 = new SimpleStep.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(TWITTER_CONNECTOR)
+                .build())
+            .action(new ConnectorAction.Builder()
+                .id("twitter-mention-action")
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .componentScheme("twitter-timeline")
+                    .putConfiguredProperty("timelineType", "MENTIONS")
+                    .putConfiguredProperty("delay", "30000")
+                    .split(new Split.Builder().build())
+                    .build())
+                .build())
+            .putConfiguredProperty("accessToken", "at")
+            .putConfiguredProperty("accessTokenSecret", "ats")
+            .putConfiguredProperty("consumerKey", "ck")
+            .putConfiguredProperty("consumerSecret", "cs")
+            .build();
+
+        testConnectorConvertWithDefaultSplitter(newIntegration(step1, step2));
+    }
+
+    @Test
+    public void testConnectorConvertWithDefaultSplitterFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-with-default-splitter-integration.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
+        }
+    }
+
+    public void testConnectorConvertWithDefaultSplitter(Integration integration) throws Exception {
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Path runtimeDir = generate(integration, generatorProperties);
+
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-with-default-splitter-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
     // ************************************************
     // Helpers
     // ************************************************
 
+    private Integration newIntegration(Step... steps) {
+        for (Step step : steps) {
+            step.getConnection().ifPresent(
+                resource -> resources.put(resource.getId().get(), resource)
+            );
+            step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(
+                resource -> resources.put(resource.getId().get(), resource)
+            );
+            step.getExtension().ifPresent(
+                resource -> resources.put(resource.getId().get(), resource)
+            );
+        }
+
+        return new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .steps(Arrays.asList(steps))
+            .build();
+    }
+
     private Path generate(Integration integration, ProjectGeneratorProperties generatorProperties) throws IOException {
         final DataManager dataManager = mock(DataManager.class);
         final ExtensionDataManager extensionDataManager = mock(ExtensionDataManager.class);
-        final ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, new ConnectorCatalog(CATALOG_PROPERTIES), registry, dataManager, Optional.of(extensionDataManager));
+        final ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, dataManager, extensionDataManager);
 
-        // Mock data manager
-        connectors.forEach((k, v) -> when(dataManager.fetch(Connector.class, k)).thenReturn(v));
+        // mock data manager
+        when(dataManager.fetch(anyObject(), anyString())).then(invocation -> {
+            final String id = invocation.getArgumentAt(1, String.class);
+            final Object resource = resources.get(id);
+
+            LOGGER.debug("Resource {}: {}", id, resource);
+
+            return resource;
+        });
 
         // mock extension manager
-        when(extensionDataManager.getExtensionBinaryFile("my-extension-1")).thenReturn(IOUtils.toInputStream("my-extension-1", StandardCharsets.UTF_8));
-        when(extensionDataManager.getExtensionBinaryFile("my-extension-2")).thenReturn(IOUtils.toInputStream("my-extension-2", StandardCharsets.UTF_8));
-        when(extensionDataManager.getExtensionBinaryFile("my-extension-3")).thenReturn(IOUtils.toInputStream("my-extension-3", StandardCharsets.UTF_8));
+        when(extensionDataManager.getExtensionBinaryFile(anyString())).then(invocation -> {
+            final String id = invocation.getArgumentAt(0, String.class);
+            final InputStream is = IOUtils.toInputStream(id, StandardCharsets.UTF_8);
+
+            return is;
+        });
 
         try (InputStream is = generator.generate(integration)) {
             Path ret = testFolder.newFolder("integration-runtime").toPath();
@@ -603,21 +829,18 @@ public class DefaultProjectGeneratorTest {
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
                 TarArchiveEntry tarEntry = tis.getNextTarEntry();
                 // tarIn is a TarArchiveInputStream
-                while (tarEntry != null) {// create a file with the same name as the tarEntry
+                while (tarEntry != null) {
+                    // create a file with the same name as the tarEntry
                     File destPath = new File(ret.toFile(), tarEntry.getName());
                     if (tarEntry.isDirectory()) {
                         destPath.mkdirs();
                     } else {
                         destPath.getParentFile().mkdirs();
                         destPath.createNewFile();
-                        byte[] btoRead = new byte[8129];
-                        BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath));
-                        int len = tis.read(btoRead);
-                        while (len != -1) {
-                            bout.write(btoRead, 0, len);
-                            len = tis.read(btoRead);
+
+                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
+                            IOUtils.copy(tis, bout);
                         }
-                        bout.close();
                     }
                     tarEntry = tis.getNextTarEntry();
                 }
@@ -645,14 +868,5 @@ public class DefaultProjectGeneratorTest {
         final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8);
 
         assertThat(actual).isEqualTo(expected);
-    }
-
-    // Helper method to help constuct maps with concise syntax
-    private static Map<String, String> map(Object... values) {
-        HashMap<String, String> rc = new HashMap<>();
-        for (int i = 0; i + 1 < values.length; i += 2) {
-            rc.put(values[i].toString(), values[i + 1].toString());
-        }
-        return rc;
     }
 }

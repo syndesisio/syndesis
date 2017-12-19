@@ -11,8 +11,7 @@ import { ApiConnectorStore } from './api-connector.store';
   styleUrls: ['api-connector-detail.component.scss']
 })
 export class ApiConnectorDetailComponent implements OnInit {
-  // TODO: Update Restangular/Store setup config to return a properly typed ApiConnectorData instance object
-  apiConnectorData$: Observable<ApiConnector>;
+  apiConnectorData$: Observable<ApiConnectorData>;
   loading$: Observable<boolean>;
 
   constructor(private apiConnectorStore: ApiConnectorStore,

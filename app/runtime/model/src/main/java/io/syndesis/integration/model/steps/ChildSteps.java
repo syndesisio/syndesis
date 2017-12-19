@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Reusable base class for steps which contain nested steps
  */
-public abstract class ChildSteps<T extends ChildSteps> extends Step {
+public abstract class ChildSteps<T extends ChildSteps<T>> extends Step {
     protected List<Step> steps = new ArrayList<>();
 
     public ChildSteps(String kind) {
@@ -34,6 +34,7 @@ public abstract class ChildSteps<T extends ChildSteps> extends Step {
         this.steps = steps;
     }
 
+    @SuppressWarnings("unchecked")
     public T addStep(Step step) {
         steps.add(step);
         return (T) this;

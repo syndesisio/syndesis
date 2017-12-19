@@ -43,15 +43,15 @@ export class TechExtensionsListComponent implements OnInit {
       showCheckbox: false,
       emptyStateConfig: {
         iconStyleClass: 'pficon pficon-add-circle-o',
-        title: 'Import Technical Extension',
+        title: 'Import Extension',
         info:
-          'There are no technical extensions available',
+          'There are no extensions available',
         actions: {
           primaryActions: [
             {
               id: 'importTechnicalExtension',
-              title: 'Import Technical Extension',
-              tooltip: 'Import Technical Extension',
+              title: 'Import Extension',
+              tooltip: 'Import Extension',
               visible: true,
               disabled: false
             }

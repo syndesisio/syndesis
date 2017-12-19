@@ -21,15 +21,15 @@ import java.util.List;
 
 import com.google.common.io.Resources;
 import io.fabric8.mockwebserver.DefaultMockServer;
+import io.syndesis.core.cache.CacheManager;
+import io.syndesis.core.cache.LRUCacheManager;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
 public class DataMapperClassInspectorTest {
 
-    @Rule
-    public InfinispanCache infinispan = new InfinispanCache();
+    public CacheManager cache = new LRUCacheManager(100);
 
     private DefaultMockServer mockServer = new DefaultMockServer();
 
@@ -37,7 +37,7 @@ public class DataMapperClassInspectorTest {
 
     @Test
     public void shouldHandleNesting() throws IOException {
-        DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
+        DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(cache, new RestTemplate(), config);
 
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.StatusJSONImpl").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.StatusJSONImpl.json"), Charset.defaultCharset())).always();
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Logger").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Logger.json"), Charset.defaultCharset())).always();
@@ -51,7 +51,7 @@ public class DataMapperClassInspectorTest {
 
     @Test
     public void shouldHandleInterfaces() throws IOException {
-        DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(infinispan.getCaches(), new RestTemplate(), config);
+        DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(cache, new RestTemplate(), config);
         mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Status").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Status.json"), Charset.defaultCharset())).always();
 
         List<String> paths = dataMapperClassInspector.getPaths("java", "twitter4j.Status", null, null);

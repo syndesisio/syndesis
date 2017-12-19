@@ -15,14 +15,20 @@
  */
 package io.syndesis.model.action;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.integration.support.Strings;
+import io.syndesis.model.Dependency;
+import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction> {
+public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction>, WithDependencies {
 
     @Override
     @Value.Default
@@ -33,6 +39,15 @@ public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<Con
     @Override
     default ConnectorAction withId(String id) {
         return new Builder().createFrom(this).id(id).build();
+    }
+
+    @Override
+    default List<Dependency> getDependencies() {
+        final String gav = getDescriptor().getCamelConnectorGAV();
+
+        return Strings.isEmpty(gav)
+            ? Collections.emptyList()
+            : Collections.singletonList(Dependency.maven(gav));
     }
 
     class Builder extends ImmutableConnectorAction.Builder {

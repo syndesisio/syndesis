@@ -67,7 +67,7 @@ public class ActiveMQUtil {
         // create client key entry
         CertificateFactory factory = CertificateFactory.getInstance("X.509");
         final Certificate generated = factory.generateCertificate(new ByteArrayInputStream
-                (certificate.getBytes("UTF-8")));
+                (getMultilineCertificate(certificate).getBytes("UTF-8")));
         keyStore.setCertificateEntry(alias, generated);
         return keyStore;
     }
@@ -121,4 +121,14 @@ public class ActiveMQUtil {
         return connectionFactory;
     }
 
+    // X.509 PEM parser requires a newline after the header
+    private static String getMultilineCertificate(String certificate) {
+        // is this a multi line certificate?
+        if (certificate.indexOf('\n') != -1) {
+            return certificate;
+        } else {
+            // insert newline after header
+            return certificate.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n");
+        }
+    }
 }

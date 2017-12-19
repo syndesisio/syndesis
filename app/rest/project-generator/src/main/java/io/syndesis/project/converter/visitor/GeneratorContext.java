@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.connector.catalog.ConnectorCatalog;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.Flow;
@@ -34,15 +33,21 @@ import org.immutables.value.Value;
 public interface GeneratorContext {
 
     Integration getIntegration();
+
     Flow getFlow();
-    ConnectorCatalog getConnectorCatalog();
+
     ProjectGeneratorProperties getGeneratorProperties();
+
     StepVisitorFactoryRegistry getVisitorFactoryRegistry();
+
     TarArchiveOutputStream getTarArchiveOutputStream();
+
     DataManager getDataManager();
+
     Optional<ExtensionDataManager> getExtensionDataManager();
 
     default void addTarEntry(String path, byte[] content) throws IOException {
+        @SuppressWarnings("resource")
         TarArchiveOutputStream tos = getTarArchiveOutputStream();
         TarArchiveEntry entry = new TarArchiveEntry(path);
         entry.setSize(content.length);
@@ -52,5 +57,6 @@ public interface GeneratorContext {
     }
 
     class Builder extends ImmutableGeneratorContext.Builder {
+        // make ImmutableGeneratorContext accessible
     }
 }

@@ -17,17 +17,22 @@ package io.syndesis.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.atlasmap.maven.GenerateInspectionsMojo;
-import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.DataShapeKinds;
+import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ModelData;
+import io.syndesis.model.WithDependencies;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
 import org.apache.maven.model.Resource;
@@ -106,8 +111,8 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
 
         final DataShape shape = maybeShape.get();
         getLog().info("Generating for connector: " + connector.getId().get() + ", and type: " + shape.getType());
-        final File outputFile = new File(outputDir,
-            resourceDir + "/" + connector.getId().get() + "/" + shape.getType() + ".json");
+        final File outputFile = new File(outputDir, resourceDir + "/" + connector.getId().get() + "/" + shape.getType() + ".json");
+
         if (generated.contains(outputFile)) {
             return;
         }
@@ -116,14 +121,23 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
             getLog().debug("Created dir: " + outputFile.getParentFile());
         }
 
+        List<String> artifacts = Stream.of(connector, action)
+            .map(WithDependencies.class::cast)
+            .map(WithDependencies::getDependencies)
+            .flatMap(Collection::stream)
+            .filter(Dependency::isMaven)
+            .map(Dependency::getId)
+            .collect(Collectors.toList());
+
         final GenerateInspectionsMojo generateInspectionsMojo = new GenerateInspectionsMojo();
         generateInspectionsMojo.setLog(getLog());
         generateInspectionsMojo.setPluginContext(getPluginContext());
         generateInspectionsMojo.setSystem(system);
         generateInspectionsMojo.setRemoteRepos(remoteRepos);
         generateInspectionsMojo.setRepoSession(repoSession);
-        generateInspectionsMojo.setGav(action.getDescriptor().getCamelConnectorGAV());
+        generateInspectionsMojo.setArtifacts(artifacts);
         generateInspectionsMojo.setClassName(shape.getType());
+        generateInspectionsMojo.setArtifacts(artifacts);
         generateInspectionsMojo.setOutputFile(outputFile);
         generateInspectionsMojo.execute();
         generated.add(outputFile);

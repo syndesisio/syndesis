@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Optional;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.model.steps.Throttle;
@@ -31,7 +33,7 @@ public class ThrottleHandler implements StepHandler<Throttle> {
   }
 
   @Override
-  public ProcessorDefinition handle(Throttle step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+  public Optional<ProcessorDefinition> handle(Throttle step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
     ThrottleDefinition throttle = route.throttle(step.getMaximumRequests());
     Long period = step.getPeriodMillis();
     if (period != null) {

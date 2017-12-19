@@ -20,10 +20,6 @@ public class SqlStoredStartConnectorConnectorConfigurationCommon {
      */
     private String template;
     /**
-     * Delay in milli seconds between scheduling (executing)
-     */
-    private long schedulerPeriod = 1000L;
-    /**
      * DB User Name
      */
     private String user;
@@ -47,6 +43,10 @@ public class SqlStoredStartConnectorConnectorConfigurationCommon {
      * Stored Procedure Name
      */
     private String procedureName;
+    /**
+     * Delay in milli seconds between scheduling (executing)
+     */
+    private long schedulerPeriod = 1000L;
 
     public DataSource getDataSource() {
         return dataSource;
@@ -62,14 +62,6 @@ public class SqlStoredStartConnectorConnectorConfigurationCommon {
 
     public void setTemplate(String template) {
         this.template = template;
-    }
-
-    public long getSchedulerPeriod() {
-        return schedulerPeriod;
-    }
-
-    public void setSchedulerPeriod(long schedulerPeriod) {
-        this.schedulerPeriod = schedulerPeriod;
     }
 
     public String getUser() {
@@ -118,5 +110,13 @@ public class SqlStoredStartConnectorConnectorConfigurationCommon {
 
     public void setProcedureName(String procedureName) {
         this.procedureName = procedureName;
+    }
+
+    public long getSchedulerPeriod() {
+        return schedulerPeriod;
+    }
+
+    public void setSchedulerPeriod(long schedulerPeriod) {
+        this.schedulerPeriod = schedulerPeriod;
     }
 }

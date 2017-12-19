@@ -99,7 +99,7 @@
 {{/Debug}}{{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{Images.SyndesisImagesPrefix}}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
 {{^Probeless}}
@@ -132,7 +132,6 @@
               memory: 612Mi
             requests:
               memory: 256Mi
-
         volumes:
         - name: config-volume
           configMap:

@@ -1,0 +1,22 @@
+[id='create-twitter-sf-integration']
+= Create and deploy Twitter to Salesforce sample integration
+
+To create and deploy an integration that uses the 
+Twitter and Salesforce connections
+you created, the main steps are:
+
+* <<t2sf-choose-start-connection>>
+* <<t2sf-choose-finish-connection>>
+* <<t2sf-add-basic-filter-step>>
+* <<t2sf-add-data-mapping-step>>
+* <<t2sf-name-and-publish>>
+
+include::t2sf_choose_start.adoc[leveloffset=+1]
+
+include::t2sf_choose_finish.adoc[leveloffset=+1]
+
+include::t2sf_add_filter_step.adoc[leveloffset=+1]
+
+include::t2sf_add_mapping_step.adoc[leveloffset=+1]
+
+include::t2sf_name_and_publish.adoc[leveloffset=+1]

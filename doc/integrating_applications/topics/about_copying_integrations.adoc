@@ -1,0 +1,46 @@
+[id='about-copying-integrations']
+= About copying integrations
+
+Each {prodname} installation is an environment from which you 
+can export an integration. Exporting an integration downloads a zip file 
+that contains the information needed to recreate the integration in a 
+different {prodname} environment. 
+
+In an environment, each integration can have only one *Draft* version.
+
+The result of importing an integration depends on whether an integration with
+the same name is already present. The following table describes the various
+possibilities.
+
+[cols=2*,options="header"]
+|===
+|In the importing environment:
+|After importing the integration:
+
+|No integration has the same name as the integration being imported.
+|The integration is in the *Draft* state. The import operation creates each 
+connection that the imported integration uses and copies all connection 
+settings except for secrets. You must edit each connection that is incomplete 
+and ensure that it is configured for its new environment. 
+
+|There is a published or deactivated integration with the same name as the 
+integration being imported.
+|The integration is updated. Connection settings are not updated.
+
+If the imported integration does not contain any new connections that
+require configuration then the integration is ready to be published. 
+
+If the integration has new connections that require configuration then the
+imported integration is in the *Draft* state. You must add required
+configuration to any new connections. 
+
+|There is only a draft integration with the same name as the integration being 
+imported.
+|The imported integration is now the *Draft* and the previous draft is lost. 
+
+The import operation creates each 
+connection that the imported integration uses and copies all connection 
+settings except for secrets. You must edit each connection that is incomplete 
+and ensure that it is configured for its new environment. 
+|===
+ 

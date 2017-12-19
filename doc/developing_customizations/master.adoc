@@ -1,0 +1,19 @@
+:prodname: Fuse Ignite
+:prodversion: 7.0-TP
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+
+[id='developing-customizations']
+= Developing {prodname} Customizations
+
+Add an intro paragraph here. 
+
+* <<developing-api-client-connectors>>
+* <<developing-custom-steps>>
+* <<developing-other-connectors>>
+
+include::topics/developing_api_client_connectors.adoc[leveloffset=+1]
+
+include::topics/developing_custom_steps.adoc[leveloffset=+1]
+
+include::topics/developing_other_connectors.adoc[leveloffset=+1]

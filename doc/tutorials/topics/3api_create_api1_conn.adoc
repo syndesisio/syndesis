@@ -1,0 +1,18 @@
+[id='create-api1-connection']
+= Create a connection to the first API
+
+To create a connection for the first API: 
+
+. In the left pane, click *Connections* to display available connections. 
+. In the upper right, click *Create Connection* to display
+{prodname} connectors. 
+. Select the *API* connector.  
+. In the *Swagger Definition* field, enter the URL for the Swagger document
+that defines the first API or click *Browse* to select the file that contains
+the Swagger definition. 
+. TBA - what triggers the integration? Polling interval?
+. Click *Validate* to confirm that the connection works. 
+. After successful validation, click *Next*. 
+. In the *Connection Name* field, enter `*First API Connection*`.
+. In the upper right, click *Create*. This displays 
+*First API Connection* as an available connection. 

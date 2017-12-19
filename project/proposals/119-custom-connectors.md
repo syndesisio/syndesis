@@ -53,6 +53,8 @@ New API endpoints for defining custom connectors:
 | GET       | /api/**{version}**/connectors/**{connectorId}**/details                 | Fetches details in same form as the `/custom/info` endpoint above                     |
 | DELETE    | /api/**{version}**/connectors/**{connectorId}**                         | Deletes a connector with the id **{connectorId}**                                     |
 | PUT       | /api/**{version}**/connectors/**{connectorId}**                         | Updates a connector with the id **{connectorId}**                                     |
+| GET       | /api/**{version}**/connectors/**{connectorId}**/icon                    | Serves the connector icon if one is saved separately in the DB                        |
+| POST      | /api/**{version}**/connectors/**{connectorId}**/icon                    | Updates the icon for the specified connector                                          |
 
 ### New custom connector based on Swagger specification example
 
@@ -149,7 +151,7 @@ Content-Length: 1895
     }
   },
   //...
-} 
+}
 ```
 
 Based on the connector template property `specification`, tagged with `upload`,

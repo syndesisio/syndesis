@@ -1,0 +1,42 @@
+[id='sf2db-add-data-mapping-step']
+= Add a data mapping step
+
+Add a step that maps Salesforce fields to fields in the 
+database:
+
+. In the left panel, hover over the plus sign immediately after the
+start connection to display a pop-up in which you click *Add a Step*.
+
+. Click *Data Mapper* and wait a few moments for the data fields
+to appear.
+
+. Map the source `Company` field to the 
+target `company` field:
+.. On the left, scroll down and click *Company*.
+.. On the right, click *company*. 
+The data mapper displays a line
+from the source field to the target field. 
+. Map the Salesforce `Email` field to the database `email` field. 
+. Map two Salesforce fields (`FirstName` and `LastName`) to the database
+`first_and_last_name` field:
+.. In the *Sources* panel, click *FirstName*.
+.. In the *Target* panel, click *first_and_last_name*. 
+.. In the *Mapping Details* panel, under *Action*, select *Combine*.
+.. Just above that, click *Add Source*. 
+.. Under *Source*, highlight *`[None]`* and start to type
+`*LastName*`. When *LastName* appears below the field, click it.
+The data mapper displays a line from the Salesforce *LastName* field to the
+database *first_and_last_name* field. 
+. Add the following mappings:  
++
+[options="header"]
+|=======================
+|Map This Salesforce Field |To This Database Field     
+|`LeadSource`    |`lead_source`    
+|`Status`    |`lead_status`    
+|`Phone`    |`phone`    
+|`Rating`    |`rating`
+|=======================
+
+
+. In the upper right, click *Done*.
