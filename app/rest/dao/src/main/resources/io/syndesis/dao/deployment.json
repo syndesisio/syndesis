@@ -1695,20 +1695,6 @@
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token"
         },
-        "operationId": {
-          "kind": "property",
-          "displayName": "Operation ID",
-          "group": "producer",
-          "label": "producer",
-          "required": false,
-          "type": "hidden",
-          "javaType": "java.lang.String",
-          "tags": [],
-          "deprecated": false,
-          "secret": false,
-          "componentProperty": false,
-          "description": "ID of operation to invoke"
-        },
         "specification": {
           "kind": "property",
           "displayName": "Specification",

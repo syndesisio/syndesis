@@ -15,21 +15,21 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.util.Optional;
+
 import io.swagger.models.ArrayModel;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Response;
-import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import static io.syndesis.connector.generator.swagger.JsonSchemaHelper.determineSchemaReference;
 
 final class DataShapeHelper {
 
@@ -93,18 +93,6 @@ final class DataShapeHelper {
         final String jsonSchema = JsonSchemaHelper.resolveSchemaForReference(specification, title, reference);
 
         return new DataShape.Builder().kind("json-schema").specification(jsonSchema).build();
-    }
-
-    private static String determineSchemaReference(final Property schema) {
-        if (schema instanceof RefProperty) {
-            return ((RefProperty) schema).get$ref();
-        } else if (schema instanceof ArrayProperty) {
-            final Property property = ((ArrayProperty) schema).getItems();
-
-            return determineSchemaReference(property);
-        }
-
-        throw new IllegalArgumentException("Only references to schemas are supported");
     }
 
 }

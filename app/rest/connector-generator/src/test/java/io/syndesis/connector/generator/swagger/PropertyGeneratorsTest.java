@@ -15,12 +15,12 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.net.URI;
+
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 
 import org.junit.Test;
-
-import java.net.URI;
 
 import static io.syndesis.connector.generator.swagger.PropertyGenerators.createHostUri;
 import static io.syndesis.connector.generator.swagger.PropertyGenerators.determineHost;
@@ -46,12 +46,12 @@ public class PropertyGeneratorsTest {
     @Test
     public void shouldDetermineHostFromSpecificationUrl() {
         final URI specificationUrl = URI.create("https://api.example.com/swagger.json");
-        assertThat(determineHost(new Swagger().vendorExtension(SwaggerConnectorGenerator.URL_EXTENSION, specificationUrl)))
+        assertThat(determineHost(new Swagger().vendorExtension(BaseSwaggerConnectorGenerator.URL_EXTENSION, specificationUrl)))
             .isEqualTo("https://api.example.com");
         assertThat(
-            determineHost(new Swagger().vendorExtension(SwaggerConnectorGenerator.URL_EXTENSION, specificationUrl).scheme(Scheme.HTTP)))
+            determineHost(new Swagger().vendorExtension(BaseSwaggerConnectorGenerator.URL_EXTENSION, specificationUrl).scheme(Scheme.HTTP)))
                 .isEqualTo("http://api.example.com");
-        assertThat(determineHost(new Swagger().vendorExtension(SwaggerConnectorGenerator.URL_EXTENSION, specificationUrl)
+        assertThat(determineHost(new Swagger().vendorExtension(BaseSwaggerConnectorGenerator.URL_EXTENSION, specificationUrl)
             .host("api2.example.com").scheme(Scheme.HTTP))).isEqualTo("http://api2.example.com");
     }
 

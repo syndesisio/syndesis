@@ -133,7 +133,7 @@ import org.apache.commons.lang3.StringUtils;
 
     /* default */ static String determineHost(final Swagger swagger) {
         final Map<String, Object> vendorExtensions = Optional.ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
-        final URI specificationUrl = (URI) vendorExtensions.get(SwaggerConnectorGenerator.URL_EXTENSION);
+        final URI specificationUrl = (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
 
         final List<Scheme> schemes = swagger.getSchemes();
         final String schemeToUse;

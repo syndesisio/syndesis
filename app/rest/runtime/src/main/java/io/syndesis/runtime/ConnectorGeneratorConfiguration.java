@@ -16,7 +16,7 @@
 package io.syndesis.runtime;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.connector.generator.swagger.SwaggerConnectorGenerator;
+import io.syndesis.connector.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +26,6 @@ public class ConnectorGeneratorConfiguration {
 
     @Bean("swagger-connector-template")
     public ConnectorGenerator swaggerConnectorGenerator() {
-        return new SwaggerConnectorGenerator();
+        return new SwaggerUnifiedShapeConnectorGenerator();
     }
 }

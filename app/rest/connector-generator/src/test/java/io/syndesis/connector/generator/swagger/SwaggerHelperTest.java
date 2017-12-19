@@ -15,15 +15,15 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import org.junit.Test;
-
 import java.io.IOException;
+
+import org.junit.Test;
 
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SwaggerHelperTest extends SwaggerConnectorGeneratorBaseTest {
+public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
 
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {

@@ -15,14 +15,16 @@
  */
 package io.syndesis.connector.generator.swagger;
 
-import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.models.properties.Property;
-import io.syndesis.core.Json;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import io.swagger.models.parameters.SerializableParameter;
+import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.Property;
+import io.swagger.models.properties.RefProperty;
+import io.syndesis.core.Json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,6 +37,18 @@ final class JsonSchemaHelper {
 
     private JsonSchemaHelper() {
         // utility class
+    }
+
+    /* default */ static String determineSchemaReference(final Property schema) {
+        if (schema instanceof RefProperty) {
+            return ((RefProperty) schema).get$ref();
+        } else if (schema instanceof ArrayProperty) {
+            final Property property = ((ArrayProperty) schema).getItems();
+
+            return determineSchemaReference(property);
+        }
+
+        throw new IllegalArgumentException("Only references to schemas are supported");
     }
 
     /* default */ static URL inMemory(final String specification) throws MalformedURLException {

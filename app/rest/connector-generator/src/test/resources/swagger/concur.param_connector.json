@@ -105,20 +105,6 @@
       "componentProperty": true,
       "description":"URL to fetch the OAuth Access token"
     },
-    "operationId": {
-      "kind": "property",
-      "displayName": "Operation ID",
-      "group": "producer",
-      "label": "producer",
-      "required": false,
-      "type": "hidden",
-      "javaType": "java.lang.String",
-      "tags": [],
-      "deprecated": false,
-      "secret": false,
-      "componentProperty": false,
-      "description": "ID of operation to invoke"
-    },
     "specification": {
       "kind": "property",
       "displayName": "Specification",
@@ -185,6 +171,9 @@
           "kind": "json-schema",
           "specification": "{\"properties\":{\"Items\":{\"properties\":{\"Comment\":{\"type\":\"string\",\"description\":\"A comment that describes the expense. Max Length: 2000\"},\"CurrencyCode\":{\"type\":\"string\",\"description\":\"The <a target=\\\"_blank\\\" href=\\\"http://en.wikipedia.org/wiki/ISO_4217\\\">3-letter ISO 4217 currency code</a> for the expense transaction amount. Example: USD\"},\"ExpenseTypeCode\":{\"type\":\"string\",\"description\":\"The code for the expense type in the company's expense management system. Currently supports Concur Expense codes. The Expense Type Code is returned in the ExpKey element of the Get Expense Group Configuration function response.\"},\"ExpenseTypeName\":{\"type\":\"string\",\"description\":\"The name of the expense type associated with the quick expense.\"},\"ID\":{\"type\":\"string\",\"description\":\"The unique identifier of the resource.\"},\"LocationName\":{\"type\":\"string\",\"description\":\"The name of the location where the expense was incurred.\"},\"OwnerLoginID\":{\"type\":\"string\",\"description\":\"The Concur login ID for the expense owner. Useful for system to system integration when there are expenses for multiple users.\"},\"OwnerName\":{\"type\":\"string\",\"description\":\"The first and last name for the expense owner. Useful for system to system integration when there are expenses for multiple users.\"},\"PaymentTypeCode\":{\"type\":\"string\",\"description\":\"This element specifies the method of payment for the expense. Format: CASHX = Cash, CPAID = Company Paid, or PENDC = Pending Card Transaction (default)\"},\"ReceiptImageID\":{\"type\":\"string\",\"description\":\"The ID of the receipt image associated with this quick expense, if any.\"},\"TransactionAmount\":{\"type\":\"number\",\"format\":\"double\",\"description\":\"The total amount of the expense in the original currency, with up to three decimal places. Example: 123.654\"},\"TransactionDate\":{\"type\":\"string\",\"format\":\"date-time\",\"description\":\"The date the expense was incurred. Format: YYYY-MM-DD\"},\"URI\":{\"type\":\"string\",\"description\":\"The URI to the resource.\"},\"VendorDescription\":{\"type\":\"string\",\"description\":\"The descriptive text for the vendor for the quick expense. This often matches the Merchant Name found in a credit card transaction.  Max Length: 64\"}}},\"NextPage\":{\"type\":\"string\",\"description\":\"The URI of the next page of results, if any.\"}},\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"title\":\"QuickExpenseCollection\"}"
         },
+        "configuredProperties": {
+          "operationId": "operation-0"
+        },
         "propertyDefinitionSteps": [
           {
             "name": "Query parameters",
@@ -225,18 +214,6 @@
                 "secret": false,
                 "componentProperty": false,
                 "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter."
-              },
-              "operationId": {
-                "kind": "property",
-                "displayName": "operationId",
-                "group": "producer",
-                "required": true,
-                "type": "hidden",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "operation-0"
               }
             }
           }
@@ -264,6 +241,9 @@
           "kind": "json-schema",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"title\" : \"CreateResponse\", \"type\": \"object\", \"properties\": {\"ID\": {\"type\": \"string\"}, \"URI\": {\"type\": \"string\"}}}"
         },
+        "configuredProperties": {
+          "operationId": "operation-1"
+        },
         "propertyDefinitionSteps": [
           {
             "name": "Query parameters",
@@ -280,18 +260,6 @@
                 "secret": false,
                 "componentProperty": false,
                 "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter."
-              },
-              "operationId": {
-                "kind": "property",
-                "displayName": "operationId",
-                "group": "producer",
-                "required": true,
-                "type": "hidden",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "operation-1"
               }
             }
           }
@@ -317,6 +285,9 @@
         "outputDataShape": {
           "kind": "json-schema",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"title\" : \"QuickExpenseGet\", \"type\": \"object\", \"properties\": {\"Comment\": {\"type\": \"string\", \"description\": \"A comment that describes the expense. Max Length: 2000\"}, \"PaymentTypeCode\": {\"type\": \"string\", \"description\": \"This element specifies the method of payment for the expense. Format: CASHX = Cash, CPAID = Company Paid, or PENDC = Pending Card Transaction (default)\"}, \"CurrencyCode\": {\"type\": \"string\", \"description\": \"The <a target=\\\"_blank\\\" href=\\\"http://en.wikipedia.org/wiki/ISO_4217\\\">3-letter ISO 4217 currency code</a> for the expense transaction amount. Example: USD\"}, \"TransactionDate\": {\"type\": \"string\", \"description\": \"The date the expense was incurred. Format: YYYY-MM-DD\", \"format\": \"date-time\"}, \"URI\": {\"type\": \"string\", \"description\": \"The URI to the resource.\"}, \"ID\": {\"type\": \"string\", \"description\": \"The unique identifier of the resource.\"}, \"LocationName\": {\"type\": \"string\", \"description\": \"The name of the location where the expense was incurred.\"}, \"ReceiptImageID\": {\"type\": \"string\", \"description\": \"The ID of the receipt image associated with this quick expense, if any.\"}, \"OwnerName\": {\"type\": \"string\", \"description\": \"The first and last name for the expense owner. Useful for system to system integration when there are expenses for multiple users.\"}, \"OwnerLoginID\": {\"type\": \"string\", \"description\": \"The Concur login ID for the expense owner. Useful for system to system integration when there are expenses for multiple users.\"}, \"VendorDescription\": {\"type\": \"string\", \"description\": \"The descriptive text for the vendor for the quick expense. This often matches the Merchant Name found in a credit card transaction.  Max Length: 64\"}, \"ExpenseTypeCode\": {\"type\": \"string\", \"description\": \"The code for the expense type in the company's expense management system. Currently supports Concur Expense codes. The Expense Type Code is returned in the ExpKey element of the Get Expense Group Configuration function response.\"}, \"TransactionAmount\": {\"type\": \"number\", \"description\": \"The total amount of the expense in the original currency, with up to three decimal places. Example: 123.654\", \"format\": \"double\"}, \"ExpenseTypeName\": {\"type\": \"string\", \"description\": \"The name of the expense type associated with the quick expense.\"}}}"
+        },
+        "configuredProperties": {
+          "operationId": "operation-2"
         },
         "propertyDefinitionSteps": [
           {
@@ -346,18 +317,6 @@
                 "secret": false,
                 "componentProperty": false,
                 "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter."
-              },
-              "operationId": {
-                "kind": "property",
-                "displayName": "operationId",
-                "group": "producer",
-                "required": true,
-                "type": "hidden",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "operation-2"
               }
             }
           }
@@ -385,6 +344,9 @@
           "kind": "json-schema",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"title\" : \"Void\", \"type\": \"object\", \"properties\": {}}"
         },
+        "configuredProperties": {
+          "operationId": "operation-3"
+        },
         "propertyDefinitionSteps": [
           {
             "name": "Query parameters",
@@ -413,18 +375,6 @@
                 "secret": false,
                 "componentProperty": false,
                 "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter."
-              },
-              "operationId": {
-                "kind": "property",
-                "displayName": "operationId",
-                "group": "producer",
-                "required": true,
-                "type": "hidden",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "operation-3"
               }
             }
           }
@@ -450,6 +400,9 @@
         "outputDataShape": {
           "kind": "json-schema",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"title\" : \"Void\", \"type\": \"object\", \"properties\": {}}"
+        },
+        "configuredProperties": {
+          "operationId": "operation-4"
         },
         "propertyDefinitionSteps": [
           {
@@ -479,18 +432,6 @@
                 "secret": false,
                 "componentProperty": false,
                 "description": "The login ID of the user. Optional. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter."
-              },
-              "operationId": {
-                "kind": "property",
-                "displayName": "operationId",
-                "group": "producer",
-                "required": true,
-                "type": "hidden",
-                "javaType": "java.lang.String",
-                "deprecated": false,
-                "secret": false,
-                "componentProperty": false,
-                "defaultValue": "operation-4"
               }
             }
           }
