@@ -643,11 +643,20 @@ objects:
             name: public
             protocol: TCP
           readinessProbe:
-            tcpSocket:
+            httpGet:
               port: 8443
+              path: /robots.txt
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
           livenessProbe:
-            tcpSocket:
+            httpGet:
               port: 8443
+              path: /robots.txt
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+
           volumeMounts:
           - mountPath: /etc/tls/private
             name: syndesis-oauthproxy-tls
