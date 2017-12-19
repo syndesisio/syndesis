@@ -76,30 +76,4 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
             (generator, template) -> generator.info(template, connectorSettings));
     }
-
-    @GET
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Returns all Connectors that have been created from a given template identified by `templateId`")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "sort", value = "Sort the result list according to the given field value", paramType = "query",
-            dataType = "string"),
-        @ApiImplicitParam(name = "direction",
-            value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " + "(ascending) or 'desc' (descending)",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
-        @ApiImplicitParam(name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer",
-            defaultValue = "20")
-
-    })
-    @ApiResponses(@ApiResponse(code = 200, response = ListResult.class,
-        message = "List of connectors created from template identified by `templateId`"))
-    public ListResult<Connector> list(
-        @ApiParam(value = "Id of the template", required = true) @NotNull @QueryParam("templateId") final String templateId,
-        @Context final UriInfo uriInfo) {
-        return getDataManager().fetchAll(Connector.class,
-            new PredicateFilter<>(c -> c.getConnectorGroup().map(g -> g.idEquals(templateId)).orElse(false)),
-            new ReflectiveSorter<>(Connector.class, new SortOptionsFromQueryParams(uriInfo)),
-            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
-    }
 }
