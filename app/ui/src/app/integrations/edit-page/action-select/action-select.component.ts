@@ -31,6 +31,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
   actionsSubscription: Subscription;
   position: number;
   step: Step;
+  currentStep: number;
 
   constructor(
     public connectorStore: ConnectorStore,
@@ -101,16 +102,48 @@ export class IntegrationsSelectActionComponent extends FlowPage
     }
   }
 
+  // filters out actions that do not use the 'From' pattern
+  connectorStartActionsFilter(connector: Connector): Connector {
+    const filteredConnectorActions = connector.actions.filter(action => action.pattern === 'From');
+    connector.actions = filteredConnectorActions;
+    return connector;
+  }
+
+  // filters out actions that do not use the 'To' pattern
+  connectorFinishActionsFilter(connector: Connector): Connector {
+    const filteredConnectorActions = connector.actions.filter(action => action.pattern === 'To');
+    connector.actions = filteredConnectorActions;
+    return connector;
+  }
+
   ngOnInit() {
-    this.actions = this.connector
-      .filter(connector => connector !== undefined)
-      .map(connector => connector.actions);
+    // set a local var for current step
+    this.route.params.pluck<Params, string>('position').subscribe(value => this.currentStep = parseInt(value));
+
+    // if it's a start step
+    if (this.currentStep === this.currentFlow.getFirstPosition()) {
+      this.actions = this.connector
+        .filter(connector => connector !== undefined)
+        .map(this.connectorStartActionsFilter)
+        .map(connector => connector.actions);
+    }
+
+    // if it's anything other than a start step
+    if (this.currentStep > this.currentFlow.getFirstPosition()
+      && this.currentStep <= this.currentFlow.getLastPosition()) {
+      this.actions = this.connector
+        .filter(connector => connector !== undefined)
+        .map(this.connectorFinishActionsFilter)
+        .map(connector => connector.actions);
+    }
+
     this.actionsSubscription = this.actions.subscribe(_ =>
       this.currentFlow.events.emit({
         kind: 'integration-action-select',
         position: this.position
       })
     );
+
     this.routeSubscription = this.route.params
       .pluck<Params, string>('position')
       .map((position: string) => {
