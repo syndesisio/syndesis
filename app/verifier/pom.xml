@@ -201,9 +201,8 @@
     </dependency>
 
      <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>salesforce-upsert-contact-connector</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-salesforce</artifactId>
     </dependency>
 
     <dependency>
@@ -327,7 +326,7 @@
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-web:</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-undertow</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:salesforce-upsert-contact-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>org.apache.camel:camel-salesforce</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:http-get-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:twitter-mention-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:sql-connector</ignoredUnusedDeclaredDependency>
