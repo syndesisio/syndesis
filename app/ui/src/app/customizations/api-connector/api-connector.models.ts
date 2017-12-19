@@ -6,9 +6,7 @@ export interface ApiConnector extends BaseEntity {
   data: ApiConnectorData;
 }
 
-export type ApiConnectors = Array<ApiConnector>;
-
-export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
+export interface ApiConnectorData extends ApiConnectorValidation {
   id: string;
   name: string;
   description: string;
@@ -18,7 +16,9 @@ export interface ApiConnectorData extends BaseEntity, ApiConnectorValidation {
   connectorProperties: any;
 }
 
-export interface ApiConnectorProperties extends BaseEntity {
+export type ApiConnectors = Array<ApiConnectorData>;
+
+export interface ApiConnectorProperties {
   specification: {
     kind: string;
     displayName: string;
