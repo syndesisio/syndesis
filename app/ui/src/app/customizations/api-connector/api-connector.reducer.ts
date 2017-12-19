@@ -8,7 +8,6 @@ import {
   ApiConnectorFetchFail
 } from './api-connector.actions';
 
-
 const initialState: ApiConnectorState = {
   list             : [],
   createRequest    : null,
