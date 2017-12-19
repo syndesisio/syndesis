@@ -15,17 +15,22 @@
  */
 package io.syndesis.connector.salesforce;
 
-/**
- * Camel salesforce-delete-sobject connector
- */
-public class SalesforceDeleteSObjectComponent extends SalesforceConnector {
+import org.apache.camel.Message;
 
-    public SalesforceDeleteSObjectComponent() {
-        this(null);
-    }
+public abstract class SalesforceConnectorExpectingId extends SalesforceConnector {
 
-    public SalesforceDeleteSObjectComponent(final String componentSchema) {
-        super("salesforce-delete-sobject", componentSchema, SalesforceDeleteSObjectComponent.class);
+    protected SalesforceConnectorExpectingId(final String componentName, final String componentScheme, final Class<?> componentClass) {
+        super(componentName, componentScheme, componentClass);
+
+        // replace DTO with id for Salesforce component
+        setBeforeProducer(exchange -> {
+            final Message in = exchange.getIn();
+            final SalesforceIdentifier id = in.getBody(SalesforceIdentifier.class);
+
+            if (id != null) {
+                in.setBody(id.getId());
+            }
+        });
     }
 
 }

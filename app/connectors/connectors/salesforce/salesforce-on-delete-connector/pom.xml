@@ -43,6 +43,10 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>salesforce-common</artifactId>
+    </dependency>
 
     <!-- base component to use for this connector -->
     <dependency>
@@ -69,12 +73,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>salesforce-model</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
   </dependencies>

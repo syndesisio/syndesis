@@ -43,6 +43,10 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>salesforce-common</artifactId>
+    </dependency>
 
     <!-- base component to use for this connector -->
     <dependency>
@@ -71,12 +75,6 @@
       <artifactId>spring-boot-configuration-processor</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>salesforce-model</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
   </dependencies>
 
   <build>
@@ -102,25 +100,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.0.1</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
       </plugin>
 
       <!-- generate components meta-data and validate component includes documentation etc -->
