@@ -63,7 +63,6 @@
     <module>connectors</module>
     <module>connector-verify</module>
     <module>catalog</module>
-    <module>examples</module>
   </modules>
 
   <dependencyManagement>
