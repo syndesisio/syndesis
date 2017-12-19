@@ -125,6 +125,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         }
     }
 
+    @SuppressWarnings("resource")
     @Override
     public InputStream generate(Integration integration) throws IOException {
         final PipedInputStream is = new PipedInputStream();

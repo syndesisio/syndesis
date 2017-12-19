@@ -15,7 +15,6 @@
  */
 package io.syndesis.runtime;
 
-import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.verifier.AlwaysOkVerifier;
@@ -53,99 +52,53 @@ public class ConnectorsITCase extends BaseITCase {
     @Autowired
     private Verifier verifier;
 
-    @Autowired
-    private IconDataAccessObject iconDao;
-
-    @Test
-    public void connectorsListForbidden() {
-        ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/connectors", JsonNode.class);
-        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.FORBIDDEN);
-    }
-
     @Test
     public void connectorListWithValidToken() {
         @SuppressWarnings({"unchecked", "rawtypes"})
-        Class<ListResult<Connector>> type = (Class) ListResult.class;
-        ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors", type);
+        final Class<ListResult<Connector>> type = (Class) ListResult.class;
+        final ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors", type);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
-        ListResult<Connector> result = response.getBody();
+        final ListResult<Connector> result = response.getBody();
         assertThat(result.getTotalCount()).as("connectors total").isGreaterThan(2);
         assertThat(result.getItems().size()).as("connector list").isGreaterThan(2);
     }
 
     @Test
     public void connectorsGetTest() {
-        ResponseEntity<Connector> response = get("/api/v1/connectors/twitter", Connector.class);
+        final ResponseEntity<Connector> response = get("/api/v1/connectors/twitter", Connector.class);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
-        Connector connector = response.getBody();
+        final Connector connector = response.getBody();
         assertThat(connector).isNotNull();
         assertThat(connector.getId()).contains("twitter");
     }
 
-    // Disabled as it works only for the LocalProcessVerifier which would needs some update
     @Test
-    @Ignore
-    public void verifyGoodTwitterConnectionSettings() throws IOException {
-        Properties credentials = new Properties();
-        try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
-            credentials.load(is);
-        }
-
-        ResponseEntity<Verifier.Result> response = post("/api/v1/connectors/twitter/verifier/connectivity", credentials, Verifier.Result.class);
-        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
-        Verifier.Result result = response.getBody();
-        assertThat(result).isNotNull();
-        assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.OK);
-        assertThat(result.getErrors()).isEmpty();
-    }
-
-    @Test
-    @Ignore
-    public void verifyBadTwitterConnectionSettings() throws IOException {
-
-        // AlwaysOkVerifier never fails.. do don't try this test case, if that's whats being used.
-        Assume.assumeFalse(verifier instanceof AlwaysOkVerifier);
-
-        Properties credentials = new Properties();
-        try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
-            credentials.load(is);
-        }
-        credentials.put("accessTokenSecret", "badtoken");
-
-        ResponseEntity<Verifier.Result> response = post("/api/v1/connectors/twitter/verifier/connectivity", credentials, Verifier.Result.class);
-        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
-        Verifier.Result result = response.getBody();
-        assertThat(result).isNotNull();
-        assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.ERROR);
-        assertThat(result.getErrors()).isNotEmpty();
+    public void connectorsListForbidden() {
+        final ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/connectors", JsonNode.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.FORBIDDEN);
     }
 
     @Test
     public void filterConnectorList() {
         @SuppressWarnings({"unchecked", "rawtypes"})
-        Class<ListResult<Connector>> type = (Class) ListResult.class;
-        ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors?query=connectorGroupId=trade", type);
+        final Class<ListResult<Connector>> type = (Class) ListResult.class;
+        final ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors?query=connectorGroupId=trade", type);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
-        ListResult<Connector> result = response.getBody();
+        final ListResult<Connector> result = response.getBody();
         assertThat(result.getTotalCount()).as("connectors total").isEqualTo(2);
         assertThat(result.getItems().size()).as("connector list").isEqualTo(2);
     }
 
     @Test
     public void testUpdateIcon() throws IOException {
-        ResponseEntity<Connector> updated = post(
-            "/api/v1/connectors/twitter/icon",
-            multipartBody(getClass().getResourceAsStream("test-image.png")),
-            Connector.class,
-            tokenRule.validToken(),
-            HttpStatus.OK,
-            multipartHeaders()
-        );
+        final ResponseEntity<Connector> updated = post("/api/v1/connectors/twitter/icon",
+            multipartBody(getClass().getResourceAsStream("test-image.png")), Connector.class, tokenRule.validToken(), HttpStatus.OK,
+            multipartHeaders());
 
         assertThat(updated.getBody().getId()).isPresent();
         assertThat(updated.getBody().getIcon()).isNotBlank().startsWith("db:");
 
-        ResponseEntity<ByteArrayResource> got = get("/api/v1/connectors/twitter/icon", ByteArrayResource.class);
+        final ResponseEntity<ByteArrayResource> got = get("/api/v1/connectors/twitter/icon", ByteArrayResource.class);
         assertThat(got.getHeaders().getFirst("Content-Type")).isEqualTo("image/png");
 
         try (ImageInputStream iis = ImageIO.createImageInputStream(got.getBody().getInputStream());) {
@@ -164,16 +117,58 @@ public class ConnectorsITCase extends BaseITCase {
         }
     }
 
-    private HttpHeaders multipartHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return headers;
+    @Test
+    @Ignore
+    public void verifyBadTwitterConnectionSettings() throws IOException {
+
+        // AlwaysOkVerifier never fails.. do don't try this test case, if that's
+        // whats being used.
+        Assume.assumeFalse(verifier instanceof AlwaysOkVerifier);
+
+        final Properties credentials = new Properties();
+        try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
+            credentials.load(is);
+        }
+        credentials.put("accessTokenSecret", "badtoken");
+
+        final ResponseEntity<Verifier.Result> response = post("/api/v1/connectors/twitter/verifier/connectivity", credentials,
+            Verifier.Result.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        final Verifier.Result result = response.getBody();
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.ERROR);
+        assertThat(result.getErrors()).isNotEmpty();
     }
 
-    private MultiValueMap<String, Object> multipartBody(InputStream is) {
-        LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+    // Disabled as it works only for the LocalProcessVerifier which would needs
+    // some update
+    @Test
+    @Ignore
+    public void verifyGoodTwitterConnectionSettings() throws IOException {
+        final Properties credentials = new Properties();
+        try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
+            credentials.load(is);
+        }
+
+        final ResponseEntity<Verifier.Result> response = post("/api/v1/connectors/twitter/verifier/connectivity", credentials,
+            Verifier.Result.class);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        final Verifier.Result result = response.getBody();
+        assertThat(result).isNotNull();
+        assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.OK);
+        assertThat(result.getErrors()).isEmpty();
+    }
+
+    private MultiValueMap<String, Object> multipartBody(final InputStream is) {
+        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("file", new InputStreamResource(is));
         return multipartData;
+    }
+
+    private HttpHeaders multipartHeaders() {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return headers;
     }
 
 }

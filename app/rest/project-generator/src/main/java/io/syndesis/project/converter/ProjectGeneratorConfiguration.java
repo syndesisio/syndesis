@@ -17,7 +17,6 @@ package io.syndesis.project.converter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;

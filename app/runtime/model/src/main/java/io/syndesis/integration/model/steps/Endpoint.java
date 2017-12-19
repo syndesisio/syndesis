@@ -72,8 +72,8 @@ public final class Endpoint extends Step implements FromStep {
     private static final Map<String, Object> clone(Map<String, Object> properties) {
         if (properties == null) {
             return Collections.emptyMap();
-        } else {
-            return new TreeMap<>(properties);
         }
+
+        return new TreeMap<>(properties);
     }
 }
