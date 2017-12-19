@@ -2,6 +2,10 @@
   "commment":"This config should for testing against a minishift using the syndesis-dev application templates.",
   "apiBase": "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com",
   "apiEndpoint": "/api/v1",
+  "apiChildEndpoints": {
+    "submitCustomConnectorInfo": "/connectors/custom/info",
+    "submitCustomConnector": "/connectors/custom"
+  },
   "mapperEndpoint": "/mapper/v1",
   "branding": {
     "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
