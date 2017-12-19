@@ -15,6 +15,11 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Function;
 import io.syndesis.integration.model.steps.Step;
@@ -26,10 +31,6 @@ import org.apache.camel.TypeConverter;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @AutoService(StepHandler.class)
 public class FunctionHandler implements StepHandler<Function> {
     @Override
@@ -38,7 +39,7 @@ public class FunctionHandler implements StepHandler<Function> {
     }
 
     @Override
-    public ProcessorDefinition handle(Function step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(Function step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
         final CamelContext context = routeBuilder.getContext();
         final TypeConverter converter = context.getTypeConverter();
 
@@ -47,7 +48,7 @@ public class FunctionHandler implements StepHandler<Function> {
         String options = null;
 
         if (ObjectHelper.isEmpty(function)) {
-            return route;
+            return Optional.empty();
         }
 
         int idx = function.indexOf("::");
@@ -75,7 +76,7 @@ public class FunctionHandler implements StepHandler<Function> {
             uri += "?" + options;
         }
 
-        return route.to(uri);
+        return Optional.of(route.to(uri));
     }
 
     private String asBeanParameter(TypeConverter converter, Map.Entry<String, Object> entry) {

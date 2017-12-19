@@ -19,13 +19,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.SortedSet;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.core.immutable.SkipNulls;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfigurationProperties;
+import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
@@ -40,7 +39,7 @@ import org.immutables.value.Value;
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
 @JsonPropertyOrder({ "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
 @SuppressWarnings("immutables")
-public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, Serializable {
+public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, Serializable {
 
     enum Status {
         Draft,
@@ -62,10 +61,6 @@ public interface Extension extends WithId<Extension>, WithActions<ExtensionActio
     String getIcon();
 
     String getDescription();
-
-    @Value.NaturalOrder
-    @SkipNulls
-    SortedSet<String> getDependencies();
 
     OptionalInt getUses();
 

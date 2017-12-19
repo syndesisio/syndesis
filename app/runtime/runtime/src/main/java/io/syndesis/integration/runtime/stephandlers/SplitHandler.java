@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.Optional;
+
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Split;
 import io.syndesis.integration.model.steps.Step;
@@ -34,10 +36,13 @@ public class SplitHandler implements StepHandler<Split> {
     }
 
     @Override
-    public ProcessorDefinition handle(Split step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(Split step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
         CamelContext context = routeBuilder.getContext();
         Expression expression = JsonSimpleHelpers.getMandatoryExpression(context, step, step.getExpression());
         ProcessorDefinition split = route.split(expression).marshal().json(JsonLibrary.Jackson);
-        return routeBuilder.addSteps(split, step.getSteps());
+
+        routeBuilder.addSteps(split, step.getSteps());
+
+        return Optional.empty();
     }
 }

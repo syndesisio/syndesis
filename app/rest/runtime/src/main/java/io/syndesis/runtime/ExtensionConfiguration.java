@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ExtensionConfiguration {
-
     @Bean
     @Autowired
     public ExtensionDataManager extensionDataManager(

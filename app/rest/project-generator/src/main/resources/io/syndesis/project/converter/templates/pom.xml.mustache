@@ -65,23 +65,14 @@
       <version>\${camel-atlasmap.version}</version>
     </dependency>
 
-    <!-- connectors used in this integration -->
-  {{#connectors}}
+    <!-- dependencies used in this integration -->
+  {{#dependencies}}
     <dependency>
       <groupId>{{groupId}}</groupId>
       <artifactId>{{artifactId}}</artifactId>
       <version>{{version}}</version>
     </dependency>
-  {{/connectors}}
-
-    <!-- extensions used in this integration -->
-  {{#extensions}}
-    <dependency>
-      <groupId>{{groupId}}</groupId>
-      <artifactId>{{artifactId}}</artifactId>
-      <version>{{version}}</version>
-    </dependency>
-  {{/extensions}}
+  {{/dependencies}}
 
     <!-- spring-boot as runtime -->
     <dependency>

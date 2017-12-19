@@ -350,6 +350,8 @@
             <ignoredClassPattern>org.codehaus.plexus.*</ignoredClassPattern>
             <ignoredClassPattern>org.eclipse.aether.*</ignoredClassPattern>
             <ignoredClassPattern>org.apache.log4j.*</ignoredClassPattern>
+            <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
+            <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
           </ignoredClassPatterns>
         </configuration>
       </plugin>

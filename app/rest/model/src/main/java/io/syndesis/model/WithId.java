@@ -17,6 +17,8 @@ package io.syndesis.model;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public interface WithId<T extends WithId<T>> extends WithKind {
 
     Optional<String> getId();
@@ -30,5 +32,10 @@ public interface WithId<T extends WithId<T>> extends WithKind {
         }
 
         return false;
+    }
+
+    @JsonIgnore
+    default boolean hasId() {
+        return getId().isPresent();
     }
 }

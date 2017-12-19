@@ -98,7 +98,7 @@ jobs:
           - ~/.m2
       - <<: *push_images
 
-  # Connectors have no dependencies, just load cache
+  # Connectors depends runtime, mount workspace .m2
   connectors:
     <<: *job_defaults
     environment:
@@ -107,6 +107,7 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+      - <<: *load_m2
       - run:
           name: Build Connectors
           command: |
@@ -321,16 +322,16 @@ workflows:
               only: master
       - license-check
       - ui
-      - connectors
-      - runtime:
+      - runtime
+      - connectors:
           requires:
-            - connectors
+            - runtime
       - verifier:
           requires:
             - connectors
       - rest:
           requires:
-            - runtime
+            - connectors
       - s2i:
           requires:
             - rest

@@ -52,6 +52,11 @@ public interface ListResult<T> {
         return new Builder<T>().items(items).totalCount(items.size()).build();
     }
 
+    @SafeVarargs
+    static <T> ListResult<T> of(T... items) {
+        return new Builder<T>().addItem(items).totalCount(items.length).build();
+    }
+
     static <T> Collector<T, Builder<T>, Builder<T>> collector() {
         return Collector.of(Builder::new, Builder::addItem, (b1, b2) -> b1.addAllItems(b2.build().getItems()));
     }

@@ -328,6 +328,8 @@
             <ignoredClassPattern>org.eclipse.aether.util.artifact.*</ignoredClassPattern>
             <ignoredClassPattern>org.eclipse.aether.util.filter.*</ignoredClassPattern>
             <ignoredClassPattern>javax.ws.rs.*</ignoredClassPattern>
+            <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
+            <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
           </ignoredClassPatterns>
         </configuration>
       </plugin>

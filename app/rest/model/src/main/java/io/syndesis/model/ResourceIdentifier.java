@@ -15,11 +15,11 @@
  */
 package io.syndesis.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
-
 import java.io.Serializable;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 /**
  * Identifies a resource managed by the system.

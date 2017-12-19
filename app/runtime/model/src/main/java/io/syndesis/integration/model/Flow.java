@@ -24,6 +24,7 @@ import io.syndesis.integration.model.steps.Choice;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Filter;
 import io.syndesis.integration.model.steps.Function;
+import io.syndesis.integration.model.steps.SplitInline;
 import io.syndesis.integration.model.steps.Log;
 import io.syndesis.integration.model.steps.SetBody;
 import io.syndesis.integration.model.steps.SetHeaders;
@@ -111,6 +112,18 @@ public class Flow extends DtoSupport {
         Split step = new Split(expression);
         addStep(step);
         return step;
+    }
+
+    public Flow splitInline() {
+        SplitInline step = new SplitInline();
+        addStep(step);
+        return this;
+    }
+
+    public Flow splitInline(String language, String expression) {
+        SplitInline step = new SplitInline(language, expression);
+        addStep(step);
+        return this;
     }
 
     public Filter filter(String expression) {

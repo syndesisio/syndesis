@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.stephandlers;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Choice;
@@ -40,7 +41,7 @@ public class ChoiceHandler implements StepHandler<Choice> {
     }
 
     @Override
-    public ProcessorDefinition handle(Choice step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(Choice step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
         final CamelContext context = routeBuilder.getContext();
         final ChoiceDefinition choice = route.choice();
 
@@ -49,17 +50,17 @@ public class ChoiceHandler implements StepHandler<Choice> {
             Predicate predicate = JsonSimpleHelpers.getMandatorySimplePredicate(context, filter, filter.getExpression());
             ChoiceDefinition when = choice.when(predicate);
 
-            route = routeBuilder.addSteps(when, filter.getSteps());
+            routeBuilder.addSteps(when, filter.getSteps());
         }
 
         Otherwise otherwiseStep = step.getOtherwise();
         if (otherwiseStep != null) {
             List<Step> otherwiseSteps = ObjectHelper.supplyIfEmpty(otherwiseStep.getSteps(), Collections::<Step>emptyList);
             if (!otherwiseSteps.isEmpty()) {
-                route = routeBuilder.addSteps(choice.otherwise(), otherwiseSteps);
+                routeBuilder.addSteps(choice.otherwise(), otherwiseSteps);
             }
         }
 
-        return route;
+        return Optional.empty();
     }
 }

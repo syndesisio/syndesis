@@ -63,6 +63,87 @@
               "entrypoint": {
                 "type": "string"
               },
+              "propertyDefinitionSteps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:io:syndesis:model:action:ActionDescriptor:ActionDescriptorStep",
+                  "additionalProperties": false,
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty",
+                        "additionalProperties": false,
+                        "properties": {
+                          "description": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "type": "string"
+                          },
+                          "required": {
+                            "type": "boolean"
+                          },
+                          "enum": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty:PropertyValue",
+                              "additionalProperties": false,
+                              "properties": {
+                                "label": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "group": {
+                            "type": "string"
+                          },
+                          "javaType": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "connectorValue": {
+                            "type": "string"
+                          },
+                          "deprecated": {
+                            "type": "boolean"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "defaultValue": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
               "inputDataShape": {
                 "type": "object",
                 "id": "urn:jsonschema:io:syndesis:model:DataShape",
@@ -106,89 +187,6 @@
                     "type": "string"
                   }
                 }
-              },
-              "propertyDefinitionSteps": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "id": "urn:jsonschema:io:syndesis:model:action:ActionDescriptor:ActionDescriptorStep",
-                  "additionalProperties": false,
-                  "properties": {
-                    "description": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "configuredProperties": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "string"
-                      }
-                    },
-                    "properties": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "object",
-                        "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty",
-                        "properties": {
-                          "displayName": {
-                            "type": "string"
-                          },
-                          "description": {
-                            "type": "string"
-                          },
-                          "kind": {
-                            "type": "string"
-                          },
-                          "required": {
-                            "type": "boolean"
-                          },
-                          "deprecated": {
-                            "type": "boolean"
-                          },
-                          "enum": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty:PropertyValue",
-                              "additionalProperties": false,
-                              "properties": {
-                                "label": {
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          },
-                          "group": {
-                            "type": "string"
-                          },
-                          "javaType": {
-                            "type": "string"
-                          },
-                          "label": {
-                            "type": "string"
-                          },
-                          "type": {
-                            "type": "string"
-                          },
-                          "defaultValue": {
-                            "type": "string"
-                          },
-                          "tags": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           },
@@ -214,7 +212,21 @@
     "dependencies": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "object",
+        "id": "urn:jsonschema:io:syndesis:model:Dependency",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MAVEN",
+              "EXTENSION"
+            ]
+          }
+        }
       }
     },
     "properties": {

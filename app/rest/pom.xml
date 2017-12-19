@@ -94,7 +94,6 @@
 
   <modules>
 	<module>archetypes</module>
-    <module>connector-catalog</module>
     <module>connector-generator</module>
     <module>controllers</module>
     <module>core</module>
@@ -247,18 +246,6 @@
         <groupId>io.syndesis</groupId>
         <artifactId>verifier</artifactId>
         <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>connector-catalog</artifactId>
-        <version>${project.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
 
       <dependency>
@@ -895,6 +882,7 @@
             <ignoredClassPattern>org.springframework.security.crypto.*</ignoredClassPattern>
             <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
             <ignoredClassPattern>javax.ws.*</ignoredClassPattern>
+            <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
           </ignoredClassPatterns>
           <ignoredResourcePatterns>
             <ignoredResourcePattern>features.xml</ignoredResourcePattern>

@@ -16,6 +16,7 @@
 package io.syndesis.integration.runtime.stephandlers;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.SetHeaders;
@@ -32,13 +33,13 @@ public class SetHeadersHandler implements StepHandler<SetHeaders> {
     }
 
     @Override
-    public ProcessorDefinition handle(SetHeaders step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(SetHeaders step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
         Map<String, Object> headers = step.getHeaders();
         if (headers != null) {
             for (Map.Entry<String, Object> entry : headers.entrySet()) {
                 route.setHeader(entry.getKey(), routeBuilder.constant(entry.getValue()));
             }
         }
-        return route;
+        return Optional.empty();
     }
 }

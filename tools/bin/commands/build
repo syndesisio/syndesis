@@ -5,12 +5,12 @@ ALL_MODULES="connectors verifier runtime rest s2i ui tests"
 POD_MODULES="verifier rest ui"
 MODULES=(
   "ui"
-  "connectors"
-  "runtime:connectors"
-  "verifier:connectors"
-  "rest:connectors runtime"
-  "s2i:rest runtime connectors"
-  "tests:connectors runtime rest s2i"
+  "runtime"
+  "connectors:runtime"
+  "verifier:runtime connectors"
+  "rest:runtime connectors"
+  "s2i:runtime connectors rest"
+  "tests:runtime connectors rest s2i"
 )
 
 build::description() {

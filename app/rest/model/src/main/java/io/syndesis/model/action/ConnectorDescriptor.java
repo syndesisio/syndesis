@@ -17,18 +17,22 @@ package io.syndesis.model.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.Split;
+import io.syndesis.model.WithConfiguredProperties;
 import io.syndesis.model.connection.ConfigurationProperty;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConnectorDescriptor extends ActionDescriptor, Serializable {
+public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredProperties, Serializable {
 
     final class Builder extends ImmutableConnectorDescriptor.Builder {
 
@@ -88,10 +92,21 @@ public interface ConnectorDescriptor extends ActionDescriptor, Serializable {
         }
     }
 
-
     String getConnectorId();
 
     String getCamelConnectorGAV();
 
     String getCamelConnectorPrefix();
+
+    // This is set to optional for backward compatibility with camel style connectors
+    Optional<String> getComponentScheme();
+
+    Optional<String> getConnectorFactory();
+
+    @Value.Default
+    default List<String> getConnectorCustomizers() {
+        return Collections.emptyList();
+    }
+
+    Optional<Split> getSplit();
 }

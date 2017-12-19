@@ -25,7 +25,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>http-component</artifactId>
-  <name>Connectors :: Component :: HTTP</name>
+  <name>Syndesis Connectors :: Components :: HTTP Component</name>
   <description>HTTP Component</description>
   <packaging>jar</packaging>
 

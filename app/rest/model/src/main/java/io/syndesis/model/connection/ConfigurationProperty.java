@@ -17,13 +17,12 @@ package io.syndesis.model.connection;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.model.WithTags;
 import io.syndesis.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
-
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -80,6 +79,8 @@ public interface ConfigurationProperty extends WithTags, Serializable {
     Boolean getSecret();
 
     String getType();
+
+    Optional<String> getConnectorValue();
 
     @JsonIgnore
     default boolean isComponentProperty() {

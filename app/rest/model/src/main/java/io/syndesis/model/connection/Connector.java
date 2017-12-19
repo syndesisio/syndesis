@@ -15,26 +15,24 @@
  */
 package io.syndesis.model.connection;
 
+import java.io.Serializable;
+import java.util.Optional;
+import java.util.OptionalInt;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
+import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.WithActions;
-
 import org.immutables.value.Value;
-
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
 @SuppressWarnings("immutables")
-public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, Serializable {
+public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, WithDependencies, Serializable {
 
     class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {
         public Builder putOrRemoveConfiguredPropertyTaggedWith(final String tag, final String value) {
@@ -50,9 +48,6 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
         return new Builder().createFrom(this);
     }
 
-    @Override
-    Map<String, String> getConfiguredProperties();
-
     Optional<ConnectorGroup> getConnectorGroup();
 
     Optional<String> getConnectorGroupId();
@@ -67,8 +62,10 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
         return Kind.Connector;
     }
 
-    @Override
-    Map<String, ConfigurationProperty> getProperties();
+    // This is set to optional for backward compatibility with camel style connectors
+    Optional<String> getComponentScheme();
+
+    Optional<String> getConnectorFactory();
 
     Optional<ConnectorSummary> getSummary();
 
@@ -77,5 +74,4 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
     default Optional<String> propertyTaggedWith(final String tag) {
         return propertyTaggedWith(getConfiguredProperties(), tag);
     }
-
 }

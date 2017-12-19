@@ -2,8 +2,12 @@
 flows:
 - steps:
   - kind: endpoint
-    uri: periodic-timer-connector?period=5000
+    uri: periodic-timer-connector
+    properties:
+      period: "5000"
   - kind: endpoint
     uri: atlas:mapping-step-2.json
   - kind: endpoint
-    uri: http-post-connector?httpUri=http://localhost:8080/bye
+    uri: http-post-connector
+    properties:
+      httpUri: http://localhost:8080/bye

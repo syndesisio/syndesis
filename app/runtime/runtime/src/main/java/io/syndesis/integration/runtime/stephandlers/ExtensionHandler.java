@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.stephandlers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Extension;
@@ -38,7 +39,7 @@ public class ExtensionHandler implements StepHandler<Extension> {
     }
 
     @Override
-    public ProcessorDefinition handle(Extension step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
+    public Optional<ProcessorDefinition> handle(Extension step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder) {
         final CamelContext context = routeBuilder.getContext();
         final TypeConverter converter = context.getTypeConverter();
         final String target = step.getName();
@@ -61,6 +62,6 @@ public class ExtensionHandler implements StepHandler<Extension> {
             }
         }
 
-        return route;
+        return Optional.of(route);
     }
 }

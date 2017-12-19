@@ -15,24 +15,19 @@
  */
 package io.syndesis.integration.runtime.steps;
 
-import io.syndesis.integration.runtime.SyndesisTestSupport;
-import io.syndesis.integration.model.SyndesisModel;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
 
+import io.syndesis.integration.model.SyndesisModel;
+import io.syndesis.integration.runtime.SyndesisTestSupport;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.Test;
 
-/**
- */
 public class SplitTest extends SyndesisTestSupport {
     public static final String START_URI = "direct:start";
     public static final String RESULTS_URI = "mock:results";
-    private static final transient Logger LOG = LoggerFactory.getLogger(SplitTest.class);
+
     @EndpointInject(uri = RESULTS_URI)
     protected MockEndpoint resultsEndpoint;
 

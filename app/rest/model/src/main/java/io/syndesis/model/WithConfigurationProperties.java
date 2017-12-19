@@ -125,7 +125,23 @@ public interface WithConfigurationProperties {
      * @return                  A map with the properties that match the {@link Predicate}, and converted values.
      */
     default Map<String, String> filterProperties(Map<String, String> properties, Predicate<Entry<String, String>> predicate) {
-        return filterProperties(properties, predicate, e -> e.getKey(),  e -> e.getValue());
+        return filterProperties(properties, predicate, Map.Entry::getKey, Map.Entry::getValue);
+    }
+
+    default Map<String, String> filterEndpointProperties(WithConfiguredProperties withConfigurationProperties) {
+        return filterProperties(withConfigurationProperties.getConfiguredProperties(), this::isEndpointProperty);
+    }
+
+    default Map<String, String> filterEndpointProperties(Map<String, String> properties) {
+        return filterProperties(properties, this::isEndpointProperty);
+    }
+
+    default Map<String, String> filterComponentProperties(WithConfiguredProperties withConfigurationProperties) {
+        return filterProperties(withConfigurationProperties.getConfiguredProperties(), this::isComponentProperty);
+    }
+
+    default Map<String, String> filterComponentProperties(Map<String, String> properties) {
+        return filterProperties(properties, this::isComponentProperty);
     }
 
     /**

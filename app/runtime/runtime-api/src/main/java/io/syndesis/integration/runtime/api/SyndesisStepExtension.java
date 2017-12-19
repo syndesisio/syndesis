@@ -16,11 +16,12 @@
 package io.syndesis.integration.runtime.api;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 
 @FunctionalInterface
 public interface SyndesisStepExtension {
-    ProcessorDefinition configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
+    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
 }

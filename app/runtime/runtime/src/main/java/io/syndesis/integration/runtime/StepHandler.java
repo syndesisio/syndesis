@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.util.Optional;
+
 import io.syndesis.integration.model.steps.Step;
 import org.apache.camel.model.ProcessorDefinition;
 
@@ -22,6 +24,6 @@ public interface StepHandler<T extends Step> {
 
   boolean canHandle(Step step);
 
-  ProcessorDefinition handle(T step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder);
+  Optional<ProcessorDefinition> handle(T step, ProcessorDefinition route, SyndesisRouteBuilder routeBuilder);
 
 }

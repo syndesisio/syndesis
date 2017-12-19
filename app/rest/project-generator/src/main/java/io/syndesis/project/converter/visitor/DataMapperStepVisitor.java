@@ -15,7 +15,6 @@
  */
 package io.syndesis.project.converter.visitor;
 
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collection;
