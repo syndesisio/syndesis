@@ -8,7 +8,7 @@ NEXUS_DEFAULT_STAGING_PROFILE_ID="61015c63f807ce" #This this is the id of the st
 
 REPO_ANNOUNCEMENT_PREFIX="OpenedStagingProfile"
 
-NO_TAG=`notag`
+NO_TAG="notag"
 
 release::description() {
     echo "Perform a release"
