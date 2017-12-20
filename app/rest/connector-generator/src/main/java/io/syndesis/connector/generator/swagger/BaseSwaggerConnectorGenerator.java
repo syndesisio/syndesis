@@ -166,7 +166,8 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
-        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
+        final SwaggerModelInfo info = parseSpecification(connectorSettings, false);
+        final Swagger swagger = info.getModel();
         addGlobalParameters(builder, swagger);
 
         final Map<String, Path> paths = swagger.getPaths();
@@ -188,8 +189,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     operation.operationId("operation-" + idx++);
                 }
 
-                final String specification = requiredSpecification(connectorSettings);
-                final ConnectorDescriptor descriptor = createDescriptor(specification, operation)//
+                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedSpecification(), operation)//
                     .camelConnectorGAV(connectorGav)//
                     .camelConnectorPrefix(connectorScheme)//
                     .connectorId(connectorId)//
@@ -226,11 +226,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         actions.sort(ActionComparator.INSTANCE);
         builder.addAllActions(actions);
 
-        if (idx != 0) {
-            // we changed the Swagger specification by adding missing
-            // operationIds
-            builder.putConfiguredProperty("specification", SwaggerHelper.serialize(swagger));
-        }
+        builder.putConfiguredProperty("specification", SwaggerHelper.serialize(swagger));
 
         return builder.build();
     }

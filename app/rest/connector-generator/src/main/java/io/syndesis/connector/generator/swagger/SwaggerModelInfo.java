@@ -43,9 +43,10 @@ public interface SwaggerModelInfo {
 
     Swagger getModel();
 
+    String getResolvedSpecification();
+
     @Value.Default
     default List<Violation> getWarnings() {
         return Collections.emptyList();
     }
-
 }

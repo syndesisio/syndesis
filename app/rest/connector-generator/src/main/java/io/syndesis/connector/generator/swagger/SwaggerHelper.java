@@ -24,6 +24,7 @@ import static java.util.Optional.ofNullable;
 
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
+import io.swagger.parser.util.RemoteUrl;
 import io.syndesis.core.Json;
 import io.syndesis.model.Violation;
 
@@ -63,21 +64,43 @@ public final class SwaggerHelper {
     }
 
     /* default */ static SwaggerModelInfo parse(final String specification, final boolean validate) {
+        final SwaggerModelInfo.Builder resultBuilder = new SwaggerModelInfo.Builder();
+
+        final String resolvedSpecification;
+        try {
+            resolvedSpecification = resolve(specification);
+            resultBuilder.resolvedSpecification(resolvedSpecification);
+        } catch (final Exception e) {
+            LOG.debug("Unable to resolve Swagger specification\n{}\n", specification, e);
+            return resultBuilder
+                .addError(new Violation.Builder().error("error").property("").message("Unable to resolve Swagger specification from: "
+                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
+                .build();
+        }
+
         final SwaggerParser parser = new SwaggerParser();
-        final Swagger swagger = ofNullable(parser.read(specification)).orElseGet(() -> parser.parse(specification));
+        final Swagger swagger = parser.parse(resolvedSpecification);
         if (swagger == null) {
             LOG.debug("Unable to read Swagger specification\n{}\n", specification);
-            return new SwaggerModelInfo.Builder()
+            return resultBuilder
                 .addError(new Violation.Builder().error("error").property("").message("Unable to read Swagger specification from: "
                     + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
                 .build();
         }
 
         if (validate) {
-            final SwaggerModelInfo swaggerModelInfo = validateJSonSchema(specification, swagger);
+            final SwaggerModelInfo swaggerModelInfo = validateJSonSchema(resolvedSpecification, swagger);
             return SyndesisSwaggerValidationRules.getInstance().apply(swaggerModelInfo);
         }
-        return new SwaggerModelInfo.Builder().model(swagger).build();
+        return resultBuilder.model(swagger).build();
+    }
+
+    /* default */ static String resolve(final String specification) throws Exception {
+        if (specification.toLowerCase().startsWith("http")) {
+            return RemoteUrl.urlToString(specification, null);
+        }
+
+        return specification;
     }
 
     /* default */ static String serialize(final Swagger swagger) {
@@ -122,7 +145,8 @@ public final class SwaggerHelper {
                 }
             }
 
-            return new SwaggerModelInfo.Builder().errors(errors).warnings(warnings).model(model).build();
+            return new SwaggerModelInfo.Builder().errors(errors).warnings(warnings).model(model).resolvedSpecification(specification)
+                .build();
 
         } catch (IOException | ProcessingException ex) {
             LOG.error("Unable to load the schema file embedded in the artifact", ex);
