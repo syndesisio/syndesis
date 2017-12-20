@@ -4,7 +4,7 @@ import { EditableComponent } from './editable.component';
 @Component({
   selector: 'syndesis-editable-tags',
   template: `
-    <ng-template *ngIf="!editing; else editingTemplate">
+    <ng-template [ngIf]="!editing">
       <em class="text-muted" *ngIf="!value || value.length === 0">
         {{ placeholder }}
       </em>
@@ -18,7 +18,7 @@ import { EditableComponent } from './editable.component';
       </button>
     </ng-template>
 
-    <ng-template #editingTemplate>
+    <ng-template [ngIf]="editing">
       <div class="form-group">
         <tag-input #tagInput
                    [ngModel]="value"
