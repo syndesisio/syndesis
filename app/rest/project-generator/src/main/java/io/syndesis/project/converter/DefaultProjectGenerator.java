@@ -57,6 +57,8 @@ import io.syndesis.model.WithDependencies;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationRevisionSpec;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
 import io.syndesis.project.converter.mvn.MavenGav;
@@ -127,12 +129,12 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     @SuppressWarnings("resource")
     @Override
-    public InputStream generate(Integration integration) throws IOException {
+    public InputStream generate(Integration integration, IntegrationRevision integrationRevision) throws IOException {
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
 
-        executor.execute(generateAddProjectTarEntries(integration, os));
+        executor.execute(generateAddProjectTarEntries(integration, integrationRevision, os));
 
         return is;
     }
@@ -166,7 +168,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @SuppressWarnings("PMD.DoNotUseThreads")
-    private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os) {
+    private Runnable generateAddProjectTarEntries(Integration integration, IntegrationRevision integrationRevision, OutputStream os) {
         return () -> {
             try (
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
@@ -174,10 +176,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generate(integration, applicationJavaMustache));
                 addTarEntry(tos, "src/main/resources/application.properties", generate(integration, applicationPropertiesMustache));
-                addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlow(tos, integration));
-                addTarEntry(tos, "pom.xml", generatePom(integration));
+                addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlow(tos, integrationRevision.getSpec()));
+                addTarEntry(tos, "pom.xml", generatePom(integration, integrationRevision));
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
-                addExtensions(tos, integration);
+                addExtensions(tos, integrationRevision);
                 addAdditionalResources(tos);
                 LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(integration.getName()));
             } catch (IOException e) {
@@ -204,8 +206,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         addTarEntry(tos, destination, bytes);
     }
 
-    private void addExtensions(TarArchiveOutputStream tos, Integration integration) throws IOException {
-        final Set<String> extensions = collectDependencies(integration).stream()
+    private void addExtensions(TarArchiveOutputStream tos, IntegrationRevision integrationRevision) throws IOException {
+        final Set<String> extensions = collectDependencies(integrationRevision.getSpec()).stream()
             .filter(Dependency::isExtension)
             .map(Dependency::getId)
             .collect(Collectors.toCollection(TreeSet::new));
@@ -226,8 +228,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @Override
-    public byte[] generatePom(Integration integration) throws IOException {
-        final Set<MavenGav> dependencies = collectDependencies(integration).stream()
+    public byte[] generatePom(Integration integration, IntegrationRevision integrationRevision) throws IOException {
+        final Set<MavenGav> dependencies = collectDependencies(integrationRevision.getSpec()).stream()
             .filter(Dependency::isMaven)
             .map(Dependency::getId)
             .map(MavenGav::new)
@@ -263,8 +265,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private byte[] generateFlow(TarArchiveOutputStream tos, Integration integration) throws JsonProcessingException {
-        final List<? extends Step> steps =  integration.getSteps();
+    private byte[] generateFlow(TarArchiveOutputStream tos, IntegrationRevisionSpec spec) throws JsonProcessingException {
+        final List<? extends Step> steps =  spec.getSteps();
         final Flow flow = new Flow();
 
         if (!steps.isEmpty()) {
@@ -274,7 +276,8 @@ public class DefaultProjectGenerator implements ProjectGenerator {
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()
                     .generatorContext(new GeneratorContext.Builder()
                         .generatorProperties(generatorProperties)
-                        .integration(integration)
+                        //TODO: Check if we really need that.
+                        //.integration(integration)
                         .tarArchiveOutputStream(tos)
                         .flow(flow)
                         .visitorFactoryRegistry(registry)
@@ -316,14 +319,14 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
 
-    private Collection<Dependency> collectDependencies(Integration integration) {
-        return collectDependencies(dataManager, integration);
+    private Collection<Dependency> collectDependencies(IntegrationRevisionSpec spec) {
+        return collectDependencies(dataManager, spec);
     }
 
-    public static Collection<Dependency> collectDependencies(DataManager dataManager, Integration integration) {
+    public static Collection<Dependency> collectDependencies(DataManager dataManager, IntegrationRevisionSpec spec) {
         List<Dependency> dependencies = new ArrayList<>();
 
-        for (Step step : integration.getSteps()) {
+        for (Step step : spec.getSteps()) {
             step.getAction()
                 .filter(WithDependencies.class::isInstance)
                 .map(WithDependencies.class::cast)

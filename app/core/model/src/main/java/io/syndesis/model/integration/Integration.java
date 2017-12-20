@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.Kind;
@@ -48,10 +47,6 @@ import org.immutables.value.Value;
 @SuppressWarnings("immutables")
 public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
-    enum Status {
-        Draft, Pending, Activated, Deactivated, Deleted
-    }
-
     @Override
     default Kind getKind() {
         return Kind.Integration;
@@ -68,65 +63,73 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<Integer> getDeployedRevisionId();
 
-    @JsonIgnore
-    default Optional<IntegrationRevision> getDeployedRevision() {
-        return getDeployedRevisionId().map(i -> getRevisions()
-            .stream()
-            .filter(r -> r.getVersion().isPresent() && i.equals(r.getVersion().get()))
-            .findFirst()
-            .orElse(null));
-    }
-
-    Optional<String> getConfiguration();
-
-    Optional<String> getIntegrationTemplateId();
-
     Optional<String> getUserId();
 
     List<User> getUsers();
 
+
+    @Deprecated
+    Optional<String> getIntegrationTemplateId();
+
+    @Deprecated
+    Optional<String> getConfiguration();
+
+    @Deprecated
     @Value.Default
     default List<Connection> getConnections() {
         return Collections.emptyList();
     }
 
+    @Deprecated
     @Value.Default
     default List<? extends Step> getSteps() {
         return Collections.emptyList();
     }
 
+    @Deprecated
     @Value.Default
     default List<ResourceIdentifier> getResources() {
         return Collections.emptyList();
     }
 
+    @Deprecated
     Optional<String> getDescription();
 
-    Optional<Status> getDesiredStatus();
+    @Deprecated
+    Optional<IntegrationRevisionState> getDesiredStatus();
 
-    Optional<Status> getCurrentStatus();
+    @Deprecated
+    Optional<IntegrationRevisionState> getCurrentStatus();
 
+    @Deprecated
     @Value.Default
     default List<String> getStepsDone() {
         return Collections.emptyList();
     }
 
+    @Deprecated
     Optional<String> getStatusMessage();
 
+    @Deprecated
     Optional<Date> getLastUpdated();
 
+    @Deprecated
     Optional<Date> getCreatedDate();
 
+    @Deprecated
     Optional<BigInteger> getTimesUsed();
 
+
+    @Deprecated
     @Value.Derived
     default boolean isInactive() {
         return getCurrentStatus()
-            .map(s -> s == Status.Deleted || s == Status.Deactivated)
-            .orElse(getDesiredStatus().map(s -> s == Status.Deleted || s == Status.Deactivated)
+            .map(s -> s == IntegrationRevisionState.Undeployed || s == IntegrationRevisionState.Inactive)
+            .orElse(getDesiredStatus().map(s -> s == IntegrationRevisionState.Undeployed || s == IntegrationRevisionState.Inactive)
                 .orElse(false));
     }
 
+    @Deprecated
     @Value.Derived
     default Set<String> getUsedConnectorIds() {
         return getSteps().stream()//
@@ -140,12 +143,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
             .collect(Collectors.toSet());
     }
 
-    @JsonIgnore
-    default IntegrationRevisionState getStatus() {
-        Optional<IntegrationRevision> deployedRevision = getDeployedRevision();
-
-        return deployedRevision.map(r -> r.getCurrentState()).orElse(IntegrationRevisionState.Pending);
-    }
 
     default IntegrationRevision lastRevision() {
         return getRevisions().stream().max(Comparator.comparingInt(r -> r.getVersion().orElse(0))).get();

@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import io.syndesis.model.integration.Integration;
 
+import io.syndesis.model.integration.IntegrationRevisionState;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class JsonHandlingITCase extends BaseITCase {
         tags.add("\tTaggy McTagface\t");
 
         final Integration integration = new Integration.Builder().id(id).name("  some-name\t").description("")
-            .tags(tags).desiredStatus(Integration.Status.Draft).build();
+            .tags(tags).desiredStatus(IntegrationRevisionState.Draft).build();
         post("/api/v1/integrations", integration, Integration.class);
 
         final ResponseEntity<Integration> result = get("/api/v1/integrations/" + id, Integration.class);

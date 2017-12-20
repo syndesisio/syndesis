@@ -43,6 +43,8 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationRevisionSpec;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.DefaultProjectGenerator;
@@ -169,22 +171,27 @@ public class Application implements ApplicationRunner {
             .id("integration")
             .name("Integration")
             .description("This integration is used to prime the .m2 repo")
-            .steps( steps )
             .build();
 
-        generate(integration, project);
+        IntegrationRevision integrationRevision = new IntegrationRevision.Builder()
+            .integrationId("integration")
+            .name("Integration")
+            .spec(new IntegrationRevisionSpec.Builder().steps(steps).build())
+            .build();
+
+        generate(integration, integrationRevision, project);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(Integration integration, File targetDir) throws IOException {
+    private static void generate(Integration integration, IntegrationRevision integrationRevision, File targetDir) throws IOException {
         MavenProperties mavenProperties = new MavenProperties();
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Collections.emptyList());
         ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, null, new ExtensionDataManager(null, null));
 
-        Path dir =targetDir.toPath();
+        Path dir = targetDir.toPath();
         Files.createDirectories( dir);
-        Files.write(dir.resolve("pom.xml"), generator.generatePom(integration));
+        Files.write(dir.resolve("pom.xml"), generator.generatePom(integration, integrationRevision));
 
         dir = dir.resolve("src/main/java/io/syndesis/example");
         Files.createDirectories( dir);

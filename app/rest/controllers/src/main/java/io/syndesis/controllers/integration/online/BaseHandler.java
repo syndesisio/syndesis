@@ -23,6 +23,7 @@ import io.syndesis.core.Names;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,12 @@ public class BaseHandler {
         return openShiftService;
     }
 
+    protected void logInfo(IntegrationRevision integrationRevision, String format, Object ... args) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info(getLabel(integrationRevision) + ": " + format, args);
+        }
+    }
+
     protected void logInfo(Integration integration, String format, Object ... args) {
         if (LOG.isInfoEnabled()) {
             LOG.info(getLabel(integration) + ": " + format, args);
@@ -53,8 +60,18 @@ public class BaseHandler {
         }
     }
 
+    protected void logError(IntegrationRevision integrationRevision, String format, Object ... args) {
+        if (LOG.isErrorEnabled()) {
+            LOG.error(getLabel(integrationRevision) + ": " + format, args);
+        }
+    }
+
     private String getLabel(Integration integration) {
         return String.format("Integration [%s]",Names.sanitize(integration.getName()));
+    }
+
+    private String getLabel(IntegrationRevision integrationRevision) {
+        return String.format("Integration [%s]",Names.sanitize(integrationRevision.getName()));
     }
 
     /**

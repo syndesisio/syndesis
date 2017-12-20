@@ -35,6 +35,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.integration.Integration;
 
+import io.syndesis.model.integration.IntegrationRevisionState;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public class ReadApiClientDataTest {
     public void deserializeModelDataTest() throws IOException {
 
         Integration integrationIn = new Integration.Builder()
-                    .desiredStatus(Integration.Status.Activated)
+                    .desiredStatus(IntegrationRevisionState.Active)
                     .tags(new TreeSet<>(Arrays.asList("tag1", "tag2")))
                     .createdDate(new Date())
                     .build();

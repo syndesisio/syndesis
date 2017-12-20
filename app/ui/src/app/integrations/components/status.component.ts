@@ -28,11 +28,11 @@ export class IntegrationStatusComponent {
   //-----  Get Status Icon Class ------------------->>
   getLabelClass(currentStatus): string | any {
     switch (currentStatus) {
-      case 'Activated':
+      case 'Active':
         return 'primary';
-      case 'Deactivated':
+      case 'Inactive':
         return 'inactive';
-      case 'Deleted':
+      case 'Undeployed':
         return 'danger';
       case 'Draft':
         return 'warning';
@@ -43,9 +43,9 @@ export class IntegrationStatusComponent {
 
   getStatusText(currentStatus): string | any {
     switch (currentStatus) {
-      case 'Activated':
+      case 'Active':
         return 'Active';
-      case 'Deactivated':
+      case 'Inactive':
         return 'Inactive';
       case 'Pending':
         return 'In Progress';

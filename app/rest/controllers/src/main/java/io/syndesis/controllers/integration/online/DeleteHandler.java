@@ -18,29 +18,32 @@ package io.syndesis.controllers.integration.online;
 import java.util.Collections;
 import java.util.Set;
 
-import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
+import io.syndesis.controllers.StateChangeHandler;
+import io.syndesis.controllers.StateUpdate;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationRevisionState;
 import io.syndesis.openshift.OpenShiftService;
 
-public class DeleteHandler extends BaseHandler implements StatusChangeHandlerProvider.StatusChangeHandler {
+public class DeleteHandler extends BaseHandler implements StateChangeHandler {
     DeleteHandler(OpenShiftService openShiftService) {
         super(openShiftService);
     }
 
     @Override
-    public Set<Integration.Status> getTriggerStatuses() {
-        return Collections.singleton(Integration.Status.Deleted);
+    public Set<IntegrationRevisionState> getTriggerStates() {
+        return Collections.singleton(IntegrationRevisionState.Undeployed);
     }
 
     @Override
-    public StatusUpdate execute(Integration integration) {
-        Integration.Status currentStatus = !openShiftService().exists(integration.getName())
+    public StateUpdate execute(IntegrationRevision integration) {
+        IntegrationRevisionState currentState = !openShiftService().exists(integration.getName())
             || openShiftService().delete(integration.getName())
-            ? Integration.Status.Deleted
-            : Integration.Status.Pending;
+            ? IntegrationRevisionState.Undeployed
+            : IntegrationRevisionState.Pending;
         logInfo(integration,"Deleted");
 
-        return new StatusUpdate(currentStatus);
+        return new StateUpdate(currentState);
     }
 
 }

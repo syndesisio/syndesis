@@ -43,19 +43,4 @@ public enum IntegrationRevisionState {
      * The {@link IntegrationRevision} is in peding state. (Desired != Actual).
      */
     Pending;
-
-
-    @Deprecated //Temporary method for compatibility reasons. Eventually Integration.Status will go away, so will this method.
-    public static IntegrationRevisionState from(Integration.Status status) {
-        switch (status) {
-            case Activated:
-                return IntegrationRevisionState.Active;
-            case Deactivated:
-                return IntegrationRevisionState.Inactive;
-            case Deleted:
-                return Undeployed;
-            default:
-                return Pending;
-        }
-    }
 }

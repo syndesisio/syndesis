@@ -19,8 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.syndesis.controllers.ControllersConfigurationProperties;
+import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.controllers.integration.StatusChangeHandlerProvider;
+import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.project.converter.ProjectGenerator;
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "true", matchIfMissing = true)
-public class OnlineHandlerProvider extends BaseHandler implements StatusChangeHandlerProvider {
+public class OnlineHandlerProvider extends BaseHandler implements StateChangeHandlerProvider {
 
     private final DataManager dataManager;
     private final ProjectGenerator projectGenerator;
@@ -52,7 +53,7 @@ public class OnlineHandlerProvider extends BaseHandler implements StatusChangeHa
     }
 
     @Override
-    public List<StatusChangeHandler> getStatusChangeHandlers() {
+    public List<StateChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
             new ActivateHandler(
                 dataManager,

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.connection.Connection;
 import org.immutables.value.Value;
 
@@ -36,6 +37,11 @@ public interface IntegrationRevisionSpec {
 
     @Value.Default
     default List<Step> getSteps() {
+        return Collections.emptyList();
+    }
+
+    @Value.Default
+    default List<ResourceIdentifier> getResources() {
         return Collections.emptyList();
     }
 

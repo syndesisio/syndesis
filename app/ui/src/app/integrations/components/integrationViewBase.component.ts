@@ -22,13 +22,13 @@ export class IntegrationViewBase {
     private integrationSupportService: IntegrationSupportService,
   ) {}
 
-  canEdit = int => int.currentStatus !== 'Deleted';
+  canEdit = int => int.currentStatus !== 'Undeployed';
   /* tslint:disable semicolon */
   canActivate = int =>
-    int.currentStatus === 'Deactivated' || int.currentStatus === 'Draft';
+    int.currentStatus === 'Inactive' || int.currentStatus === 'Draft';
   /* tslint:enable semicolon */
-  canDeactivate = int => int.currentStatus === 'Activated';
-  canDelete = int => int.currentStatus !== 'Deleted';
+  canDeactivate = int => int.currentStatus === 'Active';
+  canDelete = int => int.currentStatus !== 'Undeployed';
 
   //----- Actions ------------------->>
 

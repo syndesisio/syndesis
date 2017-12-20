@@ -22,13 +22,36 @@ import java.util.List;
 import java.util.Optional;
 
 @Value.Immutable
-@JsonDeserialize(builder = IntegrationStatus.Builder.class)
-public interface IntegrationStatus {
+@JsonDeserialize(builder = OldIntegrationStatus.Builder.class)
+public interface OldIntegrationStatus {
 
-    List<IntegrationRevision> getDeployments();
-    List<String> getMessages();
+    /**
+     * The desired state of the revision.
+     * @return
+     */
+    IntegrationRevisionState getTargetState();
 
-    class Builder extends ImmutableIntegrationStatus.Builder {
+    /**
+     * The current state of the revision.
+     * @return
+     */
+    IntegrationRevisionState getCurrentState();
+
+    /**
+     * Message describing the currentState further (e.g. error message)
+     * @return
+     */
+    Optional<String> getCurrentMessage();
+
+
+    /**
+     * Message which should become the currentMessage after reconciliation
+     * @return
+     */
+    Optional<String> getTargetMessage();
+
+
+    class Builder extends ImmutableOldIntegrationStatus.Builder {
         // allow access to ImmutableIntegrationStatus.Builder
     }
 }

@@ -13,22 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
+package io.syndesis.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-@Value.Immutable
-@JsonDeserialize(builder = IntegrationStatus.Builder.class)
-public interface IntegrationStatus {
+public interface StateChangeHandlerProvider {
 
-    List<IntegrationRevision> getDeployments();
-    List<String> getMessages();
+    List<StateChangeHandler> getStatusChangeHandlers();
 
-    class Builder extends ImmutableIntegrationStatus.Builder {
-        // allow access to ImmutableIntegrationStatus.Builder
-    }
 }

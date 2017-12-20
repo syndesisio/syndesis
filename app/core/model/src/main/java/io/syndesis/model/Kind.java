@@ -41,6 +41,8 @@ public enum Kind {
     Organization(io.syndesis.model.environment.Organization.class),
 
     Integration(io.syndesis.model.integration.Integration.class),
+    IntegrationRevision(io.syndesis.model.integration.IntegrationRevision.class),
+
     IntegrationRuntime(io.syndesis.model.integration.IntegrationRuntime.class),
     Step(io.syndesis.model.integration.Step.class),
 

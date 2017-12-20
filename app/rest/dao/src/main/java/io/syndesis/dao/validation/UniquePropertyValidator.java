@@ -23,7 +23,7 @@ import javax.validation.ConstraintValidatorContext;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.WithId;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Integration.Status;
+import io.syndesis.model.integration.IntegrationRevisionState;
 import io.syndesis.model.validation.UniqueProperty;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -83,7 +83,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         // if we're looking at Integration then we need to make sure that
         // the Integration in question is not deleted
         if (modelInstance instanceof Integration) {
-            return ((Integration) modelInstance).getCurrentStatus().map(Status.Deleted::equals).orElse(false);
+            return ((Integration) modelInstance).getCurrentStatus().map(IntegrationRevisionState.Undeployed::equals).orElse(false);
         }
 
         return false;

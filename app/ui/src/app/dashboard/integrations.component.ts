@@ -71,7 +71,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
       */
 
       switch (a.currentStatus) {
-        case 'Activated':
+        case 'Active':
           total = total + 1;
           active.push(a);
           break;
@@ -79,7 +79,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
           total = total + 1;
           draft.push(a);
           break;
-        case 'Deactivated':
+        case 'Inactive':
           total = total + 1;
           inactive.push(a);
           break;
@@ -127,10 +127,10 @@ export class DashboardIntegrationsComponent implements OnChanges {
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
     */
     switch (integration.currentStatus) {
-      case 'Activated':
+      case 'Active':
       default:
         return 'label-primary';
-      case 'Deactivated':
+      case 'Inactive':
         return 'label-default';
       case 'Draft':
         return 'label-warning';
@@ -139,9 +139,9 @@ export class DashboardIntegrationsComponent implements OnChanges {
 
   getStatusText(integration: Integration): string {
     switch (integration.currentStatus) {
-      case 'Activated':
+      case 'Active':
         return 'Active';
-      case 'Deactivated':
+      case 'Inactive':
         return 'Inactive';
       default:
         return integration.currentStatus;

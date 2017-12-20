@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -29,6 +30,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,9 +50,10 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationStatus;
+import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
@@ -93,8 +97,8 @@ public class IntegrationHandler extends BaseHandler
     public Integration get(String id) {
         Integration integration = Getter.super.get(id);
 
-        if (Status.Deleted.equals(integration.getCurrentStatus().get()) ||
-            Status.Deleted.equals(integration.getDesiredStatus().get())) {
+        if (IntegrationRevisionState.Undeployed.equals(integration.getCurrentStatus().get()) ||
+            IntegrationRevisionState.Undeployed.equals(integration.getDesiredStatus().get())) {
             //Not sure if we need to do that for both current and desired status,
             //but If we don't do include the desired state, IntegrationITCase is not going to pass anytime soon. Why?
             //Cause that test, is using NoopHandlerProvider, so that means no controllers.
@@ -102,8 +106,8 @@ public class IntegrationHandler extends BaseHandler
         }
 
         //fudging the timesUsed for now
-        Optional<Status> currentStatus = integration.getCurrentStatus();
-        if (currentStatus.isPresent() && currentStatus.get() == Integration.Status.Activated) {
+        Optional<IntegrationRevisionState> currentStatus = integration.getCurrentStatus();
+        if (currentStatus.isPresent() && currentStatus.get() ==  IntegrationRevisionState.Active) {
             return new Integration.Builder()
                     .createFrom(integration)
                     .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
@@ -138,41 +142,50 @@ public class IntegrationHandler extends BaseHandler
 
         Integration encryptedIntegration = encryptionSupport.encrypt(integration);
 
-        IntegrationRevision revision = IntegrationRevision
-            .createNewRevision(encryptedIntegration)
-            .withCurrentState(IntegrationRevisionState.Draft);
-
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(encryptedIntegration)
-            .deployedRevisionId(revision.getVersion())
-            .addRevision(revision)
             .userId(SecurityContextHolder.getContext().getAuthentication().getName())
             .statusMessage(Optional.empty())
             .lastUpdated(rightNow)
             .createdDate(rightNow)
-            .currentStatus(determineCurrentStatus(encryptedIntegration))
+            .currentStatus(determineCurrentState(encryptedIntegration))
             .userId(sec.getUserPrincipal().getName())
             .stepsDone(new ArrayList<>())
             .build();
 
-        return Creator.super.create(sec, updatedIntegration);
+        updatedIntegration = Creator.super.create(sec, updatedIntegration);
+
+        if (integration.getDesiredStatus().orElse(IntegrationRevisionState.Draft).equals(IntegrationRevisionState.Active)) {
+
+            IntegrationRevision revision = IntegrationRevision
+                .createNewRevision(updatedIntegration)
+                .withCurrentState(IntegrationRevisionState.Draft)
+                .withTargetState(IntegrationRevisionState.Active);
+
+            getDataManager().create(revision);
+        }
+        return updatedIntegration;
     }
 
     @Override
     public void update(String id, @ConvertGroup(from = Default.class, to = AllValidations.class) Integration integration) {
         Integration existing = Getter.super.get(id);
 
-        Status currentStatus = determineCurrentStatus(integration);
-        IntegrationRevision currentRevision = IntegrationRevision.deployedRevision(existing)
-            .withCurrentState(IntegrationRevisionState.from(currentStatus))
-            .withTargetState(IntegrationRevisionState.from(integration.getDesiredStatus().orElse(Status.Pending)));
+        IntegrationRevisionState currentStatus = determineCurrentState(integration);
+        IntegrationRevision latest = latestRevision(integration).orElse(null);
+
+        IntegrationRevision updatedRevision = new IntegrationRevision.Builder()
+            .createFrom(IntegrationRevision.createNewRevision(existing))
+            .version(latest != null ? latest.getVersion().orElse(0) + 1 : 1)
+            .parentVersion(latest != null ? latest.getVersion().orElse(0) : 0)
+            .build();
 
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(encryptionSupport.encrypt(integration))
             .deployedRevisionId(existing.getDeployedRevisionId())
             .lastUpdated(new Date())
             .currentStatus(currentStatus)
-            .addRevision(currentRevision)
+            .addRevision(updatedRevision)
             .stepsDone(new ArrayList<>())
             .build();
 
@@ -182,19 +195,28 @@ public class IntegrationHandler extends BaseHandler
 
     @Override
     public void delete(String id) {
-         Integration existing = Getter.super.get(id);
+        Integration existing = Getter.super.get(id);
 
-        Status currentStatus = determineCurrentStatus(existing);
-        IntegrationRevision currentRevision = IntegrationRevision.deployedRevision(existing)
-            .withCurrentState(IntegrationRevisionState.from(currentStatus))
-            .withTargetState(IntegrationRevisionState.from(Status.Deleted));
+        //Set all integration status to Undeployed.
+        Set<String> revisionIds = getDataManager().fetchIdsByPropertyValue(IntegrationRevision.class, "integrationId", existing.getId().get());
+
+        if (revisionIds != null && !revisionIds.isEmpty()) {
+            revisionIds.stream()
+                .map(i -> getDataManager().fetch(IntegrationRevision.class, i))
+                .filter(r -> r != null)
+                .map(r -> r.withTargetState(IntegrationRevisionState.Undeployed))
+                .forEach(r -> getDataManager().update(r));
+        }
+
+        //for (IntegrationRevision r : getDataManager().fetchAll(IntegrationRevision.class).getItems()) {
+        //    getDataManager().delete(IntegrationRevision.class, r.getId().get());
+        //}
 
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(existing)
             .deployedRevisionId(existing.getDeployedRevisionId())
             .lastUpdated(new Date())
-            .desiredStatus(Status.Deleted)
-            .addRevision(currentRevision)
+            .desiredStatus(IntegrationRevisionState.Undeployed)
             .stepsDone(new ArrayList<>())
             .build();
 
@@ -225,11 +247,83 @@ public class IntegrationHandler extends BaseHandler
     // However because of how the Controller works (i.e. that any change to the integration
     // within the controller will trigger an event again), the initial status must be set
     // from the outside for the moment.
-    private Integration.Status determineCurrentStatus(Integration integration) {
-        Integration.Status desiredStatus = integration.getDesiredStatus().orElse(Integration.Status.Draft);
-        return desiredStatus == Integration.Status.Draft ?
-            Integration.Status.Draft :
-            Integration.Status.Pending;
+    private IntegrationRevisionState determineCurrentState(Integration integration) {
+        IntegrationRevisionState desiredStatus = integration.getDesiredStatus().orElse(IntegrationRevisionState.Draft);
+        return desiredStatus == IntegrationRevisionState.Draft ?
+            IntegrationRevisionState.Draft :
+            IntegrationRevisionState.Pending;
+    }
+
+    // Determine the current status to 'pending' or 'draft' immediately depending on
+    // the desired stated. This status will be later changed by the activation handlers.
+    // This is not the best place to set but should be done by the IntegrationController
+    // However because of how the Controller works (i.e. that any change to the integration
+    // within the controller will trigger an event again), the initial status must be set
+    // from the outside for the moment.
+    private IntegrationRevisionState determineCurrentState(IntegrationRevision integrationRevision) {
+        IntegrationRevisionState state = integrationRevision.getTargetState();
+        return state == IntegrationRevisionState.Draft ?
+            IntegrationRevisionState.Draft :
+            IntegrationRevisionState.Pending;
+    }
+
+    private Optional<IntegrationRevision> latestRevision(Integration integration) {
+         //Set all integration status to Undeployed.
+        return getDataManager().fetchIdsByPropertyValue(IntegrationRevision.class, "integrationId", integration.getId().get())
+            .stream()
+            .map(i -> getDataManager().fetch(IntegrationRevision.class, i))
+            .max( (r,l) -> r.getVersion().orElse(0) - l.getVersion().orElse(0) );
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/status")
+    public IntegrationStatus status(@Context UriInfo uriInfo) {
+        String integrationId = uriInfo.getPathParameters().getFirst("id");
+
+        return new IntegrationStatus.Builder()
+            .deployments(getDataManager().fetchAll(IntegrationRevision.class, new IntegrationIdFilter(integrationId)).getItems())
+            .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/revisions")
+    public ListResult<IntegrationRevision> listRevisions(@Context UriInfo uriInfo) {
+        String integrationId = uriInfo.getPathParameters().getFirst("id");
+
+        return getDataManager().fetchAll(IntegrationRevision.class,
+            new IntegrationIdFilter(integrationId),
+            new ReflectiveSorter<>(IntegrationRevision.class, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/revisions/{version}")
+    public IntegrationRevision getRevision(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull @PathParam("version") @ApiParam(required = true) Integer version) {
+        String compositeId = IntegrationRevision.compositeId(id, version);
+        IntegrationRevision integrationRevision = getDataManager().fetch(IntegrationRevision.class, compositeId);
+        return integrationRevision;
+    }
+
+    @DELETE
+    @Consumes("application/json")
+    @Path("/{id}/revisions/{version}")
+    public void delete(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull @PathParam("version") @ApiParam(required = true) Integer version) {
+        String compositeId = IntegrationRevision.compositeId(id, version);
+        IntegrationRevision existing = getDataManager().fetch(IntegrationRevision.class, compositeId);
+
+        IntegrationRevisionState currentState = determineCurrentState(existing);
+        IntegrationRevision updatedIntegrationRevision = new IntegrationRevision.Builder()
+            .createFrom(existing)
+            .lastUpdated(new Date())
+            .currentState(currentState)
+            .targetState(IntegrationRevisionState.Undeployed)
+            .stepsDone(new ArrayList<>())
+            .build();
+
+        getDataManager().update(updatedIntegrationRevision);
     }
 
     @Override
@@ -242,11 +336,31 @@ public class IntegrationHandler extends BaseHandler
         @Override
         public ListResult<Integration> apply(ListResult<Integration> list) {
             List<Integration> filtered = list.getItems().stream()
-                    .filter(i -> !Status.Deleted.equals(i.getCurrentStatus().get()))
-                    .filter(i -> !Status.Deleted.equals(i.getDesiredStatus().get()))
+                    .filter(i -> !IntegrationRevisionState.Undeployed.equals(i.getCurrentStatus().get()))
+                    .filter(i -> !IntegrationRevisionState.Undeployed.equals(i.getDesiredStatus().get()))
                     .collect(Collectors.toList());
 
             return new ListResult.Builder<Integration>()
+                .totalCount(filtered.size())
+                .addAllItems(filtered).build();
+        }
+    }
+
+    private static class IntegrationIdFilter implements Function<ListResult<IntegrationRevision>, ListResult<IntegrationRevision>> {
+
+        private final String integrationId;
+
+        private IntegrationIdFilter(String integrationId) {
+            this.integrationId = integrationId;
+        }
+
+        @Override
+        public ListResult<IntegrationRevision> apply(ListResult<IntegrationRevision> list) {
+            List<IntegrationRevision> filtered = list.getItems().stream()
+                .filter(i -> integrationId == null || integrationId.equals(i.getIntegrationId().orElse(null)))
+                .collect(Collectors.toList());
+
+            return new ListResult.Builder<IntegrationRevision>()
                 .totalCount(filtered.size())
                 .addAllItems(filtered).build();
         }
