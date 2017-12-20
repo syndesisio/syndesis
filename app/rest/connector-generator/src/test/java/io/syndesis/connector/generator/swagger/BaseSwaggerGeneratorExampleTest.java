@@ -39,7 +39,7 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
     private final String specification;
 
     public BaseSwaggerGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
-        specification = resource("/swagger/" + name + ".swagger.json");
+        specification = resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
         expected = Json.mapper().readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"), Connector.class);
     }
 

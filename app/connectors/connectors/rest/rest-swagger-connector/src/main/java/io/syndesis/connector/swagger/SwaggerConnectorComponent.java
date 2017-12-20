@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -46,7 +47,11 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
     private AuthenticationType authenticationType;
 
+    private String password;
+
     private String specification;
+
+    private String username;
 
     public SwaggerConnectorComponent() {
         this(null);
@@ -64,8 +69,16 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
         return authenticationType;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public String getSpecification() {
         return specification;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setAccessToken(final String accessToken) {
@@ -76,13 +89,24 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
         this.authenticationType = authenticationType;
     }
 
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
     public void setSpecification(final String specification) {
         this.specification = specification;
+    }
+
+    public void setUsername(final String username) {
+        this.username = username;
     }
 
     /* default */ void addAuthenticationHeadersTo(final Map<String, Object> headers) {
         if (authenticationType == AuthenticationType.oauth2) {
             headers.put("Authorization", "Bearer " + accessToken);
+        } else if (authenticationType == AuthenticationType.basic) {
+            final String usernameAndPassword = username + ":" + password;
+            headers.put("Authorization", "Basic " + Base64.getEncoder().encode(usernameAndPassword.getBytes(StandardCharsets.UTF_8)));
         }
     }
 

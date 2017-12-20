@@ -56,4 +56,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
         return resource;
     }
 
+    /* default */ static String resource(final String path, final String alternative) throws IOException {
+        if (TestHelper.class.getResource(path) != null) {
+            return resource(path);
+        }
+
+        return resource(alternative);
+    }
+
 }

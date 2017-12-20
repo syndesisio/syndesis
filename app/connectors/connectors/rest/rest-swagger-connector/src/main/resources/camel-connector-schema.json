@@ -82,6 +82,24 @@
       "javaType":"java.lang.String",
       "deprecated":false,
       "secret":false
+    },
+    "username":{
+      "kind":"property",
+      "displayName":"Username",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
+    },
+    "password":{
+      "kind":"property",
+      "displayName":"Password",
+      "required":false,
+      "type":"string",
+      "javaType":"java.lang.String",
+      "deprecated":false,
+      "secret":false
     }
   }
 }

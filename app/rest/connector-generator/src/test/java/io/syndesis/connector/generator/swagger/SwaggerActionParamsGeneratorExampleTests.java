@@ -45,7 +45,7 @@ public class SwaggerActionParamsGeneratorExampleTests extends BaseSwaggerGenerat
 
     @Parameters(name = "{0}")
     public static Iterable<String> parameters() {
-        return Arrays.asList("concur", "petstore", "reverb");
+        return Arrays.asList("concur", "petstore", "reverb", "basic_auth");
     }
 
 }

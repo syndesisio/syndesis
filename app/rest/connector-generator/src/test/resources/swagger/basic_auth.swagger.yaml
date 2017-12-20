@@ -1,0 +1,24 @@
+---
+swagger: "2.0"
+info:
+  description: "Sample Swagger file with HTTP Basic Authentication"
+  version: "1.0.0"
+  title: "HTTP Basic Authentication Sample"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "sample.io"
+basePath: "/api"
+schemes:
+- "http"
+paths:
+  /operation:
+    get:
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: All OK
+securityDefinitions:
+  username_password:
+    type: "basic"
