@@ -92,7 +92,7 @@ public class ConnectorsITCase extends BaseITCase {
     @Test
     public void testUpdateIcon() throws IOException {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
-        multipartData.add("file", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
+        multipartData.add("icon", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
 
         final ResponseEntity<Connector> updated = post("/api/v1/connectors/twitter/icon",
             multipartData, Connector.class, tokenRule.validToken(), HttpStatus.OK,
