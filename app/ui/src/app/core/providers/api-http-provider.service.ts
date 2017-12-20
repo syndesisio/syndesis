@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpRequest, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpEventType, HttpProgressEvent, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { ApiHttpService, ApiEndpoint, ApiRequestProgress, StringMap } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
-import { HttpProgressEvent, HttpResponse } from '@angular/common/http/src/response';
 
 @Injectable()
 export class ApiHttpProviderService extends ApiHttpService {
