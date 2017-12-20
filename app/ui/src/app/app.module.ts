@@ -21,6 +21,7 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
+import { CoreModule } from './core';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
@@ -82,6 +83,7 @@ export function mapperRestangularProvider(
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    CoreModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
     TabsModule.forRoot(),
