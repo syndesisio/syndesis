@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: amq63
+  template: syndesis-amq
 message: A new messaging service has been created in your project. It will handle
   the protocol openwire. The username/password for accessing the service
   is ${MQ_USERNAME}/${MQ_PASSWORD}.
@@ -10,8 +10,8 @@ metadata:
     description: Application template for JBoss A-MQ brokers. These can be deployed
       as standalone or in a mesh. This template doesn't feature SSL support.
     iconClass: icon-amq
-    openshift.io/display-name: Red Hat JBoss A-MQ 6.3 (Ephemeral, no SSL)
-    openshift.io/provider-display-name: Red Hat, Inc.
+    openshift.io/display-name: Syndesis A-MQ (Ephemeral, no SSL)
+    openshift.io/provider-display-name: syndesis.io
     tags: messaging,amq,jboss
   name: amq63-basic
   parameters:
@@ -31,12 +31,14 @@ metadata:
   - description: User name for standard broker user. It is required for connecting to
       the broker. If left empty, it will be generated.
     displayName: A-MQ Username
-    value: amq
+    from: user[a-zA-Z0-9]{3}
+    generate: expression
     name: MQ_USERNAME
   - description: Password for standard broker user. It is required for connecting to
       the broker. If left empty, it will be generated.
     displayName: A-MQ Password
-    value: topSecret
+    from: '[a-zA-Z0-9]{8}'
+    generate: expression
     name: MQ_PASSWORD
   - description: Namespace in which the ImageStreams for Red Hat Middleware images are
       installed. These ImageStreams are normally installed in the openshift namespace.
