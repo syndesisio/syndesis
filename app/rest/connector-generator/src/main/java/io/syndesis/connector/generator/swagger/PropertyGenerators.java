@@ -29,6 +29,8 @@ import static java.util.Objects.requireNonNull;
 
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
+import io.swagger.models.auth.AbstractSecuritySchemeDefinition;
+import io.swagger.models.auth.BasicAuthDefinition;
 import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -109,6 +111,12 @@ import org.apache.commons.lang3.StringUtils;
                 d -> d.getScopes().keySet().stream().collect(Collectors.joining(" ")));
         }
     },
+    password {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return PropertyGenerators::ifHasBasicSecurityDefinition;
+        }
+    },
     specification {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
@@ -119,6 +127,12 @@ import org.apache.commons.lang3.StringUtils;
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
             return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getTokenUrl);
+        }
+    },
+    username {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return PropertyGenerators::ifHasBasicSecurityDefinition;
         }
     };
 
@@ -184,34 +198,39 @@ import org.apache.commons.lang3.StringUtils;
         return Optional.of(template);
     }
 
-    private static boolean hasOAuth2Definition(final Swagger swagger) {
-        return oauth2Definition(swagger).isPresent();
+    private static Optional<ConfigurationProperty> ifHasBasicSecurityDefinition(final Swagger swagger,
+        final ConfigurationProperty template) {
+        return ifHasSecurityDefinition(swagger, template, BasicAuthDefinition.class);
     }
 
     private static Optional<ConfigurationProperty> ifHasOAuthSecurityDefinition(final Swagger swagger,
         final ConfigurationProperty template) {
-        if (hasOAuth2Definition(swagger)) {
+        return ifHasSecurityDefinition(swagger, template, OAuth2Definition.class);
+    }
+
+    private static Optional<ConfigurationProperty> ifHasSecurityDefinition(final Swagger swagger, final ConfigurationProperty template,
+        final Class<? extends AbstractSecuritySchemeDefinition> type) {
+        if (securityDefinition(swagger, type).isPresent()) {
             return Optional.of(template);
         }
 
         return Optional.empty();
     }
 
-    private static Optional<OAuth2Definition> oauth2Definition(final Swagger swagger) {
+    private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,
+        final Function<OAuth2Definition, String> defaultValueExtractor) {
+        return securityDefinition(swagger, OAuth2Definition.class).map(definition -> new ConfigurationProperty.Builder()
+            .createFrom(template).defaultValue(defaultValueExtractor.apply(definition)).build());
+    }
+
+    private static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final Class<T> type) {
         final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
 
         if (securityDefinitions == null) {
             return Optional.empty();
         }
 
-        return securityDefinitions.values().stream().filter(OAuth2Definition.class::isInstance).map(OAuth2Definition.class::cast)
-            .findFirst();
-    }
-
-    private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,
-        final Function<OAuth2Definition, String> defaultValueExtractor) {
-        return oauth2Definition(swagger).map(definition -> new ConfigurationProperty.Builder().createFrom(template)
-            .defaultValue(defaultValueExtractor.apply(definition)).build());
+        return securityDefinitions.values().stream().filter(type::isInstance).map(type::cast).findFirst();
     }
 
     private static BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>>

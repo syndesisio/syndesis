@@ -1743,6 +1743,32 @@
           "secret": false,
           "componentProperty": true,
           "description": "Swagger specification of the service"
+        },
+        "username": {
+          "kind": "property",
+          "displayName": "Username",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Username to authenticate with"
+        },
+        "password": {
+          "kind": "property",
+          "displayName": "Password",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "Password to authenticate with"
         }
       }
     }

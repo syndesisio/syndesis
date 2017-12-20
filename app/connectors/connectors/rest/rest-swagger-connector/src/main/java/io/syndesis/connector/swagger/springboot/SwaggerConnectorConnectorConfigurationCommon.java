@@ -33,6 +33,8 @@ public class SwaggerConnectorConnectorConfigurationCommon {
     private String specification;
     private AuthenticationType authenticationType;
     private String accessToken;
+    private String username;
+    private String password;
 
     public String getBasePath() {
         return basePath;
@@ -80,5 +82,21 @@ public class SwaggerConnectorConnectorConfigurationCommon {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
