@@ -144,6 +144,6 @@ do_cleanup() {
 }
 
 find_tag() {
-    local $releave_version=$1
+    local release_version=$1
     git tag -l | grep $release_version | tail -n 1
 }
