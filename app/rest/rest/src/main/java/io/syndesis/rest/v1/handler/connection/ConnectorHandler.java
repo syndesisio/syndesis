@@ -71,7 +71,8 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Verifier verifier;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
-                            final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext, final IconDataAccessObject iconDao) {
+                            final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
+                            final IconDataAccessObject iconDao) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -89,7 +90,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Path("/custom")
     public CustomConnectorHandler customConnectorHandler() {
-        return new CustomConnectorHandler(getDataManager(), applicationContext);
+        return new CustomConnectorHandler(getDataManager(), applicationContext, iconDao);
     }
 
     @Override
