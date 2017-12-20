@@ -29,7 +29,7 @@ export interface ApiEndpoint {
 
 export interface ApiRequestProgress {
   percentage: number;
-  bytesLoaded: number;
-  bytesPending: number;
   isComplete: boolean;
+  bytesLoaded?: number;
+  bytesTotal?: number;
 }

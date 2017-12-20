@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { StringMap } from './../platform.models';
 import { ApiResponse, ApiEndpoint, ApiRequestProgress } from './api.models';
 
 @Injectable()
 export abstract class ApiHttpService {
-  //TODO: abstract progressEvent$: Observable<ApiRequestProgress>;
+  abstract uploadProgressEvent$: Observable<ApiRequestProgress>;
 
   abstract getEndpointUrl(endpointKey: string, ...endpointParams: any[]): string;
 
@@ -19,5 +20,5 @@ export abstract class ApiHttpService {
 
   abstract delete<T>(endpoint: string | any[]): Observable<T>;
 
-  //TODO: abstract upload<T>(endpoint: string | any[], body?: any): Observable<T>;
+  abstract upload<T>(endpoint: string | any[], fileList?: FileList, body?: StringMap<any>): Observable<T>;
 }
