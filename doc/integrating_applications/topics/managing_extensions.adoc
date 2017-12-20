@@ -1,0 +1,30 @@
+[id='managing-extensions']
+= Managing extensions
+
+After you upload an extension, you can update or delete it. 
+
+To update an extension:
+
+. Obtain an updated `.jar` file for the extension from the developer.
+. Upload the updated file in the same way you uploaded the original file.
+See <<making-extensions-available>>. 
+. In the details page for the updated extension, determine which integrations
+use the custom step(s) defined in the extension. 
+
+It is up to you to 
+know exactly what is required to update each integration that uses a 
+custom step from the updated extension.  At the very least, you must
+deactivate and republish each integration that uses one of the custom 
+steps. In some cases, you might need to edit the integration to change
+or add configuration details for the custom steps(s). You must communicate
+with the extension developer to understand how to update integrations. 
+
+To delete an extension:
+
+. In the left {prodname} pane, click *Customizations*. 
+. At the top, click the *Extensions* tab. 
+. In the list of extensions, find the entry for the extension you want to
+delete and click *Delete*. 
+
+You cannot delete an extension if an integration is using a custom step
+provided by that extension. 

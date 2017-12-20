@@ -1,0 +1,39 @@
+[id='adding-amq-connection-middle']
+= Adding an AMQ connection as a middle connection
+
+In an integration, to add an AMQ connection between the start and 
+finish connections:
+
+. On the *Choose a Connection* page, click the AMQ connection that you 
+want the integration to use after the start connection and before 
+the finish connection. 
+
+. On the *Choose an Action* page, select one of the following actions: 
++
+* *Publish Messages* to send messages to the JMS destination you specify.
+For details about configuring this action, see <<adding-amq-connection-finish>>.
+* *Request Response Using Messages* to send messages to the JMS destination
+you specify and receive a response. 
+* *Subscribe to Messages* to receive messages from the JMS destination
+you specify. For details about configuring this action, see
+<<adding-amq-connection-start>>.
+
+. Configure the action you selected. To configure 
+the *Request Response Using Messages* action:
++ 
+.. In the *Destination Name* field, enter the name of the queue or topic 
+to send messages to. 
+.. For the *Destination Type*, accept *Queue* or select *Topic*.
+.. In the *Message Selector* field, if you want to receive only responses 
+that satisfy a particular condition, enter a filter expression. 
+.. In the *Named Reply To* field, enter the name of
+a queue or topic. The destination sends its response
+to this queue or topic. 
+.. For the *Delivery Mode*, accept *Non-Persistent* 
+or select *Persistent* to guarantee delivery even if
+a connection fails. 
+.. In the *Response Time Out* field, enter the amount of time that this 
+connection waits for a 
+response message before throwing a runtime exception. 
+
+. Click *Done*. 
