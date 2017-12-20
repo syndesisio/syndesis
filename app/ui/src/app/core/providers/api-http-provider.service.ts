@@ -45,7 +45,10 @@ export class ApiHttpProviderService extends ApiHttpService {
       get: <T>() => this.get<T>(url),
       post: <T>(body: any) => this.post<T>([endpointKey, ...endpointParams], body),
       put: <T>(body: any) => this.put<T>([endpointKey, ...endpointParams], body),
-      delete: <T>() => this.delete<T>(url)
+      delete: <T>() => this.delete<T>(url),
+      upload: <T>(fileList?: FileList, body?: StringMap<any>) => {
+        return this.upload<T>([endpointKey, ...endpointParams], fileList, body);
+      }
     };
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { StringMap } from './../platform.models';
+import { StringMap } from '@syndesis/ui/platform';
 import { ApiResponse, ApiEndpoint, ApiRequestProgress } from './api.models';
 
 @Injectable()
