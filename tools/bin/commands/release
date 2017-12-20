@@ -8,7 +8,7 @@ NEXUS_DEFAULT_STAGING_PROFILE_ID="61015c63f807ce" #This this is the id of the st
 
 REPO_ANNOUNCEMENT_PREFIX="OpenedStagingProfile"
 
-NO_TAG=`notag`
+NO_TAG="notag"
 
 release::description() {
     echo "Perform a release"
@@ -17,6 +17,7 @@ release::description() {
 release::usage() {
     cat - <<EOT
     --dry-run                 Dry run. This will stage and drop a release
+    --release-snaposhots      Indicates that this is a snapshot release
     --release-version         The release version
     --dev-version             The development version
     --profiles                Additional profiles to specify
@@ -38,19 +39,24 @@ EOT
 release::run() {
     source "$(basedir)/commands/build"
     local dry_run=$(hasflag --dry-run)
+    local release_snapshots=$(hasflag --release-snapshots)
     local release_version=$(readopt --release-version)
     local dev_version=$(readopt --dev-version)
     local maven_opts=""
 
-    if [ -z "${release_version}" ]; then
-        echo "Please specify --release-version"
-        exit 1
+    #Validation
+    if [ -z "${release_snapshots}" ]; then
+        if [ -z "${release_version}" ]; then
+            echo "Please specify --release-version"
+            exit 1
+        fi
+
+        if [ -z "${dev_version}" ]; then
+            echo "Please specify --dev-version"
+            exit 1
+        fi
     fi
 
-    if [ -z "${dev_version}" ]; then
-        echo "Please specify --dev-version"
-        exit 1
-    fi
 
     local profiles=$(readopt --profiles)
     if [ -n "${profiles}" ]; then
@@ -71,11 +77,13 @@ release::run() {
     #There is no tag yet, so let's pass $NO_TAG instead.
     trap "do_cleanup \"$repo_id\" \"$NO_TAG\" \"$maven_opts\"" EXIT
 
-    do_release "$release_version" "$dev_version" "$maven_opts"
+    do_release "$release_snapshots" "$release_version" "$dev_version" "$maven_opts"
 
-    #Update the trap with the tag created.
-    local tag=$(find_tag)
-    trap "do_cleanup \"$repo_id\" \"$tag\" \"$maven_opts\"" EXIT
+    if [ -z "${release_snapshots}" ]; then
+        #Update the trap with the tag created.
+        local tag=$(find_tag)
+        trap "do_cleanup \"$repo_id\" \"$tag\" \"$maven_opts\"" EXIT
+    fi
 
     echo "Closing staging repository: $repo_id"
     close_staging_repository "$repo_id" "$maven_opts"
@@ -121,10 +129,19 @@ drop_staging_repository() {
 }
 
 do_release() {
-    local release_version=$1
-    local dev_version=$2
-    local maven_opts=$3
-    local maven_args="-B release:clean release:prepare release:perform -DpushChanges=false -Dtag=$release_version $maven_opts"
+    local release_snapshots=$1
+    local release_version=$2
+    local dev_version=$4
+    local maven_opts=$4
+
+    local maven_args=""
+
+    if [ -n "${release_snapshots}" ]; then
+        maven_args="clean package deploy:deploy $maven_opts"
+    else
+        maven_args="-B release:clean release:prepare release:perform -DpushChanges=false -Dtag=$release_version $maven_opts"
+    fi
+
     call_maven "$maven_args"
 }
 
@@ -144,6 +161,6 @@ do_cleanup() {
 }
 
 find_tag() {
-    local $releave_version=$1
+    local release_version=$1
     git tag -l | grep $release_version | tail -n 1
 }
