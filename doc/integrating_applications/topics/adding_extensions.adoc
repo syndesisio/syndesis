@@ -1,0 +1,16 @@
+[id='adding-extensions']
+= Adding extensions
+
+{prodname} provides a number of bulit-in steps for operating on 
+integration data. If {prodname} does not provide a step that you need,
+a developer can code an extension that defines one or more
+custom steps. The developer gives you a `.jar` file that contains the extension.
+You then upload the extension in {prodname} to make the custom step(s)
+available for use in integrations. The following topics provide details:
+
+* <<making-extensions-available>> 
+* <<managing-extensions>>
+
+include::making_extensions_available.adoc[leveloffset=+1]
+
+include::managing_extensions.adoc[leveloffset=+1]
