@@ -12,6 +12,7 @@ import { NotificationType } from 'patternfly-ng';
 import { Extension } from '../../../model';
 import { ExtensionStore } from '../../../store/extension/extension.store';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import {Observable} from "rxjs/Observable";
 
 interface FileError {
   level: string;
@@ -31,13 +32,16 @@ export class TechExtensionImportComponent implements OnInit {
   importing = false;
   extensionId: string;
   extensionName: string;
+  extension$: Observable<Extension>;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
   constructor(private extensionStore: ExtensionStore,
               private notificationService: NotificationService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute) {
+    this.extension$ = this.extensionStore.resource;
+  }
 
   getGenericError() {
     return {
@@ -71,10 +75,8 @@ export class TechExtensionImportComponent implements OnInit {
 
   ngOnInit() {
     this.extensionId = this.route.snapshot.paramMap.get('id');
-    this.extensionName = this.route.snapshot.paramMap.get('name');
-    if (!this.extensionName) {
-      // safety net
-      this.extensionId = undefined;
+    if (this.extensionId) {
+      this.extensionStore.load(this.extensionId);
     }
     const uploadUrl = this.extensionStore.getUploadUrl(this.extensionId);
     this.uploader = new FileUploader({
