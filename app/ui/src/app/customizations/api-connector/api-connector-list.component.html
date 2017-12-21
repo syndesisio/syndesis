@@ -50,7 +50,7 @@
           <ng-template #actionTemplate
                        let-item="item"
                        let-index="index">
-            <button type="button" class="btn btn-default">Delete</button>
+            <button type="button" [disabled]="item.uses > 0" class="btn btn-default">Delete</button>
           </ng-template>
         </pfng-list>
 
