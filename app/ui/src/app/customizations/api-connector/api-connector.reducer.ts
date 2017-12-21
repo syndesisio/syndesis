@@ -11,7 +11,7 @@ import {
 const initialState: ApiConnectorState = {
   list             : [],
   createRequest    : null,
-  loading          : true,
+  loading          : false,
   loaded           : false,
   hasErrors        : false,
   errors           : []
@@ -19,6 +19,35 @@ const initialState: ApiConnectorState = {
 
 export function apiConnectorReducer(state = initialState, action: any): ApiConnectorState {
   switch (action.type) {
+    case ApiConnectorActions.VALIDATE_SWAGGER: {
+      return {
+        ...state,
+        createRequest: action.payload,
+        loading: true,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE: {
+      return {
+        ...state,
+        createRequest: { ...state.createRequest, ...action.payload },
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.VALIDATE_SWAGGER_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        hasErrors: true,
+        errors: [action.payload]
+      };
+    }
+
     case ApiConnectorActions.FETCH: {
       return {
         ...state,

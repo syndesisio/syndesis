@@ -33,7 +33,7 @@
       'Upload Swagger',
       'Review Swagger Action',
       'Security',
-      'General Connector Info']" [selectedStep]="TEMP_STEP">
+      'General Connector Info']" [selectedStep]="currentActiveStep">
     </syndesis-wizard-progress-bar>
   </section>
 
@@ -41,18 +41,19 @@
     <div class="row row-cards-pf">
       <div class="card-pf">
         <syndesis-api-connector-swagger-upload 
-          *ngIf="TEMP_STEP == 1"
-          (next)="onFetchComplete()">
+          [apiConnectorState]="apiConnectorState$ | async"
+          *ngIf="currentActiveStep == 1"
+          (request)="onValidationRequest($event)">
         </syndesis-api-connector-swagger-upload>
-        <syndesis-api-connector-review *ngIf="TEMP_STEP == 2"
+        <syndesis-api-connector-review *ngIf="currentActiveStep == 2"
           [apiConnectorTemplateName]="'Swagger'"
-          [apiConnectorValidation]="{}"
+          [apiConnectorValidation]="(apiConnectorState$ | async)?.createRequest"
           [showNext]="true"
           (next)="onReviewComplete()">
         </syndesis-api-connector-review>
-        <syndesis-api-connector-auth *ngIf="TEMP_STEP == 3" (next)="onAuthSetup()">
+        <syndesis-api-connector-auth *ngIf="currentActiveStep == 3" (next)="onAuthSetup()">
         </syndesis-api-connector-auth>
-        <syndesis-api-connector-info *ngIf="TEMP_STEP == 4" (update)="onCreateComplete()">
+        <syndesis-api-connector-info *ngIf="currentActiveStep == 4" (update)="onCreateComplete()">
         </syndesis-api-connector-info>
       </div>
     </div>

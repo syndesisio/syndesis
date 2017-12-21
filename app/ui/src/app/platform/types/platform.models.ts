@@ -10,7 +10,7 @@ export interface StringMap<T> {
  * or any other state handling actions that might throw an exception.
  */
 export interface ActionReducerError {
-  errorCode: any;
+  errorCode?: any;
   message: string;
   status?: number;
   statusText?: string;

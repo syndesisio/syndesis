@@ -21,6 +21,7 @@ import { TruncateWordsPipe } from './truncate-words.pipe';
 import { CapitalizePipe } from './capitalize.pipe';
 import { TitleizePipe } from './titleize.pipe';
 import { SlugifyPipe } from './slugify.pipe';
+import { ButtonComponent } from './button.component';
 // TODO: Move these services out to a CoreModule
 import { UserService } from './user.service';
 import { FormFactoryService } from './forms.service';
@@ -42,6 +43,7 @@ import { NavigationService } from './navigation.service';
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
+    ButtonComponent,
     SlugifyPipe,
     ModalComponent,
     WizardProgressBarComponent,
@@ -60,6 +62,7 @@ import { NavigationService } from './navigation.service';
     LoadingComponent,
     CapitalizePipe,
     TitleizePipe,
+    ButtonComponent,
     SlugifyPipe,
     ModalComponent,
     WizardProgressBarComponent,

@@ -102,6 +102,12 @@
   }
 }
 
+input[type="text"] {
+  &.syn-invalid {
+    color: $color-pf-red-200;
+    border-color: $color-pf-red-200;
+  }
+}
 
 // Legacy styles. To be reviewed at some point and 
 // replaced by the above styling whereas possible

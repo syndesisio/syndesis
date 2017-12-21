@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload-base/src';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';

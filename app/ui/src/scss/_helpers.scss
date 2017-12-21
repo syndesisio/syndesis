@@ -1,0 +1,29 @@
+@import 'syndesis-sass';
+
+@each $color in map-keys($colors) {
+  .syn-color--#{$color} {
+    color: color($color);
+  }
+
+  .syn-bg--#{$color} {
+    background-color: color($color);
+  }
+
+  .syn-border--#{$color} {
+    border-color: color($color);
+  }
+
+  @each $tone in map-keys(map-get($colors, nth($color, 1))) { 
+    .syn-color--#{$color}-#{$tone} {
+      color: color($color, $tone);
+    }
+
+    .syn-bg--#{$color}-#{$tone} {
+      background-color: color($color, $tone);
+    }
+    
+    .syn-border--#{$color}-#{$tone} {
+      border-color: color($color, $tone);
+    }
+  }
+}

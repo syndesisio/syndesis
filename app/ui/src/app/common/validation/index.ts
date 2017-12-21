@@ -1,12 +1,14 @@
 import { Type } from '@angular/core';
 
 import { RequiredIfValidatorDirective, requiredIfValidator } from './required-if-validator.directive';
+import { ValidationErrorComponent } from './validation-error.component';
 
 export const SYNDESYS_VALIDATION_DIRECTIVES: Type<any>[] = [
-  RequiredIfValidatorDirective
+  RequiredIfValidatorDirective,
+  ValidationErrorComponent
 ];
 
 export {
-  RequiredIfValidatorDirective, requiredIfValidator,
-  // ... Place other validator and valdiator directives grouped by type below
+  requiredIfValidator,
+  // ... Place other validator functions grouped by type below
 };
