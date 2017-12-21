@@ -34,6 +34,7 @@
 
       <div class="syn-form-row syn-form-row--fetch-file" [class.syn-visuallyhidden]="!fetchUrlOption.checked">
         <input class="syn-form-row__input" type="text"
+          [class.syn-invalid]="validationError"
           name="swaggerFileUrl"  
           [(ngModel)]="swaggerFileUrl"
           [requiredIf]="fetchUrlOption.checked"
@@ -43,7 +44,7 @@
         </em>
       </div>
     </fieldset>
-    
+
     <fieldset class="syn-form__buttons">
       <syndesis-button type="submit"
         [loading]="apiConnectorState.loading"

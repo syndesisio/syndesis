@@ -105,7 +105,7 @@
 input[type="text"] {
   &.syn-invalid {
     color: $color-pf-red-200;
-    border-color: $color-pf-red-200;
+    border: 1px solid $color-pf-red-100;
   }
 }
 
