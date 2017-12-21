@@ -1,11 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { ApiConnector, ApiConnectorData } from './api-connector.models';
+import { ApiConnectorData } from './api-connector.models';
 import { ApiConnectorStore } from './api-connector.store';
-
-import { Restangular } from 'ngx-restangular';
+import { ApiConnectorService } from '@syndesis/ui/customizations/api-connector/api-connector.service';
 
 
 @Component({
@@ -18,10 +17,8 @@ export class ApiConnectorDetailComponent implements OnInit {
   loading$: Observable<boolean>;
 
   constructor(private apiConnectorStore: ApiConnectorStore,
-              private router: Router,
-              private route: ActivatedRoute,
-              @Inject(Restangular) public Restangular) {
-
+              private apiConnectorService: ApiConnectorService,
+              private route: ActivatedRoute) {
     //this.loading$ = this.apiConnectorStore.loading;
     //this.apiConnectorData$ = this.apiConnectorStore.resource;
   }
@@ -30,7 +27,6 @@ export class ApiConnectorDetailComponent implements OnInit {
     this.route.paramMap
       .first(params => params.has('id'))
       .map(params => params.get('id'))
-      //.subscribe(id => this.apiConnectorStore.load(id));
-      .subscribe(id => this.Restangular.one('connectors/').get(id));
+      .subscribe(id => this.apiConnectorService.getApiConnector(id));
   }
 }
