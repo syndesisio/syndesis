@@ -1867,7 +1867,7 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Get an Object from AWS S3",
+                "name": "Retrieve an object from an Amazon S3 bucket",
                 "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
                 "properties": {
                   "deleteAfterRead": {
@@ -1901,8 +1901,8 @@
           }
         },
         {
-          "name": "Poll an AWS S3 Bucket",
-          "description": "Polling an AWS S3 Bucket",
+          "name": "Poll an Amazon S3 Bucket",
+          "description": "Poll an Amazon S3 Bucket",
           "id": "io.syndesis:aws-s3-polling-bucket-connector:latest",
           "pattern": "To",
           "actionType": "connector",
@@ -1917,8 +1917,8 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Polling an AWS S3 Bucket",
-                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "name": "Poll an Amazon S3 Bucket",
+                "description": "Set if you need to delete the file once it has been downloaded from S3, the polling interval, the file prefix to use and number of objects you want to retrieve on each poll",
                 "properties": {
                   "deleteAfterRead": {
                     "kind": "parameter",
