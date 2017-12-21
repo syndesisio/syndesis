@@ -1852,7 +1852,7 @@
         },
         {
           "name": "Get Object",
-          "description": "Get an object from an AWS S3 Bucket",
+          "description": "Retrieve an object from an Amazon S3 bucket",
           "id": "io.syndesis:aws-s3-get-object-connector:latest",
           "pattern": "To",
           "actionType": "connector",
