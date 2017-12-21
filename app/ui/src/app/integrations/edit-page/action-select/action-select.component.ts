@@ -103,17 +103,14 @@ export class IntegrationsSelectActionComponent extends FlowPage
   }
 
   ngOnInit() {
-    // set a local var for current step
     this.currentStep = +this.route.snapshot.paramMap.get('position');
 
-    // if it's a start step
     if (this.currentStep === this.currentFlow.getFirstPosition()) {
       this.actions = this.connector
         .filter(connector => connector !== undefined)
         .switchMap(connector => [connector.actions.filter(action => action.pattern === 'From')]);
     }
 
-    // if it's anything other than a start step
     if (this.currentStep > this.currentFlow.getFirstPosition()
       && this.currentStep <= this.currentFlow.getLastPosition()) {
       this.actions = this.connector
