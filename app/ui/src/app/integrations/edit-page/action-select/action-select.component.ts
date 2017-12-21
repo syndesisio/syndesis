@@ -104,7 +104,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
 
   ngOnInit() {
     // set a local var for current step
-    this.currentStep = +this.route.snapshot.paramMap.get('position')
+    this.currentStep = +this.route.snapshot.paramMap.get('position');
 
     // if it's a start step
     if (this.currentStep === this.currentFlow.getFirstPosition()) {
@@ -128,13 +128,10 @@ export class IntegrationsSelectActionComponent extends FlowPage
       })
     );
 
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('position')
-      .map((position: string) => {
-        this.position = Number.parseInt(position);
-        this.loadActions();
-      })
-      .subscribe();
+    this.route.paramMap.subscribe(params => {
+      this.position = +params.get('position');
+      this.loadActions();
+    });
 
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
