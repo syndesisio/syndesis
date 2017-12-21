@@ -125,13 +125,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         DeploymentConfig dc = openShiftClient.deploymentConfigs().withName(sName).get();
 
         int allReplicas = 0;
-        int readyReplicas = 0;
+        int availableReplicas = 0;
         if (dc != null && dc.getStatus() != null) {
             DeploymentConfigStatus status = dc.getStatus();
             allReplicas = nullSafe(status.getReplicas());
-            readyReplicas = nullSafe(status.getReadyReplicas());
+            availableReplicas = nullSafe(status.getAvailableReplicas());
         }
-        return desiredReplicas == allReplicas && desiredReplicas == readyReplicas;
+        return desiredReplicas == allReplicas && desiredReplicas == availableReplicas;
     }
 
     @Override
