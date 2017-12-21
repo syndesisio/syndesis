@@ -1777,7 +1777,7 @@
     "kind": "connector",
     "data": {
       "id": "aws-s3",
-      "name": "AWS-S3",
+      "name": "Amazon S3",
       "description": "Direct AWS S3",
       "icon": "fa-puzzle-piece",
       "configuredProperties": {},
