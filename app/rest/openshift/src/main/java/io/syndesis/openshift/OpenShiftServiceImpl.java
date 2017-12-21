@@ -243,7 +243,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
               .withType("Source")
               .withNewSourceStrategy()
                 .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).withNamespace(imageStreamNamespace).endFrom()
-                .withIncremental(true)
+                .withIncremental(false)
                 // TODO: This environment setup needs to be externalized into application.properties
                 // https://github.com/syndesisio/syndesis-rest/issues/682
                 .withEnv(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null))
