@@ -1831,7 +1831,7 @@
       "actions": [
         {
           "name": "Copy Object",
-          "description": "Copy an object on AWS S3",
+          "description": "Create a copy of an object in an Amazon S3 bucket",
           "id": "io.syndesis:aws-s3-copy-object-connector:latest",
           "pattern": "To",
           "actionType": "connector",
