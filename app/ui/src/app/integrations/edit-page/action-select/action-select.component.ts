@@ -102,30 +102,15 @@ export class IntegrationsSelectActionComponent extends FlowPage
     }
   }
 
-  // filters out actions that do not use the 'From' pattern
-  connectorStartActionsFilter(connector: Connector): Connector {
-    const filteredConnectorActions = connector.actions.filter(action => action.pattern === 'From');
-    connector.actions = filteredConnectorActions;
-    return connector;
-  }
-
-  // filters out actions that do not use the 'To' pattern
-  connectorFinishActionsFilter(connector: Connector): Connector {
-    const filteredConnectorActions = connector.actions.filter(action => action.pattern === 'To');
-    connector.actions = filteredConnectorActions;
-    return connector;
-  }
-
   ngOnInit() {
     // set a local var for current step
-    this.route.params.pluck<Params, string>('position').subscribe(value => this.currentStep = parseInt(value));
+    this.currentStep = +this.route.snapshot.paramMap.get('position')
 
     // if it's a start step
     if (this.currentStep === this.currentFlow.getFirstPosition()) {
       this.actions = this.connector
         .filter(connector => connector !== undefined)
-        .map(this.connectorStartActionsFilter)
-        .map(connector => connector.actions);
+        .switchMap(connector => [connector.actions.filter(action => action.pattern === 'From')]);
     }
 
     // if it's anything other than a start step
@@ -133,8 +118,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
       && this.currentStep <= this.currentFlow.getLastPosition()) {
       this.actions = this.connector
         .filter(connector => connector !== undefined)
-        .map(this.connectorFinishActionsFilter)
-        .map(connector => connector.actions);
+        .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To')]);
     }
 
     this.actionsSubscription = this.actions.subscribe(_ =>
