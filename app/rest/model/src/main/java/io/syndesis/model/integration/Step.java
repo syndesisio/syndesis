@@ -18,6 +18,7 @@ package io.syndesis.model.integration;
 import java.io.Serializable;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfiguredProperties;
@@ -28,6 +29,7 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
 
 @JsonDeserialize(using = StepDeserializer.class)
+@JsonIgnoreProperties(value = {"dependencies"}, allowGetters = true)
 public interface Step extends WithId<Step>, WithConfiguredProperties, WithDependencies, Serializable {
 
     @Override
