@@ -1818,7 +1818,7 @@
         },
         "bucketNameOrArn": {
           "kind": "path",
-          "displayName": "Bucket Name Or Arn",
+          "displayName": "Bucket Name Or Amazon Resource Name",
           "group": "common",
           "required": true,
           "type": "string",
