@@ -30,12 +30,17 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     }
 
     case ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE: {
+      const { validationDetails, errors } = action.payload;
       return {
         ...state,
-        createRequest: { ...state.createRequest, ...action.payload },
+        createRequest: {
+          ...state.createRequest,
+          ...action.payload,
+          validationDetails: validationDetails
+        },
         loading: false,
         hasErrors: false,
-        errors: []
+        errors: errors
       };
     }
 
@@ -45,6 +50,33 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
         loading: false,
         hasErrors: true,
         errors: [action.payload]
+      };
+    }
+
+    case ApiConnectorActions.CREATE_CANCEL: {
+      return {
+        ...state,
+        createRequest: undefined,
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.UPDATE_AUTH_SETTINGS: {
+      const configuredProperties = {
+        ...state.createRequest.configuredProperties,
+        ...action.payload
+      };
+      return {
+        ...state,
+        createRequest: {
+          ...state.createRequest,
+          configuredProperties,
+        },
+        loading: false,
+        hasErrors: false,
+        errors: []
       };
     }
 

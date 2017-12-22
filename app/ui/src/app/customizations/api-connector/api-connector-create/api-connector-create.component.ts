@@ -9,8 +9,16 @@ import {
   ApiConnectorStore,
   ApiConnectorActions,
   getApiConnectorState,
-  CustomSwaggerConnectorRequest
+  CustomSwaggerConnectorRequest,
+  CustomApiConnectorAuthSettings
 } from '@syndesis/ui/customizations/api-connector';
+
+enum WizardSteps {
+  UploadSwagger = 1,
+  ReviewApiConnector = 2,
+  UpdateAuthSettings = 3,
+  SubmitRequest = 4
+}
 
 @Component({
   selector: 'syndesis-api-connector-create',
@@ -27,7 +35,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalService: ModalService,
-    private apiConnectorStore: Store<ApiConnectorStore>,
+    private apiConnectorStore: Store<ApiConnectorStore>
   ) { }
 
   ngOnInit() {
@@ -35,9 +43,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.apiConnectorState$ = this.apiConnectorStore.select(getApiConnectorState);
     // Once the request validation results are yielded for the 1st time, we move user to step 2
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
-      .filter(request => !!request)
-      .first(request => !!request.validationDetails)
-      .subscribe(() => this.currentActiveStep = 2);
+      .first(request => !!request && !!request.actionsSummary)
+      .subscribe(() => this.currentActiveStep = WizardSteps.ReviewApiConnector);
   }
 
   showCancelModal(): void {
@@ -57,11 +64,12 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   }
 
   onReviewComplete(): void {
-    this.currentActiveStep = 3;
+    this.currentActiveStep = WizardSteps.UpdateAuthSettings;
   }
 
-  onAuthSetup(): void {
-    this.currentActiveStep = 4;
+  onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {
+    this.apiConnectorStore.dispatch(ApiConnectorActions.updateAuthSettings(authSettings));
+    this.currentActiveStep = WizardSteps.SubmitRequest;
   }
 
   onCreateComplete(event): void {
@@ -70,5 +78,6 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelModalId);
+    this.apiConnectorStore.dispatch(ApiConnectorActions.createCancel());
   }
 }

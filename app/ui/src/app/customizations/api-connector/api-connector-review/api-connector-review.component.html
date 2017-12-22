@@ -3,46 +3,50 @@
     Review {{ apiConnectorTemplateName }} Actions
   </h2>
 </div>
-<div class="card-pf-body" *ngIf="apiConnectorValidation; else apiConnectorValidationFallback">
-  <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.actionsSummary as actionsSummary">
+<div class="card-pf-body" *ngIf="validation; else validationFallback">
+  <div class="connector-actions" *ngIf="validation?.actionsSummary as actionsSummary">
     <h5 class="connector-actions__header">
       Imported
     </h5>
     <ol class="connector-actions__operations">
       <li><strong>{{ actionsSummary.totalActions }}</strong> operations</li>
       <ol class="connector-actions__operations">
-        <li *ngFor="let actionTagCount of actionSummary.actionTagCount">
-          <strong>{{ actionTagCount.count }}</strong> dealing with {{ actionTagCount.tag }}
+        <li *ngFor="let importedAction of importedActions">
+          <strong>{{ importedAction.count }}</strong> dealing with {{ importedAction.tag }}
         </li>
       </ol>
     </ol>
   </div>
 
-  <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.errors as errors">
-    <h5 class="connector-actions__header">
+  <div class="connector-actions" *ngIf="validation?.errors as errors">
+    <h5 class="connector-actions__header" *ngIf="errors.length">
       Errors
-      <span class="connector-actions__label connector-actions__label--error">1</span>
+      <span class="connector-actions__label connector-actions__label--error">
+        {{ errors.length }}
+      </span>
     </h5>
-    <ol>
-      <li *ngFor="let error of errors">{{ error | json }}</li>
+    <ol *ngIf="errors.length">
+      <li *ngFor="let error of errors">{{ error.message }}</li>
     </ol>
   </div>
 
-  <div class="connector-actions" *ngIf="apiConnectorValidation.validationDetails?.warnings as warnings">
-    <h5 class="connector-actions__header">
+  <div class="connector-actions" *ngIf="validation?.warnings as warnings">
+    <h5 class="connector-actions__header" *ngIf="warnings.length">
       Warnings
-      <span class="connector-actions__label connector-actions__label--warning">2</span>
+      <span class="connector-actions__label connector-actions__label--warning">
+          {{ warnings.length }}
+      </span>
     </h5>
-    <ol>
-      <li *ngFor="let warning of warnings">{{ warning | json }}</li>
+    <ol *ngIf="warnings.length">
+      <li *ngFor="let warning of warnings">{{ warning.message }}</li>
     </ol>
   </div>
 
-  <button *ngIf="showNext" (click)="next.emit()" type="button" class="connector-form__submit btn btn-primary">
+  <button *ngIf="showNextButton" (click)="reviewComplete.emit()" type="button" class="connector-form__submit btn btn-primary">
     Next
   </button>
 
 </div>
-<ng-template #apiConnectorValidationFallback>
+<ng-template #validationFallback>
   <h5 class="connector-fallback">No connector details are currently available.</h5>
 </ng-template>

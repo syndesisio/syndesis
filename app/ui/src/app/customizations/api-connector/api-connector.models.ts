@@ -6,15 +6,15 @@ export interface ApiConnector extends BaseEntity {
   data: ApiConnectorData;
 }
 
-export interface ApiConnectorData extends ApiConnectorValidation {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  fileIcon?: File;
-  properties: ApiConnectorProperties;
-  connectorProperties: any;
-}
+// export interface ApiConnectorData extends ApiConnectorValidation {
+//   id: string;
+//   name: string;
+//   description: string;
+//   icon: string;
+//   fileIcon?: File;
+//   properties: ApiConnectorProperties;
+//   connectorProperties: any;
+// }
 
 export type ApiConnectors = Array<ApiConnectorData>;
 
@@ -37,7 +37,7 @@ export interface ApiConnectorProperties {
   };
 }
 
-export interface ApiConnectorData extends ApiConnectorValidation, CustomSwaggerConnectorRequest {
+export interface ApiConnectorData extends ApiConnectorValidation {
   id: string;
   name: string;
   description: string;
@@ -57,28 +57,33 @@ export interface ApiConnector extends BaseEntity {
 //      and will eventually replace the ones above
 
 export interface ApiConnectorValidationError {
-  error: string;
+  error?: string;
   message: string;
-  property: string;
+  property?: string;
 }
 
 export interface ApiConnectorValidation {
-  validationDetails?: {
-    actionsSummary?: {
-      actionCountByTags: StringMap<number>;
-      totalActions: number;
-    };
-    warnings: Array<{ key: string; longdesc: string; }>;
-    errors: Array<{ key: string; longdesc: string; }>;
+  actionsSummary?: {
+    actionCountByTags: StringMap<number>;
+    totalActions: number;
   };
-  errors?: Array<ApiConnectorValidationError>; // Rethink duplication of error properties
+  name?: string;
+  description?: string;
+  warnings?: Array<{ key: string; longdesc: string; }>;
+  errors?: Array<ApiConnectorValidationError>;
 }
 
 export interface CustomApiConnectorRequest {
   connectorTemplateId: string;
   name?: string;
   description?: string;
-  icon?: string;
+  icon?: File|string;
+}
+
+export interface CustomApiConnectorAuthSettings {
+  authenticationType?: string;
+  authorizationEndpoint?: string;
+  tokenEndpoint?: string;
 }
 
 export interface CustomSwaggerConnectorRequest
@@ -87,7 +92,19 @@ export interface CustomSwaggerConnectorRequest
     specification?: string;
     host?: string;
     basePath?: string;
-    authentication?: any;
+    // Below props mirror the CustomApiConnectorAuthSettings schema
+    authenticationType?: string;
+    authorizationEndpoint?: string;
+    tokenEndpoint?: string;
+  };
+  properties?: {
+    authenticationType?: {
+      defaultValue: string;
+      enum: Array<{ label: string; value: string; }>;
+    };
+    authorizationEndpoint?: {
+      defaultValue: string;
+    }
   };
   file?: File;
 }

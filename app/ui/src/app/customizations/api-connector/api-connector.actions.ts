@@ -5,19 +5,21 @@ import {
   ApiConnectors,
   CustomSwaggerConnectorRequest,
   ApiConnectorValidation,
-  ApiConnectorData
+  ApiConnectorData,
+  CustomApiConnectorAuthSettings
 } from './api-connector.models';
 
 export class ApiConnectorActions {
-  static FETCH                        = '[API Connectors] Fetch connectors request';
-  static FETCH_COMPLETE               = '[API Connectors] Fetch operation complete';
-  static FETCH_FAIL                   = '[API Connectors] Fetch operation failed';
-  static VALIDATE_SWAGGER             = '[API Connectors] Swagger validation request';
-  static VALIDATE_SWAGGER_COMPLETE    = '[API Connectors] Swagger validation complete';
-  static VALIDATE_SWAGGER_FAIL        = '[API Connectors] Swagger validation failed';
-  static CREATE                       = '[API Connectors] Create custom connector request';
-  static CREATE_COMPLETE              = '[API Connectors] Create custom connector complete';
-  static CREATE_CANCEL                = '[API Connectors] Create custom connector cancelled';
+  static FETCH = '[API Connectors] Fetch connectors request';
+  static FETCH_COMPLETE = '[API Connectors] Fetch operation complete';
+  static FETCH_FAIL = '[API Connectors] Fetch operation failed';
+  static VALIDATE_SWAGGER = '[API Connectors] Swagger validation request';
+  static VALIDATE_SWAGGER_COMPLETE = '[API Connectors] Swagger validation complete';
+  static VALIDATE_SWAGGER_FAIL = '[API Connectors] Swagger validation failed';
+  static UPDATE_AUTH_SETTINGS = '[API Connectors] Update Api Connector auth settings';
+  static CREATE = '[API Connectors] Create custom connector request';
+  static CREATE_COMPLETE = '[API Connectors] Create custom connector complete';
+  static CREATE_CANCEL = '[API Connectors] Create custom connector cancelled';
 
   static fetch() {
     return new ApiConnectorFetch();
@@ -37,6 +39,10 @@ export class ApiConnectorActions {
 
   static validateSwaggerFail(payload: ActionReducerError) {
     return new ApiConnectorValidateSwaggerFail(payload);
+  }
+
+  static updateAuthSettings(payload: CustomApiConnectorAuthSettings) {
+    return new ApiConnectorUpdateAuthSettings(payload);
   }
 
   static create(payload: ApiConnectorData) {
@@ -86,6 +92,12 @@ export class ApiConnectorValidateSwaggerFail implements Action {
   constructor(public payload: ActionReducerError) { }
 }
 
+export class ApiConnectorUpdateAuthSettings implements Action {
+  readonly type = ApiConnectorActions.UPDATE_AUTH_SETTINGS;
+
+  constructor(public payload: CustomApiConnectorAuthSettings) { }
+}
+
 export class ApiConnectorCreate implements Action {
   readonly type = ApiConnectorActions.CREATE;
 
@@ -93,7 +105,7 @@ export class ApiConnectorCreate implements Action {
 }
 
 export class ApiConnectorCreateComplete implements Action {
-  readonly type = ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE;
+  readonly type = ApiConnectorActions.CREATE_COMPLETE;
 
   constructor(public payload: any) { }  // TODO: Review payload type
 }

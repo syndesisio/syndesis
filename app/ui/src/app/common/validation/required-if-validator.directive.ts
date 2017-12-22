@@ -1,11 +1,7 @@
 import { Directive, Input } from '@angular/core';
 import { ValidatorFn, AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
 
-export function requiredIfValidator(isRequired: boolean): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} => {
-    return isRequired && !control.value ? {'requiredIfChecked': true } : null;
-  };
-}
+import { CustomValidators } from '@syndesis/ui/platform';
 
 @Directive({
   selector: '[requiredIf]',
@@ -19,6 +15,6 @@ export class RequiredIfValidatorDirective implements Validator {
   @Input() requiredIf: boolean;
 
   validate(control: AbstractControl): { [key: string]: any } {
-    return this.requiredIf ? requiredIfValidator(this.requiredIf)(control) : null;
+    return this.requiredIf ? CustomValidators.requiredIfValidator(this.requiredIf)(control) : null;
   }
 }

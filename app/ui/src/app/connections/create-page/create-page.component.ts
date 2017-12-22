@@ -61,7 +61,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     }
   }
 
-  showNext() {
+  showNextButton() {
     const page = this.getCurrentPage();
     switch (page) {
       case 'connection-basics':
