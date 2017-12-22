@@ -24,11 +24,15 @@ might look like this:
 . In {prodname}, in the left pane, click *Settings*. 
 . Look for the name of the API you want to connect to and click its 
 *Register* button to display its client ID and client secret fields. 
-. In another browser window, go the URL for specifying client settings
-for access to the API you want to connect to. The API service should
-provide this URL. 
-. Follow the prompts there to obtain the API client ID and API client secret
-that {prodname} will use to access the API.  
-. Paste the API client ID and the API client secret into their
+
+. In another browser window, you must register {prodname} as an OAuth
+client of the API you want to connect to. The exact steps for doing this
+vary for each API service. Typically, the API service provides an OAuth
+custom application setting page. Go to that page. 
+
+. On that page, 
+provide the {prodname} callback URL and obtain the API service's
+client ID and client secret that {prodname} will use to access the API.  
+. Paste the client ID and the client secret into their
 respective fields in the {prodname} *Settings* page. 
 . Click *Save*. 

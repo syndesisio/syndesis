@@ -1,7 +1,12 @@
 [id='connecting-to-amq']
 = Connecting to AMQ
 
-Add intro. 
+In an integration, to connect to a JMS broker, you create an AMQ
+connection. You then add that AMQ connection to an integration. 
+For details, see:
+
+* <<create-amq-connection>> 
+* <<adding-amq-connections>>
 
 include::create_amq_connection.adoc[leveloffset=+1]
 

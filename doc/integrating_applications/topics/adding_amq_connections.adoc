@@ -1,4 +1,25 @@
 [id='adding-amq-connections']
 = Adding an AMQ connection to an integration
 
-TBA
+You must create an AMQ connection before you can add it to an
+integration. If you did not already create an AMQ connection, 
+see <<create-amq-connection>>. 
+
+After you add an AMQ connection to an integration, you might need to
+specify a schema for the data that you plan to send to a JMS broker
+or receive from a JMS broker. To do this, see <<add-describe-data-step>>. 
+
+The procedure for adding an AMQ connection to an integration varies
+according to whether you are adding an AMQ connection as the
+start connection, the finish connection, or a middle connection.
+See the following topics:
+
+* <<adding-amq-connection-start>>
+* <<adding-amq-connection-finish>>
+* <<adding-amq-connection-middle>>
+
+include::adding_amq_connection_start.adoc[leveloffset=+1]
+
+include::adding_amq_connection_finish.adoc[leveloffset=+1]
+
+include::adding_amq_connection_middle.adoc[leveloffset=+1]
