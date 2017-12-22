@@ -1,5 +1,5 @@
 import { Injector, Injectable } from '@angular/core';
-import { Http, Response, ResponseContentType } from '@angular/http';
+import { Http, Response, ResponseContentType, URLSearchParams } from '@angular/http';
 import { Restangular } from 'ngx-restangular';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
@@ -73,13 +73,17 @@ export class IntegrationSupportService {
     return this.http.get(url);
   }
 
-  exportIntegration(id: string): Observable<Response> {
-    const url =
-      this.config.getSettings().apiEndpoint +
-      '/integrations/' +
-      id +
-      '/export.zip';
-    return this.http.get(url, { responseType: ResponseContentType.Blob });
+  exportIntegration(...ids: string[]): Observable<Response> {
+    const params = new URLSearchParams();
+    for ( const id of ids ) {
+      params.append('id', id);
+    }
+
+    const url = this.service.one('export.zip').getRestangularUrl();
+    return this.http.get(url, {
+      responseType: ResponseContentType.Blob,
+      params: params
+    });
   }
 
   importIntegrationURL(): string {

@@ -127,38 +127,7 @@ public class IntegrationHandler extends BaseHandler
         return integration;
     }
 
-
-    @GET
-    @Path("/{id}/export.zip")
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput export(@NotNull @PathParam("id") @ApiParam(required = true) String id) throws IOException {
-        ArrayList<ModelData<?>> models = new ArrayList<>();
-
-        Integration integration = this.get(id);
-        models.add(new ModelData<Integration>(Kind.Integration, integration));
-
-        for (Step step : integration.getSteps()) {
-            Optional<Connection> c = step.getConnection();
-            if( c.isPresent() ) {
-                Connection connection = c.get();
-                models.add(new ModelData<Connection>(Kind.Connection, connection));
-                Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
-                if( connector != null ) {
-                    models.add(new ModelData<Connector>(Kind.Connector, connector));
-                }
-            }
-        }
-
-        return out -> {
-            try (ZipOutputStream tos = new ZipOutputStream(out) ) {
-                ModelExport exportObject = ModelExport.of(Schema.VERSION, models);
-                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.mapper().writeValueAsBytes(exportObject));
-                // Eventually we might need to add things like tech extensions too..
-            }
-        };
-    }
-
-    private void addEntry(ZipOutputStream os, String path, byte[] content) throws IOException {
+    public static void addEntry(ZipOutputStream os, String path, byte[] content) throws IOException {
         ZipEntry entry = new ZipEntry(path);
         entry.setSize(content.length);
         os.putNextEntry(entry);

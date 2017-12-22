@@ -317,6 +317,10 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
 
     private Collection<Dependency> collectDependencies(Integration integration) {
+        return collectDependencies(dataManager, integration);
+    }
+
+    public static Collection<Dependency> collectDependencies(DataManager dataManager, Integration integration) {
         List<Dependency> dependencies = new ArrayList<>();
 
         for (Step step : integration.getSteps()) {
