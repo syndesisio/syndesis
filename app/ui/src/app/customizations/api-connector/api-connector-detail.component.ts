@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 import { ApiConnectorData } from './api-connector.models';
 import { ApiConnectorStore } from './api-connector.store';
@@ -13,20 +12,23 @@ import { ApiConnectorService } from '@syndesis/ui/customizations/api-connector/a
   styleUrls: ['api-connector-detail.component.scss']
 })
 export class ApiConnectorDetailComponent implements OnInit {
-  apiConnectorData$: Observable<ApiConnectorData>;
-  loading$: Observable<boolean>;
+  apiConnector: ApiConnectorData;
+  loading: boolean;
 
   constructor(private apiConnectorStore: ApiConnectorStore,
               private apiConnectorService: ApiConnectorService,
               private route: ActivatedRoute) {
-    //this.loading$ = this.apiConnectorStore.loading;
-    //this.apiConnectorData$ = this.apiConnectorStore.resource;
+    this.loading = true;
   }
 
   ngOnInit() {
-    this.route.paramMap
-      .first(params => params.has('id'))
-      .map(params => params.get('id'))
-      .subscribe(id => this.apiConnectorService.getApiConnector(id));
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if(id) {
+      this.apiConnectorService.getApiConnector(id).subscribe(apiConnectorData => {
+        this.apiConnector = apiConnectorData;
+        this.loading = false;
+      });
+    }
   }
 }
