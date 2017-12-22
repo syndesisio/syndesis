@@ -18,6 +18,7 @@ package io.syndesis.model.action;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.integration.support.Strings;
 import io.syndesis.model.Dependency;
@@ -28,6 +29,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
 @SuppressWarnings("immutables")
+@JsonIgnoreProperties(value = {"dependencies"}, allowGetters = true)
 public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction>, WithDependencies {
 
     @Override

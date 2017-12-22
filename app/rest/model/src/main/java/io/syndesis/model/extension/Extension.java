@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
@@ -38,6 +39,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
 @JsonPropertyOrder({ "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
+@JsonIgnoreProperties(value = {"dependencies"}, allowGetters = true)
 @SuppressWarnings("immutables")
 public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, Serializable {
 
