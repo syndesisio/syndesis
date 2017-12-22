@@ -15,18 +15,18 @@
  */
 package io.syndesis.connector.generator;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
-
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class ConnectorGenerator {
 
@@ -55,7 +55,6 @@ public abstract class ConnectorGenerator {
             .name(name)//
             .description(description)//
             .icon(connectorSettings.getIcon())//
-            .properties(connectorTemplate.getConnectorProperties())//
             .configuredProperties(configuredProperties)//
             .connectorGroup(connectorGroup)//
             .connectorGroupId(connectorGroup.map(ConnectorGroup::getId).orElse(Optional.empty()))//

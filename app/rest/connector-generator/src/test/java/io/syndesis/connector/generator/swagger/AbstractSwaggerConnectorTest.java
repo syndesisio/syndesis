@@ -17,16 +17,16 @@ package io.syndesis.connector.generator.swagger;
 
 import java.util.List;
 
+import io.syndesis.core.Json;
+import io.syndesis.model.connection.ConnectorTemplate;
+
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
-import io.syndesis.core.Json;
-import io.syndesis.model.connection.ConnectorTemplate;
-
-abstract class SwaggerConnectorGeneratorBaseTest {
+abstract class AbstractSwaggerConnectorTest {
 
     /* default */ static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
 
@@ -37,7 +37,7 @@ abstract class SwaggerConnectorGeneratorBaseTest {
             .build();
 
         final List<ConnectorTemplate> templates = JsonPath.using(configuration)
-            .parse(SwaggerConnectorGeneratorBaseTest.class.getResourceAsStream("/io/syndesis/dao/deployment.json"))
+            .parse(AbstractSwaggerConnectorTest.class.getResourceAsStream("/io/syndesis/dao/deployment.json"))
             .read("$..[?(@['id'] == 'swagger-connector-template')]", new TypeRef<List<ConnectorTemplate>>() {
                 // type token pattern
             });

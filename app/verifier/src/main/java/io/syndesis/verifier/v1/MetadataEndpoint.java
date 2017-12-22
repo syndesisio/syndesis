@@ -15,9 +15,12 @@
  */
 package io.syndesis.verifier.v1;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.syndesis.verifier.v1.metadata.MetadataAdapter;
@@ -34,6 +37,9 @@ class MetadataEndpoint {
 
     private final String connectorId;
 
+    private static final Set<String> CONNECTORS_WITH_DIFFERENT_METADATA_PER_ACTION =
+            new HashSet<>(Arrays.asList(new String[] {"sql"}));
+
     MetadataEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
         this.connectorId = connectorId;
         this.adapter = adapter;
@@ -49,9 +55,8 @@ class MetadataEndpoint {
             camel.start();
 
             try {
-                //TODO Kurt
                 String componentId = connectorId;
-                if ("sql".equals(connectorId)) {
+                if (CONNECTORS_WITH_DIFFERENT_METADATA_PER_ACTION.contains(connectorId)) {
                     componentId = actionId;
                 }
                 final MetaDataExtension metadataExtension = camel.getComponent(componentId, true, false)

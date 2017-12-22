@@ -1568,6 +1568,22 @@
           "secret": false,
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token"
+        },
+        "oauthScopes": {
+          "kind": "property",
+          "displayName": "OAuth Scopes",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-scope"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "URL to fetch the OAuth Access token"
         }
       },
       "connectorProperties": {
@@ -1695,19 +1711,21 @@
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token"
         },
-        "operationId": {
+        "oauthScopes": {
           "kind": "property",
-          "displayName": "Operation ID",
+          "displayName": "OAuth Scopes",
           "group": "producer",
           "label": "producer",
           "required": false,
-          "type": "hidden",
+          "type": "string",
           "javaType": "java.lang.String",
-          "tags": [],
+          "tags": [
+            "oauth-scope"
+          ],
           "deprecated": false,
           "secret": false,
-          "componentProperty": false,
-          "description": "ID of operation to invoke"
+          "componentProperty": true,
+          "description": "URL to fetch the OAuth Access token"
         },
         "specification": {
           "kind": "property",
@@ -1725,6 +1743,32 @@
           "secret": false,
           "componentProperty": true,
           "description": "Swagger specification of the service"
+        },
+        "username": {
+          "kind": "property",
+          "displayName": "Username",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Username to authenticate with"
+        },
+        "password": {
+          "kind": "property",
+          "displayName": "Password",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "Password to authenticate with"
         }
       }
     }
@@ -1733,7 +1777,7 @@
     "kind": "connector",
     "data": {
       "id": "aws-s3",
-      "name": "AWS-S3",
+      "name": "Amazon S3",
       "description": "Direct AWS S3",
       "icon": "fa-puzzle-piece",
       "configuredProperties": {},
@@ -1774,7 +1818,7 @@
         },
         "bucketNameOrArn": {
           "kind": "path",
-          "displayName": "Bucket Name Or Arn",
+          "displayName": "Bucket Name Or Amazon Resource Name",
           "group": "common",
           "required": true,
           "type": "string",
@@ -1787,7 +1831,7 @@
       "actions": [
         {
           "name": "Copy Object",
-          "description": "Copy an object on AWS S3",
+          "description": "Create a copy of an object in an Amazon S3 bucket",
           "id": "io.syndesis:aws-s3-copy-object-connector:latest",
           "pattern": "To",
           "actionType": "connector",
@@ -1808,7 +1852,7 @@
         },
         {
           "name": "Get Object",
-          "description": "Get an object from an AWS S3 Bucket",
+          "description": "Retrieve an object from an Amazon S3 bucket",
           "id": "io.syndesis:aws-s3-get-object-connector:latest",
           "pattern": "To",
           "actionType": "connector",
@@ -1823,7 +1867,7 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Get an Object from AWS S3",
+                "name": "Retrieve an object from an Amazon S3 bucket",
                 "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
                 "properties": {
                   "deleteAfterRead": {
@@ -1857,8 +1901,8 @@
           }
         },
         {
-          "name": "Poll an AWS S3 Bucket",
-          "description": "Polling an AWS S3 Bucket",
+          "name": "Poll an Amazon S3 Bucket",
+          "description": "Poll an Amazon S3 Bucket",
           "id": "io.syndesis:aws-s3-polling-bucket-connector:latest",
           "pattern": "To",
           "actionType": "connector",
@@ -1873,8 +1917,8 @@
             },
             "propertyDefinitionSteps": [
               {
-                "name": "Polling an AWS S3 Bucket",
-                "description": "Set the filename and if you have to delete the file once it has been downloaded from S3",
+                "name": "Poll an Amazon S3 Bucket",
+                "description": "Set if you need to delete the file once it has been downloaded from S3, the polling interval, the file prefix to use and number of objects you want to retrieve on each poll",
                 "properties": {
                   "deleteAfterRead": {
                     "kind": "parameter",

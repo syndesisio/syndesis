@@ -91,8 +91,11 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void testUpdateIcon() throws IOException {
+        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+        multipartData.add("icon", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
+
         final ResponseEntity<Connector> updated = post("/api/v1/connectors/twitter/icon",
-            multipartBody(getClass().getResourceAsStream("test-image.png")), Connector.class, tokenRule.validToken(), HttpStatus.OK,
+            multipartData, Connector.class, tokenRule.validToken(), HttpStatus.OK,
             multipartHeaders());
 
         assertThat(updated.getBody().getId()).isPresent();
@@ -140,6 +143,69 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(result.getErrors()).isNotEmpty();
     }
 
+    @Test
+    public void testUpdateConnectorAndIconViaMultipart() throws IOException {
+        final Connector initialConnector = dataManager.fetch(Connector.class, "twitter");
+
+        assertThat(initialConnector.getIcon()).isNotBlank().doesNotStartWith("db:");
+
+        final Connector connectorWithNewdescription = new Connector.Builder().createFrom(initialConnector)
+            .description("Updated!").build();
+
+        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+        multipartData.add("connector", connectorWithNewdescription);
+        multipartData.add("icon", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
+
+        final ResponseEntity<Void> updated = put("/api/v1/connectors/twitter",
+            multipartData, Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT,
+            multipartHeaders());
+
+        final ResponseEntity<Connector> updatedConnector = get("/api/v1/connectors/twitter", Connector.class);
+
+        assertThat(updatedConnector.getBody().getId()).isPresent();
+        assertThat(updatedConnector.getBody().getIcon()).isNotBlank().startsWith("db:");
+        assertThat(updatedConnector.getBody().getDescription()).isNotBlank().isEqualTo("Updated!");
+
+        final ResponseEntity<ByteArrayResource> got = get("/api/v1/connectors/twitter/icon", ByteArrayResource.class);
+        assertThat(got.getHeaders().getFirst("Content-Type")).isEqualTo("image/png");
+
+        try (ImageInputStream iis = ImageIO.createImageInputStream(got.getBody().getInputStream());) {
+            final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+            if (readers.hasNext()) {
+                final ImageReader reader = readers.next();
+                try {
+                    reader.setInput(iis);
+                    final Dimension dimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
+                    assertThat(dimensions.getHeight()).isEqualTo(106d).as("Wrong image height");
+                    assertThat(dimensions.getWidth()).isEqualTo(106d).as("Wrong image width");
+                } finally {
+                    reader.dispose();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateConnectorWithoutIconViaMultipart() throws IOException {
+        final Connector initialConnector = dataManager.fetch(Connector.class, "twitter");
+
+        final Connector connectorWithNewdescription = new Connector.Builder().createFrom(initialConnector)
+            .description("Updated!").build();
+
+        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+        multipartData.add("connector", connectorWithNewdescription);
+
+        final ResponseEntity<Void> updated = put("/api/v1/connectors/twitter",
+            multipartData, Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT,
+            multipartHeaders());
+
+        final ResponseEntity<Connector> updatedConnector = get("/api/v1/connectors/twitter", Connector.class);
+
+        assertThat(updatedConnector.getBody().getId()).isPresent();
+        assertThat(updatedConnector.getBody().getDescription()).isNotBlank().isEqualTo("Updated!");
+        assertThat(updatedConnector.getBody().getIcon()).isNotBlank().isEqualTo(initialConnector.getIcon());
+    }
+
     // Disabled as it works only for the LocalProcessVerifier which would needs
     // some update
     @Test
@@ -157,12 +223,6 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(result).isNotNull();
         assertThat(result.getStatus()).isEqualTo(Verifier.Result.Status.OK);
         assertThat(result.getErrors()).isEmpty();
-    }
-
-    private MultiValueMap<String, Object> multipartBody(final InputStream is) {
-        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
-        multipartData.add("file", new InputStreamResource(is));
-        return multipartData;
     }
 
     private HttpHeaders multipartHeaders() {

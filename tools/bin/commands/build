@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # All modules, in the right build order
-ALL_MODULES="connectors verifier runtime rest s2i ui tests"
+ALL_MODULES="runtime connectors verifier rest s2i ui tests"
 POD_MODULES="verifier rest ui"
 MODULES=(
   "ui"

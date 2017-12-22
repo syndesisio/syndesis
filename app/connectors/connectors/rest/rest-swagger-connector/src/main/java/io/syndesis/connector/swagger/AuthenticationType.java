@@ -16,5 +16,5 @@
 package io.syndesis.connector.swagger;
 
 public enum AuthenticationType {
-    none, oauth2
+    basic, none, oauth2
 }

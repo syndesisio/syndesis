@@ -20,13 +20,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import io.swagger.models.parameters.SerializableParameter;
+import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.Property;
+import io.swagger.models.properties.RefProperty;
+import io.syndesis.core.Json;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.models.properties.Property;
-import io.syndesis.core.Json;
 
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
@@ -35,6 +37,18 @@ final class JsonSchemaHelper {
 
     private JsonSchemaHelper() {
         // utility class
+    }
+
+    /* default */ static String determineSchemaReference(final Property schema) {
+        if (schema instanceof RefProperty) {
+            return ((RefProperty) schema).get$ref();
+        } else if (schema instanceof ArrayProperty) {
+            final Property property = ((ArrayProperty) schema).getItems();
+
+            return determineSchemaReference(property);
+        }
+
+        throw new IllegalArgumentException("Only references to schemas are supported");
     }
 
     /* default */ static URL inMemory(final String specification) throws MalformedURLException {
@@ -81,8 +95,7 @@ final class JsonSchemaHelper {
         }
     }
 
-    /* default */ static String resolveSchemaForReference(final String specification, final String title,
-        final String reference) {
+    /* default */ static String resolveSchemaForReference(final String specification, final String title, final String reference) {
         final JsonNode resolved;
         try {
             final URL inMemoryUrl = inMemory(specification);

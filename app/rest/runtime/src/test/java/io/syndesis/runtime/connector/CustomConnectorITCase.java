@@ -23,14 +23,23 @@ import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.icon.Icon;
 import io.syndesis.runtime.BaseITCase;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -157,5 +166,41 @@ public class CustomConnectorITCase extends BaseITCase {
             .id(id)//
             .name(name)//
             .build();
+    }
+
+    @Test
+    public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() {
+        ResponseEntity<Connector> response = post(
+            "/api/v1/connectors/custom",
+            multipartBody(
+                new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build(),
+                getClass().getResourceAsStream("/io/syndesis/runtime/test-image.png")
+            ),
+            Connector.class,
+            tokenRule.validToken(),
+            HttpStatus.OK,
+            multipartHeaders()
+        );
+
+        final Connector created = response.getBody();
+        assertThat(created).isNotNull();
+        assertThat(created.getDescription()).isEqualTo("test-description");
+        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
+        assertThat(created.getIcon()).startsWith("db:");
+        Icon icon = dataManager.fetch(Icon.class, created.getIcon().substring(3));
+        assertThat(icon.getMediaType()).isEqualTo(MediaType.IMAGE_PNG_VALUE);
+    }
+
+    private HttpHeaders multipartHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return headers;
+    }
+
+    private MultiValueMap<String, Object> multipartBody(ConnectorSettings connectorSettings, InputStream is) {
+        LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+        multipartData.add("connectorSettings", connectorSettings);
+        multipartData.add("icon", new InputStreamResource(is));
+        return multipartData;
     }
 }

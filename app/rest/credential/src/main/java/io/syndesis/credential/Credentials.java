@@ -15,12 +15,12 @@
  */
 package io.syndesis.credential;
 
-import java.net.URI;
-
 import io.syndesis.model.connection.Connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.net.URI;
 
 @Component
 public final class Credentials {
@@ -41,6 +41,8 @@ public final class Credentials {
 
     public static final String CLIENT_SECRET_TAG = "oauth-client-secret";
 
+    public static final String SCOPE_TAG = "oauth-scope";
+
     public static final String TOKEN_STRATEGY_TAG = "oauth-token-strategy";
 
     private final CredentialProviderLocator credentialProviderLocator;
@@ -56,8 +58,7 @@ public final class Credentials {
 
         final CredentialFlowState flowState = credentialProvider.prepare(providerId, baseUrl, returnUrl);
 
-        return new AcquisitionFlow.Builder().type(flowState.type()).redirectUrl(flowState.getRedirectUrl())
-            .state(flowState).build();
+        return new AcquisitionFlow.Builder().type(flowState.type()).redirectUrl(flowState.getRedirectUrl()).state(flowState).build();
     }
 
     public AcquisitionMethod acquisitionMethodFor(final String providerId) {
@@ -71,8 +72,7 @@ public final class Credentials {
     public Connection apply(final Connection updatedConnection, final CredentialFlowState flowState) {
         final CredentialProvider credentialProvider = providerFrom(flowState);
 
-        final Connection withDerivedFlag = new Connection.Builder().createFrom(updatedConnection).isDerived(true)
-            .build();
+        final Connection withDerivedFlag = new Connection.Builder().createFrom(updatedConnection).isDerived(true).build();
 
         return credentialProvider.applyTo(withDerivedFlag, flowState);
     }

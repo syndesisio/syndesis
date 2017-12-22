@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import io.syndesis.core.Json;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /* default */ final class TestHelper {
 
@@ -54,6 +54,14 @@ import io.syndesis.core.Json;
             resource = reader.lines().collect(Collectors.joining("\n"));
         }
         return resource;
+    }
+
+    /* default */ static String resource(final String path, final String alternative) throws IOException {
+        if (TestHelper.class.getResource(path) != null) {
+            return resource(path);
+        }
+
+        return resource(alternative);
     }
 
 }

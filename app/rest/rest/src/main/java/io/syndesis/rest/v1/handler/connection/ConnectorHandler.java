@@ -29,6 +29,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
+import io.syndesis.model.icon.Icon;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
@@ -37,25 +38,30 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
-
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("/connectors")
 @Api(value = "connectors")
@@ -71,7 +77,8 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Verifier verifier;
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
-                            final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext, final IconDataAccessObject iconDao) {
+                            final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
+                            final IconDataAccessObject iconDao) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -89,7 +96,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Path("/custom")
     public CustomConnectorHandler customConnectorHandler() {
-        return new CustomConnectorHandler(getDataManager(), applicationContext);
+        return new CustomConnectorHandler(getDataManager(), applicationContext, iconDao);
     }
 
     @Override
@@ -122,7 +129,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
     public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) final String connectorId,
-        @PathParam("actionId") @ApiParam(required = true) final String actionId) {
+                                          @PathParam("actionId") @ApiParam(required = true) final String actionId) {
         final FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
         final Connector connector = getDataManager().fetch(Connector.class, connectorId);
 
@@ -157,7 +164,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}/verifier")
     public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId,
-        final Map<String, String> props) {
+                                                            final Map<String, String> props) {
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 
@@ -177,5 +184,67 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
                 .createFrom(c)//
                 .uses(uses).build();
         }).collect(Collectors.toList());
+    }
+
+    @PUT
+    @Path(value = "/{id}")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void update(@NotNull @PathParam("id") @ApiParam(required = true) String id, @MultipartForm ConnectorFormData connectorFormData) {
+        if (connectorFormData.getConnector() == null) {
+            throw new IllegalArgumentException("Missing connector parameter");
+        }
+
+        Connector connectorToUpdate = connectorFormData.getConnector();
+
+        if (connectorFormData.getIconInputStream() != null) {
+            try {
+                String guessedMediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(connectorFormData.getIconInputStream()));
+                if (!guessedMediaType.startsWith("image/")) {
+                    throw new IllegalArgumentException("Invalid file contents for an image");
+                }
+                MediaType mediaType = MediaType.valueOf(guessedMediaType);
+                Icon.Builder iconBuilder = new Icon.Builder().mediaType(mediaType.toString());
+
+                Icon icon = getDataManager().create(iconBuilder.build());
+                iconDao.write(icon.getId().get(), connectorFormData.getIconInputStream());
+                connectorToUpdate = new Connector.Builder().createFrom(connectorToUpdate).icon("db:" + icon.getId().get()).build();
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Error while reading multipart request", e);
+            }
+        }
+
+        getDataManager().update(connectorToUpdate);
+    }
+
+    public static class ConnectorFormData {
+        @FormParam("connector")
+        private Connector connector;
+
+        @FormParam("icon")
+        private InputStream iconInputStream;
+
+        public ConnectorFormData() {
+        }
+
+        public ConnectorFormData(Connector connector, InputStream iconInputStream) {
+            this.connector = connector;
+            this.iconInputStream = iconInputStream;
+        }
+
+        public Connector getConnector() {
+            return connector;
+        }
+
+        public void setConnector(Connector connector) {
+            this.connector = connector;
+        }
+
+        public InputStream getIconInputStream() {
+            return iconInputStream;
+        }
+
+        public void setIconInputStream(InputStream iconInputStream) {
+            this.iconInputStream = iconInputStream;
+        }
     }
 }

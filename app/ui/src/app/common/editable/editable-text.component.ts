@@ -4,7 +4,7 @@ import { EditableComponent } from './editable.component';
 @Component({
   selector: 'syndesis-editable-text',
   template: `
-    <ng-template *ngIf="!editing; else editingTemplate">
+    <ng-template [ngIf]="!editing">
       <em class="text-muted" *ngIf="!value">
         {{ placeholder }}
       </em>
@@ -16,7 +16,7 @@ import { EditableComponent } from './editable.component';
       </button>
     </ng-template>
 
-    <ng-template #editingTemplate>
+    <ng-template [ngIf]="editing">
       <div class="form-group" [ngClass]="{'has-error': errorMessage}">
         <input #textInput type="text" class="form-control" [ngModel]="value">
         <span class="help-block" *ngIf="errorMessage">{{ errorMessage }}</span>
@@ -33,4 +33,4 @@ import { EditableComponent } from './editable.component';
     }
   `]
 })
-export class EditableTextComponent extends EditableComponent {}
+export class EditableTextComponent extends EditableComponent { }

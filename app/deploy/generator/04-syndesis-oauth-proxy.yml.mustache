@@ -95,11 +95,20 @@
             protocol: TCP
 {{^Probeless}}
           readinessProbe:
-            tcpSocket:
+            httpGet:
               port: 8443
+              path: /robots.txt
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
           livenessProbe:
-            tcpSocket:
-              port: 8443{{/Probeless}}
+            httpGet:
+              port: 8443
+              path: /robots.txt
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+{{/Probeless}}
           volumeMounts:
           - mountPath: /etc/tls/private
             name: syndesis-oauthproxy-tls

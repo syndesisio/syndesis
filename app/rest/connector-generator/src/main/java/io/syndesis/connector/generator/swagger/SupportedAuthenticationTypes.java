@@ -23,16 +23,16 @@ import io.syndesis.model.connection.ConfigurationProperty;
 
 @SuppressWarnings("ImmutableEnumChecker")
 enum SupportedAuthenticationTypes {
-    oauth2("OAuth 2.0");
+    basic("HTTP Basic Authentication"), oauth2("OAuth 2.0");
 
-    static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values())
-        .map(SupportedAuthenticationTypes::name).collect(Collectors.toSet());
+    static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values()).map(SupportedAuthenticationTypes::name)
+        .collect(Collectors.toSet());
 
     final String label;
 
     private final transient ConfigurationProperty.PropertyValue propertyValue;
 
-    private SupportedAuthenticationTypes(final String label) {
+    SupportedAuthenticationTypes(final String label) {
         this.label = label;
         propertyValue = new ConfigurationProperty.PropertyValue.Builder().value(name()).label(label).build();
     }
