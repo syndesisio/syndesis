@@ -14,6 +14,7 @@ export class ApiConnectorActions {
   static FETCH_FAIL                   = '[API Connectors] Fetch operation failed';
   static VALIDATE_SWAGGER             = '[API Connectors] Swagger validation request';
   static VALIDATE_SWAGGER_COMPLETE    = '[API Connectors] Swagger validation complete';
+  static VALIDATE_SWAGGER_FAIL        = '[API Connectors] Swagger validation failed';
   static CREATE                       = '[API Connectors] Create custom connector request';
   static CREATE_COMPLETE              = '[API Connectors] Create custom connector complete';
   static CREATE_CANCEL                = '[API Connectors] Create custom connector cancelled';
@@ -32,6 +33,10 @@ export class ApiConnectorActions {
 
   static validateSwaggerComplete(payload: ApiConnectorValidation) {
     return new ApiConnectorValidateSwaggerComplete(payload);
+  }
+
+  static validateSwaggerFail(payload: ActionReducerError) {
+    return new ApiConnectorValidateSwaggerFail(payload);
   }
 
   static create(payload: ApiConnectorData) {
@@ -66,13 +71,19 @@ export class ApiConnectorFetchFail implements Action {
 export class ApiConnectorValidateSwagger implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER;
 
-  constructor(public payload: CustomSwaggerConnectorRequest) { }  // TODO: Review payload type
+  constructor(public payload: CustomSwaggerConnectorRequest) { }
 }
 
 export class ApiConnectorValidateSwaggerComplete implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE;
 
-  constructor(public payload: ApiConnectorValidation) { }  // TODO: Review payload type
+  constructor(public payload: ApiConnectorValidation) { }
+}
+
+export class ApiConnectorValidateSwaggerFail implements Action {
+  readonly type = ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE;
+
+  constructor(public payload: ActionReducerError) { }
 }
 
 export class ApiConnectorCreate implements Action {

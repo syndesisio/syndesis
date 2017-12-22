@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import {
@@ -98,6 +99,7 @@ export function mapperRestangularProvider(
     AppRoutingModule,
     LegacyStoreModule,
     StoreModule.forRoot(platformReducer),
+    EffectsModule.forRoot([]),
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,

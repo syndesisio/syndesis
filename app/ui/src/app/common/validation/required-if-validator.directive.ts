@@ -3,7 +3,7 @@ import { ValidatorFn, AbstractControl, NG_VALIDATORS, Validator } from '@angular
 
 export function requiredIfValidator(isRequired: boolean): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} => {
-    return isRequired && control.value ? {'requiredIfChecked': {value: control.value}} : null;
+    return isRequired && !control.value ? {'requiredIfChecked': true } : null;
   };
 }
 
@@ -18,7 +18,7 @@ export function requiredIfValidator(isRequired: boolean): ValidatorFn {
 export class RequiredIfValidatorDirective implements Validator {
   @Input() requiredIf: boolean;
 
-  validate(control: AbstractControl): {[key: string]: any} {
+  validate(control: AbstractControl): { [key: string]: any } {
     return this.requiredIf ? requiredIfValidator(this.requiredIf)(control) : null;
   }
 }

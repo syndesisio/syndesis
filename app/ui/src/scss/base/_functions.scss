@@ -1,0 +1,5 @@
+/// Internal SASS functions, allowinf for a more convenient access to env variables
+
+@function color($color, $tone: 'base') {
+  @return map-get(map-get($colors, $color), $tone);
+}
