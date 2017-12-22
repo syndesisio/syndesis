@@ -3,8 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'syndesis-button',
   template: `
-    <button [attr.type]="type" class="syndesis-button syn-form__submit btn btn-primary"
-      [ngClass]="submit"
+    <button [attr.type]="type" class="submit syndesis-button syn-form__submit btn btn-primary"
       [ngClass]="{ 'syndesis-button--loading': loading, 'syndesis-button--disabled': disabled }"
       [attr.disabled]="(disabled || loading) ? 'disabled' : null">
       <i class="spinner spinner-sm syndesis-button__spinner" *ngIf="loading"></i>
