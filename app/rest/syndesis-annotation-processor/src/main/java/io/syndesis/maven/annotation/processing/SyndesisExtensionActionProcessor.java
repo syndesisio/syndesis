@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -323,10 +324,11 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
             error("Annotation SyndesisExtensionAction not found processing element " + element);
         }
 
+        final String actionId = (String)annotationClass.getMethod("id").invoke(annotation);
         final String fileName = new StringBuilder()
             .append(classElement.getSimpleName().toString())
             .append('-')
-            .append((String)annotationClass.getMethod("id").invoke(annotation))
+            .append(Names.sanitize(actionId))
             .append(".properties")
             .toString();
 
@@ -389,4 +391,39 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
 
         return null;
     }
+
+    // From app/rest/core
+    public static final class Names {
+        private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
+        private static final String SPACE = " ";
+        private static final String BLANK = "";
+        private static final String DASH = "-";
+
+        /**
+         * Sanitizes the specified name by applying the following rules:
+         * 1. Keep the first 100 characters.
+         * 2. Replace spaces with dashes.
+         * 3. Remove invalid characters.
+         * @param name  The specified name.
+         * @return      The sanitized string.
+         */
+        static String sanitize(String name) {
+            return name
+                .replaceAll(SPACE, DASH)
+                .replaceAll(INVALID_CHARACTER_REGEX, BLANK)
+                .toLowerCase(Locale.US)
+                .chars()
+                .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
+                .collect(StringBuilder::new,
+                    (b, chr) -> {
+                        int lastChar = b.length() > 0 ? b.charAt(b.length() - 1) : -1;
+
+                        if (lastChar != '-' || chr != '-') {
+                            b.appendCodePoint(chr);
+                        }
+                    }, StringBuilder::append)
+                .toString();
+        }
+    }
+
 }
