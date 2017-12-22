@@ -5,7 +5,6 @@ import { ApiConnectorData } from './api-connector.models';
 import { ApiConnectorStore } from './api-connector.store';
 import { ApiConnectorService } from '@syndesis/ui/customizations/api-connector/api-connector.service';
 
-
 @Component({
   selector: 'syndesis-api-connector-detail',
   templateUrl: 'api-connector-detail.component.html',
@@ -24,7 +23,7 @@ export class ApiConnectorDetailComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    if(id) {
+    if (id) {
       this.apiConnectorService.getApiConnector(id).subscribe(apiConnectorData => {
         this.apiConnector = apiConnectorData;
         this.loading = false;
