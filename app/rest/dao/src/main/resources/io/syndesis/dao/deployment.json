@@ -931,8 +931,8 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "defaultValue": "queue",
-                    "description": "By default, the destination is a queue."
+                    "defaultValue": "topic",
+                    "description": "By default, the destination is a topic."
                   },
                   "persistent": {
                     "kind": "parameter",
@@ -1007,8 +1007,8 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "defaultValue": "queue",
-                    "description": "By default, the destination is a queue."
+                    "defaultValue": "topic",
+                    "description": "By default, the destination is a topic."
                   },
                   "durableSubscriptionId": {
                     "kind": "parameter",
@@ -1095,8 +1095,8 @@
                     "deprecated": false,
                     "secret": false,
                     "componentProperty": false,
-                    "defaultValue": "queue",
-                    "description": "By default, the destination is a queue."
+                    "defaultValue": "topic",
+                    "description": "By default, the destination is a topic."
                   },
                   "messageSelector": {
                     "kind": "parameter",
