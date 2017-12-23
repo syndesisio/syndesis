@@ -1,7 +1,44 @@
 [id='create-amq-connection']
 = Create an AMQ connection
 
-TBA
+To create an AMQ connection:
 
-After you select the connector, and enter data in the fields.
-Click Validate. 
+. In {prodname}, in the left pane, click *Connections* to 
+display any available connections. 
+. In the upper right, click *Create Connection* to display
+{prodname} connectors.  
+. Click the *AMQ* connector. 
+. Configure the connection by entering: 
++
+.. In the *Broker URL* field, enter the location you want to send data
+to or obtain data from. 
+.. In the *Username* field, enter the username for the account you want
+to use to access this JMS broker. 
+.. In the *Password* field, enter the password for the account you want
+to use to access this JMS broker. 
+.. In the *Client ID* field, enter the ID that allows connections to close 
+and reopen without missing messages. The destination type must be a topic. 
+.. If this connection will be used in a development 
+environment, you can save some time by selecting 
+*Skip Certificate Check*. This is a convenience for 
+development environments. You
+should not select this for secure production 
+environments. 
+.. In the *Broker Certificate* field, enter the URL for the JMS broker certificate.
+.. In the *Client Certificate* field, enter the URL
+for the JMS client certificate. 
+. Click *Validate*. {prodname} immediately tries to validate the 
+connection and displays a message that indicates whether or not
+validation is successful. If validation fails, revise the configuration
+details as needed and try again. 
+. If validation is successful, click *Next*. 
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connection. 
+For example, enter `AMQ 1`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample AMQ connection
+that uses a provided JMS broker.*`
+. In the upper right, click *Create* to see that the connection you 
+created is now available. If you entered the example name, you would 
+see that *AMQ 1* is now available. 

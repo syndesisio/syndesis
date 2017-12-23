@@ -1,14 +1,6 @@
 [id='about-api-client-connectors']
 = About API client connectors
 
-{prodname} can create connectors for REST APIs 
-(representational state transfer application programming interfaces) 
-that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
-To do this, {prodname} requires a valid
-Swagger 2.0 specification that describes a REST API you want to connect to. 
-If the API service provider does not make a Swagger specification available
-then you must create the Swagger specification.
- 
 After you upload a Swagger specification to {prodname}, a connector to the API
 becomes available. An integrator can select the connector, create
 an API client connection and then add that connection to an integration. 
@@ -35,6 +27,12 @@ each operation's request and response types.
 Authorization. If access to the API requires Transport Layer Security (TLS)
 then the API needs to use a valid certificate that is issued by
 a recognized Certificate Authority (CA).
+
+An API that uses OAuth must have an authorization URL that takes a client 
+callback URL as input. For {prodname} to obtain authorization to access an 
+API that uses OAuth, you provide the {prodname} callback URL at the client 
+API authorization URL. The details for doing this are described in
+<<register-with-rest-api>>. 
 
 {prodname} cannot create connectors for APIs that support the HTTP 2.0
 protocol. 

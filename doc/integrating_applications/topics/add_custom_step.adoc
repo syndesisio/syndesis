@@ -1,4 +1,20 @@
 [id='add-custom-step']
 = Add a custom step
 
-TBA
+If {prodname} does not provide a step that you need in an integration, 
+a developer can define one or more custom steps in an extension. See 
+<<making-extensions-available>>.
+
+You add a custom step to an integration in the same way that you add
+a built-in step. Create an integration, choose the start and finish
+connections, add other connections as needed and then add steps. When you
+click *Add a Step*, the list of available steps includes any
+custom steps that are defined in extensions that were uploaded to
+your installation of {prodname}. 
+
+At the top of the list of steps, in the *Name* field, you can select
+*Custom Steps* to display only custom steps. 
+
+Click the custom step you want to add to the integration.
+{prodname} prompts you for any information required to perform the step.
+This varies for each custom step. 
