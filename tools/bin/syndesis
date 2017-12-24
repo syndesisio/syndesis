@@ -222,8 +222,12 @@ function run {
         exit 0
     fi
 
-    if [ -n "${command:-}" ] && [ $(hasflag --man) ]; then
-        open_url "https://doc.syndesis.io/#syndesis-${command}"
+    if [ $(hasflag --man) ]; then
+        if [ -n "${command:-}" ]; then
+          open_url "https://doc.syndesis.io/#syndesis-${command}"
+        else
+          open_url "https://doc.syndesis.io"
+        fi
         exit 0
     fi
 
