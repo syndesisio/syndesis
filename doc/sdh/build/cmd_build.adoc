@@ -33,7 +33,7 @@ Options for build:
 -k  --kill-pods               Kill pods after the image has been created.
                               Useful when building with image-mode docker
 -c  --clean                   Run clean builds (mvn clean)
--b  --batch-mode              Run mvn in batch mode
+  sy  --batch-mode              Run mvn in batch mode
 ----
 
 [[syndesis-build-modules]]

@@ -71,6 +71,57 @@ But its just there so that teams can filter on issues and PRs which are relevant
 An issue can carry many module labels.
 Especially Epics will carry more than such label as they touch more than one module (otherwise it wouldn't be an epic).
 
+[cols="3,15",options="header"]
+|===
+|Module
+|Descriptions
+
+| **module/connectors**
+{set:cellbgcolor:#b39d9e}
+| Supported camel connectors
+{set:cellbgcolor!}
+
+| **module/deploy**
+{set:cellbgcolor:#ab947d}
+| OpenShift templates
+{set:cellbgcolor!}
+
+| [white]**module/rest**
+{set:cellbgcolor:#2e9288}
+| REST backend for managing integrations
+{set:cellbgcolor!}
+
+| [white]**module/runtime**
+{set:cellbgcolor:#657c9a}
+| Library used in the the integration runtimes
+{set:cellbgcolor!}
+
+| [white]**module/s2i**
+{set:cellbgcolor:#2b313c}
+| S2I base image for building integrations
+{set:cellbgcolor!}
+
+| **module/tests**
+{set:cellbgcolor:#91ac83}
+| System tests for testing the whole applications
+{set:cellbgcolor!}
+
+| **module/ui**
+{set:cellbgcolor:#dce6f0}
+| User interface SPA, talking to the REST backend
+{set:cellbgcolor!}
+
+| **module/uxd**
+{set:cellbgcolor:#fdc5d8}
+| User experience (UX) designs
+{set:cellbgcolor!}
+
+| **module/verifier**
+{set:cellbgcolor:#c6d74b}
+| Service for connector meta-data and verification of connections
+{set:cellbgcolor!}
+|===
+
 ### Categories
 
 Labels from the `cat/` group are labels which can always be applied and which does not fit in another category.
@@ -223,7 +274,7 @@ This label group should be used if an external system is referenced, which is no
 For the future, we plan to add more of these external repos into the Syndesis mono repo (like documentation or QE).
 If this happens, then labels should be converted to `module/` kind of labels.
 
-#### Daily Meeting Labels
+### Daily Meeting Labels
 
 This category holds five labels: [#f00]`d/mon`, `d/tue`, `d/wed`, `d/thu`, `d/fri`, one for each working day.
 They are used to mark an Epic so that it is talked about the daily meeting on that day.
@@ -231,7 +282,38 @@ The reason for this selection is, that we want to keep the daily meetings still 
 More than one of such label can and actually should be added to one Epic.
 At least two-day labels must be added to an epic.
 
-#### Status
+[cols="3,15",options="header"]
+|===
+|Status
+|Daily Meeting
+
+| [white]**d/mon**
+{set:cellbgcolor:#644288}
+| Monday
+{set:cellbgcolor!}
+
+| [white]**d/tue**
+{set:cellbgcolor:#644288}
+| Tuesday
+{set:cellbgcolor!}
+
+| [white]**d/wed**
+{set:cellbgcolor:#644288}
+| Wednesday
+{set:cellbgcolor!}
+
+| [white]**d/thu**
+{set:cellbgcolor:#644288}
+| Thursday
+{set:cellbgcolor!}
+
+| [white]**d/fri**
+{set:cellbgcolor:#644288}
+| Friday
+{set:cellbgcolor!}
+|===
+
+### Status
 
 Status labels are unique since they may trigger some automatic actions.
 
@@ -244,7 +326,7 @@ The current status labels are:
 
 | [white]**status/blocked**
 {set:cellbgcolor:#ad0009}
-| The current issue is blocked by another issuer. Refer to the issue itself to see what is blocking this issued. This label is purely informal.
+| The current issue is blocked by another issue. Refer to the issue itself to see what is blocking this issued. This label is purely informal.
 {set:cellbgcolor!}
 
 | **approved**

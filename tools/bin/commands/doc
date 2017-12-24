@@ -28,7 +28,7 @@ doc::run() {
     fi
     docdir=$(cd $docdir && pwd)
 
-    local version=$(git describe $(git rev-parse HEAD))
+    local version=$(cd $docdir && git describe $(cd $docdir && git rev-parse HEAD))
 
     local input_file=$(readopt --input -i)
     if [ -z "${input_file}" ]; then

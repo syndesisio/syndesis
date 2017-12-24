@@ -39,7 +39,7 @@ build::usage() {
 -k  --kill-pods               Kill pods after the image has been created.
                               Useful when building with image-mode docker
 -c  --clean                   Run clean builds (mvn clean)
--b  --batch-mode              Run mvn in batch mode
+    --batch-mode              Run mvn in batch mode
 EOT
 
 }
@@ -64,7 +64,7 @@ maven_args() {
         args="$args -Pskip-checks"
     fi
 
-    if [ -n "$(hasflag --batch-mode -b)" ]; then
+    if [ -n "$(hasflag --batch-mode)" ]; then
         args="$args --batch-mode"
     fi
 

@@ -66,6 +66,8 @@ EOT
         source $cmd_dir/$command
         echo "Options for $command:"
         echo -e "$($command::usage)"
+        echo "    --man                     Open HTML documentation in the Syndesis Developer Handbook
+"
     fi
 }
 
@@ -220,6 +222,11 @@ function run {
         exit 0
     fi
 
+    if [ -n "${command:-}" ] && [ $(hasflag --man) ]; then
+        open_url "https://doc.syndesis.io/#syndesis-${command}"
+        exit 0
+    fi
+
     if [ -z "${command:-}" ]; then
         command="build"
     fi
@@ -230,6 +237,7 @@ function run {
     fi
 
     source "$cmd_dir/$command"
+
     eval "${command}::run"
 }
 
