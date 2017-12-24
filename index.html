@@ -522,18 +522,52 @@ table.CodeRay td.code>pre{padding:0}
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
 <span id="revnumber">version ,</span>
-<span id="revdate">2017-12-23</span>
+<span id="revdate">2017-12-24</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
 <ul class="sectlevel1">
 <li><a href="#_introduction">1. Introduction</a></li>
-<li><a href="#_building_syndesis">2. Building Syndesis</a>
+<li><a href="#syndesis">2. Buildtool "syndesis"</a>
 <ul class="sectlevel2">
-<li><a href="#_one_tool_to_rule_them_all">2.1. One tool to rule them all</a></li>
+<li><a href="#syndesis-build">2.1. syndesis build</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-build-usage">2.1.1. Usage</a></li>
+<li><a href="#syndesis-build-modules">2.1.2. Modules</a></li>
+<li><a href="#syndesis-build-tuning">2.1.3. Tuning</a></li>
+<li><a href="#syndesis-build-image">2.1.4. Images</a></li>
 </ul>
 </li>
-<li><a href="#_syndesis_development_process">3. Syndesis Development Process</a>
+<li><a href="#syndesis-ui">2.2. syndesis ui</a></li>
+<li><a href="#syndesis-minishift">2.3. syndesis minishift</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-minishift-usage">2.3.1. Usage</a></li>
+<li><a href="#_installing_syndesis">2.3.2. Installing Syndesis</a></li>
+<li><a href="#_resetting_minishift">2.3.3. Resetting Minishift</a></li>
+<li><a href="#_example">2.3.4. Example</a></li>
+</ul>
+</li>
+<li><a href="#syndesis-system-test">2.4. syndesis system-test</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-system-test-usage">2.4.1. Usage</a></li>
+<li><a href="#_how_it_works">2.4.2. How it works</a></li>
+</ul>
+</li>
+<li><a href="#syndesis-dev">2.5. syndesis dev</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-dev-usage">2.5.1. Usage</a></li>
+</ul>
+</li>
+<li><a href="#syndesis-doc">2.6. syndesis doc</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-doc-usage">2.6.1. Usage</a></li>
+<li><a href="#syndesis-doc-output">2.6.2. Output</a></li>
+</ul>
+</li>
+<li><a href="#syndesis-release">2.7. syndesis release</a></li>
+</ul>
+</li>
+<li><a href="#process">3. Development Process</a>
 <ul class="sectlevel2">
 <li><a href="#_issue_and_pull_request_labels">3.1. Issue and Pull-Request Labels</a>
 <ul class="sectlevel3">
@@ -541,6 +575,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_categories">3.1.2. Categories</a></li>
 <li><a href="#_notification">3.1.3. Notification</a></li>
 <li><a href="#_external_references">3.1.4. External references</a></li>
+<li><a href="#_daily_meeting_labels">3.1.5. Daily Meeting Labels</a></li>
+<li><a href="#_status">3.1.6. Status</a></li>
 </ul>
 </li>
 </ul>
@@ -563,21 +599,765 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 <div class="sect1">
-<h2 id="_building_syndesis">2. Building Syndesis</h2>
+<h2 id="syndesis">2. Buildtool "syndesis"</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_one_tool_to_rule_them_all">2.1. One tool to rule them all</h3>
+<div class="paragraph">
+<p>Syndesis uses a single tool for controlling various aspects of the build and developer related tasks.
+This script can be found in <code>$SYNDESIS_DIR/tools/bin</code> and is called <code>syndesis</code>.
+It requires bash and can be used on any Unix or macOS.</p>
+</div>
+<div class="paragraph">
+<p>To have this script handy all the time it is recommended to either but this <code>bin/</code> directory into the path or add a symlink from <code>syndesis</code> into a directory which is already on your execution path.</p>
+</div>
+<div class="paragraph">
+<p>The script can be used for various tasks which are selected by a so-called command_ which is the first argument to the script.</p>
+</div>
+<div class="paragraph">
+<p>Just type <code>syndesis -h</code> to get an overview of the commands available:</p>
+</div>
+<div class="listingblock">
+<div class="title">Usage message</div>
+<div class="content">
+<pre class="CodeRay highlight"><code>Syndesis Developer Tool
 
+Usage: syndesis &lt;command&gt; [... options ...]
+
+with the following commands
+
+   build            Build Syndesis
+   dev              Developer tools
+   doc              Generate Syndesis Developer Handbook (SDH)
+   minishift        Initialize and manage a Minishift developer environment
+   system-test      Run system tests
+
+"build" is the default command if no command is specified.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are a handful of global options which can be used:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 15.7894%;">
+<col style="width: 5.2631%;">
+<col style="width: 78.9475%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--help</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Print usage information. If a command is given print out commands specific options</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--rebase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-r</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rebase your project directory before building to integrate upstream changes to your local repository. See <a href="#syndesis-rebase">below</a> for details how this works.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--verbose</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set verbose mode, which is useful mostly only for debugging the script itself.</p></td>
+</tr>
+</tbody>
+</table>
+<div id="syndesis-rebase" class="paragraph">
+<div class="title">Rebase to upstream</div>
+<p>To easily rebase on changes which have been merged upstream to master, you can use the option <code>--rebase</code> (short: <code>-r</code>).
+This command assumes that you have forked the Syndesis GitHub repositories and you have "origin" and "upstream" remotes like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ git remote -v
+origin    git@github.com:rhuss/syndesis.git (fetch)
+origin    git@github.com:rhuss/syndesis.git (push)
+upstream  https://github.com/syndesisio/syndesis (fetch)
+upstream  https://github.com/syndesisio/syndesis (push)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this in place, a <code>--rebase</code> performs the following steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Refresh upstream remote: <code>git fetch upstream master</code></p>
+</li>
+<li>
+<p>Try a <code>git rebase upstream/master</code> which rebases your current local working branch.</p>
+</li>
+<li>
+<p>If this fails because you have uncommitted work:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>git stash</code> is performed</p>
+</li>
+<li>
+<p>The rebase is retried and should succeed</p>
+</li>
+<li>
+<p><code>git stash pop</code> brings back your changes. Stashing can fail with conflicts which you would have to resolve on your own.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div id="syndesis-dev-modes" class="paragraph">
+<div class="title">Development Modes</div>
+<p>The Syndesis application consists of a set of Docker images OpenShift resources descriptors for installing Syndesis.
+For development, <a href="https://www.openshift.org/minishift/">minishift</a> is used, and most of the commands assume that you have minishift installed locally and executable directly from your path.
+Minishift can be downloaded and installed from <a href="https://github.com/minishift/minishift/releases" class="bare">https://github.com/minishift/minishift/releases</a></p>
+</div>
+<div class="paragraph">
+<p>You can choose from two different modes how Docker images are installed and updated:</p>
+</div>
+<div class="paragraph">
+<div class="title">Docker mode</div>
+<p>The Docker mode avoids OpenShift specific image stream and uses plain Docker image references in the deployment descriptors.
+Without an extra Docker registry push, this only works smoothly on single node OpenShift installation like with Minishift or <code>oc cluster up</code>.
+For Minishift, the Docker daemon exposed with <code>minishift docker-env</code> is used.
+The advantage of this mode is that building is a bit faster and you avoid the overhead of image streams.
+On the other side, you have to kill pods when images are updated so that the new images are picked up.</p>
+</div>
+<div class="paragraph">
+<div class="title">OpenShift mode</div>
+<p>The OpenShift mode uses OpenShift S2I builds and image streams.
+This mode works also when running with a real OpenShift cluster and is not restricted to Minishift usage.
+Another advantage is that a build automatically triggers a redeployment, so you don&#8217;t have to kill any pods manually (or with this script).
+On the con side is a slightly slower build.</p>
+</div>
+<div class="paragraph">
+<p>Both modes are currently supported, but the OpenShift mode is recommended.</p>
+</div>
+<div id="syndesis-commands" class="paragraph">
+<div class="title">Commands</div>
+<p>All other options are specific to each command.
+You get a list of those options with <code>syndesis &lt;cmd&gt; -h</code>.
+These options are described in detail in the next sections.</p>
+</div>
+<div class="paragraph">
+<p>The following commands are available:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-build"><strong>build</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used for building Syndesis and its various modules.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-ui"><strong>ui</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start the UI for local development <em>(not implemented yet)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-minishift"><strong>minishift</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start and install Syndesis on Minishift</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-deploy"><strong>deploy</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deploy Syndesis to a running cluster (other than Minishift) <em>(not implemented yet)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-system-test"><strong>system-test</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run System test against an OpenShift cluster</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-dev"><strong>dev</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utility commands useful during development</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-doc"><strong>doc</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generating and publish this documentation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-doc"><strong>release</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Release Syndesis' Maven and NPM artefacts <em>(not implemented yet)</em></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If no command is given, <code>build</code> is the default.
+Remember a command must be the first argument, but there are additional possibilities to specify commands:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You can use the form <code>--command</code> anywhere as an option, too. E.g. using  <code>--minishift</code> is the same as specifying "minishift" as the first argument.</p>
+</li>
+<li>
+<p>A <code>--mode command</code> can be used, too (e.g. <code>--mode sytem-test</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The next sections describe the commands in detail.
+To add a new command, just drop a script file into</p>
+</div>
+<div class="sect2">
+<h3 id="syndesis-build">2.1. syndesis build</h3>
+<div class="paragraph">
+<p>The primary goal of <code>syndesis</code> is to build Syndesis.
+It is mainly a wrapper around Maven but adds some convenience for common developer workflows.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-build-usage">2.1.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Usage: syndesis build [... options ...]
+
+Options for build:
+-b  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
+    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-m  --module &lt;m1&gt;,&lt;m2&gt;, ..    Build modules
+                              Modules: ui, rest, connectors, s2i, verifier, runtime
+-d  --dependencies            Build also all project the specified module depends on
+    --init                    Install top-level parent pom, too. Only needed when used with -m
+    --skip-tests              Skip unit and system test execution
+    --skip-checks             Disable all checks
+-f  --flash                   Skip checks and tests execution (fastest mode)
+-i  --image-mode  &lt;mode&gt;      &lt;mode&gt; can be
+                              - "none"      : No images are build (default)
+                              - "openshift" : Build for OpenShift image streams
+                              - "docker"    : Build against a plain Docker daemon
+                              - "auto"      : Automatically detect whether to
+                                              use "openshift" or "docker"
+    --docker                  == --image-mode docker
+    --openshift               == --image-mode openshift
+-p  --project &lt;project&gt;       Specifies the project to create images in when using '--images s2i'
+-k  --kill-pods               Kill pods after the image has been created.
+                              Useful when building with image-mode docker
+-c  --clean                   Run clean builds (mvn clean)
+    --batch-mode              Run mvn in batch mode</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="syndesis-build-modules">2.1.2. Modules</h4>
+<div class="paragraph">
+<p>A plain <code>build</code> command without any options performs a plain <code>mvn install</code> for all modules.
+This compiles all Java and Javascript artefacts and also runs all tests and code checks.</p>
+</div>
+<div class="paragraph">
+<p>You also can compile only specific modules by using the <code>--module</code> (short: <code>-m</code>) option with a comma-separated list of modules.</p>
+</div>
+<div class="paragraph">
+<p>The following modules are available:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>rest</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Main backend providing a REST API for the user interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ui</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The SPA user interface application</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>verifier</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifier used for verifying connections and providing connector metadata</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>connectors</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All connectors used by Syndesis out of the box</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>runtime</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Support libraries for running integrations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>s2i</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S2I base image used for building the runtime images</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Also, to specify each module individually, you can also use some module groups:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--backend</code> (short: <code>-b</code>) for the modules <code>rest</code>, <code>runtime</code>, <code>verifier</code>, <code>connectors</code></p>
+</li>
+<li>
+<p><code>--images</code> build all modules which result in Docker images, and also builds the Docker images in addition to the Maven artefacts.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When the option <code>--dependencies</code> (short: <code>-d</code>) is given in addition to <code>--modules</code>, also all modules which the specified modules depend on are build, too.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="syndesis-build-tuning">2.1.3. Tuning</h4>
+<div class="paragraph">
+<p>By default, all checks like license or code quality checks are performed.
+Also, all unit and local integration tests are run.
+A full build eats up quite some time, but you should always run at full blast before submitting a pull request.</p>
+</div>
+<div class="paragraph">
+<p>However, to speed up the turnaround, several speed-up options are available.
+The following table shows these options, and also how long a full clean build over all modules takes: (but without building images)</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 15%;">
+<col style="width: 75%;">
+<col style="width: 10%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default mode with all checks and tests</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--skip-tests</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skip all unit and local integration tests</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--skip-checks</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skip sanity checks like for correct license headers and</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--flash</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fastest mode with skipping all checks and tests and with even some other aggressive optimizations</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="syndesis-build-image">2.1.4. Images</h4>
+<div class="paragraph">
+<p>As described in <a href="#syndesis-dev-modes">Development Modes</a> there are two ways how Syndesis Docker images can be created and deployed.</p>
+</div>
+<div class="paragraph">
+<p>You can decide which mode to use with the option <code>--image-mode</code> (short: <code>-i</code>) and the following options are available:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Shortcut</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i auto</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-select the mode based whether you are connected to OpenShift (e.g via Minishift) or not.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i docker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--docker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable Docker build mode. Access to a Docker daemon is required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i openshift</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--openshift</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use OpenShift S2I for building the images. An active login to OpenShift is a precondition for this. You can use <code>--project</code> (<code>-p</code>) for specifying the target namespace where to create the image. By default, it is created in the current namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i s2i</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--s2i</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shortcut for <code>--openshift</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i none</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Don&#8217;t build Docker images even when implicitly enabled (e.g. when using <code>--images</code>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Specifying the mode also enables building the Docker images which otherwise would not be built.</p>
+</div>
+<div class="paragraph">
+<p>If the direct Docker mode is used it, you have to restart the Pods, so the newly created images are picked up.
+For this you can use <code>--kill-pods</code> (short: <code>-k</code>) which will kill the corresponding pod after the image has been created.
+This only works when you are connected to an OpenShift cluster (like for minishift)</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code># Build all image with openshift mode
+syndesis --images --openshift
+
+# Build to the minishift Docker daemon
+eval $(minishift docker-env)
+syndesis -i docker -k
+
+# Or:
+# syndesis --image-mode docker
+
+# Or:
+# syndesis --docker</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-ui">2.2. syndesis ui</h3>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">"syndesis ui" is not implemented yet</div>
+<div class="paragraph">
+<p>This is just a placeholder, still in the planning phased.
+Nevertheless we already start to document the feature for an "UX first" approach.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-minishift">2.3. syndesis minishift</h3>
+<div class="paragraph">
+<p>With <code>syndesis minishift</code> you can adequately manage a <a href="https://www.openshift.org/minishift/">minishift</a> installation for hosting Syndesis.
+This command is especially useful for a simple and self-contained development workflow.</p>
+</div>
+<div class="paragraph">
+<p><code>syndesis minishift</code> requires that you have a current minishift in your path.
+You can download it directly from <a href="https://github.com/minishift/minishift/releases">GitHub</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-minishift-usage">2.3.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Usage: syndesis minishift [... options ...]
+
+Options for minishift:
+    --install                 Install templates to a running Minishift.
+-p  --project                 Install into this project. Delete this project if
+    --reset                   Reset the minishift installation by
+                              'minishift delete &amp;&amp; minishift start'.
+    --full-reset              Full reset by
+                              'minishift stop &amp;&amp; rm -rf ~/.minishift &amp;&amp; minishift start'
+    --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4GB
+    --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
+    --disk-size &lt;size&gt;        How many disk space to use when doing a reset. Default: 20GB
+    --show-logs               Show minishift logs during startup
+    --openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.6.0)
+                              already existing for --install.
+                              Default project: "syndesis"
+-i  --image-mode &lt;mode&gt;       Which templates to install: "docker" for plain images,
+                              "openshift" for image streams (default: "openshift")
+-o  --open                    Open Syndesis in the browser</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_installing_syndesis">2.3.2. Installing Syndesis</h4>
+<div class="paragraph">
+<p>You can easily install Syndesis with the option <code>--install</code>.
+This option triggers the creation of all relevant OpenShift resources objects in the currently connected OpenShift project.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use a different project, then use <code>--project</code> (short: <code>-p</code>) to specify this project.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Any existing project will be deleted first when specified with <code>--project</code>. This option is also an easy and quick way to recreate a Syndesis installation.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As explained in <a href="#syndesis-dev-modes">Development Modes</a> there are two workflows for developing Syndesis:
+Either with plain Docker images and killing pods (<code>--image-mode docker</code>) or with OpenShift S2I builds and image streams (<code>--image-mode openshift</code>).
+You have to specify the mode already when installing Syndesis as this choice also determines the OpenShift templates to use.
+By default the <code>openshift</code> mode is selected, so you have to specify <code>--image-mode docker</code> only when using the plain Docker image mode.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resetting_minishift">2.3.3. Resetting Minishift</h4>
+<div class="paragraph">
+<p>The quickest way to get a fresh Syndesis setup is to use <code>--project</code> which will install Syndesis into a clean, new project.</p>
+</div>
+<div class="paragraph">
+<p>However, you can also recreate the whole Minishift installation with <code>--reset</code>. This will delete the Minishift VM (<code>minishift delete</code>) and create a new one (<code>minishift start</code>).
+It doesn&#8217;t harm if the Minishift VM does not exist so that you can use <code>--reset</code> also on a fresh Minishift installation.</p>
+</div>
+<div class="paragraph">
+<p>If you want to get a real clean installation use <code>--full-reset</code> which deletes the <code>~/.minishift</code> directory which holds downloaded artefacts like the ISO image for the Minishift VM.
+Using <code>--full-reset</code> forces Minishift to re-download all those files.</p>
+</div>
+<div class="paragraph">
+<p>There are several options which influence the re-creation of the VM:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 29.4117%;">
+<col style="width: 58.8235%;">
+<col style="width: 11.7648%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--memory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory to use for the Minishift VM.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--cpus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of CPUs used for the Minishift VM.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--disk-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk space used for Minishift.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--show-logs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to show OpenShift logs during startup.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--openshift-version</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift version to use</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.6.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_example">2.3.4. Example</h4>
+<div class="paragraph">
+<p>This short example performs the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Stops and deletes a running Minishift VM (if existent)</p>
+</li>
+<li>
+<p>Removes <code>~/.minishift</code> (if existent)</p>
+</li>
+<li>
+<p>Install Syndesis in OpenShift modes (S2I builds &amp; image streams) in project <code>syndesis</code></p>
+</li>
+<li>
+<p>Open Syndesis UI in the default browser</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code># Complete fresh installation in project "syndesis"
+syndesis minishift --full-reset --install --project syndesis
+
+# Open Syndesis in default browser
+syndesis minishift -o</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-system-test">2.4. syndesis system-test</h3>
+<div class="paragraph">
+<p>The <code>system-test</code> command is for running a full blown system test of Syndesis by installing it in one of multiple projects which are managed in a pool.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-system-test-usage">2.4.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Usage: syndesis system-test [... options ...]
+
+Options for system-test:
+    --project &lt;project&gt;       The test project to use
+    --token &lt;token&gt;           Token for connecting to the server
+    --server &lt;url&gt;            OpenShift aerver url to use for the tests.
+                              If not given, use the currently connected server
+    --pool &lt;project&gt;          If no project is given use, a pooling mechanism.
+                              This pool has to be created before with --create-pool
+    --test-id &lt;id&gt;            Id to identify the test run
+    --create-pool &lt;prefix&gt;    Create project pool for system-tests with
+                              all projects with the given prefix
+    --list-pool               Show all locks for the pool
+    --release-project &lt;t-id&gt;  Release project for given test id (or all if no test id is given)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_how_it_works">2.4.2. How it works</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This section needs a more detailed explanation how the systems tests are working in detail.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-dev">2.5. syndesis dev</h3>
+<div class="paragraph">
+<p>Dev commands are useful helpers for developing Syndesis</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-dev-usage">2.5.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Usage: syndesis dev [... options ...]
+
+Options for dev:
+    --debug &lt;name&gt;            Setup a port forwarding to &lt;name&gt; pod (default: rest)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command enable port-forwarding of port 5005 from a specific pod (by default: "rest") to port 5005 on the localhost.
+You then can point your Java IDE to port 5005 on localhost for connecting for remote debugging.
+As argument to <code>--debug</code> "rest", "verifier" and "atlasmap" can be used, which are our Java based services.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-doc">2.6. syndesis doc</h3>
+<div class="paragraph">
+<p>This command is used to generated and manage this documentation which you are currently reading.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-doc-usage">2.6.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Usage: syndesis doc [... options ...]
+
+Options for doc:
+-d  --directory &lt;dir&gt;         Top-level dir holding doc source and output directory. Default: "doc/sdh"
+-i  --input &lt;file&gt;            Input file to use. Default: "index.adoc"
+-o  --out &lt;dir&gt;               Directory to generate files (default: "output")
+    --html                    Generate HTML pages
+    --pdf &lt;out&gt;               Generate PDF and write it to &lt;out&gt; (default: "sdh.pdf")
+    --epub &lt;out&gt;              Generate Epub and write it to &lt;out&gt; (default: "sdh.epub")
+    --gh-pages &lt;msg&gt;          Create everything into the gh-pages branch and commit with &lt;msg&gt;
+-l  --local                   Use locally installed commands instead of Docker image</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>syndesis doc</code> uses by default a Docker container to create the documentation.
+Therefore a Docker daemon must be accessible, and it must allow <a href="https://docs.docker.com/engine/admin/volumes/bind-mounts/">bind volume mounts</a> to the local <code>doc/sdh</code> directory.
+Bind mounts are possible for Linux Docker daemons and for "Docker for Mac".
+But it is not the case for the Minishift exposed Docker daemon, as this daemon is running isolated in a VM.</p>
+</div>
+<div class="paragraph">
+<p>You can always run <code>asciidoctor</code> locally with the <code>--local</code> (short: <code>-l</code>) options. See the <a href="https://asciidoctor.org/#installation">Asciidoctor manual</a> for more information how to install Asciidoctor.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="syndesis-doc-output">2.6.2. Output</h4>
+<div class="paragraph">
+<p>Impit and output has sane defaults but can be changed with the following options</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 18.1818%;">
+<col style="width: 13.6363%;">
+<col style="width: 68.1819%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--input &lt;file&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-i &lt;file&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input document in Asciidoc format which is by default <code>$SYNDESIS_DIR/doc/sdh/index.adoc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--output &lt;dir&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-o &lt;dir&gt;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output director, default id <code>$SYNDESIS_DIR/doc/sdh/output</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>By default <code>syndesis doc</code> creates the documentation in HTML format, but more formats are supported:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--html</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create HTML documentation in the output directory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--pdf &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create PDF documentation. <code>&lt;name&gt;</code> is optional, but when given, then this specifies the file name generated in the output directory. By default <code>sdh.pdf</code> is used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--epub &lt;name&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create the documentation in Epub format. <code>&lt;name&gt;</code> is optional, but when given, then this specifies the file name generated in the output directory. By default <code>sdh.epub</code> is used.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-release">2.7. syndesis release</h3>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">"syndesis release" is not implemented yet</div>
+<div class="paragraph">
+<p>This is just a placeholder, still in the planning phased.
+Nevertheless we already start to document the feature for an "UX first" approach.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_syndesis_development_process">3. Syndesis Development Process</h2>
+<h2 id="process">3. Development Process</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_issue_and_pull_request_labels">3.1. Issue and Pull-Request Labels</h3>
 <div class="paragraph">
-<p>We use GitHub labels in order to categorize epics, issues and tasks.
+<p>We use GitHub labels to categorize epics, issues and tasks.
 They are the foundation of our process, so please use labels for issues.</p>
 </div>
 <div class="admonitionblock caution">
@@ -587,16 +1367,16 @@ They are the foundation of our process, so please use labels for issues.</p>
 <i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-Label are living entities. This document describes the current status and might be slightly outdated. Please send a PR to adapt this document if the label structure changes. Also feel free to discuss the label structure anytime. It&#8217;s essential that labels describe our process, not that we have to adapt our process for these labels.
+Labels are living entities. This document describes the current status and might be slightly outdated. Please send a PR to adopt this section if the label structure changes. Also feel free to discuss the label structure anytime. It&#8217;s essential that labels describe our process, not that we have to adapt our process for these labels.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Labels are  grouped.
+<p>Labels are grouped.
 Each label consists of two part:
 A <strong>Group</strong> and a <strong>Name</strong> which are separated by a slash (<code>/</code>).
-For example the label <code>module/ui</code> is used to mark issue which are relevant to the Syndesis UI module.</p>
+For example, the label <code>module/ui</code> is used to mark issue which is relevant to the Syndesis UI module.</p>
 </div>
 <div class="paragraph">
 <p>The following label groups are available.
@@ -648,7 +1428,7 @@ There must be only at most one label from the "Exclusive" groups.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>size/</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tee shirt size for issues. This is a subjective assesment and should be done relative to other issues.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tee shirt size for issues. Sizing is a subjective assessment and should be done relative to other issues.</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">✔︎</p></td>
 </tr>
 <tr>
@@ -658,32 +1438,82 @@ There must be only at most one label from the "Exclusive" groups.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>target/</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Target milestone for an Epic. These are the Technicla Preview (TP) targets and GA.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target milestone for an Epic. These are the Technical Preview (TP) targets and GA.</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">✔︎</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Each label group serves a certain purpose and for each issue and PR it should be considered whether a label from a group applies.</p>
+<p>Each label group serves a particular purpose, and for each issue and PR, it should be considered whether a label from a group applies.</p>
 </div>
 <div class="sect3">
 <h4 id="_modules">3.1.1. Modules</h4>
 <div class="paragraph">
 <p>Labels from this group reference our application components like "rest", "ui", "uxd" or "connectors".
-Each sub team is responsible for one or more modules, and every module has a 'owning' team.
+Each sub-team is responsible for one or more modules, and every module has an 'owning' team.
 That does not mean that members of other teams are allowed to work on such modules.
 Contrary, this is even encouraged.
 But its just there so that teams can filter on issues and PRs which are relevant to them.</p>
 </div>
 <div class="paragraph">
 <p>An issue can carry many module labels.
-Especially Epics will carry more than such label as they touches more than one module (otherwise it wouldn&#8217;t be an epic).</p>
+Especially Epics will carry more than such label as they touch more than one module (otherwise it wouldn&#8217;t be an epic).</p>
 </div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Descriptions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #b39d9e;"><p class="tableblock"><strong>module/connectors</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported camel connectors</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #ab947d;"><p class="tableblock"><strong>module/deploy</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift templates</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #2e9288;"><p class="tableblock"><strong class="white">module/rest</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REST backend for managing integrations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #657c9a;"><p class="tableblock"><strong class="white">module/runtime</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Library used in the the integration runtimes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #2b313c;"><p class="tableblock"><strong class="white">module/s2i</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S2I base image for building integrations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #91ac83;"><p class="tableblock"><strong>module/tests</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System tests for testing the whole applications</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #dce6f0;"><p class="tableblock"><strong>module/ui</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User interface SPA, talking to the REST backend</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #fdc5d8;"><p class="tableblock"><strong>module/uxd</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User experience (UX) designs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #c6d74b;"><p class="tableblock"><strong>module/verifier</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service for connector meta-data and verification of connections</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_categories">3.1.2. Categories</h4>
 <div class="paragraph">
-<p>Labels from the <code>cat/</code> group are labels which can be always applied and which does not fit in other category.
+<p>Labels from the <code>cat/</code> group are labels which can always be applied and which does not fit in another category.
 Currently we have these categories:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -699,63 +1529,63 @@ Currently we have these categories:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/bug</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #e08891;"><p class="tableblock"><strong>cat/bug</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A bug which needs fixing.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/blocker</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #dd6977;"><p class="tableblock"><strong>cat/blocker</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A blocker, which is a bug which needs to be fixed as soon as possible.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/enhancement</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #93d273;"><p class="tableblock"><strong>cat/enhancement</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PR label for an enhancement of an existing feature.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/feature</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #bdd9f4;"><p class="tableblock"><strong>cat/feature</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PR label for a new feature</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/discussion</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #1d4367;"><p class="tableblock"><strong class="white">cat/discussion</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This issues requires a discussion.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/question</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #8bd5e3;"><p class="tableblock"><strong>cat/question</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">For issues holding a question.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/build</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">For issues which has relevance for the build system.</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #fef2c0;"><p class="tableblock"><strong>cat/build</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For issues which have relevance for the build system.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/design</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #cebdf8;"><p class="tableblock"><strong>cat/design</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A concrete UX design. Use this for PRs containing UX designs.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/process</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #999D99;"><p class="tableblock"><strong>cat/process</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Development process related issues carry this label.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/research</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #e9d355;"><p class="tableblock"><strong>cat/research</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Label used for issues which describe some research work</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/retro</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #84c68f;"><p class="tableblock"><strong>cat/retro</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Label for action items which are the result of a retrospective.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/starter</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #e2704f;"><p class="tableblock"><strong>cat/starter</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An issue which is easy to solve and can be used for ramping up new developers.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/techdebt</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #e7aeb6;"><p class="tableblock"><strong>cat/techdebt</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Label for issues identifying technical debt.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/techdoc</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Technical deceloper information (likes this hanbook ;-) related issues.</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #A69F36;"><p class="tableblock"><strong>cat/techdoc</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Technical developer information (likes this handbook ;-) related issues.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>cat/tooling</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #fcc7f5;"><p class="tableblock"><strong>cat/tooling</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Issues used for tooling around the development process (note: could be merged with "build")</p></td>
 </tr>
 </tbody>
@@ -764,8 +1594,8 @@ Currently we have these categories:</p>
 <div class="sect3">
 <h4 id="_notification">3.1.3. Notification</h4>
 <div class="paragraph">
-<p>Notification labels from the <code>notif/</code> group serve a special purpose.
-They are used when one team wants to notify another team that a certain issue might have them relevance to them.</p>
+<p>Notification labels from the <code>notif/</code> group serve a particular purpose.
+They are used when one team wants to notify another group that a specific issue might have them relevance to them.</p>
 </div>
 <div class="paragraph">
 <p>Currently we have two notifcation labels:</p>
@@ -783,12 +1613,12 @@ They are used when one team wants to notify another team that a certain issue mi
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>notif/doc</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This issue needs some attention from the docs team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a documentation already exists.</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #98cc38;"><p class="tableblock"><strong>notif/doc</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The issue needs some attention from the docs team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a documentation already exists.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>notif/uxd</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This label should be used for issues which needs some attention from the UX team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a a UX design already exists.</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #f382d0;"><p class="tableblock"><strong>notif/uxd</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This label should be used for issues which needs some attention from the UX team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a UX design already exists.</p></td>
 </tr>
 </tbody>
 </table>
@@ -796,11 +1626,11 @@ They are used when one team wants to notify another team that a certain issue mi
 <p>It is important to note that these labels also be removed when the notification has been received.</p>
 </div>
 <div class="paragraph">
-<p>For example, when an UI feature like a input form changes.
+<p>For example, when a UI feature like an input form changes.
 Then the UI team attaches a <code>notif/uxd</code> label to the PR which introduces this change.
 The UX team, detects with a filter search on this label, that there is a new notification.
 It then decides, whether UX design needs to be updated or not.
-In any case they are removing the <code>notif/uxd</code> label and add a <code>module/uxd</code> label if this PR indeed requires an UX design update.
+In any case, they are removing the <code>notif/uxd</code> label and add a <code>module/uxd</code> label if this PR indeed requires a UX design update.
 If no update is required, then the label is removed without replacement.</p>
 </div>
 </div>
@@ -822,41 +1652,76 @@ If no update is required, then the label is removed without replacement.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/atlasmap</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #edb080;"><p class="tableblock"><strong>ext/atlasmap</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/atlasmap/atlasmap">atlasmap</a> data mapper</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/camel</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #c56b37;"><p class="tableblock"><strong class="white">ext/camel</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://camel.apache.org">Camel</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/qe</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #91ac83;"><p class="tableblock"><strong>ext/qe</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/syndesisio/syndesis-qe">syndesis-qe</a> suite</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ext/docs</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #f9d647;"><p class="tableblock"><strong>ext/docs</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/syndesisio/syndesis-documentation">syndesis-documentation</a> End user documentation</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>For the future we plan to add more of these external repos into the Syndesis mono repo (like documentation or QE).
+<p>For the future, we plan to add more of these external repos into the Syndesis mono repo (like documentation or QE).
 If this happens, then labels should be converted to <code>module/</code> kind of labels.</p>
 </div>
-<div class="sect4">
-<h5 id="_daily_meeting_labels">Daily Meeting Labels</h5>
+</div>
+<div class="sect3">
+<h4 id="_daily_meeting_labels">3.1.5. Daily Meeting Labels</h4>
 <div class="paragraph">
-<p>This category holds five labels: <code>d/mon</code>, <code>d/tue</code>, <code>d/wed</code>, <code>d/thu</code>, <code>d/fri</code>, one for each working day.
-They are used to mark an Epic so that it is talked about the daily meeting at that day.
-The reason for this selection is, that we want to keep the daily meetings still at 15 mins but dont yet want to split up.
+<p>This category holds five labels: <a id="f00"></a><code>d/mon</code>, <code>d/tue</code>, <code>d/wed</code>, <code>d/thu</code>, <code>d/fri</code>, one for each working day.
+They are used to mark an Epic so that it is talked about the daily meeting on that day.
+The reason for this selection is, that we want to keep the daily meetings still for 15 mins but don&#8217;t yet want to split up.
 More than one of such label can and actually should be added to one Epic.
-At least two day labels must be added to an epic.</p>
+At least two-day labels must be added to an epic.</p>
 </div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Daily Meeting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #644288;"><p class="tableblock"><strong class="white">d/mon</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monday</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #644288;"><p class="tableblock"><strong class="white">d/tue</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tuesday</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #644288;"><p class="tableblock"><strong class="white">d/wed</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wednesday</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #644288;"><p class="tableblock"><strong class="white">d/thu</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Thursday</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #644288;"><p class="tableblock"><strong class="white">d/fri</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Friday</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sect4">
-<h5 id="_status">Status</h5>
+<div class="sect3">
+<h4 id="_status">3.1.6. Status</h4>
 <div class="paragraph">
-<p>Status labels are special since they may trigger some automatic actions.</p>
+<p>Status labels are unique since they may trigger some automatic actions.</p>
 </div>
 <div class="paragraph">
 <p>The current status labels are:</p>
@@ -874,20 +1739,20 @@ At least two day labels must be added to an epic.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/blocked</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The current issue is blocked by another issuer. Refer to the issue itself to see what is blocking this issued. This label is purely informal.</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #ad0009;"><p class="tableblock"><strong class="white">status/blocked</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current issue is blocked by another issue. Refer to the issue itself to see what is blocking this issued. This label is purely informal.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Approved</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This label will be automatically applied to an an PR as soon as the PR has been approved in a review. It is an indicator for our PR bot to automatically merge the pull request if it passes all required tests. (Note: Should probably be renamed to <code>status/approved</code>)</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #0ffa16;"><p class="tableblock"><strong>approved</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for our PR bot to automatically merge the pull request if it passes all required tests. (Note: Should probably be renamed to <code>status/approved</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/wip</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #f5c73f;"><p class="tableblock"><strong>status/wip</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is "Approved"</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>status/2s2f</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use this label to mark issues which should be self-merged without requiring a PR review, because its "too small too fail". Be very careful with this label, and remember a review is a service to you to help in your code quality. It alone your responsibility when you chose this label. It&#8217;s useful for minor doc updates or one line where you are 100% sure that it doesn&#8217;t break the system. Please use it sparingly and responsibly. (<em>Need still to be implemented</em>)</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #fdfcb6;"><p class="tableblock"><strong>status/2s2f</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use this label to mark issues which should be self-merged without requiring a PR review, because of its "too small to fail". Be very careful with this label, and remember a review is a service to you to help in your code quality. It is alone your responsibility when you chose this label. It&#8217;s useful for minor doc updates or one line where you are 100% sure that it doesn&#8217;t break the system. Please use it sparingly and responsibly. (<em>Need still to be implemented</em>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -896,11 +1761,10 @@ At least two day labels must be added to an epic.</p>
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
 Version <br>
-Last updated 2017-12-23 20:41:47 UTC
+Last updated 2017-12-24 12:41:03 UTC
 </div>
 </div>
 </body>
