@@ -6,21 +6,25 @@ minishift::description() {
 
 minishift::usage() {
     cat <<EOT
-    --reset                   Reset the minishift installation with 'minishift delete && minishift start'.
-    --full-reset              Full reset by 'minishift stop && rm -rf ~/.minishift && minishift start'
+    --install                 Install templates to a running Minishift.
+-p  --project                 Install into this project. Delete this project if
+    --reset                   Reset the minishift installation by
+                              'minishift delete && minishift start'.
+    --full-reset              Full reset by
+                              'minishift stop && rm -rf ~/.minishift && minishift start'
     --memory <mem>            How much memory to use when doing a reset. Default: 4GB
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
     --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
     --show-logs               Show minishift logs during startup
-    --install                 Install templates into a running Minishift.
--p  --project                 Install into this project. Delete this project if already existing for --install.
-                              Default project: "syndesis"
--i  --image-mode <mode>       Which templates to install: "docker" for plain images, "openshift" for image streams
-                              (default: "openshift")
--o  --open                    Open Syndesis in the browser
     --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.6.0)
+                              already existing for --install.
+                              Default project: "syndesis"
+-i  --image-mode <mode>       Which templates to install: "docker" for plain images,
+                              "openshift" for image streams (default: "openshift")
+-o  --open                    Open Syndesis in the browser
 EOT
 }
+
 
 minishift::run() {
     if [ $(hasflag --open -o) ]; then
@@ -71,6 +75,8 @@ minishift::run() {
         if [ ${template} = "syndesis-restricted" ]; then
           # Wait a bit to start image fetching
           # Patch imagestreams from "DockerImage" to "ImageStreamTag"
+          oc get pods -w &
+          watch_pid=$!
           for dc in "syndesis-rest" "syndesis-ui" "syndesis-verifier"; do
               echo "Waiting for $dc to be started"
               local replicas="$(oc get dc $dc -o jsonpath='{.status.availableReplicas}')"
@@ -80,6 +86,7 @@ minishift::run() {
                   replicas=$(oc get dc $dc -o jsonpath="{.status.availableReplicas}")
               done
           done
+          kill $watch_pid
           for is in "syndesis-rest" "syndesis-ui" "syndesis-verifier" "syndesis-s2i"; do
               echo "Patching imagestream $is"
               local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'

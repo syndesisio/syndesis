@@ -17,7 +17,7 @@ release::description() {
 release::usage() {
     cat - <<EOT
     --dry-run                 Dry run. This will stage and drop a release
-    --release-snaposhots      Indicates that this is a snapshot release
+    --release-snapshots      Indicates that this is a snapshot release
     --release-version         The release version
     --dev-version             The development version
     --profiles                Additional profiles to specify

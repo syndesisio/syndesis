@@ -6,7 +6,7 @@ dev::description() {
 
 dev::usage() {
     cat <<EOT
-    --debug <name>            Setup a port forwarding to <name> pod (example: rest)
+    --debug <name>            Setup a port forwarding to <name> pod (default: rest)
 EOT
 }
 
