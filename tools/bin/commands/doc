@@ -14,7 +14,7 @@ doc::usage() {
     --pdf <out>               Generate PDF and write it to <out> (default: "sdh.pdf")
     --epub <out>              Generate Epub and write it to <out> (default: "sdh.epub")
     --gh-pages <msg>          Create everything into the gh-pages branch and commit with <msg>
-    --local                   Use locally installed commands instead of Docker image
+-l  --local                   Use locally installed commands instead of Docker image
 EOT
 }
 
@@ -28,7 +28,7 @@ doc::run() {
     fi
     docdir=$(cd $docdir && pwd)
 
-    local version=$(git describe $(git rev-parse HEAD))
+    local version=$(cd $docdir && git describe $(cd $docdir && git rev-parse HEAD))
 
     local input_file=$(readopt --input -i)
     if [ -z "${input_file}" ]; then
@@ -93,7 +93,7 @@ doc::run() {
 call_asciidoctor() {
     local docdir=$1
     shift
-    if [ $(hasflag --local) ]; then
+    if [ $(hasflag --local -l) ]; then
         cd $docdir
         eval "$@"
     else

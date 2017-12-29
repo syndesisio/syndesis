@@ -1,0 +1,163 @@
+[[syndesis-build]]
+## syndesis build
+
+The primary goal of `syndesis` is to build Syndesis.
+It is mainly a wrapper around Maven but adds some convenience for common developer workflows.
+
+
+[[syndesis-build-usage]]
+### Usage
+[source,indent=0,subs="verbatim,quotes"]
+----
+Usage: syndesis build [... options ...]
+
+Options for build:
+-b  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
+    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-m  --module <m1>,<m2>, ..    Build modules
+                              Modules: ui, rest, connectors, s2i, verifier, runtime
+-d  --dependencies            Build also all project the specified module depends on
+    --init                    Install top-level parent pom, too. Only needed when used with -m
+    --skip-tests              Skip unit and system test execution
+    --skip-checks             Disable all checks
+-f  --flash                   Skip checks and tests execution (fastest mode)
+-i  --image-mode  <mode>      <mode> can be
+                              - "none"      : No images are build (default)
+                              - "openshift" : Build for OpenShift image streams
+                              - "docker"    : Build against a plain Docker daemon
+                              - "auto"      : Automatically detect whether to
+                                              use "openshift" or "docker"
+    --docker                  == --image-mode docker
+    --openshift               == --image-mode openshift
+-p  --project <project>       Specifies the project to create images in when using '--images s2i'
+-k  --kill-pods               Kill pods after the image has been created.
+                              Useful when building with image-mode docker
+-c  --clean                   Run clean builds (mvn clean)
+    --batch-mode              Run mvn in batch mode
+----
+
+[[syndesis-build-modules]]
+### Modules
+A plain `build` command without any options performs a plain `mvn install` for all modules.
+This compiles all Java and Javascript artefacts and also runs all tests and code checks.
+
+You also can compile only specific modules by using the `--module` (short: `-m`) option with a comma-separated list of modules.
+
+The following modules are available:
+
+[cols="3,15"]
+|===
+| **rest**
+| Main backend providing a REST API for the user interface
+
+| **ui**
+| The SPA user interface application
+
+| **verifier**
+| Verifier used for verifying connections and providing connector metadata
+
+| **connectors**
+| All connectors used by Syndesis out of the box
+
+| **runtime**
+| Support libraries for running integrations
+
+| **s2i**
+| S2I base image used for building the runtime images
+|===
+
+Also, to specify each module individually, you can also use some module groups:
+
+* `--backend` (short: `-b`) for the modules `rest`, `runtime`, `verifier`, `connectors`
+* `--images` build all modules which result in Docker images, and also builds the Docker images in addition to the Maven artefacts.
+
+When the option `--dependencies` (short: `-d`) is given in addition to `--modules`, also all modules which the specified modules depend on are build, too.
+
+[[syndesis-build-tuning]]
+### Tuning
+By default, all checks like license or code quality checks are performed.
+Also, all unit and local integration tests are run.
+A full build eats up quite some time, but you should always run at full blast before submitting a pull request.
+
+However, to speed up the turnaround, several speed-up options are available.
+The following table shows these options, and also how long a full clean build over all modules takes: (but without building images)
+
+[cols="3,15,2",options="header"]
+|===
+|Option
+|Description
+|Time
+
+| _none_
+| Default mode with all checks and tests
+|
+
+| `--skip-tests`
+| Skip all unit and local integration tests
+|
+
+| `--skip-checks`
+| Skip sanity checks like for correct license headers and
+|
+
+
+| `--flash`
+| Fastest mode with skipping all checks and tests and with even some other aggressive optimizations
+|
+|===
+
+[[syndesis-build-image]]
+### Images
+As described in <<syndesis-dev-modes,Development Modes>> there are two ways how Syndesis Docker images can be created and deployed.
+
+You can decide which mode to use with the option `--image-mode` (short: `-i`) and the following options are available:
+
+[cols="3,3,15",options="header"]
+|===
+|Option
+|Shortcut
+|Description
+
+| `-i auto`
+|
+| Auto-select the mode based whether you are connected to OpenShift (e.g via Minishift) or not.
+
+| `-i docker`
+| `--docker`
+| Enable Docker build mode. Access to a Docker daemon is required.
+
+| `-i openshift`
+| `--openshift`
+| Use OpenShift S2I for building the images. An active login to OpenShift is a precondition for this. You can use `--project` (`-p`) for specifying the target namespace where to create the image. By default, it is created in the current namespace
+
+| `-i s2i`
+| `--s2i`
+| Shortcut for `--openshift`
+
+| `-i none`
+|
+| Don't build Docker images even when implicitly enabled (e.g. when using `--images`)
+|===
+
+Specifying the mode also enables building the Docker images which otherwise would not be built.
+
+If the direct Docker mode is used it, you have to restart the Pods, so the newly created images are picked up.
+For this you can use `--kill-pods` (short: `-k`) which will kill the corresponding pod after the image has been created.
+This only works when you are connected to an OpenShift cluster (like for minishift)
+
+[source,indent=0,subs="verbatim,quotes"]
+.Example
+----
+# Build all image with openshift mode
+syndesis --images --openshift
+
+# Build to the minishift Docker daemon
+eval $(minishift docker-env)
+syndesis -i docker -k
+
+# Or:
+# syndesis --image-mode docker
+
+# Or:
+# syndesis --docker
+----

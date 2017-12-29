@@ -31,6 +31,7 @@ export class IntegrationsSelectActionComponent extends FlowPage
   actionsSubscription: Subscription;
   position: number;
   step: Step;
+  currentStep: number;
 
   constructor(
     public connectorStore: ConnectorStore,
@@ -102,22 +103,32 @@ export class IntegrationsSelectActionComponent extends FlowPage
   }
 
   ngOnInit() {
-    this.actions = this.connector
-      .filter(connector => connector !== undefined)
-      .map(connector => connector.actions);
+    this.currentStep = +this.route.snapshot.paramMap.get('position');
+
+    if (this.currentStep === this.currentFlow.getFirstPosition()) {
+      this.actions = this.connector
+        .filter(connector => connector !== undefined)
+        .switchMap(connector => [connector.actions.filter(action => action.pattern === 'From')]);
+    }
+
+    if (this.currentStep > this.currentFlow.getFirstPosition()
+      && this.currentStep <= this.currentFlow.getLastPosition()) {
+      this.actions = this.connector
+        .filter(connector => connector !== undefined)
+        .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To')]);
+    }
+
     this.actionsSubscription = this.actions.subscribe(_ =>
       this.currentFlow.events.emit({
         kind: 'integration-action-select',
         position: this.position
       })
     );
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('position')
-      .map((position: string) => {
-        this.position = Number.parseInt(position);
-        this.loadActions();
-      })
-      .subscribe();
+
+    this.route.paramMap.subscribe(params => {
+      this.position = +params.get('position');
+      this.loadActions();
+    });
 
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.

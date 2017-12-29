@@ -7,6 +7,7 @@ import { log, getCategory } from '../logging';
 import { Connection, Connections, Integration, Integrations } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
+import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 const category = getCategory('Dashboard');
 
@@ -15,7 +16,8 @@ const category = getCategory('Dashboard');
   templateUrl: './integrations.component.html',
   styleUrls: ['./integrations.component.scss']
 })
-export class DashboardIntegrationsComponent {
+export class DashboardIntegrationsComponent implements OnChanges {
+  chartData: number[];
   @Input() integrations: Integrations;
   @Input() connections: Connections;
   @Input() integrationsLoading: boolean;
@@ -26,11 +28,7 @@ export class DashboardIntegrationsComponent {
   doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
 
   get doughnutChartData() {
-    return [
-      this.countActiveIntegrations(),
-      this.countDraftIntegrations(),
-      this.countInactiveIntegrations()
-    ];
+    return this.chartData;
   }
 
   doughnutChartType = 'doughnut';
@@ -48,7 +46,15 @@ export class DashboardIntegrationsComponent {
     cutoutPercentage: 75
   };
 
-  constructor(public route: ActivatedRoute, private router: Router) {}
+  constructor(public route: ActivatedRoute, private router: Router) {
+    this.chartData = [0, 0, 0];
+  }
+
+  ngOnChanges(changes: any) {
+    this.chartData[0] = this.countActiveIntegrations();
+    this.chartData[1] = this.countDraftIntegrations();
+    this.chartData[2] = this.countInactiveIntegrations();
+  }
 
   //-----  Integration Board Chart ------------------->>
 

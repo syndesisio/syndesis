@@ -1,4 +1,4 @@
-[id='deleting_api_connectors']
+[id='deleting-api-connectors']
 = Deleting API client connectors
 
 To delete an API client connector:

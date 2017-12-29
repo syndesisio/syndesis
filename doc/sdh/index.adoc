@@ -15,8 +15,5 @@ ifdef::basebackend-html[toc::[]]
 
 include::introduction.adoc[]
 
-# Building Syndesis
-include::build/syndesis_sh.adoc[]
-
-# Syndesis Development Process
-include::process/labels.adoc[]
+include::build/syndesis.adoc[]
+include::process/process.adoc[]

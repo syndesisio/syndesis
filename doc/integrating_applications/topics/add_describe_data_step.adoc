@@ -1,11 +1,43 @@
 [id='add-describe-data-step']
-= Adding a step to describe data types
+= Add a step to describe data
 
- {prodname} provides the *Describe Data* 
-step for declaring data types. In an integration, you 
-can add a *Describe Data* step before an API connection that invokes
-a typeless action. 
+In an integration, some connections do not declare data types. 
+To be able to map data fields from or to connections that do not
+declare data types, {prodname} provides the *Describe Data* 
+step, which lets you specify a schema for the
+current integration data. For example, in an
+integration, you 
+might need to add a *Describe Data* step 
 
+* Between an API connection and a data mapping step.
+* Between an AMQ connection and a data mapping step.
 
-Description in the list of steps
-Declare data type when not specified by a connection
+To add a step that specifies a data schema, start to create your 
+integration. Add the connections to the applications you want to 
+integrate, then:
+
+. In the left pane, between the connections that require specification
+of a data schema, hover over the plus sign and in the popup, click
+*Add a Step*. 
+. On the *Add a Step* page, click *Describe Data*. 
+. To configure the *Describe Data* step:
++
+.. Select one of the following as the schema type:
++
+* JSON schema
+* JSON instance document
+* XML schema
+* XML instance document
+
+.. To import the schema, choose a file or specify a URL for the schema. 
+If you are using a JSON file, the file extension must be `.json`.
+If you are using an XML schema, the file extension must be `.xsd`.
+If you are using an XML document, the file extension must be `.xml`. 
+
+.. If you are importing a schema, identify the root element. 
++
+{prodname} immediately tries to upload the specified file or obtain the 
+schema from the URL. If there is an error, {prodname} displays a 
+message about the problem. Correct the error and try again. 
+
+. When {prodname} has a valid schema, click *Done*. 
