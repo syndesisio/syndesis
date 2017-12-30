@@ -19,7 +19,7 @@ import { ApiConnectorService } from './api-connector.service';
 export class ApiConnectorListComponent implements OnInit {
   apiConnectors$: Observable<ApiConnectors|any>;
   filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
-  loading$ = Observable.of(false);
+  loading$ = Observable.of(true);
   listConfig: ListConfig;
   appName: string;
   itemUseMapping: { [valueComparator: string]: string } = {
