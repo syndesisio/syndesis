@@ -9,7 +9,7 @@ import { log, getCategory } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 import { ApiConnector, ApiConnectors } from './api-connector.models';
-import { ApiConnectorStore } from './api-connector.store';
+import { ApiConnectorService } from './api-connector.service';
 
 @Component({
   selector: 'syndesis-api-connector-list',
@@ -17,24 +17,22 @@ import { ApiConnectorStore } from './api-connector.store';
   styleUrls: ['./api-connector-list.component.scss']
 })
 export class ApiConnectorListComponent implements OnInit {
-  apiConnectors$: Observable<ApiConnectors>;
+  apiConnectors$: Observable<ApiConnectors|any>;
   filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
-  loading$: Observable<boolean>;
+  loading$ = Observable.of(false);
   listConfig: ListConfig;
-  appName;
+  appName: string;
   itemUseMapping: { [valueComparator: string]: string } = {
     '=1': '<strong>1</strong> time',
     'other': '<strong>#</strong> times'
   };
 
   constructor(
-    public config: ConfigService,
-    private apiConnectorStore: ApiConnectorStore,
+    private apiConnectorService: ApiConnectorService,
+    private config: ConfigService,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.apiConnectors$ = this.apiConnectorStore.list;
-    this.loading$ = this.apiConnectorStore.loading;
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -59,6 +57,12 @@ export class ApiConnectorListComponent implements OnInit {
     };
   }
 
+  ngOnInit() {
+    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
+    this.apiConnectors$ = this.apiConnectorService.list();
+    this.loading$ = this.apiConnectors$.switchMap(apiConnectors => Observable.of(!apiConnectors));
+  }
+
   handleAction(event: any) {
     if (event.id === 'createApiConnector') {
       this.router.navigate(['create'], { relativeTo: this.route });
@@ -68,10 +72,5 @@ export class ApiConnectorListComponent implements OnInit {
   handleClick(event: { item: ApiConnector }) {
     const apiConnector = event.item;
     this.router.navigate([apiConnector.id], { relativeTo: this.route });
-  }
-
-  ngOnInit() {
-    this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
-    this.apiConnectorStore.loadAll();
   }
 }
