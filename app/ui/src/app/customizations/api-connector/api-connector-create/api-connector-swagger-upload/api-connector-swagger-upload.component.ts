@@ -28,6 +28,14 @@ export class ApiConnectorSwaggerUploadComponent {
     }
   }
 
+  get processingError(): string {
+    if (this.apiConnectorState &&
+      this.apiConnectorState.hasErrors &&
+      this.apiConnectorState.createRequest.errors.length > 0) {
+      return this.apiConnectorState.errors[0].message;
+    }
+  }
+
   onFile(event): void {
     if (event.target && event.target.files) {
       this.swaggerFileList = event.target.files;

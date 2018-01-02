@@ -5,7 +5,10 @@ import { ApiConnectorState } from './api-connector.models';
 import {
   ApiConnectorActions,
   ApiConnectorFetchComplete,
-  ApiConnectorFetchFail
+  ApiConnectorFetchFail,
+  ApiConnectorCreate,
+  ApiConnectorCreateComplete,
+  ApiConnectorCreateCancel,
 } from './api-connector.actions';
 
 const initialState: ApiConnectorState = {
@@ -45,6 +48,37 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     }
 
     case ApiConnectorActions.VALIDATE_SWAGGER_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        hasErrors: true,
+        errors: [action.payload]
+      };
+    }
+
+    case ApiConnectorActions.CREATE: {
+      const createRequest = (action as ApiConnectorCreate).payload;
+      return {
+        ...state,
+        createRequest,
+        loading: true,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.CREATE_COMPLETE: {
+      const createRequest = (action as ApiConnectorCreateComplete).payload;
+      return {
+        ...state,
+        createRequest,
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.CREATE_FAIL: {
       return {
         ...state,
         loading: false,

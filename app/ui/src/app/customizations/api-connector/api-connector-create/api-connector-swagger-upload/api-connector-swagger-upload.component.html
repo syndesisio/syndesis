@@ -11,6 +11,10 @@
   <syndesis-validation-error *ngIf="validationError">
     {{ validationError.message }}
   </syndesis-validation-error>
+  
+  <syndesis-validation-error *ngIf="processingError">
+    {{ processingError }}
+  </syndesis-validation-error>
 
   <p>Upload the swagger file for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere,
     as long as a well-documented swagger is available and conforms to OpenAPI standard.</p>

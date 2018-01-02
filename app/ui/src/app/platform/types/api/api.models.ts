@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
-import { StringMap } from '@syndesis/ui/platform';
+import { StringMap, FileMap } from '@syndesis/ui/platform';
 
 export interface ApiErrorMessage {
   userMessage: string;
@@ -26,7 +26,7 @@ export interface ApiEndpoint {
   post<T>(payload: any): Observable<T>;
   put<T>(payload: any): Observable<T>;
   delete<T>(payload?: any): Observable<T>;
-  upload<T>(fileList?: FileList, body?: StringMap<any>): Observable<T>;
+  upload<T>(fileMap?: FileMap, body?: StringMap<any>): Observable<T>;
 }
 
 export interface ApiRequestProgress {

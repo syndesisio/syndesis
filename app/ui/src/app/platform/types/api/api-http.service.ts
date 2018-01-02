@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { StringMap } from '@syndesis/ui/platform';
+import { StringMap, FileMap } from '@syndesis/ui/platform';
 import { ApiResponse, ApiEndpoint, ApiRequestProgress } from './api.models';
 
 @Injectable()
@@ -20,5 +20,5 @@ export abstract class ApiHttpService {
 
   abstract delete<T>(endpoint: string | any[]): Observable<T>;
 
-  abstract upload<T>(endpoint: string | any[], fileList?: FileList, body?: StringMap<any>): Observable<T>;
+  abstract upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>): Observable<T>;
 }

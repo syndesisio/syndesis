@@ -4,6 +4,10 @@
     </h2>
   </div>
   <div class="card-pf-body">
+    <syndesis-validation-error *ngIf="processingError">
+      {{ processingError }}
+    </syndesis-validation-error>
+
     <form class="syn-form syn-form--card syn-form--api-connector"
       [formGroup]="apiConnectorInfoForm"
       (submit)="onSubmit()" novalidate>
@@ -34,15 +38,17 @@
         </div>
 
         <div class="syn-form-row">
-          <label class="syn-form-row__label" for="baseUrl">Base URL</label>
-          <input class="syn-form-row__input" type="text" formControlName="baseUrl" (keyup.enter)="onChange($event)">
+          <label class="syn-form-row__label" for="basePath">Base URL</label>
+          <input class="syn-form-row__input" type="text" formControlName="basePath" (keyup.enter)="onChange($event)">
         </div>
       </fieldset>
 
       <fieldset class="syn-form__buttons syn-form__buttons--pushed" *ngIf="!enableEditing">
-        <button type="submit" class="submit syn-form__submit btn btn-primary">
+        <syndesis-button type="submit"
+          [loading]="apiConnectorState.loading"
+          [disabled]="apiConnectorInfoForm.invalid">
           Next
-        </button>
+        </syndesis-button>
       </fieldset>
     </form>
   </div>

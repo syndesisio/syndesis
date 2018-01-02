@@ -8,24 +8,43 @@ import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { of } from 'rxjs/observable/of';
 
-import { ApiHttpService } from '@syndesis/ui/platform';
-import { ApiConnectorActions, ApiConnectorValidateSwagger } from './api-connector.actions';
-
-const ERROR_MSG = 'An unexpected HTTP error occured. Please check stack strace';
+import { ApiConnectorService } from './api-connector.service';
+import {
+  ApiConnectorActions,
+  ApiConnectorValidateSwagger,
+  ApiConnectorCreate
+} from './api-connector.actions';
 
 @Injectable()
 export class ApiConnectorEffects {
-  @Effect() validateSwagger$: Observable<Action> = this.actions$
+  @Effect()
+  validateSwagger$: Observable<Action> = this.actions$
     .ofType(ApiConnectorActions.VALIDATE_SWAGGER)
     .mergeMap((action: ApiConnectorValidateSwagger) =>
-      this.apiHttpService.setEndpointUrl('submitCustomConnectorInfo')
-        .post(action.payload)
+      this.apiConnectorService
+        .submitCustomConnectorInfo(action.payload)
         .map(response => ({ type: ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE, payload: response }))
-        .catch(error => of({ type: ApiConnectorActions.VALIDATE_SWAGGER_FAIL, payload: { message: ERROR_MSG } }))
+        .catch(error => of({
+          type: ApiConnectorActions.VALIDATE_SWAGGER_FAIL,
+          payload: error
+        }))
+    );
+
+  @Effect()
+  createCustomConnector$: Observable<Action> = this.actions$
+    .ofType(ApiConnectorActions.CREATE)
+    .mergeMap((action: ApiConnectorCreate) =>
+      this.apiConnectorService
+        .createCustomConnector(action.payload)
+        .map(response => ({ type: ApiConnectorActions.CREATE_COMPLETE, payload: response }))
+        .catch(error => of({
+          type: ApiConnectorActions.CREATE_FAIL,
+          payload: error
+        }))
     );
 
   constructor(
     private actions$: Actions,
-    private apiHttpService: ApiHttpService
+    private apiConnectorService: ApiConnectorService
   ) { }
 }

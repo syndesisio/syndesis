@@ -6,12 +6,20 @@ export interface StringMap<T> {
 }
 
 /**
+ * FileMap allows to model FormData objects containing files mapped to named keys
+ */
+export interface FileMap {
+  [key: string]: File;
+}
+
+/**
  * A convenience model to map internal UI errors, either derived from Http sync operations
  * or any other state handling actions that might throw an exception.
  */
 export interface ActionReducerError {
   errorCode?: any;
   message: string;
+  debugMessage?: string;
   status?: number;
   statusText?: string;
 }

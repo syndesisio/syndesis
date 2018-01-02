@@ -6,16 +6,6 @@ export interface ApiConnector extends BaseEntity {
   data: ApiConnectorData;
 }
 
-// export interface ApiConnectorData extends ApiConnectorValidation {
-//   id: string;
-//   name: string;
-//   description: string;
-//   icon: string;
-//   fileIcon?: File;
-//   properties: ApiConnectorProperties;
-//   connectorProperties: any;
-// }
-
 export type ApiConnectors = Array<ApiConnectorData>;
 
 export interface ApiConnectorProperties {
@@ -37,7 +27,7 @@ export interface ApiConnectorProperties {
   };
 }
 
-export interface ApiConnectorData extends ApiConnectorValidation {
+export interface ApiConnectorData {
   id: string;
   name: string;
   description: string;
@@ -71,13 +61,26 @@ export interface ApiConnectorValidation {
   description?: string;
   warnings?: Array<{ key: string; longdesc: string; }>;
   errors?: Array<ApiConnectorValidationError>;
+  icon?: string;
+  properties?: {
+    basePath: {
+      defaultValue: string;
+    };
+    host: {
+      defaultValue: string;
+    };
+    authenticationType?: {
+      defaultValue: string;
+      enum: Array<{ label: string; value: string; }>;
+    };
+    authorizationEndpoint?: {
+      defaultValue: string;
+    };
+  };
 }
 
 export interface CustomApiConnectorRequest {
   connectorTemplateId: string;
-  name?: string;
-  description?: string;
-  icon?: File|string;
 }
 
 export interface CustomApiConnectorAuthSettings {
@@ -86,26 +89,14 @@ export interface CustomApiConnectorAuthSettings {
   tokenEndpoint?: string;
 }
 
-export interface CustomSwaggerConnectorRequest
-  extends CustomApiConnectorRequest, ApiConnectorValidation {
-  configuredProperties?: {
-    specification?: string;
-    host?: string;
-    basePath?: string;
-    // Below props mirror the CustomApiConnectorAuthSettings schema
-    authenticationType?: string;
-    authorizationEndpoint?: string;
-    tokenEndpoint?: string;
-  };
-  properties?: {
-    authenticationType?: {
-      defaultValue: string;
-      enum: Array<{ label: string; value: string; }>;
-    };
-    authorizationEndpoint?: {
-      defaultValue: string;
-    }
-  };
+export interface RequestProperties extends CustomApiConnectorAuthSettings {
+  specification?: string;
+  host?: string;
+  basePath?: string;
+}
+
+export interface CustomSwaggerConnectorRequest extends CustomApiConnectorRequest, ApiConnectorValidation {
+  configuredProperties?: RequestProperties;
   file?: File;
 }
 

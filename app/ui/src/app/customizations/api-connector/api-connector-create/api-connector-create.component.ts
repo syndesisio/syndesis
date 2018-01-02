@@ -10,14 +10,15 @@ import {
   ApiConnectorActions,
   getApiConnectorState,
   CustomSwaggerConnectorRequest,
-  CustomApiConnectorAuthSettings
+  CustomApiConnectorAuthSettings,
+  ApiConnectorData
 } from '@syndesis/ui/customizations/api-connector';
 
 enum WizardSteps {
-  UploadSwagger = 1,
-  ReviewApiConnector = 2,
-  UpdateAuthSettings = 3,
-  SubmitRequest = 4
+  UploadSwagger       = 1,
+  ReviewApiConnector  = 2,
+  UpdateAuthSettings  = 3,
+  SubmitRequest       = 4,
 }
 
 @Component({
@@ -41,6 +42,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.modalService.registerModal(this.cancelModalId, this.cancelModalTemplate);
     this.apiConnectorState$ = this.apiConnectorStore.select(getApiConnectorState);
+
     // Once the request validation results are yielded for the 1st time, we move user to step 2
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
       .first(request => !!request && !!request.actionsSummary)
@@ -72,8 +74,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.currentActiveStep = WizardSteps.SubmitRequest;
   }
 
-  onCreateComplete(event): void {
-    //console.log(event);
+  onCreateComplete(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): void {
+    this.apiConnectorStore.dispatch(ApiConnectorActions.create(customSwaggerConnectorRequest));
   }
 
   ngOnDestroy() {

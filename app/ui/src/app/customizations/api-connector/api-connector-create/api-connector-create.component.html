@@ -52,7 +52,9 @@
           [customSwaggerConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
           (authSetup)="onAuthSetup($event)">
         </syndesis-api-connector-auth>
-        <syndesis-api-connector-info *ngIf="currentActiveStep == 4" (update)="onCreateComplete()">
+        <syndesis-api-connector-info *ngIf="currentActiveStep == 4" 
+          [apiConnectorState]="apiConnectorState$ | async"
+          (update)="onCreateComplete($event)">
         </syndesis-api-connector-info>
       </div>
     </div>

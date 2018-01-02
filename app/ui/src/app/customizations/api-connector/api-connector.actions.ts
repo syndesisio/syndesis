@@ -19,6 +19,7 @@ export class ApiConnectorActions {
   static UPDATE_AUTH_SETTINGS = '[API Connectors] Update Api Connector auth settings';
   static CREATE = '[API Connectors] Create custom connector request';
   static CREATE_COMPLETE = '[API Connectors] Create custom connector complete';
+  static CREATE_FAIL = '[API Connectors] Custom connector creation failed';
   static CREATE_CANCEL = '[API Connectors] Create custom connector cancelled';
 
   static fetch() {
@@ -45,8 +46,12 @@ export class ApiConnectorActions {
     return new ApiConnectorUpdateAuthSettings(payload);
   }
 
-  static create(payload: ApiConnectorData) {
+  static create(payload: CustomSwaggerConnectorRequest) {
     return new ApiConnectorCreate(payload);
+  }
+
+  static createFail(payload: any) {
+    return new ApiConnectorCreateFail(payload);
   }
 
   static createComplete(payload: any) {
@@ -101,13 +106,19 @@ export class ApiConnectorUpdateAuthSettings implements Action {
 export class ApiConnectorCreate implements Action {
   readonly type = ApiConnectorActions.CREATE;
 
-  constructor(public payload: ApiConnectorData) { }  // TODO: Review payload type
+  constructor(public payload: CustomSwaggerConnectorRequest) { }
 }
 
 export class ApiConnectorCreateComplete implements Action {
   readonly type = ApiConnectorActions.CREATE_COMPLETE;
 
   constructor(public payload: any) { }  // TODO: Review payload type
+}
+
+export class ApiConnectorCreateFail implements Action {
+  readonly type = ApiConnectorActions.CREATE_FAIL;
+
+  constructor(public payload: ActionReducerError) { }
 }
 
 export class ApiConnectorCreateCancel implements Action {

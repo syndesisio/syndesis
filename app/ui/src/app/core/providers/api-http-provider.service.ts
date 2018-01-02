@@ -3,8 +3,10 @@ import { HttpClient, HttpHeaders, HttpRequest, HttpEventType, HttpProgressEvent,
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { ApiHttpService, ApiEndpoint, ApiRequestProgress, StringMap } from '@syndesis/ui/platform';
+import { ApiHttpService, ApiEndpoint, ApiRequestProgress, ActionReducerError, StringMap, FileMap } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
+
+const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack strace';
 
 @Injectable()
 export class ApiHttpProviderService extends ApiHttpService {
@@ -45,8 +47,8 @@ export class ApiHttpProviderService extends ApiHttpService {
       post: <T>(body: any) => this.post<T>([endpointKey, ...endpointParams], body),
       put: <T>(body: any) => this.put<T>([endpointKey, ...endpointParams], body),
       delete: <T>() => this.delete<T>(url),
-      upload: <T>(fileList?: FileList, body?: StringMap<any>) => {
-        return this.upload<T>([endpointKey, ...endpointParams], fileList, body);
+      upload: <T>(fileMap?: FileMap, body?: StringMap<any>) => {
+        return this.upload<T>([endpointKey, ...endpointParams], fileMap, body);
       }
     };
   }
@@ -54,50 +56,61 @@ export class ApiHttpProviderService extends ApiHttpService {
   get<T>(endpoint: string | any[]): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
-    return this.httpClient.get<T>(url);
+    return this.httpClient
+      .get<T>(url)
+      .catch(error => Observable.throw(this.catchError(error)));
   }
 
   post<T>(endpoint: string | any[], body?: any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
-    return this.httpClient.post<T>(url, body);
+    return this.httpClient
+      .post<T>(url, body)
+      .catch(error => Observable.throw(this.catchError(error)));
   }
 
   put<T>(endpoint: string | any[], body: any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
-    return this.httpClient.put<T>(url, body);
+    return this.httpClient
+      .put<T>(url, body)
+      .catch(error => Observable.throw(this.catchError(error)));
   }
 
   delete<T>(endpoint: string | any[]): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
-    return this.httpClient.delete<T>(url);
+    return this.httpClient
+      .delete<T>(url)
+      .catch(error => Observable.throw(this.catchError(error)));
   }
 
   get uploadProgressEvent$(): Observable<ApiRequestProgress> {
     return this.uploadProgressSubject.asObservable();
   }
 
-  upload<T>(endpoint: string | any[], fileList?: FileList, body?: StringMap<any>): Observable<T> {
+  upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
-    const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data');
+    const headers = new HttpHeaders();
 
-    const formData = new FormData();
-    for (let i = 0; i < fileList.length; i++) {
-      formData.append(fileList.item(i).name, fileList.item(i));
-    }
+    const multipartFormData = new FormData();
 
     if (body) {
       for (const key in body) {
         if (body.hasOwnProperty(key)) {
-          formData.append(key, body[key]);
+          multipartFormData.append(key, body[key]);
         }
       }
     }
 
-    const request = new HttpRequest('POST', url, formData, { headers, reportProgress: true });
+    for (const key in fileMap) {
+      if (fileMap.hasOwnProperty(key)) {
+        multipartFormData.append(key, fileMap[key]);
+      }
+    }
+
+    const request = new HttpRequest('POST', url, multipartFormData, { headers, reportProgress: true });
 
     return this.httpClient.request(request)
       .do(requestEvent => {
@@ -108,7 +121,8 @@ export class ApiHttpProviderService extends ApiHttpService {
       })
       .filter(requestEvent => requestEvent.type === HttpEventType.Response)
       .map(requestEvent => requestEvent as HttpResponse<T>)
-      .map(requestEvent => requestEvent.body);
+      .map(requestEvent => requestEvent.body)
+      .catch(error => Observable.throw(this.catchError(JSON.parse(error.error))));
   }
 
   private emitProgressEvent(httpProgressEvent?: HttpProgressEvent): void {
@@ -157,5 +171,13 @@ export class ApiHttpProviderService extends ApiHttpService {
     }
 
     return endpointTemplate;
+  }
+
+  private catchError(error): ActionReducerError {
+    return {
+      message: error.userMsg || DEFAULT_ERROR_MSG,
+      debugMessage: error.developerMsg || DEFAULT_ERROR_MSG,
+      status: error.errorCode,
+    };
   }
 }
