@@ -7,7 +7,7 @@ import {
   FilterFunction,
   FileUploaderOptions,
   ParsedResponseHeaders
-} from 'ng2-file-upload-base/src';
+} from 'ng2-file-upload';
 import { NotificationType } from 'patternfly-ng';
 import { Extension } from '../../../model';
 import { ExtensionStore } from '../../../store/extension/extension.store';

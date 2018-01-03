@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FileUploadModule } from 'ng2-file-upload-base/src';
+import { FileUploadModule } from 'ng2-file-upload';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
 import { ApiConnectorModule, ApiConnectorListComponent } from './api-connector';
