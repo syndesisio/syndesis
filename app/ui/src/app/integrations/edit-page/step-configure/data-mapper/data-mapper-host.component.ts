@@ -43,7 +43,7 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'syndesis-data-mapper-host',
   template: `
-    <div *ngIf="initializedCountDown==0" class="data-mapper-host">
+    <div *ngIf="outstandingTasks == 0" class="data-mapper-host">
       <data-mapper #dataMapperComponent></data-mapper>
     </div>
   `,
@@ -66,7 +66,7 @@ const MAPPING_KEY = 'atlasmapping';
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit {
   routeSubscription: Subscription;
-  initializedCountDown = 1;
+  outstandingTasks = 1;
 
   sourceDocTypes = [];
   targetDocTypes = [];
@@ -108,7 +108,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
-        this.initializedCountDown += 1;
+        this.addInitializationTask();
         const docDef: DocumentDefinition = this.cfg.addJavaDocument(
           type,
           isSource
@@ -122,7 +122,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
             );
             log.debugc(() => inspection, category);
             docDef.initCfg.inspectionResultContents = inspection;
-            this.countDownInitialization();
+            this.removeInitializationTask();
           },
           err => {
             log.warnc(
@@ -130,7 +130,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
                 'No precomputed java document found for ' + type + ': ' + err,
               category
             );
-            this.countDownInitialization();
+            this.removeInitializationTask();
           }
         );
         break;
@@ -263,17 +263,21 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
         this.initializeMapper();
       }
     });
-    this.countDownInitialization();
+    this.removeInitializationTask();
   }
 
   initializeMapper() {
-    if ( this.initializedCountDown == 0 ) {
+    if ( this.outstandingTasks == 0 ) {
       this.initializationService.initialize();
     }
   }
 
-  countDownInitialization() {
-    this.initializedCountDown -= 1;
+  addInitializationTask() {
+    this.outstandingTasks += 1;
+  }
+
+  removeInitializationTask() {
+    this.outstandingTasks -= 1;
     this.initializeMapper();
   }
 
