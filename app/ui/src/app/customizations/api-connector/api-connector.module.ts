@@ -19,7 +19,6 @@ import { ApiConnectorDetailComponent } from './api-connector-detail.component';
 
 import { ApiConnectorEffects } from './api-connector.effects';
 import { ApiConnectorService } from './api-connector.service';
-import { ApiConnectorStore } from './api-connector.store';
 import { apiConnectorReducer } from './api-connector.reducer';
 
 const routes: Routes = [{
@@ -54,8 +53,7 @@ const routes: Routes = [{
     ApiConnectorReviewComponent,
   ],
   providers: [
-    ApiConnectorService,   // TODO: Remove once custom ApiConnectors are managed thru a reducer
-    ApiConnectorStore      // TODO: Remove once custom ApiConnectors are managed thru a reducer
+    ApiConnectorService,
   ]
 })
 export class ApiConnectorModule { }

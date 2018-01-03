@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Restangular } from 'ngx-restangular';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
-import { RESTService } from '@syndesis/ui/store/entity';
 import {
   ApiConnectorData, ApiConnectors,
   ApiConnectorValidation, CustomSwaggerConnectorRequest
 } from './api-connector.models';
 
 @Injectable()
-export class ApiConnectorService extends RESTService<ApiConnectorData, ApiConnectors> {
-  constructor(restangular: Restangular, private apiHttpService: ApiHttpService) {
-    super(restangular.service('connectors?query=connectorGroupId%3Dswagger-connector-template'), 'apiConnector');
+export class ApiConnectorService {
+  constructor(private apiHttpService: ApiHttpService) { }
+
+  getApiConnector(id): Observable<ApiConnectorData> {
+    return this.apiHttpService
+      .setEndpointUrl('getApiConnectorDetails', { id })
+      .get<ApiConnectorData>();
   }
 
-  public list(): Observable<ApiConnectors> {
-    return super.list().map(apiConnectors => {
-      return apiConnectors;
-    });
+  list(): Observable<ApiConnectors> {
+    return this.apiHttpService
+      .setEndpointUrl('getApiConnectorList', { template: 'swagger-connector-template'})
+      .get<{ items: ApiConnectors }>() // TODO: Provide a better <T> typing here
+      .map(response => response.items);
   }
 
   submitCustomConnectorInfo(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): Observable<ApiConnectorValidation> {

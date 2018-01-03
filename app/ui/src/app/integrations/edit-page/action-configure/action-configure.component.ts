@@ -86,6 +86,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
   }
 
   continue(data: any = undefined) {
+    this.error = undefined;
     data = this.buildData(data);
     this.currentFlow.events.emit({
       kind: 'integration-set-properties',
@@ -121,22 +122,23 @@ export class IntegrationsConfigureActionComponent extends FlowPage
                     )[0];
                   }
                 }
+                /* All done... */
+                this.router.navigate([ 'save-or-add-step' ], {
+                  queryParams: { validate: true },
+                  relativeTo: this.route.parent
+                });
               })
               .catch(response => {
+                const body = JSON.parse(response._body);
                 this.error = {
+                  class: 'alert alert-warning',
                   message:
-                    response.message ||
-                    response.userMsg ||
-                    response.developerMsg
+                    body.message ||
+                    body.userMsg ||
+                    body.developerMsg
                 };
               });
           }
-
-          /* All done... */
-          this.router.navigate([ 'save-or-add-step' ], {
-            queryParams: { validate: true },
-            relativeTo: this.route.parent
-          });
         } else {
           /* Go to the next page... */
           this.router.navigate(
@@ -180,7 +182,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
           const error = JSON.parse(response[ '_body' ]);
           this.initForm(position, page, undefined, error);
         } catch (err) {
-          /* Nailout at this point... */
+          /* Bailout at this point... */
           this.initForm(position, page, undefined, {
             message: response['_body']
           });
