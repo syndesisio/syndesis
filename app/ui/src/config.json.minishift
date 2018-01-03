@@ -3,6 +3,8 @@
   "apiBase": "https://syndesis.192.168.64.2.xip.io",
   "apiEndpoint": "/api/v1",
   "apiChildEndpoints": {
+    "getApiConnectorDetails": "/connectors/{id}",
+    "getApiConnectorList": "/connectors?query=connectorGroupId%3D{template}",
     "submitCustomConnectorInfo": "/connectors/custom/info",
     "submitCustomConnector": "/connectors/custom"
   },
