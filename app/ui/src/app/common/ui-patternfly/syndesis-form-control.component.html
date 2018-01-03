@@ -1,11 +1,11 @@
-<div [class.form-group]="asBootstrapFormGroup || model.cls.element.container.includes('form-group')"
+<div [class.form-group]="asBootstrapFormGroup || getClass('element', 'container').includes('form-group')"
      [class.has-error]="showErrorMessages"
      [formGroup]="group"
-     [ngClass]="[model.cls.element.container, model.cls.grid.container]">
+     [ngClass]="[getClass('element', 'container'), getClass('grid', 'container')]">
 
   <label *ngIf="type !== 2 && model.label !== null"
          [attr.for]="model.id"
-         [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+         [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
     <label [ngClass]="{'required-pf': model.required}">
       {{ model.label }}
     </label>
@@ -23,10 +23,10 @@
 
 
   <div *ngIf="type === 2"
-       [ngClass]="model.cls.grid.control">
+       [ngClass]="getClass('grid', 'control')">
 
     <div [class.disabled]="model.disabled"
-         [ngClass]="model.cls.element.control || 'checkbox'">
+         [ngClass]="getClass('element', 'control') || 'checkbox'">
 
       <label>
 
@@ -36,14 +36,14 @@
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
                [name]="model.name"
-               [ngClass]="model.cls.element.control"
+               [ngClass]="getClass('element', 'control')"
                [required]="model.required"
                [value]="model.value"
                (dfBlur)="onFocus($event)"
                (change)="onValueChange($event)"
                (dfFocus)="onFocus($event)">
         <span [innerHTML]="model.label"
-              [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+              [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
         </span>
         <div *ngIf="model.hint !== null"
              [tooltip]="model.hint"
@@ -59,28 +59,30 @@
 
 
   <div *ngIf="type !== 2"
-       [ngClass]="model.cls.grid.control">
+       [ngClass]="getClass('grid', 'control')">
 
     <ng-container [ngSwitch]="type">
 
       <div *ngSwitchCase="1"
            [dynamicId]="bindId && model.id"
            [formArrayName]="model.id"
-           [ngClass]="model.cls.element.control">
+           [ngClass]="getClass('element', 'control')">
 
         <div *ngFor="let groupModel of model.groups; let idx = index"
              role="group"
              [formGroupName]="idx"
-             [ngClass]="[model.cls.element.group, model.cls.grid.group]">
+             [ngClass]="[getClass('element', 'group'), getClass('grid', 'group')]">
 
-          <syndesis-form-control *ngFor="let item of groupModel.group"
+          <syndesis-form-control *ngFor="let _model of groupModel.group"
                                  [bindId]="false"
                                  [context]="groupModel"
                                  [group]="control.at(idx)"
-                                 [hasErrorMessaging]="item.hasErrorMessages"
-                                 [model]="item"
-                                 [templates]="templates"
-                                 [ngClass]="[item.cls.element.host, item.cls.grid.host]"
+                                 [hasErrorMessaging]="_model.hasErrorMessages"
+                                 [hidden]="_model.hidden"
+                                 [layout]="layout"
+                                 [model]="_model"
+                                 [templates]="templateList"
+                                 [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
                                  (dfBlur)="onFocus($event)"
                                  (change)="onValueChange($event)"
                                  (dfFocus)="onFocus($event)"></syndesis-form-control>
@@ -95,18 +97,20 @@
                 [dynamicId]="bindId && model.id"
                 [formGroupName]="model.id"
                 [name]="model.name"
-                [ngClass]="model.cls.element.control">
+                [ngClass]="getClass('element', 'control')">
 
         <legend *ngIf="model.legend"
                 [innerHTML]="model.legend"></legend>
 
-        <syndesis-form-control *ngFor="let controlModel of model.group"
+        <syndesis-form-control *ngFor="let _model of model.group"
                                [asBootstrapFormGroup]="false"
                                [group]="control"
-                               [hasErrorMessaging]="controlModel.hasErrorMessages"
-                               [model]="controlModel"
-                               [templates]="templates"
-                               [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
+                               [hasErrorMessaging]="_model.hasErrorMessages"
+                               [hidden]="_model.hidden"
+                               [layout]="layout"
+                               [model]="_model"
+                               [templates]="templateList"
+                               [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
                                (dfBlur)="onFocus($event)"
                                (change)="onValueChange($event)"
                                (dfFocus)="onFocus($event)"></syndesis-form-control>
@@ -136,7 +140,7 @@
                [minlength]="model.minLength"
                [name]="model.name"
                [tooltip]="model.hint"
-               [ngClass]="model.cls.element.control"
+               [ngClass]="getClass('element', 'control')"
                [pattern]="model.pattern"
                [placeholder]="model.placeholder"
                [readonly]="model.readOnly"
@@ -174,7 +178,7 @@
                 [innerHTML]="model.legend"></legend>
 
         <div *ngFor="let option of model.options$ | async"
-             [ngClass]="model.cls.element.control || 'radio'">
+             [ngClass]="getClass('element', 'control') || 'radio'">
 
           <label>
 
@@ -196,7 +200,7 @@
               [formControlName]="model.id"
               [name]="model.name"
               [tooltip]="model.hint"
-              [ngClass]="model.cls.element.control"
+              [ngClass]="getClass('element', 'control')"
               [required]="model.required"
               (dfBlur)="onFocus($event)"
               (change)="onValueChange($event)"
@@ -218,7 +222,7 @@
                 [maxlength]="model.maxLength"
                 [minlength]="model.minLength"
                 [name]="model.name"
-                [ngClass]="model.cls.element.control"
+                [ngClass]="getClass('element', 'control')"
                 [placeholder]="model.placeholder"
                 [readonly]="model.readOnly"
                 [required]="model.required"
