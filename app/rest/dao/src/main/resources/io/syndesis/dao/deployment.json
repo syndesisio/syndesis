@@ -860,7 +860,18 @@
           "javaType" : "java.lang.String",
           "deprecated" : false,
           "secret" : false,
-          "description" : "AMQ Broker X.509 PEM Certificate"
+          "description" : "AMQ Broker X.509 PEM Certificate",
+          "relation": [
+            {
+              "action": "VISIBLE",
+              "when": [
+                {
+                  "id": "skipCertificateCheck",
+                  "value": true
+                }
+              ]
+            }
+          ]
         },
         "clientCertificate" : {
           "kind" : "property",
@@ -873,7 +884,18 @@
           "javaType" : "java.lang.String",
           "deprecated" : false,
           "secret" : false,
-          "description" : "AMQ Client X.509 PEM Certificate"
+          "description" : "AMQ Client X.509 PEM Certificate",
+          "relation": [
+            {
+              "action": "VISIBLE",
+              "when": [
+                {
+                  "id": "skipCertificateCheck",
+                  "value": true
+                }
+              ]
+            }
+          ]
         }
       },
       "actions": [

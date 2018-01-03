@@ -263,13 +263,13 @@
     fs-extra "^4.0.1"
     viz.js "^1.8.0"
 
-"@ng-dynamic-forms/core@1.4.31":
-  version "1.4.31"
-  resolved "https://registry.yarnpkg.com/@ng-dynamic-forms/core/-/core-1.4.31.tgz#411dbf4cce547e88cfd2daa92040cf15dc2b6d26"
+"@ng-dynamic-forms/core@5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@ng-dynamic-forms/core/-/core-5.4.1.tgz#d2663b8bc02611eaa78ba40409f1ca8c57bc1d79"
 
-"@ng-dynamic-forms/ui-bootstrap@1.4.31":
-  version "1.4.31"
-  resolved "https://registry.yarnpkg.com/@ng-dynamic-forms/ui-bootstrap/-/ui-bootstrap-1.4.31.tgz#7dd46e5890df5e7cf3f1090c9e2948337e616f79"
+"@ng-dynamic-forms/ui-bootstrap@5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@ng-dynamic-forms/ui-bootstrap/-/ui-bootstrap-5.4.1.tgz#fe6046d4512ea5bae471274670d033319e33f8a3"
 
 "@ngrx/effects@^4.1.1":
   version "4.1.1"

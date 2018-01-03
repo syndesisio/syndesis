@@ -17,6 +17,8 @@ import {
   DynamicFormControlComponent,
   DynamicFormControlEvent,
   DynamicTemplateDirective,
+  DynamicFormLayout,
+  DynamicFormLayoutService,
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX_GROUP,
@@ -59,6 +61,7 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
   @Input() context: DynamicFormArrayGroupModel = null;
   @Input() group: FormGroup;
   @Input() model: DynamicFormControlModel;
+  @Input() layout: DynamicFormLayout;
 
   @Output() blur = new EventEmitter<DynamicFormControlEvent>();
   @Output() change = new EventEmitter<DynamicFormControlEvent>();
@@ -99,9 +102,10 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
 
   constructor(
     protected validationService: DynamicFormValidationService,
-    protected detector: ChangeDetectorRef
+    protected detector: ChangeDetectorRef,
+    protected layoutService: DynamicFormLayoutService
   ) {
-    super(detector, validationService);
+    super(detector, layoutService, validationService);
   }
 
   ngOnChanges(changes: SimpleChanges) {
