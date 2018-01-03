@@ -13,7 +13,7 @@ import {
   FileUploader,
   FileItem,
   ParsedResponseHeaders
-} from 'ng2-file-upload-base/src';
+} from 'ng2-file-upload';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({

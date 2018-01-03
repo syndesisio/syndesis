@@ -35,7 +35,7 @@ import { FlowViewStepComponent } from './edit-page/flow-view/flow-view-step.comp
 import { CurrentFlow } from './edit-page/current-flow.service';
 import { SyndesisCommonModule } from '../common/common.module';
 import { ConnectionsModule } from '../connections/connections.module';
-import { FileUploadModule } from 'ng2-file-upload-base/src';
+import { FileUploadModule } from 'ng2-file-upload';
 import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 const editIntegrationChildRoutes = [
