@@ -4,17 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import { ApiHttpService } from '@syndesis/ui/platform';
 import {
   ApiConnectors,
-  ApiConnectorValidation, CustomSwaggerConnectorRequest
+  ApiConnectorData, CustomSwaggerConnectorRequest
 } from './api-connector.models';
 
 @Injectable()
 export class ApiConnectorService {
   constructor(private apiHttpService: ApiHttpService) { }
 
-  getApiConnector(id: string): Observable<ApiConnectorValidation> {
+  getApiConnector(id: string): Observable<ApiConnectorData> {
     return this.apiHttpService
       .setEndpointUrl('getApiConnectorDetails', { id })
-      .get<ApiConnectorValidation>();
+      .get<ApiConnectorData>();
   }
 
   list(): Observable<ApiConnectors> {
@@ -24,10 +24,10 @@ export class ApiConnectorService {
       .map(response => response.items);
   }
 
-  submitCustomConnectorInfo(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): Observable<ApiConnectorValidation> {
+  submitCustomConnectorInfo(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): Observable<ApiConnectorData> {
     return this.apiHttpService
       .setEndpointUrl('submitCustomConnectorInfo')
-      .post<ApiConnectorValidation>(customSwaggerConnectorRequest);
+      .post<ApiConnectorData>(customSwaggerConnectorRequest);
   }
 
   createCustomConnector(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): Observable<any> {

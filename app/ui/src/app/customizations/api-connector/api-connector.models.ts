@@ -8,51 +8,14 @@ export interface ApiConnector extends BaseEntity {
 
 export type ApiConnectors = Array<ApiConnectorData>;
 
-export interface ApiConnectorProperties {
-  specification: {
-    kind: string;
-    displayName: string;
-    required: boolean;
-    type: string;
-    javaType: string;
-    description: string
-  };
-  specificationUrl: {
-    kind: string;
-    displayName: string;
-    required: boolean;
-    type: string;
-    javaType: string;
-    description: string;
-  };
-}
-
-export interface ApiConnectorData {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  fileIcon?: File;
-  properties: ApiConnectorProperties;
-  connectorProperties: any;
-  host: string;
-  baseUrl: string;
-}
-
-export interface ApiConnector extends BaseEntity {
-  data: ApiConnectorData;
-}
-
-// XXX: The following models are designed to fit into the Redux container
-//      and will eventually replace the ones above
-
 export interface ApiConnectorValidationError {
   error?: string;
   message: string;
   property?: string;
 }
 
-export interface ApiConnectorValidation {
+export interface ApiConnectorData {
+  id?: string;
   actionsSummary?: {
     actionCountByTags: StringMap<number>;
     totalActions: number;
@@ -95,7 +58,7 @@ export interface RequestProperties extends CustomApiConnectorAuthSettings {
   basePath?: string;
 }
 
-export interface CustomSwaggerConnectorRequest extends CustomApiConnectorRequest, ApiConnectorValidation {
+export interface CustomSwaggerConnectorRequest extends CustomApiConnectorRequest, ApiConnectorData {
   configuredProperties?: RequestProperties;
   file?: File;
 }

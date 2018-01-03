@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ApiConnectorValidation } from '@syndesis/ui/customizations/api-connector';
+import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 import { ApiConnectorService } from './../api-connector.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ApiConnectorService } from './../api-connector.service';
   styleUrls: ['api-connector-detail.component.scss']
 })
 export class ApiConnectorDetailComponent implements OnInit {
-  apiConnectorData: ApiConnectorValidation;
+  apiConnectorData: ApiConnectorData;
   loading: boolean;
 
   constructor(

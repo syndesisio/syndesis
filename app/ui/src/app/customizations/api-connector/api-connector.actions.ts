@@ -4,7 +4,6 @@ import { ActionReducerError } from '@syndesis/ui/platform';
 import {
   ApiConnectors,
   CustomSwaggerConnectorRequest,
-  ApiConnectorValidation,
   ApiConnectorData,
   CustomApiConnectorAuthSettings
 } from './api-connector.models';
@@ -34,7 +33,7 @@ export class ApiConnectorActions {
     return new ApiConnectorValidateSwagger(payload);
   }
 
-  static validateSwaggerComplete(payload: ApiConnectorValidation) {
+  static validateSwaggerComplete(payload: ApiConnectorData) {
     return new ApiConnectorValidateSwaggerComplete(payload);
   }
 
@@ -88,7 +87,7 @@ export class ApiConnectorValidateSwagger implements Action {
 export class ApiConnectorValidateSwaggerComplete implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE;
 
-  constructor(public payload: ApiConnectorValidation) { }
+  constructor(public payload: ApiConnectorData) { }
 }
 
 export class ApiConnectorValidateSwaggerFail implements Action {
@@ -112,7 +111,7 @@ export class ApiConnectorCreate implements Action {
 export class ApiConnectorCreateComplete implements Action {
   readonly type = ApiConnectorActions.CREATE_COMPLETE;
 
-  constructor(public payload: any) { }  // TODO: Review payload type
+  constructor(public payload: ApiConnectorData) { }
 }
 
 export class ApiConnectorCreateFail implements Action {

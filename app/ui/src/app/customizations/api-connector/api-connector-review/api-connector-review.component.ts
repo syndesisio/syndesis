@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ApiConnectorValidation } from '@syndesis/ui/customizations/api-connector';
+import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-review',
@@ -8,12 +8,12 @@ import { ApiConnectorValidation } from '@syndesis/ui/customizations/api-connecto
   styleUrls: ['./api-connector-review.component.scss']
 })
 export class ApiConnectorReviewComponent {
-  validation: ApiConnectorValidation;
+  validation: ApiConnectorData;
   importedActions: Array<{ tag: string; count: number; }>;
 
   @Input() apiConnectorTemplateName: string;
   @Input() showNextButton: boolean;
-  @Input() set apiConnectorValidation(value: ApiConnectorValidation) {
+  @Input() set apiConnectorData(value: ApiConnectorData) {
     this.validation = value;
     const actionCountByTags = value.actionsSummary.actionCountByTags;
     this.importedActions = Object.keys(actionCountByTags).map(key => ({

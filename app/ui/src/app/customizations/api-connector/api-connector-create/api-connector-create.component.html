@@ -44,7 +44,7 @@
         </syndesis-api-connector-swagger-upload>
         <syndesis-api-connector-review *ngIf="currentActiveStep == 2"
           [apiConnectorTemplateName]="'Swagger'"
-          [apiConnectorValidation]="(apiConnectorState$ | async)?.createRequest"
+          [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
           [showNextButton]="true"
           (reviewComplete)="onReviewComplete($event)">
         </syndesis-api-connector-review>
