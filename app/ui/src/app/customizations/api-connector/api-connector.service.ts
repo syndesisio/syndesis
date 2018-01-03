@@ -28,12 +28,13 @@ export class ApiConnectorService extends RESTService<ApiConnectorData, ApiConnec
   }
 
   createCustomConnector(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): Observable<any> {
-    return this.apiHttpService
-      .setEndpointUrl('submitCustomConnector')
-      .upload<any>({
-        icon: customSwaggerConnectorRequest.file
-      }, {
-        connectorSettings: customSwaggerConnectorRequest
-      });
+    const apiHttpService = this.apiHttpService.setEndpointUrl('submitCustomConnector');
+    const [icon, connectorSettings] = [customSwaggerConnectorRequest.file, customSwaggerConnectorRequest];
+
+    if (icon) {
+      return apiHttpService.upload({ icon }, { connectorSettings });
+    } else {
+      return apiHttpService.post(connectorSettings);
+    }
   }
 }

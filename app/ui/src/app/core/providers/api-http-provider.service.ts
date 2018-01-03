@@ -89,24 +89,28 @@ export class ApiHttpProviderService extends ApiHttpService {
     return this.uploadProgressSubject.asObservable();
   }
 
-  upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>): Observable<T> {
+  upload<T>(endpoint: string | any[], fileMap: FileMap, body?: StringMap<any>): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     const headers = new HttpHeaders();
 
     const multipartFormData = new FormData();
 
-    if (body) {
-      for (const key in body) {
-        if (body.hasOwnProperty(key)) {
-          multipartFormData.append(key, body[key]);
-        }
-      }
-    }
-
     for (const key in fileMap) {
       if (fileMap.hasOwnProperty(key)) {
         multipartFormData.append(key, fileMap[key]);
+      }
+    }
+
+    if (body) {
+      for (const key in body) {
+        if (body.hasOwnProperty(key)) {
+          if (body[key] instanceof Object) {
+            multipartFormData.append(key, new Blob([JSON.stringify(body[key])], { type: 'application/json' }), key);
+          } else {
+            multipartFormData.append(key, body[key]);
+          }
+        }
       }
     }
 

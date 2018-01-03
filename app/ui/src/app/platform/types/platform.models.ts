@@ -36,20 +36,12 @@ export interface BaseReducerModel {
 }
 
 /**
- * Common wrapper interface for all messages exchanged between UI and API
+ * Common interface for modelling requests requiring several steps for accomplishment
+ * which require additional flags to track progress level and success
  */
-export interface RestResponse<T> {
-  kind: string;
-  data: T;
+export interface BaseRequestModel {
+  isRequested?: boolean;
+  isOK?: boolean;
+  isComplete?: boolean;
 }
 
-/**
- * Maps errors returned from the REST API. Currently unused until we figure out a
- * common contract schema for ALL messages exchanged between the UI and the API.
- */
-export interface RestError {
-  developerMsg: string;
-  userMsg: string;
-  userMsgDetail: string;
-  errorCode: number;
-}

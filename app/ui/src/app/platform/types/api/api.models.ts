@@ -3,8 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { StringMap, FileMap } from '@syndesis/ui/platform';
 
 export interface ApiErrorMessage {
-  userMessage: string;
-  developerMessage: string;
+  developerMsg?: string;
+  userMsg?: string;
+  userMsgDetail?: string;
+  errorCode?: number;
 }
 
 export interface ApiErrors {

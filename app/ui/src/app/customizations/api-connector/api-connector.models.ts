@@ -1,4 +1,4 @@
-import { StringMap, BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
+import { StringMap, BaseReducerModel, BaseRequestModel, PlatformStore } from '@syndesis/ui/platform';
 import { BaseEntity } from '@syndesis/ui/model';
 
 export interface ApiConnector extends BaseEntity {
@@ -79,7 +79,7 @@ export interface ApiConnectorValidation {
   };
 }
 
-export interface CustomApiConnectorRequest {
+export interface CustomApiConnectorRequest extends BaseRequestModel {
   connectorTemplateId: string;
 }
 

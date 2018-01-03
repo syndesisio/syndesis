@@ -47,12 +47,17 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
       .first(request => !!request && !!request.actionsSummary)
       .subscribe(() => this.currentActiveStep = WizardSteps.ReviewApiConnector);
+
+    // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
+    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
+      .first(request => !!request && request.isComplete)
+      .subscribe(() => this.redirectBack());
   }
 
   showCancelModal(): void {
     this.modalService.show(this.cancelModalId).then(modal => {
       if (modal.result) {
-        this.router.navigate(['customizations', 'api-connector']);
+        this.redirectBack();
       }
     });
   }
@@ -81,5 +86,9 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelModalId);
     this.apiConnectorStore.dispatch(ApiConnectorActions.createCancel());
+  }
+
+  private redirectBack(): void {
+    this.router.navigate(['customizations', 'api-connector']);
   }
 }

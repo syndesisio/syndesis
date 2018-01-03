@@ -12,12 +12,17 @@ import {
 } from './api-connector.actions';
 
 const initialState: ApiConnectorState = {
-  list             : [],
-  createRequest    : null,
-  loading          : false,
-  loaded           : false,
-  hasErrors        : false,
-  errors           : []
+  list: [],
+  createRequest: {
+    connectorTemplateId: null,
+    isComplete: false,
+    isOK: false,
+    isRequested: false
+  },
+  loading: false,
+  loaded: false,
+  hasErrors: false,
+  errors: []
 };
 
 export function apiConnectorReducer(state = initialState, action: any): ApiConnectorState {
@@ -60,7 +65,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       const createRequest = (action as ApiConnectorCreate).payload;
       return {
         ...state,
-        createRequest,
+        createRequest: { ...createRequest, isComplete: false, isRequested: true },
         loading: true,
         hasErrors: false,
         errors: []
@@ -71,7 +76,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       const createRequest = (action as ApiConnectorCreateComplete).payload;
       return {
         ...state,
-        createRequest,
+        createRequest: { ...createRequest, isComplete: true },
         loading: false,
         hasErrors: false,
         errors: []
@@ -118,6 +123,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       return {
         ...state,
         loading: true,
+        loaded: false,
         hasErrors: false,
         errors: []
       };
