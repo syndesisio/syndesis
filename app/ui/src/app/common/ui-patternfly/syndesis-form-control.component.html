@@ -39,9 +39,9 @@
                [ngClass]="model.cls.element.control"
                [required]="model.required"
                [value]="model.value"
-               (blur)="onFocus($event)"
+               (dfBlur)="onFocus($event)"
                (change)="onValueChange($event)"
-               (focus)="onFocus($event)">
+               (dfFocus)="onFocus($event)">
         <span [innerHTML]="model.label"
               [ngClass]="[model.cls.element.label, model.cls.grid.label]">
         </span>
@@ -81,9 +81,9 @@
                                  [model]="item"
                                  [templates]="templates"
                                  [ngClass]="[item.cls.element.host, item.cls.grid.host]"
-                                 (blur)="onFocus($event)"
+                                 (dfBlur)="onFocus($event)"
                                  (change)="onValueChange($event)"
-                                 (focus)="onFocus($event)"></syndesis-form-control>
+                                 (dfFocus)="onFocus($event)"></syndesis-form-control>
 
           <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
         </div>
@@ -91,7 +91,7 @@
       </div>
 
 
-      <fieldset *ngSwitchCase="3"
+      <fieldset *ngSwitchCase="4"
                 [dynamicId]="bindId && model.id"
                 [formGroupName]="model.id"
                 [name]="model.name"
@@ -107,13 +107,13 @@
                                [model]="controlModel"
                                [templates]="templates"
                                [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
-                               (blur)="onFocus($event)"
+                               (dfBlur)="onFocus($event)"
                                (change)="onValueChange($event)"
-                               (focus)="onFocus($event)"></syndesis-form-control>
+                               (dfFocus)="onFocus($event)"></syndesis-form-control>
       </fieldset>
 
 
-      <div *ngSwitchCase="4"
+      <div *ngSwitchCase="5"
            [class.input-group]="model.prefix || model.suffix">
 
         <div *ngIf="model.prefix"
@@ -144,9 +144,9 @@
                [spellcheck]="model.spellCheck"
                [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
                [type]="model.inputType"
-               (blur)="onFocus($event)"
+               (dfBlur)="onFocus($event)"
                (change)="onValueChange($event)"
-               (focus)="onFocus($event)" />
+               (dfFocus)="onFocus($event)" />
 
         <div *ngIf="model.suffix"
              class="input-group-addon"
@@ -163,7 +163,7 @@
       </div>
 
 
-      <fieldset *ngSwitchCase="5"
+      <fieldset *ngSwitchCase="6"
                 role="radiogroup"
                 [attr.tabindex]="model.tabIndex"
                 [dynamicId]="bindId && model.id"
@@ -182,14 +182,14 @@
                    [formControlName]="model.id"
                    [name]="model.name"
                    [value]="option.value"
-                   (blur)="onFocus($event)"
-                   (focus)="onFocus($event)" />
+                   (dfBlur)="onFocus($event)"
+                   (dfFocus)="onFocus($event)" />
             <span [innerHTML]="option.label"></span>
           </label>
         </div>
       </fieldset>
 
-      <select *ngSwitchCase="6"
+      <select *ngSwitchCase="7"
               class="form-control"
               [attr.tabindex]="model.tabIndex"
               [dynamicId]="bindId && model.id"
@@ -198,9 +198,9 @@
               [tooltip]="model.hint"
               [ngClass]="model.cls.element.control"
               [required]="model.required"
-              (blur)="onFocus($event)"
+              (dfBlur)="onFocus($event)"
               (change)="onValueChange($event)"
-              (focus)="onFocus($event)">
+              (dfFocus)="onFocus($event)">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
@@ -209,7 +209,7 @@
       </select>
 
 
-      <textarea *ngSwitchCase="7"
+      <textarea *ngSwitchCase="8"
                 class="form-control"
                 [attr.tabindex]="model.tabIndex"
                 [dynamicId]="bindId && model.id"
@@ -225,9 +225,9 @@
                 [rows]="model.rows"
                 [spellcheck]="model.spellCheck"
                 [wrap]="model.wrap"
-                (blur)="onFocus($event)"
+                (dfBlur)="onFocus($event)"
                 (change)="onValueChange($event)"
-                (focus)="onFocus($event)"></textarea>
+                (dfFocus)="onFocus($event)"></textarea>
 
 
       <!--<span *ngIf="model.hint" class="help-block"-->
