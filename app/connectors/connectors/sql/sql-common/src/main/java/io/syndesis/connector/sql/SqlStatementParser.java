@@ -216,12 +216,6 @@ public class SqlStatementParser {
         return params;
     }
 
-    /*
-     * Only for Select
-     * 1. table needs to be in the table list
-     * 2. if more then one, the parameters need to have a period
-     * 3. if parameters contain period, figure out what's in front and find that table
-     */
     /* default */ List<String> findTablesInSelectStatement() {
         boolean isTable = false;
         List<String> tables = new ArrayList<>();

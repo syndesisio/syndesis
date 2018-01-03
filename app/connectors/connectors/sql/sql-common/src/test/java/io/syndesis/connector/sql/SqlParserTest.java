@@ -48,8 +48,11 @@ public class SqlParserTest {
                 connection.getMetaData().getDatabaseProductName(), parameters.get("user").toString());
         Statement stmt = connection.createStatement();
         String createTable = "CREATE TABLE NAME0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
-                             "lastName VARCHAR(255))"; 
+                             "lastName VARCHAR(255))";
+        String createTableAddress = "CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + 
+                "lastName VARCHAR(255))"; 
         stmt.executeUpdate(createTable);
+        stmt.executeUpdate(createTableAddress);
     }
 
     @AfterClass
@@ -74,6 +77,16 @@ public class SqlParserTest {
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
         Assert.assertEquals("FIRST", info.getInParams().get(0).getName());
+        Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithJoin() throws SQLException {
+        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, NAME0.LASTNAME, ADDRESS FROM NAME0, ADDRESS0 WHERE NAME0.LASTNAME=ADDRESS0.LASTNAME AND FIRSTNAME LIKE :#first\"");
+        SqlStatementMetaData info = parser.parse();
+        Assert.assertTrue(info.getTableNames().contains("NAME0"));
+        Assert.assertTrue(info.getTableNames().contains("ADDRESS0"));
+        Assert.assertEquals(1, info.getInParams().size());
         Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
     }
 
