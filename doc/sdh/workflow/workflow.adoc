@@ -1,0 +1,5 @@
+[[workflow]]
+# Development Workflows
+
+include::ui.adoc[]
+include::rest.adoc[]

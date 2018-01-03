@@ -17,3 +17,4 @@ include::introduction.adoc[]
 
 include::build/syndesis.adoc[]
 include::process/process.adoc[]
+include::process/workflow.adoc[]
