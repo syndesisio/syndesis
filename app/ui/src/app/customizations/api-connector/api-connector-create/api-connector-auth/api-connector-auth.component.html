@@ -10,7 +10,7 @@
   <form [formGroup]="authSetupForm" #form="ngForm" (ngSubmit)="onSubmit(form)" class="syn-form syn-form--card syn-form--auth-setup" novalidate>
     <fieldset class="syn-form__body">
       <div class="syn-form-input-list">
-        <label class="syn-form-input-list__option" *ngFor="let authType of customSwaggerConnectorRequest.properties.authenticationType.enum">
+        <label class="syn-form-input-list__option" *ngFor="let authType of customConnectorRequest.properties.authenticationType.enum">
           <input type="radio" 
             name="authenticationType"
             formControlName="authenticationType"

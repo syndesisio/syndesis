@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 
-import { ApiConnectorData } from '@syndesis/ui/customizations/api-connector';
-import { ApiConnectorService } from './../api-connector.service';
+import {
+  ApiConnectorData, ApiConnectors, ApiConnectorState,
+  ApiConnectorStore, getApiConnectorState
+} from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-detail',
@@ -10,24 +14,21 @@ import { ApiConnectorService } from './../api-connector.service';
   styleUrls: ['api-connector-detail.component.scss']
 })
 export class ApiConnectorDetailComponent implements OnInit {
-  apiConnectorData: ApiConnectorData;
-  loading: boolean;
+  apiConnectorState$: Observable<ApiConnectorState>;
+  apiConnectorData$: Observable<ApiConnectorData>;
 
   constructor(
-    private apiConnectorService: ApiConnectorService,
+    private apiConnectorStore: Store<ApiConnectorStore>,
     private route: ActivatedRoute,
-  ) {
-    this.loading = true;
-  }
+  ) { }
 
   ngOnInit() {
-    this.route.paramMap
+    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(getApiConnectorState);
+
+    this.apiConnectorData$ = this.route.paramMap
       .first(params => params.has('id'))
       .map(params => params.get('id'))
-      .switchMap(id => this.apiConnectorService.getApiConnector(id))
-      .subscribe(apiConnectorData => {
-        this.apiConnectorData = apiConnectorData;
-        this.loading = false;
-      });
+      .combineLatest(this.apiConnectorState$.map(apiConnectorState => apiConnectorState.list))
+      .switchMap(([id, apiConnectors]: [string, ApiConnectors]) => apiConnectors.filter(apiConnector => apiConnector.id == id));
   }
 }

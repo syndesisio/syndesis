@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 
 import {
   ApiConnectorState,
-  CustomSwaggerConnectorRequest,
+  CustomConnectorRequest,
   ApiConnectorValidationError,
 } from '@syndesis/ui/customizations/api-connector';
 
@@ -15,7 +15,7 @@ import {
 })
 export class ApiConnectorSwaggerUploadComponent {
   @Input() apiConnectorState: ApiConnectorState;
-  @Output() request = new EventEmitter<CustomSwaggerConnectorRequest>();
+  @Output() request = new EventEmitter<CustomConnectorRequest>();
   swaggerFileUrl: string;
   swaggerFileList: FileList;
 

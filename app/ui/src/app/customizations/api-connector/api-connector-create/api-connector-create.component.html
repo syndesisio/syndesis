@@ -49,7 +49,7 @@
           (reviewComplete)="onReviewComplete($event)">
         </syndesis-api-connector-review>
         <syndesis-api-connector-auth *ngIf="currentActiveStep == 3"
-          [customSwaggerConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
+          [customConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
           (authSetup)="onAuthSetup($event)">
         </syndesis-api-connector-auth>
         <syndesis-api-connector-info *ngIf="currentActiveStep == 4" 

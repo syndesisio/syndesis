@@ -18,8 +18,9 @@ import { ApiConnectorListComponent } from './api-connector-list';
 import { ApiConnectorDetailComponent } from './api-connector-detail';
 
 import { ApiConnectorEffects } from './api-connector.effects';
-import { ApiConnectorService } from './api-connector.service';
 import { apiConnectorReducer } from './api-connector.reducer';
+import { ApiConnectorLazyLoaderGuard } from './api-connector-lazy-loader.guard';
+import { ApiConnectorService } from './api-connector.service';
 
 const routes: Routes = [{
   path: 'api-connector/create/:template',
@@ -29,7 +30,8 @@ const routes: Routes = [{
   component: ApiConnectorCreateComponent
 }, {
   path: 'api-connector/:id',
-  component: ApiConnectorDetailComponent
+  component: ApiConnectorDetailComponent,
+  canActivate: [ApiConnectorLazyLoaderGuard]
 }];
 
 @NgModule({
@@ -54,6 +56,7 @@ const routes: Routes = [{
   ],
   providers: [
     ApiConnectorService,
+    ApiConnectorLazyLoaderGuard
   ]
 })
 export class ApiConnectorModule { }

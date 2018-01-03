@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
 import { CustomValidators } from '@syndesis/ui/platform';
-import { CustomSwaggerConnectorRequest } from '@syndesis/ui/customizations/api-connector';
+import { CustomConnectorRequest } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-auth',
@@ -13,13 +13,13 @@ import { CustomSwaggerConnectorRequest } from '@syndesis/ui/customizations/api-c
 export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   authSetupForm: FormGroup;
   authSetupFormValueSubscription: Subscription;
-  @Input() customSwaggerConnectorRequest: CustomSwaggerConnectorRequest;
+  @Input() customConnectorRequest: CustomConnectorRequest;
   @Output() authSetup = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    const formProperties = this.customSwaggerConnectorRequest.properties;
+    const formProperties = this.customConnectorRequest.properties;
     this.authSetupForm = this.formBuilder.group({
       authenticationType: [formProperties.authenticationType.defaultValue],
       authorizationEndpoint: [formProperties.authorizationEndpoint.defaultValue],

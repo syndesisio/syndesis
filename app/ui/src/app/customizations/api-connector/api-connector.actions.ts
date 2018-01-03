@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { ActionReducerError } from '@syndesis/ui/platform';
 import {
   ApiConnectors,
-  CustomSwaggerConnectorRequest,
+  CustomConnectorRequest,
   ApiConnectorData,
   CustomApiConnectorAuthSettings
 } from './api-connector.models';
@@ -29,7 +29,7 @@ export class ApiConnectorActions {
     return new ApiConnectorFetchComplete(payload);
   }
 
-  static validateSwagger(payload: CustomSwaggerConnectorRequest) {
+  static validateSwagger(payload: CustomConnectorRequest) {
     return new ApiConnectorValidateSwagger(payload);
   }
 
@@ -45,7 +45,7 @@ export class ApiConnectorActions {
     return new ApiConnectorUpdateAuthSettings(payload);
   }
 
-  static create(payload: CustomSwaggerConnectorRequest) {
+  static create(payload: CustomConnectorRequest) {
     return new ApiConnectorCreate(payload);
   }
 
@@ -81,7 +81,7 @@ export class ApiConnectorFetchFail implements Action {
 export class ApiConnectorValidateSwagger implements Action {
   readonly type = ApiConnectorActions.VALIDATE_SWAGGER;
 
-  constructor(public payload: CustomSwaggerConnectorRequest) { }
+  constructor(public payload: CustomConnectorRequest) { }
 }
 
 export class ApiConnectorValidateSwaggerComplete implements Action {
@@ -105,13 +105,13 @@ export class ApiConnectorUpdateAuthSettings implements Action {
 export class ApiConnectorCreate implements Action {
   readonly type = ApiConnectorActions.CREATE;
 
-  constructor(public payload: CustomSwaggerConnectorRequest) { }
+  constructor(public payload: CustomConnectorRequest) { }
 }
 
 export class ApiConnectorCreateComplete implements Action {
   readonly type = ApiConnectorActions.CREATE_COMPLETE;
 
-  constructor(public payload: ApiConnectorData) { }
+  constructor(public payload: CustomConnectorRequest) { }
 }
 
 export class ApiConnectorCreateFail implements Action {

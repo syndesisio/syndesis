@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { CustomSwaggerConnectorRequest, ApiConnectorState } from '@syndesis/ui/customizations/api-connector';
+import { CustomConnectorRequest, ApiConnectorState } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-info',
@@ -11,9 +11,9 @@ import { CustomSwaggerConnectorRequest, ApiConnectorState } from '@syndesis/ui/c
 export class ApiConnectorInfoComponent implements OnInit {
   @Input() enableEditing: boolean;
   @Input() apiConnectorState: ApiConnectorState;
-  @Output() update = new EventEmitter<CustomSwaggerConnectorRequest>();
+  @Output() update = new EventEmitter<CustomConnectorRequest>();
 
-  apiConnectorCreateRequest: CustomSwaggerConnectorRequest;
+  apiConnectorCreateRequest: CustomConnectorRequest;
   apiConnectorInfoForm: FormGroup;
   icon: string; // TODO - Replace default thumb by image if any. Wrap in square container
   private iconFile: File;
@@ -72,7 +72,7 @@ export class ApiConnectorInfoComponent implements OnInit {
         name,
         description,
         file: this.iconFile
-      } as CustomSwaggerConnectorRequest;
+      } as CustomConnectorRequest;
 
       this.update.emit(apiConnectorCreateRequest);
     }

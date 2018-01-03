@@ -9,7 +9,7 @@ import {
   ApiConnectorStore,
   ApiConnectorActions,
   getApiConnectorState,
-  CustomSwaggerConnectorRequest,
+  CustomConnectorRequest,
   CustomApiConnectorAuthSettings,
   ApiConnectorData
 } from '@syndesis/ui/customizations/api-connector';
@@ -66,7 +66,7 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.modalService.hide(this.cancelModalId, doCancel);
   }
 
-  onValidationRequest(request: CustomSwaggerConnectorRequest) {
+  onValidationRequest(request: CustomConnectorRequest) {
     this.apiConnectorStore.dispatch(ApiConnectorActions.validateSwagger(request));
   }
 
@@ -79,8 +79,8 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.currentActiveStep = WizardSteps.SubmitRequest;
   }
 
-  onCreateComplete(customSwaggerConnectorRequest: CustomSwaggerConnectorRequest): void {
-    this.apiConnectorStore.dispatch(ApiConnectorActions.create(customSwaggerConnectorRequest));
+  onCreateComplete(customConnectorRequest: CustomConnectorRequest): void {
+    this.apiConnectorStore.dispatch(ApiConnectorActions.create(customConnectorRequest));
   }
 
   ngOnDestroy() {
