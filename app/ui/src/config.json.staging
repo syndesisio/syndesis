@@ -3,6 +3,8 @@
   "apiBase": "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com",
   "apiEndpoint": "/api/v1",
   "apiChildEndpoints": {
+    "getApiConnectorDetails": "/connectors/{id}",
+    "getApiConnectorList": "/connectors?query=connectorGroupId%3D{template}",
     "submitCustomConnectorInfo": "/connectors/custom/info",
     "submitCustomConnector": "/connectors/custom"
   },
