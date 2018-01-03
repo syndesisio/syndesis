@@ -43,7 +43,7 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'syndesis-data-mapper-host',
   template: `
-    <div *ngIf="initialized" class="data-mapper-host">
+    <div *ngIf="outstandingTasks == 0" class="data-mapper-host">
       <data-mapper #dataMapperComponent></data-mapper>
     </div>
   `,
@@ -66,7 +66,8 @@ const MAPPING_KEY = 'atlasmapping';
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit {
   routeSubscription: Subscription;
-  initialized = false;
+  outstandingTasks = 1;
+
   sourceDocTypes = [];
   targetDocTypes = [];
 
@@ -107,6 +108,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
+        this.addInitializationTask();
         const docDef: DocumentDefinition = this.cfg.addJavaDocument(
           type,
           isSource
@@ -120,6 +122,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
             );
             log.debugc(() => inspection, category);
             docDef.initCfg.inspectionResultContents = inspection;
+            this.removeInitializationTask();
           },
           err => {
             log.warnc(
@@ -127,6 +130,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
                 'No precomputed java document found for ' + type + ': ' + err,
               category
             );
+            this.removeInitializationTask();
           }
         );
         break;
@@ -256,16 +260,25 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
         atlasmapping: mappings ? mappings : ''
       },
       onSave: () => {
-        setTimeout(() => {
-          this.initializeMapper();
-        }, 10);
+        this.initializeMapper();
       }
     });
+    this.removeInitializationTask();
   }
 
   initializeMapper() {
-    this.initialized = true;
-    this.initializationService.initialize();
+    if ( this.outstandingTasks == 0 ) {
+      this.initializationService.initialize();
+    }
+  }
+
+  addInitializationTask() {
+    this.outstandingTasks += 1;
+  }
+
+  removeInitializationTask() {
+    this.outstandingTasks -= 1;
+    this.initializeMapper();
   }
 
   ngOnInit() {
