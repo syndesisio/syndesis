@@ -43,7 +43,7 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'syndesis-data-mapper-host',
   template: `
-    <div *ngIf="initialized" class="data-mapper-host">
+    <div *ngIf="initializedCountDown==0" class="data-mapper-host">
       <data-mapper #dataMapperComponent></data-mapper>
     </div>
   `,
@@ -66,7 +66,8 @@ const MAPPING_KEY = 'atlasmapping';
 })
 export class DataMapperHostComponent extends FlowPage implements OnInit {
   routeSubscription: Subscription;
-  initialized = false;
+  initializedCountDown = 1;
+
   sourceDocTypes = [];
   targetDocTypes = [];
 
@@ -107,6 +108,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
+        this.initializedCountDown += 1;
         const docDef: DocumentDefinition = this.cfg.addJavaDocument(
           type,
           isSource
@@ -120,6 +122,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
             );
             log.debugc(() => inspection, category);
             docDef.initCfg.inspectionResultContents = inspection;
+            this.countDownInitialization();
           },
           err => {
             log.warnc(
@@ -127,6 +130,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
                 'No precomputed java document found for ' + type + ': ' + err,
               category
             );
+            this.countDownInitialization();
           }
         );
         break;
@@ -256,16 +260,21 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
         atlasmapping: mappings ? mappings : ''
       },
       onSave: () => {
-        setTimeout(() => {
-          this.initializeMapper();
-        }, 10);
+        this.initializeMapper();
       }
     });
+    this.countDownInitialization();
   }
 
   initializeMapper() {
-    this.initialized = true;
-    this.initializationService.initialize();
+    if ( this.initializedCountDown == 0 ) {
+      this.initializationService.initialize();
+    }
+  }
+
+  countDownInitialization() {
+    this.initializedCountDown -= 1;
+    this.initializeMapper();
   }
 
   ngOnInit() {
