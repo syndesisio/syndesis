@@ -34,7 +34,7 @@ const routes: Routes = [
     ]
   // TODO: Move to its own NgRoutingModule
   }, {
-    path: 'tech-extensions/import/:id/:extensionId',
+    path: 'tech-extensions/import/:id',
     component: TechExtensionImportComponent
   }, {
     path: 'tech-extensions/import',

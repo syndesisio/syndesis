@@ -29,7 +29,6 @@ export class TechExtensionImportComponent implements OnInit {
   response: Extension;
   error: FileError;
   importing = false;
-  id: string;
   extensionId: string;
   extensionName: string;
 
@@ -42,9 +41,9 @@ export class TechExtensionImportComponent implements OnInit {
 
   getGenericError() {
     return {
-      level: 'alert alert-danger',
-      message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file'
-    };
+        level: 'alert alert-danger',
+        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file'
+      };
   }
 
   doImport() {
@@ -54,13 +53,13 @@ export class TechExtensionImportComponent implements OnInit {
       this.response = undefined;
       return;
     }
-    this.extensionStore.importExtension(this.response.id).toPromise().then(value => {
+    this.extensionStore.importExtension(this.response.id).toPromise().then( value => {
       this.notificationService.popNotification({
         type: NotificationType.SUCCESS,
         header: 'Imported!',
         message: 'Your extension has been imported'
       });
-      const id = this.id || this.response.id;
+      const id = this.extensionId || this.response.id;
       this.router.navigate(['/customizations/tech-extensions', id], { relativeTo: this.route });
     }).catch((reason: any) => {
       this.error = {
@@ -71,15 +70,13 @@ export class TechExtensionImportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
-    this.extensionId = this.route.snapshot.paramMap.get('extensionId');
-    this.extensionName = this.route.snapshot.queryParamMap.get('name');
+    this.extensionId = this.route.snapshot.paramMap.get('id');
+    this.extensionName = this.route.snapshot.paramMap.get('name');
     if (!this.extensionName) {
       // safety net
       this.extensionId = undefined;
-      this.id = undefined;
     }
-    const uploadUrl = this.extensionStore.getUploadUrl(this.id);
+    const uploadUrl = this.extensionStore.getUploadUrl(this.extensionId);
     this.uploader = new FileUploader({
       url: uploadUrl,
       disableMultipart: false,
