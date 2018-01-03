@@ -8,8 +8,8 @@ import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
 
-import { ApiConnector, ApiConnectors } from './api-connector.models';
-import { ApiConnectorService } from './api-connector.service';
+import { ApiConnector, ApiConnectors } from '@syndesis/ui/customizations/api-connector';
+import { ApiConnectorService } from './../api-connector.service';
 
 @Component({
   selector: 'syndesis-api-connector-list',

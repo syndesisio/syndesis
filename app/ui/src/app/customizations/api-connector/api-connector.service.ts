@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
 import {
-  ApiConnectorData, ApiConnectors,
+  ApiConnectors,
   ApiConnectorValidation, CustomSwaggerConnectorRequest
 } from './api-connector.models';
 
@@ -11,10 +11,10 @@ import {
 export class ApiConnectorService {
   constructor(private apiHttpService: ApiHttpService) { }
 
-  getApiConnector(id): Observable<ApiConnectorData> {
+  getApiConnector(id: string): Observable<ApiConnectorValidation> {
     return this.apiHttpService
       .setEndpointUrl('getApiConnectorDetails', { id })
-      .get<ApiConnectorData>();
+      .get<ApiConnectorValidation>();
   }
 
   list(): Observable<ApiConnectors> {

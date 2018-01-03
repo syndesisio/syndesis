@@ -71,12 +71,11 @@
               </tr>
             </table>
           </div>
-
-          <syndesis-api-connector-review
+          <!-- The following component is temporarily disabld until we get #898 fixed -->
+          <syndesis-api-connector-review *ngIf="false"
             [apiConnectorTemplateName]="'Swagger'"
             [apiConnectorValidation]="apiConnectorData">
           </syndesis-api-connector-review>
-
         </div>
       </div>
     </div>

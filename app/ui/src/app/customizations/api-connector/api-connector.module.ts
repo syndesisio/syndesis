@@ -14,8 +14,8 @@ import {
 } from './api-connector-create';
 import { ApiConnectorInfoComponent } from './api-connector-info';
 import { ApiConnectorReviewComponent } from './api-connector-review';
-import { ApiConnectorListComponent } from './api-connector-list.component';
-import { ApiConnectorDetailComponent } from './api-connector-detail.component';
+import { ApiConnectorListComponent } from './api-connector-list';
+import { ApiConnectorDetailComponent } from './api-connector-detail';
 
 import { ApiConnectorEffects } from './api-connector.effects';
 import { ApiConnectorService } from './api-connector.service';

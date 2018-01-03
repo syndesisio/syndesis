@@ -44,4 +44,3 @@ export interface BaseRequestModel {
   isOK?: boolean;
   isComplete?: boolean;
 }
-
