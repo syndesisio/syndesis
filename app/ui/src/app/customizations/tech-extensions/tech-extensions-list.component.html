@@ -48,7 +48,7 @@
                      let-index="index">
             <button type="button"
                     class="btn btn-default"
-                    [routerLink]="['import', item.id, item.extensionId]" [queryParams]="{ name: item.name }">Update</button>
+                    [routerLink]="['import', item.id, { 'name': item.name }]">Update</button>
             <button type="button"
                     class="btn btn-default"
                     (click)="deleteModal.prompt(item)">Delete</button>
