@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import {
   FileUploader,
   FileItem,
@@ -9,10 +10,10 @@ import {
   ParsedResponseHeaders
 } from 'ng2-file-upload';
 import { NotificationType } from 'patternfly-ng';
-import { Extension } from '../../../model';
-import { ExtensionStore } from '../../../store/extension/extension.store';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
-import {Observable} from "rxjs/Observable";
+
+import { Extension } from '@syndesis/ui/model';
+import { NotificationService } from '@syndesis/ui/common';
+import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 
 interface FileError {
   level: string;
@@ -25,7 +26,6 @@ interface FileError {
   styleUrls: ['tech-extension-import.component.scss']
 })
 export class TechExtensionImportComponent implements OnInit {
-
   uploader: FileUploader;
   response: Extension;
   error: FileError;
