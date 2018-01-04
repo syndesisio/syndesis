@@ -22,7 +22,8 @@ export class FormFactoryService {
       | Map<string, ConfigurationProperty>
       | Map<string, any>
       | {},
-    values: any = {}
+    values: any = {},
+    controls: Array<string> = ['*']
   ): DynamicFormControlModel[] {
     const answer = <DynamicFormControlModel[]>[];
     for (const key in properties) {
@@ -159,6 +160,23 @@ export class FormFactoryService {
         answer.push(formField);
       }
     }
+    // guard against missing wildcard
+    if (controls.find(val => val === '*') === undefined) {
+      controls.push('*');
+    }
+    // sort the form based on the controls array
+    const wildcardIndex = controls.findIndex(val => val === '*');
+    answer.sort((a, b) => {
+      let aIndex = controls.findIndex(val => val === a.id);
+      if (aIndex === -1) {
+        aIndex = wildcardIndex;
+      }
+      let bIndex = controls.findIndex(val => val === b.id);
+      if (bIndex === -1) {
+        bIndex = wildcardIndex;
+      }
+      return aIndex - bIndex;
+    });
     return answer;
   }
 }

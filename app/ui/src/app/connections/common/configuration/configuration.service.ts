@@ -38,7 +38,15 @@ export class ConnectionConfigurationService {
     readOnly: boolean
   ): DynamicFormControlModel[] {
     const config = this.getFormConfig(connection);
-    const formModel = this.formFactory.createFormModel(config);
+    let controls = ['*'];
+    // TODO temporary client-side hack to tweak form ordering
+    switch (connection.connectorId) {
+      case 'activemq':
+        controls = ['brokerUrl', 'username', 'password', 'clientId', 'skipCertificateCheck', 'brokerCertificate', 'clientCertificate'];
+        break;
+      default:
+    }
+    const formModel = this.formFactory.createFormModel(config, undefined, controls);
     formModel
       .filter(model => model instanceof DynamicInputModel)
       .forEach(model => ((<DynamicInputModel>model).readOnly = readOnly));
