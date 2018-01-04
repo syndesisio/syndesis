@@ -1854,7 +1854,7 @@
           "name": "Get Object",
           "description": "Retrieve an object from an Amazon S3 bucket",
           "id": "io.syndesis:aws-s3-get-object-connector:latest",
-          "pattern": "To",
+          "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:aws-s3-get-object-connector:@syndesis-connectors.version@",
@@ -1904,7 +1904,7 @@
           "name": "Poll an Amazon S3 Bucket",
           "description": "Poll an Amazon S3 Bucket",
           "id": "io.syndesis:aws-s3-polling-bucket-connector:latest",
-          "pattern": "To",
+          "pattern": "From",
           "actionType": "connector",
           "descriptor": {
             "camelConnectorGAV": "io.syndesis:aws-s3-polling-bucket-connector:@syndesis-connectors.version@",
