@@ -19,7 +19,7 @@
     <button type="button"
             class="btn btn-primary"
             (click)="continue()"
-            [disabled]="!formGroup?.valid"
+            [disabled]="maybeDisableDone()"
             tourAnchor="integrations.done">
       <ng-container *ngIf="page >= lastPage || !descriptor">
         Done

@@ -85,6 +85,17 @@ export class IntegrationsConfigureActionComponent extends FlowPage
     });
   }
 
+  maybeDisableDone() {
+    return this.formGroup ? this.formGroup.invalid : false;
+  }
+
+  finishUp() {
+    this.router.navigate(['save-or-add-step'], {
+      queryParams: { validate: true },
+      relativeTo: this.route.parent
+    });
+  }
+
   continue(data: any = undefined) {
     this.error = undefined;
     data = this.buildData(data);
@@ -123,10 +134,7 @@ export class IntegrationsConfigureActionComponent extends FlowPage
                   }
                 }
                 /* All done... */
-                this.router.navigate([ 'save-or-add-step' ], {
-                  queryParams: { validate: true },
-                  relativeTo: this.route.parent
-                });
+                this.finishUp();
               })
               .catch(response => {
                 const body = JSON.parse(response._body);
@@ -138,9 +146,12 @@ export class IntegrationsConfigureActionComponent extends FlowPage
                     body.developerMsg
                 };
               });
+          } else {
+            /* All done... */
+            this.finishUp();
           }
         } else {
-          /* Go to the next page... */
+          /* Go to the next wizard page... */
           this.router.navigate(
             ['action-configure', this.position, this.page + 1],
             { relativeTo: this.route.parent }

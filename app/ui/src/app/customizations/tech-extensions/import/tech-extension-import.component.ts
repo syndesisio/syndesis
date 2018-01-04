@@ -12,7 +12,7 @@ import { NotificationType } from 'patternfly-ng';
 import { Extension } from '../../../model';
 import { ExtensionStore } from '../../../store/extension/extension.store';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
-import {Observable} from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
 interface FileError {
   level: string;
