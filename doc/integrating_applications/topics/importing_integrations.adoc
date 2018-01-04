@@ -1,8 +1,6 @@
 [id='importing-integrations']
 = Importing integrations
 
-
-
 To import an integration:
 
 . Open the {prodname} environment that you want to import the integration into. 
@@ -12,5 +10,5 @@ To import an integration:
 or navigate to a zip file that contains an exported integration and select it. 
 . After {prodname} imports the file(s), click *Done*. {prodname} displays
 information about imported integrations. 
-. For each imported integration, if it has a connection that requires
+. For each imported integration, if it uses a connection that requires
 configuration, such as authorization credentials, you must add that information. 

@@ -1,4 +1,8 @@
 [id='add-data-mapping-step']
 = Add a data mapping step
 
-Add the topic contents here.
+Details to be added. 
+
+Add all connections to your integration before you add any steps. When you 
+add a step, {prodname} operates on the data it receives from the
+previous connection or the previous step. 

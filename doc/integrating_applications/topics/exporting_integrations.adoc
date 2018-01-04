@@ -1,12 +1,6 @@
 [id="exporting-integrations"]
 = Exporting integrations
 
-You can export an integration whose status is one of the following:
-
-* *Draft*
-* *Active*
-* *Deactivated*
-
 To export an integration:
 
 . In the left pane of {prodname}, click *Integrations*. 

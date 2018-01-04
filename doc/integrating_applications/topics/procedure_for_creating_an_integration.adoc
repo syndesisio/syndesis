@@ -41,7 +41,7 @@ any required configuration details.
 <<add-steps>>. 
 
 . When the integration contains the needed connections and steps, 
-click *Save as Draft* or *Publish* according to whether you are want
+click *Save as Draft* or *Publish* according to whether you want
 to start running the integration.
 
 .. In the *Integration Name* field, enter a name that distinguishes this

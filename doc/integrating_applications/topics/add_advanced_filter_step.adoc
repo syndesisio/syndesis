@@ -1,11 +1,30 @@
 [id='add-advanced-filter-step']
 = Add an advanced filter step
 
-. On the *Create an Integration* page, click *Add a Step*
+In a filter step, {prodname} inspects the
+data and continues the integration only if the content meets
+criteria that you define. The advanced filter step lets you specify
+a filter expression if the basic filter step does not let you 
+define the exact filter you need. 
 
-. Select *Advanced Filter* from the *Add a Step* page. 
+Add all connections to your integration before you add any steps. When you 
+add a step, {prodname} operates on the data it receives from the
+previous connection or the previous step. 
 
-The Advanced filter uses Camel Simple language. You can enter Simple scripts in the edit box provided. 
-For more information about Camel Simple language see http://camel.apache.org/simple.html.
+When you add a step you might be creating a new integration or editing
+an integration. The flow of the integration appears in the left pane. 
 
-When you have completed your filter, click *Next >*.
+To add an advanced filter step:
+
+. In the left pane, where you want to add an advanced filter step to
+the integration, hover over the 
+image:images/PlusSignToAddStepOrConnection.png[title='plus sign']
+and in the popup that appears, click *Add a Step*. 
+
+. Select *Advanced Filter*.
+
+. In the edit box, use the Camel Simple language to specify a filter
+expression. To learn about the Camel Simple language,
+see http://camel.apache.org/simple.html.
+
+. Click *Done*.
