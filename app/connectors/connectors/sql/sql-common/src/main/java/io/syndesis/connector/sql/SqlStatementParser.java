@@ -43,7 +43,7 @@ public class SqlStatementParser {
 
     public SqlStatementParser(Connection connection, String schema, String sql) {
         super();
-        statementInfo = new SqlStatementMetaData(sql.toUpperCase().trim());
+        statementInfo = new SqlStatementMetaData(sql.trim());
         this.connection = connection;
         this.schema = schema;
     }
@@ -54,7 +54,7 @@ public class SqlStatementParser {
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
 
-        switch (sqlArray.get(0)) {
+        switch (sqlArray.get(0).toUpperCase()) {
             case "SELECT":
                 parseSelect(meta);
                 if (! statementInfo.getInParams().isEmpty()) {
@@ -73,7 +73,7 @@ public class SqlStatementParser {
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
 
-        switch (sqlArray.get(0)) {
+        switch (sqlArray.get(0).toUpperCase()) {
             case "INSERT":
                 parseInsert(meta);
                 break;
@@ -171,7 +171,7 @@ public class SqlStatementParser {
         List<SqlParam> params = findInputParams();
         if (columnNames.size() == params.size()) {
             for (int i=0; i<params.size(); i++) {
-                params.get(i).setColumn(columnNames.get(i));
+                params.get(i).setColumn(columnNames.get(i).toUpperCase());
             }
         }
         return params;
@@ -191,7 +191,7 @@ public class SqlStatementParser {
                 if (column.startsWith(":#") || "VALUES".equals(column)) {
                     param.setColumnPos(columnPos++);
                 } else {
-                    param.setColumn(column);
+                    param.setColumn(column.toUpperCase());
                 }
                 params.add(param);
             }
