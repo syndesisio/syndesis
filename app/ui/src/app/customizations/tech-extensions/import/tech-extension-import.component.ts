@@ -64,7 +64,7 @@ export class TechExtensionImportComponent implements OnInit {
         message: 'Your extension has been imported'
       });
       const id = this.extensionId || this.response.id;
-      this.router.navigate(['/customizations/tech-extensions', id], { relativeTo: this.route });
+      this.router.navigate(['/customizations/extensions', id], { relativeTo: this.route });
     }).catch((reason: any) => {
       this.error = {
         level: 'alert alert-danger',
