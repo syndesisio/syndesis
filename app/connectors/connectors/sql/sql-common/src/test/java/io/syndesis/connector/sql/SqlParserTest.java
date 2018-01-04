@@ -66,7 +66,7 @@ public class SqlParserTest {
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
-        Assert.assertEquals("ID", info.getInParams().get(0).getName());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
         Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
     }
 
@@ -76,18 +76,19 @@ public class SqlParserTest {
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
-        Assert.assertEquals("FIRST", info.getInParams().get(0).getName());
+        Assert.assertEquals("first", info.getInParams().get(0).getName());
         Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
     }
 
     @Test
     public void parseSelectWithJoin() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, NAME0.LASTNAME, ADDRESS FROM NAME0, ADDRESS0 WHERE NAME0.LASTNAME=ADDRESS0.LASTNAME AND FIRSTNAME LIKE :#first\"");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, NAME0.LASTNAME, ADDRESS FROM NAME0, ADDRESS0 WHERE NAME0.LASTNAME=ADDRESS0.LASTNAME AND FIRSTNAME LIKE :#first");
         SqlStatementMetaData info = parser.parse();
         Assert.assertTrue(info.getTableNames().contains("NAME0"));
         Assert.assertTrue(info.getTableNames().contains("ADDRESS0"));
         Assert.assertEquals(1, info.getInParams().size());
         Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
+        Assert.assertEquals("first", info.getInParams().get(0).getName());
     }
 
     @Test
@@ -96,9 +97,9 @@ public class SqlParserTest {
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(2, info.getInParams().size());
-        Assert.assertEquals("FIRST", info.getInParams().get(0).getName());
+        Assert.assertEquals("first", info.getInParams().get(0).getName());
         Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
-        Assert.assertEquals("ID", info.getInParams().get(1).getName());
+        Assert.assertEquals("id", info.getInParams().get(1).getName());
         Assert.assertEquals("ID", info.getInParams().get(1).getColumn());
     }
 
@@ -108,7 +109,7 @@ public class SqlParserTest {
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
-        Assert.assertEquals("ID", info.getInParams().get(0).getName());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
         Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
         Assert.assertEquals(Integer.class, info.getInParams().get(0).getTypeValue().getClazz());
         Assert.assertFalse(info.getDefaultedSqlStatement().contains(":"));
@@ -120,11 +121,11 @@ public class SqlParserTest {
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(3, info.getInParams().size());
-        Assert.assertEquals("ID", info.getInParams().get(0).getName());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
         Assert.assertEquals(0, info.getInParams().get(0).getColumnPos());
-        Assert.assertEquals("FIRSTNAME", info.getInParams().get(1).getName());
+        Assert.assertEquals("firstname", info.getInParams().get(1).getName());
         Assert.assertEquals(1, info.getInParams().get(1).getColumnPos());
-        Assert.assertEquals("LASTNAME", info.getInParams().get(2).getName());
+        Assert.assertEquals("lastname", info.getInParams().get(2).getName());
         Assert.assertEquals(2, info.getInParams().get(2).getColumnPos());
         Assert.assertEquals(String.class, info.getInParams().get(2).getTypeValue().getClazz());
     }
@@ -135,10 +136,10 @@ public class SqlParserTest {
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(2, info.getInParams().size());
-        Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getName());
+        Assert.assertEquals("firstname", info.getInParams().get(0).getName());
         Assert.assertEquals(0, info.getInParams().get(0).getColumnPos());
         Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
-        Assert.assertEquals("LASTNAME", info.getInParams().get(1).getName());
+        Assert.assertEquals("lastname", info.getInParams().get(1).getName());
         Assert.assertEquals(1, info.getInParams().get(1).getColumnPos());
         Assert.assertEquals("LASTNAME", info.getInParams().get(1).getColumn());
     }

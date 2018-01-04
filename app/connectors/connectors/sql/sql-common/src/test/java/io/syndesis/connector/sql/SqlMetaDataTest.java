@@ -79,8 +79,7 @@ public class SqlMetaDataTest {
         //information for input
         Assert.assertEquals(1,inputParams.size());
         Assert.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
-        
-        select = select.toUpperCase();
+
         //information for output of select statement
         for (SqlParam sqlParam : inputParams) {
             select = select.replace(":#" + sqlParam.getName(), "'" + sqlParam.getTypeValue().getSampleValue().toString() + "'");

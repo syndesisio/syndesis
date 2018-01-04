@@ -3,7 +3,7 @@
     "$schema" : "http://json-schema.org/schema#",
     "title" : "SQL_PARAM_IN",
     "properties" : {
-      "ID" : {
+      "id" : {
         "type" : "integer",
         "required" : true
       }
@@ -30,7 +30,7 @@
   "properties" : {
     "query" : [ {
       "displayValue" : "query",
-      "value" : "SELECT * FROM NAME WHERE ID=:#ID"
+      "value" : "SELECT * FROM NAME WHERE ID=:#id"
     } ]
   }
 }
