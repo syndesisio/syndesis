@@ -6,6 +6,7 @@ import { NotificationModule } from 'patternfly-ng';
 import { TagInputModule } from 'ngx-chips';
 
 import { CancelConfirmationModalComponent } from './cancel_confirmation_modal';
+import { DeleteConfirmationModalComponent } from './delete_confirmation_modal';
 import { SYNDESYS_EDITABLE_DIRECTIVES } from './editable';
 import { LoadingComponent } from './loading/loading.component';
 import { ModalComponent, ModalService } from './modal';
@@ -48,6 +49,7 @@ import { NavigationService } from './navigation.service';
     ModalComponent,
     WizardProgressBarComponent,
     CancelConfirmationModalComponent,
+    DeleteConfirmationModalComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES
   ],
@@ -67,6 +69,7 @@ import { NavigationService } from './navigation.service';
     ModalComponent,
     WizardProgressBarComponent,
     CancelConfirmationModalComponent,
+    DeleteConfirmationModalComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES
   ],

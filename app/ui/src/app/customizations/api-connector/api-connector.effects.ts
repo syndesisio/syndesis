@@ -8,17 +8,22 @@ import {
   ApiConnectorActions,
   ApiConnectorValidateSwagger,
   ApiConnectorCreate,
-  ApiConnectorCreateComplete
+  ApiConnectorCreateComplete,
+  ApiConnectorDelete,
+  ApiConnectorDeleteComplete
 } from './api-connector.actions';
 
 @Injectable()
 export class ApiConnectorEffects {
   @Effect()
   fetchApiConnectors$: Observable<Action> = this.actions$
-    .ofType(ApiConnectorActions.FETCH)
+    .ofType(
+      ApiConnectorActions.FETCH,
+      ApiConnectorActions.DELETE_FAIL
+    )
     .mergeMap(() =>
       this.apiConnectorService
-        .getApiConnectorList()
+        .getCustomConnectorList()
         .map(response => ({ type: ApiConnectorActions.FETCH_COMPLETE, payload: response }))
         .catch(error => Observable.of({
           type: ApiConnectorActions.FETCH_FAIL,
@@ -56,6 +61,19 @@ export class ApiConnectorEffects {
   refreshApiConnectors$: Observable<Action> = this.actions$
     .ofType<ApiConnectorCreateComplete>(ApiConnectorActions.CREATE_COMPLETE)
     .switchMap(() => Observable.of(ApiConnectorActions.fetch()));
+
+  @Effect()
+  deleteCustomConnector$: Observable<Action> = this.actions$
+    .ofType<ApiConnectorDelete>(ApiConnectorActions.DELETE)
+    .mergeMap(action  =>
+      this.apiConnectorService
+        .deleteCustomConnector(action.payload)
+        .map(response => ({ type: ApiConnectorActions.DELETE_COMPLETE, payload: response }))
+        .catch(error => Observable.of({
+          type: ApiConnectorActions.DELETE_FAIL,
+          payload: error
+        }))
+    );
 
   constructor(
     private actions$: Actions,

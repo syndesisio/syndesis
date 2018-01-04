@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { log, getCategory } from './logging';
 import { environment } from '../environments/environment';
 
-const apiEndpoints = require('./../api-endpoints-config.json');
+const apiChildEndpoints = require('./../api-endpoints-config.json');
 
 const category = getCategory('ConfigService');
 
@@ -19,17 +19,16 @@ export class ConfigService {
     this.settingsRepository = this.getSettings();
   }
 
-  load(configJson = defaultConfigJson): Promise<any|ConfigService> {
+  initialize(configJson = defaultConfigJson): Promise<any|ConfigService> {
     return this.httpClient.get(configJson)
       .toPromise()
       .then(config => {
         log.debugc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
 
-        const apiChildEndpoints = JSON.parse(apiEndpoints);
         this.settingsRepository = Object.freeze({
           ...this.settingsRepository,
           ...config,
-          ...apiChildEndpoints
+          ...{ apiChildEndpoints }
         });
 
         log.debugc(() =>
@@ -82,5 +81,5 @@ export class ConfigService {
 }
 
 export function appConfigInitializer(configService: ConfigService): () => Promise<ConfigService> {
-  return () => configService.load();
+  return () => configService.initialize();
 }
