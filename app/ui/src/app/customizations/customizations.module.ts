@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
-import { ApiConnectorModule, ApiConnectorListComponent } from './api-connector';
+import { ApiConnectorModule, ApiConnectorListComponent, ApiConnectorLazyLoaderGuard } from './api-connector';
 import { CustomizationsComponent } from './customizations.component';
 
 import {
@@ -25,7 +25,8 @@ const routes: Routes = [
       },
       {
         path: 'api-connector',
-        component: ApiConnectorListComponent
+        component: ApiConnectorListComponent,
+        canActivate: [ApiConnectorLazyLoaderGuard]
       },
       {
         path: '',
@@ -51,8 +52,8 @@ const routes: Routes = [
     SyndesisCommonModule,
     PatternflyUIModule,
     FileUploadModule,
-    RouterModule.forChild(routes),
     ApiConnectorModule,
+    RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
   declarations: [

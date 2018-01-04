@@ -5,16 +5,24 @@ import { ApiConnectorState } from './api-connector.models';
 import {
   ApiConnectorActions,
   ApiConnectorFetchComplete,
-  ApiConnectorFetchFail
+  ApiConnectorFetchFail,
+  ApiConnectorCreate,
+  ApiConnectorCreateComplete,
+  ApiConnectorCreateCancel,
 } from './api-connector.actions';
 
 const initialState: ApiConnectorState = {
-  list             : [],
-  createRequest    : null,
-  loading          : false,
-  loaded           : false,
-  hasErrors        : false,
-  errors           : []
+  list: [],
+  createRequest: {
+    connectorTemplateId: null,
+    isComplete: false,
+    isOK: false,
+    isRequested: false
+  },
+  loading: false,
+  loaded: false,
+  hasErrors: false,
+  errors: []
 };
 
 export function apiConnectorReducer(state = initialState, action: any): ApiConnectorState {
@@ -30,12 +38,17 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     }
 
     case ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE: {
+      const { validationDetails, errors } = action.payload;
       return {
         ...state,
-        createRequest: { ...state.createRequest, ...action.payload },
+        createRequest: {
+          ...state.createRequest,
+          ...action.payload,
+          validationDetails: validationDetails
+        },
         loading: false,
         hasErrors: false,
-        errors: []
+        errors: errors
       };
     }
 
@@ -48,10 +61,69 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       };
     }
 
+    case ApiConnectorActions.CREATE: {
+      const createRequest = (action as ApiConnectorCreate).payload;
+      return {
+        ...state,
+        createRequest: { ...createRequest, isComplete: false, isRequested: true },
+        loading: true,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.CREATE_COMPLETE: {
+      const createRequest = (action as ApiConnectorCreateComplete).payload;
+      return {
+        ...state,
+        createRequest: { ...createRequest, isComplete: true },
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.CREATE_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        hasErrors: true,
+        errors: [action.payload]
+      };
+    }
+
+    case ApiConnectorActions.CREATE_CANCEL: {
+      return {
+        ...state,
+        createRequest: undefined,
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.UPDATE_AUTH_SETTINGS: {
+      const configuredProperties = {
+        ...state.createRequest.configuredProperties,
+        ...action.payload
+      };
+      return {
+        ...state,
+        createRequest: {
+          ...state.createRequest,
+          configuredProperties,
+        },
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
     case ApiConnectorActions.FETCH: {
       return {
         ...state,
         loading: true,
+        loaded: false,
         hasErrors: false,
         errors: []
       };

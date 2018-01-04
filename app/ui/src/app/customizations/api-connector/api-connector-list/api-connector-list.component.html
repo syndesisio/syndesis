@@ -7,7 +7,7 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      <syndesis-loading [loading]="loading$ | async">
+      <syndesis-loading [loading]="(apiConnectorState$ | async)?.loading">
 
         <syndesis-list-toolbar [items]="apiConnectors$"
                                [filterTags]="false"

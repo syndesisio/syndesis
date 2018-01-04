@@ -103,6 +103,8 @@
 }
 
 input[type="text"] {
+  &.ng-touched.ng-invalid,
+  &.syn-submitted.ng-invalid,
   &.syn-invalid {
     color: $color-pf-red-200;
     border: 1px solid $color-pf-red-100;

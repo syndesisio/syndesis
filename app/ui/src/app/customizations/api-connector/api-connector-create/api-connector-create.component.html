@@ -20,9 +20,6 @@
             <button class="wizard-nav__button btn btn-default" (click)="showCancelModal()">
               Cancel
             </button>
-            <button class="wizard-nav__button btn btn-primary syn-visuallyhidden">
-              Create Connector
-            </button>
           </div>
         </div>
       </div>
@@ -47,13 +44,17 @@
         </syndesis-api-connector-swagger-upload>
         <syndesis-api-connector-review *ngIf="currentActiveStep == 2"
           [apiConnectorTemplateName]="'Swagger'"
-          [apiConnectorValidation]="(apiConnectorState$ | async)?.createRequest"
-          [showNext]="true"
-          (next)="onReviewComplete()">
+          [apiConnectorData]="(apiConnectorState$ | async)?.createRequest"
+          [showNextButton]="true"
+          (reviewComplete)="onReviewComplete($event)">
         </syndesis-api-connector-review>
-        <syndesis-api-connector-auth *ngIf="currentActiveStep == 3" (next)="onAuthSetup()">
+        <syndesis-api-connector-auth *ngIf="currentActiveStep == 3"
+          [customConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
+          (authSetup)="onAuthSetup($event)">
         </syndesis-api-connector-auth>
-        <syndesis-api-connector-info *ngIf="currentActiveStep == 4" (update)="onCreateComplete()">
+        <syndesis-api-connector-info *ngIf="currentActiveStep == 4" 
+          [apiConnectorState]="apiConnectorState$ | async"
+          (update)="onCreateComplete($event)">
         </syndesis-api-connector-info>
       </div>
     </div>

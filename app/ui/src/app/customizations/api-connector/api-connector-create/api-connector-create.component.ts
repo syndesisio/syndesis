@@ -9,8 +9,17 @@ import {
   ApiConnectorStore,
   ApiConnectorActions,
   getApiConnectorState,
-  CustomSwaggerConnectorRequest
+  CustomConnectorRequest,
+  CustomApiConnectorAuthSettings,
+  ApiConnectorData
 } from '@syndesis/ui/customizations/api-connector';
+
+enum WizardSteps {
+  UploadSwagger       = 1,
+  ReviewApiConnector  = 2,
+  UpdateAuthSettings  = 3,
+  SubmitRequest       = 4,
+}
 
 @Component({
   selector: 'syndesis-api-connector-create',
@@ -27,23 +36,28 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalService: ModalService,
-    private apiConnectorStore: Store<ApiConnectorStore>,
+    private apiConnectorStore: Store<ApiConnectorStore>
   ) { }
 
   ngOnInit() {
     this.modalService.registerModal(this.cancelModalId, this.cancelModalTemplate);
     this.apiConnectorState$ = this.apiConnectorStore.select(getApiConnectorState);
+
     // Once the request validation results are yielded for the 1st time, we move user to step 2
     this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
-      .filter(request => !!request)
-      .first(request => !!request.validationDetails)
-      .subscribe(() => this.currentActiveStep = 2);
+      .first(request => !!request && !!request.actionsSummary)
+      .subscribe(() => this.currentActiveStep = WizardSteps.ReviewApiConnector);
+
+    // Once the request object is flagged as 'isComplete', we redirect the user to the main listing
+    this.apiConnectorState$.map(apiConnectorState => apiConnectorState.createRequest)
+      .first(request => !!request && request.isComplete)
+      .subscribe(() => this.redirectBack());
   }
 
   showCancelModal(): void {
     this.modalService.show(this.cancelModalId).then(modal => {
       if (modal.result) {
-        this.router.navigate(['customizations', 'api-connector']);
+        this.redirectBack();
       }
     });
   }
@@ -52,23 +66,29 @@ export class ApiConnectorCreateComponent implements OnInit, OnDestroy {
     this.modalService.hide(this.cancelModalId, doCancel);
   }
 
-  onValidationRequest(request: CustomSwaggerConnectorRequest) {
+  onValidationRequest(request: CustomConnectorRequest) {
     this.apiConnectorStore.dispatch(ApiConnectorActions.validateSwagger(request));
   }
 
   onReviewComplete(): void {
-    this.currentActiveStep = 3;
+    this.currentActiveStep = WizardSteps.UpdateAuthSettings;
   }
 
-  onAuthSetup(): void {
-    this.currentActiveStep = 4;
+  onAuthSetup(authSettings: CustomApiConnectorAuthSettings): void {
+    this.apiConnectorStore.dispatch(ApiConnectorActions.updateAuthSettings(authSettings));
+    this.currentActiveStep = WizardSteps.SubmitRequest;
   }
 
-  onCreateComplete(event): void {
-    //console.log(event);
+  onCreateComplete(customConnectorRequest: CustomConnectorRequest): void {
+    this.apiConnectorStore.dispatch(ApiConnectorActions.create(customConnectorRequest));
   }
 
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelModalId);
+    this.apiConnectorStore.dispatch(ApiConnectorActions.createCancel());
+  }
+
+  private redirectBack(): void {
+    this.router.navigate(['customizations', 'api-connector']);
   }
 }

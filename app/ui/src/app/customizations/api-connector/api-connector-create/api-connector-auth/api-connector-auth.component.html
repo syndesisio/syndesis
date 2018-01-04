@@ -7,47 +7,39 @@
   <p>
     <strong>Authentication Type</strong>
   </p>
-  <form class="syn-form syn-form--card syn-form--auth-setup">
+  <form [formGroup]="authSetupForm" #form="ngForm" (ngSubmit)="onSubmit(form)" class="syn-form syn-form--card syn-form--auth-setup" novalidate>
     <fieldset class="syn-form__body">
       <div class="syn-form-input-list">
-        <label class="syn-form-input-list__option">
-          <input type="radio" name="security" checked="checked" #noSecurity> No Security
-        </label>
-        <label class="syn-form-input-list__option">
-          <input type="radio" name="security" #httpBasicAuth> HTTP Basic Authentication
-        </label>
-        <label class="syn-form-input-list__option">
-          <input type="radio" name="security" #oauth> OAuth
+        <label class="syn-form-input-list__option" *ngFor="let authType of customConnectorRequest.properties.authenticationType.enum">
+          <input type="radio" 
+            name="authenticationType"
+            formControlName="authenticationType"
+            [value]="authType.value"> {{ authType.label }}
         </label>
       </div>
 
-      <div class="syn-form-row syn-form-row--oauth" *ngIf="oauth.checked">
-        <label class="syn-form-row__label" for="authenticationUrl">Authentication URL</label>
-        <input class="syn-form-row__input" type="text" name="authenticationUrl">
+      <div class="syn-form-row syn-form-row--oauth" *ngIf="authSetupForm.value.authenticationType == 'oauth2'">
+        <label class="syn-form-row__label" for="authorizationEndpoint">Authentication URL</label>
+        <input class="syn-form-row__input"
+          [class.syn-submitted]="form.submitted"
+          type="text"
+          formControlName="authorizationEndpoint">
       </div>
       
-      <div class="syn-form-row syn-form-row--oauth" *ngIf="oauth.checked">
-        <label class="syn-form-row__label" for="authorizationUrl">Authorization URL</label>
-        <input class="syn-form-row__input" type="text" name="authorizationUrl">
+      <div class="syn-form-row syn-form-row--oauth" *ngIf="authSetupForm.value.authenticationType == 'oauth2'">
+        <label class="syn-form-row__label" for="tokenEndpoint">Authorization URL</label>
+        <input class="syn-form-row__input"
+          [class.syn-submitted]="form.submitted"
+          type="text"
+          formControlName="tokenEndpoint">
       </div>
 
-      <div class="syn-form-row syn-form-row--oauth" *ngIf="oauth.checked">
-        <strong class="syn-form-row__label syn-form-row__label--list">Scopes</strong>
-        <div class="syn-form-input-list">
-          <label class="syn-form-input-list__option">
-            <input type="checkbox" name="scopes"> write:pets
-          </label>
-          <label class="syn-form-input-list__option">
-            <input type="checkbox" name="scopes"> read:pets
-          </label>
-        </div>
-      </div>
     </fieldset>
 
     <fieldset class="syn-form__buttons">
-      <button type="button" class="submit syn-form__submit btn btn-primary" (click)="next.emit()">
+      <syndesis-button type="submit" [disabled]="authSetupForm.invalid">
         Next
-      </button>
+      </syndesis-button>
     </fieldset>
   </form>
 </div>

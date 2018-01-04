@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActionConfig, ListConfig, EmptyStateConfig } from 'patternfly-ng';
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ConfigService } from '@syndesis/ui/config.service';
-
-import { ApiConnector, ApiConnectors } from './api-connector.models';
-import { ApiConnectorService } from './api-connector.service';
+import {
+  ApiConnectorData, ApiConnectors, ApiConnectorState,
+  ApiConnectorStore, getApiConnectorState
+} from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-list',
@@ -17,9 +19,8 @@ import { ApiConnectorService } from './api-connector.service';
   styleUrls: ['./api-connector-list.component.scss']
 })
 export class ApiConnectorListComponent implements OnInit {
-  apiConnectors$: Observable<ApiConnectors|any>;
+  apiConnectorState$: Observable<ApiConnectorState>;
   filteredApiConnectors$ = new BehaviorSubject(<ApiConnectors>{});
-  loading$ = Observable.of(true);
   listConfig: ListConfig;
   appName: string;
   itemUseMapping: { [valueComparator: string]: string } = {
@@ -27,8 +28,12 @@ export class ApiConnectorListComponent implements OnInit {
     'other': '<strong>#</strong> times'
   };
 
+  get apiConnectors$(): Observable<ApiConnectors> {
+    return this.apiConnectorState$.map(apiConnectorState => apiConnectorState.list);
+  }
+
   constructor(
-    private apiConnectorService: ApiConnectorService,
+    private apiConnectorStore: Store<ApiConnectorStore>,
     private config: ConfigService,
     private router: Router,
     private route: ActivatedRoute
@@ -59,8 +64,7 @@ export class ApiConnectorListComponent implements OnInit {
 
   ngOnInit() {
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
-    this.apiConnectors$ = this.apiConnectorService.list();
-    this.loading$ = this.apiConnectors$.switchMap(apiConnectors => Observable.of(!apiConnectors));
+    this.apiConnectorState$ = this.apiConnectorStore.select<ApiConnectorState>(getApiConnectorState);
   }
 
   handleAction(event: any) {
@@ -69,7 +73,7 @@ export class ApiConnectorListComponent implements OnInit {
     }
   }
 
-  handleClick(event: { item: ApiConnector }) {
+  handleClick(event: { item: ApiConnectorData }) {
     const apiConnector = event.item;
     this.router.navigate([apiConnector.id], { relativeTo: this.route });
   }
