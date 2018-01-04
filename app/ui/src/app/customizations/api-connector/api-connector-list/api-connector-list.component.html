@@ -5,6 +5,9 @@
       <p><a>{{ appName }}</a> creates an API client connector when you upload a valid Swagger specification that describes the API you want to connect to.</p>
     </div>
   </div>
+  <syndesis-validation-error *ngIf="stateError | async">
+    {{ stateError | async }}
+  </syndesis-validation-error>
   <div class="row">
     <div class="col-xs-12">
       <syndesis-loading [loading]="(apiConnectorState$ | async)?.loading">
@@ -50,7 +53,9 @@
           <ng-template #actionTemplate
                        let-item="item"
                        let-index="index">
-            <button type="button" [disabled]="item.uses > 0" class="btn btn-default">Delete</button>
+            <button type="button" (click)="onDelete(item.id)" [disabled]="item.uses > 0" class="foo btn btn-default">
+              Delete
+            </button>
           </ng-template>
         </pfng-list>
 
@@ -58,3 +63,12 @@
     </div>
   </div>
 </div>
+
+<ng-template #confirmDeleteModalTemplate>
+  <delete-confirmation-modal (delete)="onDeleteConfirm($event)">
+    <h3>Do you really want to delete this custom connector?</h3>
+    <p>
+      This action cannot be undone.
+    </p>
+  </delete-confirmation-modal>
+</ng-template>

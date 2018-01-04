@@ -20,44 +20,59 @@ export class ApiConnectorActions {
   static CREATE_COMPLETE = '[API Connectors] Create custom connector complete';
   static CREATE_FAIL = '[API Connectors] Custom connector creation failed';
   static CREATE_CANCEL = '[API Connectors] Create custom connector cancelled';
+  static DELETE = '[API Connectors] Delete custom connector';
+  static DELETE_COMPLETE = '[API Connectors] Custom connector successfully deleted';
+  static DELETE_FAIL = '[API Connectors] Delete custom connector failed';
 
   static fetch() {
     return new ApiConnectorFetch();
   }
 
-  static fetchComplete(payload: ApiConnectors) {
+  static fetchComplete(payload: ApiConnectors): ApiConnectorFetchComplete {
     return new ApiConnectorFetchComplete(payload);
   }
 
-  static validateSwagger(payload: CustomConnectorRequest) {
+  static validateSwagger(payload: CustomConnectorRequest): ApiConnectorValidateSwagger {
     return new ApiConnectorValidateSwagger(payload);
   }
 
-  static validateSwaggerComplete(payload: ApiConnectorData) {
+  static validateSwaggerComplete(payload: ApiConnectorData): ApiConnectorValidateSwaggerComplete {
     return new ApiConnectorValidateSwaggerComplete(payload);
   }
 
-  static validateSwaggerFail(payload: ActionReducerError) {
+  static validateSwaggerFail(payload: ActionReducerError): ApiConnectorValidateSwaggerFail {
     return new ApiConnectorValidateSwaggerFail(payload);
   }
 
-  static updateAuthSettings(payload: CustomApiConnectorAuthSettings) {
+  static updateAuthSettings(payload: CustomApiConnectorAuthSettings): ApiConnectorUpdateAuthSettings {
     return new ApiConnectorUpdateAuthSettings(payload);
   }
 
-  static create(payload: CustomConnectorRequest) {
+  static create(payload: CustomConnectorRequest): ApiConnectorCreate {
     return new ApiConnectorCreate(payload);
   }
 
-  static createFail(payload: any) {
+  static createFail(payload: ActionReducerError): ApiConnectorCreateFail {
     return new ApiConnectorCreateFail(payload);
   }
 
-  static createComplete(payload: any) {
+  static createComplete(payload: any): ApiConnectorCreateComplete {
     return new ApiConnectorCreateComplete(payload);
   }
 
-  static createCancel() {
+  static delete(payload: string): ApiConnectorDelete {
+    return new ApiConnectorDelete(payload);
+  }
+
+  static deleteFail(payload: ActionReducerError): ApiConnectorDeleteFail {
+    return new ApiConnectorDeleteFail(payload);
+  }
+
+  static deleteComplete(): ApiConnectorDeleteComplete {
+    return new ApiConnectorDeleteComplete();
+  }
+
+  static createCancel(): ApiConnectorCreateCancel {
     return new ApiConnectorCreateCancel();
   }
 }
@@ -116,6 +131,22 @@ export class ApiConnectorCreateComplete implements Action {
 
 export class ApiConnectorCreateFail implements Action {
   readonly type = ApiConnectorActions.CREATE_FAIL;
+
+  constructor(public payload: ActionReducerError) { }
+}
+
+export class ApiConnectorDelete implements Action {
+  readonly type = ApiConnectorActions.DELETE;
+
+  constructor(public payload: string) { }
+}
+
+export class ApiConnectorDeleteComplete implements Action {
+  readonly type = ApiConnectorActions.DELETE_COMPLETE;
+}
+
+export class ApiConnectorDeleteFail implements Action {
+  readonly type = ApiConnectorActions.DELETE_FAIL;
 
   constructor(public payload: ActionReducerError) { }
 }

@@ -9,6 +9,7 @@ import {
   ApiConnectorCreate,
   ApiConnectorCreateComplete,
   ApiConnectorCreateCancel,
+  ApiConnectorDelete,
 } from './api-connector.actions';
 
 const initialState: ApiConnectorState = {
@@ -83,7 +84,27 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       };
     }
 
-    case ApiConnectorActions.CREATE_FAIL: {
+    case ApiConnectorActions.DELETE: {
+      const deletedConnectorId = (action as ApiConnectorDelete).payload;
+      const list = [...state.list].filter(customConnector => customConnector.id !== deletedConnectorId);
+      return {
+        ...state,
+        ...{ list },
+        loading: true,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.DELETE_COMPLETE: {
+      return {
+        ...state,
+        loading: false
+      };
+    }
+
+    case ApiConnectorActions.CREATE_FAIL:
+    case ApiConnectorActions.DELETE_FAIL: {
       return {
         ...state,
         loading: false,
@@ -135,9 +156,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
         ...state,
         list,
         loading: false,
-        loaded: true,
-        hasErrors: false,
-        errors: []
+        loaded: true
       };
     }
 

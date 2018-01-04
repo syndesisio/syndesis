@@ -11,13 +11,13 @@ import {
 export class ApiConnectorService {
   constructor(private apiHttpService: ApiHttpService) { }
 
-  getApiConnector(id: string): Observable<ApiConnectorData> {
+  getCustomConnector(id: string): Observable<ApiConnectorData> {
     return this.apiHttpService
-      .setEndpointUrl('getApiConnectorDetails', { id })
+      .setEndpointUrl('selectApiConnector', { id })
       .get<ApiConnectorData>();
   }
 
-  getApiConnectorList(): Observable<ApiConnectors> {
+  getCustomConnectorList(): Observable<ApiConnectors> {
     return this.apiHttpService
       .setEndpointUrl('getApiConnectorList', { template: 'swagger-connector-template'})
       .get<{ items: ApiConnectors }>() // TODO: Provide a better <T> typing here
@@ -39,5 +39,11 @@ export class ApiConnectorService {
     } else {
       return apiHttpService.post(connectorSettings);
     }
+  }
+
+  deleteCustomConnector(id: string): Observable<any> {
+    return this.apiHttpService
+      .setEndpointUrl('selectApiConnector', { id })
+      .delete<any>();
   }
 }
