@@ -108,31 +108,25 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     // TODO not sure what to do for `none` or `any` here
     switch (kind) {
       case 'java':
-        this.addInitializationTask();
-        const docDef: DocumentDefinition = this.cfg.addJavaDocument(
-          type,
-          isSource
-        );
-        this.support.requestJavaInspection(connectorId, type).subscribe(
-          data => {
-            const inspection: string = data['_body'];
-            log.infoc(
-              () => 'Precomputed java document found for ' + type,
-              category
-            );
-            log.debugc(() => inspection, category);
-            docDef.initCfg.inspectionResultContents = inspection;
-            this.removeInitializationTask();
-          },
-          err => {
-            log.warnc(
-              () =>
-                'No precomputed java document found for ' + type + ': ' + err,
-              category
-            );
-            this.removeInitializationTask();
-          }
-        );
+        const docDef = this.cfg.addJavaDocument(type, isSource);
+        if (specification != '') {
+          docDef.initCfg.inspectionResultContents = specification;
+        } else {
+          this.addInitializationTask();
+          this.support.requestJavaInspection(connectorId, type).toPromise().then(
+            data => {
+              const inspection: string = data['_body'];
+              log.infoc( () => `Precomputed java document found for ${type}`, category);
+              log.debugc(() => inspection, category);
+              docDef.initCfg.inspectionResultContents = inspection;
+              this.removeInitializationTask();
+            },
+            err => {
+              log.warnc(() => `No precomputed java document found for ${type}: ${err}`, category);
+              this.removeInitializationTask();
+            }
+          );
+        }
         break;
       case 'json':
       case 'json-instance':
