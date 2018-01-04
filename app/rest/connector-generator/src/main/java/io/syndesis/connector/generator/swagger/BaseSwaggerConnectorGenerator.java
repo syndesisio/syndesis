@@ -24,7 +24,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
@@ -94,23 +96,22 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             final Connector connector = basicConnector(connectorTemplate, connectorSettings);
             final Map<String, Path> paths = swaggerInfo.getModel().getPaths();
 
-            int total = 0;
-            final Map<String, AtomicInteger> tagCounts = new HashMap<>();
-            for (final Entry<String, Path> pathEntry : paths.entrySet()) {
-                final Path path = pathEntry.getValue();
+            AtomicInteger total = new AtomicInteger(0);
 
-                final Map<HttpMethod, Operation> operationMap = path.getOperationMap();
-
-                for (final Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
-                    final Operation operation = entry.getValue();
-                    total++;
-                    operation.getTags().forEach(tag -> tagCounts.computeIfAbsent(tag, x -> new AtomicInteger(0)).incrementAndGet());
-                }
-            }
+            final Map<String, Integer> tagCounts = paths.entrySet().stream()
+                .flatMap(p -> p.getValue().getOperations().stream())
+                .peek(o -> total.incrementAndGet())
+                .flatMap(o -> o.getTags().stream().distinct())
+                .collect(
+                    Collectors.groupingBy(
+                        Function.identity(),
+                        Collectors.reducing(0, (e) -> 1, Integer::sum)
+                    )
+                );
 
             final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
-                .totalActions(total)//
-                .actionCountByTags(tagCounts.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> e.getValue().intValue())))
+                .totalActions(total.intValue())//
+                .actionCountByTags(tagCounts)
                 .build();
             return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
                 .warnings(swaggerInfo.getWarnings()).build();
@@ -141,7 +142,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(baseConnector);
 
-        final Map<String, String> alreadyConfiguredProperties = ((Connector) builder.build()).getConfiguredProperties();
+        final Map<String, String> alreadyConfiguredProperties = builder.build().getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
             final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template);

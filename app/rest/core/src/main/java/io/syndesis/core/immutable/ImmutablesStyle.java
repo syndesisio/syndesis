@@ -20,6 +20,7 @@ import org.immutables.value.Value;
 @Value.Style(
     jdkOnly = true,
     visibility = Value.Style.ImplementationVisibility.PACKAGE,
+    overshadowImplementation = true,
     headerComments = true,
     depluralize = true,
     typeAbstract = "*",
