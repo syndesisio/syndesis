@@ -28,15 +28,9 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { CanDeactivateGuard, SyndesisCommonModule } from './common';
 import { UserService } from './common/user.service';
-import { ConfigService } from './config.service';
+import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
 import { platformReducer } from './platform';
-
-export function appInitializer(configService: ConfigService) {
-  return () => {
-    return configService.load();
-  };
-}
 
 export function restangularProviderConfigurer(
   restangularProvider: any,
@@ -109,7 +103,7 @@ export function mapperRestangularProvider(
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: appInitializer,
+      useFactory: appConfigInitializer,
       deps: [ConfigService],
       multi: true
     },

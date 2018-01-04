@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-
+import { HttpClient } from '@angular/common/http';
 import { log, getCategory } from './logging';
 import { environment } from '../environments/environment';
+
+const apiEndpoints = require('./../api-endpoints-config.json');
 
 const category = getCategory('ConfigService');
 
@@ -15,41 +13,40 @@ const defaultConfigJson = '/config.json';
 
 @Injectable()
 export class ConfigService {
-  private settingsRepository: any = defaults;
+  private settingsRepository = defaults;
 
-  constructor(private http: Http) {
+  constructor(private httpClient: HttpClient) {
     this.settingsRepository = this.getSettings();
   }
 
-  load(configJson: string = defaultConfigJson): Promise<ConfigService> {
-    return <Promise<ConfigService>>this.http
-      .get(configJson)
-      .map(res => res.json())
+  load(configJson = defaultConfigJson): Promise<any|ConfigService> {
+    return this.httpClient.get(configJson)
       .toPromise()
       .then(config => {
-        log.debugc(
-          () => 'Received config: ' + JSON.stringify(config, undefined, 2),
-          category
-        );
+        log.debugc(() => 'Received config: ' + JSON.stringify(config, undefined, 2), category);
+
+        const apiChildEndpoints = JSON.parse(apiEndpoints);
         this.settingsRepository = Object.freeze({
           ...this.settingsRepository,
-          ...config
+          ...config,
+          ...apiChildEndpoints
         });
-        log.debugc(
-          () =>
-            'Using merged config: ' +
-            JSON.stringify(this.settingsRepository, undefined, 2),
+
+        log.debugc(() =>
+          'Using merged config: ' + JSON.stringify(this.settingsRepository, undefined, 2),
           category
         );
+
         return this;
       })
       .catch(() => {
-        log.warnc(
-          () =>
-            'Error: Configuration service unreachable! Using defaults: ' +
-            JSON.stringify(this.settingsRepository),
+        log.warnc(() =>
+          'Error: Configuration service unreachable! Using defaults: ' +
+          JSON.stringify(this.settingsRepository),
           category
         );
+
+        Promise.resolve();
       });
   }
 
@@ -82,4 +79,8 @@ export class ConfigService {
 
     return this.settingsRepository[group][key];
   }
+}
+
+export function appConfigInitializer(configService: ConfigService): () => Promise<ConfigService> {
+  return () => configService.load();
 }
