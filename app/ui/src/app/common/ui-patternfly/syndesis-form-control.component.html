@@ -6,22 +6,27 @@
   <label *ngIf="type !== 2 && model.label !== null"
          [attr.for]="model.id"
          [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
+
     <label [ngClass]="{'required-pf': model.required}">
       {{ model.label }}
     </label>
+
     <div *ngIf="model.hint !== null"
          [tooltip]="model.hint"
          placement="right"
          class="hint-icon">
       <span class="glyphicon glyphicon-info-sign"></span>
     </div>
+
   </label>
 
-  <ng-template *ngIf="type !== 1 && template?.align === 'START'"
+  <!-- <ng-template *ngIf="type !== 1 && template?.align === 'START'"
                [ngTemplateOutlet]="template.templateRef"
-               [ngTemplateOutletContext]="model"></ng-template>
+               [ngTemplateOutletContext]="model"></ng-template> -->
+  <ng-container *ngTemplateOutlet="templates[0]?.templateRef; context: model"></ng-container>
 
 
+  <!-- CHECKBOX -->
   <div *ngIf="type === 2"
        [ngClass]="getClass('grid', 'control')">
 
@@ -39,9 +44,9 @@
                [ngClass]="getClass('element', 'control')"
                [required]="model.required"
                [value]="model.value"
-               (dfBlur)="onFocus($event)"
+               (blur)="onBlur($event)"
                (change)="onValueChange($event)"
-               (dfFocus)="onFocus($event)">
+               (focus)="onFocus($event)">
         <span [innerHTML]="model.label"
               [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
         </span>
@@ -63,6 +68,7 @@
 
     <ng-container [ngSwitch]="type">
 
+      <!-- FORM ARRAY -->
       <div *ngSwitchCase="1"
            [dynamicId]="bindId && model.id"
            [formArrayName]="model.id"
@@ -83,16 +89,19 @@
                                  [model]="_model"
                                  [templates]="templateList"
                                  [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
-                                 (dfBlur)="onFocus($event)"
-                                 (change)="onValueChange($event)"
+                                 (dfBlur)="onBlur($event)"
+                                 (dfChange)="onValueChange($event)"
                                  (dfFocus)="onFocus($event)"></syndesis-form-control>
 
-          <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
+          <ng-container *ngTemplateOutlet="templates[2]?.templateRef; context: groupModel"></ng-container>
         </div>
 
       </div>
 
+      <!-- DATEPICKER -->
+      <!-- BsDatepickerModule is under development, BREAKING CHANGES are possible -->
 
+      <!-- FORM GROUP -->
       <fieldset *ngSwitchCase="4"
                 [dynamicId]="bindId && model.id"
                 [formGroupName]="model.id"
@@ -111,12 +120,12 @@
                                [model]="_model"
                                [templates]="templateList"
                                [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
-                               (dfBlur)="onFocus($event)"
+                               (dfBlur)="onBlur($event)"
                                (change)="onValueChange($event)"
                                (dfFocus)="onFocus($event)"></syndesis-form-control>
       </fieldset>
 
-
+      <!-- INPUT -->
       <div *ngSwitchCase="5"
            [class.input-group]="model.prefix || model.suffix">
 
@@ -126,13 +135,13 @@
 
         <input class="form-control"
                [attr.accept]="model.accept"
-               [attr.autoComplete]="model.autoComplete"
                [attr.list]="model.listId"
                [attr.max]="model.max"
                [attr.min]="model.min"
                [attr.multiple]="model.multiple"
                [attr.step]="model.step"
                [attr.tabindex]="model.tabIndex"
+               [autocomplete]="model.autoComplete"
                [autofocus]="model.autoFocus"
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
@@ -148,15 +157,15 @@
                [spellcheck]="model.spellCheck"
                [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
                [type]="model.inputType"
-               (dfBlur)="onFocus($event)"
+               (blur)="onBlur($event)"
                (change)="onValueChange($event)"
-               (dfFocus)="onFocus($event)" />
+               (focus)="onFocus($event)" />
 
         <div *ngIf="model.suffix"
              class="input-group-addon"
              [innerHTML]="model.suffix"></div>
 
-        <datalist *ngIf="model.list"
+        <datalist *ngIf="hasList"
                   [id]="model.listId">
 
           <option *ngFor="let option of model.list"
@@ -166,19 +175,20 @@
 
       </div>
 
-
+      <!-- RADIO GROUP -->
       <fieldset *ngSwitchCase="6"
                 role="radiogroup"
                 [attr.tabindex]="model.tabIndex"
                 [dynamicId]="bindId && model.id"
                 [name]="model.name"
+                [ngClass]="getClass('element', 'control')"
                 (change)="onValueChange($event)">
 
         <legend *ngIf="model.legend"
                 [innerHTML]="model.legend"></legend>
 
         <div *ngFor="let option of model.options$ | async"
-             [ngClass]="getClass('element', 'control') || 'radio'">
+             [ngClass]="getClass('element', 'option') || 'radio'">
 
           <label>
 
@@ -186,13 +196,14 @@
                    [formControlName]="model.id"
                    [name]="model.name"
                    [value]="option.value"
-                   (dfBlur)="onFocus($event)"
-                   (dfFocus)="onFocus($event)" />
+                   (blur)="onBlur($event)"
+                   (focus)="onFocus($event)" />
             <span [innerHTML]="option.label"></span>
           </label>
         </div>
       </fieldset>
 
+      <!-- SELECT -->
       <select *ngSwitchCase="7"
               class="form-control"
               [attr.tabindex]="model.tabIndex"
@@ -202,12 +213,13 @@
               [tooltip]="model.hint"
               [ngClass]="getClass('element', 'control')"
               [required]="model.required"
-              (dfBlur)="onFocus($event)"
+              (blur)="onBlur($event)"
               (change)="onValueChange($event)"
-              (dfFocus)="onFocus($event)">
+              (focus)="onFocus($event)">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
+                [disabled]="option.disabled"
                 [ngValue]="option.value">{{ option.label }}</option>
 
       </select>
@@ -229,14 +241,29 @@
                 [rows]="model.rows"
                 [spellcheck]="model.spellCheck"
                 [wrap]="model.wrap"
-                (dfBlur)="onFocus($event)"
+                (blur)="onBlur($event)"
                 (change)="onValueChange($event)"
-                (dfFocus)="onFocus($event)"></textarea>
+                (focus)="onFocus($event)"></textarea>
 
 
-      <!--<span *ngIf="model.hint" class="help-block"-->
-      <!--[innerHTML]="model.hint"-->
-      <!--[ngClass]="model.cls.element.hint"></span>-->
+      <!-- <span *ngIf="showHint" class="help-block" [innerHTML]="model.hint" [ngClass]="getClass('element', 'hint')"></span> -->
+
+      <!-- TIMEPICKER -->
+      <!-- <timepicker *ngSwitchCase="9"
+        [arrowkeys]="getAdditional('arrowkeys', true)"
+        [dynamicId]="bindId && model.id"
+        [formControlName]="model.id"
+        [hourStep]="getAdditional('hourStep', 1)"
+        [max]="model.max"
+        [min]="model.min"
+        [mousewheel]="getAdditional('mousewheel', true)"
+        [minuteStep]="getAdditional('minuteStep', 1)"
+        [ngClass]="getClass('element', 'control')"
+        [secondsStep]="getAdditional('secondsStep', 1)"
+        [showMeridian]="model.meridian"
+        [showSeconds]="model.showSeconds"
+        [showSpinners]="getAdditional('spinners', true)"></timepicker> -->
+
 
     </ng-container>
 
@@ -245,9 +272,11 @@
 
   </div>
 
-  <ng-template *ngIf="type !== 1 && template?.align === 'END'"
-               [ngTemplateOutlet]="template.templateRef"
-               [ngTemplateOutletContext]="model"></ng-template>
+  <!-- <ul *ngIf="showErrorMessages" class="has-error" [ngClass]="[getClass('element', 'errors'), getClass('grid', 'errors')]">
+      <li *ngFor="let message of errorMessages" class="help-block">{{ message }}</li>
+  </ul> -->
+
+  <ng-container *ngTemplateOutlet="templates[1]?.templateRef; context: model"></ng-container>
 
 
   <ng-content></ng-content>
