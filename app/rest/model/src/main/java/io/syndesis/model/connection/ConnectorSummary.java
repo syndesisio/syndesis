@@ -15,17 +15,17 @@
  */
 package io.syndesis.model.connection;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Violation;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
 import io.syndesis.model.action.ActionsSummary;
-
 import org.immutables.value.Value;
 
 import java.util.List;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorSummary.Builder.class)
@@ -36,10 +36,25 @@ public interface ConnectorSummary extends WithName, WithConfigurationProperties 
         // make ImmutableConnectorSummary.Builder accessible
 
         public Builder createFrom(final Connector connector) {
+            final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
+                .totalActions(connector.getActions().size())//
+                .actionCountByTags(
+                    connector.getActions().stream()
+                        .flatMap(s -> s.getTags().stream().distinct())
+                        .collect(
+                            Collectors.groupingBy(
+                                Function.identity(),
+                                Collectors.reducing(0, (e) -> 1, Integer::sum)
+                            )
+                        )
+                )
+                .build();
+
             return new Builder().createFrom((WithProperties) connector)//
                 .name(connector.getName())//
                 .description(connector.getDescription())//
-                .icon(connector.getIcon());
+                .icon(connector.getIcon())
+                .actionsSummary(actionsSummary);
         }
 
     }

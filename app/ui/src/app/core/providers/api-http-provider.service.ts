@@ -19,7 +19,7 @@ export class ApiHttpProviderService extends ApiHttpService {
 
     const { apiBase, apiEndpoint, apiChildEndpoints } = this.configService.getSettings();
     this.apiBaseHost = `${apiBase}${apiEndpoint}`;
-    this.apiChildEndpoints = apiChildEndpoints;
+    this.apiChildEndpoints = apiChildEndpoints || {};
   }
 
   getEndpointUrl(endpointKey: string, ...endpointParams: any[]): string {

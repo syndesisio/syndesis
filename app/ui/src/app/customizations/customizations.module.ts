@@ -20,7 +20,7 @@ const routes: Routes = [
     component: CustomizationsComponent,
     children: [
       {
-        path: 'tech-extensions',
+        path: 'extensions',
         component: TechExtensionsListComponent
       },
       {
@@ -35,13 +35,13 @@ const routes: Routes = [
     ]
   // TODO: Move to its own NgRoutingModule
   }, {
-    path: 'tech-extensions/import/:id',
+    path: 'extensions/import/:id',
     component: TechExtensionImportComponent
   }, {
-    path: 'tech-extensions/import',
+    path: 'extensions/import',
     component: TechExtensionImportComponent
   }, {
-    path: 'tech-extensions/:id',
+    path: 'extensions/:id',
     component: TechExtensionDetailComponent
   }
 ];

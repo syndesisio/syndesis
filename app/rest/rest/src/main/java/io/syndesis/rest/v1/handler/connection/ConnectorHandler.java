@@ -62,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Path("/connectors")
 @Api(value = "connectors")
@@ -110,7 +111,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(connector).build();
 
-        return new Connector.Builder().createFrom(connector).summary(summary).build();
+        return connector.builder().summary(summary).build();
     }
 
     @Path("/{id}/actions")
@@ -149,7 +150,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Override
     public ListResult<Connector> list(final UriInfo uriInfo) {
-        final List<Connector> connectors = Lister.super.list(uriInfo).getItems();
+        final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
+            .map(c -> {
+                final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(c).build();
+
+                return c.builder().summary(summary).build();
+            })
+            .collect(Collectors.toList());
 
         return ListResult.of(augmentedWithUsage(connectors));
     }
@@ -180,9 +187,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         return connectors.stream().map(c -> {
             final int uses = connectorUsage.getOrDefault(c.getId().get(), 0L).intValue();
-            return (Connector) new Connector.Builder()//
-                .createFrom(c)//
-                .uses(uses).build();
+            return c.builder().uses(uses).build();
         }).collect(Collectors.toList());
     }
 
@@ -207,7 +212,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
                 Icon icon = getDataManager().create(iconBuilder.build());
                 iconDao.write(icon.getId().get(), connectorFormData.getIconInputStream());
-                connectorToUpdate = new Connector.Builder().createFrom(connectorToUpdate).icon("db:" + icon.getId().get()).build();
+                connectorToUpdate = connectorToUpdate.builder().icon("db:" + icon.getId().get()).build();
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error while reading multipart request", e);
             }

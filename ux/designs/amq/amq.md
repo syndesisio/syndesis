@@ -28,7 +28,7 @@ This design covers the following workflows:
 
 ![Image of configure connection ssl](img/AMQ_configureConnection-ssl.png)
 
-1.	If users type in a Broker URL with a “ssl:” substring, display the security settings section.
+1.	If users check "Use SSL" option, display the security settings section.
 
 2.	“Skip Certificate Check” is a dropdown menu with Enable/Disable option.
 

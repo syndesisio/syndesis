@@ -301,6 +301,12 @@ objects:
     config.json: |
       {
         "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
+        "apiChildEndpoints": {
+          "getApiConnectorDetails": "/connectors/{id}",
+          "getApiConnectorList": "/connectors?query=connectorGroupId%3D{template}",
+          "submitCustomConnectorInfo": "/connectors/custom/info",
+          "submitCustomConnector": "/connectors/custom"
+        },
         "title": "Syndesis",
         "datamapper": {
           "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
