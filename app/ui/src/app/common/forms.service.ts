@@ -139,8 +139,8 @@ export class FormFactoryService {
                   return val['value'];
                 })
               : undefined,
-            required: field.required,
-            validators: validators,
+            required: type === 'hidden' ? undefined : field.required,
+            validators: type === 'hidden' ? undefined : validators,
             errorMessages: errorMessages
           },
           {
