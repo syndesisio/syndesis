@@ -53,7 +53,7 @@ public class SalesforceApplicatorTest {
         final SalesforceApplicator applicator = new SalesforceApplicator(salesforce, properties);
         applicator.additionalApplication(mutableConnection, accessGrant);
 
-        assertThat(((Connection) mutableConnection.build()).getConfiguredProperties())
+        assertThat(mutableConnection.build().getConfiguredProperties())
             .containsExactly(entry("instanceUrl", "https://instance.salesforce.com"));
     }
 

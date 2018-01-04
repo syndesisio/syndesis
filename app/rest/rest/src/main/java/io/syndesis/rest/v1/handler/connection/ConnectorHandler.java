@@ -150,12 +150,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Override
     public ListResult<Connector> list(final UriInfo uriInfo) {
-        final List<Connector> connectors = Lister.super.list(uriInfo).getItems()
-            .stream()
-            .flatMap(c -> {
+        final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
+            .map(c -> {
                 final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(c).build();
 
-                return Stream.of(c.builder().summary(summary).build());
+                return c.builder().summary(summary).build();
             })
             .collect(Collectors.toList());
 
@@ -188,8 +187,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         return connectors.stream().map(c -> {
             final int uses = connectorUsage.getOrDefault(c.getId().get(), 0L).intValue();
-            return (Connector) c.builder()//
-                .uses(uses).build();
+            return c.builder().uses(uses).build();
         }).collect(Collectors.toList());
     }
 

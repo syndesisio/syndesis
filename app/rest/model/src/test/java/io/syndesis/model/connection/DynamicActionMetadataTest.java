@@ -63,7 +63,7 @@ public class DynamicActionMetadataTest {
         }
     }
 
-    private static ImmutableActionPropertySuggestion property(final String displayValue, final String value) {
+    private static DynamicActionMetadata.ActionPropertySuggestion property(final String displayValue, final String value) {
         return new DynamicActionMetadata.ActionPropertySuggestion.Builder().displayValue(displayValue).value(value)
             .build();
     }
