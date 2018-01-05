@@ -21,7 +21,7 @@
   <p>
     <strong>Choose how you want to create your connector?</strong>
   </p>
-  <form class="syn-form syn-form--swagger-upload" (ngSubmit)="onSubmit(swaggerForm)" #swaggerForm="ngForm" novalidate>
+  <form class="syn-form syn-form--swagger-upload" (ngSubmit)="onSubmit(swaggerForm, uploadFileOption.checked)" #swaggerForm="ngForm" novalidate>
     <fieldset class="syn-form__body">
       <div class="syn-form-input-list syn-form-input-list--horizontal">
         <label class="syn-form-input-list__option">
@@ -52,7 +52,7 @@
     <fieldset class="syn-form__buttons">
       <syndesis-button type="submit"
         [loading]="apiConnectorState.loading"
-        [disabled]="(!uploadFileOption.checked && swaggerForm.invalid) || (uploadFileOption.checked && !swaggerFileList)">
+        [disabled]="(!uploadFileOption.checked && !swaggerFileUrlInput.value) || (uploadFileOption.checked && !swaggerFileList)">
         Next
       </syndesis-button>
     </fieldset>
