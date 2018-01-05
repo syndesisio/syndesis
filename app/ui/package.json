@@ -64,10 +64,10 @@
     "zone.js": "0.8.4"
   },
   "devDependencies": {
-    "@angular/cli": "1.2.8",
+    "@angular/cli": "1.5.1",
     "@angular/compiler-cli": "^5.0.0",
     "@compodoc/compodoc": "1.0.0-beta.11",
-    "@ngtools/webpack": "1.5.6",
+    "@ngtools/webpack": "1.8.1",
     "@types/chai-as-promised": "^0.0.29",
     "@types/cucumber": "^0.0.37",
     "@types/file-saver": "0.0.0",
