@@ -23,7 +23,3 @@ include::preparing_to_create_an_integration.adoc[leveloffset=+1]
 include::procedure_for_creating_an_integration.adoc[leveloffset=+1]
 
 include::add_steps.adoc[leveloffset=+1]
-
-
-
-Y

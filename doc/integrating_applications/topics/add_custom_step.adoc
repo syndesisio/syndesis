@@ -7,8 +7,11 @@ a developer can define one or more custom steps in an extension. See
 
 You add a custom step to an integration in the same way that you add
 a built-in step. Create an integration, choose the start and finish
-connections, add other connections as needed and then add steps. When you
-click *Add a Step*, the list of available steps includes any
+connections, add other connections as needed and then add steps. 
+When you add a step, {prodname} operates on the data it receives from the
+previous connection or the previous step. 
+
+When you click *Add a Step*, the list of available steps includes any
 custom steps that are defined in extensions that were uploaded to
 your installation of {prodname}. 
 
