@@ -34,6 +34,7 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>twitter-connector</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   

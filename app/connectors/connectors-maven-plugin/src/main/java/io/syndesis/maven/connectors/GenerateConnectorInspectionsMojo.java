@@ -16,20 +16,21 @@
 package io.syndesis.maven.connectors;
 
 import java.io.File;
-import java.util.HashSet;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.atlasmap.maven.GenerateInspectionsMojo;
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.service.AtlasJsonProvider;
+import io.atlasmap.java.v2.JavaClass;
+import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -55,6 +56,12 @@ import org.eclipse.aether.repository.RemoteRepository;
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     private static final String CONNECTORS_META_PATH = "META-INF/syndesis/connector/";
 
+    public enum InspectionMode {
+        RESOURCE,
+        SPECIFICATION,
+        RESOURCE_AND_SPECIFICATION
+    }
+
     @Component
     private RepositorySystem system;
 
@@ -79,7 +86,8 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.directory}/classes/META-INF/syndesis")
     private File inspectionsOutputDir;
 
-    private Set<String> inspections = new HashSet<>();
+    @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
+    private InspectionMode inspectionMode = InspectionMode.RESOURCE_AND_SPECIFICATION;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -92,18 +100,42 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 if (files == null) {
                     return;
                 }
+
                 for (File file: files) {
-                    Connector connector = new ObjectMapper()
-                        .registerModules(new Jdk8Module())
-                        .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
-                        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                        .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-                        .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-                        .readValue(file, Connector.class);
+                    final Connector connector = Json.mapper().readValue(file, Connector.class);
+                    final List<ConnectorAction> actions = new ArrayList<>();
 
                     for (ConnectorAction action : connector.getActions()) {
-                        generateInspections(connector, action.getDescriptor().getInputDataShape());
-                        generateInspections(connector, action.getDescriptor().getOutputDataShape());
+                        Optional<DataShape> inputDataShape = generateInspections(file, connector, action.getDescriptor().getInputDataShape());
+                        Optional<DataShape> outputDataShape = generateInspections(file, connector, action.getDescriptor().getOutputDataShape());
+
+                        if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
+                            if (inputDataShape.isPresent() || outputDataShape.isPresent()) {
+                                ConnectorDescriptor.Builder descriptorBuilder = new ConnectorDescriptor.Builder().createFrom(action.getDescriptor());
+
+                                inputDataShape.ifPresent(descriptorBuilder::inputDataShape);
+                                outputDataShape.ifPresent(descriptorBuilder::outputDataShape);
+                                
+                                actions.add(
+                                    new ConnectorAction.Builder()
+                                        .createFrom(action)
+                                        .descriptor(descriptorBuilder.build())
+                                        .build()
+                                );
+                            } else {
+                                actions.add(action);
+                            }
+                        }
+                    }
+
+                    if (!actions.isEmpty()) {
+                        Json.mapper().writeValue(
+                            file,
+                            new Connector.Builder()
+                                .createFrom(connector)
+                                .actions(actions)
+                                .build()
+                        );
                     }
                 }
             }
@@ -117,44 +149,62 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     // Inspections
     // ****************************************
 
-    private void generateInspections(Connector connector, Optional<DataShape> shape) throws Exception {
-        if (!shape.isPresent()) {
-            return;
+    private Optional<DataShape> generateInspections(File file, Connector connector, Optional<DataShape> shape) throws Exception {
+        if (!shape.isPresent() || !connector.getId().isPresent()) {
+            return Optional.empty();
         }
 
         if (StringUtils.equals("java", shape.get().getKind()) && StringUtils.isNotEmpty(shape.get().getType())) {
             final String kind = shape.get().getKind();
             final String type = shape.get().getType();
 
-            if (inspections.contains(type)) {
-                return;
-            }
 
-            getLog().info("Generating for connector: " + connector.getId() + ", and type: " + type);
-
-            File outputFile = new File(inspectionsOutputDir, String.format("%s/%s/%s.json", inspectionsResourceDir, connector.getId(), type));
+            File outputFile = new File(inspectionsOutputDir, String.format("%s/%s/%s.json", inspectionsResourceDir, connector.getId().get(), type));
             if (!outputFile.getParentFile().exists()) {
-                outputFile.getParentFile().mkdirs();
+                if (outputFile.getParentFile().mkdirs()) {
+                    getLog().debug("Directory created:" + outputFile.getParentFile());
+                }
             }
 
-            List<String> artifacts = project.getDependencies().stream()
-                .map(this::toArtifact)
-                .map(Artifact::getId)
-                .collect(Collectors.toList());
+            getLog().info("Generating for connector: " + connector.getId().get() + ", and type: " + type);
 
-            GenerateInspectionsMojo mojo = new GenerateInspectionsMojo();
-            mojo.setLog(getLog());
-            mojo.setPluginContext(getPluginContext());
-            mojo.setSystem(system);
-            mojo.setRemoteRepos(remoteRepos);
-            mojo.setRepoSession(repoSession);
-            mojo.setClassName(type);
-            mojo.setArtifacts(artifacts);
-            mojo.setOutputFile(outputFile);
-            mojo.execute();
+            final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+            final List<String> elements = project.getCompileClasspathElements();
+            final URL[] classpath = new URL[elements.size()];
 
-            inspections.add(type);
+            for (int i = 0; i < elements.size(); i++) {
+                classpath[i] = new File(elements.get(i)).toURI().toURL();
+
+                getLog().debug("Add element to classpath: " + classpath[i]);
+            }
+
+            try (URLClassLoader loader = new URLClassLoader(classpath, tccl)) {
+                ClassInspectionService classInspectionService = new ClassInspectionService();
+                classInspectionService.setConversionService(DefaultAtlasConversionService.getInstance());
+
+                final Class<?> clazz = loader.loadClass(type);
+                final JavaClass c = classInspectionService.inspectClass(loader, clazz);
+                final ObjectMapper mapper = AtlasJsonProvider.createObjectMapper();
+
+                if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
+                    shape = Optional.of(
+                        new DataShape.Builder()
+                            .createFrom(shape.get())
+                            .specification(mapper.writeValueAsString(c))
+                            .build()
+                    );
+
+                    getLog().info("Specification for type: " + type + " created");
+                }
+
+                if (inspectionMode == InspectionMode.RESOURCE || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
+                    mapper.writeValue(outputFile, c);
+                    getLog().info("Created: " + outputFile);
+                }
+            }
         }
+
+        return shape;
     }
 
     protected Artifact toArtifact(org.apache.maven.model.Dependency dependency) {
