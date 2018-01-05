@@ -44,14 +44,14 @@ export class ApiConnectorSwaggerUploadComponent {
     }
   }
 
-  onSubmit({ valid }): void {
+  onSubmit({ valid }, attachFile: boolean): void {
     if ((this.swaggerFileUrl && valid) || this.swaggerFileList) {
       const validateSwaggerRequest = {
         connectorTemplateId: 'swagger-connector-template',
         configuredProperties: {
           specification: this.swaggerFileUrl
         },
-        file: this.swaggerFileList && this.swaggerFileList[0]
+        file: attachFile && this.swaggerFileList && this.swaggerFileList[0]
       };
 
       this.request.next(validateSwaggerRequest);
