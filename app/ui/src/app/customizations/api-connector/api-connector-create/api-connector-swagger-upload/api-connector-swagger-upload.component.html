@@ -52,7 +52,7 @@
     <fieldset class="syn-form__buttons">
       <syndesis-button type="submit"
         [loading]="apiConnectorState.loading"
-        [disabled]="(swaggerForm.pristine || swaggerForm.invalid) || (uploadFileOption.checked && !swaggerFileList)">
+        [disabled]="(!uploadFileOption.checked && swaggerForm.invalid) || (uploadFileOption.checked && !swaggerFileList)">
         Next
       </syndesis-button>
     </fieldset>

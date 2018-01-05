@@ -31,7 +31,7 @@ export class ApiConnectorSwaggerUploadComponent {
   get processingError(): string {
     if (this.apiConnectorState &&
       this.apiConnectorState.hasErrors &&
-      this.apiConnectorState.createRequest.errors.length > 0) {
+      this.apiConnectorState.errors.length > 0) {
       return this.apiConnectorState.errors[0].message;
     }
   }
@@ -51,7 +51,7 @@ export class ApiConnectorSwaggerUploadComponent {
         configuredProperties: {
           specification: this.swaggerFileUrl
         },
-        file: this.swaggerFileList && this.swaggerFileList.item[0]
+        file: this.swaggerFileList && this.swaggerFileList[0]
       };
 
       this.request.next(validateSwaggerRequest);
