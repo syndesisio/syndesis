@@ -128,6 +128,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>model</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>atlasmap-maven-plugin</artifactId>
       <version>${atlasmap.version}</version>

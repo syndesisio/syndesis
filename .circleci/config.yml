@@ -202,7 +202,32 @@ jobs:
           paths:
           - ~/.m2
 
-  # Rest depends on connectors and runtime, mount workspace .m2
+  # Core depends runtime, mount workspace .m2
+  core:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Core
+          command: |
+            ./tools/bin/syndesis build --init --batch-mode --module core | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+          paths:
+          - ~/.m2
+      - <<: *save_m2
+
+  # Rest depends on core, connectors and runtime, mount workspace .m2
   rest:
     <<: *job_defaults
     environment:
@@ -323,9 +348,12 @@ workflows:
       - license-check
       - ui
       - runtime
-      - connectors:
+      - core:
           requires:
             - runtime
+      - connectors:
+          requires:
+            - core
       - verifier:
           requires:
             - connectors

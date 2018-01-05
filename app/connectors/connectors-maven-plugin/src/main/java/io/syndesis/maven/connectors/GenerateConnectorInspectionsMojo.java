@@ -16,7 +16,6 @@
 package io.syndesis.maven.connectors;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +26,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.atlasmap.maven.GenerateInspectionsMojo;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.connection.Connector;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.plugin.AbstractMojo;
@@ -45,7 +46,6 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.immutables.value.Value;
 
 @Mojo(
     name = "generate-connector-inspections",
@@ -165,77 +165,5 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             dependency.getScope(),
             dependency.getType()
         );
-    }
-
-    // ****************************************
-    // Model
-    // ****************************************
-
-    @Value.Immutable
-    @JsonDeserialize(builder = Dependency.Builder.class)
-    public interface Dependency {
-        String getType();
-        String getId();
-
-        class Builder extends ImmutableDependency.Builder {
-        }
-    }
-
-    public interface WithDependencies {
-        @Value.Default
-        default List<Dependency> getDependencies() {
-            return Collections.emptyList();
-        }
-    }
-
-    @Value.Immutable
-    @JsonDeserialize(builder = DataShape.Builder.class)
-    public interface DataShape {
-        @Value.Default
-        default String getKind() {
-            return "";
-        }
-        @Value.Default
-        default String getType() {
-            return "";
-        }
-
-        class Builder extends ImmutableDataShape.Builder {
-        }
-    }
-
-    @Value.Immutable
-    @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
-    public interface ConnectorDescriptor {
-        Optional<DataShape> getInputDataShape();
-        Optional<DataShape> getOutputDataShape();
-
-        class Builder extends ImmutableConnectorDescriptor.Builder {
-        }
-    }
-
-    @Value.Immutable
-    @JsonDeserialize(builder = ConnectorAction.Builder.class)
-    @SuppressWarnings("immutables")
-    public interface ConnectorAction extends WithDependencies {
-        ConnectorDescriptor getDescriptor();
-
-        class Builder extends ImmutableConnectorAction.Builder {
-        }
-    }
-
-    @Value.Immutable
-    @JsonDeserialize(builder = Connector.Builder.class)
-    @SuppressWarnings("immutables")
-    public interface Connector extends WithDependencies {
-        String getId();
-
-        @Value.Default
-        default List<ConnectorAction> getActions() {
-            return Collections.emptyList();
-        }
-
-        class Builder extends ImmutableConnector.Builder {
-        }
     }
 }

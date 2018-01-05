@@ -18,13 +18,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-rest-parent</artifactId>
+    <artifactId>syndesis-core-parent</artifactId>
     <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>core</artifactId>
-  <name>REST :: Core</name>
+  <name>Core :: Core</name>
   <packaging>jar</packaging>
 
   <dependencies>
