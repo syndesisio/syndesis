@@ -821,6 +821,11 @@
         <artifactId>wiremock-standalone</artifactId>
     </dependency>
 
+    <dependency>
+        <groupId>com.squareup.okio</groupId>
+        <artifactId>okio</artifactId>
+    </dependency>
+
   </dependencies>
 
   <profiles>

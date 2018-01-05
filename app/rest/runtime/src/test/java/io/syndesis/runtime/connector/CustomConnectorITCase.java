@@ -26,8 +26,10 @@ import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.icon.Icon;
 import io.syndesis.runtime.BaseITCase;
 
+import okio.Okio;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.InputStreamResource;
@@ -39,6 +41,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,7 +75,7 @@ public class CustomConnectorITCase extends BaseITCase {
         private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
 
         @Bean(TEMPLATE_ID)
-        public static final ConnectorGenerator testGenerator() {
+        public static ConnectorGenerator testGenerator() {
             return new ConnectorGenerator() {
                 @Override
                 public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
