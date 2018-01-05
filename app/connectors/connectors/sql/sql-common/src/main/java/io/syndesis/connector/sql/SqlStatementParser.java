@@ -87,7 +87,7 @@ public class SqlStatementParser {
                 parseSelect(meta);
                 break;
             default:
-                throw new SQLException("Your statement is invalid and should start with SELECT, UPDATE, SELECT or DELETE");
+                throw new SQLException("Your statement is invalid and should start with INSERT, UPDATE, SELECT or DELETE");
         }
         return statementInfo;
     }
