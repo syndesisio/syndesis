@@ -221,7 +221,8 @@ objects:
   data:
     config.json: |
       {
-        "apiEndpoint": "https://${ROUTE_HOSTNAME}/api/v1",
+        "apiBase": "https://${ROUTE_HOSTNAME}",
+        "apiEndpoint": "/api/v1",
         "title": "Syndesis",
         "datamapper": {
           "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
