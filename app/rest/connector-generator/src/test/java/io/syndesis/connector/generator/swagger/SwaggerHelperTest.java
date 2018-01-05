@@ -33,7 +33,7 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
 
         for (final String specificationFile : specifications) {
             final String specification = resource(specificationFile);
-            final SwaggerModelInfo info = SwaggerHelper.parseUrl(specification, true);
+            final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
             assertThat(info.getErrors()).withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors())
                 .isEmpty();
@@ -43,7 +43,7 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
     @Test
     public void testThatInvalidFieldPetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-field.petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parseUrl(specification, true);
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -55,7 +55,7 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
     @Test
     public void testThatInvalidSchemePetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parseUrl(specification, true);
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -67,7 +67,7 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
     @Test
     public void testThatInvalidTypePetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-type.petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parseUrl(specification, true);
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -79,7 +79,7 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
     @Test
     public void testThatWarningPetstoreSwaggerContainsWarnings() throws IOException {
         final String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parseUrl(specification, true);
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).isEmpty();
         assertThat(info.getWarnings()).hasSize(3);

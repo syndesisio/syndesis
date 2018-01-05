@@ -56,7 +56,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in`connectorSettings`")
+    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`")
     @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
     public Connector create(final ConnectorSettings connectorSettings) {
 
@@ -70,7 +70,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in`connectorSettings` multipart part, plus optional `icon` file")
+    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file")
     @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
     public Connector create(@MultipartForm CustomConnectorFormData customConnectorFormData) {
         if (customConnectorFormData.getConnectorSettings() == null) {
@@ -126,10 +126,10 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
             final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
                 .createFrom(swaggerConnectorFormData.getConnectorSettings())
-                .putConfiguredProperty("swaggerSpecification", swaggerSpecification)
+                .putConfiguredProperty("specification", swaggerSpecification)
                 .build();
 
-            return withGeneratorAndTemplate(swaggerConnectorFormData.getConnectorSettings().getConnectorTemplateId(),
+            return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
                 (generator, template) -> generator.info(template, connectorSettings));
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable("Failed to read Swagger specification", e);
