@@ -18,7 +18,6 @@ package io.syndesis.connector.generator.swagger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,7 +25,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
@@ -132,7 +130,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
 
         // could be either JSON of the Swagger specification or a URL to one
-        final String specification = requiredSpecification(connectorSettings);
+        final String specification = requiredSpecificationUrl(connectorSettings);
 
         if (specification.startsWith("http")) {
             swagger.vendorExtension(URL_EXTENSION, URI.create(specification));
@@ -335,11 +333,17 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
     }
 
     /* default */ static SwaggerModelInfo parseSpecification(final ConnectorSettings connectorSettings, final boolean validate) {
-        final String specification = requiredSpecification(connectorSettings);
-        return SwaggerHelper.parse(specification, validate);
+        final String specification = connectorSettings.getConfiguredProperties().get("swaggerSpecification");
+
+        if (specification != null) {
+            return SwaggerHelper.parseSpecification(specification, validate);
+        }
+
+        final String url = requiredSpecificationUrl(connectorSettings);
+        return SwaggerHelper.parseUrl(url, validate);
     }
 
-    /* default */ static String requiredSpecification(final ConnectorSettings connectorSettings) {
+    /* default */ static String requiredSpecificationUrl(final ConnectorSettings connectorSettings) {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
         final String specification = configuredProperties.get("specification");

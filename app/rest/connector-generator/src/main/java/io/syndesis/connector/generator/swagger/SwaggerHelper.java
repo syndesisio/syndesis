@@ -63,28 +63,28 @@ public final class SwaggerHelper {
         // utility class
     }
 
-    /* default */ static SwaggerModelInfo parse(final String specification, final boolean validate) {
+    /* default */ static SwaggerModelInfo parseUrl(final String url, final boolean validate) {
         final SwaggerModelInfo.Builder resultBuilder = new SwaggerModelInfo.Builder();
 
         final String resolvedSpecification;
         try {
-            resolvedSpecification = resolve(specification);
+            resolvedSpecification = resolveUrl(url);
             resultBuilder.resolvedSpecification(resolvedSpecification);
         } catch (final Exception e) {
-            LOG.debug("Unable to resolve Swagger specification\n{}\n", specification, e);
+            LOG.debug("Unable to resolve Swagger specification\n{}\n", url, e);
             return resultBuilder
                 .addError(new Violation.Builder().error("error").property("").message("Unable to resolve Swagger specification from: "
-                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
+                    + ofNullable(url).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
                 .build();
         }
 
         final SwaggerParser parser = new SwaggerParser();
         final Swagger swagger = parser.parse(resolvedSpecification);
         if (swagger == null) {
-            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
+            LOG.debug("Unable to read Swagger specification\n{}\n", url);
             return resultBuilder
                 .addError(new Violation.Builder().error("error").property("").message("Unable to read Swagger specification from: "
-                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
+                    + ofNullable(url).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
                 .build();
         }
 
@@ -95,12 +95,31 @@ public final class SwaggerHelper {
         return resultBuilder.model(swagger).build();
     }
 
-    /* default */ static String resolve(final String specification) throws Exception {
-        if (specification.toLowerCase().startsWith("http")) {
-            return RemoteUrl.urlToString(specification, null);
+    /* default */ static SwaggerModelInfo parseSpecification(final String specification, final boolean validate) {
+        final SwaggerModelInfo.Builder resultBuilder = new SwaggerModelInfo.Builder();
+
+        final SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = parser.parse(specification);
+        if (swagger == null) {
+            LOG.debug("Unable to read Swagger specification\n{}\n", specification);
+            return resultBuilder
+                .addError(new Violation.Builder().error("error").property("").message("Unable to parse Swagger specification").build())
+                .build();
         }
 
-        return specification;
+        if (validate) {
+            final SwaggerModelInfo swaggerModelInfo = validateJSonSchema(specification, swagger);
+            return SyndesisSwaggerValidationRules.getInstance().apply(swaggerModelInfo);
+        }
+        return resultBuilder.model(swagger).build();
+    }
+
+    /* default */ static String resolveUrl(final String url) throws Exception {
+        if (url.toLowerCase().startsWith("http")) {
+            return RemoteUrl.urlToString(url, null);
+        }
+
+        return url;
     }
 
     /* default */ static String serialize(final Swagger swagger) {

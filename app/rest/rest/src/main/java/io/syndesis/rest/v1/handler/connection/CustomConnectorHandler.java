@@ -19,12 +19,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.icon.Icon;
+import okio.BufferedSource;
+import okio.Okio;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
 
@@ -109,6 +112,30 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
             (generator, template) -> generator.info(template, connectorSettings));
     }
 
+    @POST
+    @Path("/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
+    public ConnectorSummary info(@MultipartForm final SwaggerConnectorFormData swaggerConnectorFormData) {
+        try {
+            final String swaggerSpecification;
+            try (BufferedSource source = Okio.buffer(Okio.source(swaggerConnectorFormData.getSwaggerSpecification()))) {
+                swaggerSpecification = source.readUtf8();
+            }
+
+            final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+                .createFrom(swaggerConnectorFormData.getConnectorSettings())
+                .putConfiguredProperty("swaggerSpecification", swaggerSpecification)
+                .build();
+
+            return withGeneratorAndTemplate(swaggerConnectorFormData.getConnectorSettings().getConnectorTemplateId(),
+                (generator, template) -> generator.info(template, connectorSettings));
+        } catch (IOException e) {
+            throw SyndesisServerException.launderThrowable("Failed to read Swagger specification", e);
+        }
+    }
+
     public static class CustomConnectorFormData {
         @FormParam("connectorSettings")
         private ConnectorSettings connectorSettings;
@@ -138,6 +165,38 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
         public void setIconInputStream(InputStream iconInputStream) {
             this.iconInputStream = iconInputStream;
+        }
+    }
+
+    public static class SwaggerConnectorFormData {
+        @FormParam("connectorSettings")
+        private ConnectorSettings connectorSettings;
+
+        @FormParam("swaggerSpecification")
+        private InputStream swaggerSpecification;
+
+        public SwaggerConnectorFormData() {
+        }
+
+        public SwaggerConnectorFormData(ConnectorSettings connectorSettings, InputStream swaggerSpecification) {
+            this.connectorSettings = connectorSettings;
+            this.swaggerSpecification = swaggerSpecification;
+        }
+
+        public ConnectorSettings getConnectorSettings() {
+            return connectorSettings;
+        }
+
+        public void setConnectorSettings(ConnectorSettings connectorSettings) {
+            this.connectorSettings = connectorSettings;
+        }
+
+        public InputStream getSwaggerSpecification() {
+            return swaggerSpecification;
+        }
+
+        public void setSwaggerSpecification(InputStream swaggerSpecification) {
+            this.swaggerSpecification = swaggerSpecification;
         }
     }
 }
