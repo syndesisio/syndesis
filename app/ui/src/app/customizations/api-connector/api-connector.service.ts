@@ -19,15 +19,23 @@ export class ApiConnectorService {
 
   getCustomConnectorList(): Observable<ApiConnectors> {
     return this.apiHttpService
-      .setEndpointUrl('getApiConnectorList', { template: 'swagger-connector-template'})
+      .setEndpointUrl('getApiConnectorList', { template: 'swagger-connector-template' })
       .get<{ items: ApiConnectors }>() // TODO: Provide a better <T> typing here
       .map(response => response.items);
   }
 
   submitCustomConnectorInfo(customConnectorRequest: CustomConnectorRequest): Observable<ApiConnectorData> {
-    return this.apiHttpService
-      .setEndpointUrl('submitCustomConnectorInfo')
-      .post<ApiConnectorData>(customConnectorRequest);
+    const apiHttpService = this.apiHttpService.setEndpointUrl('submitCustomConnectorInfo');
+    const { file, connectorTemplateId } = customConnectorRequest;
+    if (file) {
+      return apiHttpService.upload<ApiConnectorData>({
+        swaggerSpecification: file
+      }, {
+        connectorSettings: { connectorTemplateId }
+      });
+    } else {
+      return apiHttpService.post<ApiConnectorData>(customConnectorRequest);
+    }
   }
 
   createCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {

@@ -51,7 +51,7 @@ export class ApiConnectorSwaggerUploadComponent {
         configuredProperties: {
           specification: this.swaggerFileUrl
         },
-        file: this.swaggerFileList && this.swaggerFileList.item[0]
+        file: this.swaggerFileList && this.swaggerFileList[0]
       };
 
       this.request.next(validateSwaggerRequest);
