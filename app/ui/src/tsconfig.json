@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "plugins": [
-      { 
+      {
         "name": "tslint-language-service",
         "alwaysShowRuleFailuresAsWarnings": true,
         "ignoreDefinitionFiles": true,
@@ -40,5 +40,9 @@
         "app/*"
       ]
     }
-  }
+  },
+  "include": [
+    "**/*.ts",
+    "../node_modules/@atlasmap/atlasmap.data.mapper/src/app/lib/atlasmap-data-mapper/**/*.ts"
+  ]
 }
