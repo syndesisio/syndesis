@@ -8,7 +8,7 @@ one application and before sending it to another application.
 To operate on data, you add a step. {prodname} provides steps for:
 
 * Filtering data so that the integration continues only when it meets 
-criteria you define. 
+criteria that you define. 
  
 * Mapping data fields in one application to data fields in another
 application. 

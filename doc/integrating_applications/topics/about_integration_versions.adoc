@@ -1,0 +1,9 @@
+[id='about-integration-versions']
+= About integration versions
+
+For a given integration:
+
+* There can be exactly one draft version. 
+* There can be exactly one active version. An active version is running. 
+
+More information to be added. 

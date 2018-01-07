@@ -3,7 +3,7 @@
 
 After some planning and preparation, you are ready to create an 
 integration. In the {prodname} web interface, when you 
-click btn:[Create Integration], {prodname} guides you
+click *Create Integration*, {prodname} guides you
 through the procedure to create an integration.  
 
 It is assumed that you are familiar with the information in these topics:

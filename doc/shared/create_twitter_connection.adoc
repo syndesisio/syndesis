@@ -1,7 +1,7 @@
 [id='create-twitter-connection']
 = Create a Twitter connection
 
-A {prodname} connection to Twitter requires registration of
+A connection to Twitter requires registration of
 {prodname} as an application that can access Twitter.
 If you did not already register {prodname}, see <<register-with-twitter>>. 
 

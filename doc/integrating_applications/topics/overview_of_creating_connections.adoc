@@ -2,7 +2,7 @@
 = Overview of creating connections
 
 You must create a connection to 
-each application you want to integrate. The particular steps for
+each application that you want to integrate. The particular steps for
 creating connections vary for each application. The following topics
 provide an overview of the workflow:
 

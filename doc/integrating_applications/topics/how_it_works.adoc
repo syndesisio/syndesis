@@ -17,7 +17,7 @@ the main steps are:
 
 . Create a connection to each application that you want to integrate.
 . Select the start connection. This connection is to the application that 
-contains the data you want to share with another application. 
+contains the data that you want to share with another application. 
 . Select the finish connection. This connection is to the application 
 that receives data from the start connection and that completes the
 integration. 
@@ -27,11 +27,5 @@ finish connection.
 . Click *Publish* to start running the integration.  
 
 The {prodname} dashboard lets you monitor and manage integrations. You can 
-see which integrations are running, start and stop integrations, edit and 
+see which integrations are running, start and stop integrations, and edit and 
 deactivate integrations.
-
-The {prodname} *Create Connection* page lets you create a connection by
-selecting
-the connector for the application or service you want to connect to. 
-{prodname} prompts you to enter values for the parameters required to create 
-the connection. 

@@ -1,7 +1,7 @@
 [id='adding-extensions']
 = Adding extensions
 
-{prodname} provides a number of bulit-in steps for operating on 
+{prodname} provides a number of built-in steps for operating on 
 integration data. If {prodname} does not provide a step that you need,
 a developer can code an extension that defines one or more
 custom steps. The developer gives you a `.jar` file that contains the extension.

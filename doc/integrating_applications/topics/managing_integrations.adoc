@@ -1,25 +1,27 @@
 [id='managing-integrations']
 = Managing integrations
 
-TBA - Just some notes:
-Monitoring running integrating_applications
-Evaluating log information to manage and troubleshoot integrating_applications
-Updating integrations
-Managing versions of integrations across development, test and 
-production environments
+The following topics provide information to help you manage your 
+integrations:
 
-The history page for an integration lists all the version of that integration
-that have been published. If you have a problem with the active integration,
-you can re-deploy an older integration from this page. 
-
-Published = active and running
-
-For a given integration:
-* There is only ever one draft.
-* There is only ever one active integration
-
-See the following topics:
-
+* <<about-integration-versions>>
+* <<publishing-integrations>>
+* <<testing-integrations>>
+* <<updating-integrations>>
 * <<copying-integrations-to-other-environments>>
+* <<deactivating-integrations>>
+* <<deleting-integrations>>
+
+include::about_integration_versions.adoc[leveloffset=+1]
+
+include::publishing_integrations.adoc[leveloffset=+1]
+
+include::testing_integrations.adoc[leveloffset=+1]
+
+include::updating_integrations.adoc[leveloffset=+1]
 
 include::copying_integrations_to_other_environments.adoc[leveloffset=+1]
+
+include::deactivating_integrations.adoc[leveloffset=+1]
+
+include::deleting_integrations.adoc[leveloffset=+1]
