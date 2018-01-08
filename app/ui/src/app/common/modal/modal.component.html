@@ -12,7 +12,7 @@
     <p>{{ message }}</p>
     <ng-template *ngIf="body"
                  [ngTemplateOutlet]="body"
-                 [ngOutletContext]="{ modal: this }"></ng-template>
+                 [ngTemplateOutletContext]="{ modal: this }"></ng-template>
   </div>
   <div class="modal-footer">
     <button type="button"

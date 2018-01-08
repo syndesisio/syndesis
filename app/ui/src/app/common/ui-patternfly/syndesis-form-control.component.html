@@ -39,9 +39,9 @@
                [ngClass]="model.cls.element.control"
                [required]="model.required"
                [value]="model.value"
-               (blur)="onFocusChange($event)"
+               (blur)="onFocus($event)"
                (change)="onValueChange($event)"
-               (focus)="onFocusChange($event)">
+               (focus)="onFocus($event)">
         <span [innerHTML]="model.label"
               [ngClass]="[model.cls.element.label, model.cls.grid.label]">
         </span>
@@ -81,9 +81,9 @@
                                  [model]="item"
                                  [templates]="templates"
                                  [ngClass]="[item.cls.element.host, item.cls.grid.host]"
-                                 (blur)="onFocusChange($event)"
+                                 (blur)="onFocus($event)"
                                  (change)="onValueChange($event)"
-                                 (focus)="onFocusChange($event)"></syndesis-form-control>
+                                 (focus)="onFocus($event)"></syndesis-form-control>
 
           <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
         </div>
@@ -107,9 +107,9 @@
                                [model]="controlModel"
                                [templates]="templates"
                                [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
-                               (blur)="onFocusChange($event)"
+                               (blur)="onFocus($event)"
                                (change)="onValueChange($event)"
-                               (focus)="onFocusChange($event)"></syndesis-form-control>
+                               (focus)="onFocus($event)"></syndesis-form-control>
       </fieldset>
 
 
@@ -144,9 +144,9 @@
                [spellcheck]="model.spellCheck"
                [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
                [type]="model.inputType"
-               (blur)="onFocusChange($event)"
+               (blur)="onFocus($event)"
                (change)="onValueChange($event)"
-               (focus)="onFocusChange($event)" />
+               (focus)="onFocus($event)" />
 
         <div *ngIf="model.suffix"
              class="input-group-addon"
@@ -182,8 +182,8 @@
                    [formControlName]="model.id"
                    [name]="model.name"
                    [value]="option.value"
-                   (blur)="onFocusChange($event)"
-                   (focus)="onFocusChange($event)" />
+                   (blur)="onFocus($event)"
+                   (focus)="onFocus($event)" />
             <span [innerHTML]="option.label"></span>
           </label>
         </div>
@@ -198,9 +198,9 @@
               [tooltip]="model.hint"
               [ngClass]="model.cls.element.control"
               [required]="model.required"
-              (blur)="onFocusChange($event)"
+              (blur)="onFocus($event)"
               (change)="onValueChange($event)"
-              (focus)="onFocusChange($event)">
+              (focus)="onFocus($event)">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
@@ -225,9 +225,9 @@
                 [rows]="model.rows"
                 [spellcheck]="model.spellCheck"
                 [wrap]="model.wrap"
-                (blur)="onFocusChange($event)"
+                (blur)="onFocus($event)"
                 (change)="onValueChange($event)"
-                (focus)="onFocusChange($event)"></textarea>
+                (focus)="onFocus($event)"></textarea>
 
 
       <!--<span *ngIf="model.hint" class="help-block"-->
