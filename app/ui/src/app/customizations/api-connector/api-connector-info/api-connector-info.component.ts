@@ -71,7 +71,7 @@ export class ApiConnectorInfoComponent implements OnInit {
         },
         name,
         description,
-        file: this.iconFile
+        iconFile: this.iconFile
       } as CustomConnectorRequest;
 
       this.update.emit(apiConnectorCreateRequest);

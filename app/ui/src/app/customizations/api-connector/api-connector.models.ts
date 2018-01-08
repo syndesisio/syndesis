@@ -55,7 +55,8 @@ export interface RequestProperties extends CustomApiConnectorAuthSettings {
 
 export interface CustomConnectorRequest extends CustomApiConnectorRequest, ApiConnectorData {
   configuredProperties?: RequestProperties;
-  file?: File;
+  specificationFile?: File;
+  iconFile?: File;
 }
 
 export interface ApiConnectorState extends BaseReducerModel {
