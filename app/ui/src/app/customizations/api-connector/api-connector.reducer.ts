@@ -90,16 +90,9 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       return {
         ...state,
         ...{ list },
-        loading: true,
+        loading: false,
         hasErrors: false,
         errors: []
-      };
-    }
-
-    case ApiConnectorActions.DELETE_COMPLETE: {
-      return {
-        ...state,
-        loading: false
       };
     }
 

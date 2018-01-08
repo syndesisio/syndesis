@@ -36,7 +36,7 @@ export class ApiConnectorEffects {
     .ofType<ApiConnectorValidateSwagger>(ApiConnectorActions.VALIDATE_SWAGGER)
     .mergeMap(action =>
       this.apiConnectorService
-        .submitCustomConnectorInfo(action.payload)
+        .validateCustomConnectorInfo(action.payload)
         .map(response => ({ type: ApiConnectorActions.VALIDATE_SWAGGER_COMPLETE, payload: response }))
         .catch(error => Observable.of({
           type: ApiConnectorActions.VALIDATE_SWAGGER_FAIL,
