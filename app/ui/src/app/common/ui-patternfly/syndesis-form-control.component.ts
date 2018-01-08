@@ -17,24 +17,30 @@ import {
   DynamicFormControlComponent,
   DynamicFormControlEvent,
   DynamicTemplateDirective,
+  DynamicFormLayout,
+  DynamicFormLayoutService,
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX_GROUP,
   DYNAMIC_FORM_CONTROL_TYPE_GROUP,
+  DYNAMIC_FORM_CONTROL_TYPE_DATEPICKER,
   DYNAMIC_FORM_CONTROL_TYPE_INPUT,
   DYNAMIC_FORM_CONTROL_TYPE_RADIO_GROUP,
   DYNAMIC_FORM_CONTROL_TYPE_SELECT,
-  DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA
+  DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA,
+  DYNAMIC_FORM_CONTROL_TYPE_TIMEPICKER
 } from '@ng-dynamic-forms/core';
 
 export const enum SyndesisFormControlType {
   Array = 1, //'ARRAY',
   Checkbox = 2, //'CHECKBOX',
-  Group = 3, //'GROUP',
-  Input = 4, //'INPUT',
-  RadioGroup = 5, //'RADIO_GROUP',
-  Select = 6, //'SELECT',
-  TextArea = 7 //'TEXTAREA'
+  DatePicker = 3, //'DATEPICKER,
+  Group = 4, //'GROUP',
+  Input = 5, //'INPUT',
+  RadioGroup = 6, //'RADIO_GROUP',
+  Select = 7, //'SELECT',
+  TextArea = 8, //'TEXTAREA',
+  TimePicker = 9 //"TIMEPICKER"
 }
 
 @Component({
@@ -46,23 +52,24 @@ export const enum SyndesisFormControlType {
 })
 export class SyndesisFormComponent extends DynamicFormControlComponent
   implements OnChanges {
-  @ContentChildren(DynamicTemplateDirective)
-  contentTemplates: QueryList<DynamicTemplateDirective>;
+  @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // TODO disabling this for now as the base class is in a dependency
   /* tslint:disable */
-  @Input('templates') inputTemplates: QueryList<DynamicTemplateDirective>;
+  @Input('templates') inputTemplateList: QueryList<DynamicTemplateDirective>;
   /* tslint:enable */
 
   @Input() asBootstrapFormGroup = true;
   @Input() bindId = true;
-  @Input() hasErrorMessaging = false;
-  @Input() context: DynamicFormArrayGroupModel = null;
+  @Input() context: DynamicFormArrayGroupModel | null = null;
   @Input() group: FormGroup;
+  @Input() hasErrorMessaging = false;
+  @Input() layout: DynamicFormLayout;
   @Input() model: DynamicFormControlModel;
 
-  @Output() blur = new EventEmitter<DynamicFormControlEvent>();
-  @Output() change = new EventEmitter<DynamicFormControlEvent>();
-  @Output() focus = new EventEmitter<DynamicFormControlEvent>();
+  @Output('dfBlur') blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
+  @Output('dfChange') change: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
+  @Output('dfFocus') focus: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
+  @Output('bsEvent') customEvent: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();
 
   type: SyndesisFormControlType | null;
 
@@ -80,6 +87,9 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
       case DYNAMIC_FORM_CONTROL_TYPE_GROUP:
         return SyndesisFormControlType.Group;
 
+      case DYNAMIC_FORM_CONTROL_TYPE_DATEPICKER:
+        return SyndesisFormControlType.DatePicker;
+
       case DYNAMIC_FORM_CONTROL_TYPE_INPUT:
         return SyndesisFormControlType.Input;
 
@@ -92,6 +102,9 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
       case DYNAMIC_FORM_CONTROL_TYPE_TEXTAREA:
         return SyndesisFormControlType.TextArea;
 
+      case DYNAMIC_FORM_CONTROL_TYPE_TIMEPICKER:
+        return SyndesisFormControlType.TimePicker;
+
       default:
         return null;
     }
@@ -99,9 +112,10 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
 
   constructor(
     protected validationService: DynamicFormValidationService,
-    protected detector: ChangeDetectorRef
+    protected detector: ChangeDetectorRef,
+    protected layoutService: DynamicFormLayoutService
   ) {
-    super(detector, validationService);
+    super(detector, layoutService, validationService);
   }
 
   ngOnChanges(changes: SimpleChanges) {
