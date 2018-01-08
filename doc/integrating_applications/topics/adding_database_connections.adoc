@@ -1,9 +1,16 @@
 [id='add-database-connection']
 = Add a database connection to an integration
 
-You must create a database connection before you can add it to an
+You must create a database connection before you can add a database
+connection to an
 integration. If you did not already create the database connection, 
 see <<create-database-connection>>. 
+
+The procedure for adding a database connection varies according to 
+whether you are adding
+
+* Database connections as start connections
+* Database connections as middle or finish connections
 
 == Database connections as start connections
 
@@ -30,10 +37,12 @@ invoke to obtain the data of interest. The stored procedure you specify must
 already exist. The database administrator should have created any stored 
 procedures you need to use in an integration. 
 . In the *Period* field, enter an integer and indicate whether the unit is
-minutes, hours or days. For example, if you indicate 5 minutes then
+minutes, hours, or days. For example, if you specify `5 minutes` then
 the connection invokes the specified query or stored procedure every
 five minutes. 
-. Click *Done*. {prodname} tries to validate the connection, which includes
+. Click *Done*. 
+
+{prodname} tries to validate the connection, which includes
 checking that a specified SQL query is syntactically correct and
 confirming that the query or stored procedure target data exists. If
 verfication is successful then {prodname} adds the start connection to
@@ -60,7 +69,7 @@ the stored procedure you specify or select.
 . If you selected *Invoke SQL*, in the *SQL Statement* field:
 +
 For a middle connection, enter a SQL `SELECT` statement that obtains
-one record or enter a SQL `INSERT`, `UPDATE` or 
+one record or enter a SQL `INSERT`, `UPDATE`, or 
 `DELETE` statement that 
 operates on one or more records.
 The table that contains the data must already exist.

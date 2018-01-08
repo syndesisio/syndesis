@@ -3,7 +3,7 @@
 
 When you integrate applications with {prodname}, you create an
 integration by working with connectors, 
-connections, actions and steps. See the following sections to
+connections, actions, and steps. See the following sections to
 learn about each of these constructs. 
 
 * <<about-integrations>>

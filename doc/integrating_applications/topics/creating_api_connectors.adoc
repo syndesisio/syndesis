@@ -6,7 +6,7 @@ To create an API client connector, do one of the following:
 * Upload a Swagger 2.0 specification.
 * Provide a URL for a Swagger 2.0 specification.
 
-The Swagger specification describes an API you want to connect to.  
+The Swagger specification describes an API that you want to connect to.  
 {prodname} verifies that the Swagger specification is valid and contains 
 the information required to create the connector. {prodname} provides 
 information if there is invalid or missing content. 
@@ -46,7 +46,7 @@ you must contact the service provider to obtain this URL.
 Swagger specification or other documentation for the API should provide 
 this URL. If it does not then you must contact the service provider. 
 . Click *Next*. {prodname} displays the connector's name, 
-description, host and base URL as indicated by the Swagger file. 
+description, host, and base URL as indicated by the Swagger file. 
 For connections that you create from this connector, 
 +
 ** {prodname} 
@@ -58,7 +58,7 @@ the base URL is `/api/v1` then the connection endpoint is
 mapping steps. If the Swagger file supports more than one schema then {prodname} 
 uses the TLS (HTTPS) schema. 
 . Review the connector details. To override a value obtained from
-the Swagger file, edit the field value you want to change. 
+the Swagger file, edit the field value that you want to change. 
 After {prodname} creates a connector, 
 you cannot change it. To effect a change, you need to upload an updated
 Swagger file so that {prodname} can create a new connector. 

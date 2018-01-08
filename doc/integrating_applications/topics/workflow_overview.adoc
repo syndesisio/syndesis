@@ -6,11 +6,11 @@ for integrating applications are:
 
 . For each application that you want to integrate and that uses the
 OAuth protocol, register {prodname} as a client of that application.
-. For each application you want to integrate, create a connection.
+. For each application that you want to integrate, create a connection.
 . Create the integration:
 .. Select the start connection. This connection starts the integration by
 accessing the application you want to obtain data from. 
-.. Select the action you want the start connection to perform. 
+.. Select the action that you want the start connection to perform. 
 .. Optionally, depending on the connection, enter some 
 configuration information, for example, you might indicate whether to
 operate on a Salesforce contact or a Salesforce lead. 

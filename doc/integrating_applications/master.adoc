@@ -15,8 +15,6 @@ The content is organized as follows:
 * <<connecting-to-applications>>
 * <<adding-customizations>>
 * <<creating-integrations>>
-* <<testing-integrations>>
-* <<publishing-integrations>>
 * <<managing-integrations>>
 
 include::topics/understanding.adoc[leveloffset=+1]
@@ -28,9 +26,5 @@ include::topics/connecting_to_applications.adoc[leveloffset=+1]
 include::topics/adding_customizations.adoc[leveloffset=+1]
 
 include::topics/creating_integrations.adoc[leveloffset=+1]
-
-include::topics/testing_integrations.adoc[leveloffset=+1]
-
-include::topics/publishing_integrations.adoc[leveloffset=+1]
 
 include::topics/managing_integrations.adoc[leveloffset=+1]
