@@ -49,13 +49,13 @@ Call "syndesis <module> --help" for module specific options.
 
 Examples:
 
-* Build only backend modules, fast               build.sh --backend --flash
-* Build only UI                                  build.sh -m ui
-* Build only images with OpenShift S2I, fast     build.sh --images --s2i -f
-* Build only the rest and verifier image         build.sh --module rest,verifier --s2i
-* Build for system test                          build.sh system-test
-* Start Minishift afresh                         build.sh minishift --full-reset --install
-* Setup debug port forward for rest pod          build.sh dev --debug rest
+* Build only backend modules, fast               syndesis --backend --flash
+* Build only UI                                  syndesis -m ui
+* Build only images with OpenShift S2I, fast     syndesis --images --s2i -f
+* Build only the rest and verifier image         syndesis --module rest,verifier --s2i
+* Build for system test                          syndesis system-test
+* Start Minishift afresh                         syndesis minishift --full-reset --install
+* Setup debug port forward for rest pod          syndesis dev --debug rest
 EOT
     else
         cat <<EOT
