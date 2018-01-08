@@ -34,7 +34,6 @@ export class TechExtensionImportComponent implements OnInit {
   extensionId: string;
   extensionName: string;
   extension$: Observable<Extension>;
-  loading$: Observable<boolean>;
   extensionUpdate = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
@@ -44,7 +43,6 @@ export class TechExtensionImportComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute) {
     this.extension$ = this.extensionStore.resource;
-    this.loading$ = this.extensionStore.loading;
   }
 
   getGenericError() {
