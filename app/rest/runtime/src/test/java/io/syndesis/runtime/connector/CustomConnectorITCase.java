@@ -15,6 +15,10 @@
  */
 package io.syndesis.runtime.connector;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -26,10 +30,8 @@ import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.icon.Icon;
 import io.syndesis.runtime.BaseITCase;
 
-import okio.Okio;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.InputStreamResource;
@@ -40,9 +42,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -138,6 +137,41 @@ public class CustomConnectorITCase extends BaseITCase {
     }
 
     @Test
+    public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() {
+        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
+            multipartBody(
+                new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID)
+                    .putConfiguredProperty("specification", "here-be-specification").build(),
+                getClass().getResourceAsStream("/io/syndesis/runtime/test-image.png")),
+            Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        final Connector created = response.getBody();
+        assertThat(created).isNotNull();
+        assertThat(created.getDescription()).isEqualTo("test-description");
+        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
+        assertThat(created.getIcon()).startsWith("db:");
+        final Icon icon = dataManager.fetch(Icon.class, created.getIcon().substring(3));
+        assertThat(icon.getMediaType()).isEqualTo(MediaType.IMAGE_PNG_VALUE);
+    }
+
+    @Test
+    public void shouldCreateNewCustomConnectorsFromMultipartWithSpecificationAndIcon() {
+        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
+            multipartBody(new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build(),
+                getClass().getResourceAsStream("/io/syndesis/runtime/test-image.png"),
+                new ByteArrayInputStream("here-be-specification".getBytes(StandardCharsets.US_ASCII))),
+            Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        final Connector created = response.getBody();
+        assertThat(created).isNotNull();
+        assertThat(created.getDescription()).isEqualTo("test-description");
+        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
+        assertThat(created.getIcon()).startsWith("db:");
+        final Icon icon = dataManager.fetch(Icon.class, created.getIcon().substring(3));
+        assertThat(icon.getMediaType()).isEqualTo(MediaType.IMAGE_PNG_VALUE);
+    }
+
+    @Test
     public void shouldOfferCustomConnectorInfo() {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
@@ -164,46 +198,31 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(responseForNonCustomConnector.getBody().getSummary()).isNotPresent();
     }
 
+    private MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon) {
+        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+        multipartData.add("connectorSettings", connectorSettings);
+        multipartData.add("icon", new InputStreamResource(icon));
+        return multipartData;
+    }
+
+    private MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon,
+        final InputStream specification) {
+        final MultiValueMap<String, Object> multipartData = multipartBody(connectorSettings, icon);
+        multipartData.add("specification", new InputStreamResource(specification));
+
+        return multipartData;
+    }
+
+    private HttpHeaders multipartHeaders() {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        return headers;
+    }
+
     private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {
         return new ConnectorTemplate.Builder()//
             .id(id)//
             .name(name)//
             .build();
-    }
-
-    @Test
-    public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() {
-        ResponseEntity<Connector> response = post(
-            "/api/v1/connectors/custom",
-            multipartBody(
-                new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build(),
-                getClass().getResourceAsStream("/io/syndesis/runtime/test-image.png")
-            ),
-            Connector.class,
-            tokenRule.validToken(),
-            HttpStatus.OK,
-            multipartHeaders()
-        );
-
-        final Connector created = response.getBody();
-        assertThat(created).isNotNull();
-        assertThat(created.getDescription()).isEqualTo("test-description");
-        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
-        assertThat(created.getIcon()).startsWith("db:");
-        Icon icon = dataManager.fetch(Icon.class, created.getIcon().substring(3));
-        assertThat(icon.getMediaType()).isEqualTo(MediaType.IMAGE_PNG_VALUE);
-    }
-
-    private HttpHeaders multipartHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        return headers;
-    }
-
-    private MultiValueMap<String, Object> multipartBody(ConnectorSettings connectorSettings, InputStream is) {
-        LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
-        multipartData.add("connectorSettings", connectorSettings);
-        multipartData.add("icon", new InputStreamResource(is));
-        return multipartData;
     }
 }
