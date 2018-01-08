@@ -21,11 +21,13 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,7 @@ import static com.fasterxml.jackson.core.JsonToken.VALUE_NULL;
 public final class JsonRecordSupport {
 
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
+    public static final Pattern INDEX_EXTRACTOR_PATTERN = Pattern.compile("^(.+)/[^/]+/([^/]+)/$");
 
     /* default */ static class PathPart {
         private final String path;
@@ -89,9 +92,9 @@ public final class JsonRecordSupport {
         return new JsonRecordConsumer(dbPath, output, options);
     }
 
-    public static void jsonStreamToRecords(String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(HashSet<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
         try (JsonParser jp = new JsonFactory().createParser(is)) {
-            jsonStreamToRecords(jp, dbPath, consumer);
+            jsonStreamToRecords(indexes, jp, dbPath, consumer);
 
             JsonToken jsonToken = jp.nextToken();
             if (jsonToken != null) {
@@ -132,7 +135,7 @@ public final class JsonRecordSupport {
         return key;
     }
 
-    public static void jsonStreamToRecords(JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(HashSet<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
         boolean inArray = false;
         int arrayIndex = 0;
         while (true) {
@@ -144,12 +147,12 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                jsonStreamToRecords(jp, currentPath + validateKey(jp.getCurrentName()) + "/", consumer);
+                jsonStreamToRecords(indexes, jp, currentPath + validateKey(jp.getCurrentName()) + "/", consumer);
             } else if (nextToken == VALUE_NULL) {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, "", nextToken.id()));
+                consumer.accept(JsonRecord.of(currentPath, "", nextToken.id(), indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -159,7 +162,7 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, jp.getValueAsString(), nextToken.id()));
+                consumer.accept(JsonRecord.of(currentPath, jp.getValueAsString(), nextToken.id(), indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -177,6 +180,20 @@ public final class JsonRecordSupport {
                 return;
             }
         }
+    }
+
+    private static String indexFieldValue(HashSet<String> indexes, String path) {
+        Matcher matcher = INDEX_EXTRACTOR_PATTERN.matcher(path);
+        if( !matcher.matches() ) {
+            return null;
+        }
+
+        String idx = matcher.replaceAll("$1/$2");
+        if( !indexes.contains(idx) ) {
+            return null;
+        }
+
+        return idx;
     }
 
     private static String toArrayIndexPath(int idx) {

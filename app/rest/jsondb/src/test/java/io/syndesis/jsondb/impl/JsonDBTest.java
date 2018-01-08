@@ -58,7 +58,10 @@ public class JsonDBTest {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         DBI dbi = new DBI(ds);
-        this.jsondb = new SqlJsonDB(dbi, null);
+
+        this.jsondb = new SqlJsonDB(dbi, null,
+            Arrays.asList(new Index("/pair", "key"))
+        );
 
         try {
             this.jsondb.dropTables();
