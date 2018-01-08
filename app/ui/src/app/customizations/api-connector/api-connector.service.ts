@@ -24,12 +24,12 @@ export class ApiConnectorService {
       .map(response => response.items);
   }
 
-  submitCustomConnectorInfo(customConnectorRequest: CustomConnectorRequest): Observable<ApiConnectorData> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl('submitCustomConnectorInfo');
+  validateCustomConnectorInfo(customConnectorRequest: CustomConnectorRequest): Observable<ApiConnectorData> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl('validateCustomConnectorInfo');
     const { specificationFile, connectorTemplateId } = customConnectorRequest;
     if (specificationFile) {
       return apiHttpService.upload<ApiConnectorData>({
-        swaggerSpecification: specificationFile
+        specification: specificationFile
       }, {
         connectorSettings: { connectorTemplateId }
       });
@@ -40,14 +40,14 @@ export class ApiConnectorService {
 
   createCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {
     const apiHttpService = this.apiHttpService.setEndpointUrl('submitCustomConnector');
-    const [connectorSettings, icon, swaggerSpecification] = [
+    const [connectorSettings, icon, specification] = [
       customConnectorRequest,
       customConnectorRequest.iconFile,
       customConnectorRequest.specificationFile
     ];
 
-    if (swaggerSpecification || icon) {
-      return apiHttpService.upload({ swaggerSpecification, icon }, { connectorSettings });
+    if (specification || icon) {
+      return apiHttpService.upload({ specification, icon }, { connectorSettings });
     } else {
       return apiHttpService.post(connectorSettings);
     }
