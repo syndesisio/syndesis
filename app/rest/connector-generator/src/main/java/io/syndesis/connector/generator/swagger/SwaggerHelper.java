@@ -31,6 +31,7 @@ import io.syndesis.model.Violation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,13 +44,15 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 public final class SwaggerHelper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SwaggerHelper.class);
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Logger LOG = LoggerFactory.getLogger(SwaggerHelper.class);
 
     private static final JsonSchema SWAGGER_2_0_SCHEMA;
 
     private static final String SWAGGER_2_0_SCHEMA_FILE = "/schema/swagger-2.0-schema.json";
+
+    private static final Yaml YAML_PARSER = new Yaml();
 
     static {
         try {
@@ -134,7 +137,12 @@ public final class SwaggerHelper {
 
     private static SwaggerModelInfo validateJSonSchema(final String specification, final Swagger model) {
         try {
-            final JsonNode specRoot = OBJECT_MAPPER.readTree(specification);
+            final JsonNode specRoot;
+            if (specification.matches("\\s+\\{")) {
+                specRoot = JSON_MAPPER.readTree(specification);
+            } else {
+                specRoot = JSON_MAPPER.convertValue(YAML_PARSER.load(specification), JsonNode.class);
+            }
             final ProcessingReport report = SWAGGER_2_0_SCHEMA.validate(specRoot);
             final List<Violation> errors = new ArrayList<>();
             final List<Violation> warnings = new ArrayList<>();
