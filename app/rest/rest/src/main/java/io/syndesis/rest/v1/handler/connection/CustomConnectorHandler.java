@@ -72,13 +72,26 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file")
     @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
-    public Connector create(@MultipartForm CustomConnectorFormData customConnectorFormData) {
-        if (customConnectorFormData.getConnectorSettings() == null) {
+    public Connector create(@MultipartForm CustomConnectorFormData customConnectorFormData) throws IOException {
+        final ConnectorSettings connectorSettings = customConnectorFormData.getConnectorSettings();
+        if (connectorSettings == null) {
             throw new IllegalArgumentException("Missing connectorSettings parameter");
         }
 
-        Connector generatedConnector = withGeneratorAndTemplate(customConnectorFormData.getConnectorSettings().getConnectorTemplateId(),
-            (generator, template) -> generator.generate(template, customConnectorFormData.getConnectorSettings()));
+        final ConnectorSettings connectorSettingsToUse;
+        if (connectorSettings.getConfiguredProperties().containsKey("specification")) {
+            connectorSettingsToUse = connectorSettings;
+        } else {
+            final String specification;
+            try (BufferedSource source = Okio.buffer(Okio.source(customConnectorFormData.getSpecification()))) {
+                specification = source.readUtf8();
+            }
+
+            connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).putConfiguredProperty("specification", specification).build();
+        }
+
+        Connector generatedConnector = withGeneratorAndTemplate(connectorSettingsToUse.getConnectorTemplateId(),
+            (generator, template) -> generator.generate(template, connectorSettingsToUse));
 
         if (customConnectorFormData.getIconInputStream() != null) {
             try {
@@ -117,22 +130,22 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    public ConnectorSummary info(@MultipartForm final SwaggerConnectorFormData swaggerConnectorFormData) {
+    public ConnectorSummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
         try {
-            final String swaggerSpecification;
-            try (BufferedSource source = Okio.buffer(Okio.source(swaggerConnectorFormData.getSwaggerSpecification()))) {
-                swaggerSpecification = source.readUtf8();
+            final String specification;
+            try (BufferedSource source = Okio.buffer(Okio.source(connectorFormData.getSpecification()))) {
+                specification = source.readUtf8();
             }
 
             final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
-                .createFrom(swaggerConnectorFormData.getConnectorSettings())
-                .putConfiguredProperty("specification", swaggerSpecification)
+                .createFrom(connectorFormData.getConnectorSettings())
+                .putConfiguredProperty("specification", specification)
                 .build();
 
             return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
                 (generator, template) -> generator.info(template, connectorSettings));
         } catch (IOException e) {
-            throw SyndesisServerException.launderThrowable("Failed to read Swagger specification", e);
+            throw SyndesisServerException.launderThrowable("Failed to read specification", e);
         }
     }
 
@@ -142,6 +155,9 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
         @FormParam("icon")
         private InputStream iconInputStream;
+
+        @FormParam("specification")
+        private InputStream specification;
 
         public CustomConnectorFormData() {
         }
@@ -166,37 +182,14 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         public void setIconInputStream(InputStream iconInputStream) {
             this.iconInputStream = iconInputStream;
         }
-    }
 
-    public static class SwaggerConnectorFormData {
-        @FormParam("connectorSettings")
-        private ConnectorSettings connectorSettings;
-
-        @FormParam("swaggerSpecification")
-        private InputStream swaggerSpecification;
-
-        public SwaggerConnectorFormData() {
+        public void setSpecification(InputStream specification) {
+            this.specification = specification;
         }
 
-        public SwaggerConnectorFormData(ConnectorSettings connectorSettings, InputStream swaggerSpecification) {
-            this.connectorSettings = connectorSettings;
-            this.swaggerSpecification = swaggerSpecification;
-        }
-
-        public ConnectorSettings getConnectorSettings() {
-            return connectorSettings;
-        }
-
-        public void setConnectorSettings(ConnectorSettings connectorSettings) {
-            this.connectorSettings = connectorSettings;
-        }
-
-        public InputStream getSwaggerSpecification() {
-            return swaggerSpecification;
-        }
-
-        public void setSwaggerSpecification(InputStream swaggerSpecification) {
-            this.swaggerSpecification = swaggerSpecification;
+        public InputStream getSpecification() {
+            return specification;
         }
     }
+
 }
