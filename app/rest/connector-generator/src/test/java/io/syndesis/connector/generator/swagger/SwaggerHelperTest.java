@@ -27,9 +27,7 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
 
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {
-        final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json",
-            // "/swagger/reverb.swagger.json" // reverb is invalid
-        };
+        final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json", "/swagger/todo.swagger.yaml"};
 
         for (final String specificationFile : specifications) {
             final String specification = resource(specificationFile);
