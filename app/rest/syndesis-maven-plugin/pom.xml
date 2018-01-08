@@ -68,8 +68,32 @@
 
     <dependency>
       <groupId>io.atlasmap</groupId>
-      <artifactId>atlasmap-maven-plugin</artifactId>
+      <artifactId>atlas-java-model</artifactId>
       <version>${atlasmap.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-java-service</artifactId>
+      <version>${atlasmap.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-core</artifactId>
+      <version>${atlasmap.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-java-core</artifactId>
+      <version>${atlasmap.version}</version>
+    </dependency>
+
+    <!-- needed by atlasmap/jackson -->
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
     </dependency>
 
     <dependency>
@@ -358,6 +382,7 @@
             <ignoredClassPattern>org.apache.log4j.*</ignoredClassPattern>
             <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
             <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
+            <ignoredClassPattern>javax.ws.rs.*</ignoredClassPattern>
           </ignoredClassPatterns>
         </configuration>
       </plugin>

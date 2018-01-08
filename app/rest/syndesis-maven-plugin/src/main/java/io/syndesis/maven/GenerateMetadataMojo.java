@@ -18,6 +18,8 @@ package io.syndesis.maven;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -28,17 +30,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
-import io.atlasmap.maven.GenerateInspectionsMojo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.service.AtlasJsonProvider;
+import io.atlasmap.java.v2.JavaClass;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.model.DataShape;
@@ -72,6 +76,12 @@ import org.eclipse.aether.repository.RemoteRepository;
  */
 @Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GenerateMetadataMojo extends AbstractMojo {
+    public enum InspectionMode {
+        RESOURCE,
+        SPECIFICATION,
+        RESOURCE_AND_SPECIFICATION
+    }
+
     @Component
     private RepositorySystem system;
 
@@ -114,6 +124,9 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter
     private String tags;
 
+    @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
+    private InspectionMode inspectionMode = InspectionMode.RESOURCE_AND_SPECIFICATION;
+
     /**
      * Partial Extension JSON descriptor to augment
      */
@@ -123,7 +136,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter(defaultValue = "false")
     private Boolean listAllArtifacts;
 
-    protected final Set<String> inspections = new HashSet<>();
     protected Extension.Builder extensionBuilder = new Extension.Builder();
     protected Map<String, ExtensionAction> actions = new HashMap<>();
 
@@ -137,7 +149,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
         Extension extension = extensionBuilder.actions(actions.values()).build();
 
         saveExtensionMetaData(extension);
-        generateInspections(extension);
     }
 
     protected void processAnnotations() throws MojoExecutionException {
@@ -148,19 +159,21 @@ public class GenerateMetadataMojo extends AbstractMojo {
             try {
                 final Properties p = new Properties();
                 final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.properties");
+                final List<Path> paths = Files.find(dir, Integer.MAX_VALUE, (path, attr) -> matcher.matches(path)).sorted().collect(Collectors.toList());
 
-                List<Path> paths = Files.find(dir, Integer.MAX_VALUE, (path, attr) -> matcher.matches(path)).sorted().collect(Collectors.toList());
                 for (Path path: paths) {
                     try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
                         getLog().info("Loading annotations properties from: " + path);
+
                         p.clear();
                         p.load(reader);
+
                         assignProperties(p);
                     } catch (IOException e) {
                         getLog().error("Error reading file " + path);
                     }
                 };
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new MojoExecutionException("Error checking annotations.", e);
             }
         } else {
@@ -169,7 +182,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("PMD.PrematureDeclaration")
-    protected void assignProperties(Properties p) throws MojoExecutionException {
+    protected void assignProperties(Properties p) throws Exception {
 
         final String actionId = p.getProperty("id");
         final String actionName = p.getProperty("name");
@@ -221,29 +234,38 @@ public class GenerateMetadataMojo extends AbstractMojo {
                     new ExtensionDescriptor.Builder()
                         .kind(ExtensionAction.Kind.valueOf(actionKind))
                         .entrypoint(actionEntry)
-                        .inputDataShape(buildDataShape(p.getProperty("inputDataShape")))
-                        .outputDataShape(buildDataShape(p.getProperty("outputDataShape")))
+                        .inputDataShape(buildDataShape(actionId, p.getProperty("inputDataShape")))
+                        .outputDataShape(buildDataShape(actionId, p.getProperty("outputDataShape")))
                         .propertyDefinitionSteps(propertyDefinitionSteps)
                         .build())
                 .build()
         );
     }
 
-    protected DataShape buildDataShape(String dataShape) {
+    protected DataShape buildDataShape(String actionId, String dataShape) throws Exception {
         DataShape.Builder builder = new DataShape.Builder();
         if (StringUtils.isNotEmpty(dataShape)) {
             int separator = dataShape.indexOf(':');
+            String kind = null;
+            String type = null;
+
             if (separator == -1) {
-                builder.kind(dataShape);
+                kind = dataShape;
             } else {
-                String kind = dataShape.substring(0, separator);
-                if (StringUtils.isNotEmpty(kind)) {
-                    builder.kind(kind);
-                }
-                String type = dataShape.substring(separator + 1);
-                if (StringUtils.isNotEmpty(type)) {
-                    builder.type(type);
-                }
+                kind = dataShape.substring(0, separator);
+                type = dataShape.substring(separator + 1);
+
+            }
+
+            if (StringUtils.isNotEmpty(kind)) {
+                builder.kind(kind);
+            }
+            if (StringUtils.isNotEmpty(type)) {
+                builder.type(type);
+            }
+
+            if (StringUtils.isNotEmpty(kind) && StringUtils.isNotEmpty(type)) {
+                generateInspections(actionId, kind, type).ifPresent(builder::specification);
             }
         } else {
             builder.kind("any");
@@ -436,31 +458,11 @@ public class GenerateMetadataMojo extends AbstractMojo {
     // Inspections
     // ****************************************
 
-    private void generateInspections(Extension extension) throws MojoExecutionException {
-        for (ExtensionAction action : extension.getActions()) {
-            try {
-                generateInspections(action.getId().get(), action.getInputDataShape());
-                generateInspections(action.getId().get(), action.getOutputDataShape());
-            } catch (Exception e) {
-                throw new MojoExecutionException("Error generating inspections.", e);
-            }
-        }
-    }
+    private Optional<String> generateInspections(String actionId, String kind, String type) throws Exception {
+        Optional<String> specification = Optional.empty();
 
-    private void generateInspections(String actionId, Optional<DataShape> shape) throws Exception {
-        if (!shape.isPresent()) {
-            return;
-        }
-
-        if (StringUtils.equals("java", shape.get().getKind()) && StringUtils.isNotEmpty(shape.get().getType())) {
-            final String type = shape.get().getType();
+        if (StringUtils.equals("java", kind)) {
             final String name = Names.sanitize(actionId);
-
-            if (inspections.contains(type)) {
-                return;
-            }
-
-            getLog().info("Generating inspection for action: " + actionId + " (" + name + "), and type: " + type);
 
             File outputFile = new File(inspectionsOutputDir, String.format("%s/%s/%s.json", inspectionsResourceDir, name, type));
             if (!outputFile.getParentFile().exists()) {
@@ -469,24 +471,39 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 }
             }
 
-            List<String> artifacts = project.getDependencies().stream()
-                .map(this::toArtifact)
-                .map(Artifact::getId)
-                .collect(Collectors.toList());
+            getLog().info("Generating inspection for action: " + actionId + " (" + name + "), and type: " + type);
 
-            GenerateInspectionsMojo mojo = new GenerateInspectionsMojo();
-            mojo.setLog(getLog());
-            mojo.setPluginContext(getPluginContext());
-            mojo.setSystem(system);
-            mojo.setRemoteRepos(remoteRepos);
-            mojo.setRepoSession(repoSession);
-            mojo.setClassName(type);
-            mojo.setArtifacts(artifacts);
-            mojo.setOutputFile(outputFile);
-            mojo.execute();
+            final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+            final List<String> elements = project.getCompileClasspathElements();
+            final URL[] classpath = new URL[elements.size()];
 
-            inspections.add(type);
+            for (int i = 0; i < elements.size(); i++) {
+                classpath[i] = new File(elements.get(i)).toURI().toURL();
+
+                getLog().debug("Add element to classpath: " + classpath[i]);
+            }
+
+            try (URLClassLoader loader = new URLClassLoader(classpath, tccl)) {
+                ClassInspectionService classInspectionService = new ClassInspectionService();
+                classInspectionService.setConversionService(DefaultAtlasConversionService.getInstance());
+
+                final Class<?> clazz = loader.loadClass(type);
+                final JavaClass c = classInspectionService.inspectClass(loader, clazz);
+                final ObjectMapper mapper = AtlasJsonProvider.createObjectMapper();
+
+                if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
+                    specification = Optional.of(mapper.writeValueAsString(c));
+                    getLog().info("Specification for type: " + type + " created");
+                }
+
+                if (inspectionMode == InspectionMode.RESOURCE || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
+                    mapper.writeValue(outputFile, c);
+                    getLog().info("Created: " + outputFile);
+                }
+            }
         }
+
+        return specification;
     }
 
     // ****************************************
