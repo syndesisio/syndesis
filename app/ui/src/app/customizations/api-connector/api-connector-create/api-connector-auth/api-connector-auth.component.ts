@@ -19,10 +19,10 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    const formProperties = this.customConnectorRequest.properties;
+    const { authenticationType, authorizationEndpoint } = this.customConnectorRequest.properties;
     this.authSetupForm = this.formBuilder.group({
-      authenticationType: [formProperties.authenticationType.defaultValue],
-      authorizationEndpoint: [formProperties.authorizationEndpoint.defaultValue],
+      authenticationType: [authenticationType ? authenticationType.defaultValue : ''],
+      authorizationEndpoint: [authorizationEndpoint ? authorizationEndpoint.defaultValue : ''],
       tokenEndpoint: ['']
     });
 
@@ -31,7 +31,7 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
       .valueChanges
       .subscribe(value => this.setOAuthFormValidation(value));
 
-    this.setOAuthFormValidation(formProperties.authenticationType.defaultValue);
+    this.setOAuthFormValidation(authenticationType ? authenticationType.defaultValue : '');
   }
 
   onSubmit({ value, valid }): void {
