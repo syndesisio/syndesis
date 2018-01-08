@@ -15,7 +15,7 @@
           </li>
           <li class="active">
             <strong>
-              <ng-container *ngIf="extension$ | async; let extension; else import">
+              <ng-container *ngIf="extensionUpdate && (extension$ | async); let extension; else import">
                 Update {{ extension.name }} <small>(ID: {{ extension.extensionId }})</small>
               </ng-container>
               <ng-template #import>
@@ -42,14 +42,17 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">
-          <ng-container *ngIf="extension$ | async; let extension; else import">
+          <ng-container *ngIf="extensionUpdate && (extension$ | async); let extension; else import">
             Update {{ extension.name }} <small>(ID: {{ extension.extensionId }})</small>
           </ng-container>
+          <ng-template #import>
+            Import Extension
+          </ng-template>
         </h3>
       </div>
       <div class="panel-body">
         <p>
-          <ng-container *ngIf="extension$ | async; else importHelp">
+          <ng-container *ngIf="extensionUpdate && (extension$ | async); else importHelp">
             To update an extension, you must ensure that the new version you are uploading is compatible with the previously uploaded version.
           </ng-container>
           <ng-template #importHelp>
@@ -136,7 +139,12 @@
                       (click)="doImport()">
                 <span *ngIf="importing"
                       class="spinner spinner-sm spinner-inline"></span>
-                Import
+                  <ng-container *ngIf="extensionUpdate; else import">
+                    Update
+                  </ng-container>
+                  <ng-template #update>
+                    Import
+                  </ng-template>
               </button>
               <button *ngIf="!importing"
                       type="button"

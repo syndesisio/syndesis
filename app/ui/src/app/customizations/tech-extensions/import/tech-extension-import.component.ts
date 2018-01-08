@@ -26,6 +26,7 @@ interface FileError {
   styleUrls: ['tech-extension-import.component.scss']
 })
 export class TechExtensionImportComponent implements OnInit {
+
   uploader: FileUploader;
   response: Extension;
   error: FileError;
@@ -33,6 +34,8 @@ export class TechExtensionImportComponent implements OnInit {
   extensionId: string;
   extensionName: string;
   extension$: Observable<Extension>;
+  loading$: Observable<boolean>;
+  extensionUpdate = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -41,6 +44,7 @@ export class TechExtensionImportComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute) {
     this.extension$ = this.extensionStore.resource;
+    this.loading$ = this.extensionStore.loading;
   }
 
   getGenericError() {
@@ -76,6 +80,7 @@ export class TechExtensionImportComponent implements OnInit {
   ngOnInit() {
     this.extensionId = this.route.snapshot.paramMap.get('id');
     if (this.extensionId) {
+      this.extensionUpdate = true;
       this.extensionStore.load(this.extensionId);
     }
     const uploadUrl = this.extensionStore.getUploadUrl(this.extensionId);
