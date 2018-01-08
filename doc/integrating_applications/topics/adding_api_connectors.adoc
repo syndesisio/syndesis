@@ -1,8 +1,9 @@
 [id='adding-api-connectors']
 = Adding REST API client connectors
 
-{prodname} can create connectors for REST APIs 
-(representational state transfer application programming interfaces) 
+{prodname} can create connectors for
+Representational State Transfer Application Programming Interfaces
+( REST APIs )
 that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
 To do this, {prodname} requires a valid
 Swagger 2.0 specification that describes a REST API you want to connect to. 
@@ -13,6 +14,7 @@ The following topics provide information and instructions for adding
 REST API connectors:
 
 * <<about-api-client-connectors>>
+* <<guidelines-for-swagger-specifications>>
 * <<creating-api-connectors>>
 * <<updating-api-connectors>>
 * <<deleting-api-connectors>>
@@ -22,6 +24,8 @@ that connector in an integration, see
 <<connecting-to-rest-apis>>. 
 
 include::about_api_connectors.adoc[leveloffset=+1]
+
+include::guidelines_for_swagger_specifications.adoc[leveloffset=+1]
 
 include::creating_api_connectors.adoc[leveloffset=+1]
 

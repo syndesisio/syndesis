@@ -8,6 +8,9 @@ databases:
 * MySQL
 * PostgreSQL
 
+The database table that the connection operates on or the stored procedure that
+the connection invokes must already exist
+
 See the following topics for details:
 
 * <<create-database-connection>>

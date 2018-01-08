@@ -1,0 +1,14 @@
+[id='adding-s3-connection-finish']
+= Adding an Amazon S3 connection as the finish connection
+
+In an integration, to add an Amazon S3 connection as the finish connection,
+start creating the integration, add and configure the start connection
+and then:
+
+. On the *Choose a Finish Connection* page, click the Amazon S3 connection that
+you want to use as the integration's finish connection. 
+. On the *Choose an Action* page, click the *Copy Object* action to copy
+a file to the bucket that the connection accesses.
+. Select the checkbox if you want to delete the original file after it is
+safely in the bucket. 
+. Click *Done*. 

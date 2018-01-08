@@ -1,0 +1,16 @@
+[id='guidelines-for-swagger-specifications']
+= Guidelines for Swagger specifications
+
+The more detail that the Swagger specification provides, the more support
+{prodname} can offer when connecting to the API. For example, 
+the API definition is not required to declare data types for requests
+and responses. Without type declarations, {prodname}
+defines the corresponding connection action as typeless. However, in an
+integration, you cannot add a data mapping step immediately before or 
+immediately after an API connection that performs a typeless action. 
+
+One remedy for this is to add more information to the Swagger specification
+before you upload it to {prodname}. Identify the Swagger resource operations that
+will map to the actions you want the API connection to perform. In the
+Swagger specification, ensure that there is a JSON schema that specifies
+each operation's request and response types.

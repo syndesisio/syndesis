@@ -1,0 +1,29 @@
+[id='adding-s3-connection-middle']
+= Adding an Amazon S3 connection as a middle connection
+
+In an integration, to add an Amazon S3 connection between the start and 
+finish connections:
+
+. On the *Choose a Connection* page, click the Amazon S3 connection that you 
+want the integration to use after the start connection and before 
+the finish connection. 
+
+. On the *Choose an Action* page, click one of the following actions: 
++
+* *Copy Object* to copy a file into the bucket that the connection accesses.
+On the *Configure Action* page, select the checkbox if you want to delete 
+the original file after it is safely in the bucket.
+* *Get Object* to obtain a file from the bucket that the connection accesses. 
+* *Poll a Bucket* to periodically obtain files from the bucket that the
+connection accesses. To configure polling:
+
+.. In the *Delay* field, enter the number of milliseconds that elapse between
+polls. 
+.. Select *Delete After Read* when you want to remove files from the bucket
+after you obtain them.
+.. In the *Max Messages Per Poll* field, enter the largest number of files
+that one poll operation can obtain. 
+.. In the *Prefix* field, specify a string that Amazon S3 prefixes to the
+name of each file it obtains.
+
+. Click *Done*. 

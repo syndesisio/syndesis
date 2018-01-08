@@ -2,7 +2,7 @@
 = About adding connections to integrations
 
 When you add a connection to an integration, {prodname} displays a list
-of the actions that connection can perform when it connects to the 
+of the actions that the connection can perform when it connects to the 
 application. You must select exactly one action. In a running integration, 
 each connection performs only the action you choose. For example, when you 
 add a Twitter connection as an integration's start connection, you might

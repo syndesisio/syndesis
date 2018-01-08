@@ -18,6 +18,6 @@ your installation of {prodname}.
 At the top of the list of steps, in the *Name* field, you can select
 *Custom Steps* to display only custom steps. 
 
-Click the custom step you want to add to the integration.
+Click the custom step that you want to add to the integration.
 {prodname} prompts you for any information required to perform the step.
-This varies for each custom step. 
+This information varies for each custom step. 

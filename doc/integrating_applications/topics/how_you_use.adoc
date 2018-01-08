@@ -5,16 +5,23 @@ The best way to learn about how to use {prodname} is to create the sample
 integrations by following the instructions in the
 https://access.qa.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/[sample integration tutorials].
 
+If you already created a sample integration then you can skip this 
+section, which is an abbreviated description of creating one of the samples.
+
 One of the sample integrations captures updates in Salesforce and
 calls a database stored procedure to synchronize the database with the
-Salesforce updates. The main steps for doing this are:
+Salesforce updates. The main steps for creating this sample 
+integration are below. These steps leave out details so you should not 
+try to follow them. They are intended to provide an overview of how you
+use {prodname}.
 
 . Register your installation of {prodname} as an application that can access
 Salesforce. You need to do this only once to be able to create any number of 
 integrations that connect to Salesforce. 
 
-. Create a Salesforce connection. To configure this connection, you follow
-prompts for logging in to the desired Salesforce account. You can use 
+. Create a Salesforce connection. To configure this connection, {prodname}
+prompts you to log in to the Salesforce account you used to
+register {prodname}. You can use 
 the same Salesforce connection in any number of integrations. 
 
 . Choose your Salesforce connection as the connection that starts the

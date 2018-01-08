@@ -1,7 +1,8 @@
 [id='adding-amq-connections']
 = Adding an AMQ connection to an integration
 
-You must create an AMQ connection before you can add it to an
+You must create an AMQ connection before you can add an
+AMQ connection to an
 integration. If you did not already create an AMQ connection, 
 see <<create-amq-connection>>. 
 

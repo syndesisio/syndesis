@@ -7,7 +7,7 @@ declare data types, {prodname} provides the *Describe Data*
 step, which lets you specify a schema for the
 current integration data. For example, in an
 integration, you 
-might need to add a *Describe Data* step 
+might need to add a *Describe Data* step: 
 
 * Between an API connection and a data mapping step.
 * Between an AMQ connection and a data mapping step.
