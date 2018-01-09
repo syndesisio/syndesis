@@ -129,9 +129,3 @@ $ syndesis build -m rest -f -i docker -k
 ```
 
 Alternatively, you can use the REST API Endpoint: /api/v1/test-support/reset-db
-
----
-
-### Troubleshooting & Issues with the VM
-
-
