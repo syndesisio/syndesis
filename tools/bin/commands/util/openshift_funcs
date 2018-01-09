@@ -1,6 +1,12 @@
 #!/bin/bash
 
 recreate_project() {
+    local project=$1
+    if [ -z "$project" ]; then
+        echo "No project given"
+        exit 1
+    fi
+
     # Delete project if existing
     if oc get project "${project}" >/dev/null 2>&1 ; then
         echo "Deleting project ${project}"
