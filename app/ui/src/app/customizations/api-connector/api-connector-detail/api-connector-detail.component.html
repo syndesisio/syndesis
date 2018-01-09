@@ -56,12 +56,12 @@
             [apiConnectorState]="apiConnectorState$ | async"
             (update)="onUpdate($event)">
           </syndesis-api-connector-info>
+          <syndesis-api-connector-review *ngIf="apiConnectorData.actionsSummary"
+            [apiConnectorTemplateName]="apiConnectorData.name"
+            [apiConnectorData]="apiConnectorData">
+          </syndesis-api-connector-review>
         </div>
       </div>
-      <syndesis-api-connector-review *ngIf="apiConnectorData.actionsSummary"
-        [apiConnectorTemplateName]="apiConnectorData.name"
-        [apiConnectorData]="apiConnectorData">
-      </syndesis-api-connector-review>
     </section>
   </div>
 </article>
