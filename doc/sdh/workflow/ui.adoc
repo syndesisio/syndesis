@@ -1,58 +1,25 @@
-### First Time Quick Start
+## UI
 
-You can follow these steps if it's your first time setting up Syndesis, or if you want a fresh local installation to replace an existing one.
+After you've set up your initial Local Development environment, you're ready to contribute to the UI.
 
-1. Make sure you have installed https://nodejs.org/en/download/[node] version >= 6.x.x and https://yarnpkg.com/en/docs/install[Yarn] version >= 0.18.1.
+From the project root directory:
 
-2. Get a developer deployment of Syndesis running in a Minishift environment as described in the https://syndesis.io/quickstart/[Syndesis Quickstart].  Most are specific to your environment, so follow the links below for a quick setup:
+### Install Dependencies
 
-- https://docs.openshift.org/latest/minishift/getting-started/installing.html#install-prerequisites[Install a hypervisor for Minishift]. For macOS, we recommend using the Docker xhyve plugin https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install[here], which can be installed using Homebrew.
-- https://docs.openshift.org/latest/minishift/getting-started/installing.html#installing-instructions[Install Minishift]. For macOS, we recommend you use the Homebrew method.
-
-3. Get a local developer UI with hot reloading, using the Syndesis backend running on Minishift:
-
-```bash
-# Clone our repo:
-$ git clone https://github.com/syndesisio/syndesis-ui.git
-
-# Change directory to Syndesis:
-$ cd syndesis-ui
-
-# Start up Minishift
-$ minishift start
-
-# Make sure Minishift is running:
-$ minishift status
-
-# Which should look like:
-Minishift:  Running
-Profile:    minishift
-OpenShift:  Running (openshift v3.6.0+c4dd4cf)
-DiskUsage:  11% of 17.9G
-
-# Log into OpenShift with developer account
-# Password: whatever you like
-$ oc login -u developer
-
-# Set environment variables to point to Minishift resources:
-$ eval $(minishift oc-env)
-$ eval $(minishift docker-env)
-
-# For a fresh install of Syndesis:
-$ ./scripts/syndesis-install --clean --pull
-
-# Set OpenShift routes
-$ ./scripts/minishift-setup.sh
-
-# Install the dependencies:
+```
+$ cd app/ui
 $ yarn install
+```
 
-# Start the UI server:
+### Start up the App
+*Using Minishift resources (recommended):*
+```
 $ yarn start:minishift
 ```
 
 The `yarn start:minishift` command works when it can properly detect your local development machine's IP address.  A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the `SYNDESIS_DEV_LOCAL_IP` env variable to your local machine's IP address before running the yarn `yarn start:minishift` command.
 
+### Open in Your Browser
 Open the Syndesis UI in your browser from the command line by running:
 
 ```bash
@@ -75,43 +42,30 @@ Another option is to run `minishift console`, go into *My Project* and click on 
 
 To verify that you're running against the development instance of the UI check the title of the browser tab you've opened and ensure it says `DEVELOPMENT` in in somewhere.
 
-
-### Day-to-Day UI Workflow
-
-```bash
-# Start up Minishift
-$ minishift start
-
-# Log into OpenShift with developer account
-# Password: whatever you like
-$ oc login -u developer
-
-# Set environment variables to point to Minishift resources:
-$ eval $(minishift oc-env)
-$ eval $(minishift docker-env)
-
-# Start the UI server:
-$ yarn start:minishift
-```
-
-To run tests or lint there's two more commands you can run in separate terminals.
+*Not using Minishift resources*
+In the event that you have issues with Minishift. Don't be surprised if most things don't load and there isn't any data in the UI. Only use this if you're totally blocked and need to work on something minor/aesthetic in the UI.
 
 ```
-# Run tests (in a second tab):
+$ yarn start
+```
+
+### Running Tests
+To run tests or lint there are two more commands you can run in separate terminals.
+
+```
 $ yarn test
+```
 
-# Run lint (in another tab):
+### Running Linter
+If you don't, the CI will, and your PR build will likely fail.
+
+```
 $ yarn lint
-
 ```
 
-At the end of the day you might want to stop Minishift:
+You should be able to access the UI in your browser at http://localhost:4200
 
-```bash
-$ minishift stop
-```
-
-### API/Code Documentation
+### Code Documentation
 
 We use https://compodoc.github.io/website/[Compodoc] for documentation, or https://compodoc.github.io/website/guides/comments.html[here] to see how to format comments. Files get generated automatically in the `/documentation` directory. Read the documentation [here](https://compodoc.github.io/website/guides/getting-started.html) to see how to properly document features. You can automatically generate and run docs using Yarn:
 
@@ -128,9 +82,7 @@ Included in this stack are the following technologies:
 
 * Language: http://www.typescriptlang.org[TypeScript] (JavaScript with @Types)
 * Framework: https://angular.io/[Angular]
-* Module Bundler: https://cli.angular.io[Angular CLI]
-* Design Patterns: https://github.com/patternfly/patternfly-ng[PatternFly Angular] (Design Consistency)
 * Testing: https://cucumber.io/[Cucumber.js] (BDD Unit Test Framework), https://karma-runner.github.io/1.0/index.html[Karma] (Unit Test Runner), https://github.com/gotwarlost/istanbul[Istanbul] (Code Coverage)
 * Linting: https://github.com/palantir/tslint[TsLint] (Linting for TypeScript)
-* Logging: https://github.com/mreuvers/typescript-logging[typescript-logging] (TypeScript Logging)
-* Code Analysis: https://github.com/mgechev/codelyzer[Codelyzer] (TsLint rules for static code analysis of Angular TypeScript projects)
+* Logging: WIP
+* Code Analysis: https://github.com/mgechev/codelyzer[Codelyzer] (TsLint rules for static code analysis of Angular TypeScript projects) / WIP

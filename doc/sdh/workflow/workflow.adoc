@@ -1,5 +1,7 @@
 [[workflow]]
 # Development Workflows
 
+include::development.adoc[]
 include::ui.adoc[]
 include::rest.adoc[]
+include::troubleshooting.adoc[]

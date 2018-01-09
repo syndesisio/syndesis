@@ -1,3 +1,10 @@
+## REST API
+
+After you've set up your initial Local Development environment, you're ready to contribute to the REST API.
+
+
+/////////////////
+Commenting this out until I can get clarification about how this is used and for what.
 
 ## Rest & UI Combined Development Tips
 
@@ -61,3 +68,4 @@ MaxRequestsPerChild 0
 PidFile "tinyproxy.pid"
 LogFile "tinyproxy.log"
 ```
+/////////////////
