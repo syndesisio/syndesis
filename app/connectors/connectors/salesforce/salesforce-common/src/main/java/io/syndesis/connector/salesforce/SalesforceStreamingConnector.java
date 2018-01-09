@@ -40,7 +40,7 @@ public abstract class SalesforceStreamingConnector extends DefaultConnectorCompo
         options.put(SalesforceEndpointConfig.SOBJECT_QUERY, query);
         options.remove(SalesforceEndpointConfig.SOBJECT_NAME);
 
-        final String salesforceComponent = getComponentName() + "-component";
+        final String salesforceComponent = getComponentScheme();
 
         if (!topicName.endsWith("_delete")) {
             final Enricher enricher = new Enricher(
