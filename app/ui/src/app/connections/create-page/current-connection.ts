@@ -1,4 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
@@ -23,6 +24,7 @@ export class CurrentConnectionService {
   private _connection: Connection;
   private _credentials: any;
   private _oauthStatus: any;
+  private _formGroup: FormGroup;
   private subscription: Subscription;
 
   constructor(
@@ -34,6 +36,7 @@ export class CurrentConnectionService {
     this._credentials = undefined;
     this._oauthStatus = undefined;
     this._connection = undefined;
+    this._formGroup = undefined;
     this._loaded = false;
     this.subscription = this.events.subscribe((event: ConnectionEvent) =>
       this.handleEvent(event)
@@ -132,6 +135,14 @@ export class CurrentConnectionService {
 
   get connection(): Connection {
     return this._connection;
+  }
+
+  get formGroup(): FormGroup {
+    return this._formGroup;
+  }
+
+  set formGroup(formGroup: FormGroup) {
+    this._formGroup = formGroup;
   }
 
   set connection(connection: Connection) {
