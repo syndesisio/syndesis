@@ -739,14 +739,14 @@ objects:
           readinessProbe:
             httpGet:
               port: 8443
-              path: /robots.txt
+              path: /oauth/healthz
               scheme: HTTPS
             initialDelaySeconds: 15
             timeoutSeconds: 10
           livenessProbe:
             httpGet:
               port: 8443
-              path: /robots.txt
+              path: /oauth/healthz
               scheme: HTTPS
             initialDelaySeconds: 15
             timeoutSeconds: 10
