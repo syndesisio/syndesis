@@ -2,10 +2,6 @@
 
 After you've set up your initial Local Development environment, you're ready to contribute to the UI.
 
-///////
-[![CircleCI](https://circleci.com/gh/syndesisio/syndesis-ui.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis-ui) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-///////
-
 ### Install Dependencies
 From the project root directory:
 
