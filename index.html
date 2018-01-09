@@ -565,6 +565,11 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </li>
 <li><a href="#syndesis-release">2.7. syndesis release</a></li>
+<li><a href="#syndesis-deploy">2.8. syndesis deploy</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-deploy-usage">2.8.1. Usage</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#process">3. Development Process</a>
@@ -1349,6 +1354,34 @@ Nevertheless we already start to document the feature for an "UX first" approach
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="syndesis-deploy">2.8. syndesis deploy</h3>
+<div class="paragraph">
+<p>With <code>syndesis deploy</code> you can deploy Syndesis to an arbitrary OpenShift cluster.
+You have to be connected to the cluster with <code>oc login</code> for this command to work.
+It&#8217;s an alternative to <code>syndesis minishift</code> but does not support a Development workflow.</p>
+</div>
+<div class="paragraph">
+<p>You have to provide the route name with <code>--route</code>, how the project in the given cluster can be reached. E.g. <code>--route app-proj186023.6a63.fuse-ignite.openshiftapps.com</code>.
+By default this commands installs in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
+If this project already exists, it gets deleted unconditionally.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-deploy-usage">2.8.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Usage: syndesis deploy [... options ...]
+
+Options for deploy:
+-p  --project                 Install into this project. Delete this project if it
+                              already exists. If not given, install into the current project
+    --route                   Route to use (mandatory)
+-w  --watch                   Wait until cluster is up
+    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1765,7 +1798,7 @@ Unresolved directive in index.adoc - include::process/workflow.adoc[]</p></td>
 <div id="footer">
 <div id="footer-text">
 Version <br>
-Last updated 2018-01-09 21:33:51 UTC
+Last updated 2018-01-09 23:41:35 UTC
 </div>
 </div>
 </body>
