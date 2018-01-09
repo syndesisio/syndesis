@@ -14,7 +14,7 @@
           <li class="active"><strong>Create Connection</strong></li>
         </ol>
       </div>
-      <div class="toolbar-pf-action-right">
+      <div *ngIf="current.loaded" class="toolbar-pf-action-right">
         <button class="btn btn-default"
                 (click)="cancel()">Cancel
         </button> &nbsp;
@@ -24,7 +24,7 @@
           <i class="fa fa-chevron-left"></i> Back
         </button>
         <button class="btn btn-primary"
-                *ngIf="getCurrentPage() === 'configure-fields'"
+                *ngIf="showNextButton()"
                 (click)="goForward()"
                 [disabled]="!canContinue()">
           Next <i class="fa fa-chevron-right"></i>

@@ -16,7 +16,7 @@ const category = getCategory('Connections');
 })
 export class ConnectionsCreatePage implements OnInit, OnDestroy {
   constructor(
-    private current: CurrentConnectionService,
+    public current: CurrentConnectionService,
     private route: ActivatedRoute,
     private router: Router,
     private nav: NavigationService
@@ -43,7 +43,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       case 'connection-basics':
         return this.connection.name && this.connection.connector;
       case 'configure-fields':
-      // TODO validate form
+        return this.current.formGroup && this.current.formGroup.valid;
       case 'review':
       // TODO is this ever going to be false?
       default:
@@ -66,6 +66,8 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     switch (page) {
       case 'connection-basics':
         return false;
+      case 'configure-fields':
+        return !this.current.hasCredentials();
       default:
         return true;
     }

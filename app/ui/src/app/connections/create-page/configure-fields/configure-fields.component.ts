@@ -46,6 +46,8 @@ export class ConnectionsConfigureFieldsComponent
         this.connection.configuredProperties = data;
       }
     );
+
+    this.current.formGroup = (this.hasCredentials) ? null : this.formGroup;
   }
 
   ngOnDestroy() {
