@@ -20,5 +20,5 @@ export abstract class ApiHttpService {
 
   abstract delete<T>(endpoint: string | any[]): Observable<T>;
 
-  abstract upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>, verb?: string): Observable<T>;
+  abstract upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>, verb?: 'POST'|'PUT'): Observable<T>;
 }
