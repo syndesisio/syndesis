@@ -2,8 +2,6 @@
 
 .syn-form--edit-mode {
   .syn-form-row {
-    align-items: flex-start;
-
     &__input--editor {
       display: flex;
       justify-content: space-between;
@@ -17,6 +15,7 @@
         border: none;
         background: none;
         color: $color-pf-blue-500;
+        margin-left: $forms-grid-gutter;
         cursor: hand;
       }
     }
