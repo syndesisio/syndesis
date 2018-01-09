@@ -3,7 +3,10 @@ import {
   Input,
   OnInit,
   OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
@@ -42,6 +45,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   loading = false;
   error: any = undefined;
   valid = true;
+  routeSubscription: Subscription;
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -50,7 +54,8 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public stepStore: StepStore,
-    public integrationSupport: IntegrationSupportService
+    public integrationSupport: IntegrationSupportService,
+    public changeDetectorRef: ChangeDetectorRef
   ) {
     super(currentFlow, route, router);
   }
@@ -133,43 +138,52 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     });
   }
 
-  fetchDataShapesFor(step: Step, output = true) {
-    return this.integrationSupport
-      .fetchMetadata(
-      step.connection,
-      step.action,
-      step.configuredProperties || {}
-      )
-      .toPromise()
-      .then(response => {
-        log.debug('Response: ' + JSON.stringify(response, undefined, 2));
-        const definition: any = response['_body']
-          ? JSON.parse(response['_body'])
-          : undefined;
-        if (output) {
-          this.outputDataShape = definition.outputDataShape;
-        } else {
-          this.inputDataShape = definition.inputDataShape;
-        }
-      })
-      .catch(response => {
-        this.loading = false;
-        const error = JSON.parse(response['_body']);
-        this.error = {
-          class: 'alert alert-warning',
-          message: error.message || error.userMsg || error.developerMsg
-        };
-        log.info(
-          'Error fetching data shape for ' +
-          JSON.stringify(step) +
-          ' : ' +
-          JSON.stringify(response)
-        );
-      });
+  fetchDataShapesFor(step: Step, output = true): Promise<any> {
+    if (step.stepKind === 'extension') {
+      if (output) {
+        this.outputDataShape = step.action.descriptor.outputDataShape;
+      } else {
+        this.inputDataShape = step.action.descriptor.inputDataShape;
+      }
+      return Observable.of({}).toPromise();
+    } else {
+      return this.integrationSupport
+        .fetchMetadata(
+        step.connection,
+        step.action,
+        step.configuredProperties || {}
+        )
+        .toPromise()
+        .then(response => {
+          log.debug('Response: ' + JSON.stringify(response, undefined, 2));
+          const definition: any = response['_body']
+            ? JSON.parse(response['_body'])
+            : undefined;
+          if (output) {
+            this.outputDataShape = definition.outputDataShape;
+          } else {
+            this.inputDataShape = definition.inputDataShape;
+          }
+        })
+        .catch(response => {
+          this.loading = false;
+          const error = JSON.parse(response['_body']);
+          this.error = {
+            class: 'alert alert-warning',
+            message: error.message || error.userMsg || error.developerMsg
+          };
+          log.info(
+            'Error fetching data shape for ' +
+            JSON.stringify(step) +
+            ' : ' +
+            JSON.stringify(response)
+          );
+        });
+    }
   }
 
   loadForm() {
-    if (!this.currentFlow.loaded) {
+    if (!this.currentFlow.loaded || this.loading) {
       return;
     }
     this.loading = true;
@@ -181,18 +195,10 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
       });
       return;
     }
-
-    // we want the output shape of the previous connection
-    const prevConnection = this.currentFlow.getPreviousConnection(
-      this.position
-    );
-    // we want the input shape of the next connection
-    const nextConnection = this.currentFlow.getSubsequentConnection(
-      this.position
-    );
-
-    this.fetchDataShapesFor(prevConnection, true)
-      .then(() => this.fetchDataShapesFor(nextConnection, false))
+    const prevStep = this.currentFlow.getPreviousStepWithDataShape(this.position);
+    const nextStep = this.currentFlow.getSubsequentStepWithDataShape(this.position);
+    this.fetchDataShapesFor(prevStep, true)
+      .then(() => this.fetchDataShapesFor(nextStep, false))
       .then(() => this.loadFormSetup(step));
   }
 
@@ -233,8 +239,19 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
   }
 
   ngOnInit() {
-    this.route.paramMap.first(params => params.has('position'))
+    this.routeSubscription = this.route.paramMap
       .subscribe(params => {
+        /* totally reset our state just to be safe*/
+        this.loading = false;
+        this.step = undefined;
+        this.formModel = undefined;
+        this.formGroup = undefined;
+        this.formConfig = undefined;
+        this.cfg = undefined;
+        this.customProperties = undefined;
+        this.inputDataShape = undefined;
+        this.outputDataShape = undefined;
+        this.error = undefined;
         this.position = +params.get('position');
         this.loadForm();
       });
@@ -242,5 +259,8 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
 
   ngOnDestroy() {
     super.ngOnDestroy();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 }

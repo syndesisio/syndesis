@@ -131,6 +131,12 @@ export class CurrentFlow {
     return null;
   }
 
+  getSubsequentStepsWithDataShape(position): Array<Step> {
+    const steps = this.getSubsequentSteps(position);
+    const answer = steps.filter(s => this.hasDataShape(s, false));
+    return answer;
+  }
+
   /**
    * Return all steps in the flow before the supplied position
    *
@@ -147,6 +153,12 @@ export class CurrentFlow {
       }
       return this._integration.steps.slice(0, position);
     }
+  }
+
+  getPreviousStepsWithDataShape(position): Array<Step> {
+    const steps = this.getPreviousSteps(position);
+    const answer = steps.filter(s => this.hasDataShape(s, true));
+    return answer;
   }
 
   /**
@@ -186,6 +198,16 @@ export class CurrentFlow {
   getSubsequentConnection(position): Step {
     const connections = this.getSubsequentConnections(position);
     return connections[0];
+  }
+
+  getPreviousStepWithDataShape(position): Step {
+    const steps = this.getPreviousStepsWithDataShape(position).reverse();
+    return steps[0];
+  }
+
+  getSubsequentStepWithDataShape(position): Step {
+    const steps = this.getSubsequentStepsWithDataShape(position);
+    return steps[0];
   }
 
   /**
@@ -453,6 +475,20 @@ export class CurrentFlow {
         integration: this.integration
       });
     }, 10);
+  }
+
+  private hasDataShape(step: Step, isInput = false): boolean {
+      if (step.stepKind === 'endpoint') {
+        return true;
+      }
+      if (step.stepKind !== 'extension') {
+        return false;
+      }
+      // it's an extesion, we need to look at the action
+      const action = step.action;
+      const descriptor = action.descriptor;
+      const dataShape = isInput ? descriptor.inputDataShape : descriptor.outputDataShape;
+      return dataShape.kind !== 'any' && dataShape.kind !== 'none';
   }
 
   private maybeDoAction(thing: any) {
