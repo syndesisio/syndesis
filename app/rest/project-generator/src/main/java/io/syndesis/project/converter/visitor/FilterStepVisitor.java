@@ -29,11 +29,13 @@ public abstract class FilterStepVisitor implements StepVisitor {
     @Override
     public Collection<io.syndesis.integration.model.steps.Step> visit(StepVisitorContext stepContext) {
         Step step = stepContext.getStep();
+        StepVisitorContext currentContext = stepContext;
         if (step instanceof FilterStep && step.getStepKind().equals(getStepKind())) {
             Filter filter = createFilter((FilterStep) step);
             List<io.syndesis.integration.model.steps.Step> steps = new ArrayList<>();
             while (stepContext.hasNext()) {
-                steps.addAll(visit(stepContext.next()));
+                currentContext = currentContext.next();
+                steps.addAll(visit(currentContext));
             }
             filter.setSteps(steps);
             return Collections.singletonList(filter);
@@ -43,7 +45,7 @@ public abstract class FilterStepVisitor implements StepVisitor {
         StepVisitorFactory<?> factory = generatorContext.getVisitorFactoryRegistry().get(stepContext.getStep().getStepKind());
         StepVisitor visitor = factory.create();
 
-        return visitor.visit(stepContext);
+        return visitor.visit(currentContext);
     }
 
     private Filter createFilter(FilterStep s) {
