@@ -28,7 +28,7 @@ export interface ApiEndpoint {
   post<T>(payload: any): Observable<T>;
   put<T>(payload: any): Observable<T>;
   delete<T>(payload?: any): Observable<T>;
-  upload<T>(fileMap?: FileMap, body?: StringMap<any>): Observable<T>;
+  upload<T>(fileMap?: FileMap, body?: StringMap<any>, verb?: 'POST'|'PUT'): Observable<T>;
 }
 
 export interface ApiRequestProgress {

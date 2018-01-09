@@ -20,6 +20,9 @@ export class ApiConnectorActions {
   static CREATE_COMPLETE = '[API Connectors] Create custom connector complete';
   static CREATE_FAIL = '[API Connectors] Custom connector creation failed';
   static CREATE_CANCEL = '[API Connectors] Create custom connector cancelled';
+  static UPDATE = '[API Connectors] Custom connector update request';
+  static UPDATE_COMPLETE = '[API Connectors] Custom connector update complete';
+  static UPDATE_FAIL = '[API Connectors] Custom connector update failed';
   static DELETE = '[API Connectors] Delete custom connector';
   static DELETE_COMPLETE = '[API Connectors] Custom connector successfully deleted';
   static DELETE_FAIL = '[API Connectors] Delete custom connector failed';
@@ -58,6 +61,18 @@ export class ApiConnectorActions {
 
   static createComplete(payload: any): ApiConnectorCreateComplete {
     return new ApiConnectorCreateComplete(payload);
+  }
+
+  static update(payload: CustomConnectorRequest): ApiConnectorUpdate {
+    return new ApiConnectorUpdate(payload);
+  }
+
+  static updateFail(payload: ActionReducerError): ApiConnectorUpdateFail {
+    return new ApiConnectorUpdateFail(payload);
+  }
+
+  static updateComplete(payload: CustomConnectorRequest): ApiConnectorUpdateComplete {
+    return new ApiConnectorUpdateComplete(payload);
   }
 
   static delete(payload: string): ApiConnectorDelete {
@@ -131,6 +146,24 @@ export class ApiConnectorCreateComplete implements Action {
 
 export class ApiConnectorCreateFail implements Action {
   readonly type = ApiConnectorActions.CREATE_FAIL;
+
+  constructor(public payload: ActionReducerError) { }
+}
+
+export class ApiConnectorUpdate implements Action {
+  readonly type = ApiConnectorActions.UPDATE;
+
+  constructor(public payload: CustomConnectorRequest) { }
+}
+
+export class ApiConnectorUpdateComplete implements Action {
+  readonly type = ApiConnectorActions.UPDATE_COMPLETE;
+
+  constructor(public payload: CustomConnectorRequest) { }
+}
+
+export class ApiConnectorUpdateFail implements Action {
+  readonly type = ApiConnectorActions.UPDATE_FAIL;
 
   constructor(public payload: ActionReducerError) { }
 }

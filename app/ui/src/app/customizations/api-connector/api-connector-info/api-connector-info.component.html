@@ -1,54 +1,91 @@
-<div class="card-pf-heading">
-    <h2 class="card-pf-title">
-      General Connector Info
-    </h2>
-  </div>
-  <div class="card-pf-body">
-    <syndesis-validation-error *ngIf="processingError">
-      {{ processingError }}
-    </syndesis-validation-error>
+<div class="card-pf-heading" *ngIf="createMode">
+  <h2 class="card-pf-title">
+    General Connector Info
+  </h2>
+</div>
+<div class="card-pf-body">
+  <syndesis-validation-error *ngIf="processingError">
+    {{ processingError }}
+  </syndesis-validation-error>
 
-    <form class="syn-form syn-form--card syn-form--api-connector"
-      [formGroup]="apiConnectorInfoForm"
-      (submit)="onSubmit()" novalidate>
-      <fieldset class="syn-form__body">
-        <div class="syn-form-row">
-          <label class="syn-form-row__label" for="connectorName">Connector Icon</label>
-          <div class="syn-form-column syn-form-filebrowser">
-            <span class="syn-form-filebrowser__default-file">
-              <i class="fa fa-times"></i>
-            </span>
-            <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="onChange($event)">
-          </div>
+  <form class="syn-form syn-form--card syn-form--api-connector" novalidate
+    [class.syn-form--edit-mode]="!createMode"
+    [class.syn-form--create-mode]="createMode"
+    [formGroup]="apiConnectorDataForm" 
+    (submit)="onSubmit()">
+    <fieldset class="syn-form__body">
+      <div class="syn-form-row">
+        <label class="syn-form-row__label" for="connectorName">Connector Icon</label>
+        <div class="syn-form-column syn-form-filebrowser">
+          <span class="syn-form-filebrowser__default-file">
+            <i class="fa fa-times"></i>
+          </span>
+          <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="onChange($event)">
         </div>
+      </div>
 
-        <div class="syn-form-row">
-          <label class="syn-form-row__label" for="name">Connector Name</label>
-          <input class="syn-form-row__input" type="text" formControlName="name" (keyup.enter)="onChange($event)">
-        </div>
+      <div class="syn-form-row">
+        <label class="syn-form-row__label" for="name">Connector Name</label>
+        <input class="syn-form-row__input" type="text" id="name"
+          formControlName="name"
+          (keyup.enter)="onChange($event)"
+          (change)="onEditChange()"
+          #nameInput
+          [hidden]="!createMode && editControlKey !== 'name'">
+        <span class="syn-form-row__input syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'name'" (click)="onEditEnable($event, 'name')">
+          {{ nameInput.value }}
+          <i class="fa fa-pencil"></i>
+        </span>
+      </div>
 
-        <div class="syn-form-row">
-          <label class="syn-form-row__label" for="description">Description</label>
-          <input class="syn-form-row__input" type="text" formControlName="description" (keyup.enter)="onChange($event)">
-        </div>
+      <div class="syn-form-row">
+        <label class="syn-form-row__label syn-form-row__label--top" for="description">Description</label>
+        <textarea class="syn-form-row__input" type="text" id="description" rows="4"
+          formControlName="description"
+          (keyup.enter)="onChange($event)"
+          (change)="onEditChange()"
+          #descriptionInput
+          [hidden]="!createMode && editControlKey !== 'description'">
+        </textarea>
+        <span class="syn-form-row__input syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'description'" (click)="onEditEnable($event, 'description')">
+          <span [innerHtml]="descriptionInput.value | synParseMarkdownLinks"></span>
+          <i class="fa fa-pencil"></i>
+        </span>
+      </div>
 
-        <div class="syn-form-row">
-          <label class="syn-form-row__label" for="host">Host</label>
-          <input class="syn-form-row__input" type="text" formControlName="host" (keyup.enter)="onChange($event)">
-        </div>
+      <div class="syn-form-row">
+        <label class="syn-form-row__label" for="host">Host</label>
+        <input class="syn-form-row__input" type="text" id="host"
+          formControlName="host"
+          (keyup.enter)="onChange($event)"
+          (change)="onEditChange()"
+          #hostInput
+          [hidden]="!createMode && editControlKey !== 'host'">
+        <span class="syn-form-row__input syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'host'" (click)="onEditEnable($event, 'host')">
+          {{ hostInput.value }}
+          <i class="fa fa-pencil"></i>
+        </span>
+      </div>
 
-        <div class="syn-form-row">
-          <label class="syn-form-row__label" for="basePath">Base URL</label>
-          <input class="syn-form-row__input" type="text" formControlName="basePath" (keyup.enter)="onChange($event)">
-        </div>
-      </fieldset>
+      <div class="syn-form-row">
+        <label class="syn-form-row__label" for="basePath">Base URL</label>
+        <input class="syn-form-row__input" type="text" id="basePath"
+          formControlName="basePath"
+          (keyup.enter)="onChange($event)"
+          (change)="onEditChange()"
+          #basePathInput
+          [hidden]="!createMode && editControlKey !== 'basePath'">
+        <span class="syn-form-row__input syn-form-row__input--editor" *ngIf="!createMode && editControlKey !== 'basePath'" (click)="onEditEnable($event, 'basePath')">
+          {{ basePathInput.value }}
+          <i class="fa fa-pencil"></i>
+        </span>
+      </div>
+    </fieldset>
 
-      <fieldset class="syn-form__buttons syn-form__buttons--pushed" *ngIf="!enableEditing">
-        <syndesis-button type="submit"
-          [loading]="apiConnectorState.loading"
-          [disabled]="apiConnectorInfoForm.invalid">
-          Next
-        </syndesis-button>
-      </fieldset>
-    </form>
-  </div>
+    <fieldset class="syn-form__buttons syn-form__buttons--pushed" *ngIf="createMode">
+      <syndesis-button type="submit" [loading]="apiConnectorState.loading" [disabled]="apiConnectorDataForm.invalid">
+        Next
+      </syndesis-button>
+    </fieldset>
+  </form>
+</div>

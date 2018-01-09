@@ -1,7 +1,7 @@
 import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
 import { BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
-import { ApiConnectorState } from './api-connector.models';
+import { ApiConnectorState, CustomApiConnectorRequest, CustomConnectorRequest } from './api-connector.models';
 import {
   ApiConnectorActions,
   ApiConnectorFetchComplete,
@@ -9,17 +9,23 @@ import {
   ApiConnectorCreate,
   ApiConnectorCreateComplete,
   ApiConnectorCreateCancel,
+  ApiConnectorUpdate,
+  ApiConnectorUpdateComplete,
+  ApiConnectorUpdateFail,
   ApiConnectorDelete,
 } from './api-connector.actions';
 
+const initialCreateRequest: CustomApiConnectorRequest = {
+  connectorTemplateId: null,
+  isComplete: false,
+  isOK: false,
+  isRequested: false
+};
+
 const initialState: ApiConnectorState = {
   list: [],
-  createRequest: {
-    connectorTemplateId: null,
-    isComplete: false,
-    isOK: false,
-    isRequested: false
-  },
+  createRequest: initialCreateRequest,
+  deleted: null,
   loading: false,
   loaded: false,
   hasErrors: false,
@@ -84,12 +90,41 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
       };
     }
 
+    case ApiConnectorActions.UPDATE: {
+      const updatedCustomConnection = (action as ApiConnectorUpdate).payload;
+      const deleted = [...state.list].filter(customConnector => customConnector.id === updatedCustomConnection.id)[0];
+      const list = [...state.list].filter(customConnector => customConnector.id !== updatedCustomConnection.id);
+      list.unshift(updatedCustomConnection);
+
+      return {
+        ...state,
+        list,
+        deleted,
+        loading: true,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case ApiConnectorActions.UPDATE_COMPLETE: {
+      return {
+        ...state,
+        deleted: null,
+        loading: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
     case ApiConnectorActions.DELETE: {
       const deletedConnectorId = (action as ApiConnectorDelete).payload;
+      const deleted = [...state.list].filter(customConnector => customConnector.id === deletedConnectorId)[0];
       const list = [...state.list].filter(customConnector => customConnector.id !== deletedConnectorId);
+
       return {
         ...state,
         ...{ list },
+        deleted,
         loading: false,
         hasErrors: false,
         errors: []
@@ -97,6 +132,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     }
 
     case ApiConnectorActions.CREATE_FAIL:
+    case ApiConnectorActions.UPDATE_FAIL:
     case ApiConnectorActions.DELETE_FAIL: {
       return {
         ...state,
@@ -109,7 +145,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
     case ApiConnectorActions.CREATE_CANCEL: {
       return {
         ...state,
-        createRequest: undefined,
+        createRequest: initialCreateRequest,
         loading: false,
         hasErrors: false,
         errors: []

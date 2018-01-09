@@ -1,1 +1,24 @@
 @import 'syndesis-sass';
+
+.syn-form--edit-mode {
+  .syn-form-row {
+    &__input--editor {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+
+      &:hover {
+        color: $color-pf-blue-500;
+      }
+      
+      .fa-pencil {
+        border: none;
+        background: none;
+        color: $color-pf-blue-500;
+        margin-left: $forms-grid-gutter;
+        cursor: hand;
+      }
+    }
+  }
+
+}

@@ -18,8 +18,8 @@ export class ApiConnectorEffects {
   @Effect()
   fetchApiConnectors$: Observable<Action> = this.actions$
     .ofType(
-      ApiConnectorActions.FETCH,
-      ApiConnectorActions.DELETE_FAIL
+    ApiConnectorActions.FETCH,
+    ApiConnectorActions.DELETE_FAIL
     )
     .mergeMap(() =>
       this.apiConnectorService
@@ -29,7 +29,7 @@ export class ApiConnectorEffects {
           type: ApiConnectorActions.FETCH_FAIL,
           payload: error
         }))
-  );
+    );
 
   @Effect()
   validateSwagger$: Observable<Action> = this.actions$
@@ -47,12 +47,25 @@ export class ApiConnectorEffects {
   @Effect()
   createCustomConnector$: Observable<Action> = this.actions$
     .ofType<ApiConnectorCreate>(ApiConnectorActions.CREATE)
-    .mergeMap(action  =>
+    .mergeMap(action =>
       this.apiConnectorService
         .createCustomConnector(action.payload)
         .map(response => ({ type: ApiConnectorActions.CREATE_COMPLETE, payload: response }))
         .catch(error => Observable.of({
           type: ApiConnectorActions.CREATE_FAIL,
+          payload: error
+        }))
+    );
+
+  @Effect()
+  updateCustomConnector$: Observable<Action> = this.actions$
+    .ofType<ApiConnectorCreate>(ApiConnectorActions.UPDATE)
+    .mergeMap(action =>
+      this.apiConnectorService
+        .updateCustomConnector(action.payload)
+        .map(response => ({ type: ApiConnectorActions.UPDATE_COMPLETE }))
+        .catch(error => Observable.of({
+          type: ApiConnectorActions.UPDATE_FAIL,
           payload: error
         }))
     );
@@ -65,7 +78,7 @@ export class ApiConnectorEffects {
   @Effect()
   deleteCustomConnector$: Observable<Action> = this.actions$
     .ofType<ApiConnectorDelete>(ApiConnectorActions.DELETE)
-    .mergeMap(action  =>
+    .mergeMap(action =>
       this.apiConnectorService
         .deleteCustomConnector(action.payload)
         .map(response => ({ type: ApiConnectorActions.DELETE_COMPLETE, payload: response }))

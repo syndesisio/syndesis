@@ -7,6 +7,12 @@ export interface ApiConnectorValidationError {
   property?: string;
 }
 
+export interface RequestProperties extends CustomApiConnectorAuthSettings {
+  specification?: string;
+  host?: string;
+  basePath?: string;
+}
+
 export interface ApiConnectorData {
   id?: string;
   actionsSummary?: {
@@ -18,6 +24,7 @@ export interface ApiConnectorData {
   warnings?: Array<{ key: string; longdesc: string; }>;
   errors?: Array<ApiConnectorValidationError>;
   icon?: string;
+  configuredProperties?: RequestProperties;
   properties?: {
     basePath: {
       defaultValue: string;
@@ -47,14 +54,7 @@ export interface CustomApiConnectorAuthSettings {
   tokenEndpoint?: string;
 }
 
-export interface RequestProperties extends CustomApiConnectorAuthSettings {
-  specification?: string;
-  host?: string;
-  basePath?: string;
-}
-
 export interface CustomConnectorRequest extends CustomApiConnectorRequest, ApiConnectorData {
-  configuredProperties?: RequestProperties;
   specificationFile?: File;
   iconFile?: File;
 }
@@ -62,4 +62,5 @@ export interface CustomConnectorRequest extends CustomApiConnectorRequest, ApiCo
 export interface ApiConnectorState extends BaseReducerModel {
   list: ApiConnectors;
   createRequest: CustomConnectorRequest;
+  deleted?: ApiConnectorData;
 }

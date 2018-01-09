@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-xs-12">
       <h2>API Client Connectors</h2>
-      <p><a>{{ appName }}</a> creates an API client connector when you upload a valid Swagger specification that describes the API you want to connect to.</p>
+      <p>
+        <a>{{ appName }}</a> creates an API client connector when you upload a valid Swagger specification that describes the
+        API you want to connect to.</p>
     </div>
   </div>
   <syndesis-validation-error *ngIf="stateError | async">
@@ -12,47 +14,37 @@
     <div class="col-xs-12">
       <syndesis-loading [loading]="(apiConnectorState$ | async)?.loading">
 
-        <syndesis-list-toolbar [items]="apiConnectors$"
-                               [filterTags]="false"
-                               [filteredItems]="filteredApiConnectors$"
-                               [viewTemplate]="viewTemplate">
+        <syndesis-list-toolbar [items]="apiConnectors$" [filterTags]="false" [filteredItems]="filteredApiConnectors$" [viewTemplate]="viewTemplate">
           <ng-template #viewTemplate>
             <div class="toolbar-pf-action-right">
-              <button type="button"
-                      class="btn btn-primary"
-                      routerLink="/customizations/api-connector/create/swagger-connector">
+              <button type="button" class="btn btn-primary" routerLink="/customizations/api-connector/create/swagger-connector">
                 Create API Connector
               </button>
             </div>
           </ng-template>
         </syndesis-list-toolbar>
 
-        <pfng-list [items]="filteredApiConnectors$ | async"
-                   [config]="listConfig"
-                   [itemTemplate]="itemTemplate"
-                   [actionTemplate]="actionTemplate"
-                   (onActionSelect)="handleAction($event)"
-                   (onClick)="handleClick($event)">
-          <ng-template #itemTemplate
-                       let-item="item"
-                       let-index="index">
+        <pfng-list [items]="filteredApiConnectors$ | async" [config]="listConfig" [itemTemplate]="itemTemplate" [actionTemplate]="actionTemplate"
+          (onActionSelect)="handleAction($event)" (onClick)="handleClick($event)">
+          <ng-template #itemTemplate let-item="item" let-index="index">
             <div class="list-pf-content-wrapper">
-              <div class="list-pf-main-content">
+              <div class="list-pf-additional-content">
                 <div class="list-pf-title">{{ item.name }}</div>
-                <div class="list-pf-description" text-overflow-pf>
-                  {{ item.description }}
+              </div>
+              <div class="list-pf-main-content">
+                <div class="list-pf-description" text-overflow-pf [innerHtml]="item.description | synParseMarkdownLinks">
                 </div>
               </div>
               <div class="list-pf-additional-content">
-                <div *ngIf="item.uses">
-                  <strong>Used by integrations <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span></strong>
+                <div *ngIf="item.uses !== null && item.uses !== undefined">
+                  <strong>Used by integrations
+                    <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
+                  </strong>
                 </div>
               </div>
             </div>
           </ng-template>
-          <ng-template #actionTemplate
-                       let-item="item"
-                       let-index="index">
+          <ng-template #actionTemplate let-item="item" let-index="index">
             <button type="button" (click)="onDelete(item.id)" [disabled]="item.uses > 0" class="foo btn btn-default">
               Delete
             </button>
