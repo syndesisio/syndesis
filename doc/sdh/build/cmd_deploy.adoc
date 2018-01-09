@@ -14,16 +14,12 @@ If this project already exists, it gets deleted unconditionally.
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
-Syndesis Developer Tool
-
 Usage: syndesis deploy [... options ...]
 
 Options for deploy:
--p  --project                 Install into this project.
-                              Delete this project if it already exists.
-                              If not given, install into the current project
+-p  --project                 Install into this project. Delete this project if it
+                              already exists. If not given, install into the current project
     --route                   Route to use (mandatory)
 -w  --watch                   Wait until cluster is up
-    --man                     Open HTML documentation in
-                              the Syndesis Developer Handbook
+    --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
