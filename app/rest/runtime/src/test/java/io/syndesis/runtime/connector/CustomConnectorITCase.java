@@ -191,11 +191,11 @@ public class CustomConnectorITCase extends BaseITCase {
     public void shouldProvideSummaryForCustomConnectors() {
         final ResponseEntity<Connector> responseForCustomConnector = get("/api/v1/connectors/connector-from-template-1", Connector.class);
 
-        assertThat(responseForCustomConnector.getBody().getSummary()).isPresent();
+        assertThat(responseForCustomConnector.getBody().getActionsSummary()).isPresent();
 
         final ResponseEntity<Connector> responseForNonCustomConnector = get("/api/v1/connectors/non-custom-connector", Connector.class);
 
-        assertThat(responseForNonCustomConnector.getBody().getSummary()).isNotPresent();
+        assertThat(responseForNonCustomConnector.getBody().getActionsSummary()).isNotPresent();
     }
 
     private MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon) {

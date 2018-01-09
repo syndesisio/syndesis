@@ -110,7 +110,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(connector).build();
 
-        return connector.builder().summary(summary).build();
+        return connector.builder().actionsSummary(summary.getActionsSummary()).build();
     }
 
     @Path("/{id}/actions")
@@ -153,7 +153,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             .map(c -> {
                 final ConnectorSummary summary = new ConnectorSummary.Builder().createFrom(c).build();
 
-                return c.builder().summary(summary).build();
+                return c.builder().actionsSummary(summary.getActionsSummary()).build();
             })
             .collect(Collectors.toList());
 
