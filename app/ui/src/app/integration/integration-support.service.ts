@@ -77,4 +77,28 @@ export class IntegrationSupportService {
     });
   }
 
+  getPods(): Observable<Response> {
+    const url = this.supportService
+      .one('pods')
+      .getRestangularUrl();
+    return this.http.get(url);
+  }
+  getSupportFormConfiguration(): Observable<Response> {
+    const url = this.supportService
+      .one('formConfig')
+      .getRestangularUrl();
+    return this.http.get(url);
+  }
+  downloadSupportData(configuredProperties: any): Observable<Response>  {
+    const url = this.supportService
+      .one('downloadSupportZip')
+      .getRestangularUrl();
+    return this.http.post(url, configuredProperties, {
+      method: RequestMethod.Post,
+      responseType: ResponseContentType.Blob
+  });
+  }
+
+
+
 }

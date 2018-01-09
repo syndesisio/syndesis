@@ -32,6 +32,10 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: './settings/settings.module#SettingsModule'
   },
+  {
+    path: 'support',
+    loadChildren: './support/support.module#SupportModule'
+  }
 ];
 
 @NgModule({
