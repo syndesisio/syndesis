@@ -24,60 +24,42 @@
       </div>
     </div>
   </div>
-  <syndesis-loading [loading]="(apiConnectorState$ | async)?.loading">
-    <div class="row content" *ngIf="apiConnectorData$ | async; let apiConnectorData">
-      <div class="col-xs-12">
-        <div class="col-xs-4">
-          <div class="card-pf card-pf-view ">
-            <div class="card-pf-body">
-              <div class="card-pf-top-element">
-                <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
-              </div>
-              <h2 class="card-pf-title text-center">
-                {{ apiConnectorData.name || 'N/A' }}
-              </h2>
-              <div class="card-pf-items text-center">
-                {{ apiConnectorData.description || 'N/A' }}
-              </div>
+  <div class="row content" *ngIf="apiConnectorData$ | async; let apiConnectorData">
+    <div class="col-xs-12">
+      <div class="col-xs-4">
+        <div class="card-pf card-pf-view">
+          <div class="card-pf-body">
+            <div class="card-pf-top-element">
+              <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
+            </div>
+            <h2 class="card-pf-title text-center">
+              {{ apiConnectorData.name || 'N/A' }}
+            </h2>
+            <div class="card-pf-items text-center"
+              [innerHtml]=" (apiConnectorData.description || 'N/A') | synParseMarkdownLinks">
             </div>
           </div>
         </div>
-        <div class="col-xs-8">
-          <div class="col-xs-12">
-            <h2>{{ apiConnectorData.name }}</h2>
-            <table class="table">
-              <tr class="icon">
-                <th scope="row">Connector Icon</th>
-                <td>
-                  <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
-                  <button class="btn">Choose icon</button>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">Connector Name</th>
-                <td>{{ apiConnectorData.name || 'N/A' }}</td>
-              </tr>
-              <tr>
-                <th scope="row">Description</th>
-                <td>{{ apiConnectorData.description || 'N/A' }}</td>
-              </tr>
-              <tr>
-                <th scope="row">Host</th>
-                <td>{{ apiConnectorData.configuredProperties.host || 'N/A' }}</td>
-              </tr>
-              <tr>
-                <th scope="row">Base URL</th>
-                <td>{{ apiConnectorData.configuredProperties.basePath || 'N/A' }}</td>
-              </tr>
-            </table>
+      </div>
+      <div class="col-xs-8">
+        <div class="col-xs-12 card-pf">
+          <div class="card-pf-heading">
+            <h2 class="card-pf-title">{{ apiConnectorData.name }}</h2>
           </div>
-          <!-- The following component is temporarily disabld until we get #898 fixed -->
-          <syndesis-api-connector-review *ngIf="false"
-            [apiConnectorTemplateName]="'Swagger'"
-            [apiConnectorData]="apiConnectorData">
-          </syndesis-api-connector-review>
+          <div class="card-pf-body">
+            <syndesis-api-connector-info
+              [apiConnectorData]="apiConnectorData"
+              [apiConnectorState]="apiConnectorState$ | async"
+              (update)="onUpdate($event)">
+            </syndesis-api-connector-info>
+          </div>
         </div>
+        <!-- The following component is temporarily disabld until we get #898 fixed -->
+        <syndesis-api-connector-review *ngIf="false"
+          [apiConnectorTemplateName]="'Swagger'"
+          [apiConnectorData]="apiConnectorData">
+        </syndesis-api-connector-review>
       </div>
     </div>
-  </syndesis-loading>
+  </div>
 </div>

@@ -47,8 +47,8 @@ export class ApiHttpProviderService extends ApiHttpService {
       post: <T>(body: any) => this.post<T>([endpointKey, ...endpointParams], body),
       put: <T>(body: any) => this.put<T>([endpointKey, ...endpointParams], body),
       delete: <T>() => this.delete<T>(url),
-      upload: <T>(fileMap?: FileMap, body?: StringMap<any>) => {
-        return this.upload<T>([endpointKey, ...endpointParams], fileMap, body);
+      upload: <T>(fileMap?: FileMap, body?: StringMap<any>, verb?: string) => {
+        return this.upload<T>([endpointKey, ...endpointParams], fileMap, body, verb);
       }
     };
   }
@@ -89,7 +89,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     return this.uploadProgressSubject.asObservable();
   }
 
-  upload<T>(endpoint: string | any[], fileMap: FileMap, body?: StringMap<any>): Observable<T> {
+  upload<T>(endpoint: string | any[], fileMap: FileMap, body?: StringMap<any>, verb = 'POST'): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     const headers = new HttpHeaders();
@@ -114,7 +114,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       }
     }
 
-    const request = new HttpRequest('POST', url, multipartFormData, { headers, reportProgress: true });
+    const request = new HttpRequest(verb, url, multipartFormData, { headers, reportProgress: true });
 
     return this.httpClient.request(request)
       .do(requestEvent => {

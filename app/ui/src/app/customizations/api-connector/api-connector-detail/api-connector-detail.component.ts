@@ -4,8 +4,10 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import {
+  ApiConnectorActions,
   ApiConnectorData, ApiConnectors, ApiConnectorState,
-  ApiConnectorStore, getApiConnectorState
+  ApiConnectorStore, getApiConnectorState,
+  CustomConnectorRequest
 } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
@@ -29,6 +31,12 @@ export class ApiConnectorDetailComponent implements OnInit {
       .first(params => params.has('id'))
       .map(params => params.get('id'))
       .combineLatest(this.apiConnectorState$.map(apiConnectorState => apiConnectorState.list))
-      .switchMap(([id, apiConnectors]: [string, ApiConnectors]) => apiConnectors.filter(apiConnector => apiConnector.id == id));
+      .switchMap(([id, apiConnectors]: [string, ApiConnectors]) =>
+        apiConnectors.filter(apiConnector => apiConnector.id == id)
+      );
+  }
+
+  onUpdate(customConnectorRequest: CustomConnectorRequest): void {
+    this.apiConnectorStore.dispatch(ApiConnectorActions.update(customConnectorRequest));
   }
 }

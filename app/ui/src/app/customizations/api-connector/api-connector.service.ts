@@ -47,9 +47,24 @@ export class ApiConnectorService {
     ];
 
     if (specification || icon) {
-      return apiHttpService.upload({ specification, icon }, { connectorSettings });
+      const payload = specification && icon ? { specification, icon } : { specification } || { icon };
+      return apiHttpService.upload(payload, { connectorSettings });
     } else {
       return apiHttpService.post(connectorSettings);
+    }
+  }
+
+  updateCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl('selectApiConnector', { id: customConnectorRequest.id });
+    const [connector, icon] = [
+      customConnectorRequest,
+      customConnectorRequest.iconFile
+    ];
+
+    if (icon) {
+      return apiHttpService.upload({ icon }, { connector }, 'PUT');
+    } else {
+      return apiHttpService.put(connector);
     }
   }
 

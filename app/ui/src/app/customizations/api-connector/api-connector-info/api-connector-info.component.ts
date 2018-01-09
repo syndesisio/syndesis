@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Renderer2, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { CustomConnectorRequest, ApiConnectorState } from '@syndesis/ui/customizations/api-connector';
+import { CustomConnectorRequest, ApiConnectorData, ApiConnectorState } from '@syndesis/ui/customizations/api-connector';
 
 @Component({
   selector: 'syndesis-api-connector-info',
@@ -9,16 +9,21 @@ import { CustomConnectorRequest, ApiConnectorState } from '@syndesis/ui/customiz
   styleUrls: ['./api-connector-info.component.scss']
 })
 export class ApiConnectorInfoComponent implements OnInit {
-  @Input() enableEditing: boolean;
   @Input() apiConnectorState: ApiConnectorState;
+  @Input() apiConnectorData: ApiConnectorData;
   @Output() update = new EventEmitter<CustomConnectorRequest>();
 
-  apiConnectorCreateRequest: CustomConnectorRequest;
-  apiConnectorInfoForm: FormGroup;
+  createMode: boolean;
+  apiConnectorDataForm: FormGroup;
+  editControlKey: string;
   icon: string; // TODO - Replace default thumb by image if any. Wrap in square container
   private iconFile: File;
+  private isDirty: boolean;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private renderer: Renderer2
+  ) { }
 
   get processingError(): string {
     return this.apiConnectorState.hasErrors ?
@@ -26,22 +31,30 @@ export class ApiConnectorInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.apiConnectorInfoForm = this.formBuilder.group({
+    this.apiConnectorDataForm = this.formBuilder.group({
       name: ['', Validators.required],
       description: [''],
       host: [''],
       basePath: [''],
     });
 
-    this.apiConnectorCreateRequest = this.apiConnectorState.createRequest;
+    // If no particular connector is injected but there's a custom connector create
+    // request in progress, we set the component in CREATE mode (inputs visible by default).
+    if (!this.apiConnectorData && this.apiConnectorState.createRequest.name) {
+      this.createMode = true;
+      this.apiConnectorData = this.apiConnectorState.createRequest;
+    } else if (!this.apiConnectorData) {
+      throw new Error(`ApiConnectorInfoComponent requires either an ApiConnectorData object or an active custom connector create request`);
+    }
 
-    if (this.apiConnectorCreateRequest) {
-      const { name, description, properties, icon } = this.apiConnectorCreateRequest;
-      this.apiConnectorInfoForm.get('name').setValue(name);
-      this.apiConnectorInfoForm.get('description').setValue(description);
-      this.apiConnectorInfoForm.get('host').setValue(properties.host.defaultValue);
-      this.apiConnectorInfoForm.get('basePath').setValue(properties.basePath.defaultValue);
+    if (this.apiConnectorData) {
+      const { name, description, properties, icon } = this.apiConnectorData;
+      this.apiConnectorDataForm.get('name').setValue(name);
+      this.apiConnectorDataForm.get('description').setValue(description);
+      this.apiConnectorDataForm.get('host').setValue(properties.host.defaultValue);
+      this.apiConnectorDataForm.get('basePath').setValue(properties.basePath.defaultValue);
       this.icon = icon;
+      this.isDirty = true;
     }
   }
 
@@ -52,20 +65,21 @@ export class ApiConnectorInfoComponent implements OnInit {
         this.iconFile = fileList[0];
       }
     }
-    // If component is in edit mode (eg. detail page), updating
+    this.isDirty = true;
+    // If component is not in "Create" mode (eg. detail page), updating
     // any input field will automatically fire up the submit handler
-    if (this.enableEditing) {
+    if (!this.createMode) {
       this.onSubmit();
     }
   }
 
   onSubmit(): void {
-    if (this.apiConnectorInfoForm.valid) {
-      const { name, description, host, basePath } = this.apiConnectorInfoForm.value;
-      const apiConnectorCreateRequest = {
-        ...this.apiConnectorCreateRequest,
+    if (this.apiConnectorDataForm.valid && this.isDirty) {
+      const { name, description, host, basePath } = this.apiConnectorDataForm.value;
+      const apiConnectorData = {
+        ...this.apiConnectorData,
         configuredProperties: {
-          ...this.apiConnectorCreateRequest.configuredProperties,
+          ...this.apiConnectorData.configuredProperties,
           host,
           basePath,
         },
@@ -74,7 +88,28 @@ export class ApiConnectorInfoComponent implements OnInit {
         iconFile: this.iconFile
       } as CustomConnectorRequest;
 
-      this.update.emit(apiConnectorCreateRequest);
+      this.update.emit(apiConnectorData);
+    }
+    this.editControlKey = null;
+  }
+
+  onEditEnable(event: Event, key: string): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.editControlKey = key;
+    this.isDirty = false;
+    setTimeout(() => this.renderer.selectRootElement(`#${key}`).focus(), 0);
+  }
+
+  onEditChange(): void {
+    this.isDirty = true;
+  }
+
+  @HostListener('document:click', ['$event'])
+  private onDocumentClick(event: Event): void {
+    const elementTag = event.srcElement.tagName.toLowerCase();
+    if (elementTag !== 'input' && elementTag !== 'textarea' && this.editControlKey) {
+      setTimeout(() => this.onSubmit(), 0);
     }
   }
 }
