@@ -14,7 +14,7 @@ MODULES=(
 )
 
 build::description() {
-    echo "Build Syndesis"
+    echo "Run Syndesis builds"
 }
 
 build::usage() {

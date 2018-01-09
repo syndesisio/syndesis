@@ -1,0 +1,71 @@
+#!/bin/bash
+
+recreate_project() {
+    # Delete project if existing
+    if oc get project "${project}" >/dev/null 2>&1 ; then
+        echo "Deleting project ${project}"
+        oc delete project "${project}"
+    fi
+
+    # Create project afresh
+    echo "Creating project ${project}"
+    for i in {1..10}; do
+        if oc new-project "${project}" >/dev/null 2>&1 ; then
+            break
+        fi
+        echo "Project still exists. Sleeping 10s ..."
+        sleep 10
+    done
+    oc project "${project}"
+}
+
+create_oauthclient() {
+    basedir=$(appdir)
+    check_error "$basedir"
+    oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+}
+
+create_and_apply_template() {
+    basedir=$(appdir)
+    check_error "$basedir"
+    local route=$1
+    if [ -z "$route" ]; then
+        echo "No route given"
+        exit 1
+    fi
+    local template=${2:-syndesis-restricted.yml}
+
+    oc create -f ${basedir}/deploy/$template.yml
+    oc new-app $template \
+      -p ROUTE_HOSTNAME="${route}" \
+      -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
+      -p OPENSHIFT_PROJECT="$(oc project -q)" \
+      -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+}
+
+wait_for_syndesis_to_be_ready() {
+    # Wait a bit to start image fetching
+    # Patch imagestreams from "DockerImage" to "ImageStreamTag"
+    oc get pods -w &
+    watch_pid=$!
+    for dc in "syndesis-rest" "syndesis-ui" "syndesis-verifier"; do
+        echo "Waiting for $dc to be started"
+        local replicas="$(oc get dc $dc -o jsonpath='{.status.availableReplicas}')"
+        while [ "$replicas" -lt 1 ]; do
+            echo "Sleeping 10s ..."
+            sleep 10
+            replicas=$(oc get dc $dc -o jsonpath="{.status.availableReplicas}")
+        done
+    done
+    kill $watch_pid
+}
+
+patch_imagestreams_for_initial_image() {
+    for is in "syndesis-rest" "syndesis-ui" "syndesis-verifier" "syndesis-s2i"; do
+        echo "Patching imagestream $is"
+        local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'
+        local replace_name="{\"op\": \"replace\", \"path\": \"/spec/tags/0/from/name\", \"value\": \"$is:latest\"}"
+        local remove_import_policy='{"op": "remove", "path": "/spec/tags/0/importPolicy"}'
+        oc patch is $is --type json -p="[$replace_kind, $replace_name, $remove_import_policy]"
+    done
+}

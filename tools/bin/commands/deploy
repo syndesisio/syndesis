@@ -1,0 +1,37 @@
+#!/bin/bash
+
+deploy::description() {
+    echo "Deploy Syndesis to a connected OpenShift cluster"
+}
+
+deploy::usage() {
+    cat <<EOT
+-p  --project                 Install into this project. Delete this project if it already exists.
+                              If not given, install into the current project
+    --route                   Route to use (mandatory)
+-w  --watch                   Wait until cluster is up
+EOT
+}
+
+
+deploy::run() {
+    source "$(basedir)/commands/util/openshift_funcs"
+
+    local route=$(readopt --route)
+    if [ -z "$route" ]; then
+        echo "No route given. Use --route to set the route."
+        exit 1
+    fi
+
+    local project=$(readopt --project -p)
+    if [ -n "${project}" ]; then
+        recreate_project $project
+    fi
+
+    create_oauthclient
+
+    create_and_apply_template "$route" "syndesis-restricted"
+    if [ $(hasflag --watch -w) ]; then
+        wait_for_syndesis_to_be_ready
+    fi
+}

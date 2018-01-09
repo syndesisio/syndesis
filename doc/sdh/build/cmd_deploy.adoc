@@ -1,0 +1,29 @@
+[[syndesis-deploy]]
+## syndesis deploy
+
+With `syndesis deploy` you can deploy Syndesis to an arbitrary OpenShift cluster.
+You have to be connected to the cluster with `oc login` for this command to work.
+It's an alternative to `syndesis minishift` but does not support a Development workflow.
+
+You have to provide the route name with `--route`, how the project in the given cluster can be reached. E.g. `--route app-proj186023.6a63.fuse-ignite.openshiftapps.com`.
+By default this commands installs in the currently connected project, but you can specify an alternative project with `--project <project>`.
+If this project already exists, it gets deleted unconditionally.
+
+[[syndesis-deploy-usage]]
+### Usage
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+Syndesis Developer Tool
+
+Usage: syndesis deploy [... options ...]
+
+Options for deploy:
+-p  --project                 Install into this project.
+                              Delete this project if it already exists.
+                              If not given, install into the current project
+    --route                   Route to use (mandatory)
+-w  --watch                   Wait until cluster is up
+    --man                     Open HTML documentation in
+                              the Syndesis Developer Handbook
+----

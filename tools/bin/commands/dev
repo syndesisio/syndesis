@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dev::description() {
-    echo "Developer tools"
+    echo "Syndesis developer tools"
 }
 
 dev::usage() {
