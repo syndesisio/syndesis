@@ -41,10 +41,13 @@
         </div>
       </div>
     </section>
-    
+
     <section class="col-xs-8">
       <div class="col-xs-12 card-pf">
-        <div class="card-pf-heading">
+        <div class="card-pf-heading api-connector-detail__header">
+          <div class="spinner spinner-lg api-connector-detail__loader"
+            [class.api-connector-detail__loader--loading]="(apiConnectorState$ | async)?.loading">
+          </div>
           <h2 class="card-pf-title">{{ apiConnectorData.name }}</h2>
         </div>
         <div class="card-pf-body">
