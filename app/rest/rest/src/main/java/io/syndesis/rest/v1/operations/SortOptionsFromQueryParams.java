@@ -28,10 +28,15 @@ public class SortOptionsFromQueryParams implements SortOptions {
     private final SortDirection sortDirection;
 
     public SortOptionsFromQueryParams(UriInfo uri) {
-        MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
-        sortField = queryParams.getFirst("sort");
-        String dir = queryParams.getFirst("direction");
-        sortDirection = dir == null ?  SortOptions.SortDirection.ASC : SortOptions.SortDirection.valueOf(dir.toUpperCase(Locale.US));
+        if( uri == null ) {
+            sortField = null;
+            sortDirection = SortOptions.SortDirection.ASC;
+        } else {
+            MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
+            sortField = queryParams.getFirst("sort");
+            String dir = queryParams.getFirst("direction");
+            sortDirection = dir == null ?  SortOptions.SortDirection.ASC : SortOptions.SortDirection.valueOf(dir.toUpperCase(Locale.US));
+        }
     }
 
     @Override
