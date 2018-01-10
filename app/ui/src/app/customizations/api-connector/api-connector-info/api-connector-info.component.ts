@@ -48,11 +48,11 @@ export class ApiConnectorInfoComponent implements OnInit {
     }
 
     if (this.apiConnectorData) {
-      const { name, description, properties, icon } = this.apiConnectorData;
+      const { name, description, configuredProperties, properties, icon } = this.apiConnectorData;
       this.apiConnectorDataForm.get('name').setValue(name);
       this.apiConnectorDataForm.get('description').setValue(description);
-      this.apiConnectorDataForm.get('host').setValue(properties.host.defaultValue);
-      this.apiConnectorDataForm.get('basePath').setValue(properties.basePath.defaultValue);
+      this.apiConnectorDataForm.get('host').setValue(configuredProperties.host || properties.host.defaultValue);
+      this.apiConnectorDataForm.get('basePath').setValue(configuredProperties.basePath || properties.basePath.defaultValue);
       this.icon = icon;
       this.isDirty = true;
     }
