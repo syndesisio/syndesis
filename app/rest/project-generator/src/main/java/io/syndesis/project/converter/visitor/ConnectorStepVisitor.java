@@ -29,6 +29,7 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Split;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
@@ -158,6 +159,10 @@ public class ConnectorStepVisitor implements StepVisitor {
                 .filter(Predicates.or(connector::isSecret, action::isSecret))
                 .forEach(e -> e.setValue(String.format("{{%s-%d.%s}}", componentScheme, visitorContext.getIndex(), e.getKey())));
         }
+
+        // any configuredProperties on action descriptor are considered
+        final ConnectorDescriptor descriptor = action.getDescriptor();
+        properties.putAll(descriptor.getConfiguredProperties());
 
         if (hasComponentProperties(configuredProperties, connector, action)) {
             return new io.syndesis.integration.model.steps.Endpoint(String.format("%s-%d", componentScheme, visitorContext.getIndex()), Map.class.cast(properties));
