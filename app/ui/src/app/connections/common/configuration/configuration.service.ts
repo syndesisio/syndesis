@@ -61,6 +61,13 @@ export class ConnectionConfigurationService {
     let props = {};
     if (connection.connector) {
       props = this.cloneObject(connection.connector.properties);
+      if (connection.connector.configuredProperties) {
+        Object.keys(connection.connector.configuredProperties).forEach(key => {
+          if (props[key]) {
+            props[key].value = connection.connector.configuredProperties[key];
+          }
+        });
+      }
       if (connection.configuredProperties) {
         Object.keys(connection.configuredProperties).forEach(key => {
           if (props[key]) {
