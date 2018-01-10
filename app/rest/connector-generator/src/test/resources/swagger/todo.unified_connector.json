@@ -1,0 +1,240 @@
+{
+  "name": "Todo App API",
+  "description": "unspecified",
+  "connectorGroup": {
+    "id": "swagger-connector-template"
+  },
+  "connectorGroupId": "swagger-connector-template",
+  "configuredProperties": {
+    "specification": "{\"swagger\": \"2.0\", \"info\": {\"title\": \"Todo App API\", \"version\": \"1.0.0\", \"license\": {\"name\": \"Apache 2.0\", \"url\": \"http://www.apache.org/licenses/LICENSE-2.0.html\"}}, \"host\": \"hostname\", \"schemes\": [ \"http\", \"https\" ], \"paths\": {\"/api\": {\"get\": {\"operationId\": \"operation-0\", \"tags\": [ \"tasks\", \"fetching\" ], \"summary\": \"List all tasks\", \"description\": \"Fetches all tasks from the database\", \"parameters\" : [ ], \"produces\": [ \"application/json\" ], \"responses\": {\"200\": {\"description\": \"All is good\", \"schema\": {\"type\": \"array\", \"items\": {\"$ref\": \"#/definitions/Task\"}}}}}, \"post\": {\"operationId\": \"operation-1\", \"tags\": [ \"tasks\", \"creating\" ], \"summary\": \"Create new task\", \"description\": \"Stores new task in the database\", \"produces\": [ \"application/json\" ], \"consumes\": [ \"application/json\" ], \"parameters\": [ {\"in\": \"body\", \"name\": \"body\", \"description\": \"Task to create\", \"required\": true, \"schema\": {\"$ref\": \"#/definitions/Task\"}} ], \"responses\": {\"201\": {\"description\": \"All is good\", \"schema\": {\"$ref\": \"#/definitions/Task\"}}}}}, \"/api/{id}\": {\"get\": {\"operationId\": \"operation-2\", \"tags\": [ \"tasks\", \"fetching\" ], \"summary\": \"Fetch task\", \"description\": \"Fetches task by given identifier\", \"produces\": [ \"application/json\" ], \"parameters\": [ {\"in\": \"path\", \"name\": \"id\", \"type\": \"integer\", \"format\": \"int64\", \"description\": \"Task identifier\", \"required\": true} ], \"responses\": {\"200\": {\"description\": \"All is good\", \"schema\": {\"$ref\": \"#/definitions/Task\"}}, \"404\": {\"description\": \"No task with provided identifier found\"}}}, \"put\": {\"operationId\": \"operation-3\", \"tags\": [ \"tasks\", \"updating\" ], \"summary\": \"Update task\", \"description\": \"Updates task by given identifier\", \"produces\": [ \"application/json\" ], \"consumes\": [ \"application/json\" ], \"parameters\": [ {\"in\": \"path\", \"name\": \"id\", \"type\": \"integer\", \"format\": \"int64\", \"description\": \"Task identifier\", \"required\": true}, {\"in\": \"body\", \"name\": \"body\", \"description\": \"Task with updates\", \"required\": true, \"schema\": {\"$ref\": \"#/definitions/Task\"}} ], \"responses\": {\"200\": {\"description\": \"All is good\", \"schema\": {\"$ref\": \"#/definitions/Task\"}}}}, \"delete\": {\"operationId\": \"operation-4\", \"tags\": [ \"tasks\", \"destruction\" ], \"summary\": \"Delete task\", \"description\": \"Deletes task by given identifier\", \"parameters\": [ {\"in\": \"path\", \"name\": \"id\", \"type\": \"integer\", \"format\": \"int64\", \"description\": \"Task identifier to delete\", \"required\": true} ], \"responses\": {\"204\": {\"description\": \"Task deleted\"}}}}}, \"securityDefinitions\": {\"username_password\": {\"type\": \"basic\"}}, \"definitions\": {\"Task\": {\"type\": \"object\", \"properties\": {\"id\": {\"type\": \"integer\", \"format\": \"int64\", \"title\": \"Task ID\", \"description\": \"Unique task identifier\"}, \"task\": {\"type\": \"string\", \"title\": \"The task\", \"description\": \"Task line\"}, \"completed\": {\"type\": \"integer\", \"title\": \"Task completition status\", \"description\": \"0 - ongoing, 1 - completed\", \"minimum\": 0, \"maximum\": 1}}}}}",
+    "authenticationType": "basic",
+    "host": "https://hostname"
+  },
+  "properties": {
+    "authenticationType": {
+      "kind": "property",
+      "displayName": "Authentication Type",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "authentication-type"
+      ],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "defaultValue": "basic",
+      "enum": [
+        {
+          "value": "basic",
+          "label": "HTTP Basic Authentication"
+        }
+      ],
+      "description": "Type of authentication used to connect to the API"
+    },
+    "specification": {
+      "kind": "property",
+      "displayName": "Specification",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "hidden",
+      "javaType": "java.lang.String",
+      "tags": [
+        "upload",
+        "url"
+      ],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "Swagger specification of the service"
+    },
+    "basePath": {
+      "kind": "property",
+      "displayName": "Base path",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
+    },
+    "host": {
+      "kind": "property",
+      "displayName": "Host",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "defaultValue": "https://hostname",
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+    },
+    "username": {
+      "kind": "property",
+      "displayName": "Username",
+      "group": "producer",
+      "label": "producer",
+      "required": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "Username to authenticate with"
+    },
+    "password": {
+      "kind": "property",
+      "displayName": "Password",
+      "group": "producer",
+      "label": "producer",
+      "required": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "Password to authenticate with"
+    }
+  },
+  "actions": [
+    {
+      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-0",
+      "name": "List all tasks",
+      "description": "Fetches all tasks from the database",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Task\"}"
+        },
+        "configuredProperties": {
+          "operationId": "operation-0"
+        }
+      },
+      "tags": [
+        "fetching",
+        "tasks"
+      ],
+      "actionType": "connector",
+      "pattern": "To"
+    },
+    {
+      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-1",
+      "name": "Create new task",
+      "description": "Stores new task in the database",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "inputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Task\"}}}"
+        },
+        "outputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Task\"}"
+        },
+        "configuredProperties": {
+          "operationId": "operation-1"
+        }
+      },
+      "tags": [
+        "creating",
+        "tasks"
+      ],
+      "actionType": "connector",
+      "pattern": "To"
+    },
+    {
+      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-2",
+      "name": "Fetch task",
+      "description": "Fetches task by given identifier",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "inputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}}}}"
+        },
+        "outputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Task\"}"
+        },
+        "configuredProperties": {
+          "operationId": "operation-2"
+        }
+      },
+      "tags": [
+        "fetching",
+        "tasks"
+      ],
+      "actionType": "connector",
+      "pattern": "To"
+    },
+    {
+      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-3",
+      "name": "Update task",
+      "description": "Updates task by given identifier",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "inputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Task\"}}}"
+        },
+        "outputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}},\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Task\"}"
+        },
+        "configuredProperties": {
+          "operationId": "operation-3"
+        }
+      },
+      "tags": [
+        "tasks",
+        "updating"
+      ],
+      "actionType": "connector",
+      "pattern": "To"
+    },
+    {
+      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-4",
+      "name": "Delete task",
+      "description": "Deletes task by given identifier",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "inputDataShape": {
+          "kind": "json-schema",
+          "specification": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier to delete\"}}}}}"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {
+          "operationId": "operation-4"
+        }
+      },
+      "tags": [
+        "destruction",
+        "tasks"
+      ],
+      "actionType": "connector",
+      "pattern": "To"
+    }
+  ]
+}

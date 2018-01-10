@@ -52,6 +52,8 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
 
         final Connector generated = generator().generate(SWAGGER_TEMPLATE, connectorSettings);
 
+        Json.mapper().writeValue(System.out, generated);
+
         final Map<String, String> generatedConfiguredProperties = generated.getConfiguredProperties();
         final String generatedSpecification = generatedConfiguredProperties.get("specification");
 

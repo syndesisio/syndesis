@@ -66,6 +66,16 @@ public final class SwaggerHelper {
         // utility class
     }
 
+    /* default */ static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
+        final JsonNode specRoot;
+        if (specification.matches("\\s+\\{")) {
+            specRoot = JSON_MAPPER.readTree(specification);
+        } else {
+            specRoot = JSON_MAPPER.convertValue(YAML_PARSER.load(specification), JsonNode.class);
+        }
+        return specRoot;
+    }
+
     /* default */ static SwaggerModelInfo parse(final String specification, final boolean validate) {
         final SwaggerModelInfo.Builder resultBuilder = new SwaggerModelInfo.Builder();
 
@@ -99,11 +109,16 @@ public final class SwaggerHelper {
     }
 
     /* default */ static String resolve(final String specification) throws Exception {
+        final String specificationToUse;
         if (specification.toLowerCase().startsWith("http")) {
-            return RemoteUrl.urlToString(specification, null);
+            specificationToUse = RemoteUrl.urlToString(specification, null);
+        } else {
+            specificationToUse = specification;
         }
 
-        return specification;
+        final JsonNode node = convertToJson(specificationToUse);
+
+        return Json.mapper().writeValueAsString(node);
     }
 
     /* default */ static String serialize(final Swagger swagger) {
@@ -137,12 +152,7 @@ public final class SwaggerHelper {
 
     private static SwaggerModelInfo validateJSonSchema(final String specification, final Swagger model) {
         try {
-            final JsonNode specRoot;
-            if (specification.matches("\\s+\\{")) {
-                specRoot = JSON_MAPPER.readTree(specification);
-            } else {
-                specRoot = JSON_MAPPER.convertValue(YAML_PARSER.load(specification), JsonNode.class);
-            }
+            final JsonNode specRoot = convertToJson(specification);
             final ProcessingReport report = SWAGGER_2_0_SCHEMA.validate(specRoot);
             final List<Violation> errors = new ArrayList<>();
             final List<Violation> warnings = new ArrayList<>();
