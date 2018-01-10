@@ -1,0 +1,14 @@
+[id=separate-one-source-field-into-multiple-target-fields]
+== Separate one source field into multiple target fields
+
+You can separate more than one source field into multiple target fields using a *Separate* mapping.
+
+When you use a *Separate* mapping, you will be asked to specify a *Separator*. The software will split the Source field at the separator.
+
+To add a *Separate* mapping 
+
+. Select the Source field that you want to separate into multiple fields in the target.
+
+.  In the *Data Mapping* pane, select *Separate* and a separator. Place the cursor in the *Target* box. Start overtyping *[none]* with the name of the target field. As you type the field name will be offered up in a dropdown. Select the field name.
+
+.  To add another field click *Add Target*. 

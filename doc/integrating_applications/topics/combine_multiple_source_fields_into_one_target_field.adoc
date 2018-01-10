@@ -1,0 +1,16 @@
+[id=combine_multiple-source-fields-into-one-target-field]
+== Combine multiple source fields into one target field
+
+You can combine more than one source field into a single target field using the *Combine* mapping.
+
+When you use a *Combine* mapping, you will be asked to specify a *Separator*. The separator is the character that will be placed between the fields when they are combined into one field.
+
+To add a *Combine* mapping :
+
+. Click on the field you want to combine the source fields into from the Target list. 
+
+. In the *Data Mapping* pane, place the cursor in the *Source* box. Start overtyping *[none]* with the name of the source field. As you type the field name will be offered up in a dropdown. Select the field name.
+
+. Select *Combine* and a *Separator* 
+
+. To add another field click *Add Source*.

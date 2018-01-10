@@ -1,0 +1,10 @@
+[id="map-one-source-field-to-one-target-field"]
+== Map one source field to one target field
+
+To add a basic data mapping using all the defaults:
+
+. Select a field from the *Sources* table on the *Configure Mapper* pane.
+. Select a field from the *Target* table.
+
+A line will appear, linking the two fields that you selected. 
+The details of the mapping you have just created are shown in the *Mapping Details* pane.

@@ -1,0 +1,135 @@
+[id=available-transformations]
+= Available transformations
+
+This is a list of the current available transformations and what they do. 
+
+.Transformations
+
+|===
+|Transformation  |Input Type|Output Type |Parameter (* = required)|What does it do?
+
+|Capitalize
+|String
+|String
+| n/a
+|Capitalize the first character of a string.
+
+|CurrentDate
+|n/a
+|String
+|Date format
+|Create a string representing the current date in the supplied format. The default format is "yyyy-MM-dd".
+
+|CurrentDateTime
+|n/a
+|String
+|dateFormat
+|Create a string representing the current date and time in the specified format. The default format is "yyyy-MM-dd'T'HH:mm'Z'".
+
+|CurrentTime
+|n/a
+|String
+|dateFormat
+|Create a string representing the current time in the supplied format. The default format is "HH:mm:ss".
+
+|GenerateUUID
+|n/a
+|String
+|n/a
+|Create a string representing a random UUID.
+
+|Lowercase
+|String
+|String
+|n/a
+|Convert a string to lowercase.
+
+|PadStringLeft
+|String
+|String
+|padCharacter *
+
+padCount *
+|Insert the character supplied in `padCharacter` to the beginning of a string the number of times specified in `padCount`.
+
+|PadStringRight
+|String
+|String
+|padCharacter *
+
+padCount *
+|Insert the character supplied in `padCharacter` to the end of a string the number of times specified in `padCount`.
+
+|Replace
+|
+|
+|oldString *
+
+newString
+|Replace all occurrences of the value supplied  in `oldString` in a string with the value supplied in `newString`. The default `newString` is an empty string.
+
+|SeparateByDash
+|String
+|String
+|n/a
+|Replace all occurrences of whitespace, colons (:), underscores (_), plus (+), or equals (=) with a dash (-) in a string.
+
+|SeparateByUnderscore
+|String
+|String
+|n/a
+|Replace all occurrences of whitespace, colon (:), dash (-), plus (+), or equals (=) with an underscores (_) in a string.
+
+|Substring
+|String
+|String
+|startIndex *
+
+endIndex
+|Retrieve a segment of a string from the specified `startIndex` to the specified `endIndex`. Both indexes start at zero. `startIndex` is inclusive. `endIndex` is exclusive. The default `endIndex` is the length of the string.
+
+|SubstringAfter
+|String
+|String
+|startIndex *
+
+endIndex
+
+match *
+|Retrieve the segment of a string after the specified `match` string from the specified inclusive `startIndex` to the specified exclusive `endIndex`. Both indexes start at zero. The default `endIndex` is the length of the string after the supplied match string.
+
+|SubstringBefore
+|String
+|String
+|startIndex *
+
+endIndex
+
+match *
+|Retrieve a segment of a string before the supplied `match` string from the supplied inclusive `startIndex` to the supplied exclusive `endIndex`. Both indexes start at zero. The default endIndex is the length of the string before the supplied match string.
+
+|Trim
+|String
+|String
+|n/a
+|Trim leading and trailing whitespace from a string.
+
+|TrimLeft
+|String
+|String
+|n/a
+|Trim leading whitespace from a string.
+
+|TrimRight
+|String
+|String
+|n/a
+|Trim trailing whitespace from a string.
+
+|Uppercase
+|String
+|String
+|n/a
+|Convert a string to uppercase.
+
+|===

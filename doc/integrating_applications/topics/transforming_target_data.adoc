@@ -1,0 +1,16 @@
+[id=transforming-target-data]
+== Transforming target data
+
+Adding a transformation to the target data defines how the data will be stored at the target.
+Transformations often require a parameter to specify a format or other detail required to enable the transformation to take place.
+
+To add a transformation to your data mapping:
+
+. Click *Transformation* on the Target pane.
+
+. Select the type of transformation you want from the dropdown menu.
+
+. Add any parameters required into the boxes provided.
+
+
+See <<available-transformations>> for a list of available transformations and the parameters they require.
