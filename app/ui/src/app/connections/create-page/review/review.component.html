@@ -11,10 +11,11 @@
             <span class="required-pf">*</span> are required.</p>
           <div class="form-group"
                [ngClass]="{'has-error': name.invalid && name.touched}">
-            <label class="col-sm-3 control-label required-pf">Connection Name</label>
+            <label for="nameInput" class="col-sm-3 control-label required-pf">Connection Name</label>
             <!-- data-id is used in automated tests -->
             <div class="col-sm-9">
               <input data-id="nameInput"
+                     id="nameInput"
                      class="form-control"
                      formControlName="name"
                      (blur)="validateNameNotTaken()"
@@ -32,9 +33,10 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-3 control-label">Description</label>
+            <label for="descriptionInput" class="col-sm-3 control-label">Description</label>
             <div class="col-sm-9">
               <textarea data-id="descriptionInput"
+                        id="descriptionInput"
                         class="form-control"
                         formControlName="description"
                         rows="2"></textarea>

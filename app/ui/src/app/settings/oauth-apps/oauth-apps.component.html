@@ -72,7 +72,7 @@
       <ng-template #listItemExpansion
                    let-item="item">
         <div *ngIf="item.expanded">
-          <syndesis-oauth-app-form [item]="item"></syndesis-oauth-app-form>
+          <syndesis-oauth-app-form [appType]="item.client.id" [item]="item"></syndesis-oauth-app-form>
         </div>
       </ng-template>
 

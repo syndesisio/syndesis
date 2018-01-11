@@ -16,7 +16,8 @@ const category = getCategory('Connections');
 
 @Component({
   selector: 'syndesis-connections-review',
-  templateUrl: 'review.component.html'
+  templateUrl: 'review.component.html',
+  styleUrls: ['review.component.scss']
 })
 export class ConnectionsReviewComponent implements CanComponentDeactivate, OnInit, OnDestroy {
   saved = false;
