@@ -11,6 +11,7 @@ import {
   ListEvent,
   EmptyStateConfig,
 } from 'patternfly-ng';
+import { ConfigService } from '../../config.service';
 import { TechExtensionDeleteModalComponent } from './tech-extension-delete-modal.component';
 import { Extensions, Extension } from '../../model';
 
@@ -32,6 +33,7 @@ export class TechExtensionsListComponent implements OnInit {
   };
 
   constructor(private store: ExtensionStore,
+              public config: ConfigService,
               private router: Router,
               private route: ActivatedRoute) {
     this.extensions$ = this.store.list;
