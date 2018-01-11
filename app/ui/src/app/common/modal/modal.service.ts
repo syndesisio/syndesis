@@ -1,6 +1,5 @@
 import { Injectable, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Modal } from './modal.models';
 
 @Injectable()

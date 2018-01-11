@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import {
   NotificationService as NS,
   Notification,
@@ -6,6 +7,7 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
+@Injectable()
 export class NotificationService extends NS {
   notificationsSubject = new BehaviorSubject<Notification[]>(
     this.getNotifications()

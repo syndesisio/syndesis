@@ -5,7 +5,7 @@ import { OAuthAppListItem } from './oauth-apps.component';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '../../model';
 import { ModalService } from '../../common/modal/modal.service';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-oauth-app-modal',
