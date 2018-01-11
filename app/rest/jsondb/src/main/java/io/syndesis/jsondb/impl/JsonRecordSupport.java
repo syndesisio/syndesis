@@ -79,10 +79,6 @@ public final class JsonRecordSupport {
         // utility class
     }
 
-    public static Consumer<JsonRecord> recordsToJsonStream(String dbPath, OutputStream output, GetOptions options) throws IOException {
-        return new JsonRecordConsumer(dbPath, output, options);
-    }
-
     public static void jsonStreamToRecords(HashSet<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
         try (JsonParser jp = new JsonFactory().createParser(is)) {
             jsonStreamToRecords(indexes, jp, dbPath, consumer);
@@ -101,7 +97,7 @@ public final class JsonRecordSupport {
         return Strings.suffix(Strings.prefix(value, "/"), "/");
     }
 
-    private static String validateKey(String key) {
+    public static String validateKey(String key) {
         if( key.chars().anyMatch(x -> { switch(x){
             case '.':
             case '%':

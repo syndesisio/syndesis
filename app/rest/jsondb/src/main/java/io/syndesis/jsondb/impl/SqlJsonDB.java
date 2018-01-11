@@ -53,6 +53,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static io.syndesis.jsondb.impl.JsonRecordSupport.validateKey;
 import static io.syndesis.jsondb.impl.Strings.prefix;
 import static io.syndesis.jsondb.impl.Strings.suffix;
 import static io.syndesis.jsondb.impl.Strings.trimSuffix;
@@ -153,20 +154,39 @@ public class SqlJsonDB implements JsonDB {
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
         try {
+
             // Creating the iterator could fail with a runtime exception,
-            String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
-            ResultIterator<JsonRecord> iterator = h.createQuery(sql)
-                .bind("like", like)
-                .map(JsonRecordMapper.INSTANCE)
-                .iterator();
+            ResultIterator<JsonRecord> iterator;
+            if( o.after()!=null ) {
+
+                // yes terminate with | instead of / so that we skip that entire tree of values.
+                String after = baseDBPath + validateKey(o.after()) + "|";
+
+                String sql = "select path,value,kind from jsondb where path LIKE :like and path >= :after order by path";
+                iterator = h.createQuery(sql)
+                    .bind("like", like)
+                    .bind("after", after)
+                    .map(JsonRecordMapper.INSTANCE)
+                    .iterator();
+
+            } else {
+
+                String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
+                iterator = h.createQuery(sql)
+                    .bind("like", like)
+                    .map(JsonRecordMapper.INSTANCE)
+                    .iterator();
+
+            }
+
             try {
                 // At this point we know if we can produce results..
                 if (iterator.hasNext()) {
                     result = output -> {
-                        try {
-                            Consumer<JsonRecord> toJson = JsonRecordSupport.recordsToJsonStream(baseDBPath, output, o);
-                            iterator.forEachRemaining(toJson);
-                            toJson.accept(null);
+                        try (JsonRecordConsumer toJson = new JsonRecordConsumer(baseDBPath, output, o)) {
+                            while ( !toJson.isClosed() && iterator.hasNext() ) {
+                                toJson.accept(iterator.next());
+                            }
                         } catch (IOException e) {
                             throw new JsonDBException(e);
                         } finally {

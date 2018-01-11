@@ -141,6 +141,38 @@ public class JsonDBTest {
 
 
     @Test
+    public void testGetLimit() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().limit(3));
+        assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\"}");
+    }
+
+    @Test
+    public void testGetAfter() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().after("user3"));
+        assertThat(json).isEqualTo("{\"user4\":\"test 4\",\"user5\":\"test 5\",\"user6\":\"test 6\"}");
+    }
+
+    @Test
     public void testGetDepth1() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(

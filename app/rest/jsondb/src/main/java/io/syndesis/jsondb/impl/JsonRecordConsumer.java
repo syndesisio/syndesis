@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonTokenId;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDBException;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -36,7 +37,7 @@ import java.util.function.Consumer;
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
  */
-/* default */ class JsonRecordConsumer implements Consumer<JsonRecord> {
+/* default */ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
     private final String base;
     private final JsonGenerator jg;
@@ -45,6 +46,8 @@ import java.util.function.Consumer;
     @SuppressWarnings("JdkObsolete")
     private final LinkedList<JsonRecordSupport.PathPart> currentPath = new LinkedList<>();
     private final Set<String> shallowObjects = new LinkedHashSet<>();
+    private int entriesAdded;
+    private boolean closed;
 
     /* default */ JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
         this.base = base;
@@ -68,12 +71,6 @@ import java.util.function.Consumer;
     @Override
     public void accept(JsonRecord record) {
         try {
-            // Handle the end end of stream..
-            if (record == null) {
-                close();
-                return;
-            }
-
             String path = record.getPath();
             path = Strings.trimSuffix(path.substring(base.length()), "/");
 
@@ -82,6 +79,17 @@ import java.util.function.Consumer;
             List<String> newPath = new ArrayList<>(Arrays.asList(path.split("/")));
             if (newPath.size() == 1 && newPath.get(0).isEmpty()) {
                 newPath.clear();
+            }
+
+            // Handle limit options.
+            if( this.options.limit() !=null ) {
+                if ( newPath.size() == 1 ) {
+                    this.entriesAdded++;
+                }
+                if( this.entriesAdded > this.options.limit() ) {
+                    close();
+                    return;
+                }
             }
 
             // should we skip over deep records?
@@ -185,7 +193,11 @@ import java.util.function.Consumer;
         return pathMatches;
     }
 
-    private void close() throws IOException {
+    @Override
+    public void close() throws IOException{
+        if( closed ) {
+            return;
+        }
         if (!shallowObjects.isEmpty()) {
             for (String o : shallowObjects) {
                 jg.writeFieldName(o);
@@ -205,7 +217,10 @@ import java.util.function.Consumer;
             output.write(")".getBytes(StandardCharsets.UTF_8));
         }
         jg.close();
+        closed = true;
     }
+
+
 
     private void writeValue(JsonRecord value) throws IOException {
         switch (value.getKind()) {
@@ -228,4 +243,9 @@ import java.util.function.Consumer;
             default:
         }
     }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
 }
