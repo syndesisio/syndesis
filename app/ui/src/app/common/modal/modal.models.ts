@@ -1,5 +1,5 @@
 import { TemplateRef } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap';
 
 export interface Modal {
   template: TemplateRef<any>;

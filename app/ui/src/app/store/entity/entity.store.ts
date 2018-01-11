@@ -5,6 +5,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { plural } from 'pluralize';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/share';
 
 import { RESTService } from './rest.service';
 import { BaseEntity } from '../../model';

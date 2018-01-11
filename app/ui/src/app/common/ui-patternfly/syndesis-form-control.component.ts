@@ -17,6 +17,7 @@ import {
   DynamicFormControlComponent,
   DynamicFormControlEvent,
   DynamicTemplateDirective,
+  DynamicFormLayoutService,
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX_GROUP,
@@ -66,9 +67,15 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
 
   type: SyndesisFormControlType | null;
 
-  static getFormControlType(
-    model: DynamicFormControlModel
-  ): SyndesisFormControlType | null {
+  constructor(
+    protected detector: ChangeDetectorRef,
+    protected layoutService: DynamicFormLayoutService,
+    protected validationService: DynamicFormValidationService
+  ) {
+    super(detector, layoutService, validationService);
+  }
+
+  static getFormControlType(model: DynamicFormControlModel): SyndesisFormControlType {
     switch (model.type) {
       case DYNAMIC_FORM_CONTROL_TYPE_ARRAY:
         return SyndesisFormControlType.Array;
@@ -95,13 +102,6 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
       default:
         return null;
     }
-  }
-
-  constructor(
-    protected validationService: DynamicFormValidationService,
-    protected detector: ChangeDetectorRef
-  ) {
-    super(detector, validationService);
   }
 
   ngOnChanges(changes: SimpleChanges) {
