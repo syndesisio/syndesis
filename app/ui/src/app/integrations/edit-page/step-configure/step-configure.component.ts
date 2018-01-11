@@ -217,11 +217,18 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
       return;
     }
     const values: any = this.getConfiguredProperties(step.configuredProperties);
+    /*
     log.info(
       'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
       category
     );
-
+    */
+    // supress null values
+    Object.keys(values).forEach(key => {
+      if (values[key] === 'null') {
+        values[key] = undefined;
+      }
+    });
     // Call formService to build the form
     this.formModel = this.formFactory.createFormModel(this.formConfig, values);
     this.formGroup = this.formService.createFormGroup(this.formModel);
