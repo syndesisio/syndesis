@@ -1,15 +1,15 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IntegrationStore } from '../../store/integration/integration.store';
+import { IntegrationStore } from '@syndesis/ui/store';
 import {
   Action,
   Integration,
   Step,
   Connection,
   TypeFactory
-} from '../../model';
-import { log, getCategory } from '../../logging';
+} from '@syndesis/ui/model';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('CurrentFlow');
 

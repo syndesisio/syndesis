@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Actions, Action } from '../../../model';
-import { log, getCategory } from '../../../logging';
+import { Actions, Action } from '@syndesis/ui/model';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('Actions');
 

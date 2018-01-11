@@ -11,14 +11,11 @@ import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
-
-import { log, getCategory } from '../../../logging';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration, Step, TypeFactory } from '../../../model';
-import { ChildAwarePage } from '../child-aware-page';
-import { ModalService } from '../../../common/modal/modal.service';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { Integration, Step, TypeFactory } from '@syndesis/ui/model';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../../common/user.service';
+import { UserService } from '@syndesis/ui/common';
 
 const category = getCategory('IntegrationsCreatePage');
 

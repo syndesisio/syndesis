@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CurrentFlow } from '../current-flow.service';
-import { FlowPage } from '../flow-page';
+import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../../common/user.service';
+import { UserService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integrations-integration-basics',

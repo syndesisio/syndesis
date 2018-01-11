@@ -3,12 +3,11 @@ import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { NavigationService } from '../../common/navigation.service';
-import { IntegrationStore } from '../../store/integration/integration.store';
-import { Integration } from '../../model';
-import { CurrentFlow, FlowEvent } from './current-flow.service';
-import { log, getCategory } from '../../logging';
-import { ChildAwarePage } from './child-aware-page';
+import { NavigationService } from '@syndesis/ui/common';
+import { IntegrationStore } from '@syndesis/ui/store';
+import { Integration } from '@syndesis/ui/model';
+import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsEditPage');
 

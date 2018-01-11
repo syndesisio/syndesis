@@ -4,15 +4,14 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { log, getCategory } from '../../../logging';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { ConnectionStore } from '../../../store/connection/connection.store';
-import { Connections, Connection } from '../../../model';
-import { FlowPage } from '../flow-page';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { ConnectionStore } from '@syndesis/ui/store';
+import { Connections, Connection } from '@syndesis/ui/model';
 
 const category = getCategory('Integrations');
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../../common/user.service';
+import { UserService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integrations-connection-select',

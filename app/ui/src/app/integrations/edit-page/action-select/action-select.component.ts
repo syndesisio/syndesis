@@ -5,14 +5,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Actions, Action, Step, Connector } from '../../../model';
-import { log, getCategory } from '../../../logging';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { ConnectorStore } from '../../../store/connector/connector.store';
-import { FlowPage } from '../flow-page';
+import { Actions, Action, Step, Connector } from '@syndesis/ui/model';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { ConnectorStore } from '@syndesis/ui/store';
 
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../../common/user.service';
+import { UserService } from '@syndesis/ui/common';
 
 const category = getCategory('Integrations');
 

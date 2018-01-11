@@ -20,15 +20,11 @@ import {
   DataMapperAppComponent
 } from '@atlasmap/atlasmap.data.mapper';
 
-import { ConfigService } from '../../../../config.service';
-import { IntegrationSupportService } from '../../../../store/integration-support.service';
-
-import { CurrentFlow, FlowEvent } from '../../current-flow.service';
-import { FlowPage } from '../../flow-page';
-
-import { Step, DataShape, TypeFactory } from '../../../../model';
-
-import { log, getCategory } from '../../../../logging';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { IntegrationSupportService } from '@syndesis/ui/store';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { Step, DataShape, TypeFactory } from '@syndesis/ui/model';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 /*
  * Example host component:

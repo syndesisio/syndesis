@@ -3,15 +3,14 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IntegrationStore } from '../../../store/integration/integration.store';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { FlowPage } from '../flow-page';
-import { Integration, Step, TypeFactory } from '../../../model';
-import { log, getCategory } from '../../../logging';
+import { IntegrationStore } from '@syndesis/ui/store';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { Integration, Step, TypeFactory } from '@syndesis/ui/model';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsCreatePage');
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../../common/user.service';
+import { UserService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integrations-save-or-add-step',

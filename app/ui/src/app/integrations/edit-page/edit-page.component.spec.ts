@@ -7,18 +7,13 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
 import { ToolbarModule } from 'patternfly-ng';
 
-import { SyndesisCommonModule } from '../../common/common.module';
-import { NavigationService } from '../../common/navigation.service';
-import { FlowViewComponent } from './flow-view/flow-view.component';
-import { FlowViewStepComponent } from './flow-view/flow-view-step.component';
+import { SyndesisCommonModule, NavigationService } from '@syndesis/ui/common';
+import { CurrentFlow, FlowViewComponent, FlowViewStepComponent, IntegrationsEditPage } from '@syndesis/ui/integrations';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
-import { StoreModule } from '../../store/store.module';
-import { CurrentFlow } from './current-flow.service';
+import { StoreModule } from '@syndesis/ui/store';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule, PopoverModule } from 'ngx-bootstrap';
-
-import { IntegrationsEditPage } from './edit-page.component';
 
 describe('IntegrationsEditComponent', () => {
   let component: IntegrationsEditPage;
