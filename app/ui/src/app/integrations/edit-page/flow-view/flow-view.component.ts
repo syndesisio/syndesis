@@ -15,7 +15,7 @@ import { log, getCategory } from '@syndesis/ui/logging';
 import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
 import { Integration, Step, TypeFactory } from '@syndesis/ui/model';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/common';
+import { ModalService, UserService } from '@syndesis/ui/common';
 
 const category = getCategory('IntegrationsCreatePage');
 
