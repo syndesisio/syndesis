@@ -5,10 +5,9 @@
 
   <label *ngIf="type !== 2 && model.label !== null"
          [attr.for]="model.id"
+         [class.required-pf]="model.required"
          [ngClass]="[model.cls.element.label, model.cls.grid.label]">
-    <label [ngClass]="{'required-pf': model.required}">
-      {{ model.label }}
-    </label>
+    {{ model.label }}
     <div *ngIf="model.hint !== null"
          [tooltip]="model.hint"
          placement="right"
