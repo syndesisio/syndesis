@@ -13,13 +13,11 @@ import {
   NotificationType
 } from 'patternfly-ng';
 
-import { Integrations, Integration } from '../../model';
-import { IntegrationStore } from '../../store/integration/integration.store';
-import { IntegrationViewBase } from '../components/integrationViewBase.component';
-import { ModalService } from '../../common/modal/modal.service';
-import { log, getCategory } from '../../logging';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
-import { IntegrationSupportService } from 'app/store/integration-support.service';
+import { Integrations, Integration } from '@syndesis/ui/model';
+import { IntegrationStore, IntegrationSupportService } from '@syndesis/ui/store';
+import { IntegrationViewBase } from '../components';
+import { ModalService, NotificationService } from '@syndesis/ui/common';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 @Component({
   selector: 'syndesis-integrations-list',

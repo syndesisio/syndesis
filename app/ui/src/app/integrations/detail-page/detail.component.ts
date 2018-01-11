@@ -9,14 +9,11 @@ import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { StepStore } from '../../store/step/step.store';
-import { Integration, Step, Connection, Action } from '../../model';
-import { IntegrationStore } from '../../store/integration/integration.store';
-import { IntegrationViewBase } from '../components/integrationViewBase.component';
-import { ModalService } from '../../common/modal/modal.service';
-import { IntegrationSupportService } from '../../store/integration-support.service';
+import { IntegrationStore, IntegrationSupportService, StepStore } from '@syndesis/ui/store';
+import { Integration, Step, Connection, Action } from '@syndesis/ui/model';
+import { IntegrationViewBase } from '../components';
 import { NotificationType } from 'patternfly-ng';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { ModalService, NotificationService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-integration-detail-page',
