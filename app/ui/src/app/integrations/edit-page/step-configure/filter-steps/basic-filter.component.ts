@@ -14,7 +14,7 @@ import {
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
 
-import { CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
 import { DATA_MAPPER, IntegrationSupportService } from '@syndesis/ui/store';
 import { DataShape } from '@syndesis/ui/model';
 import { createBasicFilterModel, findById } from './basic-filter.model';

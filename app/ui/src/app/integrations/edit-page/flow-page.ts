@@ -1,7 +1,7 @@
 import { OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
 import { Integration, Step, TypeFactory } from '@syndesis/ui/model';
 
 export abstract class FlowPage implements OnDestroy {

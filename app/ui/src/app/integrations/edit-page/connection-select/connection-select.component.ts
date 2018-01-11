@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import { ConnectionStore } from '@syndesis/ui/store';
 import { Connections, Connection } from '@syndesis/ui/model';
 

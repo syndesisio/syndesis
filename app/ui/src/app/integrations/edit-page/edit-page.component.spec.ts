@@ -8,7 +8,7 @@ import { RestangularModule } from 'ngx-restangular';
 import { ToolbarModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule, NavigationService } from '@syndesis/ui/common';
-import { CurrentFlow, FlowViewComponent, FlowViewStepComponent, IntegrationsEditPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowViewComponent, FlowViewStepComponent, IntegrationsEditPage } from '@syndesis/ui/integrations/edit-page';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
 import { StoreModule } from '@syndesis/ui/store';
 

@@ -18,7 +18,7 @@ import {
   StepKind,
   StepKinds
 } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import {
   Extension,
   Extensions,

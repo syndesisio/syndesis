@@ -12,10 +12,10 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
 import { Integration, Step, TypeFactory } from '@syndesis/ui/model';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { ModalService, UserService } from '@syndesis/ui/common';
+import { UserService, ModalService } from '@syndesis/ui/common';
 
 const category = getCategory('IntegrationsCreatePage');
 

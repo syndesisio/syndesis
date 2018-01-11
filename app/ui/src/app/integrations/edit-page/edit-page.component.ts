@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { NavigationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { Integration } from '@syndesis/ui/model';
-import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsEditPage');

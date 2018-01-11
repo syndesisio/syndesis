@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { CurrentFlow } from '@syndesis/ui/integrations';
+import { CurrentFlow } from '@syndesis/ui/integrations/edit-page';
 
 export abstract class ChildAwarePage {
   constructor(

@@ -9,7 +9,7 @@ import {
 
 import { IntegrationSupportService } from '@syndesis/ui/store';
 import { Action, Step } from '@syndesis/ui/model';
-import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import { FormFactoryService, UserService } from '@syndesis/ui/common';
 import { log } from '@syndesis/ui/logging';
 

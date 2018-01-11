@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { UserService } from '@syndesis/ui/common';
 

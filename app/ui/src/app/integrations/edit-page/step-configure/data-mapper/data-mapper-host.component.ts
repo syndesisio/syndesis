@@ -22,7 +22,7 @@ import {
 
 import { ConfigService } from '@syndesis/ui/config.service';
 import { IntegrationSupportService } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import { Step, DataShape, TypeFactory } from '@syndesis/ui/model';
 import { log, getCategory } from '@syndesis/ui/logging';
 

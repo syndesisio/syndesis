@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 
 import { StepStore } from '@syndesis/ui/store';
-import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations';
+import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Integration, Step, Action } from '@syndesis/ui/model';
 import { ModalService } from '@syndesis/ui/common';

@@ -7,7 +7,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Actions, Action, Step, Connector } from '@syndesis/ui/model';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
 
 import { TourService } from 'ngx-tour-ngx-bootstrap';

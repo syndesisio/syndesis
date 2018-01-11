@@ -1,6 +1,6 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 import { StepStore, StepKind, StepKinds } from '@syndesis/ui/store';
-import { CurrentFlow } from '@syndesis/ui/integrations';
+import { CurrentFlow } from '@syndesis/ui/integrations/edit-page';
 import { Step, Steps, TypeFactory } from '@syndesis/ui/model';
 
 export class StepVisibleConfig {
