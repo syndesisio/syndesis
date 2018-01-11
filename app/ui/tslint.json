@@ -187,6 +187,9 @@
     // ***************************************************
     // Codelyzer Ruleset - Angular Specific
     // ***************************************************
+    "deprecation": {
+      "severity": "warn"
+    },
     "banana-in-box": true,
     "no-input-rename": true,
     "no-output-rename": true,
