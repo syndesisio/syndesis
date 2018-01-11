@@ -9,7 +9,6 @@ import { ChildAwarePage } from '../child-aware-page';
 import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Integration, Step, Action } from '../../../model';
-import { ModalService } from '../../../common/modal/modal.service';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -37,14 +36,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    private stepStore: StepStore,
-    private modalService: ModalService
+    private stepStore: StepStore
   ) {
     super(currentFlow, route, router);
-  }
-
-  getDeleteModalId() {
-    return 'delete-integration-step-' + this.position;
   }
 
   showTooltip() {
@@ -92,36 +86,9 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   deletePrompt() {
-    this.modalService
-      .show('delete-integration-step-' + this.position)
-      .then(modal => {
-        if (modal.result) {
-          this.deleteStep();
-        }
-      });
-  }
-
-  deleteStep() {
-    const position = this.getPosition();
-    const isFirst = position === this.currentFlow.getFirstPosition();
-    const isLast = position === this.currentFlow.getLastPosition();
-
     this.currentFlow.events.emit({
-      kind: 'integration-remove-step',
-      position: position,
-      onSave: () => {
-        setTimeout(() => {
-          if (isFirst || isLast) {
-            this.router.navigate(['connection-select', position], {
-              relativeTo: this.route
-            });
-          } else {
-            this.router.navigate(['save-or-add-step'], {
-              relativeTo: this.route
-            });
-          }
-        }, 10);
-      }
+      kind: 'integration-delete-prompt',
+      position: this.getPosition()
     });
   }
 
