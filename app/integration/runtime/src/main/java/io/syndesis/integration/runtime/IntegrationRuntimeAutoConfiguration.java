@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.spi.InterceptStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -60,5 +61,11 @@ public class IntegrationRuntimeAutoConfiguration {
         // IntegrationRouteBuilder automatically add known handlers to the list
         // of provided ones, know handlers have priority
         return new IntegrationRouteBuilder(location, handlers);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "syndesis.integration.runtime", name = "capture", matchIfMissing = true)
+    public InterceptStrategy createOutMessageCaptureInterceptStrategy() {
+        return new OutMessageCaptureInterceptStrategy();
     }
 }
