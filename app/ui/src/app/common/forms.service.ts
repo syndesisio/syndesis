@@ -23,8 +23,7 @@ export class FormFactoryService {
       | Map<string, any>
       | {},
     values: any = {},
-    controls: Array<string> = ['*'],
-    ns: string = undefined
+    controls: Array<string> = ['*']
   ): DynamicFormControlModel[] {
     const answer = <DynamicFormControlModel[]>[];
     for (const key in properties) {
@@ -61,7 +60,7 @@ export class FormFactoryService {
       if (type === 'checkbox') {
         formField = new DynamicCheckboxModel(
           {
-            id: (ns === undefined) ? key : `${ns}${key}`,
+            id: key,
             label: field.displayName || key,
             hint: field.description,
             value: value || field.value || field.defaultValue
@@ -79,7 +78,7 @@ export class FormFactoryService {
       } else if (type === 'textarea') {
         formField = new DynamicTextAreaModel(
           {
-            id: (ns === undefined) ? key : `${ns}${key}`,
+            id: key,
             label: field.displayName || key,
             value: value || field.value || field.defaultValue,
             hint: field.description,
@@ -102,7 +101,7 @@ export class FormFactoryService {
       } else if (type === 'select') {
         formField = new DynamicSelectModel(
           {
-            id: (ns === undefined) ? key : `${ns}${key}`,
+            id: key,
             multiple: false,
             label: field.displayName || key,
             value: value || field.defaultValue || field.enum[0].value,
@@ -128,7 +127,7 @@ export class FormFactoryService {
         }
         formField = new DynamicInputModel(
           {
-            id: (ns === undefined) ? key : `${ns}${key}`,
+            id: key,
             label: type === 'hidden' ? null : field.displayName || key,
             inputType: type,
             value: value || field.value || field.defaultValue,

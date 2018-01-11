@@ -4,7 +4,7 @@
      [ngClass]="[model.cls.element.container, model.cls.grid.container]">
 
   <label *ngIf="type !== 2 && model.label !== null"
-         [attr.for]="model.id"
+         [attr.for]="fieldHash"
          [class.required-pf]="model.required"
          [ngClass]="[model.cls.element.label, model.cls.grid.label]">
     {{ model.label }}
@@ -31,6 +31,7 @@
 
         <input type="checkbox"
                [attr.tabindex]="model.tabIndex"
+               [attr.id]="fieldHash"
                [checked]="model.checked"
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
@@ -92,6 +93,7 @@
 
       <fieldset *ngSwitchCase="3"
                 [dynamicId]="bindId && model.id"
+                [attr.id]="fieldHash"
                 [formGroupName]="model.id"
                 [name]="model.name"
                 [ngClass]="model.cls.element.control">
@@ -128,6 +130,7 @@
                [attr.multiple]="model.multiple"
                [attr.step]="model.step"
                [attr.tabindex]="model.tabIndex"
+               [attr.id]="fieldHash"
                [autofocus]="model.autoFocus"
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
@@ -165,6 +168,7 @@
       <fieldset *ngSwitchCase="5"
                 role="radiogroup"
                 [attr.tabindex]="model.tabIndex"
+                [attr.id]="fieldHash"
                 [dynamicId]="bindId && model.id"
                 [name]="model.name"
                 (change)="onValueChange($event)">
@@ -191,6 +195,7 @@
       <select *ngSwitchCase="6"
               class="form-control"
               [attr.tabindex]="model.tabIndex"
+              [attr.id]="fieldHash"
               [dynamicId]="bindId && model.id"
               [formControlName]="model.id"
               [name]="model.name"
@@ -211,6 +216,7 @@
       <textarea *ngSwitchCase="7"
                 class="form-control"
                 [attr.tabindex]="model.tabIndex"
+                [attr.id]="fieldHash"
                 [dynamicId]="bindId && model.id"
                 [cols]="model.cols"
                 [formControlName]="model.id"

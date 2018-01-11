@@ -35,7 +35,6 @@ const OAUTH_APP_FORM_CONFIG = {
 })
 export class OAuthAppFormComponent implements OnInit {
   @Input() item: any = {};
-  @Input() appType: any = {};
 
   loading = false;
   error: any = null;
@@ -77,8 +76,7 @@ export class OAuthAppFormComponent implements OnInit {
     this.formModel = this.formFactory.createFormModel(
       formConfig,
       this.item.client,
-      ['*'],
-      this.appType
+      ['*']
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }
