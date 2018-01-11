@@ -16,10 +16,11 @@ import { log, getCategory } from '../../../logging';
 import { CurrentFlow, FlowEvent } from '../current-flow.service';
 import { Integration, Step, TypeFactory } from '../../../model';
 import { ChildAwarePage } from '../child-aware-page';
-
-const category = getCategory('IntegrationsCreatePage');
+import { ModalService } from '../../../common/modal/modal.service';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { UserService } from '../../../common/user.service';
+
+const category = getCategory('IntegrationsCreatePage');
 
 @Component({
   selector: 'syndesis-integrations-flow-view',
@@ -42,7 +43,8 @@ export class FlowViewComponent extends ChildAwarePage
     public route: ActivatedRoute,
     public router: Router,
     public tourService: TourService,
-    private userService: UserService
+    private userService: UserService,
+    private modalService: ModalService
   ) {
     super(currentFlow, route, router);
     this.flowSubscription = this.currentFlow.events.subscribe(
@@ -152,6 +154,35 @@ export class FlowViewComponent extends ChildAwarePage
     return (this.currentFlow.integration || { name: '' }).name || '';
   }
 
+  deletePrompt(position) {
+    this.modalService
+      .show('delete-step')
+      .then(modal => {
+        if (modal.result) {
+          const isFirst = position === this.currentFlow.getFirstPosition();
+          const isLast = position === this.currentFlow.getLastPosition();
+
+          this.currentFlow.events.emit({
+            kind: 'integration-remove-step',
+            position: position,
+            onSave: () => {
+              setTimeout(() => {
+                if (isFirst || isLast) {
+                  this.router.navigate(['connection-select', position], {
+                    relativeTo: this.route
+                  });
+                } else {
+                  this.router.navigate(['save-or-add-step'], {
+                    relativeTo: this.route
+                  });
+                }
+              }, 10);
+            }
+          });
+        }
+      });
+  }
+
   set integrationName(name: string) {
     this.currentFlow.events.emit({
       kind: 'integration-set-property',
@@ -194,6 +225,9 @@ export class FlowViewComponent extends ChildAwarePage
       case 'integration-show-popouts':
         this.selectedKind = event['type'] || false;
         this.popovers.forEach(popover => popover.show());
+        break;
+      case 'integration-delete-prompt':
+        this.deletePrompt(event['position']);
         break;
       case 'integration-connection-select':
       case 'integration-connection-configure':

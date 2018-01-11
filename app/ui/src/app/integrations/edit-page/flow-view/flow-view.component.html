@@ -24,14 +24,22 @@
            placement="right"
            #pop="bs-popover">
         <p>
-          <i class="fa fa-plus-square"
+          <i class="fa fa-plus-square"></i>
+          <!-- TODO causes exception
              tourAnchor="integrations.step"></i>
+          -->
         </p>
       </div>
       <div class="col-md-10">
       </div>
     </div>
   </ng-template>
+
+  <!-- Delete Modal Container -->
+  <syndesis-modal id="delete-step"
+                  title="Confirm Delete?"
+                  message="Are you sure you would like to delete this step?">
+  </syndesis-modal>
 
   <syndesis-loading [loading]="!loaded()">
 
