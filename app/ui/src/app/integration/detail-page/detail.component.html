@@ -123,6 +123,12 @@
                   (click)="requestAction('delete', integration)">Delete Integration</button>
         </dd>
       </dl>
+      <dl class="dl-horizontal" *ngIf="loggingEnabled">
+        <dt>
+          Logs:
+        </dt>
+        <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
+      </dl>
 
     </div>
   </div>

@@ -17,9 +17,11 @@ package io.syndesis.core;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
+import org.assertj.core.data.Offset;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,8 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit tests for KeyGenerator
@@ -74,4 +78,12 @@ public class KeyGeneratorTest {
             + " of distinct keys", count, keys.size());
     }
 
+
+    @Test
+    public void testGetKeyTimeMillis() throws IOException {
+        long t1 = System.currentTimeMillis();
+        String key = KeyGenerator.createKey();
+        long t2 = KeyGenerator.getKeyTimeMillis(key);
+        assertThat(t2).isCloseTo(t1, Offset.offset(500L));
+    }
 }

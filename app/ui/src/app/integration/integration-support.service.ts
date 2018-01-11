@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { ApiHttpService } from '@syndesis/ui/platform';
-import { Action, Connection } from '@syndesis/ui/model';
+import { Action, Connection, Exchange } from '@syndesis/ui/model';
 import { Integration } from './integration.model';
 import { integrationSupportEndpoints } from './integration-support.api';
 
@@ -61,4 +61,14 @@ export class IntegrationSupportService {
   importIntegrationURL(): string {
     return this.apiHttpService.getEndpointUrl(integrationSupportEndpoints.import);
   }
+
+  requestIntegrationLogs(id: string): Observable<Exchange[]> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.logs, {
+      integrationId: id,
+    }).get().map(res => {
+      const transactions = res as Exchange[];
+      return transactions;
+    });
+  }
+
 }

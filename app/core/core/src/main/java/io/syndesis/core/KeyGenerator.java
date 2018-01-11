@@ -49,6 +49,9 @@ public final class KeyGenerator {
     private KeyGenerator() {
     }
 
+    /**
+     * Generates a new key.
+     */
     public static String createKey() {
         final long now = currentTimeMillis();
 
@@ -76,4 +79,39 @@ public final class KeyGenerator {
             return randomVal;
         });
     }
+
+    /**
+     * Used to extract the time information that is encoded to each
+     * generated key.
+     */
+    public static long getKeyTimeMillis(String key) throws IOException {
+        byte[] decoded = Base64.decode(key, Base64.ORDERED);
+        if (decoded.length != 15) {
+            throw new IOException("Invalid key: size is incorrect.");
+        }
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.position(2);
+        buffer.put(decoded, 0 ,6);
+        buffer.flip();
+        return buffer.getLong();
+    }
+
+    /**
+     * Used to recreate a key using a user supplied timestamp and random data that
+     * is encoded into it.
+     */
+    public static String recreateKey(long timestamp, int random1, long random2) {
+
+        final ByteBuffer buffer = ByteBuffer.wrap(new byte[8 + 1 + 8]);
+        buffer.putLong(timestamp);
+        buffer.put((byte) random1);
+        buffer.putLong(random2);
+
+        try {
+            return Base64.encodeBytes(buffer.array(), 2, 15, Base64.ORDERED);
+        } catch (final IOException e) {
+            throw new SyndesisServerException(e);
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ export const integrationSupportEndpoints: Endpoints = {
   pom: '/integration-support/generate/pom.xml',
   export: '/integration-support/export.zip',
   import: '/integration-support/import',
+  logs: '/logs/{integrationId}',
   // TODO this path should be driven by config.json also does this belong here
   javaInspection: '/../../mapper/v1/java-inspections/{connectorId}/{type}.json',
 };

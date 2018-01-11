@@ -52,7 +52,7 @@ export class ConfigService {
     }
 
     if (!this.settingsRepository[group]) {
-      if (def) {
+      if (def != undefined) {
         return def;
       }
       throw new Error(
@@ -65,7 +65,7 @@ export class ConfigService {
     }
 
     if (this.settingsRepository[group][key] === undefined) {
-      if (def) {
+      if (def != undefined) {
         return def;
       }
       throw new Error(

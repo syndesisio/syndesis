@@ -13,7 +13,7 @@ export function endpointsLazyLoaderFactory(apiEndpoints: Endpoints, apiConfigSer
   imports: [CommonModule, HttpClientModule],
 })
 export class ApiModule {
-  constructor(@Optional() apiEndpointsLazyLoaderService: SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService) { }
+  constructor(@Optional() private apiEndpointsLazyLoaderService: SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService) {}
 
   static forRoot(apiEndpoints?: Endpoints): Array<ModuleWithProviders> {
     return [{

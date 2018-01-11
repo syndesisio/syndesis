@@ -83,6 +83,7 @@
     <module>controllers</module>
     <module>credential</module>
     <module>dao</module>
+    <module>db-logging</module>
     <module>filestore</module>
     <module>inspector</module>
     <module>jsondb</module>

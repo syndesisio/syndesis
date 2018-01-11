@@ -18,6 +18,8 @@ features:
   api:
     v1:
       enabled: true
+  dblogging:
+    enabled: true
 
 server:
   useForwardHeaders: true
@@ -84,7 +86,7 @@ generator:
   secretMaskingEnabled: true
 
 controllers:
-  integration:
+  logs:
     enabled: true
 
 maven:
