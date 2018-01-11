@@ -15,14 +15,17 @@
  */
 package io.syndesis.connector.salesforce;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
 import org.apache.camel.component.salesforce.api.SalesforceException;
 import org.apache.camel.component.salesforce.api.utils.JsonUtils;
-
-import java.util.Map;
+import org.apache.camel.util.URISupport;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,12 +34,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class AdaptObjectForUpdateProcessor implements Processor {
 
     private static final ObjectMapper MAPPER = JsonUtils.createObjectMapper();
-
-    private final Map<String, Object> options;
-
-    public AdaptObjectForUpdateProcessor(final Map<String, Object> options) {
-        this.options = options;
-    }
 
     @Override
     public void process(final Exchange exchange) throws Exception {
@@ -50,7 +47,7 @@ public class AdaptObjectForUpdateProcessor implements Processor {
 
         final ObjectNode node = (ObjectNode) MAPPER.readTree(body);
 
-        final String idPropertyName = determineIdProperty();
+        final String idPropertyName = determineIdProperty(exchange);
 
         final JsonNode idProperty = node.remove(idPropertyName);
         if (idProperty == null) {
@@ -74,8 +71,12 @@ public class AdaptObjectForUpdateProcessor implements Processor {
         in.setBody(MAPPER.writeValueAsString(node));
     }
 
-    private String determineIdProperty() {
-        return String.valueOf(options.getOrDefault(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, "Id"));
+    private String determineIdProperty(final Exchange exchange) throws URISyntaxException {
+        final String uri = exchange.getProperty(Exchange.TO_ENDPOINT, String.class);
+
+        final Map<String, Object> endpointParameters = URISupport.parseParameters(URI.create(uri));
+
+        return (String) endpointParameters.getOrDefault(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, "Id");
     }
 
     private static void clearBaseFields(final ObjectNode node) {

@@ -20,7 +20,7 @@ public abstract class UpdatingSalesforceConnector extends SalesforceConnector {
     protected UpdatingSalesforceConnector(final String componentName, final String componentScheme, final Class<?> componentClass) {
         super(componentName, componentScheme, componentClass);
 
-        setBeforeProducer(new AdaptObjectForUpdateProcessor(getOptions()));
+        setBeforeProducer(new AdaptObjectForUpdateProcessor());
     }
 
 }
