@@ -68,6 +68,8 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         return false;
       case 'configure-fields':
         return !this.current.hasCredentials();
+      case 'review':
+        return false;
       default:
         return true;
     }
