@@ -9,9 +9,7 @@ textarea:read-only {
   border: none;
 }
 .control-label {
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
   > .hint-icon {
     position: absolute;
     top: 3px;
