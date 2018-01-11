@@ -1852,7 +1852,7 @@
         },
         {
           "name": "Get Object",
-          "description": "Retrieve an object from an Amazon S3 bucket",
+          "description": "Retrieve one object from a bucket",
           "id": "io.syndesis:aws-s3-get-object-connector:latest",
           "pattern": "From",
           "actionType": "connector",
@@ -1902,7 +1902,7 @@
         },
         {
           "name": "Poll an Amazon S3 Bucket",
-          "description": "Poll an Amazon S3 Bucket",
+          "description": "Retrieve multiple objects from a bucket",
           "id": "io.syndesis:aws-s3-polling-bucket-connector:latest",
           "pattern": "From",
           "actionType": "connector",
@@ -1918,11 +1918,11 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Poll an Amazon S3 Bucket",
-                "description": "Set if you need to delete the file once it has been downloaded from S3, the polling interval, the file prefix to use and number of objects you want to retrieve on each poll",
+                "description": "",
                 "properties": {
                   "deleteAfterRead": {
                     "kind": "parameter",
-                    "displayName": "Delete After Read",
+                    "displayName": "Obtain files and then delete them from the bucket",
                     "group": "consumer",
                     "label": "consumer",
                     "required": false,
@@ -1935,7 +1935,7 @@
                   },
                   "maxMessagesPerPoll": {
                     "kind": "parameter",
-                    "displayName": "Max Messages Per Poll",
+                    "displayName": "Maximum Objects to Retrieve",
                     "group": "consumer",
                     "label": "consumer",
                     "required": false,
