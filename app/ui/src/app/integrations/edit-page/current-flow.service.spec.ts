@@ -5,8 +5,7 @@ import { MockBackend } from '@angular/http/testing';
 import { RestangularModule } from 'ngx-restangular';
 
 import { CurrentFlow, FlowEvent } from './current-flow.service';
-import { IntegrationStore } from '../../store/integration/integration.store';
-import { IntegrationService } from '../../store/integration/integration.service';
+import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
 import {
   Connection,
   Integration,
@@ -14,9 +13,8 @@ import {
   Steps,
   Action,
   TypeFactory
-} from '../../model';
-import { EventsService } from '../../store/entity/events.service';
-import { SyndesisCommonModule } from '../../common/common.module';
+} from '@syndesis/ui/model';
+import { SyndesisCommonModule } from '@syndesis/ui/common';
 
 describe('CurrentFlow', () => {
   beforeEach(() => {

@@ -11,17 +11,18 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
-import { FlowPage } from '../flow-page';
+import { FormFactoryService } from '@syndesis/ui/common';
+import { CurrentFlow,
+         FlowEvent,
+         FlowPage } from '@syndesis/ui/integrations/edit-page';
+import { Action, Step, DataShape } from '@syndesis/ui/model';
 import {
+  IntegrationSupportService,
   StepStore,
   DATA_MAPPER,
   BASIC_FILTER
-} from '../../../store/step/step.store';
-import { FormFactoryService } from '../../../common/forms.service';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Action, Step, DataShape } from '../../../model';
-import { IntegrationSupportService } from '../../../store/integration-support.service';
-import { log, getCategory } from '../../../logging';
+} from '@syndesis/ui/store';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsCreatePage');
 

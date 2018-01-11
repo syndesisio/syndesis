@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { CurrentFlow } from '../current-flow.service';
+import { CurrentFlow } from '@syndesis/ui/integrations/edit-page';
 
 @Component({
   selector: 'syndesis-cancel-add-step',

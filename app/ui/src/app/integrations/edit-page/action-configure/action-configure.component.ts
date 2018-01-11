@@ -7,15 +7,13 @@ import {
   DynamicFormService
 } from '@ng-dynamic-forms/core';
 
-import { IntegrationSupportService } from '../../../store/integration-support.service';
-import { Action, Step } from '../../../model';
-import { CurrentFlow } from '../current-flow.service';
-import { FlowPage } from '../flow-page';
-import { FormFactoryService } from '../../../common/forms.service';
-import { log } from '../../../logging';
+import { IntegrationSupportService } from '@syndesis/ui/store';
+import { Action, Step } from '@syndesis/ui/model';
+import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations/edit-page';
+import { FormFactoryService, UserService } from '@syndesis/ui/common';
+import { log } from '@syndesis/ui/logging';
 
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../../common/user.service';
 
 @Component({
   selector: 'syndesis-integrations-action-configure',

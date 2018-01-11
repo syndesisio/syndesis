@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 
-import { StepStore } from '../../../store/step/step.store';
-import { ChildAwarePage } from '../child-aware-page';
-import { log, getCategory } from '../../../logging';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { Integration, Step, Action } from '../../../model';
+import { StepStore } from '@syndesis/ui/store';
+import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { Integration, Step, Action } from '@syndesis/ui/model';
+import { ModalService } from '@syndesis/ui/common';
 
 const category = getCategory('IntegrationsCreatePage');
 

@@ -12,23 +12,22 @@ import {
   ToolbarConfig
 } from 'patternfly-ng';
 import {
+  ExtensionStore,
   EXTENSION,
   StepStore,
   StepKind,
   StepKinds
-} from '../../../store/step/step.store';
-import { CurrentFlow, FlowEvent } from '../current-flow.service';
-import { FlowPage } from '../flow-page';
-import { ExtensionStore } from 'app/store/extension/extension.store';
+} from '@syndesis/ui/store';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import {
   Extension,
   Extensions,
   Step,
   Steps,
   TypeFactory
-} from '../../../model';
-import { ObjectPropertyFilterPipe } from 'app/common/object-property-filter.pipe';
-import { log, getCategory } from '../../../logging';
+} from '@syndesis/ui/model';
+import { ObjectPropertyFilterPipe } from '@syndesis/ui/common';
+import { log, getCategory } from '@syndesis/ui/logging';
 
 @Component({
   selector: 'syndesis-integrations-step-select',

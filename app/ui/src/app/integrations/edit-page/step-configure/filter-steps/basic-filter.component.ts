@@ -14,12 +14,11 @@ import {
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
 
-import { CurrentFlow, FlowEvent } from '../../current-flow.service';
-import { IntegrationSupportService } from '../../../../store/integration-support.service';
-import { DATA_MAPPER } from '../../../../store/step/step.store';
-import { DataShape } from '../../../../model';
+import { CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
+import { DATA_MAPPER, IntegrationSupportService } from '@syndesis/ui/store';
+import { DataShape } from '@syndesis/ui/model';
 import { createBasicFilterModel, findById } from './basic-filter.model';
-import { log, getCategory } from '../../../../logging';
+import { log, getCategory } from '@syndesis/ui/logging';
 import { BasicFilter } from './filter.interface';
 
 @Component({

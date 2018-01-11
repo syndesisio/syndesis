@@ -16,25 +16,29 @@ import { ToolbarModule } from 'patternfly-ng';
 import { IntegrationsListModule } from './list/list.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { IntegrationsDetailComponent } from './detail-page/detail.component';
-import { IntegrationsEditPage } from './edit-page/edit-page.component';
-import { IntegrationBasicsComponent } from './edit-page/integration-basics/integration-basics.component';
-import { IntegrationsSelectConnectionComponent } from './edit-page/connection-select/connection-select.component';
-import { IntegrationsConfigureActionComponent } from './edit-page/action-configure/action-configure.component';
-import { IntegrationsSelectActionComponent } from './edit-page/action-select/action-select.component';
-import { IntegrationsSaveOrAddStepComponent } from './edit-page/save-or-add-step/save-or-add-step.component';
-import { IntegrationsStepSelectComponent } from './edit-page/step-select/step-select.component';
-import { StepVisiblePipe } from './edit-page/step-select/step-visible.pipe';
-import { IntegrationsStepConfigureComponent } from './edit-page/step-configure/step-configure.component';
-import { DataMapperHostComponent } from './edit-page/step-configure/data-mapper/data-mapper-host.component';
-import { BasicFilterComponent } from './edit-page/step-configure/filter-steps/basic-filter.component';
-import { ListActionsComponent } from './edit-page/list-actions/list-actions.component';
-import { CancelAddStepComponent } from './edit-page/common/cancel-add-step.component';
 import { IntegrationsListPage } from './list-page/list-page.component';
-import { FlowViewComponent } from './edit-page/flow-view/flow-view.component';
-import { FlowViewStepComponent } from './edit-page/flow-view/flow-view-step.component';
-import { CurrentFlow } from './edit-page/current-flow.service';
-import { SyndesisCommonModule } from '../common/common.module';
-import { ConnectionsModule } from '../connections/connections.module';
+
+import {
+  IntegrationsEditPage,
+  IntegrationBasicsComponent,
+  IntegrationsSelectConnectionComponent,
+  IntegrationsConfigureActionComponent,
+  IntegrationsSelectActionComponent,
+  IntegrationsSaveOrAddStepComponent,
+  IntegrationsStepSelectComponent,
+  StepVisiblePipe,
+  IntegrationsStepConfigureComponent,
+  DataMapperHostComponent,
+  BasicFilterComponent,
+  ListActionsComponent,
+  CancelAddStepComponent,
+  FlowViewComponent,
+  FlowViewStepComponent,
+  CurrentFlow
+} from './edit-page';
+
+import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
