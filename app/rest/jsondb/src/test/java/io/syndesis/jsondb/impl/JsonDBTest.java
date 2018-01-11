@@ -141,7 +141,7 @@ public class JsonDBTest {
 
 
     @Test
-    public void testGetShallow() throws IOException {
+    public void testGetDepth1() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(
             "name", "Hiram Chirino",
@@ -151,8 +151,27 @@ public class JsonDBTest {
             )
         )));
 
-        String json = jsondb.getAsString("/test", new GetOptions().shallow(true));
+        String json = jsondb.getAsString("/test", new GetOptions().depth(1));
         assertThat(json).isEqualTo("{\"name\":\"Hiram Chirino\",\"props\":true}");
+    }
+
+    @Test
+    public void testGetDepth2() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "name", "Hiram Chirino",
+            "props", map(
+                "city", "Tampa",
+                "state", "FL",
+                "more-props", map(
+                    "city", "Tampa",
+                    "state", "FL"
+                )
+            )
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().depth(2));
+        assertThat(json).isEqualTo("{\"name\":\"Hiram Chirino\",\"props\":{\"city\":\"Tampa\",\"state\":\"FL\",\"props\":true}}");
     }
 
     @Test
