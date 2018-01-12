@@ -38,9 +38,6 @@
       ],
       "@syndesis/ui/*": [
         "app/*"
-      ],
-      "@syndesis/assets/*": [
-        "assets/*"
       ]
     }
   }

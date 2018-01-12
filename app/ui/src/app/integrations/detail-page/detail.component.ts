@@ -137,7 +137,7 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
-    integrationSupportService: IntegrationSupportService,
+    integrationSupportService: IntegrationSupportService
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.integration = this.store.resource;

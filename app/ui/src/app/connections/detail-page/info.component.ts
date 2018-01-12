@@ -55,7 +55,7 @@ export class ConnectionDetailInfoComponent {
 
   constructor(
     private connectionService: ConnectionService,
-    private configurationService: ConnectionConfigurationService,
+    private configurationService: ConnectionConfigurationService
   ) { }
 
   onAttributeUpdated(attr: string, value) {

@@ -36,7 +36,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    private stepStore: StepStore,
+    private stepStore: StepStore
   ) {
     super(currentFlow, route, router);
   }
