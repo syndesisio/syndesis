@@ -1,5 +1,5 @@
 [id=transforming-target-data]
-== Transforming target data
+= Transforming target data
 
 Adding a transformation to the target data defines how the data will be stored at the target.
 Transformations often require a parameter to specify a format or other detail required to enable the transformation to take place.
