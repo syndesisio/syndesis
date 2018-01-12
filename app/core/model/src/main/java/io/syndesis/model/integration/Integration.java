@@ -33,7 +33,6 @@ import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
-import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.user.User;
 import io.syndesis.model.validation.UniqueProperty;
@@ -52,13 +51,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
         return Kind.Integration;
     }
 
-    /**
-     * The list of versioned deployments
-     * The items in this list should be versioned and are not meant to be mutated.
-     * @return
-     */
-    Set<IntegrationDeployment> getDeployments();
-
     Optional<IntegrationDeployment> getDraftDeployment();
 
     Optional<Integer> getDeploymentId();
@@ -66,7 +58,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<String> getUserId();
 
     List<User> getUsers();
-
 
     @Deprecated
     Optional<String> getIntegrationTemplateId();
@@ -118,30 +109,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     @Deprecated
     Optional<BigInteger> getTimesUsed();
-
-
-    @Deprecated
-    @Value.Derived
-    default boolean isInactive() {
-        return getCurrentStatus()
-            .map(s -> s == IntegrationDeploymentState.Undeployed || s == IntegrationDeploymentState.Inactive)
-            .orElse(getDesiredStatus().map(s -> s == IntegrationDeploymentState.Undeployed || s == IntegrationDeploymentState.Inactive)
-                .orElse(false));
-    }
-
-    @Deprecated
-    @Value.Derived
-    default Set<String> getUsedConnectorIds() {
-        return getSteps().stream()//
-            .map(s -> s.getAction())//
-            .filter(Optional::isPresent)//
-            .map(Optional::get)//
-            .filter(ConnectorAction.class::isInstance)//
-            .map(ConnectorAction.class::cast)//
-            .map(a -> a.getDescriptor().getConnectorId())//
-            .filter(Objects::nonNull)//
-            .collect(Collectors.toSet());
-    }
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder

@@ -27,6 +27,7 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
@@ -73,6 +74,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Path("/extensions")
@@ -345,30 +347,31 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     private Set<ResourceIdentifier> integrations(Extension extension) {
-        return getDataManager().fetchAll(Integration.class).getItems().stream()
-            .filter(integration -> isIntegrationActiveAndUsingExtension(integration, extension))
+        return getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()
+            .filter(integrationDeployment -> isIntegrationActiveAndUsingExtension(integrationDeployment, extension))
             .map(this::toResourceIdentifier)
+            .distinct()
             .collect(Collectors.toSet());
     }
 
-    private ResourceIdentifier toResourceIdentifier(Integration integration) {
+    private ResourceIdentifier toResourceIdentifier(IntegrationDeployment integrationDeployment) {
         return new ResourceIdentifier.Builder()
-            .id(integration.getId())
-            .kind(integration.getKind())
-            .name(Optional.ofNullable(integration.getName()))
+            .id(integrationDeployment.getId())
+            .kind(integrationDeployment.getKind())
+            .name(Optional.ofNullable(integrationDeployment.getName()))
             .build();
     }
 
-    private boolean isIntegrationActiveAndUsingExtension(Integration integration, Extension extension) {
-        if (integration == null || extension == null) {
+    private boolean isIntegrationActiveAndUsingExtension(IntegrationDeployment integrationDeployment, Extension extension) {
+        if (integrationDeployment == null || extension == null) {
             return false;
         }
 
-        if (integration.getDesiredStatus().isPresent() && IntegrationDeploymentState.Undeployed.equals(integration.getDesiredStatus().get())) {
+        if (IntegrationDeploymentState.Active != integrationDeployment.getTargetState()) {
             return false;
         }
 
-        return integration.getSteps().stream().anyMatch(step ->
+        return integrationDeployment.getSpec().getSteps().stream().anyMatch(step ->
             extension.getExtensionId().equals(
                 Optional.ofNullable(step)
                 .flatMap(Step::getExtension)

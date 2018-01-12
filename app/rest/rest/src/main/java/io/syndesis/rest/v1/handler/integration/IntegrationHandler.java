@@ -52,7 +52,7 @@ import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.model.integration.IntegrationStatus;
+import io.syndesis.model.integration.IntegrationHistory;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.util.PaginationFilter;
@@ -156,7 +156,6 @@ public class IntegrationHandler extends BaseHandler
         updatedIntegration = Creator.super.create(sec, updatedIntegration);
 
         if (integration.getDesiredStatus().orElse(IntegrationDeploymentState.Draft).equals(IntegrationDeploymentState.Active)) {
-
             IntegrationDeployment integrationDeployment = IntegrationDeployment
                 .newDeployment(updatedIntegration)
                 .withCurrentState(IntegrationDeploymentState.Draft)
@@ -171,21 +170,40 @@ public class IntegrationHandler extends BaseHandler
     public void update(String id, @ConvertGroup(from = Default.class, to = AllValidations.class) Integration integration) {
         Integration existing = Getter.super.get(id);
 
-        IntegrationDeploymentState currentStatus = determineCurrentState(integration);
+        IntegrationDeploymentState currentState = determineCurrentState(integration);
+        IntegrationDeploymentState targetState = integration.getDesiredStatus().orElse(IntegrationDeploymentState.Active);
+
         IntegrationDeployment latest = latestDeployment(integration).orElse(null);
 
-        IntegrationDeployment updatedDeployment = new IntegrationDeployment.Builder()
-            .createFrom(IntegrationDeployment.newDeployment(existing))
-            .version(latest != null ? latest.getVersion().orElse(0) + 1 : 1)
-            .parentVersion(latest != null ? latest.getVersion().orElse(0) : 0)
-            .build();
+
+        switch (targetState) {
+            case Active:
+                IntegrationDeployment newDeployment = new IntegrationDeployment.Builder()
+                    .createFrom(IntegrationDeployment.newDeployment(existing))
+                    .version(latest != null ? latest.getVersion().orElse(0) + 1 : 1)
+                    .parentVersion(latest != null ? latest.getVersion().orElse(0) : 0)
+                    .targetState(IntegrationDeploymentState.Active)
+                    .currentState(IntegrationDeploymentState.Draft)
+                    .build();
+
+                getDataManager().create(newDeployment);
+                break;
+            case Undeployed:
+                String compositeId = IntegrationDeployment.compositeId(id, existing.getDeploymentId().orElse(1));
+                IntegrationDeployment activeDeployment = getDataManager().fetch(IntegrationDeployment.class, compositeId);
+                if (activeDeployment != null && activeDeployment.getCurrentState() != IntegrationDeploymentState.Undeployed) {
+                    getDataManager().create(activeDeployment.withTargetState(IntegrationDeploymentState.Undeployed));
+                }
+                break;
+            default:
+               //Just ignore and do nothing
+        }
 
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(encryptionSupport.encrypt(integration))
             .deploymentId(existing.getDeploymentId())
             .lastUpdated(new Date())
-            .currentStatus(currentStatus)
-            .addDeployment(updatedDeployment)
+            .currentStatus(currentState)
             .stepsDone(new ArrayList<>())
             .build();
 
@@ -277,11 +295,11 @@ public class IntegrationHandler extends BaseHandler
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}/status")
-    public IntegrationStatus status(@Context UriInfo uriInfo) {
+    @Path("/{id}/history")
+    public IntegrationHistory history(@Context UriInfo uriInfo) {
         String integrationId = uriInfo.getPathParameters().getFirst("id");
 
-        return new IntegrationStatus.Builder()
+        return new IntegrationHistory.Builder()
             .deployments(getDataManager().fetchAll(IntegrationDeployment.class, new IntegrationIdFilter(integrationId)).getItems())
             .build();
     }

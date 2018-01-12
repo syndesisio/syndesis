@@ -25,6 +25,9 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentSpec;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.v1.state.ClientSideState;
@@ -95,7 +98,7 @@ public class ConnectorHandlerTest {
             final Connector connector = new Connector.Builder().id("connector-id").icon(mockWebServer.url("/u/23079786").toString())
                 .build();
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
-            when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
+            when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(ListResult.of(Collections.emptyList()));
 
             final Response response = handler.getConnectorIcon("connector-id").get();
 
@@ -136,11 +139,13 @@ public class ConnectorHandlerTest {
 
         final Step step2 = new SimpleStep.Builder().action(newActionBy(connector2)).build();
 
-        final Integration integration1 = new Integration.Builder().steps(Arrays.asList(step1a, step1b)).build();
-        final Integration integration2 = new Integration.Builder().steps(Collections.singletonList(step2)).build();
-        final Integration integration3 = new Integration.Builder().steps(Collections.singletonList(step2)).build();
-        when(dataManager.fetchAll(Integration.class))
-            .thenReturn(new ListResult.Builder<Integration>().addItem(integration1, integration2, integration3).build());
+        final IntegrationDeployment deployment1 = newDeployment(Arrays.asList(step1a, step1b));
+
+        final IntegrationDeployment deployment2 = newDeployment(Collections.singletonList(step2));
+        final IntegrationDeployment deployment3 = newDeployment(Collections.singletonList(step2));
+
+        when(dataManager.fetchAll(IntegrationDeployment.class))
+            .thenReturn(new ListResult.Builder<IntegrationDeployment>().addItem(deployment1, deployment2, deployment3).build());
 
         final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
 
@@ -162,5 +167,9 @@ public class ConnectorHandlerTest {
 
     private static Connector usedConnector(final Connector connector, final int usage) {
         return new Connector.Builder().createFrom(connector).uses(usage).build();
+    }
+
+    private static IntegrationDeployment newDeployment(List<Step> steps) {
+      return new IntegrationDeployment.Builder().spec(new IntegrationDeploymentSpec.Builder().steps(steps).build()).currentState(IntegrationDeploymentState.Active).build();
     }
 }

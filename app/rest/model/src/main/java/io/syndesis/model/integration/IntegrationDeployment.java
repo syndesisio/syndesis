@@ -23,12 +23,17 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithKind;
 import io.syndesis.model.WithName;
+import io.syndesis.model.action.ConnectorAction;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @JsonDeserialize(builder = IntegrationDeployment.Builder.class)
 public class IntegrationDeployment implements WithKind, WithId<IntegrationDeployment>, WithName {
@@ -166,6 +171,27 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
         return getTargetState() != getCurrentState();
     }
 
+
+    @JsonIgnore
+    public boolean isInactive() {
+        return getCurrentState() == IntegrationDeploymentState.Undeployed || getCurrentState() == IntegrationDeploymentState.Inactive
+            ? true
+            : false;
+    }
+
+    @JsonIgnore
+    public Set<String> getUsedConnectorIds() {
+        return getSpec().getSteps().stream()//
+            .map(s -> s.getAction())//
+            .filter(Optional::isPresent)//
+            .map(Optional::get)//
+            .filter(ConnectorAction.class::isInstance)//
+            .map(ConnectorAction.class::cast)//
+            .map(a -> a.getDescriptor().getConnectorId())//
+            .filter(Objects::nonNull)//
+            .collect(Collectors.toSet());
+    }
+
     public IntegrationDeployment withCurrentState(IntegrationDeploymentState state) {
         return new IntegrationDeployment.Builder().createFrom(this).currentState(state).build();
     }
@@ -176,13 +202,16 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
 
 
     public static IntegrationDeployment newDeployment(Integration integration) {
+        return newDeployment(integration, Collections.emptyList());
+    }
+
+    public static IntegrationDeployment newDeployment(Integration integration, Collection<IntegrationDeployment> deployments) {
         BigInteger totalTimesUsed = integration.getTimesUsed().orElse(BigInteger.ZERO);
-        BigInteger parentUses =  integration.getDeployments()
+        BigInteger parentUses =  deployments
             .stream()
             .map(i -> i.getTimesUsed())
             .reduce( (n1,n2) -> n1.add(n2))
             .orElse(BigInteger.ZERO);
-
 
         return new IntegrationDeployment.Builder()
             .integrationId(integration.getId())

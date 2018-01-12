@@ -18,39 +18,16 @@ package io.syndesis.model.integration;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
-import java.util.Optional;
+import java.util.List;
 
 @Value.Immutable
-@JsonDeserialize(builder = OldIntegrationStatus.Builder.class)
-public interface OldIntegrationStatus {
+@JsonDeserialize(builder = IntegrationHistory.Builder.class)
+public interface IntegrationHistory {
 
-    /**
-     * The desired state of the revision.
-     * @return
-     */
-    IntegrationDeploymentState getTargetState();
+    List<IntegrationDeployment> getDeployments();
+    List<String> getMessages();
 
-    /**
-     * The current state of the revision.
-     * @return
-     */
-    IntegrationDeploymentState getCurrentState();
-
-    /**
-     * Message describing the currentState further (e.g. error message)
-     * @return
-     */
-    Optional<String> getCurrentMessage();
-
-
-    /**
-     * Message which should become the currentMessage after reconciliation
-     * @return
-     */
-    Optional<String> getTargetMessage();
-
-
-    class Builder extends ImmutableOldIntegrationStatus.Builder {
+    class Builder extends ImmutableIntegrationHistory.Builder {
         // allow access to ImmutableIntegrationStatus.Builder
     }
 }
