@@ -1,19 +1,20 @@
 [id='add-data-mapping-step']
 = Add a data mapping step
 
-You can add a step to an integration to map the data from the input connection to the output connection.
+You can add a step to an integration to map integration data from the previous
+connection or step to the next connection or step. 
 
-Add all connections to your integration before you add any steps. When you add a step, {prodname} operates on the data it receives from the previous connection or the previous step.
+Add all connections to your integration before you add any steps. 
+When you add a step, {prodname} operates on the data it receives from 
+the previous connection or the previous step.
 
-When you add a step you might be creating a new integration or editing an integration. The flow of the integration appears in the left pane. To add a Data Mapper step:
-
-* In the left pane, where you want to add a Data Mapper step to the integration, hover over the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'] and in the popup that appears, click *Data Mapper*.
-
-    
+When you add a step you might be creating a new integration or editing 
+an integration. The flow of the integration appears in the left pane. 
+See the following topics for details:
 
 * <<mapping-data>>
-* <<map_one-source-field-to-one-target-field>>
-* <<combine_multiple-source-fields-into-one-target-field>>
+* <<map-one-source-field-to-one-target-field>>
+* <<combine-multiple-source-fields-into-one-target-field>>
 * <<separate-one-source-field-into-multiple-target-fields>>
 * <<transforming-target-data>>
 * <<available-transformations>>

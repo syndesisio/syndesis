@@ -1,0 +1,33 @@
+[id="mapping-data"]
+= Mapping data
+
+To add a data mapper step:
+
+. In the left pane, where you want to add a data mapper step, 
+hover over the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
+. In the popup that appears, click *Data Mapper*.
+  
+The data mapping page presents you with two lists of data fields - the *Sources* list and the *Target* list.
+
+To map data, you create a link between the *Sources* data item and the *Target* data item.
+
+There are three different types of mapping:
+
+.Data mapping types
+
+|===
+|Mapping type  |What does it do?
+
+|Combine
+|The combine action allows you to combine a number of source fields into one target field. For example, day, month and year fields can be combined into a date field.
+
+|Map
+|The map action just maps the source field directly to the target field, with no manipulation. This is the default action.
+
+|Separate
+|The separate action allows you to separate a source field into a number of target fields. For example, a date field can be separated into day, month, year fields. 
+
+|===
+
+On the *Target* data field, you can specify a *Transformation*, which 
+specifies how the data in the target field is stored. 

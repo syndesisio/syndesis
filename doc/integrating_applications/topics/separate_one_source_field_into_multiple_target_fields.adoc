@@ -1,5 +1,5 @@
 [id=separate-one-source-field-into-multiple-target-fields]
-== Separate one source field into multiple target fields
+= Separate one source field into multiple target fields
 
 You can separate more than one source field into multiple target fields using a *Separate* mapping.
 
