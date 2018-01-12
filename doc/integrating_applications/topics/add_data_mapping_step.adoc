@@ -12,8 +12,8 @@ When you add a step you might be creating a new integration or editing an integr
     
 
 * <<mapping-data>>
-* <<map_one-source-field-to-one-target-field>>
-* <<combine_multiple-source-fields-into-one-target-field>>
+* <<map-one-source-field-to-one-target-field>>
+* <<combine-multiple-source-fields-into-one-target-field>>
 * <<separate-one-source-field-into-multiple-target-fields>>
 * <<transforming-target-data>>
 * <<available-transformations>>

@@ -1,4 +1,4 @@
-[id=combine_multiple-source-fields-into-one-target-field]
+[id=combine-multiple-source-fields-into-one-target-field]
 == Combine multiple source fields into one target field
 
 You can combine more than one source field into a single target field using the *Combine* mapping.

@@ -1,9 +1,9 @@
-[id="mapping_data"]
+[id="mapping-data"]
 = Mapping data
 
 The data mapping page will present you with two lists of data fields - the *Sources* list and the *Target* list.
 
-To map data you create a link between the *Sources* data item and the *Target* data item.
+To map data, you create a link between the *Sources* data item and the *Target* data item.
 
 There are three different types of mapping:
 
