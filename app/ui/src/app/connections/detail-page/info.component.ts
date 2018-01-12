@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { Connection } from '../../model';
 import { ConnectionService } from '../../store/connection/connection.service';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'syndesis-connection-detail-info',
@@ -13,7 +15,7 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
     <h1>
       <dl class="dl-horizontal">
         <dt>
-          <img src="../../../assets/icons/{{ connection.connectorId }}.connection.png" height="46" width="46">
+          <img src="{{ icon }}" height="46" width="46">
         </dt>
         <dd>
           <syndesis-editable-text [value]="connection.name"
@@ -51,18 +53,31 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
   `
   ]
 })
-export class ConnectionDetailInfoComponent {
+export class ConnectionDetailInfoComponent implements OnChanges {
+  readonly apiEndpoint: any;
   @Input() connection: Connection;
   @Output() updated = new EventEmitter<Connection>();
+  icon: String;
 
   constructor(
     private connectionService: ConnectionService,
-    private configurationService: ConnectionConfigurationService
-  ) {}
+    private configurationService: ConnectionConfigurationService,
+    private config: ConfigService
+  ) {
+    this.apiEndpoint = config.getSettings().apiEndpoint;
+  }
 
   onAttributeUpdated(attr: string, value) {
     this.connection[attr] = value;
     this.updated.emit(this.connection);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.connection.icon.startsWith('db:')) {
+      this.icon = `${this.apiEndpoint}/connectors/${this.connection.connectorId || this.connection.id}/icon`;
+    } else {
+      this.icon = `../../../assets/icons/${this.connection.connectorId || this.connection.id}.connection.png`;
+    }
   }
 
   /* tslint:disable semicolon */

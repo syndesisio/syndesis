@@ -29,8 +29,8 @@
     <section class="col-xs-4">
       <div class="card-pf card-pf-view">
         <div class="card-pf-body">
-          <div class="card-pf-top-element">
-            <span class="fa fa-birthday-cake card-pf-icon-circle"></span>
+          <div class="card-pf-top-element text-center">
+            <img src="{{ ( icon$ | async ) }}" height="106" width="106"/>
           </div>
           <h2 class="card-pf-title text-center">
             {{ apiConnectorData.name || 'N/A' }}

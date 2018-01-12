@@ -88,7 +88,7 @@
               <!-- Card Icon -->
               <div class="card-pf-top-element">
                 <span class="card-pf-icon-large image-icon">
-                <img src="../../../assets/icons/{{ connection.connectorId || connection.id }}.connection.png">
+                <img src="{{ connectionIcon(connection) | async }}">
               </span>
               </div>
 

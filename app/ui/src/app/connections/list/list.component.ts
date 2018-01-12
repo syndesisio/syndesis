@@ -14,6 +14,8 @@ import { ConnectionStore } from '../../store/connection/connection.store';
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../model';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { ConfigService } from '@syndesis/ui/config.service';
+import { Observable } from 'rxjs/Observable';
 
 const category = getCategory('Connections');
 
@@ -26,6 +28,7 @@ export class ConnectionsListComponent implements OnInit {
   truncateTrail = '…';
   selectedId = undefined;
   selectedForDelete: Connection = undefined;
+  readonly apiEndpoint: String;
 
   @Input() connections: Connections;
   @Input() loading: boolean;
@@ -37,9 +40,11 @@ export class ConnectionsListComponent implements OnInit {
   constructor(
     public store: ConnectionStore,
     private notificationService: NotificationService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private config: ConfigService
   ) {
     this.notificationService.setDelay(4000);
+    this.apiEndpoint = this.config.getSettings().apiEndpoint;
   }
 
   //----- Initialization ------------------->>
@@ -102,4 +107,10 @@ export class ConnectionsListComponent implements OnInit {
     return connection.id === this.selectedId;
   }
 
+  connectionIcon(connection: Connection) {
+    if (connection.icon.startsWith('db:')) {
+      return Observable.of(`${this.apiEndpoint}/connectors/${connection.connectorId || connection.id}/icon`);
+    }
+    return Observable.of(`../../../assets/icons/${connection.connectorId || connection.id}.connection.png`);
+  }
 }
