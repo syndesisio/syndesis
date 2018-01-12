@@ -11,7 +11,6 @@ import { log, getCategory } from '../logging';
 
 import { Connection, Connections } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
-import { ConfigService } from '@syndesis/ui/config.service';
 
 const category = getCategory('Dashboard');
 
@@ -21,7 +20,6 @@ const category = getCategory('Dashboard');
   styleUrls: ['./connections.component.scss']
 })
 export class DashboardConnectionsComponent implements OnInit {
-  readonly apiEndpoint: any;
   selectedId = undefined;
 
   @Input() connections: Connections;
@@ -29,12 +27,6 @@ export class DashboardConnectionsComponent implements OnInit {
   @Output() selectedConnection: EventEmitter<Connection> = new EventEmitter();
 
   truncateTrail = '…';
-
-  constructor(
-    private config: ConfigService
-  ) {
-    this.apiEndpoint = this.config.getSettings().apiEndpoint;
-  }
 
   //-----  Selecting a Connection ------------------->>
 
@@ -57,10 +49,4 @@ export class DashboardConnectionsComponent implements OnInit {
     );
   }
 
-  connectionIcon(connection: Connection) {
-    if (connection.icon.startsWith('db:')) {
-      return `${this.apiEndpoint}/connectors/${connection.connectorId || connection.id}/icon`;
-    }
-    return `../../../assets/icons/${connection.connectorId || connection.id}.connection.png`;
-  }
 }
