@@ -21,7 +21,7 @@
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="connection-icon"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
-           src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
+           src="{{ stepIcon(step) }}">
     </p>
   </div>
 
