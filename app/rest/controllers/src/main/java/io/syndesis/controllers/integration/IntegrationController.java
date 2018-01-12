@@ -18,14 +18,12 @@ package io.syndesis.controllers.integration;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -40,8 +38,8 @@ import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.integration.Integration;
 
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,7 @@ public class IntegrationController {
 
     private final DataManager dataManager;
     private final EventBus eventBus;
-    private final ConcurrentHashMap<IntegrationRevisionState, StateChangeHandler> handlers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<IntegrationDeploymentState, StateChangeHandler> handlers = new ConcurrentHashMap<>();
     private final Set<String> scheduledChecks = new HashSet<>();
     /* default */ ExecutorService executor;
     /* default */ ScheduledExecutorService scheduler;
@@ -69,7 +67,7 @@ public class IntegrationController {
         this.dataManager = dataManager;
         this.eventBus = eventBus;
         for (StateChangeHandler handler : handlerFactory.getStatusChangeHandlers()) {
-            for (IntegrationRevisionState state : handler.getTriggerStates()) {
+            for (IntegrationDeploymentState state : handler.getTriggerStates()) {
                 this.handlers.put(state, handler);
             }
         }
@@ -81,7 +79,7 @@ public class IntegrationController {
         scheduler = Executors.newScheduledThreadPool(1);
         scanIntegrationsForWork();
 
-        eventBus.subscribe("integration-revision-controller", getChangeEventSubscription());
+        eventBus.subscribe("integration-deployment-controller", getChangeEventSubscription());
     }
 
     private EventBus.Subscription getChangeEventSubscription() {
@@ -94,7 +92,7 @@ public class IntegrationController {
                         changeEvent.getId().ifPresent(id -> {
                             changeEvent.getKind()
                                        .map(Kind::from)
-                                       .filter(k -> k == Kind.IntegrationRevision)
+                                       .filter(k -> k == Kind.IntegrationDeployment)
                                        .ifPresent(k -> {
                                            checkIntegrationStatusIfNotAlreadyInProgress(id);
                                        });
@@ -109,12 +107,12 @@ public class IntegrationController {
 
     private void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
         executor.execute(() -> {
-            IntegrationRevision integrationRevision = dataManager.fetch(IntegrationRevision.class, id);
-            if( integrationRevision!=null ) {
-                String scheduledKey = getIntegrationMarkerKey(integrationRevision);
+            IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, id);
+            if( integrationDeployment!=null ) {
+                String scheduledKey = getIntegrationMarkerKey(integrationDeployment);
                 // Don't start check is already a check is running
                 if (!scheduledChecks.contains(scheduledKey)) {
-                    checkIntegrationStatus(integrationRevision);
+                    checkIntegrationStatus(integrationDeployment);
                 }
             }
         });
@@ -129,54 +127,54 @@ public class IntegrationController {
 
     private void scanIntegrationsForWork() {
         executor.execute(() -> {
-            dataManager.fetchAll(IntegrationRevision.class).getItems().forEach(integration -> {
+            dataManager.fetchAll(IntegrationDeployment.class).getItems().forEach(integration -> {
                 LOG.info("Checking integrations for their status.");
                 checkIntegrationStatus(integration);
             });
         });
     }
 
-    private void checkIntegrationStatus(IntegrationRevision integrationRevision) {
-        if (integrationRevision == null) {
+    private void checkIntegrationStatus(IntegrationDeployment integrationDeployment) {
+        if (integrationDeployment == null) {
             return;
         }
-        IntegrationRevisionState desiredState = integrationRevision.getTargetState();
-        IntegrationRevisionState currentState = integrationRevision.getCurrentState();
+        IntegrationDeploymentState desiredState = integrationDeployment.getTargetState();
+        IntegrationDeploymentState currentState = integrationDeployment.getCurrentState();
         if (!currentState.equals(desiredState)) {
-                integrationRevision.getId().ifPresent(integrationRevisionId -> {
+                integrationDeployment.getId().ifPresent(integrationDeploymentId -> {
                     StateChangeHandler statusChangeHandler = handlers.get(desiredState);
                     if (statusChangeHandler != null) {
                         LOG.info("Integration {} : Desired status \"{}\" != current status \"{}\" --> calling status change handler",
-                                               integrationRevisionId, desiredState.toString(), currentState);
-                        callStateChangeHandler(statusChangeHandler, integrationRevisionId);
+                            integrationDeploymentId, desiredState.toString(), currentState);
+                        callStateChangeHandler(statusChangeHandler, integrationDeploymentId);
                     }
                 });
         } else {
-            scheduledChecks.remove(getIntegrationMarkerKey(integrationRevision));
+            scheduledChecks.remove(getIntegrationMarkerKey(integrationDeployment));
         }
     }
 
-    private String getLabel(IntegrationRevision integration) {
-        return "Integration " + integration.getIntegrationId().orElse("[none]");
+    private String getLabel(IntegrationDeployment integrationDeployment) {
+        return "Integration " + integrationDeployment.getIntegrationId().orElse("[none]");
     }
 
-    /* default */ void callStateChangeHandler(StateChangeHandler handler, String integrationRevisionId) {
+    /* default */ void callStateChangeHandler(StateChangeHandler handler, String integrationDeploymentId) {
         executor.execute(() -> {
-            IntegrationRevision integrationRevision = dataManager.fetch(IntegrationRevision.class, integrationRevisionId);
-            String checkKey = getIntegrationMarkerKey(integrationRevision);
+            IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
+            String checkKey = getIntegrationMarkerKey(integrationDeployment);
             scheduledChecks.add(checkKey);
 
-            if (stale(handler, integrationRevision)) {
+            if (stale(handler, integrationDeployment)) {
                 scheduledChecks.remove(checkKey);
                 return;
             }
 
             try {
-                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationRevision.getIntegrationId().get(), integrationRevision.getVersion().get(), handler.getClass().getSimpleName());
-                StateUpdate update = handler.execute(integrationRevision);
+                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationDeployment.getIntegrationId().get(), integrationDeployment.getVersion().get(), handler.getClass().getSimpleName());
+                StateUpdate update = handler.execute(integrationDeployment);
                 if (update!=null) {
                     if (LOG.isInfoEnabled()) {
-                        LOG.info("{} : Setting status to {}{}", getLabel(integrationRevision), update.getState(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
+                        LOG.info("{} : Setting status to {}{}", getLabel(integrationDeployment), update.getState(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
                     }
 
                     // handler.execute might block for while so refresh our copy of the integration
@@ -184,49 +182,23 @@ public class IntegrationController {
 
                     // TODO: do this in a single TX.
                     Date now = new Date();
-                    IntegrationRevision current = dataManager.fetch(IntegrationRevision.class, integrationRevisionId);
-                    IntegrationRevision updated = new IntegrationRevision.Builder()
+                    IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
+                    IntegrationDeployment updated = new IntegrationDeployment.Builder()
                         .createFrom(current)
                         //.statusMessage(Optional.ofNullable(update.getStatusMessage()))
                         .currentState(update.getState())
                         .stepsDone(update.getStepsPerformed())
-                        .createdDate(IntegrationRevisionState.Active.equals(update.getState()) ? now : integrationRevision.getCreatedDate())
+                        .createdDate(IntegrationDeploymentState.Active.equals(update.getState()) ? now : integrationDeployment.getCreatedDate())
                         .lastUpdated(new Date())
                         .build();
-
-                    /*
-
-                    TODO: This block should be removed. Just keeping it till refactoring is done.
-
-                    Set<IntegrationRevision> revisions = dataManager
-                        .fetchIdsByPropertyValue(IntegrationRevision.class, "integrationId", current.getId().get())
-                        .stream()
-                        .map(i -> dataManager.fetch(IntegrationRevision.class, i))
-                        .collect(Collectors.toSet());
-
-                    IntegrationRevision revision = IntegrationRevision.deployedRevision(integrationRevision)
-                        .withCurrentState(update.getState());
-
-                    //replace revision
-                    revisions.remove(revision);
-
-                    final IntegrationRevision last = integrationRevision.lastRevision();
-                    if (update.getState().equals(last.getCurrentState())) {
-                        revision = new IntegrationRevision.Builder().createFrom(revision)
-                            .version(last.getVersion())
-                            .parentVersion(last.getParentVersion())
-                            .build();
-                    }
-                    revisions.add(revision);
-                    */
 
                     dataManager.update(updated);
                 }
 
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-                LOG.error("Error while processing integration status for integration {}", integrationRevisionId, e);
+                LOG.error("Error while processing integration status for integration {}", integrationDeploymentId, e);
                 // Something went wrong.. lets note it.
-                Integration current = dataManager.fetch(Integration.class, integrationRevisionId);
+                Integration current = dataManager.fetch(Integration.class, integrationDeploymentId);
                 dataManager.update(new Integration.Builder()
                     .createFrom(current)
                     .statusMessage("Error: "+e)
@@ -235,7 +207,7 @@ public class IntegrationController {
 
             } finally {
                 // Add a next check for the next interval
-                reschedule(integrationRevisionId);
+                reschedule(integrationDeploymentId);
             }
 
         });
@@ -244,23 +216,23 @@ public class IntegrationController {
     @SuppressWarnings("FutureReturnValueIgnored")
     private void reschedule(String integrationId) {
         scheduler.schedule(() -> {
-            IntegrationRevision i = dataManager.fetch(IntegrationRevision.class, integrationId);
+            IntegrationDeployment i = dataManager.fetch(IntegrationDeployment.class, integrationId);
             checkIntegrationStatus(i);
         }, SCHEDULE_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
     }
 
-    private String getIntegrationMarkerKey(IntegrationRevision integrationRevision) {
-        return integrationRevision.getTargetState() +
+    private String getIntegrationMarkerKey(IntegrationDeployment integrationDeployment) {
+        return integrationDeployment.getTargetState() +
                ":" +
-               integrationRevision.getId().orElseThrow(() -> new IllegalArgumentException("No id set in integration " + integrationRevision));
+               integrationDeployment.getId().orElseThrow(() -> new IllegalArgumentException("No id set in integration " + integrationDeployment));
     }
 
-    private boolean stale(StateChangeHandler handler, IntegrationRevision integrationRevision) {
-        if (integrationRevision == null || handler == null) {
+    private boolean stale(StateChangeHandler handler, IntegrationDeployment integrationDeployment) {
+        if (integrationDeployment == null || handler == null) {
             return true;
         }
 
-        IntegrationRevisionState desiredState = integrationRevision.getTargetState();
-        return desiredState.equals(integrationRevision.getCurrentState());
+        IntegrationDeploymentState desiredState = integrationDeployment.getTargetState();
+        return desiredState.equals(integrationDeployment.getCurrentState());
     }
 }

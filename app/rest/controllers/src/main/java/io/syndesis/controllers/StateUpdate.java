@@ -15,7 +15,7 @@
  */
 package io.syndesis.controllers;
 
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,27 +23,27 @@ import java.util.Optional;
 
 public class StateUpdate {
 
-    private final IntegrationRevisionState state;
+    private final IntegrationDeploymentState state;
     private String statusMessage;
     private List<String> stepsPerformed;
 
-    public StateUpdate(IntegrationRevisionState state, List<String> stepsPerformed) {
+    public StateUpdate(IntegrationDeploymentState state, List<String> stepsPerformed) {
         this.state = state;
         this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyList);
     }
 
-    public StateUpdate(IntegrationRevisionState state, String statusMessage) {
+    public StateUpdate(IntegrationDeploymentState state, String statusMessage) {
         this.state = state;
         this.statusMessage = statusMessage;
         this.stepsPerformed = Collections.emptyList();
     }
 
-    public StateUpdate(IntegrationRevisionState state) {
+    public StateUpdate(IntegrationDeploymentState state) {
         this.state = state;
         this.stepsPerformed = Collections.emptyList();
     }
 
-    public IntegrationRevisionState getState() {
+    public IntegrationDeploymentState getState() {
         return state;
     }
 

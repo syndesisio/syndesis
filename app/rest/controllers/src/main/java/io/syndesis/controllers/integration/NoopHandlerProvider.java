@@ -24,10 +24,9 @@ import java.util.Set;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.controllers.StateUpdate;
-import io.syndesis.model.integration.Integration;
 
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -36,15 +35,15 @@ import org.springframework.stereotype.Component;
 public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandlerProvider {
 
     @Override
-    public Set<IntegrationRevisionState> getTriggerStates() {
+    public Set<IntegrationDeploymentState> getTriggerStates() {
         return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            IntegrationRevisionState.Active,
-            IntegrationRevisionState.Inactive,
-            IntegrationRevisionState.Undeployed)));
+            IntegrationDeploymentState.Active,
+            IntegrationDeploymentState.Inactive,
+            IntegrationDeploymentState.Undeployed)));
     }
 
     @Override
-    public StateUpdate execute(IntegrationRevision integrationRevision) {
+    public StateUpdate execute(IntegrationDeployment integrationDeployment) {
         return null;
     }
 

@@ -34,7 +34,7 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -124,7 +124,7 @@ public class DataManagerTest {
         Assert.assertTrue(integration.getTags().contains("example"));
 
         //making sure we can deserialize Enums such as StatusType
-        Integration int2 = new Integration.Builder().createFrom(integration).desiredStatus(IntegrationRevisionState.Active).build();
+        Integration int2 = new Integration.Builder().createFrom(integration).desiredStatus(IntegrationDeploymentState.Active).build();
         String json = Json.mapper().writeValueAsString(int2);
         Integration int3 = Json.mapper().readValue(json, Integration.class);
         Assert.assertEquals(int2.getDesiredStatus(), int3.getDesiredStatus());

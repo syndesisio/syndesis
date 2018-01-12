@@ -23,7 +23,7 @@ import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.Violation;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.SimpleStep;
 
 import io.syndesis.rest.v1.handler.exception.RestError;
@@ -248,8 +248,8 @@ public class ExtensionsITCase extends BaseITCase {
         // Create a active integration that uses the extension
         dataManager.create(new Integration.Builder()
             .id("integration-extension-1")
-            .desiredStatus(IntegrationRevisionState.Active)
-            .currentStatus(IntegrationRevisionState.Active)
+            .desiredStatus(IntegrationDeploymentState.Active)
+            .currentStatus(IntegrationDeploymentState.Active)
             .createdDate(new Date())
             .lastUpdated(new Date())
             .userId("important user")
@@ -268,8 +268,8 @@ public class ExtensionsITCase extends BaseITCase {
         // Create a inactive integration that uses the extension
         dataManager.create(new Integration.Builder()
             .id("integration-extension-2")
-            .desiredStatus(IntegrationRevisionState.Undeployed)
-            .currentStatus(IntegrationRevisionState.Active)
+            .desiredStatus(IntegrationDeploymentState.Undeployed)
+            .currentStatus(IntegrationDeploymentState.Active)
             .createdDate(new Date())
             .lastUpdated(new Date())
             .userId("important user")
@@ -318,8 +318,8 @@ public class ExtensionsITCase extends BaseITCase {
         // Create a active integration that uses the extension
         dataManager.create(new Integration.Builder()
             .id("integration-extension-1")
-            .desiredStatus(IntegrationRevisionState.Active)
-            .currentStatus(IntegrationRevisionState.Active)
+            .desiredStatus(IntegrationDeploymentState.Active)
+            .currentStatus(IntegrationDeploymentState.Active)
             .createdDate(new Date())
             .lastUpdated(new Date())
             .userId("important user")

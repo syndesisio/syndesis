@@ -53,15 +53,15 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     }
 
     /**
-     * The list of versioned revisions.
+     * The list of versioned deployments
      * The items in this list should be versioned and are not meant to be mutated.
      * @return
      */
-    Set<IntegrationRevision> getRevisions();
+    Set<IntegrationDeployment> getDeployments();
 
-    Optional<IntegrationRevision> getDraftRevision();
+    Optional<IntegrationDeployment> getDraftDeployment();
 
-    Optional<Integer> getDeployedRevisionId();
+    Optional<Integer> getDeploymentId();
 
     Optional<String> getUserId();
 
@@ -96,10 +96,10 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<String> getDescription();
 
     @Deprecated
-    Optional<IntegrationRevisionState> getDesiredStatus();
+    Optional<IntegrationDeploymentState> getDesiredStatus();
 
     @Deprecated
-    Optional<IntegrationRevisionState> getCurrentStatus();
+    Optional<IntegrationDeploymentState> getCurrentStatus();
 
     @Deprecated
     @Value.Default
@@ -124,8 +124,8 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     @Value.Derived
     default boolean isInactive() {
         return getCurrentStatus()
-            .map(s -> s == IntegrationRevisionState.Undeployed || s == IntegrationRevisionState.Inactive)
-            .orElse(getDesiredStatus().map(s -> s == IntegrationRevisionState.Undeployed || s == IntegrationRevisionState.Inactive)
+            .map(s -> s == IntegrationDeploymentState.Undeployed || s == IntegrationDeploymentState.Inactive)
+            .orElse(getDesiredStatus().map(s -> s == IntegrationDeploymentState.Undeployed || s == IntegrationDeploymentState.Inactive)
                 .orElse(false));
     }
 
@@ -141,11 +141,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
             .map(a -> a.getDescriptor().getConnectorId())//
             .filter(Objects::nonNull)//
             .collect(Collectors.toSet());
-    }
-
-
-    default IntegrationRevision lastRevision() {
-        return getRevisions().stream().max(Comparator.comparingInt(r -> r.getVersion().orElse(0))).get();
     }
 
     class Builder extends ImmutableIntegration.Builder {

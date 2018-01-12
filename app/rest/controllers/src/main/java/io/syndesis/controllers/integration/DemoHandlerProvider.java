@@ -20,14 +20,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import io.fabric8.kubernetes.client.KubernetesClient;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.controllers.StateUpdate;
-import io.syndesis.model.integration.Integration;
 
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -38,27 +36,27 @@ public class DemoHandlerProvider implements StateChangeHandlerProvider {
     @Override
     public List<StateChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new DemoHandler(IntegrationRevisionState.Active, 5000L),
-            new DemoHandler(IntegrationRevisionState.Inactive, 5000L),
-            new DemoHandler(IntegrationRevisionState.Undeployed, 5000L));
+            new DemoHandler(IntegrationDeploymentState.Active, 5000L),
+            new DemoHandler(IntegrationDeploymentState.Inactive, 5000L),
+            new DemoHandler(IntegrationDeploymentState.Undeployed, 5000L));
     }
 
     /* default */ static class DemoHandler implements StateChangeHandler {
-        private final IntegrationRevisionState state;
+        private final IntegrationDeploymentState state;
         private final long waitMillis;
 
-        /* default */ DemoHandler(IntegrationRevisionState state, long waitMillis) {
+        /* default */ DemoHandler(IntegrationDeploymentState state, long waitMillis) {
             this.state = state;
             this.waitMillis = waitMillis;
         }
 
         @Override
-        public Set<IntegrationRevisionState> getTriggerStates() {
+        public Set<IntegrationDeploymentState> getTriggerStates() {
             return Collections.singleton(state);
         }
 
         @Override
-        public StateUpdate execute(IntegrationRevision integrationRevision) {
+        public StateUpdate execute(IntegrationDeployment integrationDeployment) {
 
             try {
                 Thread.sleep(waitMillis);

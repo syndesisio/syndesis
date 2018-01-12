@@ -32,9 +32,8 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionState;
-import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.project.converter.ProjectGenerator;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -101,7 +100,7 @@ public class IntegrationSupportHandler {
     @Path("/generate/pom.xml")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] projectPom(IntegrationRevision integrationRevision) throws IOException {
+    public byte[] projectPom(IntegrationDeployment integrationRevision) throws IOException {
         return projectConverter.generatePom(integrationOf(integrationRevision), integrationRevision);
     }
 
@@ -257,7 +256,7 @@ public class IntegrationSupportHandler {
                     Integration integration = (Integration) model.getData();
                     integration = new Integration.Builder()
                         .createFrom(integration)
-                        .desiredStatus(IntegrationRevisionState.Draft)
+                        .desiredStatus(IntegrationDeploymentState.Draft)
                         .build();
 
                     // Do we need to create it?
@@ -339,7 +338,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    private Integration integrationOf(IntegrationRevision integrationRevision) {
+    private Integration integrationOf(IntegrationDeployment integrationRevision) {
         return  dataManager.fetch(Integration.class, integrationRevision.getIntegrationId().orElseThrow(() -> new IllegalStateException("Integration Revision doesn't have integration id.")));
     }
 

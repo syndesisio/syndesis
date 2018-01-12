@@ -17,8 +17,8 @@ package io.syndesis.dao.manager;
 
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionSpec;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -78,10 +78,10 @@ public class EncryptionComponent {
             .build();
     }
 
-    public IntegrationRevision encrypt(IntegrationRevision integrationRevision) {
-        return new IntegrationRevision.Builder()
-            .createFrom(integrationRevision)
-            .spec(new IntegrationRevisionSpec.Builder().createFrom(integrationRevision.getSpec()).steps(encrypt(integrationRevision.getSpec().getSteps())).build())
+    public IntegrationDeployment encrypt(IntegrationDeployment integrationDeployment) {
+        return new IntegrationDeployment.Builder()
+            .createFrom(integrationDeployment)
+            .spec(new IntegrationDeploymentSpec.Builder().createFrom(integrationDeployment.getSpec()).steps(encrypt(integrationDeployment.getSpec().getSteps())).build())
             .build();
     }
 

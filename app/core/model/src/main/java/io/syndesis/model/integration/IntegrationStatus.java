@@ -19,13 +19,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 import java.util.List;
-import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationStatus.Builder.class)
 public interface IntegrationStatus {
 
-    List<IntegrationRevision> getDeployments();
+    List<IntegrationDeployment> getDeployments();
     List<String> getMessages();
 
     class Builder extends ImmutableIntegrationStatus.Builder {

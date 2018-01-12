@@ -30,21 +30,20 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 
 public final class IntegrationSupport {
     private IntegrationSupport() {
     }
 
-    public static Properties buildApplicationProperties(IntegrationRevision integrationRevision, DataManager dataManager, EncryptionComponent encryptionSupport) {
+    public static Properties buildApplicationProperties(IntegrationDeployment integrationDeployment, DataManager dataManager, EncryptionComponent encryptionSupport) {
         final Properties properties = new Properties();
         final AtomicInteger counter = new AtomicInteger();
         final Map<Step, Integer> indices = new HashMap<>();
 
         // Compute step index
-        for (Step step : integrationRevision.getSpec().getSteps()) {
+        for (Step step : integrationDeployment.getSpec().getSteps()) {
             indices.put(step, counter.incrementAndGet());
         }
 
@@ -54,7 +53,7 @@ public final class IntegrationSupport {
         //
         // ****************************************
 
-        integrationRevision.getSpec().getSteps().stream()
+        integrationDeployment.getSpec().getSteps().stream()
             .filter(step -> step.getStepKind().equals(io.syndesis.integration.model.steps.Endpoint.KIND))
             .filter(step -> step.getAction().filter(ConnectorAction.class::isInstance).isPresent())
             .filter(step -> step.getConnection().isPresent())

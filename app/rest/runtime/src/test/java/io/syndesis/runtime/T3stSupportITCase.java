@@ -17,7 +17,7 @@ package io.syndesis.runtime;
 
 import io.syndesis.model.ModelData;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,8 +52,8 @@ public class T3stSupportITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("3001")
             .name("test")
-            .desiredStatus(IntegrationRevisionState.Draft)
-            .currentStatus(IntegrationRevisionState.Draft)
+            .desiredStatus(IntegrationDeploymentState.Draft)
+            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 

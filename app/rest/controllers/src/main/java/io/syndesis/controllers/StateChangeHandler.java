@@ -15,15 +15,15 @@
  */
 package io.syndesis.controllers;
 
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 
 import java.util.Set;
 
 public interface StateChangeHandler {
 
-    Set<IntegrationRevisionState> getTriggerStates();
+    Set<IntegrationDeploymentState> getTriggerStates();
 
-    StateUpdate execute(IntegrationRevision revision);
+    StateUpdate execute(IntegrationDeployment integrationDeployment);
 
 }

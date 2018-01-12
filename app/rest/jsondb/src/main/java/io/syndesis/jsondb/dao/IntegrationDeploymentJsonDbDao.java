@@ -15,9 +15,9 @@
  */
 package io.syndesis.jsondb.dao;
 
-import io.syndesis.dao.IntegrationRevisionDao;
+import io.syndesis.dao.IntegrationDeploymentDao;
 import io.syndesis.jsondb.JsonDB;
-import io.syndesis.model.integration.IntegrationRevision;
+import io.syndesis.model.integration.IntegrationDeployment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +26,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Configuration
 @ConditionalOnProperty(value = "dao.kind", havingValue = "jsondb")
-public class IntegrationRevisionJsonDbDao extends JsonDbDao<IntegrationRevision> implements IntegrationRevisionDao {
+public class IntegrationDeploymentJsonDbDao extends JsonDbDao<IntegrationDeployment> implements IntegrationDeploymentDao {
 
     @Autowired
-    public IntegrationRevisionJsonDbDao(JsonDB jsondb) {
+    public IntegrationDeploymentJsonDbDao(JsonDB jsondb) {
         super(jsondb);
     }
 

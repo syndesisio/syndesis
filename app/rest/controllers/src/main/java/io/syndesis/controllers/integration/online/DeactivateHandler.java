@@ -23,9 +23,8 @@ import java.util.Set;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevision;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.openshift.OpenShiftService;
 
 public class DeactivateHandler extends BaseHandler implements StateChangeHandler {
@@ -34,16 +33,16 @@ public class DeactivateHandler extends BaseHandler implements StateChangeHandler
     }
 
     @Override
-    public Set<IntegrationRevisionState> getTriggerStates() {
+    public Set<IntegrationDeploymentState> getTriggerStates() {
         return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            IntegrationRevisionState.Inactive, IntegrationRevisionState.Draft)));
+            IntegrationDeploymentState.Inactive, IntegrationDeploymentState.Draft)));
     }
 
     @Override
-    public StateUpdate execute(IntegrationRevision integrationRevision) {
+    public StateUpdate execute(IntegrationDeployment integrationDeployment) {
         try {
-            openShiftService().scale(integrationRevision.getName(), 0);
-            logInfo(integrationRevision,"Deactivated");
+            openShiftService().scale(integrationDeployment.getName(), 0);
+            logInfo(integrationDeployment,"Deactivated");
         } catch (KubernetesClientException e) {
             // Ignore 404 errors, means the deployment does not exist for us
             // to scale down
@@ -52,9 +51,9 @@ public class DeactivateHandler extends BaseHandler implements StateChangeHandler
             }
         }
 
-        IntegrationRevisionState currentState = openShiftService().isScaled(integrationRevision.getName(), 0)
-            ? IntegrationRevisionState.Inactive
-                : IntegrationRevisionState.Pending;
+        IntegrationDeploymentState currentState = openShiftService().isScaled(integrationDeployment.getName(), 0)
+            ? IntegrationDeploymentState.Inactive
+                : IntegrationDeploymentState.Pending;
 
         return new StateUpdate(currentState);
     }

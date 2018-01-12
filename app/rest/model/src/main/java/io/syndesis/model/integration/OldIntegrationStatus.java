@@ -18,7 +18,6 @@ package io.syndesis.model.integration;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
-import java.util.List;
 import java.util.Optional;
 
 @Value.Immutable
@@ -29,13 +28,13 @@ public interface OldIntegrationStatus {
      * The desired state of the revision.
      * @return
      */
-    IntegrationRevisionState getTargetState();
+    IntegrationDeploymentState getTargetState();
 
     /**
      * The current state of the revision.
      * @return
      */
-    IntegrationRevisionState getCurrentState();
+    IntegrationDeploymentState getCurrentState();
 
     /**
      * Message describing the currentState further (e.g. error message)

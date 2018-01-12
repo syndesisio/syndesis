@@ -27,7 +27,7 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationRevisionState;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
@@ -364,7 +364,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             return false;
         }
 
-        if (integration.getDesiredStatus().isPresent() && IntegrationRevisionState.Undeployed.equals(integration.getDesiredStatus().get())) {
+        if (integration.getDesiredStatus().isPresent() && IntegrationDeploymentState.Undeployed.equals(integration.getDesiredStatus().get())) {
             return false;
         }
 
