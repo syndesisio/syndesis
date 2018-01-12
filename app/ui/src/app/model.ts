@@ -112,7 +112,6 @@ export type ConfigurationProperties = Array<ConfigurationProperty>;
 
 export interface Connection extends BaseEntity {
   icon: string;
-  iconPath?: string;
   organization: Organization;
   configuredProperties: {};
   organizationId: string;

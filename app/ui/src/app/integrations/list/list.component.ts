@@ -13,14 +13,13 @@ import {
   NotificationType
 } from 'patternfly-ng';
 
-import { Integrations, Integration, Connection } from '../../model';
+import { Integrations, Integration } from '../../model';
 import { IntegrationStore } from '../../store/integration/integration.store';
 import { IntegrationViewBase } from '../components/integrationViewBase.component';
 import { ModalService } from '../../common/modal/modal.service';
 import { log, getCategory } from '../../logging';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 import { IntegrationSupportService } from 'app/store/integration-support.service';
-import { ConfigService } from '@syndesis/ui/config.service';
 
 @Component({
   selector: 'syndesis-integrations-list',
@@ -28,7 +27,6 @@ import { ConfigService } from '@syndesis/ui/config.service';
   styleUrls: ['./list.component.scss']
 })
 export class IntegrationsListComponent extends IntegrationViewBase {
-  readonly apiEndpoint: any;
   @Input() complete: boolean;
   @Input() integrations: Integrations = [];
   listConfig: ListConfig;
@@ -41,7 +39,6 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     public modalService: ModalService,
     public application: ApplicationRef,
     integrationSupportService: IntegrationSupportService,
-    private config: ConfigService
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.listConfig = {
@@ -66,7 +63,6 @@ export class IntegrationsListComponent extends IntegrationViewBase {
         } as ActionConfig
       } as EmptyStateConfig
     };
-    this.apiEndpoint = this.config.getSettings().apiEndpoint;
   }
 
   handleAction($event: Action, item: any) {
@@ -132,14 +128,5 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     }
 
     return actionConfig;
-  }
-
-  connectionIcon(connection: Connection) {
-    if (connection) {
-      if (connection.icon.startsWith('db:')) {
-        return `${this.apiEndpoint}/connectors/${connection.connectorId || connection.id}/icon`;
-      }
-      return `../../../assets/icons/${connection.connectorId || connection.id}.integration.png`;
-    }
   }
 }

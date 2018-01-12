@@ -20,7 +20,6 @@ export class ApiConnectorDetailComponent implements OnInit {
   readonly apiEndpoint: String;
   apiConnectorState$: Observable<ApiConnectorState>;
   apiConnectorData$: Observable<ApiConnectorData>;
-  icon$: Observable<String>;
 
   constructor(
     private apiConnectorStore: Store<ApiConnectorStore>,
@@ -40,13 +39,6 @@ export class ApiConnectorDetailComponent implements OnInit {
       .switchMap(([id, apiConnectors]: [string, ApiConnectors]) =>
         apiConnectors.filter(apiConnector => apiConnector.id == id)
       );
-
-    this.icon$ = this.apiConnectorData$.mergeMap(connector => {
-      if (connector.icon.startsWith('db:')) {
-        return Observable.of(`${this.apiEndpoint}/connectors/${connector.id}/icon`);
-      }
-      return Observable.of(`../../../assets/icons/${connector.icon}.connection.png`);
-    });
   }
 
   onUpdate(customConnectorRequest: CustomConnectorRequest): void {

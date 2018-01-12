@@ -30,7 +30,7 @@
       <div class="card-pf card-pf-view">
         <div class="card-pf-body">
           <div class="card-pf-top-element text-center">
-            <img src="{{ ( icon$ | async ) }}" height="106" width="106"/>
+            <img [src]="apiConnectorData | synIconPath:true" width="100"/>
           </div>
           <h2 class="card-pf-title text-center">
             {{ apiConnectorData.name || 'N/A' }}

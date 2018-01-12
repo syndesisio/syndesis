@@ -24,7 +24,7 @@ export class IconPathPipe implements PipeTransform {
     this.apiEndpoint = this.configService.getSettings().apiEndpoint;
   }
 
-  transform(connection: IconConnection): SafeUrl | null {
+  transform(connection: IconConnection, isConnector?: boolean): SafeUrl | null {
     if (connection && connection.icon instanceof File) {
       const promise = new Promise<SafeUrl>(resolve => {
         const file = connection.icon as File;
@@ -38,17 +38,22 @@ export class IconPathPipe implements PipeTransform {
       return asyncPipe.transform<SafeUrl>(promise);
 
     } else if (connection && typeof (connection.icon) === 'string') {
-      const connectorId = connection.connectorId || connection.id;
-      let iconPath = `~@syndesis/assets/icons/${connectorId}.integration.png`;
+      // TODO: Streamline this assignation block once we manage to create a common model
+      //       schema for entities featuring icons, so we can remove all these conditional logic
+      let connectionId = connection.connectorId || connection.id;
+      const defaultIcon = isConnector ? connection.icon : connectionId;
+      const defaultIconSuffix = isConnector ? 'connection' : 'integration';
+      let iconPath = `./../../assets/icons/${defaultIcon}.${defaultIconSuffix}.png`;
 
       if (connection.icon.toLowerCase().startsWith('db:')) {
-        iconPath = `${this.apiEndpoint}/connectors/${connectorId}/icon`;
+        connectionId = isConnector ? connection.id : connectionId;
+        iconPath = `${this.apiEndpoint}/connectors/${connectionId}/icon`;
       }
 
       return this.toSafeUrl(iconPath);
     }
 
-    return;
+    return this.toSafeUrl('');
   }
 
   private toSafeUrl(iconPath: string): SafeUrl {

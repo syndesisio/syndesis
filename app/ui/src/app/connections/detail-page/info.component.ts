@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -6,8 +6,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { Connection } from '../../model';
 import { ConnectionService } from '../../store/connection/connection.service';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
-import { ConfigService } from '@syndesis/ui/config.service';
-import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'syndesis-connection-detail-info',
@@ -15,7 +13,7 @@ import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
     <h1>
       <dl class="dl-horizontal">
         <dt>
-          <img src="{{ icon }}" height="46" width="46">
+          <img [src]="connection | synIconPath" width="46">
         </dt>
         <dd>
           <syndesis-editable-text [value]="connection.name"
@@ -43,44 +41,28 @@ import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
       </dd>
     </dl>
   `,
-  styles: [
-    `
+  styles: [`
     h1 dt { width: 46px; }
     h1 dd { margin-left: 66px; }
     dt { text-align: left; width: 120px; }
     dd { margin-left: 140px; }
     dt:not(:first-child), dd:not(:first-child) { margin-top: 10px; }
-  `
-  ]
+  `]
 })
-export class ConnectionDetailInfoComponent implements OnChanges {
-  readonly apiEndpoint: any;
+export class ConnectionDetailInfoComponent {
   @Input() connection: Connection;
   @Output() updated = new EventEmitter<Connection>();
-  icon: String;
 
   constructor(
     private connectionService: ConnectionService,
     private configurationService: ConnectionConfigurationService,
-    private config: ConfigService
-  ) {
-    this.apiEndpoint = config.getSettings().apiEndpoint;
-  }
+  ) { }
 
   onAttributeUpdated(attr: string, value) {
     this.connection[attr] = value;
     this.updated.emit(this.connection);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.connection.icon.startsWith('db:')) {
-      this.icon = `${this.apiEndpoint}/connectors/${this.connection.connectorId || this.connection.id}/icon`;
-    } else {
-      this.icon = `../../../assets/icons/${this.connection.connectorId || this.connection.id}.connection.png`;
-    }
-  }
-
-  /* tslint:disable semicolon */
   validateName = (name: string) => {
     if (name === '') {
       return 'Name is required';
@@ -95,6 +77,5 @@ export class ConnectionDetailInfoComponent implements OnChanges {
           }
         });
     }
-  };
-  /* tslint:enable semicolon */
+  }
 }

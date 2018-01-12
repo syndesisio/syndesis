@@ -7,9 +7,8 @@ import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { StepStore } from '@syndesis/ui/store';
 import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integrations/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { Integration, Step, Action, Connection } from '@syndesis/ui/model';
+import { Integration, Step, Action } from '@syndesis/ui/model';
 import { ModalService } from '@syndesis/ui/common';
-import { ConfigService } from '@syndesis/ui/config.service';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -19,8 +18,6 @@ const category = getCategory('IntegrationsCreatePage');
   styleUrls: ['./flow-view-step.component.scss']
 })
 export class FlowViewStepComponent extends ChildAwarePage {
-  readonly apiEndpoint: String;
-
   // the step object in the current flow
   @Input() step: Step;
 
@@ -40,10 +37,8 @@ export class FlowViewStepComponent extends ChildAwarePage {
     public route: ActivatedRoute,
     public router: Router,
     private stepStore: StepStore,
-    private config: ConfigService
   ) {
     super(currentFlow, route, router);
-    this.apiEndpoint = this.config.getSettings().apiEndpoint;
   }
 
   showTooltip() {
@@ -299,15 +294,6 @@ export class FlowViewStepComponent extends ChildAwarePage {
 
   isCollapsed() {
     return this.getPosition() !== this.currentPosition;
-  }
-
-  stepIcon(step: Step) {
-    if (step.connection) {
-      if (step.connection.icon.startsWith('db:')) {
-        return `${this.apiEndpoint}/connectors/${step.connection.connectorId || step.connection.id}/icon`;
-      }
-      return `../../../assets/icons/${step.connection.connectorId || step.connection.id}.integration.png`;
-    }
   }
 
   private thingIsEnabled(step: Step) {

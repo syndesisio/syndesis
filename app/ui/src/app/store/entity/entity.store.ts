@@ -98,7 +98,7 @@ export abstract class AbstractStore<
           if (EMPTY_STATE) {
             this._list.next(<L>[]);
           } else {
-            this._list.next(this.postProcessEntities(list));
+            this._list.next(list);
           }
           this._loading.next(false);
         }, LOADING_TIME);
@@ -147,7 +147,7 @@ export abstract class AbstractStore<
     this.service.get(id).subscribe(
       entity => {
         setTimeout(() => {
-          this._current.next(this.plain(this.postProcessEntity(entity)));
+          this._current.next(this.plain(entity));
           this._loading.next(false);
         }, LOADING_TIME);
       },
@@ -259,14 +259,6 @@ export abstract class AbstractStore<
       },
     );
     return deleted.share();
-  }
-
-  protected postProcessEntity(entity: T): T {
-    return entity;
-  }
-
-  protected postProcessEntities(entities: L): L {
-    return entities.map(e => this.postProcessEntity(e)) as L;
   }
 
   private massageError(error: any) {

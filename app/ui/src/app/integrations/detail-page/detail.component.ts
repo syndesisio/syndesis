@@ -17,7 +17,6 @@ import { ModalService } from '../../common/modal/modal.service';
 import { IntegrationSupportService } from '../../store/integration-support.service';
 import { NotificationType } from 'patternfly-ng';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
-import { ConfigService } from '@syndesis/ui/config.service';
 
 @Component({
   selector: 'syndesis-integration-detail-page',
@@ -26,7 +25,6 @@ import { ConfigService } from '@syndesis/ui/config.service';
 })
 export class IntegrationsDetailComponent extends IntegrationViewBase
   implements OnInit, OnDestroy {
-  readonly apiEndpoint: any;
   integration: Observable<Integration>;
   integrationSubscription: Subscription;
   i: Integration;
@@ -140,12 +138,10 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
     public modalService: ModalService,
     public application: ApplicationRef,
     integrationSupportService: IntegrationSupportService,
-    private config: ConfigService
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.integration = this.store.resource;
     this.loading = this.store.loading;
-    this.apiEndpoint = this.config.getSettings().apiEndpoint;
   }
 
   viewDetails(step: Step) {
@@ -396,14 +392,5 @@ export class IntegrationsDetailComponent extends IntegrationViewBase
 
   exportIntegration() {
     super.requestAction('export', this.i);
-  }
-
-  connectionIcon(connection: Connection) {
-    if (connection) {
-      if (connection.icon.startsWith('db:')) {
-        return `${this.apiEndpoint}/connectors/${connection.connectorId || connection.id}/icon`;
-      }
-      return `../../../assets/icons/${connection.connectorId || connection.id}.integration.png`;
-    }
   }
 }
