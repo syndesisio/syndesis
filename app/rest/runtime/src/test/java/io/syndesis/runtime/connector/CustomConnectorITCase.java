@@ -16,10 +16,12 @@
 package io.syndesis.runtime.connector;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
@@ -32,6 +34,7 @@ import io.syndesis.runtime.BaseITCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.InputStreamResource;
@@ -61,6 +64,9 @@ public class CustomConnectorITCase extends BaseITCase {
 
     private final Connector connector3 = new Connector.Builder().id("connector-from-second-template")
         .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
+
+    @Autowired
+    private IconDataAccessObject iconDao;
 
     private final Connector nonCustomConnector = new Connector.Builder().id("non-custom-connector").build();
 
@@ -137,12 +143,12 @@ public class CustomConnectorITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() {
+    public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() throws IOException {
         final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
             multipartBody(
                 new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID)
                     .putConfiguredProperty("specification", "here-be-specification").build(),
-                getClass().getResourceAsStream("/io/syndesis/runtime/test-image.png")),
+                CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/runtime/test-image.png")),
             Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
         final Connector created = response.getBody();
@@ -152,10 +158,15 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(created.getIcon()).startsWith("db:");
         final Icon icon = dataManager.fetch(Icon.class, created.getIcon().substring(3));
         assertThat(icon.getMediaType()).isEqualTo(MediaType.IMAGE_PNG_VALUE);
+
+        try (InputStream storedIcon = iconDao.read(icon.getId().get());
+            InputStream expectedIcon = CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/runtime/test-image.png")) {
+            assertThat(storedIcon).hasSameContentAs(expectedIcon);
+        }
     }
 
     @Test
-    public void shouldCreateNewCustomConnectorsFromMultipartWithSpecificationAndIcon() {
+    public void shouldCreateNewCustomConnectorsFromMultipartWithSpecificationAndIcon() throws IOException {
         final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
             multipartBody(new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build(),
                 getClass().getResourceAsStream("/io/syndesis/runtime/test-image.png"),
@@ -169,6 +180,11 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(created.getIcon()).startsWith("db:");
         final Icon icon = dataManager.fetch(Icon.class, created.getIcon().substring(3));
         assertThat(icon.getMediaType()).isEqualTo(MediaType.IMAGE_PNG_VALUE);
+
+        try (InputStream storedIcon = iconDao.read(icon.getId().get());
+            InputStream expectedIcon = CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/runtime/test-image.png")) {
+            assertThat(storedIcon).hasSameContentAs(expectedIcon);
+        }
     }
 
     @Test

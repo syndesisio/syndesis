@@ -201,8 +201,10 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         Connector connectorToUpdate = connectorFormData.getConnector();
 
         if (connectorFormData.getIconInputStream() != null) {
-            try {
-                String guessedMediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(connectorFormData.getIconInputStream()));
+            try(BufferedInputStream iconStream = new BufferedInputStream(connectorFormData.getIconInputStream())) {
+                // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
+                // can continue to be used, rather than being consumed.
+                String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);
                 if (!guessedMediaType.startsWith("image/")) {
                     throw new IllegalArgumentException("Invalid file contents for an image");
                 }
@@ -210,7 +212,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
                 Icon.Builder iconBuilder = new Icon.Builder().mediaType(mediaType.toString());
 
                 Icon icon = getDataManager().create(iconBuilder.build());
-                iconDao.write(icon.getId().get(), connectorFormData.getIconInputStream());
+                iconDao.write(icon.getId().get(), iconStream);
                 connectorToUpdate = connectorToUpdate.builder().icon("db:" + icon.getId().get()).build();
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error while reading multipart request", e);
