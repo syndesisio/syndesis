@@ -1,3 +1,4 @@
+// This file might not be needed. Just keeping it around for now to make sure.
 [id='adding-s3-connection-middle']
 = Adding an Amazon S3 connection as a middle connection
 

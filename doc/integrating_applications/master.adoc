@@ -17,6 +17,9 @@ The content is organized as follows:
 * <<creating-integrations>>
 * <<managing-integrations>>
 
+To learn how to use {prodname} by creating sample integrations, see the
+https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/fuse_ignite_sample_integration_tutorials/[Sample Integration Tutorials].
+
 include::topics/understanding.adoc[leveloffset=+1]
 
 include::topics/shared/log_in.adoc[leveloffset=+1]
