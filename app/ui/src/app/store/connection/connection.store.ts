@@ -11,6 +11,8 @@ export class ConnectionStore extends AbstractStore<
   Connections,
   ConnectionService
 > {
+  private apiEndpoint: String;
+
   constructor(
     connectionService: ConnectionService,
     eventService: EventsService

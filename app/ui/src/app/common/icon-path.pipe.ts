@@ -1,0 +1,62 @@
+import { Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
+import { ConfigService } from '@syndesis/ui/config.service';
+
+interface IconConnection {
+  icon: string | File;
+  connectorId?: string;
+  id?: string;
+}
+
+@Pipe({
+  name: 'synIconPath'
+})
+export class IconPathPipe implements PipeTransform {
+  private apiEndpoint: string;
+
+  constructor(
+    private configService: ConfigService,
+    private sanitizer: DomSanitizer,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.apiEndpoint = this.configService.getSettings().apiEndpoint;
+  }
+
+  transform(connection: IconConnection, isConnector?: boolean): SafeUrl | null {
+    if (connection && connection.icon instanceof File) {
+      const promise = new Promise<SafeUrl>(resolve => {
+        const file = connection.icon as File;
+        const fileReader = new FileReader();
+
+        fileReader.onload = event => resolve(this.toSafeUrl(event.target['result']));
+        fileReader.readAsDataURL(file);
+      });
+
+      const asyncPipe = new AsyncPipe(this.changeDetectorRef);
+      return asyncPipe.transform<SafeUrl>(promise);
+
+    } else if (connection && typeof (connection.icon) === 'string') {
+      // TODO: Streamline this assignation block once we manage to create a common model
+      //       schema for entities featuring icons, so we can remove all these conditional logic
+      let connectionId = connection.connectorId || connection.id;
+      const defaultIcon = isConnector ? connection.icon : connectionId;
+      const defaultIconSuffix = isConnector ? 'connection' : 'integration';
+      let iconPath = `./../../assets/icons/${defaultIcon}.${defaultIconSuffix}.png`;
+
+      if (connection.icon.toLowerCase().startsWith('db:')) {
+        connectionId = isConnector ? connection.id : connectionId;
+        iconPath = `${this.apiEndpoint}/connectors/${connectionId}/icon`;
+      }
+
+      return this.toSafeUrl(iconPath);
+    }
+
+    return this.toSafeUrl('');
+  }
+
+  private toSafeUrl(iconPath: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(iconPath);
+  }
+}

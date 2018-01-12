@@ -24,8 +24,8 @@ const category = getCategory('Connections');
 })
 export class ConnectionsListComponent implements OnInit {
   truncateTrail = '…';
-  selectedId = undefined;
-  selectedForDelete: Connection = undefined;
+  selectedId: string;
+  selectedForDelete: Connection;
 
   @Input() connections: Connections;
   @Input() loading: boolean;
@@ -97,9 +97,4 @@ export class ConnectionsListComponent implements OnInit {
     }
     this.onSelected.emit(connection);
   }
-
-  isSelected(connection: Connection) {
-    return connection.id === this.selectedId;
-  }
-
 }

@@ -13,7 +13,7 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
     <h1>
       <dl class="dl-horizontal">
         <dt>
-          <img src="../../../assets/icons/{{ connection.connectorId }}.connection.png" height="46" width="46">
+          <img [src]="connection | synIconPath" width="46">
         </dt>
         <dd>
           <syndesis-editable-text [value]="connection.name"
@@ -41,15 +41,13 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
       </dd>
     </dl>
   `,
-  styles: [
-    `
+  styles: [`
     h1 dt { width: 46px; }
     h1 dd { margin-left: 66px; }
     dt { text-align: left; width: 120px; }
     dd { margin-left: 140px; }
     dt:not(:first-child), dd:not(:first-child) { margin-top: 10px; }
-  `
-  ]
+  `]
 })
 export class ConnectionDetailInfoComponent {
   @Input() connection: Connection;
@@ -58,14 +56,13 @@ export class ConnectionDetailInfoComponent {
   constructor(
     private connectionService: ConnectionService,
     private configurationService: ConnectionConfigurationService
-  ) {}
+  ) { }
 
   onAttributeUpdated(attr: string, value) {
     this.connection[attr] = value;
     this.updated.emit(this.connection);
   }
 
-  /* tslint:disable semicolon */
   validateName = (name: string) => {
     if (name === '') {
       return 'Name is required';
@@ -80,6 +77,5 @@ export class ConnectionDetailInfoComponent {
           }
         });
     }
-  };
-  /* tslint:enable semicolon */
+  }
 }

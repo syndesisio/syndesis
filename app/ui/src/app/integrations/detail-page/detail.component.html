@@ -56,8 +56,7 @@
                          title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
                       <div [class]="'step-line ' + getStepLineClass(index)"></div>
                       <div class="icon">
-                        <img class="connection-icon"
-                             src="../../../assets/icons/{{ step.connection.connectorId }}.integration.png">
+                        <img class="connection-icon" [src]="step.connection | synIconPath">
                       </div>
                       <div>{{ step.connection.name | capitalize }}</div>
                     </div>

@@ -16,11 +16,11 @@
                  let-index="index">
       <div class="list-pf-left integration-icons">
         <span *ngIf="getStart(integration).connection; let connection">
-          <img src="../../../assets/icons/{{ connection.connectorId }}.integration.png">
+          <img [src]="connection | synIconPath" width="40">
         </span>
         <span class="fa fa-angle-right"></span>
         <span *ngIf="getFinish(integration).connection; let connection">
-          <img src="../../../assets/icons/{{ connection.connectorId }}.integration.png">
+          <img [src]="connection | synIconPath" width="40">
         </span>
       </div>
       <div class="list-pf-content-wrapper">

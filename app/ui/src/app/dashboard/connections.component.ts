@@ -1,16 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { log, getCategory } from '../logging';
-
-import { Connection, Connections } from '../model';
-import { ConnectionStore } from '../store/connection/connection.store';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { Connection, Connections } from '@syndesis/ui/model';
+import { ConnectionStore } from '@syndesis/ui/store';
 
 const category = getCategory('Dashboard');
 
@@ -20,15 +12,11 @@ const category = getCategory('Dashboard');
   styleUrls: ['./connections.component.scss']
 })
 export class DashboardConnectionsComponent implements OnInit {
-  selectedId = undefined;
-
   @Input() connections: Connections;
   @Input() loading: boolean;
-  @Output() selectedConnection: EventEmitter<Connection> = new EventEmitter();
-
+  @Output() selectedConnection = new EventEmitter<Connection>();
+  selectedId: string;
   truncateTrail = '…';
-
-  //-----  Selecting a Connection ------------------->>
 
   onSelect(connection: Connection) {
     log.debugc(
@@ -38,8 +26,6 @@ export class DashboardConnectionsComponent implements OnInit {
     this.selectedId = connection.id;
     this.selectedConnection.emit(connection);
   }
-
-  //----- Initialization ------------------->>
 
   ngOnInit() {
     log.debugc(
