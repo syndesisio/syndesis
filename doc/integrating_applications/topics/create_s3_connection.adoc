@@ -1,26 +1,6 @@
 [id='create-s3-connection']
 = Create an Amazon S3 connection
 
-Before you can create an Amazon S3 connection, you must know the
-following:
-
-* Amazon S3 access key ID for the Amazon Web Services (AWS) account
-that created the bucket you want to access. 
-* Amazon S3 secret access key for the AWS account that created the bucket
-you want to access. 
-* Name of the bucket you want to access or its Amazon Resource Name (ARN)
-* Region in which the bucket is located
-
-If you do not have Amazon access keys, you can obtain new keys as follows:
-
-. Go to https://aws.amazon.com/s3/. 
-. Sign in to the console
-with the AWS account that created the bucket you want to access. 
-. In the console, in the upper right, click the down arrow next to 
-the username and click *My Security Credentials*. 
-. Expand *Access Keys* and click *Create New Access Keys*.
-. Follow the prompts to obtain the keys. 
-
 To create an Amazon S3 connection:
 
 . In {prodname}, in the left pane, click *Connections* to 
@@ -30,18 +10,25 @@ display any available connections.
 . Click the *Amazon S3* connector. 
 . In the *Access Key* field, enter the Amazon S3 access key ID, 
 provided by AWS, for the
-AWS account that created the bucket you want to access. 
+AWS account that created the bucket that you want 
+this connection to access. If the bucket you want the connection to
+access does not already exist then when the integration starts running,
+it uses the AWS account associated with this access key to create the bucket.
 . In the *Bucket Name or Amazon Resource Name* field, enter the name of
-the bucket you want this connection to access or enter the bucket's ARN. 
+the bucket that you want this connection to access or enter the bucket's ARN. 
+If the bucket does not already exist then the connection creates it.
 . In the *Region* field, enter the AWS region in which the bucket resides.
+If the bucket does not already exist then the connection creates it in the
+specified region. 
 . In the *Secret Key* field, enter the Amazon S3 secret access key,
-provided by AWS, for the account that created the bucket you want this 
+provided by AWS, for the account that created the bucket that you want this 
 connection to access. 
-. Click *Validate*. {prodname} immediately tries to validate the 
-connection and displays a message that indicates whether or not
-validation is successful. If validation fails, revise the configuration
-details as needed and try again. 
-. If validation is successful, click *Next*. 
+// . Click *Validate*. {prodname} immediately tries to validate the 
+// connection and displays a message that indicates whether or not
+// validation is successful. If validation fails, revise the configuration
+//details as needed and try again. 
+//. If validation is successful, click *Next*. 
+. Click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connection. 
 For example, enter `Obtain S3 Data`.

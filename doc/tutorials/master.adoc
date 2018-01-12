@@ -35,6 +35,10 @@ sample integrations:
 * <<twitter-to-salesforce>>
 * <<salesforce-to-db>>
 
+A 
+https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite//[user guide]
+for {prodname} is also available.
+
 include::topics/shared/log_in.adoc[leveloffset=+1]
 
 include::topics/t2sf_intro.adoc[leveloffset=+1]

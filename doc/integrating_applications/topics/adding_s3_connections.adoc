@@ -4,7 +4,7 @@
 You must create an Amazon S3 connection before you can add an 
 Amazon S3 connection to an
 integration. If you did not already create an Amazon S3 connection, 
-see <<create-s3-connection>>. 
+see <<prerequisites-for-creating-s3-connection>>. 
 
 The procedure for adding an Amazon S3 connection to an integration varies
 according to whether you are adding it as the
@@ -13,10 +13,7 @@ See the following topics:
 
 * <<adding-s3-connection-start>>
 * <<adding-s3-connection-finish>>
-* <<adding-s3-connection-middle>>
 
 include::adding_s3_connection_start.adoc[leveloffset=+1]
 
 include::adding_s3_connection_finish.adoc[leveloffset=+1]
-
-include::adding_s3_connection_middle.adoc[leveloffset=+1]
