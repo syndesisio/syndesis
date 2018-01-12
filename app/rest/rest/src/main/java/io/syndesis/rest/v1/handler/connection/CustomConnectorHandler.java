@@ -94,8 +94,10 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
             (generator, template) -> generator.generate(template, connectorSettingsToUse));
 
         if (customConnectorFormData.getIconInputStream() != null) {
-            try {
-                String guessedMediaType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(customConnectorFormData.getIconInputStream()));
+            // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
+            // can continue to be used, rather than being consumed.
+            try(BufferedInputStream iconStream = new BufferedInputStream(customConnectorFormData.getIconInputStream())) {
+                String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);
                 if (!guessedMediaType.startsWith("image/")) {
                     throw new IllegalArgumentException("Invalid file contents for an image");
                 }
@@ -104,7 +106,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
                     .mediaType(mediaType.toString());
 
                 Icon icon = getDataManager().create(iconBuilder.build());
-                iconDao.write(icon.getId().get(), customConnectorFormData.getIconInputStream());
+                iconDao.write(icon.getId().get(), iconStream);
 
                 generatedConnector = new Connector.Builder().createFrom(generatedConnector).icon("db:" + icon.getId().get()).build();
             } catch (IOException e) {
@@ -158,14 +160,6 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
         @FormParam("specification")
         private InputStream specification;
-
-        public CustomConnectorFormData() {
-        }
-
-        public CustomConnectorFormData(ConnectorSettings connectorSettings, InputStream iconInputStream) {
-            this.connectorSettings = connectorSettings;
-            this.iconInputStream = iconInputStream;
-        }
 
         public ConnectorSettings getConnectorSettings() {
             return connectorSettings;
