@@ -75,7 +75,8 @@ export class OAuthAppFormComponent implements OnInit {
     const formConfig = JSON.parse(JSON.stringify(OAUTH_APP_FORM_CONFIG));
     this.formModel = this.formFactory.createFormModel(
       formConfig,
-      this.item.client
+      this.item.client,
+      ['*']
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
   }

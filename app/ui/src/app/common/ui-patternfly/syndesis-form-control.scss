@@ -8,6 +8,11 @@ textarea:read-only {
   background-color: transparent;
   border: none;
 }
-.control-label > label {
-  margin-bottom: 0;
+.control-label {
+  cursor: pointer;
+  > .hint-icon {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
 }
