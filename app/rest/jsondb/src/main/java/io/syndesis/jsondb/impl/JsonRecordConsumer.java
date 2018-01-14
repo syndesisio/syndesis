@@ -199,6 +199,10 @@ import java.util.function.Consumer;
             return;
         }
         if (!shallowObjects.isEmpty()) {
+            JsonStreamContext oc = jg.getOutputContext();
+            if (!oc.inObject()) {
+                jg.writeStartObject();
+            }
             for (String o : shallowObjects) {
                 jg.writeFieldName(o);
                 jg.writeBoolean(true);

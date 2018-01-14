@@ -185,6 +185,17 @@ public class JsonDBTest {
 
         String json = jsondb.getAsString("/test", new GetOptions().depth(1));
         assertThat(json).isEqualTo("{\"name\":\"Hiram Chirino\",\"props\":true}");
+
+        jsondb.delete("/test");
+        jsondb.set("/test/a1/b1/c1", "1");
+        jsondb.set("/test/a1/b2/c1", "2");
+        jsondb.set("/test/a2/b3/c1", "3");
+        jsondb.set("/test/a3/b4/c1", "4");
+        jsondb.set("/test/a4/b5/c1", "5");
+
+        json = jsondb.getAsString("/test", new GetOptions().depth(1));
+        assertThat(json).isEqualTo("{\"a1\":true,\"a2\":true,\"a3\":true,\"a4\":true}");
+
     }
 
     @Test
