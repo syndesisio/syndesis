@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2016 Red Hat, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>syndesis-extension-parent</artifactId>
+  <packaging>pom</packaging>
+
+  <name>Extension :: Parent</name>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>syndesis-rest-parent</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <basepom.check.skip-license>true</basepom.check.skip-license>
+
+    <google-testing-compile.version>0.12</google-testing-compile.version>
+    <google-testing-compile-guava.version>21.0</google-testing-compile-guava.version>
+  </properties>
+
+  <modules>
+    <module>annotation-processor</module>
+    <module>api</module>
+    <module>examples</module>
+    <module>maven-plugin</module>
+    <module>bom</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerId>javac-with-errorprone</compilerId>
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+            <arg>-Xlint:-deprecation</arg>
+            <arg>-Xlint:-processing</arg>
+            <arg>-Xlint:-serial</arg>
+            <arg>-Werror</arg>
+            <arg>-XepDisableWarningsInGeneratedCode</arg>
+            <arg>-implicit:none</arg>
+          </compilerArgs>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-javac-errorprone</artifactId>
+            <version>2.8.2</version>
+          </dependency>
+          <!-- override plexus-compiler-javac-errorprone's dependency on
+           Error Prone with the latest version -->
+          <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_core</artifactId>
+            <version>2.1.2</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

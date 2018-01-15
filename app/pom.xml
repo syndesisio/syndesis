@@ -38,8 +38,9 @@
 		<syndesis.version>${project.version}</syndesis.version>
 		<syndesis.policy.version>2</syndesis.policy.version>
 
-		<!-- Atlasmap version-->
+		<!-- Atlasmap version -->
 		<atlasmap.version>1.32.2</atlasmap.version>
+		<camel-atlasmap.version>1.32.2</camel-atlasmap.version>
 
 		<!-- Image names -->
 		<image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
@@ -81,6 +82,7 @@
 		<module>runtime</module>
 		<module>core</module>
 		<module>connectors</module>
+		<module>extension</module>
 		<module>rest</module>
 		<module>s2i</module>
 		<module>verifier</module>
