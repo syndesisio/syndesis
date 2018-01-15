@@ -1,4 +1,4 @@
-FROM fabric8/s2i-java:2.0.2
+FROM fabric8/s2i-java:2.1.0
 
 COPY m2 /tmp/artifacts/m2/
 
