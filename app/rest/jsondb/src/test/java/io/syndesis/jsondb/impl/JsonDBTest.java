@@ -58,7 +58,10 @@ public class JsonDBTest {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         DBI dbi = new DBI(ds);
-        this.jsondb = new SqlJsonDB(dbi, null);
+
+        this.jsondb = new SqlJsonDB(dbi, null,
+            Arrays.asList(new Index("/pair", "key"))
+        );
 
         try {
             this.jsondb.dropTables();
@@ -138,7 +141,39 @@ public class JsonDBTest {
 
 
     @Test
-    public void testGetShallow() throws IOException {
+    public void testGetLimit() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().limit(3));
+        assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\"}");
+    }
+
+    @Test
+    public void testGetAfter() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().after("user3"));
+        assertThat(json).isEqualTo("{\"user4\":\"test 4\",\"user5\":\"test 5\",\"user6\":\"test 6\"}");
+    }
+
+    @Test
+    public void testGetDepth1() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(
             "name", "Hiram Chirino",
@@ -148,8 +183,38 @@ public class JsonDBTest {
             )
         )));
 
-        String json = jsondb.getAsString("/test", new GetOptions().shallow(true));
+        String json = jsondb.getAsString("/test", new GetOptions().depth(1));
         assertThat(json).isEqualTo("{\"name\":\"Hiram Chirino\",\"props\":true}");
+
+        jsondb.delete("/test");
+        jsondb.set("/test/a1/b1/c1", "1");
+        jsondb.set("/test/a1/b2/c1", "2");
+        jsondb.set("/test/a2/b3/c1", "3");
+        jsondb.set("/test/a3/b4/c1", "4");
+        jsondb.set("/test/a4/b5/c1", "5");
+
+        json = jsondb.getAsString("/test", new GetOptions().depth(1));
+        assertThat(json).isEqualTo("{\"a1\":true,\"a2\":true,\"a3\":true,\"a4\":true}");
+
+    }
+
+    @Test
+    public void testGetDepth2() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "name", "Hiram Chirino",
+            "props", map(
+                "city", "Tampa",
+                "state", "FL",
+                "more-props", map(
+                    "city", "Tampa",
+                    "state", "FL"
+                )
+            )
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().depth(2));
+        assertThat(json).isEqualTo("{\"name\":\"Hiram Chirino\",\"props\":{\"city\":\"Tampa\",\"state\":\"FL\",\"props\":true}}");
     }
 
     @Test

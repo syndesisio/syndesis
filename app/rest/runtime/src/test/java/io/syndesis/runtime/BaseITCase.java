@@ -15,22 +15,16 @@
  */
 package io.syndesis.runtime;
 
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.jsondb.impl.SqlJsonDB;
-
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -53,6 +47,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
+import javax.annotation.PostConstruct;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -67,6 +66,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         SyndesisCorsConfiguration.class
 })
 public abstract class BaseITCase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BaseITCase.class);
 
     public static WireMockRule wireMock;
 
@@ -224,6 +225,9 @@ public abstract class BaseITCase {
 
     private <T> ResponseEntity<T> processResponse(HttpStatus expectedStatus, ResponseEntity<T> response) {
         if( expectedStatus!=null ) {
+            if( !response.getStatusCode().equals(expectedStatus) ) {
+                LOG.warn("Got unexpected status code: {}, body: {}", response.getStatusCode(), response.getBody());
+            }
             assertThat(response.getStatusCode()).as("status code").isEqualTo(expectedStatus);
         }
         return response;

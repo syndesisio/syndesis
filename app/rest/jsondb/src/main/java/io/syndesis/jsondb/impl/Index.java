@@ -18,38 +18,21 @@ package io.syndesis.jsondb.impl;
 /**
  * JsonRecord is used to hold that data stored in a database record.
  */
-public final class JsonRecord {
+public final class Index {
 
     private final String path;
-    private final String value;
-    private final int kind;
-    private final String index;
+    private final String field;
 
-    private JsonRecord(String path, String value, int kind, String index) {
+    public Index(String path, String field) {
         this.path = path;
-        this.value = value;
-        this.kind = kind;
-        this.index = index;
+        this.field = field;
     }
 
     public String getPath() {
         return path;
     }
 
-    public String getValue() {
-        return value;
+    public String getField() {
+        return field;
     }
-
-    public int getKind() {
-        return kind;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public static JsonRecord of(String path, String value, int kind, String index) {
-        return new JsonRecord(path, value, kind, index);
-    }
-
 }

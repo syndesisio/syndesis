@@ -76,7 +76,7 @@ public class JsonDBResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         if( shallow!=null ) {
-            options.shallow(true);
+            options.depth(1);
         }
 
         String contentType = APPLICATION_JSON;

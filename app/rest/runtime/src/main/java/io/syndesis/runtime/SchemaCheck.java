@@ -55,7 +55,7 @@ public class SchemaCheck {
 
             setClusterProperty(jsondb, "dao_schema_version", Schema.VERSION);
         } else {
-            LOG.info("DB schema has not changed.");
+            LOG.info("DB schema has not changed: {}", Schema.VERSION);
         }
     }
 

@@ -31,6 +31,8 @@ import io.syndesis.model.WithTags;
 import io.syndesis.model.action.ExtensionAction;
 import io.syndesis.model.action.WithActions;
 import io.syndesis.model.validation.NonBlockingValidations;
+import io.syndesis.model.validation.UniqueProperty;
+import io.syndesis.model.validation.UniquenessRequired;
 import io.syndesis.model.validation.extension.NoDuplicateExtension;
 import org.immutables.value.Value;
 
@@ -38,6 +40,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
 @JsonPropertyOrder({ "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
+@UniqueProperty(value = "extensionId", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
 public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, Serializable {
 
