@@ -1,5 +1,7 @@
 FROM fabric8/s2i-java:2.1.0
 
+ENV AB_JOLOKIA_HTTPS="true"
+
 COPY m2 /tmp/artifacts/m2/
 
 COPY settings.xml /tmp/settings.xml
