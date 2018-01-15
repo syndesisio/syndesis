@@ -19,7 +19,7 @@
        container="body">
       <i [class]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
-      <img class="connection-icon"
+      <img class="syn-icon-small"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
            [src]="step.connection | synIconPath">
     </p>
