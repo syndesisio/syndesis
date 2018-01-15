@@ -21,6 +21,11 @@ endpoints:
   test_support:
     enabled: true
 
+features:
+  api:
+    graphql:
+      enabled: true
+
 controllers:
   integration:
     enabled: 'noop'

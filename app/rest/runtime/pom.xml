@@ -414,6 +414,9 @@
             <ignoredUnusedDeclaredDependency>com.github.mikegirard:spring-social-salesforce</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.social:spring-social-twitter</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.graphql-java:graphql-spring-boot-starter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.graphql-java:graphiql-spring-boot-starter</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.graphql-java:graphql-java-tool</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
@@ -511,6 +514,28 @@
             <dependency>
               <groupId>com.github.tomakehurst</groupId>
               <artifactId>wiremock-standalone</artifactId>
+            </dependency>
+
+            <!-- These all have a LICENSE.md in them -->
+            <dependency>
+              <groupId>com.graphql-java</groupId>
+              <artifactId>graphiql-spring-boot-autoconfigure</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>com.graphql-java</groupId>
+              <artifactId>graphiql-spring-boot-starter</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>com.graphql-java</groupId>
+              <artifactId>graphql-java</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>com.graphql-java</groupId>
+              <artifactId>graphql-spring-boot-autoconfigure</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>com.graphql-java</groupId>
+              <artifactId>graphql-spring-boot-starter</artifactId>
             </dependency>
           </ignoredDependencies>
         </configuration>
@@ -826,7 +851,30 @@
         <artifactId>okio</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-java</artifactId>
+      <version>6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-spring-boot-starter</artifactId>
+      <version>3.9.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphiql-spring-boot-starter</artifactId>
+      <version>3.9.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-java-tools</artifactId>
+      <version>4.3.0</version>
+      <scope>runtime</scope>
+    </dependency>
+
   </dependencies>
+
 
   <profiles>
     <profile>
