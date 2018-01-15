@@ -13,7 +13,7 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
     <h1>
       <dl class="dl-horizontal">
         <dt>
-          <img [src]="connection | synIconPath" width="46">
+          <img class="syn-icon-medium" [src]="connection | synIconPath">
         </dt>
         <dd>
           <syndesis-editable-text [value]="connection.name"

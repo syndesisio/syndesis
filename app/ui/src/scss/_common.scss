@@ -43,3 +43,21 @@ a.disabled {
 .syn-preventclick {
   @include preventclick;
 }
+
+@mixin syn-icon-box($size) {
+  max-height: $size;
+  max-width: $size;
+}
+
+.syn-icon-large {
+  @include syn-icon-box(100px);
+}
+
+.syn-icon-medium {
+  @include syn-icon-box(46px);
+  padding: 3px;
+}
+
+.syn-icon-small {
+  @include syn-icon-box(24px);
+}

@@ -34,7 +34,8 @@
         </div>
         <div class="list-pf-content list-pf-content-flex">
           <div class="list-pf-left">
-            <span class="fa {{ item.client.icon }} list-pf-icon list-pf-icon-bordered list-pf-icon-small"></span>
+            <img *ngIf="!item.client.icon.startsWith('fa-')" class="syn-icon-medium list-pf-icon list-pf-icon-bordered list-pf-icon-small" [src]="item.client | synIconPath">
+            <span *ngIf="item.client.icon.startsWith('fa-')" class="fa {{ item.client.icon }} list-pf-icon list-pf-icon-bordered list-pf-icon-small"></span>
           </div>
           <div class="list-pf-content-wrapper">
             <div class="list-pf-main-content">

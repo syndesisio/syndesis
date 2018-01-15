@@ -19,7 +19,7 @@
       </div>
 
       <div class="syn-form-row syn-form-row--oauth" *ngIf="authSetupForm.value.authenticationType == 'oauth2'">
-        <label class="syn-form-row__label" for="authorizationEndpoint">Authentication URL</label>
+        <label class="syn-form-row__label" for="authorizationEndpoint">Authorization URL</label>
         <input class="syn-form-row__input"
           [class.syn-submitted]="form.submitted"
           type="text"
@@ -27,7 +27,7 @@
       </div>
       
       <div class="syn-form-row syn-form-row--oauth" *ngIf="authSetupForm.value.authenticationType == 'oauth2'">
-        <label class="syn-form-row__label" for="tokenEndpoint">Authorization URL</label>
+        <label class="syn-form-row__label" for="tokenEndpoint">Access Token URL</label>
         <input class="syn-form-row__input"
           [class.syn-submitted]="form.submitted"
           type="text"
