@@ -38,6 +38,9 @@
 		<syndesis.version>${project.version}</syndesis.version>
 		<syndesis.policy.version>2</syndesis.policy.version>
 
+		<!-- Atlasmap version-->
+		<atlasmap.version>1.32.2</atlasmap.version>
+
 		<!-- Image names -->
 		<image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
 		<image.rest>syndesis/syndesis-rest:%l</image.rest>
