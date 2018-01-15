@@ -224,12 +224,14 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
       category
     );
     */
-    // supress null values
-    Object.keys(values).forEach(key => {
-      if (values[key] === 'null') {
-        values[key] = undefined;
+    if (values) {
+      // supress null values
+      for (const key in values) {
+        if (values[key] === 'null') {
+          values[key] = undefined;
+        }
       }
-    });
+    }
     // Call formService to build the form
     this.formModel = this.formFactory.createFormModel(this.formConfig, values);
     this.formGroup = this.formService.createFormGroup(this.formModel);
