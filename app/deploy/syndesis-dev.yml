@@ -11,8 +11,8 @@ metadata:
 # Allow localhost refs: true
 # Use docker images: true
 # Without Probes: false
-# Atlasmap Tag: latest
-# Syndesis Tag: latest
+# Atlasmap Tag: 1.32
+# Syndesis Tag: 1.2
 # Restricted environment: false
 #
   labels:
@@ -184,7 +184,7 @@ objects:
       spec:
         containers:
         - name: syndesis-ui
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.2
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -312,7 +312,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
+          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:1.32
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -753,7 +753,7 @@ objects:
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
           - name: JAVA_DEBUG
             value: "true"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.2
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -896,7 +896,7 @@ objects:
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           - name: JAVA_DEBUG
             value: "true"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.2
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
