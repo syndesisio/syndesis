@@ -16,7 +16,7 @@
 package io.syndesis.verifier.impl;
 
 import io.syndesis.connector.jms.ActiveMQConnectorVerifierExtension;
-import io.syndesis.verifier.api.SimpleComponentVerifier;
+import io.syndesis.verifier.api.ComponentVerifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @author dhirajsb
  */
 @Component("activemq")
-public class ActiveMQVerifier extends SimpleComponentVerifier {
+public class ActiveMQVerifier extends ComponentVerifier {
     public ActiveMQVerifier() {
         // default to arbitrary action connector for stateless connection verification
         super("activemq-publish", ActiveMQConnectorVerifierExtension.class);

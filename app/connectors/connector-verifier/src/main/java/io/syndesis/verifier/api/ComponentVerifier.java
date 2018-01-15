@@ -34,18 +34,29 @@ import org.slf4j.LoggerFactory;
  * @author roland
  * @since 28/03/2017
  */
-public abstract class BaseVerifier implements Verifier {
+public class ComponentVerifier implements Verifier {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final Class<? extends ComponentVerifierExtension> verifierExtensionClass;
+    private final String defaultComponentScheme;
+
     private volatile ComponentVerifierExtension verifierExtension;
 
-    protected BaseVerifier() {
-        this(ComponentVerifierExtension.class);
+    public ComponentVerifier() {
+        this(null, ComponentVerifierExtension.class);
     }
 
-    protected BaseVerifier(Class<? extends ComponentVerifierExtension> verifierExtensionClass) {
+    public ComponentVerifier(String componentScheme) {
+        this(componentScheme, ComponentVerifierExtension.class);
+    }
+
+    public ComponentVerifier(Class<? extends ComponentVerifierExtension> verifierExtensionClass) {
+        this(null, verifierExtensionClass);
+    }
+
+    public ComponentVerifier(String componentScheme, Class<? extends ComponentVerifierExtension> verifierExtensionClass) {
+        this.defaultComponentScheme = componentScheme;
         this.verifierExtensionClass = verifierExtensionClass;
     }
 
@@ -89,7 +100,9 @@ public abstract class BaseVerifier implements Verifier {
 
     // ========================================================
 
-    protected abstract Optional<String> getConnectorAction();
+    protected Optional<String> getConnectorAction() {
+        return Optional.ofNullable(defaultComponentScheme);
+    }
 
     protected void customize(Map<String, Object> params) {
         // Hook for customizing params

@@ -15,7 +15,7 @@
  */
 package io.syndesis.verifier.impl;
 
-import io.syndesis.verifier.api.SimpleComponentVerifier;
+import io.syndesis.verifier.api.ComponentVerifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @since 28/03/2017
  */
 @Component("http")
-public class HttpVerifier extends SimpleComponentVerifier {
+public class HttpVerifier extends ComponentVerifier {
     public HttpVerifier() {
         super("http-get-connector");
     }

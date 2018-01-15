@@ -16,7 +16,7 @@
 package io.syndesis.verifier.impl;
 
 import io.syndesis.connector.sql.SqlConnectorVerifierExtension;
-import io.syndesis.verifier.api.SimpleComponentVerifier;
+import io.syndesis.verifier.api.ComponentVerifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @since 8/29/2017
  */
 @Component("sql")
-public class SqlVerifier extends SimpleComponentVerifier {
+public class SqlVerifier extends ComponentVerifier {
     public SqlVerifier() {
         super("sql", SqlConnectorVerifierExtension.class);
     }

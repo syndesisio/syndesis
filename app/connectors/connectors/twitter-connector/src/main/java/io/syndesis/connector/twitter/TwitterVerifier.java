@@ -18,9 +18,9 @@ package io.syndesis.connector.twitter;
 import java.util.Map;
 import java.util.Optional;
 
-import io.syndesis.verifier.api.BaseVerifier;
+import io.syndesis.verifier.api.ComponentVerifier;
 
-public class TwitterVerifier extends BaseVerifier {
+public class TwitterVerifier extends ComponentVerifier {
     @Override
     protected Optional<String> getConnectorAction() {
         return Optional.of("twitter-timeline");
