@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # All modules, in the right build order
-ALL_MODULES="runtime core connectors verifier rest s2i ui tests"
+ALL_MODULES="core runtime connectors verifier rest s2i ui tests"
 POD_MODULES="verifier rest ui"
 MODULES=(
   "ui"
+  "core"
   "runtime"
-  "core:runtime"
-  "connectors:runtime core"
-  "verifier:runtime core connectors"
-  "rest:runtime core connectors"
-  "s2i:runtime core connectors rest"
-  "tests:runtime core connectors rest s2i"
+  "connectors:core runtime"
+  "verifier:core runtime connectors"
+  "rest:core runtime connectors"
+  "s2i:core runtime connectors rest"
+  "tests:core runtime connectors rest s2i"
 )
 
 build::description() {
@@ -20,7 +20,7 @@ build::description() {
 
 build::usage() {
     cat <<EOT
--b  --backend                 Build only backend modules (runtime, core, connectors, rest, verifier)
+-b  --backend                 Build only backend modules (core, runtime, connectors, rest, verifier)
     --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
 -m  --module <m1>,<m2>, ..    Build modules
                               Modules: ui, rest, connectors, s2i, verifier, runtime
