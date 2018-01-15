@@ -63,4 +63,8 @@ public class ExtensionDataManager {
         }
         return res;
     }
+
+    public ExtensionDataAccessObject getExtensionDataAccess() {
+        return extensionDataAccess;
+    }
 }

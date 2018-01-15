@@ -17,6 +17,7 @@ package io.syndesis.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Violation;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.exception.RestError;
@@ -93,7 +94,7 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(list.getBody().getItems()).as("items").hasSize(2);
 
         // We should be able to export the integration too.
-        ResponseEntity<byte[]> exportData = get("/api/v1/integrations/2001/export.zip", byte[].class);
+        ResponseEntity<byte[]> exportData = get("/api/v1/integration-support/export.zip?id=2001", byte[].class);
         assertThat(exportData.getBody()).isNotNull();
 
         // Lets delete it
@@ -109,7 +110,7 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(list.getBody().getItems()).as("items").hasSize(1);
 
         // Lets now re-import the integration:
-        post("/api/v1/integration-support/import", exportData.getBody(), (Class<?>) null);
+        post("/api/v1/integration-support/import", exportData.getBody(), ChangeEvent[].class);
 
     }
 
