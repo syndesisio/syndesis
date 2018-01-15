@@ -225,7 +225,7 @@ export class IntegrationsStepConfigureComponent extends FlowPage implements OnIn
     );
     */
     // supress null values
-    Object.keys(values).forEach(key => {
+    Object.keys(values || {}).forEach(key => {
       if (values[key] === 'null') {
         values[key] = undefined;
       }
