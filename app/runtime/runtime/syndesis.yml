@@ -1,3 +1,0 @@
-flows:
-  - trigger: http://0.0.0.0:8080
-    action: Main

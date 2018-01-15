@@ -40,7 +40,6 @@
     <dep.plugin.compiler.version>3.7.0</dep.plugin.compiler.version>
 
     <syndesis-connectors.version>${project.version}</syndesis-connectors.version>
-    <syndesis-integration-runtime.version>${project.version}</syndesis-integration-runtime.version>
 
     <immutables.version>2.5.6</immutables.version>
     <junit.version>4.12</junit.version>

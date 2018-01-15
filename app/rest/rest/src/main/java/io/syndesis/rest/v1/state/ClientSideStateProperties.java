@@ -20,8 +20,7 @@ import java.util.Base64;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import io.syndesis.integration.support.Strings;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("client.state")
@@ -44,8 +43,8 @@ public class ClientSideStateProperties {
     private Long tid;
 
     public boolean areSet() {
-        return tid != null && !Strings.isEmpty(authenticationAlgorithm) && !Strings.isEmpty(authenticationKey)
-            && !Strings.isEmpty(encryptionAlgorithm) && !Strings.isEmpty(encryptionKey);
+        return tid != null && !StringUtils.isEmpty(authenticationAlgorithm) && !StringUtils.isEmpty(authenticationKey)
+            && !StringUtils.isEmpty(encryptionAlgorithm) && !StringUtils.isEmpty(encryptionKey);
     }
 
     public String getAuthenticationAlgorithm() {

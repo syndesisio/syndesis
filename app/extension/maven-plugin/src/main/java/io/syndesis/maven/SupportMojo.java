@@ -37,17 +37,12 @@ import org.springframework.boot.maven.RepackageMojo;
  */
 @SuppressWarnings({"PMD.EmptyMethodInAbstractClassShouldBeAbstract"})
 public abstract class SupportMojo extends RepackageMojo {
-    public static final String FILTERED_GROUPS = "org.apache.camel, io.syndesis.integration-runtime";
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
     @Parameter(defaultValue = "${project.build.directory}", required = true)
     protected File outputDirectory;
     @Parameter(defaultValue = "${project.build.finalName}", required = true)
     protected String finalName;
-
-    @Parameter(defaultValue = FILTERED_GROUPS)
-    protected String filteredGroupIds;
-
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

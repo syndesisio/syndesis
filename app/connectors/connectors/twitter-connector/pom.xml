@@ -41,6 +41,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>connector-verifier</artifactId>
       <version>${project.version}</version>
@@ -49,7 +54,7 @@
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>camel-component-proxy</artifactId>
+      <artifactId>integration-component-proxy</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

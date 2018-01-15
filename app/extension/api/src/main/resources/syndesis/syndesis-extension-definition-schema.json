@@ -238,6 +238,12 @@
         "type": "object",
         "$ref": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty"
       }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
     }
   }
 }

@@ -15,31 +15,19 @@
  */
 package io.syndesis.rest.v1.handler.integration;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-import io.syndesis.core.Json;
-import io.syndesis.core.Names;
-import io.syndesis.dao.extension.ExtensionDataManager;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.ChangeEvent;
-import io.syndesis.model.Dependency;
-import io.syndesis.model.Kind;
-import io.syndesis.model.ModelData;
-import io.syndesis.model.ModelExport;
-import io.syndesis.model.Schema;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.model.integration.Step;
-import io.syndesis.project.converter.ProjectGenerator;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -53,22 +41,34 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
-import static io.syndesis.project.converter.DefaultProjectGenerator.collectDependencies;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+import io.syndesis.core.Json;
+import io.syndesis.core.Names;
+import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.integration.project.generator.ProjectGenerator;
+import io.syndesis.integration.project.generator.ProjectGeneratorHelper;
+import io.syndesis.integration.runtime.IntegrationResourceManager;
+import io.syndesis.model.ChangeEvent;
+import io.syndesis.model.Dependency;
+import io.syndesis.model.Kind;
+import io.syndesis.model.ModelData;
+import io.syndesis.model.ModelExport;
+import io.syndesis.model.Schema;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
+import io.syndesis.model.integration.Step;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntry;
 
 @Path("/integration-support")
@@ -81,17 +81,20 @@ public class IntegrationSupportHandler {
 
     private final ProjectGenerator projectConverter;
     private final DataManager dataManager;
+    private final IntegrationResourceManager resourceManager;
     private final IntegrationHandler integrationHandler;
     private final ExtensionDataManager extensionDataManager;
 
     public IntegrationSupportHandler(
         final ProjectGenerator projectConverter,
         final DataManager dataManager,
+        final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
         final ExtensionDataManager extensionDataManager) {
 
         this.projectConverter = projectConverter;
         this.dataManager = dataManager;
+        this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
         this.extensionDataManager = extensionDataManager;
     }
@@ -111,12 +114,12 @@ public class IntegrationSupportHandler {
 
         System.out.println("ids: "+ids);
 
-        LinkedHashMap<String, ModelData<?>> export = new LinkedHashMap<>();
-        LinkedHashSet<String> extensions = new LinkedHashSet<String>();
-
         if ( ids ==null || ids.isEmpty() ) {
             throw new ClientErrorException("No 'integration' query parameter specified.", Response.Status.BAD_REQUEST);
         }
+
+        LinkedHashMap<String, ModelData<?>> export = new LinkedHashMap<>();
+        LinkedHashSet<String> extensions = new LinkedHashSet<>();
 
         if( ids.contains("all") ) {
             List<Integration> allIntegrations = dataManager.fetchAll(Integration.class).getItems();
@@ -128,13 +131,10 @@ public class IntegrationSupportHandler {
 
                 addToExport(export, integration, deployments);
 
-
-                extensions.addAll(
-                    collectDependencies(dataManager, deployments).stream()
+                ProjectGeneratorHelper.collectDependencies(resourceManager, integration.getSteps()).stream()
                     .filter(Dependency::isExtension)
                     .map(Dependency::getId)
-                    .collect(Collectors.toCollection(TreeSet::new))
-                );
+                    .forEach(extensions::add);
             }
         } else {
             for (String id : ids) {
@@ -144,17 +144,18 @@ public class IntegrationSupportHandler {
                     .collect(Collectors.toList());
 
                 addToExport(export, integration, deployments);
-                extensions.addAll(
-                    collectDependencies(dataManager, deployments).stream()
-                        .filter(Dependency::isExtension)
-                        .map(Dependency::getId)
-                        .collect(Collectors.toCollection(TreeSet::new))
+
+                deployments.forEach(
+                    deployment -> {
+                        ProjectGeneratorHelper.collectDependencies(resourceManager, deployment).stream()
+                            .map(Dependency::getId)
+                            .forEach(extensions::add);
+                    }
                 );
             }
         }
 
         System.out.println("Extensions: "+extensions);
-
 
         ArrayList<ModelData<?>> models = new ArrayList<>(export.values());
         return out -> {

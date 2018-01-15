@@ -48,11 +48,6 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>project-generator</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis</groupId>
       <artifactId>openshift</artifactId>
     </dependency>
 
@@ -81,13 +76,18 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.integration-runtime</groupId>
-      <artifactId>model</artifactId>
+      <groupId>io.syndesis</groupId>
+      <artifactId>extension-converter</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>extension-converter</artifactId>
+      <artifactId>integration-runtime</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>integration-project-generator</artifactId>
     </dependency>
 
     <!-- ===================================================================================== -->
@@ -298,6 +298,7 @@
             <ignoredUnusedDeclaredDependency>io.syndesis:github</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:controllers</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:openshift</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis.integration:integration-project-generator</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
           <ignoredUsedUndeclaredDependencies>
             <!-- if declared complains about being unused -->

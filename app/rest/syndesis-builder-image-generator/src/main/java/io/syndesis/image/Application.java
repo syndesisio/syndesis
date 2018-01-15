@@ -15,7 +15,6 @@
  */
 package io.syndesis.image;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,17 +22,17 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import io.syndesis.core.Json;
-import io.syndesis.core.MavenProperties;
 import io.syndesis.core.SuppressFBWarnings;
-import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.dao.manager.DaoConfiguration;
+import io.syndesis.integration.project.generator.ProjectGenerator;
+import io.syndesis.integration.project.generator.ProjectGeneratorAutoConfiguration;
+import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
+import io.syndesis.integration.runtime.IntegrationResourceManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.action.Action;
@@ -42,21 +41,19 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
+import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
-import io.syndesis.project.converter.DefaultProjectGenerator;
-import io.syndesis.project.converter.ProjectGenerator;
-import io.syndesis.project.converter.ProjectGeneratorConfiguration;
-import io.syndesis.project.converter.ProjectGeneratorProperties;
-import io.syndesis.project.converter.visitor.StepVisitorFactoryRegistry;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -65,7 +62,7 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 @SpringBootApplication(
     exclude = {
         DaoConfiguration.class,
-        ProjectGeneratorConfiguration.class
+        ProjectGeneratorAutoConfiguration.class
     }
 )
 public class Application implements ApplicationRunner {
@@ -166,7 +163,7 @@ public class Application implements ApplicationRunner {
             // ignore
         }
 
-        IntegrationDeployment integrationRevision = new IntegrationDeployment.Builder()
+        IntegrationDeployment integrationDeployment = new IntegrationDeployment.Builder()
             .integrationId("integration")
             .name("Integration")
             .spec(new IntegrationDeploymentSpec.Builder()
@@ -176,48 +173,42 @@ public class Application implements ApplicationRunner {
                 .build())
             .build();
 
-        generate(integrationRevision, project);
+        generate(integrationDeployment, project);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(IntegrationDeployment integrationRevision, File targetDir) throws IOException {
-        MavenProperties mavenProperties = new MavenProperties();
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
-        StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Collections.emptyList());
-        ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, null, new ExtensionDataManager(null, null));
+    private static void generate(IntegrationDeployment integrationDeployment, File targetDir) throws IOException {
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        ProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager());
 
-        Path dir = targetDir.toPath();
-        Files.createDirectories( dir);
-        Files.write(dir.resolve("pom.xml"), generator.generatePom( integrationRevision));
+        Path dir =targetDir.toPath();
+        Files.createDirectories(dir);
+        Files.write(dir.resolve("pom.xml"), generator.generatePom(integrationDeployment));
 
         dir = dir.resolve("src/main/java/io/syndesis/example");
-        Files.createDirectories( dir);
+        Files.createDirectories(dir);
 
-        String resourceFile = "io/syndesis/project/converter/templates/Application.java.mustache";
-        try (InputStream is = Application.class.getClassLoader().getResourceAsStream(resourceFile) )  {
-            Files.write(dir.resolve("Application.java"), readAllBytes(is));
-        }
-
-    }
-
-    public static byte[] readAllBytes(InputStream is) throws IOException {
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024 * 4];
-            for (int len; (len = is.read(buffer)) != -1; ) { //NOPMD
-                os.write(buffer, 0, len);
-            }
-            os.flush();
-            return os.toByteArray();
+        ClassPathResource resource = new ClassPathResource("io/syndesis/integration/project/generator/templates/Application.java.mustache");
+        try (InputStream is = resource.getInputStream() )  {
+            Files.write(dir.resolve("Application.java"), IOUtils.toByteArray(is));
         }
     }
 
-
-    // Helper method to help construct maps with concise syntax
-    private static Map<String, String> map(Object... values) {
-        HashMap<String, String> rc = new HashMap<>();
-        for (int i = 0; i + 1 < values.length; i += 2) {
-            rc.put(values[i].toString(), values[i + 1].toString());
+    private static class EmptyIntegrationResourceManager implements IntegrationResourceManager {
+        @Override
+        public Optional<Connector> loadConnector(String id) {
+            return Optional.empty();
         }
-        return rc;
+
+        @Override
+        public Optional<Extension> loadExtension(String id) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<InputStream> loadExtensionBLOB(String extensionId) {
+            return Optional.empty();
+        }
     }
+
 }

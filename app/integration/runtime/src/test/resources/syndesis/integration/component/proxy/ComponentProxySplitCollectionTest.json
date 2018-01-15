@@ -1,0 +1,83 @@
+{
+  "id" : "ComponentProxyCustomizerTest:1",
+  "version" : 1,
+  "integrationId" : "ComponentProxyCustomizerTest",
+  "name" : "ComponentProxyCustomizerTest",
+  "spec" : {
+    "description" : "ComponentProxyCustomizerTest",
+    "connections" : [ ],
+    "steps" : [ {
+      "action" : {
+        "descriptor" : {
+          "componentScheme" : "direct",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : {
+            "name" : "start"
+          }
+        },
+        "tags" : [ ],
+        "actionType" : "connector",
+        "dependencies" : [ ]
+      },
+      "stepKind" : "endpoint",
+      "configuredProperties" : { },
+      "dependencies" : [ ],
+      "metadata" : {
+        "step.index" : "1"
+      }
+    }, {
+      "connection": {
+        "connector": {
+        }
+      },
+      "action" : {
+        "descriptor" : {
+          "componentScheme" : "seda",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : {
+            "name" : "proxy"
+          },
+          "split": {
+          }
+        },
+        "tags" : [ ],
+        "actionType" : "connector",
+        "dependencies" : [ ]
+      },
+      "stepKind" : "endpoint",
+      "configuredProperties" : { },
+      "dependencies" : [ ],
+      "metadata" : {
+        "step.index" : "2"
+      }
+    }, {
+      "action" : {
+        "descriptor" : {
+          "componentScheme" : "mock",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : {
+            "name" : "result"
+          }
+        },
+        "tags" : [ ],
+        "actionType" : "connector",
+        "dependencies" : [ ]
+      },
+      "stepKind" : "endpoint",
+      "configuredProperties" : { },
+      "dependencies" : [ ],
+      "metadata" : {
+        "step.index" : "3"
+      }
+    } ],
+    "resources" : [ ],
+    "tags" : [ ]
+  },
+  "stepsDone" : [ ],
+  "timesUsed" : 0,
+  "lastUpdated" : 0,
+  "createdDate" : 0
+}

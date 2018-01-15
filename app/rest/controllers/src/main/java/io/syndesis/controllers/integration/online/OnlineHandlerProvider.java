@@ -20,11 +20,11 @@ import java.util.List;
 
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.StateChangeHandler;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.openshift.OpenShiftService;
-import io.syndesis.project.converter.ProjectGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 

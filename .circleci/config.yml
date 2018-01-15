@@ -98,7 +98,7 @@ jobs:
           - ~/.m2
       - <<: *push_images
 
-  # Connectors depends runtime, mount workspace .m2
+  # Connectors depends on integration, mount workspace .m2
   connectors:
     <<: *job_defaults
     environment:
@@ -177,7 +177,7 @@ jobs:
           - ~/.m2
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-runtime-{{ checksum "app/core/pom.xml" }}
+          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -206,30 +206,30 @@ jobs:
           paths:
           - ~/.m2
 
-  # Runtime depends on extension
-  runtime:
+  # integration dependes on extension, mount workspace .m2
+  integration:
     <<: *job_defaults
     environment:
       <<: *common_env
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-runtime-{{ checksum "app/runtime/pom.xml" }}
+          key: syndesis-mvn-connectors-{{ checksum "app/integration/pom.xml" }}
       - <<: *load_m2
       - run:
-          name: Build Runtime
+          name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --batch-mode --module runtime | tee build_log.txt
+            ./tools/bin/syndesis build --init --batch-mode --module integration | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
-      - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-runtime-{{ checksum "app/runtime/pom.xml" }}
+          key: syndesis-mvn-connectors-{{ checksum "app/integration/pom.xml" }}
           paths:
           - ~/.m2
+      - <<: *save_m2
 
   # S2I image
   s2i:
@@ -256,7 +256,7 @@ jobs:
           paths:
           - ~/.m2
 
-  # Rest depends on core, connectors and runtime, mount workspace .m2
+  # Rest depends on core, connectors and integration, mount workspace .m2
   rest:
     <<: *job_defaults
     environment:
@@ -380,20 +380,18 @@ workflows:
       - extension:
           requires:
            - core
-      - runtime:
-          # add dependency to avoid concurrent write to shared
-          # files
+      - integration:
           requires:
             - extension
       - connectors:
           requires:
-            - runtime
+            - integration
       - verifier:
           requires:
             - connectors
       - rest:
           requires:
-            - runtime
+            - integration
             - connectors
       - s2i:
           requires:

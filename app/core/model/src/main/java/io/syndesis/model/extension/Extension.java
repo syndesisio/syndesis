@@ -27,6 +27,7 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
+import io.syndesis.model.WithMetadata;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
 import io.syndesis.model.action.ExtensionAction;
@@ -41,7 +42,7 @@ import org.immutables.value.Value;
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
 @JsonPropertyOrder({"name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies", "schemaVersion"})
 @SuppressWarnings("immutables")
-public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, Serializable {
+public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, WithMetadata, Serializable {
 
     enum Status {
         Draft,

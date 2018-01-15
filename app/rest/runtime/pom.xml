@@ -540,6 +540,11 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>integration-runtime</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>connector-generator</artifactId>
     </dependency>
 

@@ -99,7 +99,12 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>project-generator</artifactId>
+      <artifactId>integration-project-generator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>integration-runtime</artifactId>
     </dependency>
 
     <dependency>
@@ -132,6 +137,17 @@
       <artifactId>commons-logging-api</artifactId>
       <version>1.1</version>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
     </dependency>
 
     <dependency>
