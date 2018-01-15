@@ -2,19 +2,15 @@ import { Component, OnInit, ApplicationRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { FilterField, NotificationType } from 'patternfly-ng';
-
-import { IntegrationStore } from '../../store/integration/integration.store';
-import { Integrations } from '../../model';
-import { ModalService } from '../../common/modal/modal.service';
-import { IntegrationSupportService } from '../../store/integration-support.service';
+import { IntegrationStore, IntegrationSupportService } from '@syndesis/ui/store';
+import { Integrations } from '@syndesis/ui/model';
+import { ModalService, NotificationService } from '@syndesis/ui/common';
 import {
   FileUploader,
   FileItem,
   ParsedResponseHeaders
 } from 'ng2-file-upload';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-integrations-list-page',

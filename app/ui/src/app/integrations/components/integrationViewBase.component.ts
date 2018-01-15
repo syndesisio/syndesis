@@ -1,13 +1,11 @@
 import { ApplicationRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Integration } from '../../model';
-import { IntegrationStore } from '../../store/integration/integration.store';
-import { ModalService } from '../../common/modal/modal.service';
-import { log } from '../../logging';
+import { IntegrationStore, IntegrationSupportService } from '@syndesis/ui/store';
+import { ModalService, NotificationService } from '@syndesis/ui/common';
+import { log } from '@syndesis/ui/logging';
 
 import { NotificationType } from 'patternfly-ng';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
-import { IntegrationSupportService } from 'app/store/integration-support.service';
 import { saveAs } from 'file-saver';
 
 export class IntegrationViewBase {

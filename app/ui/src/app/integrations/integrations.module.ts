@@ -7,16 +7,15 @@ import {
   CollapseModule,
   ModalModule,
   PopoverModule,
-  TabsModule
+  TabsModule,
+  TooltipModule
 } from 'ngx-bootstrap';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 import { ToolbarModule } from 'patternfly-ng';
 
-import { IntegrationsListModule } from './list/list.module';
-import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
-import { IntegrationsDetailComponent } from './detail-page/detail.component';
-import { IntegrationsListPage } from './list-page/list-page.component';
+import { IntegrationsListModule } from './list';
+import { IntegrationsDetailComponent } from './detail-page';
+import { IntegrationsListPage } from './list-page';
 
 import {
   IntegrationsEditPage,
@@ -37,7 +36,7 @@ import {
   CurrentFlow
 } from './edit-page';
 
-import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
