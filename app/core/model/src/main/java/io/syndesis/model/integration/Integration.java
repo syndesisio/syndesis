@@ -51,63 +51,46 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
         return Kind.Integration;
     }
 
-    Optional<IntegrationDeployment> getDraftDeployment();
-
     Optional<Integer> getDeploymentId();
 
     Optional<String> getUserId();
 
     List<User> getUsers();
 
-    @Deprecated
-    Optional<String> getIntegrationTemplateId();
-
-    @Deprecated
     Optional<String> getConfiguration();
 
-    @Deprecated
     @Value.Default
     default List<Connection> getConnections() {
         return Collections.emptyList();
     }
 
-    @Deprecated
     @Value.Default
     default List<? extends Step> getSteps() {
         return Collections.emptyList();
     }
 
-    @Deprecated
     @Value.Default
     default List<ResourceIdentifier> getResources() {
         return Collections.emptyList();
     }
 
-    @Deprecated
     Optional<String> getDescription();
 
-    @Deprecated
     Optional<IntegrationDeploymentState> getDesiredStatus();
 
-    @Deprecated
     Optional<IntegrationDeploymentState> getCurrentStatus();
 
-    @Deprecated
     @Value.Default
     default List<String> getStepsDone() {
         return Collections.emptyList();
     }
 
-    @Deprecated
     Optional<String> getStatusMessage();
 
-    @Deprecated
     Optional<Date> getLastUpdated();
 
-    @Deprecated
     Optional<Date> getCreatedDate();
 
-    @Deprecated
     Optional<BigInteger> getTimesUsed();
 
     class Builder extends ImmutableIntegration.Builder {
