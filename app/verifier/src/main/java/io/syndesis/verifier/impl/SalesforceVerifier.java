@@ -15,6 +15,7 @@
  */
 package io.syndesis.verifier.impl;
 
+import io.syndesis.verifier.api.ComponentVerifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,9 +23,8 @@ import org.springframework.stereotype.Component;
  * @since 28/03/2017
  */
 @Component("salesforce")
-public class SalesforceVerifier extends BaseVerifier {
-    @Override
-    protected String getConnectorAction() {
-        return "salesforce";
+public class SalesforceVerifier extends ComponentVerifier {
+    public SalesforceVerifier() {
+        super("salesforce");
     }
 }

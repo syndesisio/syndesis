@@ -96,15 +96,11 @@
 	<module>archetypes</module>
     <module>connector-generator</module>
     <module>controllers</module>
-    <module>core</module>
     <module>credential</module>
     <module>dao</module>
     <module>filestore</module>
     <module>inspector</module>
     <module>jsondb</module>
-    <!-- not used anywhere currently -->
-    <!--<module>model2</module>-->
-    <module>model</module>
     <module>openshift</module>
     <module>project-generator</module>
     <module>rest</module>
@@ -281,6 +277,12 @@
       <dependency>
         <groupId>io.syndesis</groupId>
         <artifactId>connector-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>connectors-catalog</artifactId>
         <version>${project.version}</version>
       </dependency>
 

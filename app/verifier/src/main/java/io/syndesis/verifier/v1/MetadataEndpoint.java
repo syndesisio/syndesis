@@ -19,68 +19,50 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.syndesis.verifier.v1.metadata.MetadataAdapter;
-import io.syndesis.verifier.v1.metadata.SyndesisMetadata;
-
+import io.syndesis.verifier.api.MetadataAdapter;
+import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
-import org.apache.camel.impl.DefaultCamelContext;
 
 class MetadataEndpoint {
 
+    private final CamelContext camelContext;
     private final MetadataAdapter<?> adapter;
-
     private final String connectorId;
 
     private static final Set<String> CONNECTORS_WITH_DIFFERENT_METADATA_PER_ACTION =
-            new HashSet<>(Arrays.asList(new String[] {"sql"}));
+            new HashSet<>(Arrays.asList("sql"));
 
-    MetadataEndpoint(final String connectorId, final MetadataAdapter<?> adapter) {
+    MetadataEndpoint(final CamelContext camelContext, final String connectorId, final MetadataAdapter<?> adapter) {
+        this.camelContext = camelContext;
         this.connectorId = connectorId;
         this.adapter = adapter;
     }
 
-    /* default */ CamelContext camelContext() {
-        return new DefaultCamelContext();
-    }
-
-    /* default */ final SyndesisMetadata<?> fetchMetadata(final String actionId, final Map<String, Object> properties) {
+    protected final SyndesisMetadata<?> fetchMetadata(final String actionId, final Map<String, Object> properties) {
         try {
-            final CamelContext camel = camelContext();
-            camel.start();
-
-            try {
-                String componentId = connectorId;
-                if (CONNECTORS_WITH_DIFFERENT_METADATA_PER_ACTION.contains(connectorId)) {
-                    componentId = actionId;
-                }
-                final MetaDataExtension metadataExtension = camel.getComponent(componentId, true, false)
-                    .getExtension(MetaDataExtension.class).orElseThrow(() -> new IllegalArgumentException(
-                        "No Metadata extension present for action: " + actionId));
-
-                final Map<String, Object> propertiesForMetadataExtension = properties.entrySet().stream()
-                    .filter(e -> e.getValue() != null).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-
-                final MetaData metaData = metadataExtension.meta(propertiesForMetadataExtension)
-                    .orElseThrow(() -> new IllegalArgumentException("No Metadata returned by the metadata extension"));
-
-                return adapter.adapt(actionId, properties, metaData);
-            } finally {
-                camel.stop();
+            //TODO Kurt
+            String componentId = connectorId;
+            if (CONNECTORS_WITH_DIFFERENT_METADATA_PER_ACTION.contains(connectorId)) {
+                componentId = actionId;
             }
+            final MetaDataExtension metadataExtension = camelContext.getComponent(componentId, true, false)
+                .getExtension(MetaDataExtension.class)
+                .orElseThrow(() -> new IllegalArgumentException("No Metadata extension present for action: " + actionId));
+
+            final Map<String, Object> propertiesForMetadataExtension = properties.entrySet().stream()
+                .filter(e -> e.getValue() != null).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+            final MetaData metaData = metadataExtension.meta(propertiesForMetadataExtension)
+                .orElseThrow(() -> new IllegalArgumentException("No Metadata returned by the metadata extension"));
+
+            return adapter.adapt(actionId, properties, metaData);
         } catch (final Exception e) {
             throw new IllegalStateException("Unable to fetch and process metadata", e);
         }
-    }
-
-    /* default */ static MetadataAdapter<?> adapterFor(final Map<String, MetadataAdapter<?>> adapters,
-        final String connectorId) {
-        return Optional.ofNullable(adapters.get(connectorId + "-adapter"))
-            .orElseThrow(() -> new IllegalStateException("Unable to find adapter for:" + connectorId));
     }
 }

@@ -28,7 +28,8 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.NumberSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
-
+import io.syndesis.verifier.api.PropertyPair;
+import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
 import org.apache.camel.component.salesforce.api.utils.JsonUtils;

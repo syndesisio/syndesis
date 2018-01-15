@@ -15,6 +15,10 @@
  */
 package io.syndesis.dao.manager;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,21 +31,28 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
-import io.syndesis.core.cache.CacheManager;
 import io.syndesis.core.EventBus;
+import io.syndesis.core.Json;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
+import io.syndesis.core.cache.CacheManager;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.WithId;
+import io.syndesis.model.connection.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 @Service
 @SuppressWarnings("PMD.GodClass")
@@ -55,6 +66,7 @@ public class DataManager implements DataAccessObjectRegistry {
     private final CacheManager caches;
     private final EventBus eventBus;
     private final EncryptionComponent encryptionComponent;
+    private final ResourceLoader resourceLoader;
 
     @Value("${deployment.file:io/syndesis/dao/deployment.json}")
     @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
@@ -71,10 +83,12 @@ public class DataManager implements DataAccessObjectRegistry {
     public DataManager(CacheManager caches,
                        List<DataAccessObject<?>> dataAccessObjects,
                        EventBus eventBus,
-                       EncryptionComponent encryptionComponent) {
+                       EncryptionComponent encryptionComponent,
+                       ResourceLoader resourceLoader) {
         this.caches = caches;
         this.eventBus = eventBus;
         this.encryptionComponent = encryptionComponent;
+        this.resourceLoader = resourceLoader;
         if (dataAccessObjects != null) {
             this.dataAccessObjects.addAll(dataAccessObjects);
         }
@@ -88,6 +102,8 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     public void resetDeploymentData() {
+        loadData();
+
         if (dataFileName != null) {
             loadData(this.dataFileName);
         }
@@ -104,27 +120,69 @@ public class DataManager implements DataAccessObjectRegistry {
                 store(modelData);
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            throw new IllegalStateException("Cannot read dummy startup data due to: " + e.getMessage(), e);
+            throw new IllegalStateException("Cannot read startup data due to: " + e.getMessage(), e);
+        }
+    }
+
+    private void loadData() {
+        try {
+            final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
+            final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
+
+            if (resources != null) {
+                ReadApiClientData reader = new ReadApiClientData(encryptionComponent);
+
+                for (Resource resource: resources) {
+                    try (InputStream is = resource.getInputStream()) {
+                        // Replace placeholders
+                        final String text = reader.findAndReplaceTokens(
+                            StreamUtils.copyToString(is, StandardCharsets.UTF_8),
+                            System.getenv()
+                        );
+
+                        Connector connector = Json.mapper().readValue(text, Connector.class);
+
+                        if (connector != null) {
+                            LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());
+                            store(connector, Connector.class);
+                        }
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // ignore
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot load connector from resources due to: " + e.getMessage(), e);
         }
     }
 
     public <T extends WithId<T>> void store(ModelData<T> modelData) {
         try {
-            Kind kind = modelData.getKind();
+            final Kind kind = modelData.getKind();
+            final T entity = modelData.getData();
 
             LOGGER.debug("{}:{}", kind, modelData.getDataAsJson());
-            T entity = modelData.getData();
+
+            store(entity, kind.getModelClass());
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            LOGGER.warn("Cannot load entity from file: ", e);
+            throw SyndesisServerException.launderThrowable(e);
+        }
+    }
+
+    public <T extends WithId<T>> void store(T entity, Class<T> modelClass) {
+        try {
             Optional<String> id = entity.getId();
             if (!id.isPresent()) {
-                LOGGER.warn("Cannot load entity from file since it's missing an id: {}", modelData.toJson());
+                LOGGER.warn("Cannot load entity since it's missing an id: {}", entity);
             } else {
                 WithId<?> prev = null;
                 try {
-                    prev = this.<T>fetch(kind.getModelClass(), id.get());
+                    prev = this.fetch(modelClass, id.get());
                 } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
                     // Lets try to wipe out the previous record in case
                     // we are running into something like a schema change.
-                    this.<T>delete(kind.getModelClass(), id.get());
+                    this.delete(modelClass, id.get());
                 }
                 if (prev == null) {
                     create(entity);
@@ -133,7 +191,7 @@ public class DataManager implements DataAccessObjectRegistry {
                 }
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            LOGGER.warn("Cannot load entity from file: ", e);
+            LOGGER.warn("Cannot load entity: ", e);
             throw SyndesisServerException.launderThrowable(e);
         }
     }

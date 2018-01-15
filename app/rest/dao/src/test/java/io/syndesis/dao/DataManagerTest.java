@@ -16,7 +16,6 @@
 package io.syndesis.dao;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,6 +37,8 @@ import io.syndesis.model.integration.Integration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -52,8 +53,11 @@ public class DataManagerTest {
     public void setup() {
         cacheManager = new LRUCacheManager(100);
 
+        EncryptionComponent encryptionComponent = new EncryptionComponent(null);
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+
         //Create Data Manager
-        dataManager = new DataManager(cacheManager, new ArrayList<>(), null, new EncryptionComponent(null));
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
         dataManager.init();
         dataManager.resetDeploymentData();
     }
