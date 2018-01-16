@@ -15,6 +15,7 @@
  */
 package io.syndesis.runtime;
 
+import io.syndesis.core.IndexedProperty;
 import io.syndesis.jsondb.impl.Index;
 import io.syndesis.jsondb.impl.SqlJsonDB;
 import io.syndesis.model.Kind;
@@ -45,6 +46,11 @@ public class DataStoreConfiguration {
             UniqueProperty uniqueProperty = kind.getModelClass().getAnnotation(UniqueProperty.class);
             if (uniqueProperty != null) {
                 indexes.add(new Index("/" + kind.getModelName() + "s", uniqueProperty.value()));
+            }
+
+            IndexedProperty indexedProperty = kind.getModelClass().getAnnotation(IndexedProperty.class);
+            if (indexedProperty != null) {
+                indexes.add(new Index("/" + kind.getModelName() + "s", indexedProperty.value()));
             }
         }
 
