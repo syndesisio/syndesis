@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
@@ -45,6 +46,7 @@ import io.atlasmap.java.service.AtlasJsonProvider;
 import io.atlasmap.java.v2.JavaClass;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
+import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.ActionDescriptor;
 import io.syndesis.model.action.ExtensionAction;
@@ -355,7 +357,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         if (template.exists()) {
             try {
-                Extension extension = Json.mapper().readValue(template, Extension.class);
+                JsonNode tree = Json.mapper().readTree(template);
+                Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 
                 actions.clear();
@@ -430,7 +433,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
             throw new MojoExecutionException("Cannot create directory " + targetFile.getParentFile());
         }
         try {
-            Json.mapper().writerWithDefaultPrettyPrinter().writeValue(targetFile, jsonObject);
+            JsonNode tree = ExtensionConverter.getDefault().toPublicExtension(jsonObject);
+            Json.mapper().writerWithDefaultPrettyPrinter().writeValue(targetFile, tree);
             getLog().info("Created file " + targetFile.getAbsolutePath());
         } catch (IOException e) {
             throw new MojoExecutionException("Cannot write to file: " + metadataDestination, e);

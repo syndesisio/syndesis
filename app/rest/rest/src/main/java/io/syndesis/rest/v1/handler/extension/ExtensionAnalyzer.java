@@ -21,9 +21,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import javax.annotation.Nonnull;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.core.Json;
 import io.syndesis.core.SyndesisServerException;
+import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.extension.Extension;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Component;
 public class ExtensionAnalyzer {
 
     private static final String MANIFEST_LOCATION = "META-INF/syndesis/syndesis-extension-definition.json";
-    private static final ObjectMapper MAPPER = Json.mapper();
 
     /**
      * Analyze a binary extension to obtain the embedded {@link Extension} object.
@@ -57,7 +57,8 @@ public class ExtensionAnalyzer {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
 
-        Extension extension = MAPPER.readValue(entry, Extension.class);
+        JsonNode tree = Json.mapper().readTree(entry);
+        Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
         if (extension == null) {
             throw new IllegalArgumentException("Cannot extract Extension from manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
