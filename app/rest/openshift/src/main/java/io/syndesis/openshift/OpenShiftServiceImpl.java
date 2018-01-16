@@ -195,6 +195,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .addToLabels(COMPONENT_LABEL, "integration")
                 .addToLabels(deploymentData.getLabels())
                 .addToAnnotations(deploymentData.getAnnotations())
+                .addToAnnotations("prometheus.io/scrape", "true")
+                .addToAnnotations("prometheus.io/port", "9779")
             .endMetadata()
             .withNewSpec()
             .addNewContainer()
