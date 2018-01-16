@@ -23,6 +23,7 @@ import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.integration.model.Flow;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGeneratorProperties;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;

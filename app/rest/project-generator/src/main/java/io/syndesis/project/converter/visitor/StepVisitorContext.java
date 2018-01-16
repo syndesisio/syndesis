@@ -15,45 +15,98 @@
  */
 package io.syndesis.project.converter.visitor;
 
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Queue;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.integration.Step;
-import org.immutables.value.Value;
 
-@Value.Immutable
 @JsonDeserialize(builder = StepVisitorContext.Builder.class)
-public interface StepVisitorContext extends Iterator<StepVisitorContext> {
+public class StepVisitorContext implements Iterator<StepVisitorContext> {
 
-    GeneratorContext getGeneratorContext();
+    private final GeneratorContext generatorContext;
+    private final int index;
+    private final Step step;
+    private final List<? extends Step> remaining;
 
-    int getIndex();
+    public StepVisitorContext(GeneratorContext generatorContext, int index, Step step, List<? extends Step> remaining) {
+        this.generatorContext = generatorContext;
+        this.index = index;
+        this.step = step;
+        this.remaining = remaining == null ? Collections.emptyList() : Collections.unmodifiableList(remaining);
+    }
 
-    Step getStep();
+    public GeneratorContext getGeneratorContext() {
+        return generatorContext;
+    }
 
-    Queue<Step> getRemaining();
+    public int getIndex() {
+        return index;
+    }
+
+    public Step getStep() {
+        return step;
+    }
+
+    public List<? extends Step> getRemaining() {
+        return remaining;
+    }
 
     @Override
-    default boolean hasNext() {
+    public boolean hasNext() {
         return !getRemaining().isEmpty();
     }
 
     @Override
-    default StepVisitorContext next() {
+    public StepVisitorContext next() {
         final int index = getIndex();
-        final Queue<Step> remaining = getRemaining();
-        final Step next = remaining.remove();
+        final List<? extends Step> remaining = getRemaining();
+        final Step next = remaining.get(index);
 
-        return new StepVisitorContext.Builder()
-            .createFrom(this)
+        return StepVisitorContext.Builder.createFrom(this)
             .index(index + 1)
             .step(next)
-            .remaining(remaining)
+            .remaining(remaining.subList(index + 1, remaining.size()))
             .build();
     }
 
-    class Builder extends ImmutableStepVisitorContext.Builder {
-        // make ImmutableStepVisitorContext accessible
+    public static final class Builder {
+
+        private GeneratorContext generatorContext;
+        private int index;
+        private Step step;
+        private List<? extends Step> remaining;
+
+        public Builder() {
+        }
+
+        public static Builder createFrom(StepVisitorContext c) {
+            return new Builder().generatorContext(c.generatorContext).index(c.index).step(c.step).remaining(c.remaining);
+        }
+
+        public Builder generatorContext(GeneratorContext generatorContext) {
+            this.generatorContext = generatorContext;
+            return this;
+        }
+
+        public Builder index(int index) {
+            this.index = index;
+            return this;
+        }
+
+        public Builder step(Step step) {
+            this.step = step;
+            return this;
+        }
+
+        public Builder remaining(List<? extends Step> remaining) {
+            this.remaining = remaining;
+            return this;
+        }
+
+        public StepVisitorContext build() {
+            return new StepVisitorContext(generatorContext, index, step, remaining);
+        }
     }
 }

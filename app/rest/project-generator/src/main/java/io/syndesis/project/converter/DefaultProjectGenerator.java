@@ -268,9 +268,11 @@ public class DefaultProjectGenerator implements ProjectGenerator {
         final Flow flow = new Flow();
 
         if (!steps.isEmpty()) {
-            Queue<Step> remaining = new ArrayDeque<>(steps);
-            Step first = remaining.remove();
-            if (first != null) {
+            List<Step> remaining = new ArrayList<>(steps);
+            if (!remaining.isEmpty()) {
+                Step first = remaining.get(0);
+                remaining = remaining.subList(1, remaining.size());
+
                 StepVisitorContext stepContext = new StepVisitorContext.Builder()
                     .generatorContext(new GeneratorContext.Builder()
                         .generatorProperties(generatorProperties)
