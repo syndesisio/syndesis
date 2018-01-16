@@ -1786,7 +1786,237 @@ At least two-day labels must be added to an epic.</p>
 <tr>
 <td class="tableblock halign-left valign-top" style="background-color: #fdfcb6;"><p class="tableblock"><strong>status/2s2f</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Use this label to mark issues which should be self-merged without requiring a PR review, because of its "too small to fail". Be very careful with this label, and remember a review is a service to you to help in your code quality. It is alone your responsibility when you chose this label. It&#8217;s useful for minor doc updates or one line where you are 100% sure that it doesn&#8217;t break the system. Please use it sparingly and responsibly. (<em>Need still to be implemented</em>)
-Unresolved directive in index.adoc - include::process/workflow.adoc[]</p></td>
+<a id="workflow"></a>
+# Development Workflows</p>
+<p class="tableblock"><mark> Local Development</p>
+<p class="tableblock">If you&#8217;d like to get a local development environment up and running, for both the UI and REST API, this is how you&#8217;d do it.</p>
+<p class="tableblock"><strong>Tips</strong></p>
+<p class="tableblock">- Build on branch, not master.
+- Callback URL Example: <a href="https://syndesis.192.168.64.29.nip.io/api/v1/credentials/callback" class="bare">https://syndesis.192.168.64.29.nip.io/api/v1/credentials/callback</a></p>
+<p class="tableblock">---</p>
+<p class="tableblock"></mark># Requirements</p>
+<p class="tableblock">You can follow these steps if it&#8217;s your first time setting up Syndesis, or if you want a fresh local installation to replace an existing one. Some environment-specific instructions may be available below as well.</p>
+<p class="tableblock">1. Make sure you have installed <a href="https://nodejs.org/en/download/">node</a> version &gt;= 6.x.x and <a href="https://yarnpkg.com/en/docs/install">Yarn</a> version &gt;= 0.18.1.</p>
+<p class="tableblock">2. Get a developer deployment of Syndesis running in a Minishift environment as described in the <a href="https://syndesis.io/quickstart/">Syndesis Quickstart</a>.  Most are specific to your environment, so follow the sections below for a quick setup. The general instructions are:
+- Install a hypervisor for Minishift.
+- Install Minishift.
+- Install the OpenShift CLI.
+- Make sure it&#8217;s in your <code>$PATH</code></p>
+<p class="tableblock"><strong>macOS</strong></p>
+<p class="tableblock">If you&#8217;ll be using the Homebrew method, you&#8217;ll obviously need to have Homebrew installed. Then, to install the hypervisor for Minishift and Minishift itself:</p>
+<p class="tableblock"><code>`
+$ brew install docker-machine-driver-xhyve
+$ brew cask install minishift
+</code>`</p>
+<p class="tableblock">Finally, to install the OpenShift CLI, we recommend using Homebrew: <code>brew install openshift-cli</code></p>
+<p class="tableblock"><strong>Linux &amp; Windows</strong></p>
+<p class="tableblock">- <a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html#install-prerequisites">Install a hypervisor for Minishift</a>. For macOS, we recommend using the Docker xhyve plugin <a href="https://docs.openshift.org/latest/minishift/getting-started/setting-up-driver-plugin.html#xhyve-driver-install">here</a>, which can be installed using Homebrew.
+- <a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html#installing-instructions">Install Minishift</a>. For macOS, we recommend you use the Homebrew method.</p>
+<p class="tableblock">Please note that you need to have the <code>oc</code> binary available in your <code>PATH</code>. To do that, see here: <a href="https://docs.openshift.org/latest/cli_reference/get_started_cli.html" class="bare">https://docs.openshift.org/latest/cli_reference/get_started_cli.html</a></p>
+<p class="tableblock">---</p>
+<p class="tableblock"><mark># First-Time Setup</p>
+<p class="tableblock">The goal here is to download the project to your laptop/PC, and to install Minishift, the VM that contains OpenShift.</p>
+<p class="tableblock"><code>`
+$ git pull <a href="https://github.com/syndesisio/syndesis.git" class="bare">https://github.com/syndesisio/syndesis.git</a> # or own fork
+$ cd syndesis
+$ syndesis minishift --full-reset
+</code>`</p>
+<p class="tableblock">---</p>
+<p class="tableblock"></mark># Day-to-Day
+This uses an existing Minishift instance.</p>
+<p class="tableblock"><strong>NOTE:</strong> If you already followed the First-Time Setup above, you do not need to follow this. The Minishift VM will already have been started. Simply skip to the</p>
+<p class="tableblock"><strong>Get the Latest Changes</strong></p>
+<p class="tableblock"><code>`
+$ git checkout master
+$ git pull upstream master
+$ git checkout &lt;branch&gt;
+$ git rebase master
+</code>`</p>
+<p class="tableblock"><strong>Start of the Day</strong>
+Make sure Minishift is running.</p>
+<p class="tableblock"><code>`
+$ minishift status
+</code>`</p>
+<p class="tableblock">Which should look like:</p>
+<p class="tableblock"><code>`
+Minishift:  Running
+Profile:    minishift
+OpenShift:  Running (openshift v3.6.0+c4dd4cf)
+DiskUsage:  11% of 17.9G
+</code>`</p>
+<p class="tableblock">If it isn&#8217;t, start it with:</p>
+<p class="tableblock"><code>`
+$ minishift start
+</code>`</p>
+<p class="tableblock"><strong>Login into and Set up OpenShift</strong></p>
+<p class="tableblock">This step is required regardless of whether it&#8217;s a first-time install or not. It logs you in and points OpenShift to use Minishift resources.</p>
+<p class="tableblock"><code>`
+$ oc login -u developer
+$ eval $(minishift oc-env)
+$ eval $(minishift docker-env)
+</code>`</p>
+<p class="tableblock">The eval&#8217;s set a number of environment variables, like change the <code>$PATH</code> and <code>$DOCKER_HOST</code>, so each time you do a Syndesis build it&#8217;s good to make sure those are invoked.</p>
+<p class="tableblock"><strong>End of the Day</strong></p>
+<p class="tableblock"><code>`
+$ minishift stop
+</code>`</p>
+<p class="tableblock"><strong>Start the UI App &amp; Open in the Browser</strong></p>
+<p class="tableblock"><code>`
+$ yarn start:minishift
+$ open <a href="https://$(oc" class="bare">https://$(oc</a> get routes syndesis --template "{{.spec.host}}")
+</code>`</p>
+<p class="tableblock"><strong>Resetting the Database</strong></p>
+<p class="tableblock">This step is optional. This command expects Minishift to be running already. It&#8217;s the <code>-i docker</code> that determines the workflow, for Roland it seems to work without that though.</p>
+<p class="tableblock">It would clean the database if we increase the schema version, if we don&#8217;t it remains the same.</p>
+<p class="tableblock"><code>`
+$ syndesis build -m rest -f -i docker -k
+</code>`</p>
+<p class="tableblock">Alternatively, you can use the REST API Endpoint: /api/v1/test-support/reset-db</p>
+<p class="tableblock"><strong>Connecting to the Database</strong></p>
+<p class="tableblock">You can also port forward the DB&#8217;s port using <code>oc port-forward</code> and then connect to the database using a tool like <a href="https://www.pgadmin.org/download/">pgadmin</a> to view the data.  First get the DB pod&#8217;s name either from <code>oc get pods</code> or from the OpenShift console.  Then use the following command:</p>
+<p class="tableblock"><code>`
+$ oc port-forward &lt;db pod name&gt; 5432:5432
+</code>`</p>
+<p class="tableblock">Now start pgadmin and add a new DB server, use <code>localhost</code> for the <code>host</code> setting.  For the username and password look on the DB pod&#8217;s <code>Environment</code> page in the OpenShift console.</p>
+<p class="tableblock">In pgadmin you can see the table by navigating into the tree under <code>Server Groups &gt; Servers &gt; syndesis &gt; Databases &gt; syndesis &gt; Schemas &gt; public &gt; Tables &gt; jsondb</code>.  Right click, and then go to <code>View Data &gt; View All Rows</code>.
+<mark> UI</p>
+<p class="tableblock">After you&#8217;ve set up your initial Local Development environment, you&#8217;re ready to contribute to the UI.</p>
+<p class="tableblock"></mark># Install Dependencies
+From the project root directory:</p>
+<p class="tableblock"><code>`
+$ cd app/ui
+$ yarn install
+</code>`</p>
+<p class="tableblock"><mark># Start up the App
+<strong>Using Minishift resources (recommended):</strong>
+<code>`
+$ yarn start:minishift
+</code>`</p>
+<p class="tableblock">The <code>yarn start:minishift</code> command works when it can properly detect your local development machine&#8217;s IP address.  A proxy server inside the minishift deployment will use that IP address to connect back to the development server being run by the yarn command.  If detection of the IP is failing for you, then set the <code>SYNDESIS_DEV_LOCAL_IP</code> env variable to your local machine&#8217;s IP address before running the yarn <code>yarn start:minishift</code> command.</p>
+<p class="tableblock"></mark># Open in Your Browser
+Open the Syndesis UI in your browser from the command line by running:</p>
+<p class="tableblock"><code><code>bash
+# on macOS
+$ open <a href="https://$(oc" class="bare">https://$(oc</a> get routes syndesis --template "{{.spec.host}}")
+</code></code></p>
+<p class="tableblock"><code><code>bash
+# on linux
+$ xdg-open <a href="https://$(oc" class="bare">https://$(oc</a> get routes syndesis --template "{{.spec.host}}")</p>
+<p class="tableblock"></code></code></p>
+<p class="tableblock"><code><code>bash
+# on windows
+$ start <a href="https://$(oc" class="bare">https://$(oc</a> get routes syndesis --template "{{.spec.host}}")
+</code></code></p>
+<p class="tableblock">Another option is to run <code>minishift console</code>, go into <strong>My Project</strong> and click on the URL for the Syndesis app.</p>
+<p class="tableblock">To verify that you&#8217;re running against the development instance of the UI check the title of the browser tab you&#8217;ve opened and ensure it says <code>DEVELOPMENT</code> in in somewhere.</p>
+<p class="tableblock"><strong>Not using Minishift resources</strong>
+In the event that you have issues with Minishift. Don&#8217;t be surprised if most things don&#8217;t load and there isn&#8217;t any data in the UI. Only use this if you&#8217;re totally blocked and need to work on something minor/aesthetic in the UI.</p>
+<p class="tableblock"><code>`
+$ yarn start
+</code>`</p>
+<p class="tableblock"><mark># Running Tests
+To run tests or lint there are two more commands you can run in separate terminals.</p>
+<p class="tableblock"><code>`
+$ yarn test
+</code>`</p>
+<p class="tableblock"></mark># Running Linter
+If you don&#8217;t, the CI will, and your PR build will likely fail.</p>
+<p class="tableblock"><code>`
+$ yarn lint
+</code>`</p>
+<p class="tableblock">You should be able to access the UI in your browser at <a href="http://localhost:4200" class="bare">http://localhost:4200</a></p>
+<p class="tableblock"><mark># Code Documentation</p>
+<p class="tableblock">We use <a href="https://compodoc.github.io/website/">Compodoc</a> for documentation, or <a href="https://compodoc.github.io/website/guides/comments.html">here</a> to see how to format comments. Files get generated automatically in the <code>/documentation</code> directory. Read the documentation [here](<a href="https://compodoc.github.io/website/guides/getting-started.html" class="bare">https://compodoc.github.io/website/guides/getting-started.html</a>) to see how to properly document features. You can automatically generate and run docs using Yarn:</p>
+<p class="tableblock"><code><code>bash
+$ yarn compodoc
+</code></code></p>
+<p class="tableblock">Or manually with <code>compodoc -s</code>, or <code>compodoc</code> if you want it to simply generate the files in the default <code>/documentation</code> directory and run it with an HTTP server.</p>
+<p class="tableblock"></mark># Technology Stack</p>
+<p class="tableblock">Included in this stack are the following technologies:</p>
+<p class="tableblock">* Language: <a href="http://www.typescriptlang.org">TypeScript</a> (JavaScript with @Types)
+* Framework: <a href="https://angular.io/">Angular</a>
+* Testing: <a href="https://cucumber.io/">Cucumber.js</a> (BDD Unit Test Framework), <a href="https://karma-runner.github.io/1.0/index.html">Karma</a> (Unit Test Runner), <a href="https://github.com/gotwarlost/istanbul">Istanbul</a> (Code Coverage)
+* Linting: <a href="https://github.com/palantir/tslint">TsLint</a> (Linting for TypeScript)
+* Logging: WIP
+* Code Analysis: <a href="https://github.com/mgechev/codelyzer">Codelyzer</a> (TsLint rules for static code analysis of Angular TypeScript projects) / WIP</p>
+<p class="tableblock"><mark> REST API</p>
+<p class="tableblock">After you&#8217;ve set up your initial Local Development environment, you&#8217;re ready to contribute to the REST API.</p>
+<p class="tableblock">/////////////////
+Commenting this out until I can get clarification about how this is used and for what.</p>
+<p class="tableblock"></mark> Rest &amp; UI Combined Development Tips</p>
+<p class="tableblock"><mark># Start the Rest API w/o security</p>
+<p class="tableblock">Steps:
+ 1. Start PostgreSQL from docker</p>
+<p class="tableblock">        $ docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=syndesis postgres</p>
+<p class="tableblock"> 2. Start Syndesis backend (I run io.syndesis.runtime.Application from IDE), with JVM options:</p>
+<p class="tableblock">         -Dendpoints.test_support.enabled=true -Ddeployment.load-demo-data=false -Dencrypt.key=hello</p>
+<p class="tableblock"> 3. Install tinyproxy</p>
+<p class="tableblock">        $ brew install tinyproxy --with-reverse</p>
+<p class="tableblock">    Start <a href="https://tinyproxy.github.io/">tinyproxy</a> from a directory that has <code>tinyproxy.conf</code> (below)</p>
+<p class="tableblock">        $ tinyproxy -d -c tinyproxy.conf</p>
+<p class="tableblock"> 4. Modify the <code>$SYNDESIS/app/ui/src/config.json</code> (sample config is in the <a href="https://github.com/syndesisio/syndesis/blob/master/app/ui/src/config.json.example">repo</a>)
+    the <code>apiEndpoint</code> needs to point to tinyproxy (<code><a href="http://localhost:9090" class="bare">http://localhost:9090</a></code>):</p>
+<p class="tableblock">        "apiBase": "http://localhost:9090"</p>
+<p class="tableblock">     or</p>
+<p class="tableblock">        "apiEndpoint": "http://localhost:9090/api/v1",
+        "mapperEndpoint": "http://localhost:9090/mapper/v1",</p>
+<p class="tableblock">  5. Start the UI with from <code>$SYNDESIS/app/ui</code> (You may need to <code>npm rebuild node-sass</code>)</p>
+<p class="tableblock">         $ yarn start</p>
+<p class="tableblock">  6. Open the browser to <a href="https://localhost:4200" class="bare">https://localhost:4200</a> use Chrome and Developer Tools</p>
+<p class="tableblock">     If that doesn&#8217;t load any resources because the calls to the backend are http, then switch the UI to http as well using</p>
+<p class="tableblock">     "start": "yarn ng serve --ssl false</p>
+<p class="tableblock">     in app/ui/package.json</p>
+<p class="tableblock">  7. Place a <code>debugger;</code> statement in a <code>.ts</code> file as a first breakpoint to have somewhere to start debugging</p>
+<p class="tableblock"><code>`
+Port 9090
+ReverseOnly Yes
+ReversePath "/" "http://localhost:8080/"
+AddHeader "X-Forwarded-User" "developer"
+AddHeader "X-Forwarded-Access-Token" "dummy-token"</p>
+<p class="tableblock">MaxClients 100
+MinSpareServers 5
+MaxSpareServers 20
+StartServers 10
+MaxRequestsPerChild 0</p>
+<p class="tableblock">PidFile "tinyproxy.pid"
+LogFile "tinyproxy.log"
+</code>`
+/////////////////
+</mark> Troubleshooting</p>
+<p class="tableblock">When things go wrong, you want to try to identify the area that is causing problems (UI, REST API, etc). If it&#8217;s the UI, look for errors in the browser console or the terminal to see if it&#8217;s a dependency issue.</p>
+<p class="tableblock"><mark># UI Dependency Issues</p>
+<p class="tableblock"><code>`
+$ rm -rf node_modules
+$ yarn install
+</code>`</p>
+<p class="tableblock"></mark># VM Trouble</p>
+<p class="tableblock"><strong>Not getting latest API changes</strong></p>
+<p class="tableblock">This is a known issue. This is the workaround for using the latest REST image from the Docker stream.</p>
+<p class="tableblock"><strong>NOTE</strong>: This deletes your Minishift instance, installs OpenShift templates for the pods, and restarts Minishift.</p>
+<p class="tableblock">Disclaimer: It&#8217;s not 100% clear what <code>-i</code> docker for <code>Syndesis Minishift --install</code> does exactly, but there is no way to invoke those evals before you get a running VM, which is what <code>--full-reset</code> does. So as a rule of thumb, you can have a terminal with those evals and keep it open and do all of the Syndesis building from there.</p>
+<p class="tableblock"><code>`
+$ syndesis minishift --full-reset --install -p syndesis -i docker
+</code>`</p>
+<p class="tableblock"><strong>syndesis command not found</strong>
+If you get <code>'syndesis' command not found</code> then use the full path to the <code>syndesis</code> binary instead. This assumes you are in the root of the project directory.</p>
+<p class="tableblock"><code>`
+$ ./tools/bin/syndesis minishift --full-reset --install -p syndesis -i docker
+</code>`</p>
+<p class="tableblock"><strong>If OpenShift templates have been updated</strong>
+This should not be the first choice, since it changes the IP of the VM, and in general should not be necessary for just building and updating the version.</p>
+<p class="tableblock"><code>`
+$ syndesis minishift --full-reset --install
+</code>`</p>
+<p class="tableblock"><strong>VM Trouble</strong></p>
+<p class="tableblock"><code>`
+$ syndesis build
+</code>`</p>
+<p class="tableblock">Other things you can try:
+- <code>rm -rf ~/.minishift</code>
+- Check the OpenShift console and look for logs.
+- Is it a xip or nip problem? <a href="http://downoruprightnow.com/status/nip.io" class="bare">http://downoruprightnow.com/status/nip.io</a></p>
+<p class="tableblock"><mark>#</mark> Still Having Trouble?
+Ask on IRC #syndesis</p></td>
 </tr>
 </tbody>
 </table>
@@ -1798,7 +2028,7 @@ Unresolved directive in index.adoc - include::process/workflow.adoc[]</p></td>
 <div id="footer">
 <div id="footer-text">
 Version <br>
-Last updated 2018-01-16 15:35:08 UTC
+Last updated 2018-01-16 16:28:20 UTC
 </div>
 </div>
 </body>
