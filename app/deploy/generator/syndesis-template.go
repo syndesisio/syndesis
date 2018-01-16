@@ -39,6 +39,7 @@ var installCommand = &cobra.Command{
 type supportImages struct {
 	Postgresql string
 	OAuthProxy string
+	Prometheus string
 }
 
 type syndesisImages struct {
@@ -62,6 +63,7 @@ type images struct {
 	SyndesisImagesPrefix  string
 	AtlasMapImagesPrefix  string
 	OAuthProxyImagePrefix string
+	PrometheusImagePrefix string
 }
 
 type tags struct {
@@ -69,6 +71,7 @@ type tags struct {
 	Atlasmap   string
 	Postgresql string
 	OAuthProxy string
+	Prometheus string
 }
 
 type Context struct {
@@ -91,9 +94,11 @@ var syndesisContext = Context{
 		SyndesisImagesPrefix:  "syndesis",
 		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
+		PrometheusImagePrefix: "prom",
 		Support: supportImages{
 			Postgresql: "postgresql",
 			OAuthProxy: "oauth-proxy",
+			Prometheus: "prometheus",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "syndesis-rest",
@@ -110,6 +115,7 @@ var syndesisContext = Context{
 	Tags: tags{
 		Postgresql: "9.5",
 		OAuthProxy: "v1.1.0",
+		Prometheus: "v2.0.0",
 	},
 }
 
@@ -120,9 +126,11 @@ var productContext = Context{
 		SyndesisImagesPrefix:  "syndesis",
 		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
+		PrometheusImagePrefix: "prom",
 		Support: supportImages{
 			Postgresql: "postgresql",
 			OAuthProxy: "oauth-proxy",
+			Prometheus: "prometheus",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "fuse-ignite-rest",
@@ -141,6 +149,7 @@ var productContext = Context{
 		Syndesis:   "1.2",
 		Atlasmap:   "1.2",
 		OAuthProxy: "v1.1.0",
+		Prometheus: "v2.0.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }

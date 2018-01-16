@@ -75,6 +75,21 @@
       importPolicy:
         scheduled: true
       name: "{{ Tags.OAuthProxy }}"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: {{ Images.Support.Prometheus }}
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/{{Images.PrometheusImagePrefix}}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
+      importPolicy:
+        scheduled: true
+      name: "{{ Tags.Prometheus }}"
 {{/WithDockerImages}}
 - apiVersion: v1
   kind: ImageStream
