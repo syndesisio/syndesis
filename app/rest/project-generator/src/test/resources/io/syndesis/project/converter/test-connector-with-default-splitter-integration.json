@@ -7,7 +7,7 @@
       "id" : "-L-bzND7D32OKcmKmSD1",
       "descriptor" : {
         "connectorId" : "timer",
-        "camelConnectorGAV" : "io.syndesis:timer-connector:1.2-SNAPSHOT",
+        "camelConnectorGAV" : "io.syndesis:timer-connector:@syndesis-connectors.version@",
         "camelConnectorPrefix" : "periodic-timer-connector",
         "connectorCustomizers" : [ ],
         "propertyDefinitionSteps" : [ ],
@@ -17,7 +17,7 @@
       "actionType" : "connector",
       "dependencies" : [ {
         "type" : "MAVEN",
-        "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
+        "id" : "io.syndesis:timer-connector:@syndesis-connectors.version@"
       } ]
     },
     "connection" : {
@@ -27,7 +27,7 @@
           "id" : "-L-bzND7D32OKcmKmSD1",
           "descriptor" : {
             "connectorId" : "timer",
-            "camelConnectorGAV" : "io.syndesis:timer-connector:1.2-SNAPSHOT",
+            "camelConnectorGAV" : "io.syndesis:timer-connector:@syndesis-connectors.version@",
             "camelConnectorPrefix" : "periodic-timer-connector",
             "connectorCustomizers" : [ ],
             "propertyDefinitionSteps" : [ ],
@@ -37,7 +37,7 @@
           "actionType" : "connector",
           "dependencies" : [ {
             "type" : "MAVEN",
-            "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
+            "id" : "io.syndesis:timer-connector:@syndesis-connectors.version@"
           } ]
         } ],
         "properties" : {
@@ -129,10 +129,10 @@
         "configuredProperties" : { },
         "dependencies" : [ {
           "type" : "MAVEN",
-          "id" : "io.syndesis:camel-component-proxy:1.2-SNAPSHOT"
+          "id" : "io.syndesis:camel-component-proxy:@syndesis-connectors.version@"
         }, {
           "type" : "MAVEN",
-          "id" : "org.apache.camel:camel-twitter:2.20.1"
+          "id" : "org.apache.camel:camel-twitter:@camel.version@"
         } ]
       },
       "options" : { },
