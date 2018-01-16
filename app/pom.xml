@@ -240,6 +240,9 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
