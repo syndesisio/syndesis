@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.extension;
+package io.syndesis.extension.converter;
 
 import java.util.OptionalInt;
 
@@ -27,9 +27,11 @@ import io.syndesis.core.Json;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ExtensionAction;
 import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.extension.Extension;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class ExtensionSchemaValidationTest {
@@ -46,12 +48,9 @@ public class ExtensionSchemaValidationTest {
 
     @Test
     public void validateExtensionTest() throws Exception {
-
-        ObjectMapper mapper = Json.mapper();
-
         String syndesisExtensionSchema = "/syndesis/syndesis-extension-definition-schema.json";
         JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + syndesisExtensionSchema);
-
+        ExtensionConverter converter = new DefaultExtensionConverter();
 
         Extension extension = new Extension.Builder()
             .extensionId("my-extension")
@@ -72,11 +71,12 @@ public class ExtensionSchemaValidationTest {
                 .build())
             .build();
 
-        JsonNode node = mapper.valueToTree(extension);
-        ProcessingReport report = schema.validate(node);
-
+        JsonNode tree = converter.toPublicExtension(extension);
+        ProcessingReport report = schema.validate(tree);
         assertFalse(report.toString(), report.iterator().hasNext());
 
+        Extension extensionClone = converter.toInternalExtension(tree);
+        assertEquals(extensionClone, extension);
     }
 
 }

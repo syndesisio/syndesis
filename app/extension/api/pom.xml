@@ -19,13 +19,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-extension-parent</artifactId>
+    <groupId>io.syndesis.extension</groupId>
+    <artifactId>extension-parent</artifactId>
     <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>syndesis-extension-api</artifactId>
+  <artifactId>extension-api</artifactId>
   <packaging>jar</packaging>
 
   <name>Extension :: API</name>

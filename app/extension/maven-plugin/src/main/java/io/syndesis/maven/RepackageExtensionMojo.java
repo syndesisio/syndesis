@@ -67,11 +67,11 @@ public class RepackageExtensionMojo extends SupportMojo {
     public static final String SPRING_BOOT_BOM = "org.springframework.boot:spring-boot-dependencies:pom:";
     public static final String CAMEL_BOM = "org.apache.camel:camel-spring-boot-dependencies:pom:";
 //    public static final String SYNDESIS_INTEGRATION_RUNTIME_BOM = "io.syndesis:integration-runtime:pom:";
-    public static final String SYNDESIS_BOM = "io.syndesis:syndesis-rest-parent:pom:";
+    public static final String SYNDESIS_BOM = "io.syndesis.extension:extension-bom:pom:";
     public static final String NET_MINIDEV_JSON_SMART = "net.minidev:json-smart";
     public static final String NET_MINIDEV_ACCESSORS_SMART = "net.minidev:accessors-smart";
     public static final String ORG_OW2_ASM_ASM = "org.ow2.asm:asm";
-    public static final String SYNDESIS_ANNOTATION_PROCESSOR = "io.syndesis:syndesis-annotation-processor";
+    public static final String SYNDESIS_ANNOTATION_PROCESSOR = "io.syndesis.extension:extension-annotation-processor";
 
     @Parameter
     protected String blackListedBoms;
@@ -184,7 +184,7 @@ public class RepackageExtensionMojo extends SupportMojo {
         String[] defaultBoms = new String[]{
             resolveBomVersion(SPRING_BOOT_BOM, "org.springframework.boot:spring-boot", "spring-boot.version"),
             resolveBomVersion(CAMEL_BOM, "org.apache.camel:camel-core", "camel.version"),
-            resolveBomVersion(SYNDESIS_BOM, "io.syndesis:syndesis-extension-api", "syndesis.version")
+            resolveBomVersion(SYNDESIS_BOM, "io.syndesis.extension:extension-api", "syndesis.version")
 //            resolveBomVersion(SYNDESIS_INTEGRATION_RUNTIME_BOM, "io.syndesis:integration-runtime", "syndesis.version")
         };
 

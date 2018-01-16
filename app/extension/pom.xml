@@ -23,7 +23,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>syndesis-extension-parent</artifactId>
+  <groupId>io.syndesis.extension</groupId>
+  <artifactId>extension-parent</artifactId>
   <packaging>pom</packaging>
 
   <name>Extension :: Parent</name>
@@ -53,9 +54,10 @@
   <modules>
     <module>annotation-processor</module>
     <module>api</module>
+    <module>bom</module>
+    <module>converter</module>
     <module>examples</module>
     <module>maven-plugin</module>
-    <module>bom</module>
   </modules>
 
   <build>

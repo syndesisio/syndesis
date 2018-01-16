@@ -19,11 +19,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-extension-log-example</artifactId>
+    <groupId>io.syndesis.extension</groupId>
+    <artifactId>extension-log-step-example</artifactId>
     <version>1.2-SNAPSHOT</version>
 
-    <name>Extension :: Examples :: Log</name>
+    <name>Extension :: Examples :: Log Step</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,8 +37,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.syndesis</groupId>
-                <artifactId>syndesis-extension-bom</artifactId>
+                <groupId>io.syndesis.extension</groupId>
+                <artifactId>extension-bom</artifactId>
                 <version>${syndesis.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -50,15 +50,15 @@
 
         <!-- annotation processing -->
         <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>syndesis-extension-annotation-processor</artifactId>
+            <groupId>io.syndesis.extension</groupId>
+            <artifactId>extension-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
 
         <!-- runtime -->
         <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>syndesis-extension-api</artifactId>
+            <groupId>io.syndesis.extension</groupId>
+            <artifactId>extension-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -84,8 +84,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.syndesis</groupId>
-                <artifactId>syndesis-extension-maven-plugin</artifactId>
+                <groupId>io.syndesis.extension</groupId>
+                <artifactId>extension-maven-plugin</artifactId>
                 <version>${syndesis.version}</version>
                 <executions>
                     <execution>
