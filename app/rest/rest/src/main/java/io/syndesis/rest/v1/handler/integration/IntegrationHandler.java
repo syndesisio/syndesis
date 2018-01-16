@@ -27,40 +27,29 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
-import io.syndesis.core.Json;
-import io.syndesis.model.ModelData;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
-import io.syndesis.model.ModelExport;
-import io.syndesis.model.Schema;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.connection.Connector;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Integration.Status;
 import io.syndesis.model.integration.IntegrationRevision;
 import io.syndesis.model.integration.IntegrationRevisionState;
-import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
@@ -76,9 +65,6 @@ import io.syndesis.rest.v1.operations.Validating;
 import io.syndesis.dao.manager.EncryptionComponent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import static io.syndesis.rest.v1.handler.integration.IntegrationSupportHandler.EXPORT_MODEL_FILE_NAME;
-
 
 @Path("/integrations")
 @Api(value = "integrations")
