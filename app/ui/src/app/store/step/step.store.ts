@@ -81,6 +81,24 @@ export class StepStore {
         }
       },
       configuredProperties: undefined
+    },
+    {
+      id: undefined,
+      connection: undefined,
+      action: undefined,
+      name: "Split",
+      stepKind: SPLIT,
+      description:
+        "Split received data into data subsets that can be processed individually",
+      properties: {
+        expression: {
+          type: 'textarea',
+          displayName: "Expression",
+          required: true,
+          rows: 1
+        }
+      },
+      configuredProperties: undefined,
     }
     /*
     {
@@ -144,17 +162,6 @@ export class StepStore {
       name: 'Conditional Processing',
       stepKind: CONDITIONAL_PROCESSING,
       description: 'Add conditions and multiple paths for processing data',
-      properties: {},
-      configuredProperties: undefined,
-    },
-    {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      name: 'Split',
-      stepKind: SPLIT,
-      description:
-        'Split received data into data subsets that can be processed individually',
       properties: {},
       configuredProperties: undefined,
     },
