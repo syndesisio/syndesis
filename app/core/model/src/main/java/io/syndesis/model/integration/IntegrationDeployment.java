@@ -18,6 +18,7 @@ package io.syndesis.model.integration;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.core.IndexedProperty;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithId;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@IndexedProperty("integrationId")
 @JsonDeserialize(builder = IntegrationDeployment.Builder.class)
 public class IntegrationDeployment implements WithKind, WithId<IntegrationDeployment>, WithName {
 
@@ -42,6 +44,7 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
 
     private final Optional<String> id;
     private final Optional<Integer> version;
+
     private final Optional<String> integrationId;
 
     private final String name;

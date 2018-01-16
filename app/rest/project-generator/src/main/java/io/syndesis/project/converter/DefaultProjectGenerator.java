@@ -31,6 +31,7 @@ import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
@@ -321,6 +322,16 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     private Collection<Dependency> collectDependencies(IntegrationDeploymentSpec spec) {
         return collectDependencies(dataManager, spec);
+    }
+
+    public static Collection<Dependency> collectDependencies(DataManager dataManager, Collection<IntegrationDeployment> deployments) {
+        if (deployments == null) {
+            return Collections.emptyList();
+        }
+
+        return deployments.stream().
+            flatMap(d ->  collectDependencies(dataManager, d.getSpec()).stream())
+            .collect(Collectors.toList());
     }
 
     public static Collection<Dependency> collectDependencies(DataManager dataManager, IntegrationDeploymentSpec spec) {
