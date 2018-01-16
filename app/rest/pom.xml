@@ -86,13 +86,9 @@
     <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
     <base64.version>2.3.8</base64.version>
-
-    <!-- maven archetypes -->
-    <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
   </properties>
 
   <modules>
-	<module>archetypes</module>
     <module>connector-generator</module>
     <module>controllers</module>
     <module>credential</module>

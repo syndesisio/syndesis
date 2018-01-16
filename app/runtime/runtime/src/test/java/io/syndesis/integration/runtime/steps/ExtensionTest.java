@@ -22,7 +22,7 @@ import io.syndesis.integration.model.SyndesisModel;
 import io.syndesis.integration.model.steps.Endpoint;
 import io.syndesis.integration.model.steps.Extension;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
-import io.syndesis.integration.runtime.api.SyndesisStepExtension;
+import io.syndesis.extension.api.SyndesisStepExtension;
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;

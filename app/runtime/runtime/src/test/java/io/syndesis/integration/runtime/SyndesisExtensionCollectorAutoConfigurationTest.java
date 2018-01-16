@@ -15,19 +15,19 @@
  */
 package io.syndesis.integration.runtime;
 
-    import io.syndesis.integration.runtime.api.SyndesisExtensionRoute;
-    import org.apache.camel.CamelContext;
-    import org.apache.camel.model.RouteDefinition;
-    import org.apache.camel.spring.boot.CamelAutoConfiguration;
-    import org.assertj.core.api.Assertions;
-    import org.junit.Test;
-    import org.junit.runner.RunWith;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.boot.test.context.SpringBootTest;
-    import org.springframework.context.annotation.Bean;
-    import org.springframework.context.annotation.Configuration;
-    import org.springframework.test.annotation.DirtiesContext;
-    import org.springframework.test.context.junit4.SpringRunner;
+import io.syndesis.extension.api.SyndesisExtensionRoute;
+import org.apache.camel.CamelContext;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.spring.boot.CamelAutoConfiguration;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)

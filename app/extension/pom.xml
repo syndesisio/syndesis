@@ -54,9 +54,12 @@
   <modules>
     <module>annotation-processor</module>
     <module>api</module>
+    <module>archetype/spring-boot</module>
+    <module>archetype/java</module>
+    <module>archetype/xml</module>
     <module>bom</module>
     <module>converter</module>
-    <module>examples</module>
+    <module>example/log-step</module>
     <module>maven-plugin</module>
   </modules>
 

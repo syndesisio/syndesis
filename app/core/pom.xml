@@ -70,8 +70,7 @@
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
     <maven-resolver-api.version>1.0.3</maven-resolver-api.version>
-    <maven-archetype-plugin.version>2.2</maven-archetype-plugin.version>
-    <archetype-packaging.version>2.2</archetype-packaging.version>
+
 
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>

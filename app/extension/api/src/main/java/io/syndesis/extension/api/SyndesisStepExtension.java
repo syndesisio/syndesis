@@ -23,5 +23,6 @@ import org.apache.camel.model.ProcessorDefinition;
 
 @FunctionalInterface
 public interface SyndesisStepExtension {
-    Optional<ProcessorDefinition<?>> configure(CamelContext context, ProcessorDefinition<?> definition, Map<String, Object> parameters);
+    @SuppressWarnings("rawtypes")
+    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
 }
