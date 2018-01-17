@@ -42,18 +42,13 @@
     <syndesis-connectors.version>${project.version}</syndesis-connectors.version>
     <syndesis-integration-runtime.version>${project.version}</syndesis-integration-runtime.version>
 
-    <assertj-core.version>3.6.2</assertj-core.version>
     <immutables.version>2.5.6</immutables.version>
-    <jackson.version>2.8.10</jackson.version>
     <junit.version>4.12</junit.version>
-    <maven-shared-utils.version>3.1.0</maven-shared-utils.version>
-    <maven-common-artifact-filters.version>1.4.0</maven-common-artifact-filters.version>
     <mockwebserver.version>0.0.15</mockwebserver.version>
     <okhttp-eventsource.version>1.3.2</okhttp-eventsource.version>
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
     <resteasy.version>3.1.4.Final</resteasy.version>
-    <shrinkwrap.version>2.2.6</shrinkwrap.version>
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-cloud.version>Dalston.SR4</spring-cloud.version>
     <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
@@ -69,7 +64,6 @@
 
     <!-- maven plugin version -->
     <dep.plugin.dependency.version>3.0.1</dep.plugin.dependency.version>
-    <maven-resolver-api.version>1.0.3</maven-resolver-api.version>
 
 
     <!-- third party plugin version -->
@@ -116,14 +110,6 @@
         <scope>import</scope>
       </dependency>
 
-      <dependency>
-        <groupId>org.jboss.shrinkwrap.resolver</groupId>
-        <artifactId>shrinkwrap-resolver-bom</artifactId>
-        <version>${shrinkwrap.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
       <!-- Internal Dependencies -->
 
       <dependency>
@@ -136,13 +122,6 @@
         <groupId>io.syndesis</groupId>
         <artifactId>model</artifactId>
         <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.ws.rs</groupId>
-        <artifactId>javax.ws.rs-api</artifactId>
-        <version>2.0.1</version>
-        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -262,12 +241,6 @@
       </dependency>
 
       <dependency>
-        <groupId>org.jboss.spec.javax.ws.rs</groupId>
-        <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-        <version>1.0.1.Beta1</version>
-      </dependency>
-
-      <dependency>
         <groupId>org.jboss.spec.javax.annotation</groupId>
         <artifactId>jboss-annotations-api_1.2_spec</artifactId>
         <version>1.0.0.Final</version>
@@ -277,18 +250,6 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>23.3-jre</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.google.code.findbugs</groupId>
-        <artifactId>jsr305</artifactId>
-        <version>${dep.findbugs.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.google.code.findbugs</groupId>
-        <artifactId>findbugs-annotations</artifactId>
-        <version>${dep.findbugs.version}</version>
       </dependency>
 
       <dependency>
@@ -376,30 +337,6 @@
         <scope>test</scope>
       </dependency>
 
-      <dependency>
-        <groupId>com.github.java-json-tools</groupId>
-        <artifactId>json-schema-validator</artifactId>
-        <version>2.2.8</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.mail</groupId>
-            <artifactId>mailapi</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.mail</groupId>
-        <artifactId>mailapi</artifactId>
-        <version>1.4.3</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.github.java-json-tools</groupId>
-        <artifactId>json-schema-core</artifactId>
-        <version>1.2.8</version>
-      </dependency>
-
       <!-- Only here to exclude commons-logging transitive dependency - not direct dependency-->
       <dependency>
         <groupId>org.apache.james</groupId>
@@ -418,23 +355,6 @@
         <groupId>net.iharder</groupId>
         <artifactId>base64</artifactId>
         <version>${base64.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.maven.shared</groupId>
-        <artifactId>maven-shared-utils</artifactId>
-        <version>${maven-shared-utils.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.maven.shared</groupId>
-        <artifactId>maven-common-artifact-filters</artifactId>
-        <version>${maven-common-artifact-filters.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.resolver</groupId>
-        <artifactId>maven-resolver-api</artifactId>
-        <version>${maven-resolver-api.version}</version>
       </dependency>
 
     </dependencies>

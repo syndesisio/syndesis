@@ -42,7 +42,6 @@
         <dependency>
             <groupId>io.syndesis.extension</groupId>
             <artifactId>extension-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

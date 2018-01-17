@@ -68,7 +68,6 @@
     <dependency>
       <groupId>io.syndesis.extension</groupId>
       <artifactId>extension-converter</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -397,7 +396,12 @@
             <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
             <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
           </ignoredResourcePatterns>
-
+          <ignoredDependencies>
+            <dependency>
+              <groupId>commons-logging</groupId>
+              <artifactId>commons-logging</artifactId>
+            </dependency>
+          </ignoredDependencies>
         </configuration>
       </plugin>
 
