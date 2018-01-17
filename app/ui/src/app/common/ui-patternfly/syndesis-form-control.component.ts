@@ -39,7 +39,6 @@ export const enum SyndesisFormControlType {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'syndesis-form-control',
   templateUrl: './syndesis-form-control.component.html',
   /* tslint:disable no-unused-css*/
