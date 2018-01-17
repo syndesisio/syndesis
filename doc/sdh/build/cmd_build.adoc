@@ -15,7 +15,7 @@ Options for build:
 -b  --backend                 Build only backend modules (rest, verifier, runtime, connectors)
     --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
 -m  --module <m1>,<m2>, ..    Build modules
-                              Modules: ui, rest, connectors, s2i, verifier, runtime
+                              Modules: ui, rest, connectors, s2i, verifier, runtime, extension, core
 -d  --dependencies            Build also all project the specified module depends on
     --init                    Install top-level parent pom, too. Only needed when used with -m
     --skip-tests              Skip unit and system test execution
@@ -62,13 +62,19 @@ The following modules are available:
 | **runtime**
 | Support libraries for running integrations
 
+| **extension**
+| Tools for developing and running Syndesis custom extensions
+
+| **core**
+| Core module containing common code
+
 | **s2i**
 | S2I base image used for building the runtime images
 |===
 
 Also, to specify each module individually, you can also use some module groups:
 
-* `--backend` (short: `-b`) for the modules `rest`, `runtime`, `verifier`, `connectors`
+* `--backend` (short: `-b`) for the modules `rest`, `runtime`, `verifier`, `connectors`, `extension`, `core`
 * `--images` build all modules which result in Docker images, and also builds the Docker images in addition to the Maven artefacts.
 
 When the option `--dependencies` (short: `-d`) is given in addition to `--modules`, also all modules which the specified modules depend on are build, too.
