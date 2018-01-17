@@ -26,7 +26,7 @@
 
 	<groupId>io.syndesis</groupId>
 	<artifactId>syndesis-parent</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2.3</version>
 	<packaging>pom</packaging>
 
 	<name>Syndesis :: Parent</name>
