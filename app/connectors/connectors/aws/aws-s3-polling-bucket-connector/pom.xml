@@ -21,14 +21,14 @@
   <parent>
     <artifactId>aws-connectors</artifactId>
     <groupId>io.syndesis</groupId>
-    <version>1.2.3</version>
+    <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>aws-s3-polling-bucket-connector</artifactId>
   <name>Connectors :: AWS :: S3 Polling Bucket Connector</name>
   <packaging>jar</packaging>
-  <version>1.2.3</version>
+  <version>1.2-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
