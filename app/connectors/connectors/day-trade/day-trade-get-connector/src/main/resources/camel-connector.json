@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.daytrade.DayTradeGetComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "day-trade-get-connector",
-  "version" : "1.2-SNAPSHOT",
+  "version" : "1.2.0",
   "description" : "Get trade by order id from Day Trade API server",
   "labels" : [ "daytrade" ],
   "pattern" : "To",

@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.sql.SqlConnectorComponent",
     "groupId":"io.syndesis",
     "artifactId":"sql-connector",
-    "version":"1.2-SNAPSHOT"
+    "version":"1.2.0"
   },
   "componentProperties":{
     "dataSource":{

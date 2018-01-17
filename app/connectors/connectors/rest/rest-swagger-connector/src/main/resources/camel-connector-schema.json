@@ -13,7 +13,7 @@
     "javaType":"io.syndesis.connector.swagger.SwaggerConnectorComponent",
     "groupId":"io.syndesis",
     "artifactId":"rest-swagger-connector",
-    "version":"1.2-SNAPSHOT"
+    "version":"1.2.0"
   },
   "componentProperties":{
     "basePath":{
