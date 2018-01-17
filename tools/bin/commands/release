@@ -115,7 +115,7 @@ release::run() {
 
 open_staging_repository() {
     local maven_opts=$1
-    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-open -DnexusUrl=${NEXUS_URL} -DstagingDescriptions='Version $release_version' -DserverId=${NEXUS_SERVER_ID} -DstagingProfileId=${NEXUS_DEFAULT_STAGING_PROFILE_ID} -DopenedRepositoryMessageFormat='$REPO_ANNOUNCEMENT_PREFIX:%s' $maven_opts"
+    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-open -DnexusUrl=${NEXUS_URL} -DstagingDescription='Version $release_version' -DserverId=${NEXUS_SERVER_ID} -DstagingProfileId=${NEXUS_DEFAULT_STAGING_PROFILE_ID} -DopenedRepositoryMessageFormat='$REPO_ANNOUNCEMENT_PREFIX:%s' $maven_opts"
     #Call maven and just grab the last line that contains $REPO_ANNOUNCEMENT_PREFIX discard the line that displays the whole command and get the string that is between `:` and `'`.
     call_maven "$maven_args" | tee /tmp/x.log | grep -v maven | grep $REPO_ANNOUNCEMENT_PREFIX | tail -n 1 | awk -F ":" '{print $2}' | awk -F "'" '{print $1}'
 }
