@@ -19,13 +19,13 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2.2</version>
+    <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-ui</artifactId>
-  <version>1.2.2</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>UI</name>
