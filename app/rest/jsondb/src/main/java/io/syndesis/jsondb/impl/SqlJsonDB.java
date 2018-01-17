@@ -243,23 +243,47 @@ public class SqlJsonDB implements JsonDB {
         String idx = path+"/"+property;
         if( !indexes.contains(idx) ) {
             String message = "Index not defined for:  collectionPath: " + path + ", property: " + property;
-            LOG.warn("fetchIdsByPropertyValue failed: {}", message);
-            throw new UnsupportedOperationException(message);
+            LOG.warn("fetchIdsByPropertyValue not optimzed !!!: {}", message);
+            return fetchIdsByPropertyValueFullTableScan(collectionPath, property, value);
+        } else {
+            final AtomicReference<Set<String>> ret = new AtomicReference<>();
+            withTransaction(dbi -> {
+                final String query = "SELECT path FROM jsondb WHERE idx = ? AND value = ?";
+                final List<String> paths = dbi.createQuery(query)
+                    .bind(0, idx)
+                    .bind(1, value)
+                    .map(StringColumnMapper.INSTANCE).list();
+
+                String suffix = "/" + property + "/";
+                ret.set(paths.stream()
+                    .map(x -> trimSuffix(x, suffix))
+                    .collect(Collectors.toCollection(HashSet::new)));
+            });
+            return ret.get();
         }
+    }
+
+    protected Set<String> fetchIdsByPropertyValueFullTableScan(final String collectionPath, final String property, final String value) {
+        final String pathRegex = collectionPath + "/:[^/]+/" + property;
 
         final AtomicReference<Set<String>> ret = new AtomicReference<>();
         withTransaction(dbi -> {
-            final String query = "SELECT path FROM jsondb WHERE idx = ? AND value = ?";
-            final List<String> paths = dbi.createQuery(query)
-                .bind(0, idx)
-                .bind(1, value)
+            final String query;
+            if (databaseKind == DatabaseKind.PostgreSQL) {
+                query = "SELECT regexp_replace(path, '(/.+/:[^/]+).*', '\\1') from jsondb where path ~ ? and value = ?";
+            } else if (databaseKind == DatabaseKind.H2) {
+                query = "SELECT regexp_replace(path, '(/.+/:[^/]+).*', '$1') from jsondb where path regexp ? and value = ?";
+            } else {
+                throw new UnsupportedOperationException(
+                    "Don't know how to use regex in a query with database: " + databaseKind);
+            }
+
+            final List<String> paths = dbi.createQuery(query).bind(0, pathRegex).bind(1, value)
                 .map(StringColumnMapper.INSTANCE).list();
 
-            String suffix = "/" + property + "/";
-            ret.set(paths.stream()
-                .map(x -> trimSuffix(x, suffix))
-                .collect(Collectors.toCollection(HashSet::new)));
+            ret.set(new HashSet<>(paths));
         });
+
         return ret.get();
     }
 
