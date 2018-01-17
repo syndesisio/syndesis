@@ -14,20 +14,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.basepom</groupId>
 		<artifactId>basepom-oss</artifactId>
 		<version>23</version>
-		<relativePath></relativePath>
+		<relativePath />
 	</parent>
 
 	<groupId>io.syndesis</groupId>
 	<artifactId>syndesis-parent</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<packaging>pom</packaging>
 
 	<name>Syndesis :: Parent</name>
@@ -173,7 +172,7 @@
 						<executions>
 							<execution>
 								<id>default-testResources</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -182,7 +181,7 @@
 						<executions>
 							<execution>
 								<id>default-testCompile</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -192,7 +191,7 @@
 						<executions>
 							<execution>
 								<id>get-build-id</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -202,7 +201,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -211,7 +210,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -221,11 +220,11 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 							<execution>
 								<id>default-it</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -234,7 +233,7 @@
 						<executions>
 							<execution>
 								<id>attach-tests</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -243,7 +242,7 @@
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -252,7 +251,7 @@
 						<executions>
 							<execution>
 								<id>attach-sources</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -261,7 +260,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -271,7 +270,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -281,7 +280,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -291,7 +290,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -301,7 +300,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -310,7 +309,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -319,7 +318,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -329,7 +328,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -338,7 +337,7 @@
 						<executions>
 							<execution>
 								<id>default-test</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -348,7 +347,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -358,7 +357,7 @@
 						<version>${exec-maven-plugin.version}</version>
 						<executions>
 							<execution>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -367,7 +366,7 @@
 						<executions>
 							<execution>
 								<id>default</id>
-								<phase/>
+								<phase />
 							</execution>
 						</executions>
 					</plugin>
@@ -582,7 +581,8 @@
 		<connection>scm:git:https://github.com/syndesisio/syndesis.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
 		<url>http://github.com/syndesisio/syndesis</url>
-	</scm>
+	  <tag>1.2.0</tag>
+  </scm>
 
 	<distributionManagement>
 		<snapshotRepository>

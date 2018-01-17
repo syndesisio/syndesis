@@ -19,7 +19,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-rest-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -353,7 +353,7 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.5</version>
         <configuration>
-          <mojoDependencies/>
+          <mojoDependencies />
         </configuration>
         <executions>
           <execution>
