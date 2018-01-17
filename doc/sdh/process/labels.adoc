@@ -123,7 +123,7 @@ Especially Epics will carry more than such label as they touch more than one mod
 
 | **module/extension**
 {set:cellbgcolor:#03ba7a}
-| Syndesis core module
+| Tools for developing Syndesis extensions
 {set:cellbgcolor!}
 
 | **module/core**
