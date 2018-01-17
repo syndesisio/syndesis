@@ -40,7 +40,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
 @JsonPropertyOrder({ "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
-@UniqueProperty(value = "extensionId", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
 public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, Serializable {
 
