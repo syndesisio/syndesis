@@ -240,9 +240,6 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -481,6 +478,23 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>fabric8-maven-plugin</artifactId>
 					<version>${fabric8.maven.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 
 			</plugins>
