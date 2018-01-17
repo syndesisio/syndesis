@@ -24,6 +24,18 @@ To create a Salesforce connection:
 or more connections. 
 . Click the *Salesforce* connection type. 
 . Click *Connect Salesforce* to display a Salesforce authorization page. 
++
+[NOTE]
+====
+The following error indicates that Salesforce does not have the 
+correct {prodname} callback URL:
+
+`error=redirect_uri_mismatch&error_description=redirect_uri%20must%20match%20configuration`
+
+If you get this error message, then in Salesforce, ensure that the {prodname} 
+callback URL is specified according to the instructions in
+<<register-with-salesforce_{context}>>.
+====
 . Click *Allow* to return to {prodname}.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connection. 

@@ -24,9 +24,8 @@ environment, you can save some time by selecting
 development environments. You
 should not select this option for secure production 
 environments. 
-.. In the *Broker Certificate* field, enter the URL for the JMS broker certificate.
-.. In the *Client Certificate* field, enter the URL
-for the JMS client certificate. 
+.. In the *Broker Certificate* field, paste the AMQ broker's PEM certificate text.
+.. In the *Client Certificate* field, paste the AMQ client's PEM certificate text. 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
 validation is successful. If validation fails, revise the configuration

@@ -17,7 +17,6 @@ For details about adding steps, see the following topics:
 * <<add-data-mapping-step>>
 * <<add-basic-filter-step>>
 * <<add-advanced-filter-step>>
-* <<add-describe-data-step>>
 * <<add-custom-step>>
 
 include::add_data_mapping_step.adoc[leveloffset=+1]
@@ -25,7 +24,5 @@ include::add_data_mapping_step.adoc[leveloffset=+1]
 include::add_basic_filter_step.adoc[leveloffset=+1]
 
 include::add_advanced_filter_step.adoc[leveloffset=+1]
-
-include::add_describe_data_step.adoc[leveloffset=+1]
 
 include::add_custom_step.adoc[leveloffset=+1]
