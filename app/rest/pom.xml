@@ -59,7 +59,6 @@
     <spring-security.version>4.2.3.RELEASE</spring-security.version>
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
     <undertow.version>1.4.21.Final</undertow.version>
-    <camel-atlasmap.version>1.32.1</camel-atlasmap.version>
     <apache-mime4j.version>0.6</apache-mime4j.version>
     <google-testing-compile.version>0.12</google-testing-compile.version>
     <google-testing-compile-guava.version>21.0</google-testing-compile-guava.version>
