@@ -66,7 +66,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
-import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
 
@@ -83,9 +82,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
         SPECIFICATION,
         RESOURCE_AND_SPECIFICATION
     }
-
-    @Component
-    private RepositorySystem system;
 
     @Component
     private ArtifactFactory artifactFactory;

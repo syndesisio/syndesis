@@ -33,8 +33,8 @@ class DefaultExtensionConverter implements ExtensionConverter {
 
     @Override
     public Extension toInternalExtension(JsonNode tree) {
-        tree = convertPublicToInternalModel(tree);
-        return unmarshal(tree);
+        JsonNode convertedTree = convertPublicToInternalModel(tree);
+        return unmarshal(convertedTree);
     }
 
     @Override
