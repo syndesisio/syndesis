@@ -50,13 +50,27 @@ push_images: &push_images
 
 load_m2: &load_m2
   attach_workspace:
-    at: ~/.m2
+    at: ~/.m2/repository
+
+remember_m2_artifacts: &remember_m2_artifacts
+  run:
+    name: Remember artefacts contributed from previous steps
+    command:
+      find ~/.m2/repository/io/syndesis -type d > /tmp/artefacts.existing || echo 'No artefacts'
+
+collect_m2_artifacts: &collect_m2_artifacts
+  run:
+    name: Collect newly installed Syndesis artefacts
+    command: |
+      mkdir -p /tmp/repository/io/syndesis
+      find ~/.m2/repository/io/syndesis -type d | grep -vFf /tmp/artefacts.existing | xargs -i cp -R {} /tmp/repository/io/syndesis || echo 'No artefacts'
+      rm -rf ~/.m2/repository/io/syndesis
 
 save_m2: &save_m2
   persist_to_workspace:
-    root: ~/.m2
+    root: /tmp
     paths:
-      - repository/io/syndesis
+      - repository
 
 save_junit: &save_junit
   run:
@@ -65,6 +79,19 @@ save_junit: &save_junit
     command: |
       mkdir -p /workspace/junit/
       find . -type f -regextype posix-extended -regex ".*/target/(surefire|failsafe)-reports/.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
+  run:
+    name: Collect coverage and class files
+    command: |
+      cd app
+      ./mvnw -N -B build-helper:timestamp-property@timestamp jacoco:merge@collect
+      find . -path "*/target/classes" -exec cp -fR {} target/ \;
+
+save_coverage: &save_coverage
+  persist_to_workspace:
+    root: app/target
+    paths:
+      - jacoco.*.exec
+      - classes
 
 jobs:
   # UI has no dependencies, just load cache
@@ -77,9 +104,9 @@ jobs:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
+          key: v1-syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
       - restore_cache:
-          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
+          key: v1-syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
       - run:
           name: Build UI
           command: |
@@ -87,13 +114,13 @@ jobs:
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
-          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
+          key: v1-syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
           paths:
           - /usr/local/share/.cache/yarn/v1
       - store_artifacts:
           path: build_log.txt
       - save_cache:
-          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
+          key: v1-syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
           paths:
           - ~/.m2
       - <<: *push_images
@@ -106,23 +133,25 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+          key: v1-syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
       - <<: *load_m2
+      - <<: *remember_m2_artifacts
       - run:
           name: Build Connectors
           command: |
             ./tools/bin/syndesis build --init --batch-mode --module connectors | tee build_log.txt
       - <<: *save_junit
+      - <<: *save_coverage
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - <<: *collect_m2_artifacts
+      - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+          key: v1-syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
           paths:
           - ~/.m2
-      - <<: *save_m2
-
 
   # Verifier depends on connectors, mount workspace .m2
   verifier:
@@ -134,21 +163,24 @@ jobs:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
+          key: v1-syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
       - <<: *load_m2
+      - <<: *remember_m2_artifacts
       - run:
           name: Build Verifier
           command: |
             ./tools/bin/syndesis build --batch-mode --module verifier --image-mode=docker | tee build_log.txt
       - <<: *save_junit
+      - <<: *save_coverage
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - <<: *collect_m2_artifacts
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
+          key: v1-syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -160,24 +192,27 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+          key: v1-syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
       - <<: *load_m2
+      - <<: *remember_m2_artifacts
       - run:
           name: Build Core
           command: |
             ./tools/bin/syndesis build --init --batch-mode --module core | tee build_log.txt
       - <<: *save_junit
+      - <<: *save_coverage
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - save_cache:
-          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+          key: v1-syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
           paths:
           - ~/.m2
+      - <<: *collect_m2_artifacts
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+          key: v1-syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -189,17 +224,20 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
+          key: v1-syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
       - <<: *load_m2
+      - <<: *remember_m2_artifacts
       - run:
           name: Build Extension
           command: |
             ./tools/bin/syndesis build --batch-mode --module extension | tee build_log.txt
       - <<: *save_junit
+      - <<: *save_coverage
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - <<: *collect_m2_artifacts
       - <<: *save_m2
       - save_cache:
           key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
@@ -226,7 +264,7 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - save_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/integration/pom.xml" }}
+          key: v1-syndesis-mvn-connectors-{{ checksum "app/integration/pom.xml" }}
           paths:
           - ~/.m2
       - <<: *save_m2
@@ -241,8 +279,9 @@ jobs:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
+          key: v1-syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
       - <<: *load_m2
+      - <<: *remember_m2_artifacts
       - run:
           name: Build S2I Builder image
           command: |
@@ -250,9 +289,10 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - <<: *collect_m2_artifacts
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
+          key: v1-syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -266,8 +306,9 @@ jobs:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
+          key: v1-syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
       - <<: *load_m2
+      - <<: *remember_m2_artifacts
       - run:
           name: Build Rest
           command: |
@@ -282,6 +323,7 @@ jobs:
               cp app/runtime/runtime/target/classes/static/swagger.yaml ./apidocs
             fi
       - <<: *save_junit
+      - <<: *save_coverage
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
@@ -289,9 +331,10 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - <<: *collect_m2_artifacts
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
+          key: v1-syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -306,7 +349,7 @@ jobs:
           command: |
             cat $(find app -name pom.xml ! -path */src/* | sort) > all-poms
       - restore_cache:
-          key: syndesis-mvn-tests-{{ checksum "all-poms" }}
+          key: v1-syndesis-mvn-tests-{{ checksum "all-poms" }}
       - run:
           name: Run System Tests
           command: |
@@ -321,7 +364,7 @@ jobs:
       - store_artifacts:
           path: test_log.txt
       - save_cache:
-          key: syndesis-mvn-tests-{{ checksum "all-poms" }}
+          key: v1-syndesis-mvn-tests-{{ checksum "all-poms" }}
           paths:
           - ~/.m2
 
@@ -336,14 +379,14 @@ jobs:
           command: |
             cat $(find app -name pom.xml ! -path */src/* | sort) > all-poms
       - restore_cache:
-          key: syndesis-license-check-{{ checksum "all-poms" }}
+          key: v1-syndesis-license-check-{{ checksum "all-poms" }}
       - run:
           name: License check
           command: |
             cd app
             ./mvnw -N license:check
       - save_cache:
-          key: syndesis-license-check-{{ checksum "all-poms" }}
+          key: v1-syndesis-license-check-{{ checksum "all-poms" }}
           paths:
           - ~/.m2
 
@@ -361,6 +404,20 @@ jobs:
             git config --global user.email "circleci@syndesis.io"
             git config --global user.name "CircleCI"
             ./tools/bin/syndesis doc --local --html --pdf --gh-pages
+
+  codacy-coverage:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Codacy coverage report
+          command: |
+            cp -fR /tmp/workspace/classes app/target
+            cp -fR /tmp/workspace/jacoco.*.exec app/target
+            cd app
+            ./mvnw -N -B -Pci jacoco:merge@combine jacoco:report exec:java@codacy-coverage -Djacoco.xml=target/site/jacoco/jacoco.xml
 
 workflows:
   version: 2
@@ -396,3 +453,11 @@ workflows:
       - s2i:
           requires:
             - rest
+      - codacy-coverage:
+          requires:
+            - core
+            - rest
+            - runtime
+            - connectors
+            - verifier
+
