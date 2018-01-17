@@ -1,4 +1,5 @@
 {
+  "schemaVersion": "v1",
   "actions": [
     {
       "actionType" : "extension",

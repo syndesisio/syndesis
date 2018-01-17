@@ -27,6 +27,13 @@ import io.syndesis.model.extension.Extension;
  */
 public interface ExtensionConverter {
 
+    /**
+     * Returns the current schema version used for the public model.
+     */
+    static String getCurrentSchemaVersion() {
+        return "v1";
+    }
+
     static ExtensionConverter getDefault() {
         return new DefaultExtensionConverter();
     }
