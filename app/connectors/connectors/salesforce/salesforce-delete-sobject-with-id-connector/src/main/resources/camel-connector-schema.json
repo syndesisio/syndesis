@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.salesforce.SalesforceDeleteSObjectWithIdComponent",
     "groupId":"io.syndesis",
     "artifactId":"salesforce-delete-sobject-with-id-connector",
-    "version":"1.2-SNAPSHOT"
+    "version":"1.2.3"
   },
   "componentProperties":{
     "loginUrl":{

@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.tradeinsight.TradeInsightBuyComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "trade-insight-buy-connector",
-  "version" : "1.2-SNAPSHOT",
+  "version" : "1.2.3",
   "description" : "Fetches buy recommendation from Trade Insight API server",
   "labels" : [ "daytrade" ],
   "pattern" : "From",

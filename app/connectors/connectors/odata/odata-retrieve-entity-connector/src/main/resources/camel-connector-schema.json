@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.odata.ODataRetrieveEntityComponent",
     "groupId":"io.syndesis",
     "artifactId":"odata-retrieve-entity-connector",
-    "version":"1.2-SNAPSHOT"
+    "version":"1.2.3"
   },
   "componentProperties":{
     
