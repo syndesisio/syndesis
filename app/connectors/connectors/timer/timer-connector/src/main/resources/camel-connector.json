@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.timer.PeriodicTimerComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "timer-connector",
-  "version" : "1.2-SNAPSHOT",
+  "version" : "1.2.2",
   "description" : "Set a timer that fires at intervals that you specify. This can cause some action, such as querying your Salesforce data.",
   "labels" : [ "timer" ],
   "pattern" : "From",

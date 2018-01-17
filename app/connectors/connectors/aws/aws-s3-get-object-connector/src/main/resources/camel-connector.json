@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.s3.get.S3GetObjectConnectorComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "aws-s3-get-object-connector",
-  "version" : "1.2-SNAPSHOT",
+  "version" : "1.2.2",
   "description" : "Get specific Object with S3",
   "labels" : [ "AWS" ],
   "pattern" : "From",
