@@ -184,7 +184,6 @@ public class IntegrationHandler extends BaseHandler
                 IntegrationDeployment newDeployment = new IntegrationDeployment.Builder()
                     .createFrom(IntegrationDeployment.newDeployment(existing))
                     .version(latest != null ? latest.getVersion().orElse(0) + 1 : 1)
-                    .parentVersion(latest != null ? latest.getVersion().orElse(0) : 0)
                     .targetState(IntegrationDeploymentState.Active)
                     .currentState(IntegrationDeploymentState.Draft)
                     .build();

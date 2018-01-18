@@ -48,7 +48,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
     private final Optional<String> integrationId;
 
     private final String name;
-    private final Integer parentVersion;
 
     private final IntegrationDeploymentSpec spec;
     private final List<String> stepsDone;
@@ -61,15 +60,14 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
     private final Date createdDate;
 
     public IntegrationDeployment() {
-        this(Optional.empty(), Optional.of(1), null, null, null, Collections.emptyList(), null, null, null, null, null);
+        this(Optional.empty(), Optional.of(1), null, null, Collections.emptyList(), null, null, null, null, null);
     }
 
-    public IntegrationDeployment(Optional<String> integrationId, Optional<Integer> version, String name, Integer parentVersion, IntegrationDeploymentSpec spec, List<String> stepsDone, IntegrationDeploymentState currentState, IntegrationDeploymentState targetState, BigInteger timesUsed, Date lastUpdated, Date createdDate) {
+    public IntegrationDeployment(Optional<String> integrationId, Optional<Integer> version, String name, IntegrationDeploymentSpec spec, List<String> stepsDone, IntegrationDeploymentState currentState, IntegrationDeploymentState targetState, BigInteger timesUsed, Date lastUpdated, Date createdDate) {
         this.id = Optional.of(compositeId(integrationId, version));
         this.integrationId = integrationId;
         this.version = version;
         this.name = name;
-        this.parentVersion = parentVersion != null ? parentVersion : 0;
         this.spec = spec;
         this.stepsDone = stepsDone;
         this.currentState = currentState;
@@ -113,11 +111,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
     @JsonProperty("version")
     public Optional<Integer> getVersion() {
         return version;
-    }
-
-    @JsonProperty("parentVersion")
-    public Integer getParentVersion() {
-        return parentVersion;
     }
 
     @Override
@@ -220,7 +213,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
             .integrationId(integration.getId())
             .name(integration.getName())
             .version(1)
-            .parentVersion(0)
             .spec(new IntegrationDeploymentSpec.Builder()
                         .configuration(integration.getConfiguration())
                         .connections(integration.getConnections())
@@ -261,7 +253,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
         private Optional<Integer> version = Optional.of(1);
         private Optional<String> integrationId = Optional.empty();
         private String name;
-        private Integer parentVersion = 0;
         private IntegrationDeploymentSpec spec = new IntegrationDeploymentSpec.Builder().build();
         private List<String> stepsDone = Collections.emptyList();
         private IntegrationDeploymentState currentState;
@@ -278,7 +269,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
                 .integrationId(revision.integrationId)
                 .version(revision.version)
                 .name(revision.name)
-                .parentVersion(revision.parentVersion)
                 .spec(revision.spec)
                 .stepsDone(revision.stepsDone)
                 .currentState(revision.currentState)
@@ -304,12 +294,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
         @JsonProperty("name")
         public Builder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        @JsonProperty("parentVersion")
-        public Builder parentVersion(Integer parentVersion) {
-            this.parentVersion = parentVersion;
             return this;
         }
 
@@ -358,7 +342,7 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
         }
 
         public IntegrationDeployment build() {
-            return new IntegrationDeployment(integrationId, version, name, parentVersion, spec, stepsDone, currentState, targetState, timesUsed, lastUpdated, createdDate);
+            return new IntegrationDeployment(integrationId, version, name, spec, stepsDone, currentState, targetState, timesUsed, lastUpdated, createdDate);
         }
 
         //Getters for Jackson
@@ -379,10 +363,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
             return name;
         }
 
-
-        public Integer getParentVersion() {
-            return parentVersion;
-        }
 
 
         public IntegrationDeploymentSpec getSpec() {
