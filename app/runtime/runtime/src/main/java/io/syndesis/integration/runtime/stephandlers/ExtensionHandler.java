@@ -15,9 +15,11 @@
  */
 package io.syndesis.integration.runtime.stephandlers;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.auto.service.AutoService;
 import io.syndesis.integration.model.steps.Extension;
@@ -25,6 +27,7 @@ import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
 import io.syndesis.extension.api.SyndesisStepExtension;
+import io.syndesis.integration.runtime.util.StringHelpers;
 import io.syndesis.integration.support.Strings;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
@@ -49,9 +52,18 @@ public class ExtensionHandler implements StepHandler<Extension> {
                 final Class<SyndesisStepExtension> clazz = context.getClassResolver().resolveMandatoryClass(target, SyndesisStepExtension.class);
                 final SyndesisStepExtension stepExtension = context.getInjector().newInstance(clazz);
                 final Map<String, Object> props = new HashMap<>(step.getProperties());
+                Map<String, Object> sanitizedProps = props.entrySet().stream()
+                        .map(entry -> {
+                            if (entry.getValue() instanceof String){
+                                return new AbstractMap.SimpleEntry<String, Object>(entry.getKey(), StringHelpers.sanitizeForURI((entry.getValue())));
+                            } else {
+                                return entry;
+                            }
+                        })
+                        .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 
                 try {
-                    IntrospectionSupport.setProperties(context, converter, stepExtension, props);
+                    IntrospectionSupport.setProperties(context, converter, stepExtension, sanitizedProps);
                 } catch (Exception e) {
                     throw new IllegalStateException(e);
                 }
