@@ -1,17 +1,18 @@
 #!/bin/bash
 
 # All modules, in the right build order
-ALL_MODULES="runtime core connectors verifier rest s2i ui tests"
+ALL_MODULES="core extension runtime connectors verifier rest s2i ui tests"
 POD_MODULES="verifier rest ui"
 MODULES=(
   "ui"
-  "runtime"
-  "core:runtime"
-  "connectors:runtime core"
-  "verifier:runtime core connectors"
-  "rest:runtime core connectors"
-  "s2i:runtime core connectors rest"
-  "tests:runtime core connectors rest s2i"
+  "core"
+  "extension:core"
+  "runtime:core extension"
+  "connectors:core extension runtime"
+  "verifier:core extension runtime connectors"
+  "rest:core extension runtime connectors"
+  "s2i:core extension runtime connectors rest"
+  "tests:core extension runtime connectors rest s2i"
 )
 
 build::description() {
@@ -20,10 +21,10 @@ build::description() {
 
 build::usage() {
     cat <<EOT
--b  --backend                 Build only backend modules (runtime, core, connectors, rest, verifier)
+-b  --backend                 Build only backend modules (core, extension, runtime, connectors, rest, verifier)
     --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
 -m  --module <m1>,<m2>, ..    Build modules
-                              Modules: ui, rest, connectors, s2i, verifier, runtime
+                              Modules: ui, rest, connectors, s2i, verifier, runtime, extension, core
 -d  --dependencies            Build also all project the specified module depends on
     --skip-tests              Skip unit and system test execution
     --skip-checks             Disable all checks
@@ -119,7 +120,7 @@ extract_modules() {
     local modules=""
 
     if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules runtime core connectors rest verifier"
+        modules="$modules core extension runtime connectors rest verifier"
     fi
 
     if [ "$(hasflag --images)" ]; then

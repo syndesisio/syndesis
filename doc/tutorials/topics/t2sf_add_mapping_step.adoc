@@ -11,10 +11,10 @@ you click *Add a Step*.
 to appear.
 . Map the Twitter `name` field to the Salesforce
 `FirstName` and `LastName` fields:
-.. In the *Sources* panel, scroll down to see the *user* field. 
-Expand it and scroll down to click 
-the *name* field. (The ability to search directly for
-*name* is expected to be available in a future release.)
+.. In the *Sources* panel, click the magnifying 
+glass image:images/magnifying-glass.png[title="Magnifying Glass"]
+to display the search field and enter `*name*`. 
+.. Under the `user` folder, click the `name` field.
 .. In the *Mapping Details* panel, under *Action*, click 
 the down caret and select *Separate*. 
 .. Below that, under *Targets*, highlight *`[None]`* and start to type

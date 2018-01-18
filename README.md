@@ -12,3 +12,7 @@ git clone https://github.com/syndesisio/syndesis.git
 To see all the available options:
 
     ./app/build.sh --help
+    
+### Continuous Integration
+
+The Continuous Integration used can be found here: https://circleci.com/gh/syndesisio/syndesis

@@ -120,6 +120,16 @@ Especially Epics will carry more than such label as they touch more than one mod
 {set:cellbgcolor:#c6d74b}
 | Service for connector meta-data and verification of connections
 {set:cellbgcolor!}
+
+| **module/extension**
+{set:cellbgcolor:#03ba7a}
+| Tools for developing Syndesis extensions
+{set:cellbgcolor!}
+
+| **module/core**
+{set:cellbgcolor:#d63f0c}
+| Syndesis core module
+{set:cellbgcolor!}
 |===
 
 ### Categories

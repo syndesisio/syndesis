@@ -85,6 +85,11 @@
       <artifactId>model</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>extension-converter</artifactId>
+    </dependency>
+
     <!-- ===================================================================================== -->
 
     <dependency>
@@ -110,6 +115,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
     </dependency>
 
     <dependency>

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FilterField, NotificationType } from 'patternfly-ng';
-import { IntegrationStore, IntegrationSupportService } from '@syndesis/ui/store';
+import { IntegrationStore, IntegrationSupportService, ChangeEvent } from '@syndesis/ui/store';
 import { Integrations } from '@syndesis/ui/model';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import {
@@ -58,17 +58,22 @@ export class IntegrationsListPage implements OnInit {
       status: number,
       headers: ParsedResponseHeaders
     ) => {
-      if (status === 204) {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Imported!',
-          message: 'Your integration has been imported'
-        });
+      if (status === 200) {
+        const changeEvents = JSON.parse(response) as ChangeEvent[];
+        for ( const x of changeEvents ) {
+          this.notificationService.popNotification({
+            type: NotificationType.SUCCESS,
+            header: 'Imported ' + x.kind,
+            message: 'Your ' + x.kind + ' ' + x.id + ' has been imported',
+            isPersistent: true,
+          });
+        }
       } else if (status === 400) {
         this.notificationService.popNotification({
           type: NotificationType.DANGER,
           header: 'Import Failed!',
-          message: JSON.parse(response).userMsg
+          message: JSON.parse(response).userMsg,
+          isPersistent: true,
         });
       } else {
         this.notificationService.popNotification({

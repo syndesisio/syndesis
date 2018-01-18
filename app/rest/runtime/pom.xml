@@ -564,6 +564,11 @@
       <artifactId>connectors-catalog</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>extension-converter</artifactId>
+    </dependency>
+
     <!-- Credentials to support -->
     <dependency>
       <groupId>org.springframework.social</groupId>

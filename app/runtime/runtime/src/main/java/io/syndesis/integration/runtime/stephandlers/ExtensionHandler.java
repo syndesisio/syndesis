@@ -24,7 +24,7 @@ import io.syndesis.integration.model.steps.Extension;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
-import io.syndesis.integration.runtime.api.SyndesisStepExtension;
+import io.syndesis.extension.api.SyndesisStepExtension;
 import io.syndesis.integration.support.Strings;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;

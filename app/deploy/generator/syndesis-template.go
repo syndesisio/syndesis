@@ -37,8 +37,8 @@ var installCommand = &cobra.Command{
 }
 
 type supportImages struct {
-	Postgresql    string
-	OAuthProxy    string
+	Postgresql string
+	OAuthProxy string
 }
 
 type syndesisImages struct {
@@ -65,24 +65,24 @@ type images struct {
 }
 
 type tags struct {
-	Syndesis      string
-	Atlasmap      string
-	Postgresql    string
-	OAuthProxy    string
+	Syndesis   string
+	Atlasmap   string
+	Postgresql string
+	OAuthProxy string
 }
 
 type Context struct {
-	Name                          string
-	AllowLocalHost                bool
-	WithDockerImages              bool
-	Restricted                    bool
-	Probeless                     bool
-	Productized                   bool
-	Tag                           string
-	Registry                      string
-	Images                        images
-	Tags                          tags
-	Debug						  bool
+	Name             string
+	AllowLocalHost   bool
+	WithDockerImages bool
+	Restricted       bool
+	Probeless        bool
+	Productized      bool
+	Tag              string
+	Registry         string
+	Images           images
+	Tags             tags
+	Debug            bool
 }
 
 // TODO: Could be added from a local configuration file
@@ -92,8 +92,8 @@ var syndesisContext = Context{
 		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
 		Support: supportImages{
-			Postgresql:    "postgresql",
-			OAuthProxy:    "oauth-proxy",
+			Postgresql: "postgresql",
+			OAuthProxy: "oauth-proxy",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "syndesis-rest",
@@ -108,8 +108,8 @@ var syndesisContext = Context{
 		},
 	},
 	Tags: tags{
-		Postgresql:    "9.5",
-		OAuthProxy:    "v1.1.0",
+		Postgresql: "9.5",
+		OAuthProxy: "v1.1.0",
 	},
 }
 
@@ -121,8 +121,8 @@ var productContext = Context{
 		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
 		Support: supportImages{
-			Postgresql:    "postgresql",
-			OAuthProxy:    "oauth-proxy",
+			Postgresql: "postgresql",
+			OAuthProxy: "oauth-proxy",
 		},
 		Syndesis: syndesisImages{
 			Rest:     "fuse-ignite-rest",
@@ -137,10 +137,10 @@ var productContext = Context{
 		},
 	},
 	Tags: tags{
-		Postgresql:    "9.5",
-		Syndesis:      "1.1",
-		Atlasmap:      "1.1",
-		OAuthProxy:    "v1.1.0",
+		Postgresql: "9.5",
+		Syndesis:   "1.2",
+		Atlasmap:   "1.2",
+		OAuthProxy: "v1.1.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }

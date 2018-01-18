@@ -120,6 +120,7 @@ $ open https://$(oc get routes syndesis --template "{{.spec.host}}")
 ```
 
 *Resetting the Database*
+
 This step is optional. This command expects Minishift to be running already. It's the `-i docker` that determines the workflow, for Roland it seems to work without that though.
 
 It would clean the database if we increase the schema version, if we don't it remains the same.
@@ -129,3 +130,15 @@ $ syndesis build -m rest -f -i docker -k
 ```
 
 Alternatively, you can use the REST API Endpoint: /api/v1/test-support/reset-db
+
+*Connecting to the Database*
+
+You can also port forward the DB's port using `oc port-forward` and then connect to the database using a tool like https://www.pgadmin.org/download/[pgadmin] to view the data.  First get the DB pod's name either from `oc get pods` or from the OpenShift console.  Then use the following command:
+
+```
+$ oc port-forward <db pod name> 5432:5432
+```
+
+Now start pgadmin and add a new DB server, use `localhost` for the `host` setting.  For the username and password look on the DB pod's `Environment` page in the OpenShift console.
+
+In pgadmin you can see the table by navigating into the tree under `Server Groups > Servers > syndesis > Databases > syndesis > Schemas > public > Tables > jsondb`.  Right click, and then go to `View Data > View All Rows`.

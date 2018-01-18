@@ -15,7 +15,9 @@
  */
 package io.syndesis.runtime;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.core.Json;
+import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.Violation;
@@ -360,13 +362,15 @@ public class ExtensionsITCase extends BaseITCase {
             jar.putNextEntry(definition);
 
             Extension extension = new Extension.Builder()
+                .schemaVersion(ExtensionConverter.getCurrentSchemaVersion())
                 .extensionId("com.company:extension" + prg)
                 .name("Extension " + prg)
                 .description("Extension Description " + prg)
                 .version("1.0")
                 .build();
 
-            byte[] content = Json.mapper().writeValueAsBytes(extension);
+            JsonNode extensionTree = ExtensionConverter.getDefault().toPublicExtension(extension);
+            byte[] content = Json.mapper().writeValueAsBytes(extensionTree);
             IOUtils.write(content, jar);
             jar.closeEntry();
             jar.flush();

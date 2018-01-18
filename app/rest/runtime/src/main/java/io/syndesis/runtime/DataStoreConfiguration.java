@@ -15,26 +15,44 @@
  */
 package io.syndesis.runtime;
 
+import io.syndesis.jsondb.impl.Index;
 import io.syndesis.jsondb.impl.SqlJsonDB;
+import io.syndesis.model.Kind;
+import io.syndesis.model.validation.UniqueProperty;
 import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
 
 /**
  * Creates and configures the main datastore
  */
 @Configuration
 public class DataStoreConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(SchemaCheck.class);
 
     @Bean
     @Autowired
     @SuppressWarnings("PMD.EmptyCatchBlock")
     public SqlJsonDB realTimeDB(DBI dbi) {
-        SqlJsonDB jsondb = new SqlJsonDB(dbi, null);
+
+        ArrayList<Index> indexes = new ArrayList<>();
+        for (Kind kind : Kind.values()) {
+            UniqueProperty uniqueProperty = kind.getModelClass().getAnnotation(UniqueProperty.class);
+            if (uniqueProperty != null) {
+                indexes.add(new Index("/" + kind.getModelName() + "s", uniqueProperty.value()));
+            }
+        }
+
+        SqlJsonDB jsondb = new SqlJsonDB(dbi, null, indexes);
         try {
             jsondb.createTables();
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ignore) {
+            LOG.debug("Could not create tables", ignore);
         }
         return jsondb;
     }

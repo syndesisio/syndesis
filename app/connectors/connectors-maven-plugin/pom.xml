@@ -36,7 +36,6 @@
     <maven-plugin-annotations.version>3.5</maven-plugin-annotations.version>
     <maven-shared-utils.version>3.2.0</maven-shared-utils.version>
     <commons-io.version>2.5</commons-io.version>
-    <atlasmap.version>1.32.1</atlasmap.version>
     <jackson.version>2.8.9</jackson.version>
     <immutables.version>2.5.6</immutables.version>
   </properties>
@@ -178,7 +177,11 @@
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
     </dependency>
 
   </dependencies>

@@ -23,15 +23,17 @@ import io.syndesis.model.ToJson;
 public class GetOptions implements ToJson, Cloneable {
 
     private boolean prettyPrint;
-    private boolean shallow;
+    private Integer depth;
     private String callback;
+    private String startingAt;
+    private Integer limit;
 
     public boolean prettyPrint() {
         return prettyPrint;
     }
 
-    public boolean shallow() {
-        return shallow;
+    public Integer depth() {
+        return depth;
     }
 
     public String callback() {
@@ -43,8 +45,8 @@ public class GetOptions implements ToJson, Cloneable {
         return this;
     }
 
-    public GetOptions shallow(final boolean shallow) {
-        this.shallow = shallow;
+    public GetOptions depth(final Integer depth) {
+        this.depth = depth;
         return this;
     }
 
@@ -56,5 +58,23 @@ public class GetOptions implements ToJson, Cloneable {
     @Override
     public GetOptions clone() throws CloneNotSupportedException{
         return (GetOptions) super.clone();
+    }
+
+    public String after() {
+        return startingAt;
+    }
+
+    public GetOptions after(String startingAt) {
+        this.startingAt = startingAt;
+        return this;
+    }
+
+    public Integer limit() {
+        return limit;
+    }
+
+    public GetOptions limit(Integer limit) {
+        this.limit = limit;
+        return this;
     }
 }
