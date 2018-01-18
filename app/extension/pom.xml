@@ -23,7 +23,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis.extension</groupId>
+  <groupId>io.syndesis</groupId>
   <artifactId>extension-parent</artifactId>
   <packaging>pom</packaging>
 

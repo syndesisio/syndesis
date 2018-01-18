@@ -86,7 +86,7 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.extension</groupId>
+      <groupId>io.syndesis</groupId>
       <artifactId>extension-converter</artifactId>
     </dependency>
 

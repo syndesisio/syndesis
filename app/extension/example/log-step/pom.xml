@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.syndesis.extension</groupId>
+    <groupId>io.syndesis</groupId>
     <artifactId>extension-example-log-step</artifactId>
     <version>1.2-SNAPSHOT</version>
 
@@ -37,7 +37,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.syndesis.extension</groupId>
+                <groupId>io.syndesis</groupId>
                 <artifactId>extension-bom</artifactId>
                 <version>${syndesis.version}</version>
                 <type>pom</type>
@@ -50,14 +50,14 @@
 
         <!-- annotation processing -->
         <dependency>
-            <groupId>io.syndesis.extension</groupId>
+            <groupId>io.syndesis</groupId>
             <artifactId>extension-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
 
         <!-- runtime -->
         <dependency>
-            <groupId>io.syndesis.extension</groupId>
+            <groupId>io.syndesis</groupId>
             <artifactId>extension-api</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -85,7 +85,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.syndesis.extension</groupId>
+                <groupId>io.syndesis</groupId>
                 <artifactId>extension-maven-plugin</artifactId>
                 <version>${syndesis.version}</version>
                 <executions>

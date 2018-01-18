@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.syndesis.extension</groupId>
+    <groupId>io.syndesis</groupId>
     <artifactId>extension-bom</artifactId>
     <version>1.2-SNAPSHOT</version>
     <name>Extension :: Bill of Materials (BOM)</name>
@@ -57,12 +57,12 @@
 
             <!-- Project dependencies -->
             <dependency>
-                <groupId>io.syndesis.extension</groupId>
+                <groupId>io.syndesis</groupId>
                 <artifactId>extension-annotation-processor</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.syndesis.extension</groupId>
+                <groupId>io.syndesis</groupId>
                 <artifactId>extension-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -75,7 +75,7 @@
             <!-- Maven plugin -->
             <plugins>
                 <plugin>
-                    <groupId>io.syndesis.extension</groupId>
+                    <groupId>io.syndesis</groupId>
                     <artifactId>extension-maven-plugin</artifactId>
                     <version>${project.version}</version>
                     <executions>
