@@ -85,6 +85,11 @@
       <artifactId>model</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>extension-converter</artifactId>
+    </dependency>
+
     <!-- ===================================================================================== -->
 
     <dependency>

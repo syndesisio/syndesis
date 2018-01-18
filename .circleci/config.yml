@@ -181,7 +181,32 @@ jobs:
           paths:
           - ~/.m2
 
-  # Runtime has no dependencies, just load cache
+  # Extension depends on core
+  extension:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Extension
+          command: |
+            ./tools/bin/syndesis build --batch-mode --module extension | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: build_log.txt
+      - <<: *save_m2
+      - save_cache:
+          key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
+          paths:
+          - ~/.m2
+
+  # Runtime depends on extension
   runtime:
     <<: *job_defaults
     environment:
@@ -352,11 +377,14 @@ workflows:
       - license-check
       - ui
       - core
+      - extension:
+          requires:
+           - core
       - runtime:
           # add dependency to avoid concurrent write to shared
           # files
           requires:
-            - core        
+            - extension
       - connectors:
           requires:
             - runtime

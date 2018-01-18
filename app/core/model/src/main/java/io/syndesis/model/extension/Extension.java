@@ -15,6 +15,7 @@
  */
 package io.syndesis.model.extension;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Optional;
@@ -30,16 +31,15 @@ import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
 import io.syndesis.model.action.ExtensionAction;
 import io.syndesis.model.action.WithActions;
+import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
-import io.syndesis.model.validation.UniqueProperty;
-import io.syndesis.model.validation.UniquenessRequired;
 import io.syndesis.model.validation.extension.NoDuplicateExtension;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
-@JsonPropertyOrder({ "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
+@JsonPropertyOrder({"name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies", "schemaVersion"})
 @SuppressWarnings("immutables")
 public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, Serializable {
 
@@ -54,9 +54,21 @@ public interface Extension extends WithId<Extension>, WithActions<ExtensionActio
         return Kind.Extension;
     }
 
+    /**
+     * The artifact version of the extension (usually computed from the project.version maven property)
+     */
     String getVersion();
 
+    /**
+     * A correlation id shared among all versions of the same extension.
+     */
     String getExtensionId();
+
+    /**
+     * The public schema version used in the JAR file containing the extension.
+     */
+    @NotNull(groups = AllValidations.class)
+    String getSchemaVersion();
 
     Optional<Status> getStatus();
 

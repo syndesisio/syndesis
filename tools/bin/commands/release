@@ -21,7 +21,7 @@ release::usage() {
     --release-version         The release version
     --dev-version             The development version
     --profiles                Additional profiles to specify
-    --settings-xml            Path to a custom settings.xml to use for the reelase
+    --settings-xml            Path to a custom settings.xml to use for the release
 
     --sonatype-username       The sonatype username
     --sonatype-password       The sonatype password

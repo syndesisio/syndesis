@@ -38,8 +38,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.integration-runtime</groupId>
-      <artifactId>runtime-api</artifactId>
+      <groupId>io.syndesis</groupId>
+      <artifactId>extension-api</artifactId>
     </dependency>
 
     <dependency>

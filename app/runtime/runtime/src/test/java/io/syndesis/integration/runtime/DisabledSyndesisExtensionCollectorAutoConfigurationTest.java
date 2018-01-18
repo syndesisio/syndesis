@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime;
 
-import io.syndesis.integration.runtime.api.SyndesisExtensionRoute;
+import io.syndesis.extension.api.SyndesisExtensionRoute;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;

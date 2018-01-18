@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2016 Red Hat, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.syndesis</groupId>
+    <artifactId>extension-bom</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <name>Extension :: Bill of Materials (BOM)</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+        <camel.version>2.20.1</camel.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--
+                NOTE: the final BOM will be an extension of the FIS BOM.
+                Once the FIS BOM is aligned with versions used in syndesis, the FIS BOM should be imported instead of
+                the spring-boot and camel BOMs.
+            -->
+
+            <!-- Spring-boot full BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Camel BOM for Spring-boot -->
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-spring-boot-dependencies</artifactId>
+                <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Project dependencies -->
+            <dependency>
+                <groupId>io.syndesis</groupId>
+                <artifactId>extension-annotation-processor</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.syndesis</groupId>
+                <artifactId>extension-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <!-- Maven plugin -->
+            <plugins>
+                <plugin>
+                    <groupId>io.syndesis</groupId>
+                    <artifactId>extension-maven-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>generate-metadata</goal>
+                                <goal>repackage-extension</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

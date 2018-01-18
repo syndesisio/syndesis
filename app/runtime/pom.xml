@@ -31,7 +31,6 @@
 
   <modules>
     <module>model</module>
-    <module>runtime-api</module>
     <module>runtime</module>
   </modules>
 
