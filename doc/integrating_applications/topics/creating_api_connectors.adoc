@@ -22,7 +22,8 @@ to upload a Swagger file or specify a URL for a Swagger specification.
 . Specify a Swagger file to upload or specify a URL for a Swagger 
 specification. 
 . Click *Next*. If there is invalid or missing content, {prodname} 
-displays information about what needs to be corrected. Click *Cancel*,
+displays information about what needs to be corrected. Select a different 
+Swagger file to upload or click *Cancel*,
 revise the Swagger file, and upload the updated file. 
 +
 If the specification is valid and complete, {prodname} displays a summary of 
@@ -57,7 +58,8 @@ the base URL is `/api/v1` then the connection endpoint is
 ** (prodname) applies  the schema specified in the Swagger file to data 
 mapping steps. If the Swagger file supports more than one schema then {prodname} 
 uses the TLS (HTTPS) schema. 
-. Review the connector details. To override a value obtained from
+. Review the connector details and optionally upload an icon for the connector.
+To override a value obtained from
 the Swagger file, edit the field value that you want to change. 
 After {prodname} creates a connector, 
 you cannot change it. To effect a change, you need to upload an updated

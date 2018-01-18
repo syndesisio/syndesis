@@ -32,7 +32,7 @@ to this queue or topic.
 .. For the *Delivery Mode*, accept *Non-Persistent* 
 or select *Persistent* to guarantee delivery even if
 a connection fails. 
-.. In the *Response Time Out* field, enter the amount of time that this 
+.. In the *Response Time Out* field, enter the number of milliseconds that this 
 connection waits for a 
 response message before throwing a runtime exception. 
 

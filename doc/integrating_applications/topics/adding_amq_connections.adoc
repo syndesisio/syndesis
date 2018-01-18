@@ -6,9 +6,11 @@ AMQ connection to an
 integration. If you did not already create an AMQ connection, 
 see <<create-amq-connection>>. 
 
-After you add an AMQ connection to an integration, you might need to
-specify a schema for the data that you plan to send to a JMS broker
-or receive from a JMS broker. To do this, see <<add-describe-data-step>>. 
+In this release, connections to AMQ are shapeless. That is, they do not 
+define input/output types. Consequently, while AMQ connections can route 
+messages to and from queues and topics, an integration cannot have a data 
+mapper step before or after an AMQ connection, This limitation is expected 
+to be removed in a future release. 
 
 The procedure for adding an AMQ connection to an integration varies
 according to whether you are adding an AMQ connection as the
