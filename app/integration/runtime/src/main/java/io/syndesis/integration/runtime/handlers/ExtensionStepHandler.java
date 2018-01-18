@@ -24,7 +24,7 @@ import io.syndesis.extension.api.SyndesisStepExtension;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.util.StringHelpers;
-import io.syndesis.model.action.ExtensionAction;
+import io.syndesis.model.action.StepAction;
 import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
@@ -39,7 +39,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
             return false;
         }
 
-        return step.getAction().filter(ExtensionAction.class::isInstance).isPresent();
+        return step.getAction().filter(StepAction.class::isInstance).isPresent();
     }
 
     @SuppressWarnings("PMD")
@@ -48,19 +48,19 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
         ObjectHelper.notNull(route, "route");
 
         // Model
-        final ExtensionAction action = step.getAction().filter(ExtensionAction.class::isInstance).map(ExtensionAction.class::cast).get();
+        final StepAction action = step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).get();
 
         // Camel
         final Map<String, String> properties = step.getConfiguredProperties();
         final CamelContext context = builder.getContext();
 
-        if (action.getDescriptor().getKind() == ExtensionAction.Kind.ENDPOINT) {
+        if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
             for (Map.Entry<String, String> entry: properties.entrySet()) {
                 route.setHeader(entry.getKey(), builder.constant(entry.getValue()));
             }
 
             route = route.to(action.getDescriptor().getEntrypoint());
-        } else if (action.getDescriptor().getKind() == ExtensionAction.Kind.BEAN) {
+        } else if (action.getDescriptor().getKind() == StepAction.Kind.BEAN) {
             String method = null;
             String function = action.getDescriptor().getEntrypoint();
             String options = null;
@@ -95,7 +95,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
             }
 
             route = route.to(uri);
-        } else if (action.getDescriptor().getKind() == ExtensionAction.Kind.STEP) {
+        } else if (action.getDescriptor().getKind() == StepAction.Kind.STEP) {
             final String target = action.getDescriptor().getEntrypoint();
             final TypeConverter converter = context.getTypeConverter();
 

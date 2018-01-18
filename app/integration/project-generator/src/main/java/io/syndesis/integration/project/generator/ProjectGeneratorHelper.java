@@ -21,15 +21,18 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.github.mustachejava.Mustache;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.integration.runtime.IntegrationResourceManager;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.WithDependencies;
+import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
@@ -67,36 +70,46 @@ public final class ProjectGeneratorHelper {
 
         for (Step step : steps) {
             step.getAction()
-                .filter(WithDependencies.class::isInstance)
-                .map(WithDependencies.class::cast)
-                .map(WithDependencies::getDependencies)
-                .ifPresent(dependencies::addAll);
+                    .filter(WithDependencies.class::isInstance)
+                    .map(WithDependencies.class::cast)
+                    .map(WithDependencies::getDependencies)
+                    .ifPresent(dependencies::addAll);
 
-            step.getConnection()
-                .filter(c -> c.getConnector().isPresent())
-                .map(c -> c.getConnector().get())
-                .map(WithDependencies::getDependencies)
-                .ifPresent(dependencies::addAll);
+            List<Dependency> connectorDependecies = step.getConnection()
+                    .flatMap(Connection::getConnector)
+                    .map(WithDependencies::getDependencies)
+                    .orElse(Collections.emptyList());
+            dependencies.addAll(connectorDependecies);
 
-            step.getConnection()
-                .filter(c -> Objects.nonNull(resourceManager))
-                .filter(c -> !c.getConnector().isPresent())
-                .filter(c -> c.getConnectorId().isPresent())
-                .map(c -> c.getConnectorId().get())
-                .map(c -> resourceManager.loadConnector(c))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(WithDependencies::getDependencies)
-                .ifPresent(dependencies::addAll);
+            List<Dependency> lookedUpConnectorDependecies = step.getConnection()
+                    .filter(c -> Objects.nonNull(resourceManager))
+                    .filter(c -> !c.getConnector().isPresent())
+                    .flatMap(Connection::getConnectorId)
+                    .flatMap(resourceManager::loadConnector)
+                    .map(WithDependencies::getDependencies)
+                    .orElse(Collections.emptyList());
+            dependencies.addAll(lookedUpConnectorDependecies);
+
+            // Connector extension
+            Stream.concat(connectorDependecies.stream(), lookedUpConnectorDependecies.stream())
+                    .filter(c -> Objects.nonNull(resourceManager))
+                    .filter(Dependency::isExtension)
+                    .map(Dependency::getId)
+                    .map(resourceManager::loadExtension)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .map(Extension::getDependencies)
+                    .forEach(dependencies::addAll);
+
+            // Step extension
+            step.getExtension()
+                    .map(WithDependencies::getDependencies)
+                    .ifPresent(dependencies::addAll);
 
             step.getExtension()
-                .map(WithDependencies::getDependencies)
-                .ifPresent(dependencies::addAll);
-
-            step.getExtension()
-                .map(Extension::getExtensionId)
-                .map(Dependency::extension)
-                .ifPresent(dependencies::add);
+                    .map(Extension::getExtensionId)
+                    .map(Dependency::extension)
+                    .ifPresent(dependencies::add);
         }
 
         return dependencies;
@@ -104,7 +117,7 @@ public final class ProjectGeneratorHelper {
 
 
 
-        public static boolean filterDefaultDependencies(MavenGav gav) {
+    public static boolean filterDefaultDependencies(MavenGav gav) {
         boolean answer = true;
 
         if ("org.springframework.boot".equals(gav.getGroupId())) {

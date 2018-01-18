@@ -59,8 +59,7 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
             if ("oauth2".equalsIgnoreCase(authentication.get())) {
                 socialProperties = new OAuth2ConnectorProperties(connector);
             } else {
-                throw new IllegalArgumentException(
-                    "Unsupported authentication type: " + authentication.get() + ", for connector: " + providerId);
+                socialProperties = new ConnectorSettings(connector);
             }
         } else {
             socialProperties = new ConnectorSettings(connector);

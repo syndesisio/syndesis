@@ -20,22 +20,25 @@ import io.syndesis.model.WithId;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = ExtensionAction.Builder.class)
+@JsonDeserialize(builder = StepAction.Builder.class)
 @SuppressWarnings("immutables")
-public interface ExtensionAction extends Action<ExtensionDescriptor>, WithId<ExtensionAction> {
+public interface StepAction extends Action, WithId<StepAction> {
 
     @Override
     @Value.Default
     default String getActionType() {
-        return Action.TYPE_EXTENSION;
+        return Action.TYPE_STEP;
     }
 
     @Override
-    default ExtensionAction withId(String id) {
+    default StepAction withId(String id) {
         return new Builder().createFrom(this).id(id).build();
     }
 
-    class Builder extends ImmutableExtensionAction.Builder {
+    @Override
+    StepDescriptor getDescriptor();
+
+    class Builder extends ImmutableStepAction.Builder {
     }
 
 

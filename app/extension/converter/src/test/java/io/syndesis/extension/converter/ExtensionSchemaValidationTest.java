@@ -27,8 +27,8 @@ import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import io.syndesis.core.Json;
 import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ExtensionAction;
-import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.extension.Extension;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class ExtensionSchemaValidationTest {
     }
 
     @Test
-    public void validateExtensionTest() throws ProcessingException {
+    public void validateStepExtensionTest() throws ProcessingException {
         String syndesisExtensionSchema = "/syndesis/syndesis-extension-definition-schema.json";
         JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + syndesisExtensionSchema);
         ExtensionConverter converter = new DefaultExtensionConverter();
@@ -62,15 +62,14 @@ public class ExtensionSchemaValidationTest {
             .uses(OptionalInt.empty())
             .version("1.0.0")
             .schemaVersion(ExtensionConverter.getCurrentSchemaVersion())
-            .addAction(new ExtensionAction.Builder()
+            .addAction(new StepAction.Builder()
                 .id("action-1")
                 .name("action-1-name")
                 .description("Action 1 Description")
-                .actionType("extension")
                 .pattern(Action.Pattern.From)
-                .descriptor(new ExtensionDescriptor.Builder()
+                .descriptor(new StepDescriptor.Builder()
                     .entrypoint("direct:hello")
-                    .kind(ExtensionAction.Kind.ENDPOINT)
+                    .kind(StepAction.Kind.ENDPOINT)
                     .build())
                 .build())
             .build();
@@ -95,6 +94,7 @@ public class ExtensionSchemaValidationTest {
                 .description("Description")
                 .version("1.0.0")
                 .schemaVersion("old-V0.1")
+                .extensionType(Extension.Type.Steps)
                 .build();
 
         JsonNode tree = converter.toPublicExtension(extension);

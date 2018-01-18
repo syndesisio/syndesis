@@ -15,9 +15,30 @@
  */
 package io.syndesis.model;
 
-public interface WithId<T extends WithId<T>> extends WithResourceId, WithKind {
+import java.util.Optional;
 
-    @Override
-    T withId(String id);
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Non-generic superclass of {@link WithId}.
+ */
+public interface WithResourceId {
+
+    Optional<String> getId();
+
+    Object withId(String id);
+
+    default boolean idEquals(final String another) {
+        final Optional<String> id = getId();
+        if (id.isPresent()) {
+            return id.get().equals(another);
+        }
+
+        return false;
+    }
+
+    @JsonIgnore
+    default boolean hasId() {
+        return getId().isPresent();
+    }
 }

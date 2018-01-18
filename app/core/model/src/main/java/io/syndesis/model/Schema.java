@@ -20,5 +20,5 @@ package io.syndesis.model;
  */
 public class Schema {
     // changing this will reset all the DB data.
-    public static final String VERSION = "22";
+    public static final String VERSION = "23";
 }
