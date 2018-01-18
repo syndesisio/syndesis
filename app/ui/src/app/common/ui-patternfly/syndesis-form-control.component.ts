@@ -17,6 +17,7 @@ import {
   DynamicFormControlComponent,
   DynamicFormControlEvent,
   DynamicTemplateDirective,
+  DynamicFormLayoutService,
   DYNAMIC_FORM_CONTROL_TYPE_ARRAY,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX,
   DYNAMIC_FORM_CONTROL_TYPE_CHECKBOX_GROUP,
@@ -38,7 +39,6 @@ export const enum SyndesisFormControlType {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'syndesis-form-control',
   templateUrl: './syndesis-form-control.component.html',
   /* tslint:disable no-unused-css*/
@@ -67,9 +67,16 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
   type: SyndesisFormControlType | null;
   fieldHash: string;
 
-  static getFormControlType(
-    model: DynamicFormControlModel
-  ): SyndesisFormControlType | null {
+  constructor(
+    protected detector: ChangeDetectorRef,
+    protected layoutService: DynamicFormLayoutService,
+    protected validationService: DynamicFormValidationService
+  ) {
+    super(detector, layoutService, validationService);
+    this.fieldHash = Math.random().toString(36).substr(2, 16);
+  }
+
+  static getFormControlType(model: DynamicFormControlModel): SyndesisFormControlType {
     switch (model.type) {
       case DYNAMIC_FORM_CONTROL_TYPE_ARRAY:
         return SyndesisFormControlType.Array;
@@ -96,14 +103,6 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
       default:
         return null;
     }
-  }
-
-  constructor(
-    protected validationService: DynamicFormValidationService,
-    protected detector: ChangeDetectorRef
-  ) {
-    super(detector, validationService);
-    this.fieldHash = Math.random().toString(36).substr(2, 16);
   }
 
   ngOnChanges(changes: SimpleChanges) {

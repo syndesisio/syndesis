@@ -15,11 +15,10 @@
       <span class="glyphicon glyphicon-info-sign"></span>
     </div>
   </label>
-
-  <ng-template *ngIf="type !== 1 && template?.align === 'START'"
-               [ngTemplateOutlet]="template.templateRef"
-               [ngTemplateOutletContext]="model"></ng-template>
-
+  
+  <ng-template *ngIf="type !== 1 && templates[0]?.align === 'START'"
+                [ngTemplateOutlet]="templates[0]?.templateRef"
+                [ngTemplateOutletContext]="model"></ng-template>
 
   <div *ngIf="type === 2"
        [ngClass]="model.cls.grid.control">
@@ -246,8 +245,8 @@
 
   </div>
 
-  <ng-template *ngIf="type !== 1 && template?.align === 'END'"
-               [ngTemplateOutlet]="template.templateRef"
+  <ng-template *ngIf="type !== 1 && templates[0]?.align === 'END'"
+               [ngTemplateOutlet]="templates[0]?.templateRef"
                [ngTemplateOutletContext]="model"></ng-template>
 
 
