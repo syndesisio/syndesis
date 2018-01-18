@@ -204,7 +204,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                 TypeMirror typeMirror = field.asType();
                 TypeElement typeElement = processingEnv.getElementUtils().getTypeElement(typeMirror.toString());
                 String javaType = typeMirror.toString();
-                String type = javaType;
+                String type = propData.getProperty("type");
 
                 if (typeElement != null && typeElement.getKind() == ElementKind.ENUM) {
                     int enumIndex = 0;
@@ -221,16 +221,18 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                     type = String.class.getName();
                 }
 
-                if (String.class.getName().equals(type)) {
-                    type = "string";
-                } else if (Boolean.class.getName().equals(type)) {
-                    type = "boolean";
-                } else if (Integer.class.getName().equals(type)) {
-                    type = "int";
-                } else if (Float.class.getName().equals(type)) {
-                    type = "float";
-                } else if (Double.class.getName().equals(type)) {
-                    type = "double";
+                if (type == null || "".equals(type.trim())){
+                    if (String.class.getName().equals(type)) {
+                        type = "string";
+                    } else if (Boolean.class.getName().equals(type)) {
+                        type = "boolean";
+                    } else if (Integer.class.getName().equals(type)) {
+                        type = "int";
+                    } else if (Float.class.getName().equals(type)) {
+                        type = "float";
+                    } else if (Double.class.getName().equals(type)) {
+                        type = "double";
+                    }
                 }
 
                 writeIfNotEmpty(props, "property[" + (index + i) + "].javaType", javaType);
