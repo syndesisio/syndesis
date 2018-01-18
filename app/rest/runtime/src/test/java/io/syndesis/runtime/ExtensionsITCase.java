@@ -22,7 +22,6 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.Violation;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.IntegrationDeploymentState;
@@ -49,7 +48,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import static io.syndesis.model.Kind.IntegrationDeployment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExtensionsITCase extends BaseITCase {

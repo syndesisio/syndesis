@@ -24,23 +24,26 @@ import java.util.Optional;
 public class StateUpdate {
 
     private final IntegrationDeploymentState state;
-    private String statusMessage;
-    private List<String> stepsPerformed;
+    private final String statusMessage;
+    private final List<String> stepsPerformed;
 
-    public StateUpdate(IntegrationDeploymentState state, List<String> stepsPerformed) {
-        this.state = state;
-        this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyList);
-    }
 
     public StateUpdate(IntegrationDeploymentState state, String statusMessage) {
-        this.state = state;
-        this.statusMessage = statusMessage;
-        this.stepsPerformed = Collections.emptyList();
+        this(state, Collections.emptyList(), statusMessage);
     }
 
     public StateUpdate(IntegrationDeploymentState state) {
+        this(state, Collections.emptyList(), null);
+    }
+
+    public StateUpdate(IntegrationDeploymentState state, List<String> stepsPerformed) {
+        this(state, stepsPerformed, null);
+    }
+
+    public StateUpdate(IntegrationDeploymentState state, List<String> stepsPerformed, String statusMessage) {
         this.state = state;
-        this.stepsPerformed = Collections.emptyList();
+        this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyList);
+        this.statusMessage = statusMessage;
     }
 
     public IntegrationDeploymentState getState() {

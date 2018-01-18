@@ -261,9 +261,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
         private Date lastUpdated = new Date();
         private Date createdDate = new Date();
 
-        public Builder() {
-        }
-
         public Builder createFrom(IntegrationDeployment revision) {
             return this
                 .integrationId(revision.integrationId)

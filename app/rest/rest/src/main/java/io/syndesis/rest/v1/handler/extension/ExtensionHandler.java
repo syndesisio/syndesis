@@ -26,7 +26,6 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
@@ -74,7 +73,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Path("/extensions")
