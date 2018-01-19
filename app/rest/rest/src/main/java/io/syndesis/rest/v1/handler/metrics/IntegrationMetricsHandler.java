@@ -64,6 +64,4 @@ public class IntegrationMetricsHandler implements Resource {
     public IntegrationMetricsSummary get() {
         return metricsProvider.getTotalIntegrationMetricsSummary();
     }
-
-
 }

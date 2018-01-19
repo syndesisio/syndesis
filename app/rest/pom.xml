@@ -50,8 +50,8 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-cloud.version>Dalston.SR4</spring-cloud.version>
-    <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
     <spring-cloud-sleuth.version>1.2.5.RELEASE</spring-cloud-sleuth.version>
+    <spring-cloud-kubernetes-core.version>0.1.6</spring-cloud-kubernetes-core.version>
     <spring-security.version>4.2.3.RELEASE</spring-security.version>
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
     <undertow.version>1.4.21.Final</undertow.version>
@@ -90,6 +90,7 @@
     <module>syndesis-build-helper-maven-plugin</module>
     <module>syndesis-builder-image-generator</module>
     <module>verifier</module>
+    <module>metrics-collector</module>
   </modules>
 
   <dependencyManagement>
@@ -130,14 +131,6 @@
         <version>${spring-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>spring-cloud-kubernetes-bom</artifactId>
-        <version>${spring-cloud-kubernetes.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
       </dependency>
 
       <dependency>
@@ -319,18 +312,6 @@
           <exclusion>
             <groupId>com.force.api</groupId>
             <artifactId>force-wsc</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>spring-cloud-kubernetes-core</artifactId>
-        <version>${spring-cloud-kubernetes.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

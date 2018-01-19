@@ -786,6 +786,17 @@
         <version>${immutables.version}</version>
         <scope>provided</scope>
       </dependency>
+      <dependency>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-client-java</artifactId>
+        <version>1.3.7</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
       <!-- Internal Dependencies -->
 
@@ -990,9 +1001,15 @@
         <version>${atlasmap.version}</version>
       </dependency>
       <dependency>
+<<<<<<< HEAD
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
+=======
+        <groupId>io.syndesis</groupId>
+        <artifactId>metrics-collector</artifactId>
+        <version>${project.version}</version>
+>>>>>>> [feature] Adding the metrics-collector #1065
       </dependency>
 
     </dependencies>

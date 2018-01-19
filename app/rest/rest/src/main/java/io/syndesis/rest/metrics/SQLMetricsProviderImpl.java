@@ -52,24 +52,31 @@ public class SQLMetricsProviderImpl implements MetricsProvider {
         Long totalMessages = 0L;
         Long totalErrors = 0L;
         Optional<Date> totalLastProcessed = Optional.empty();
-        Long totalUptime = 0L;
-        for (IntegrationMetricsSummary integrationSummary : metricsSummaryList) {
-            totalMessages += integrationSummary.getMessages().orElse(0L);
-            totalErrors += integrationSummary.getErrors().orElse(0L);
-            if (! totalLastProcessed.isPresent()
-                 || (integrationSummary.getLastProcessed().isPresent() &&// NOPMD
-                 totalLastProcessed.get().before(integrationSummary.getLastProcessed().get()))) {
-                totalLastProcessed = integrationSummary.getLastProcessed();
+        Optional<Date> totalStart = Optional.empty();
+        for (IntegrationMetricsSummary summary : metricsSummaryList) {
+            totalMessages += summary.getMessages();
+            totalErrors += summary.getErrors();
+            if (totalLastProcessed.isPresent()) {
+                totalLastProcessed = summary.getLastProcessed().isPresent() &&
+                        totalLastProcessed.get().before(summary.getLastProcessed().get()) ?
+                                totalLastProcessed : summary.getLastProcessed();
+            } else {
+                totalLastProcessed = summary.getLastProcessed();
             }
-            if (integrationSummary.getUptime().isPresent() &&
-                    totalUptime.compareTo(integrationSummary.getUptime().get()) < 0) {
-                totalUptime = integrationSummary.getUptime().get();
+            //grab longest living integration pod
+            if (totalStart.isPresent()) {
+                totalStart = summary.getStart().isPresent() &&
+                        summary.getStart().get().before(totalStart.get()) ?
+                                summary.getStart() : totalStart;
+            } else {
+                totalStart = summary.getStart();
             }
         }
         return new IntegrationMetricsSummary.Builder()
                 .messages(totalMessages)
                 .errors(totalErrors)
                 .lastProcessed(totalLastProcessed)
-                .uptime(totalUptime).build();
+                .start(totalStart)
+                .build();
     }
 }
