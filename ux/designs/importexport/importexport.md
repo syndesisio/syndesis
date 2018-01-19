@@ -24,7 +24,7 @@ This design covers the following workflows:
 
 
 
-## Exporting a Single Intergration
+## Exporting a Single Integration
 
 ![Image of choosing connection](img/import.png)
 
