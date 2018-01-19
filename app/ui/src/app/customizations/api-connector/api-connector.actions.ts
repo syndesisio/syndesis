@@ -71,8 +71,8 @@ export class ApiConnectorActions {
     return new ApiConnectorUpdateFail(payload);
   }
 
-  static updateComplete(payload: CustomConnectorRequest): ApiConnectorUpdateComplete {
-    return new ApiConnectorUpdateComplete(payload);
+  static updateComplete(): ApiConnectorUpdateComplete {
+    return new ApiConnectorUpdateComplete();
   }
 
   static delete(payload: string): ApiConnectorDelete {
@@ -158,8 +158,6 @@ export class ApiConnectorUpdate implements Action {
 
 export class ApiConnectorUpdateComplete implements Action {
   readonly type = ApiConnectorActions.UPDATE_COMPLETE;
-
-  constructor(public payload: CustomConnectorRequest) { }
 }
 
 export class ApiConnectorUpdateFail implements Action {

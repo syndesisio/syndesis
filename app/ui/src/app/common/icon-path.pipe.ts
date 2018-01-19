@@ -26,16 +26,8 @@ export class IconPathPipe implements PipeTransform {
 
   transform(connection: IconConnection, isConnector?: boolean): SafeUrl | null {
     if (connection && connection.icon instanceof File) {
-      const promise = new Promise<SafeUrl>(resolve => {
-        const file = connection.icon as File;
-        const fileReader = new FileReader();
-
-        fileReader.onload = event => resolve(this.toSafeUrl(event.target['result']));
-        fileReader.readAsDataURL(file);
-      });
-
-      const asyncPipe = new AsyncPipe(this.changeDetectorRef);
-      return asyncPipe.transform<SafeUrl>(promise);
+      const tempIconBlobPath = URL.createObjectURL(connection.icon);
+      return this.toSafeUrl(tempIconBlobPath);
 
     } else if (connection && typeof (connection.icon) === 'string') {
       // TODO: Streamline this assignation block once we manage to create a common model
