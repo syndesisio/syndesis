@@ -5,7 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
+import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
+import { API_ENDPOINTS, ApiConfigService } from '@syndesis/ui/platform';
 
 import {
   ApiConnectorAuthComponent,
@@ -21,6 +23,7 @@ import { ApiConnectorEffects } from './api-connector.effects';
 import { apiConnectorReducer } from './api-connector.reducer';
 import { ApiConnectorLazyLoaderGuard } from './api-connector-lazy-loader.guard';
 import { ApiConnectorService } from './api-connector.service';
+import { apiConnectorEndpoints } from './api-connector.api';
 
 const routes: Routes = [{
   path: 'api-connector/create/:template',
@@ -42,6 +45,7 @@ const routes: Routes = [{
     SyndesisCommonModule,
     StoreModule.forFeature('apiConnectorState', apiConnectorReducer),
     EffectsModule.forFeature([ApiConnectorEffects]),
+    CoreModule.forFeature({ apiConfig: apiConnectorEndpoints }),
   ],
   exports: [RouterModule],
   declarations: [

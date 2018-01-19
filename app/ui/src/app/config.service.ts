@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { log, getCategory } from './logging';
 import { environment } from '../environments/environment';
 
-const apiChildEndpoints = require('./../api-endpoints-config.json');
-
 const category = getCategory('ConfigService');
 
 const defaults = environment.config;
@@ -28,7 +26,6 @@ export class ConfigService {
         this.settingsRepository = Object.freeze({
           ...this.settingsRepository,
           ...config,
-          ...{ apiChildEndpoints }
         });
 
         log.debugc(() =>
