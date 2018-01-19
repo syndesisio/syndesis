@@ -9,6 +9,7 @@ import {
   ApiConnectorValidateSwagger,
   ApiConnectorCreate,
   ApiConnectorCreateComplete,
+  ApiConnectorUpdate,
   ApiConnectorDelete,
   ApiConnectorDeleteComplete
 } from './api-connector.actions';
@@ -19,6 +20,7 @@ export class ApiConnectorEffects {
   fetchApiConnectors$: Observable<Action> = this.actions$
     .ofType(
     ApiConnectorActions.FETCH,
+    ApiConnectorActions.UPDATE_FAIL,
     ApiConnectorActions.DELETE_FAIL
     )
     .mergeMap(() =>
@@ -59,20 +61,24 @@ export class ApiConnectorEffects {
 
   @Effect()
   updateCustomConnector$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorCreate>(ApiConnectorActions.UPDATE)
-    .mergeMap(action =>
-      this.apiConnectorService
+    .ofType<ApiConnectorUpdate>(ApiConnectorActions.UPDATE)
+    .mergeMap((action: ApiConnectorUpdate) => {
+      const hasUpdatedIcon = !!action.payload.iconFile;
+      return this.apiConnectorService
         .updateCustomConnector(action.payload)
-        .map(response => ({ type: ApiConnectorActions.UPDATE_COMPLETE }))
+        .map(response => ({ type: ApiConnectorActions.UPDATE_COMPLETE, payload: hasUpdatedIcon }))
         .catch(error => Observable.of({
           type: ApiConnectorActions.UPDATE_FAIL,
           payload: error
-        }))
-    );
+        }));
+    });
 
   @Effect()
   refreshApiConnectors$: Observable<Action> = this.actions$
-    .ofType<ApiConnectorCreateComplete>(ApiConnectorActions.CREATE_COMPLETE)
+    .ofType(
+      ApiConnectorActions.CREATE_COMPLETE,
+      ApiConnectorActions.UPDATE_COMPLETE
+    )
     .switchMap(() => Observable.of(ApiConnectorActions.fetch()));
 
   @Effect()

@@ -18,7 +18,10 @@
         <label class="syn-form-row__label" for="connectorName">Connector Icon</label>
         <div class="syn-form-column syn-form-filebrowser">
           <span class="syn-form-filebrowser__default-file">
-            <i class="fa fa-times"></i>
+            <i class="fa fa-upload" *ngIf="(createMode && !iconFile) || !createMode"></i>
+            <img *ngIf="createMode && iconFile"
+              class="syn-form-filebrowser__preview"
+              [src]="{ icon: iconFile } | synIconPath">
           </span>
           <input class="syn-form-filebrowser__input" type="file" name="connectorIcon" (change)="onChange($event)">
         </div>

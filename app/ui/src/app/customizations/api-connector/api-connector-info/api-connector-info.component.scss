@@ -20,5 +20,18 @@
       }
     }
   }
+}
 
+.syn-form-filebrowser {
+  &__default-file {
+    overflow: hidden;
+  }
+
+  &__preview {
+    display: block;
+    min-width: 50px;
+    max-height: 50px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
 }

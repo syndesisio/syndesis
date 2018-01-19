@@ -16,8 +16,7 @@ export class ApiConnectorInfoComponent implements OnInit {
   createMode: boolean;
   apiConnectorDataForm: FormGroup;
   editControlKey: string;
-  icon: string; // TODO - Replace default thumb by image if any. Wrap in square container
-  private iconFile: File;
+  iconFile: File;
   private isDirty: boolean;
 
   constructor(
@@ -48,12 +47,11 @@ export class ApiConnectorInfoComponent implements OnInit {
     }
 
     if (this.apiConnectorData) {
-      const { name, description, configuredProperties, properties, icon } = this.apiConnectorData;
+      const { name, description, configuredProperties, properties } = this.apiConnectorData;
       this.apiConnectorDataForm.get('name').setValue(name);
       this.apiConnectorDataForm.get('description').setValue(description);
       this.apiConnectorDataForm.get('host').setValue(configuredProperties.host || properties.host.defaultValue);
       this.apiConnectorDataForm.get('basePath').setValue(configuredProperties.basePath || properties.basePath.defaultValue);
-      this.icon = icon;
       this.isDirty = true;
     }
   }
