@@ -244,6 +244,7 @@
             <resourcePackage>io.syndesis.rest.v1.handler.connection</resourcePackage>
             <resourcePackage>io.syndesis.rest.v1.handler.environment</resourcePackage>
             <resourcePackage>io.syndesis.rest.v1.handler.integration</resourcePackage>
+            <resourcePackage>io.syndesis.rest.v1.handler.metrics</resourcePackage>
             <resourcePackage>io.syndesis.rest.v1.handler.user</resourcePackage>
           </resourcePackages>
           <swaggerConfig>

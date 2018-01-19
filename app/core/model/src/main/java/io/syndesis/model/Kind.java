@@ -44,7 +44,7 @@ public enum Kind {
 
     Integration(io.syndesis.model.integration.Integration.class),
     IntegrationDeployment(IntegrationDeployment.class),
-
+    IntegrationMetricsSummary(io.syndesis.model.metrics.IntegrationMetricsSummary.class),
     IntegrationRuntime(io.syndesis.model.integration.IntegrationRuntime.class),
     Step(io.syndesis.model.integration.Step.class),
 

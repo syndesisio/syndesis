@@ -1525,5 +1525,25 @@
         }
       ]
     }
+  },
+  {
+  "kind": "integration-metrics-summary",
+    "data": {
+      "id": "1",
+      "messages": 233,
+      "errors": 0,
+      "lastProcessed": "2018-01-17T18:25:43.511Z",
+      "uptime": 1400345
+    }
+  },
+  {
+  "kind": "integration-metrics-summary",
+    "data": {
+      "id": "2",
+      "messages": 3,
+      "errors": 0,
+      "lastProcessed": "2018-01-17T18:35:43.511Z",
+      "uptime": 2345
+    }
   }
 ]

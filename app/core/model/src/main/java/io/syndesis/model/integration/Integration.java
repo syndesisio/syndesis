@@ -16,7 +16,6 @@
 package io.syndesis.model.integration;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -91,8 +90,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<Date> getLastUpdated();
 
     Optional<Date> getCreatedDate();
-
-    Optional<BigInteger> getTimesUsed();
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder

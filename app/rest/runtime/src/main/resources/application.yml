@@ -98,3 +98,6 @@ maven:
 logging:
   level:
     io.swagger.parser: WARN
+
+metrics:
+  kind: sql

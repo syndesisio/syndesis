@@ -16,7 +16,6 @@
 package io.syndesis.rest.v1.handler.integration;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -114,7 +113,6 @@ public class IntegrationHandler extends BaseHandler
         if (currentStatus.isPresent() && currentStatus.get() ==  IntegrationDeploymentState.Active) {
             integration = new  Integration.Builder()
                     .createFrom(integration)
-                    .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
                     .build();
         }
         return updateCurrentState.apply(integration);

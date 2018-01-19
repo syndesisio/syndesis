@@ -205,13 +205,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
     }
 
     public static IntegrationDeployment newDeployment(Integration integration, Collection<IntegrationDeployment> deployments) {
-        BigInteger totalTimesUsed = integration.getTimesUsed().orElse(BigInteger.ZERO);
-        BigInteger parentUses =  deployments
-            .stream()
-            .map(i -> i.getTimesUsed())
-            .reduce( (n1,n2) -> n1.add(n2))
-            .orElse(BigInteger.ZERO);
-
         return new IntegrationDeployment.Builder()
             .integrationId(integration.getId())
             .name(integration.getName())
@@ -225,7 +218,6 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
                         .build())
             .currentState(integration.getCurrentStatus().orElse(IntegrationDeploymentState.Draft))
             .targetState(integration.getDesiredStatus().orElse(IntegrationDeploymentState.Draft))
-            .timesUsed(Optional.of(totalTimesUsed.subtract(parentUses)))
             //We retain the information found on the integration and we override when needed, why?
             //Because this is not called just when we want to create a new revision,
             //but can be used when editing the current one.
