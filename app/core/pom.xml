@@ -68,7 +68,6 @@
     <!-- third party plugin version -->
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
     <build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
-    <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
     <process-exec-maven-plugin.version>0.8</process-exec-maven-plugin.version>
     <swagger-maven-plugin.version>1.0.0</swagger-maven-plugin.version>
     <swagger2markup-maven-plugin.version>1.1.0</swagger2markup-maven-plugin.version>
@@ -390,11 +389,6 @@
           <groupId>com.bazaarvoice.maven.plugins</groupId>
           <artifactId>process-exec-maven-plugin</artifactId>
           <version>${process-exec-maven-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>${exec-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
