@@ -75,8 +75,7 @@ export class StepStore {
         }
       },
       configuredProperties: undefined
-    }
-    /*
+    },
     {
       id: undefined,
       connection: undefined,
@@ -86,10 +85,15 @@ export class StepStore {
       description: "Sends a message to the integration's log",
       configuredProperties: undefined,
       properties: {
-        message: {
+        expression: {
           type: 'string',
           displayName: 'Log Message',
-          required: true,
+          required: false,
+        },
+        bodyLoggingEnabled: {
+          type: 'boolean',
+          displayName: 'Body Logging Enabled',
+          required: false,
         },
         loggingLevel: {
           type: 'hidden',
@@ -99,6 +103,7 @@ export class StepStore {
         },
       },
     },
+    /*
     {
       id: undefined,
       connection: undefined,
