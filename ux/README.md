@@ -30,10 +30,11 @@ Access UX design resource and documentation for Syndesis.
 
 ## Customizations
 * ### [API Client Connector](designs/apiconnector/apiconnector.md)
-* ### [Technical Extension](designs/technical_extensions/tech_ext.md)
+* ### [Connector & Step Extension](designs/connector-step-extensions/connector-step-ext.md)
 
 ## Connectors
 * ### AWS S3 Connector Icon: [svg](designs/aws-s3/icon/_iPaaS_ConnectionIcons_AWS-S3.svg), [png](designs/aws-s3/icon/aws-s3-icon-png.png)
 
 ## Archives
 * ### [Integration Summary Page](designs/integrationsummary/integrationsummary.md)
+* ### [Technical Extension](designs/technical_extensions/tech_ext.md)
