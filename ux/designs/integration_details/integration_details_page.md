@@ -38,7 +38,7 @@ The designs covers the following user interactions:
 
 #### Expanding a row
 
-![expandable row and scrolling](img/integration_details_page_rework_11.16_expand_scroll.png)
+![expandable row and scrolling](img/integration_details_page_1.22_expand_scroll_BOM.png)
 
 1. When expanding a row item, show more details about that version.
 
