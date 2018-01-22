@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import io.fabric8.openshift.api.model.BuildStatus;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.controllers.integration.IntegrationSupport;
@@ -99,7 +100,7 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
             stepPerformer.perform("build", this::build, deploymentData);
             stepPerformer.perform("deploy", this::deploy, deploymentData);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            logError(integration,"[ERROR] Activation failure");
+            logError(integration,"[ERROR] Activation failure", e);
             // Setting a message to update means implicitly thats in an error state (for the UI)
             return new StatusUpdate(Integration.Status.Pending, e.getMessage());
         }
@@ -158,7 +159,6 @@ public class ActivateHandler extends BaseHandler implements StatusChangeHandlerP
     public boolean isRunning(Integration integration) {
         return openShiftService().isScaled(integration.getName(),1);
     }
-
 
     private static String propsToString(Properties data) {
         if (data == null) {

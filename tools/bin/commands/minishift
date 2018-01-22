@@ -16,7 +16,7 @@ minishift::usage() {
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
     --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
     --show-logs               Show minishift logs during startup
-    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.6.0)
+    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.7.0)
                               already existing for --install.
                               Default project: "syndesis"
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images,
@@ -46,7 +46,7 @@ minishift::run() {
         if [ $(hasflag --show-logs --show-log) ]; then
             show_logs_args="--show-libmachine-logs=true "
         fi
-        minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.6.0}
+        minishift start ${show_logs_arg:- }--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.7.0}
     fi
 
     if [ $(hasflag --install) ]; then

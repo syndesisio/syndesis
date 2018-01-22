@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric8.openshift.api.model.BuildStatus;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.User;
 
@@ -101,5 +102,4 @@ public interface OpenShiftService {
      * @return The currently logged in user.
      */
     User whoAmI(String token);
-
 }
