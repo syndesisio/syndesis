@@ -26,7 +26,7 @@ import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
-abstract class AbstractSwaggerConnectorTest {
+public abstract class AbstractSwaggerConnectorTest {
 
     /* default */ static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
 

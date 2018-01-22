@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.generator.swagger;
+package io.syndesis.connector.generator.swagger.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +25,8 @@ import static java.util.Optional.ofNullable;
 import io.swagger.models.Swagger;
 import io.swagger.parser.SwaggerParser;
 import io.swagger.parser.util.RemoteUrl;
+import io.syndesis.connector.generator.swagger.SwaggerModelInfo;
+import io.syndesis.connector.generator.swagger.SyndesisSwaggerValidationRules;
 import io.syndesis.core.Json;
 import io.syndesis.model.Violation;
 
@@ -66,17 +68,7 @@ public final class SwaggerHelper {
         // utility class
     }
 
-    /* default */ static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
-        final JsonNode specRoot;
-        if (specification.matches("\\s+\\{")) {
-            specRoot = JSON_MAPPER.readTree(specification);
-        } else {
-            specRoot = JSON_MAPPER.convertValue(YAML_PARSER.load(specification), JsonNode.class);
-        }
-        return specRoot;
-    }
-
-    /* default */ static SwaggerModelInfo parse(final String specification, final boolean validate) {
+    public static SwaggerModelInfo parse(final String specification, final boolean validate) {
         final SwaggerModelInfo.Builder resultBuilder = new SwaggerModelInfo.Builder();
 
         final String resolvedSpecification;
@@ -108,6 +100,24 @@ public final class SwaggerHelper {
         return resultBuilder.model(swagger).build();
     }
 
+    public static String serialize(final Swagger swagger) {
+        try {
+            return Json.mapper().writeValueAsString(swagger);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalStateException("Unable to serialize Swagger specification", e);
+        }
+    }
+
+    /* default */ static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
+        final JsonNode specRoot;
+        if (specification.matches("\\s+\\{")) {
+            specRoot = JSON_MAPPER.readTree(specification);
+        } else {
+            specRoot = JSON_MAPPER.convertValue(YAML_PARSER.load(specification), JsonNode.class);
+        }
+        return specRoot;
+    }
+
     /* default */ static String resolve(final String specification) throws Exception {
         final String specificationToUse;
         if (specification.toLowerCase().startsWith("http")) {
@@ -119,14 +129,6 @@ public final class SwaggerHelper {
         final JsonNode node = convertToJson(specificationToUse);
 
         return Json.mapper().writeValueAsString(node);
-    }
-
-    /* default */ static String serialize(final Swagger swagger) {
-        try {
-            return Json.mapper().writeValueAsString(swagger);
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize Swagger specification", e);
-        }
     }
 
     private static boolean append(final List<Violation> violations, final ProcessingMessage message, final Optional<String> requiredLevel) {

@@ -29,10 +29,20 @@ import io.syndesis.core.Json;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-/* default */ final class TestHelper {
+public final class TestHelper {
 
     private TestHelper() {
         // utility class
+    }
+
+    public static String resource(final String path) throws IOException {
+        final String resource;
+        try (final InputStream in = requireNonNull(TestHelper.class.getResourceAsStream(path), path);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+
+            resource = reader.lines().collect(Collectors.joining("\n"));
+        }
+        return resource;
     }
 
     /* default */ static String reformatJson(final String json) throws IOException {
@@ -44,16 +54,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
         return Json.mapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
             .writeValueAsString(tree);
-    }
-
-    /* default */ static String resource(final String path) throws IOException {
-        final String resource;
-        try (final InputStream in = requireNonNull(TestHelper.class.getResourceAsStream(path), path);
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-
-            resource = reader.lines().collect(Collectors.joining("\n"));
-        }
-        return resource;
     }
 
     /* default */ static String resource(final String path, final String alternative) throws IOException {
