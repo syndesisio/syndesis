@@ -130,12 +130,12 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
     @SuppressWarnings("resource")
     @Override
-    public InputStream generate(Integration integration, IntegrationDeployment integrationDeployment) throws IOException {
+    public InputStream generate(IntegrationDeployment integrationDeployment) throws IOException {
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
 
-        executor.execute(generateAddProjectTarEntries(integration, integrationDeployment, os));
+        executor.execute(generateAddProjectTarEntries(integrationDeployment, os));
 
         return is;
     }
@@ -169,24 +169,24 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @SuppressWarnings("PMD.DoNotUseThreads")
-    private Runnable generateAddProjectTarEntries(Integration integration, IntegrationDeployment integrationDeployment, OutputStream os) {
+    private Runnable generateAddProjectTarEntries(IntegrationDeployment integrationDeployment, OutputStream os) {
         return () -> {
             try (
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
-                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generate(integration, applicationJavaMustache));
-                addTarEntry(tos, "src/main/resources/application.properties", generate(integration, applicationPropertiesMustache));
+                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", generate(integrationDeployment, applicationJavaMustache));
+                addTarEntry(tos, "src/main/resources/application.properties", generate(integrationDeployment, applicationPropertiesMustache));
                 addTarEntry(tos, "src/main/resources/syndesis.yml", generateFlow(tos, integrationDeployment.getSpec()));
-                addTarEntry(tos, "pom.xml", generatePom(integration, integrationDeployment));
+                addTarEntry(tos, "pom.xml", generatePom(integrationDeployment));
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, integrationDeployment);
                 addAdditionalResources(tos);
-                LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(integration.getName()));
+                LOG.info("Integration [{}]: Project files written to output stream",Names.sanitize(integrationDeployment.getSpec().getName()));
             } catch (IOException e) {
                 if (LOG.isErrorEnabled()) {
                     LOG.error(String.format("Exception while creating runtime build tar for integration %s : %s",
-                        integration.getName(), e.toString()), e);
+                        integrationDeployment.getSpec().getName(), e.toString()), e);
                 }
             }
         };
@@ -229,7 +229,7 @@ public class DefaultProjectGenerator implements ProjectGenerator {
     }
 
     @Override
-    public byte[] generatePom(Integration integration, IntegrationDeployment integrationDeployment) throws IOException {
+    public byte[] generatePom( IntegrationDeployment integrationDeployment) throws IOException {
         final Set<MavenGav> dependencies = collectDependencies(integrationDeployment.getSpec()).stream()
             .filter(Dependency::isMaven)
             .map(Dependency::getId)
@@ -238,9 +238,9 @@ public class DefaultProjectGenerator implements ProjectGenerator {
 
         return generate(
             new PomContext(
-                integration.getId().orElse(""),
-                integration.getName(),
-                integration.getDescription().orElse(null),
+                integrationDeployment.getIntegrationId().orElse(""),
+                integrationDeployment.getSpec().getName(),
+                integrationDeployment.getSpec().getDescription().orElse(null),
                 dependencies,
                 generatorProperties.getMavenProperties()),
             pomMustache

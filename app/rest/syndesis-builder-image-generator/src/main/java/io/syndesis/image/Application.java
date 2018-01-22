@@ -167,23 +167,21 @@ public class Application implements ApplicationRunner {
             // ignore
         }
 
-        Integration integration = new Integration.Builder()
-            .id("integration")
-            .name("Integration")
-            .description("This integration is used to prime the .m2 repo")
-            .build();
-
         IntegrationDeployment integrationRevision = new IntegrationDeployment.Builder()
             .integrationId("integration")
             .name("Integration")
-            .spec(new IntegrationDeploymentSpec.Builder().steps(steps).build())
+            .spec(new IntegrationDeploymentSpec.Builder()
+                .name("Integration")
+                .description("This integration is used to prime the .m2 repo")
+                .steps(steps)
+                .build())
             .build();
 
-        generate(integration, integrationRevision, project);
+        generate(integrationRevision, project);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(Integration integration, IntegrationDeployment integrationRevision, File targetDir) throws IOException {
+    private static void generate(IntegrationDeployment integrationRevision, File targetDir) throws IOException {
         MavenProperties mavenProperties = new MavenProperties();
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(mavenProperties);
         StepVisitorFactoryRegistry registry = new StepVisitorFactoryRegistry(Collections.emptyList());
@@ -191,7 +189,7 @@ public class Application implements ApplicationRunner {
 
         Path dir = targetDir.toPath();
         Files.createDirectories( dir);
-        Files.write(dir.resolve("pom.xml"), generator.generatePom(integration, integrationRevision));
+        Files.write(dir.resolve("pom.xml"), generator.generatePom( integrationRevision));
 
         dir = dir.resolve("src/main/java/io/syndesis/example");
         Files.createDirectories( dir);

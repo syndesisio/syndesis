@@ -21,12 +21,17 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.ResourceIdentifier;
+import io.syndesis.model.WithName;
+import io.syndesis.model.WithTags;
 import io.syndesis.model.connection.Connection;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationDeploymentSpec.Builder.class)
-public interface IntegrationDeploymentSpec {
+@SuppressWarnings("immutables")
+public interface IntegrationDeploymentSpec extends WithTags, WithName {
+
+    Optional<String> getDescription();
 
     Optional<String> getConfiguration();
 

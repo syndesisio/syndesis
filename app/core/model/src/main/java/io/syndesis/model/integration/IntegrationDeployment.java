@@ -214,6 +214,8 @@ public class IntegrationDeployment implements WithKind, WithId<IntegrationDeploy
             .name(integration.getName())
             .version(1)
             .spec(new IntegrationDeploymentSpec.Builder()
+                        .name(integration.getName())
+                        .description(integration.getDescription())
                         .configuration(integration.getConfiguration())
                         .connections(integration.getConnections())
                         .steps(integration.getSteps())

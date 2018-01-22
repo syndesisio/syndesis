@@ -101,8 +101,8 @@ public class IntegrationSupportHandler {
     @Path("/generate/pom.xml")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] projectPom(IntegrationDeployment integrationRevision) throws IOException {
-        return projectConverter.generatePom(integrationOf(integrationRevision), integrationRevision);
+    public byte[] projectPom(IntegrationDeployment integrationDeployment) throws IOException {
+        return projectConverter.generatePom(integrationDeployment);
     }
 
     @GET
