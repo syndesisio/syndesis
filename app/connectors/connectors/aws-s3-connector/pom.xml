@@ -19,51 +19,78 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-connectors-project</artifactId>
+    <artifactId>connectors</artifactId>
     <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>connectors-catalog</artifactId>
-  <name>Connectors :: Catalog</name>
+  <artifactId>aws-s3-connector</artifactId>
+  <name>Connectors :: AWS S3</name>
   <packaging>jar</packaging>
   
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>twitter-connector</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>aws-s3-connector</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>connector-verifier</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>camel-component-proxy</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-aws</artifactId>
+      <version>${camel.version}</version>
     </dependency>
   </dependencies>
   
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>connectors-maven-plugin</artifactId>
+        <version>${project.version}</version>
         <executions>
           <execution>
-            <id>unpack-dependencies</id>
-            <phase>generate-resources</phase>
+            <id>inspections</id>
             <goals>
-              <goal>unpack-dependencies</goal>
+              <goal>generate-connector-inspections</goal>
             </goals>
-            <configuration>
-              <skip>false</skip>
-              <includes>META-INF/syndesis/**/*.json</includes>
-              <outputDirectory>${project.build.directory}/classes</outputDirectory>
-            </configuration>
           </execution>
         </executions>
       </plugin>
+      
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
