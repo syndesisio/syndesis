@@ -29,7 +29,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>aws</module>
+    <module>aws-s3-connector</module>
     <module>http</module>
     <module>timer</module>
     <module>twitter-connector</module>
