@@ -74,7 +74,8 @@ public class ConnectorGeneratorTest {
                 .properties(template.getConnectorProperties())//
                 .putConfiguredProperty("property2", "value2")//
                 .build(),
-            "id");
+            "id", "icon");
+        assertThat(connector.getIcon()).startsWith("data:image");
     }
 
     @Test
@@ -92,6 +93,7 @@ public class ConnectorGeneratorTest {
                 .connectorGroupId("template-group")//
                 .properties(template.getConnectorProperties())//
                 .putConfiguredProperty("property2", "value2").build(),
-            "id");
+            "id", "icon");
+        assertThat(connector.getIcon()).startsWith("data:image");
     }
 }

@@ -67,7 +67,8 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
         assertThat(generated.getProperties().keySet()).as("Expecting the same properties to be generated")
             .containsOnlyElementsOf(expected.getProperties().keySet());
         assertThat(generated.getProperties()).containsAllEntriesOf(expected.getProperties());
-        assertThat(generated).isEqualToIgnoringGivenFields(expected, "id", "properties", "configuredProperties", "actions");
+        assertThat(generated).isEqualToIgnoringGivenFields(expected, "id", "icon", "properties", "configuredProperties", "actions");
+        assertThat(generated.getIcon()).startsWith("data:image");
         assertThat(generated.getActions()).hasSameSizeAs(expected.getActions());
 
         for (final ConnectorAction expectedAction : expected.getActions()) {
