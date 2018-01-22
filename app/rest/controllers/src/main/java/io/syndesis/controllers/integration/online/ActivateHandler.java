@@ -139,8 +139,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     // Various steps to perform:
 
     private void build(IntegrationDeployment integrationDeployment, DeploymentData data) throws IOException {
-        Integration integration = integrationOf(integrationDeployment);
-        InputStream tarInputStream = createProjectFiles(integration, integrationDeployment);
+        InputStream tarInputStream = createProjectFiles(integrationDeployment);
         logInfo(integrationDeployment, "Created project files and starting build");
         openShiftService().build(integrationDeployment.getName(), data, tarInputStream);
     }
@@ -244,9 +243,9 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             .count();
     }
 
-    private InputStream createProjectFiles(Integration integration, IntegrationDeployment integrationDeployment) {
+    private InputStream createProjectFiles(IntegrationDeployment integrationDeployment) {
         try {
-            return projectGenerator.generate(integration, integrationDeployment);
+            return projectGenerator.generate(integrationDeployment);
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }

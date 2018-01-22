@@ -161,7 +161,9 @@
         }
       }
     ],
-    "resources": []
+    "resources": [],
+    "description" : "This is a test integration!",
+    "name" : "Test Integration"
   },
   "stepsDone" : [ ],
   "id" : "test-integration",

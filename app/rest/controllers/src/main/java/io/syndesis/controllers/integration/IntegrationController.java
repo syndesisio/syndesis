@@ -36,7 +36,6 @@ import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
-import io.syndesis.model.integration.Integration;
 
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
@@ -198,10 +197,10 @@ public class IntegrationController {
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 LOG.error("Error while processing integration status for integration {}", integrationDeploymentId, e);
                 // Something went wrong.. lets note it.
-                Integration current = dataManager.fetch(Integration.class, integrationDeploymentId);
-                dataManager.update(new Integration.Builder()
+                IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
+                dataManager.update(new IntegrationDeployment.Builder()
                     .createFrom(current)
-                    .statusMessage("Error: "+e)
+                    .currentState(IntegrationDeploymentState.Error)
                     .lastUpdated(new Date())
                     .build());
 
