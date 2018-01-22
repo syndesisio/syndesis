@@ -25,6 +25,7 @@ import io.syndesis.integration.model.steps.Function;
 import io.syndesis.integration.model.steps.Step;
 import io.syndesis.integration.runtime.StepHandler;
 import io.syndesis.integration.runtime.SyndesisRouteBuilder;
+import io.syndesis.integration.runtime.util.StringHelpers;
 import org.apache.camel.CamelContext;
 import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.TypeConverter;
@@ -81,7 +82,7 @@ public class FunctionHandler implements StepHandler<Function> {
 
     private String asBeanParameter(TypeConverter converter, Map.Entry<String, Object> entry) {
         try {
-            return "bean." + entry.getKey() + "=" + converter.mandatoryConvertTo(String.class, entry.getValue());
+            return "bean." + entry.getKey() + "=" + StringHelpers.sanitizeForURI(converter.mandatoryConvertTo(String.class, entry.getValue()));
         } catch (NoTypeConversionAvailableException e) {
             throw new IllegalStateException(e);
         }
