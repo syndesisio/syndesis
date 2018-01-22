@@ -11,7 +11,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
-import { FormFactoryService } from '@syndesis/ui/common';
+import { FormFactoryService } from '@syndesis/ui/platform';
 import { CurrentFlow,
          FlowEvent,
          FlowPage } from '@syndesis/ui/integrations/edit-page';

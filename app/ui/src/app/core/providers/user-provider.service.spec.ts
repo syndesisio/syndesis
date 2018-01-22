@@ -4,19 +4,19 @@ import { TestBed, async, inject } from '@angular/core/testing';
 
 import { RestangularModule } from 'ngx-restangular';
 
-import { UserService } from './user.service';
+import { UserProviderService } from './user-provider.service';
 
-describe('UserService', () => {
+describe('UserProviderServiceProvider', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RestangularModule.forRoot()],
-      providers: [UserService]
+      providers: [UserProviderService]
     });
   });
 
   it(
     'should ...',
-    inject([UserService], (service: UserService) => {
+    inject([UserProviderService], (service: UserProviderService) => {
       expect(service).toBeTruthy();
     })
   );

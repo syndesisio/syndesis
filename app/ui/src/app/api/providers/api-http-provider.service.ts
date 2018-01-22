@@ -16,17 +16,16 @@ const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack 
 export class ApiHttpProviderService extends ApiHttpService {
   private uploadProgressSubject = new Subject<ApiRequestProgress>();
   private apiBaseHost: string;
-  private apiEndpoints: StringMap<string>;
 
   constructor(private httpClient: HttpClient, private apiConfigService: ApiConfigService) {
     super();
 
     this.apiBaseHost = this.apiConfigService.baseUrl;
-    this.apiEndpoints = this.apiConfigService.endpoints || {};
   }
 
   getEndpointUrl(endpointKey: string, ...endpointParams: any[]): string {
-    let endpoint = this.apiEndpoints[endpointKey] || endpointKey;
+    const apiEndpoints = this.apiConfigService.endpoints || {};
+    let endpoint = apiEndpoints[endpointKey] || endpointKey;
 
     if (endpointParams && endpointParams.length == 1 && endpointParams[0] === Object(endpointParams[0])) {
       endpoint = this.replaceNameMatches(endpoint, endpointParams[0]);

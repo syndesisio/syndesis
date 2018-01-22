@@ -26,11 +26,11 @@ import { CoreModule } from './core';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
-import { CanDeactivateGuard, SyndesisCommonModule } from './common';
-import { UserService } from './common/user.service';
+import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
-import { platformReducer } from './platform';
+import { platformReducer, SYNDESIS_GUARDS } from './platform';
+import { ApiModule } from './api';
 
 export function restangularProviderConfigurer(
   restangularProvider: any,
@@ -79,6 +79,7 @@ export function mapperRestangularProvider(
     ReactiveFormsModule,
     HttpModule,
     CoreModule.forRoot(),
+    ApiModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
     TabsModule.forRoot(),
@@ -101,6 +102,7 @@ export function mapperRestangularProvider(
     TourNgxBootstrapModule.forRoot()
   ],
   providers: [
+    ...SYNDESIS_GUARDS,
     {
       provide: APP_INITIALIZER,
       useFactory: appConfigInitializer,
@@ -112,9 +114,7 @@ export function mapperRestangularProvider(
       useFactory: mapperRestangularProvider,
       deps: [Restangular, ConfigService]
     },
-    ConfigService,
-    UserService,
-    CanDeactivateGuard
+    ConfigService
   ],
   bootstrap: [AppComponent]
 })

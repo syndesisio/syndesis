@@ -1,54 +1,35 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ApiHttpService, ApiConfigService, API_ENDPOINTS } from '@syndesis/ui/platform';
+import * as SYNDESIS_ABSTRACT_PROVIDERS from '@syndesis/ui/platform';
 import * as SYNDESIS_PROVIDERS from './providers';
 
 @NgModule({
   imports: [CommonModule, HttpClientModule],
 })
 export class CoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    if (parentModule) {
+      throw new Error('CoreModule is already loaded. Import it in the AppModule only');
+    }
+  }
+
   static forRoot(): Array<ModuleWithProviders> {
     return [{
       ngModule: CoreModule,
       providers: [
-        SYNDESIS_PROVIDERS.ApiConfigProviderService,
-        SYNDESIS_PROVIDERS.ApiHttpProviderService,
+        SYNDESIS_PROVIDERS.FormFactoryProviderService,
         {
-          provide: API_ENDPOINTS,
-          multi: true,
-          useValue: {}
-        }, {
-          provide: ApiConfigService,
-          useClass: SYNDESIS_PROVIDERS.ApiConfigProviderService
-        }, {
-          provide: ApiHttpService,
-          useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.FormFactoryService,
+          useClass: SYNDESIS_PROVIDERS.FormFactoryProviderService,
         },
+        SYNDESIS_PROVIDERS.UserProviderService,
+        {
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.UserService,
+          useClass: SYNDESIS_PROVIDERS.UserProviderService
+        }
       ]},
     ];
-  }
-
-  static forFeature({ apiConfig }): Array<ModuleWithProviders> {
-    const featureProviders = [];
-
-    if (apiConfig) {
-      featureProviders.push({
-        provide: API_ENDPOINTS,
-        multi: true,
-        useValue: apiConfig
-      }, {
-        provide: ApiConfigService,
-        useClass: SYNDESIS_PROVIDERS.ApiConfigProviderService
-      }, {
-        provide: ApiHttpService,
-        useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService
-      });
-    }
-    return [{
-      ngModule: CoreModule,
-      providers: featureProviders
-    }];
   }
 }

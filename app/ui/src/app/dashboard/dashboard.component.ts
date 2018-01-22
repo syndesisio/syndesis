@@ -5,7 +5,7 @@ import { Connections, Integrations } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../common/user.service';
+import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-dashboard',

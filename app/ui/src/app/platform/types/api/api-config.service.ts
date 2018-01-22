@@ -18,4 +18,11 @@ export abstract class ApiConfigService {
    * Eg. { 'myEndpoint': '/exployees/list/{role}/{name}' }
    */
   abstract endpoints: Endpoints;
+
+  /**
+   * Registers additional endpoints in the application global endpoint set.
+   * Mostly used to add new endpoints in lazy loaded modules upon request.
+   * @param endpoints A stringmap of additional endpoints to be added to the global applications' endpoints catalogue
+   */
+  abstract registerEndpoints(endpoints: Endpoints): void;
 }

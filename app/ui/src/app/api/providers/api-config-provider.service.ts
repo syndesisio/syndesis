@@ -14,13 +14,18 @@ export class ApiConfigProviderService extends ApiConfigService {
     const { apiBase, apiEndpoint } = configService.getSettings();
     this.baseUrl = `${apiBase}${apiEndpoint}`;
 
+    this.registerEndpoints(apiEndpoints);
+  }
+
+  registerEndpoints(apiEndpoints: Endpoints): void {
+    const initialEndpoints = this.endpoints || {};
     this.endpoints = Object.keys(apiEndpoints).reduce((aggregatedEndpoints, endpointKey) => {
       const newEndpoint = {};
       newEndpoint[endpointKey] = apiEndpoints[endpointKey];
       return {
         ...aggregatedEndpoints,
         ...newEndpoint
-      }[0];
-    }, {});
+      };
+    }, initialEndpoints);
   }
 }

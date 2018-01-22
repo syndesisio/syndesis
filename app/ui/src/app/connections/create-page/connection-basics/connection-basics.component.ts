@@ -7,7 +7,7 @@ import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { CurrentConnectionService } from '../current-connection';
 import { Connectors, Connector, TypeFactory } from '../../../model';
 import { ConnectorStore } from '../../../store/connector/connector.store';
-import { UserService } from '../../../common/user.service';
+import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-connections-connection-basics',

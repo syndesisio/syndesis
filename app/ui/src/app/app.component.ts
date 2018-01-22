@@ -14,7 +14,7 @@ import { Notification, NotificationEvent } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
-import { UserService } from './common/user.service';
+import { UserService } from '@syndesis/ui/platform';
 import { ConfigService } from './config.service';
 import { log } from './logging';
 import { User } from './model';

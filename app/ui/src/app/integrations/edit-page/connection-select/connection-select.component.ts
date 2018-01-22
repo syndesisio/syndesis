@@ -11,7 +11,7 @@ import { Connections, Connection } from '@syndesis/ui/model';
 
 const category = getCategory('Integrations');
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/common';
+import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integrations-connection-select',

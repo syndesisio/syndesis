@@ -9,7 +9,7 @@ import { NotificationModule } from 'patternfly-ng';
 import { AppComponent } from './app.component';
 import { SyndesisCommonModule } from './common/common.module';
 import { NavigationService } from './common/navigation.service';
-import { UserService } from './common/user.service';
+import { UserService } from '@syndesis/ui/platform';
 import { ConfigService } from './config.service';
 import { StoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
