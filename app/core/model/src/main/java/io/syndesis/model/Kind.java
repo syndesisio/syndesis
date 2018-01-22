@@ -15,6 +15,8 @@
  */
 package io.syndesis.model;
 
+import io.syndesis.model.integration.IntegrationDeployment;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +43,8 @@ public enum Kind {
     Organization(io.syndesis.model.environment.Organization.class),
 
     Integration(io.syndesis.model.integration.Integration.class),
+    IntegrationDeployment(IntegrationDeployment.class),
+
     IntegrationRuntime(io.syndesis.model.integration.IntegrationRuntime.class),
     Step(io.syndesis.model.integration.Step.class),
 

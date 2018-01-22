@@ -30,6 +30,8 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.junit.Test;
@@ -144,7 +146,7 @@ public class IntegrationSupportTest {
         });
 
         Properties properties = IntegrationSupport.buildApplicationProperties(
-            newIntegration(resources, s1, s2, s3),
+            newIntegrationRevision(resources, s1, s2, s3),
             dataManager,
             encryptionComponent
         );
@@ -167,6 +169,16 @@ public class IntegrationSupportTest {
     // ***************************
 
     private Integration newIntegration(Map<String, Object> resources, Step... steps) {
+
+
+        return new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .build();
+    }
+
+    private IntegrationDeployment newIntegrationRevision(Map<String, Object> resources, Step... steps) {
         for (Step step : steps) {
             step.getConnection().ifPresent(
                 resource -> resources.put(resource.getId().get(), resource)
@@ -179,11 +191,10 @@ public class IntegrationSupportTest {
             );
         }
 
-        return new Integration.Builder()
-            .id("test-integration")
+        return new IntegrationDeployment.Builder()
+            .integrationId("test-integration")
             .name("Test Integration")
-            .description("This is a test integration!")
-            .steps(Arrays.asList(steps))
+            .spec(new IntegrationDeploymentSpec.Builder().steps(Arrays.asList(steps)).build())
             .build();
     }
 }

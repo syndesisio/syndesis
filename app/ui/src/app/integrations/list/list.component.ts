@@ -121,7 +121,7 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     } as ActionConfig;
 
     // Hide kebab
-    if (integration.currentStatus === 'Deleted') {
+    if (integration.currentStatus === 'Undeployed') {
       actionConfig.moreActionsVisible = false;
     }
 

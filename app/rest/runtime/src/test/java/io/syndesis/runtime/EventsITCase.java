@@ -22,6 +22,7 @@ import com.launchdarkly.eventsource.MessageEvent;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.EventMessage;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
@@ -84,8 +85,8 @@ public class EventsITCase extends BaseITCase {
             Integration integration = new Integration.Builder()
                 .id("1001")
                 .name("test")
-                .desiredStatus(Integration.Status.Draft)
-                .currentStatus(Integration.Status.Draft)
+                .desiredStatus(IntegrationDeploymentState.Draft)
+                .currentStatus(IntegrationDeploymentState.Draft)
                 .build();
             post("/api/v1/integrations", integration, Integration.class);
 
@@ -179,8 +180,8 @@ public class EventsITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("1002")
             .name("test")
-            .desiredStatus(Integration.Status.Draft)
-            .currentStatus(Integration.Status.Draft)
+            .desiredStatus(IntegrationDeploymentState.Draft)
+            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 

@@ -57,6 +57,8 @@ import io.syndesis.model.filter.ExpressionFilterStep;
 import io.syndesis.model.filter.FilterPredicate;
 import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGeneratorProperties.Templates;
@@ -301,12 +303,13 @@ public class DefaultProjectGeneratorTest {
             .action(HTTP_POST_ACTION)
             .build();
 
-        Integration integration = newIntegration(step1, step2, step3, step4);
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2, step3, step4);
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
@@ -343,13 +346,15 @@ public class DefaultProjectGeneratorTest {
             .action(HTTP_GET_ACTION)
             .build();
 
-        Integration integration = newIntegration(step1, step2);
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2);
+
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment,  generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-convert-with-secrets-syndesis.yml");
@@ -393,13 +398,15 @@ public class DefaultProjectGeneratorTest {
             .action(HTTP_GET_ACTION)
             .build();
 
-        Integration integration = newIntegration(step1, step2, step3);
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2, step3);
+
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled( true);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-convert-with-secrets-and-multiple-connector-of-same-type-syndesis.yml");
@@ -408,14 +415,18 @@ public class DefaultProjectGeneratorTest {
     @Ignore("test-integration.json is outdated")
     @Test
     public void testConvertFromJson() throws Exception {
-        JsonNode json = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
-        Integration integration = new ObjectMapper().registerModule(new Jdk8Module()).readValue(json.get("data").toString(), Integration.class);
+        JsonNode integrationJson = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration.json"));
+        JsonNode integrationDeploymentJson = new ObjectMapper().readTree(this.getClass().getResourceAsStream("test-integration-deployment.json"));
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module());
+        Integration integration = objectMapper.readValue(integrationJson.get("data").toString(), Integration.class);
+        IntegrationDeployment integrationDeployment = objectMapper.readValue(integrationDeploymentJson.get("data").toString(), IntegrationDeployment.class);
+
 
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimePath = generate(integration, generatorProperties);
+        Path runtimePath = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimePath.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(generatorProperties, runtimePath.resolve("src/main/resources/application.properties"), "test-pull-push-application.properties");
@@ -450,12 +461,14 @@ public class DefaultProjectGeneratorTest {
             .action(HTTP_POST_ACTION)
             .build();
 
-        Integration integration = newIntegration(step1, step2, step3);
+
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2, step3);
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimePath = generate(integration, generatorProperties);
+        Path runtimePath = generate(integration, integrationDeployment, generatorProperties);
         runtimePath.toFile().deleteOnExit();
 
         assertFileContents(generatorProperties, runtimePath.resolve("src/main/resources/syndesis.yml"), "test-mapper-syndesis.yml");
@@ -493,12 +506,13 @@ public class DefaultProjectGeneratorTest {
             .putConfiguredProperty("filter", "${body.germanSecondLeagueChampion} equals 'FCN'")
             .build();
 
-        Integration integration = newIntegration(step1, step2, step3, step4);
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2, step3, step4);
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-filter-syndesis.yml");
     }
@@ -582,13 +596,14 @@ public class DefaultProjectGeneratorTest {
             .action(HTTP_GET_ACTION)
             .build();
 
-        Integration integration = newIntegration(step1, step2, step3, step4, step5);
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2, step3, step4, step5);
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(MAVEN_PROPERTIES);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         generatorProperties.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-syndesis-extension.yml");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/loader.properties"), "test-loader.properties");
@@ -624,31 +639,31 @@ public class DefaultProjectGeneratorTest {
             .putConfiguredProperty("consumerSecret", "cs")
             .build();
 
-        testConnectorConvertIntegration(newIntegration(step1, step2));
+        testConnectorConvertIntegration(newIntegration(), newIntegrationDeployment(step1, step2));
     }
 
     @Test
     public void testConnectorConvertFromIntegration() throws Exception {
-        try (InputStream is = getClass().getResourceAsStream("test-connector-integration.json")) {
-            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
-        }
-    }
+        try (InputStream is = getClass().getResourceAsStream("test-connector-integration.json");
+             InputStream irs = getClass().getResourceAsStream("test-connector-integration-deployment.json")) {
+            Integration integration = Json.mapper().readValue(is, Integration.class);
+            IntegrationDeployment integrationDeployment = Json.mapper().readValue(irs, IntegrationDeployment.class);
 
-    private void testConnectorConvertIntegration(Integration integration) throws Exception {
-        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
-        generatorProperties.setSecretMaskingEnabled(true);
-        generatorProperties.getTemplates().setOverridePath(this.basePath);
-        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+            ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+            generatorProperties.setSecretMaskingEnabled(true);
+            generatorProperties.getTemplates().setOverridePath(this.basePath);
+            generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+            Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
-        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
-        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
-        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-syndesis.yml");
-        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+            assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+            assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+            assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-syndesis.yml");
+            assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
 
-        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
-            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+            for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+                assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+            }
         }
     }
 
@@ -687,23 +702,14 @@ public class DefaultProjectGeneratorTest {
             .putConfiguredProperty("consumerSecret", "cs")
             .build();
 
-        testConnectorConvertWithSplitter(newIntegration(step1, step2));
-    }
-
-    @Test
-    public void testConnectorConvertWithSplitterFromIntegration() throws Exception {
-        try (InputStream is = getClass().getResourceAsStream("test-connector-with-splitter-integration.json")) {
-            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
-        }
-    }
-
-    public void testConnectorConvertWithSplitter(Integration integration) throws Exception {
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2);
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
         generatorProperties.setSecretMaskingEnabled(true);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
@@ -712,6 +718,14 @@ public class DefaultProjectGeneratorTest {
 
         for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
             assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
+    @Test
+    public void testConnectorConvertWithSplitterFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-with-splitter-integration.json");
+             InputStream irs = getClass().getResourceAsStream("test-connector-with-splitter-integration-deployment.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class), Json.mapper().readValue(irs, IntegrationDeployment.class));
         }
     }
 
@@ -747,23 +761,15 @@ public class DefaultProjectGeneratorTest {
             .putConfiguredProperty("consumerSecret", "cs")
             .build();
 
-        testConnectorConvertWithDefaultSplitter(newIntegration(step1, step2));
-    }
+        Integration integration = newIntegration();
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(step1, step2);
 
-    @Test
-    public void testConnectorConvertWithDefaultSplitterFromIntegration() throws Exception {
-        try (InputStream is = getClass().getResourceAsStream("test-connector-with-default-splitter-integration.json")) {
-            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class));
-        }
-    }
-
-    public void testConnectorConvertWithDefaultSplitter(Integration integration) throws Exception {
         ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
         generatorProperties.setSecretMaskingEnabled(true);
         generatorProperties.getTemplates().setOverridePath(this.basePath);
         generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
 
-        Path runtimeDir = generate(integration, generatorProperties);
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
 
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
         assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
@@ -775,11 +781,45 @@ public class DefaultProjectGeneratorTest {
         }
     }
 
+    @Test
+    public void testConnectorConvertWithDefaultSplitterFromIntegration() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("test-connector-with-default-splitter-integration.json");
+             InputStream irs = getClass().getResourceAsStream("test-connector-with-default-splitter-integration-deployment.json")) {
+            testConnectorConvertIntegration(Json.mapper().readValue(is, Integration.class), Json.mapper().readValue(irs, IntegrationDeployment.class));
+        }
+    }
+
+    private void testConnectorConvertIntegration(Integration integration, IntegrationDeployment integrationDeployment) throws Exception {
+        ProjectGeneratorProperties generatorProperties = new ProjectGeneratorProperties(new MavenProperties());
+        generatorProperties.setSecretMaskingEnabled(true);
+        generatorProperties.getTemplates().setOverridePath(this.basePath);
+        generatorProperties.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+
+        Path runtimeDir = generate(integration, integrationDeployment, generatorProperties);
+
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java"), "test-Application.java");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/application.properties"), "test-application.properties");
+        assertFileContents(generatorProperties, runtimeDir.resolve("src/main/resources/syndesis.yml"), "test-connector-convert-syndesis.yml");
+        assertFileContents(generatorProperties, runtimeDir.resolve("pom.xml"), "test-connector-convert-pom.xml");
+
+        for (Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
+            assertFileContents(generatorProperties, runtimeDir.resolve(additionalResource.getDestination()), "test-" + additionalResource.getSource());
+        }
+    }
+
     // ************************************************
     // Helpers
     // ************************************************
 
-    private Integration newIntegration(Step... steps) {
+    private Integration newIntegration() {
+        return new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .build();
+    }
+
+    private IntegrationDeployment newIntegrationDeployment(Step... steps) {
         for (Step step : steps) {
             step.getConnection().ifPresent(
                 resource -> resources.put(resource.getId().get(), resource)
@@ -792,15 +832,14 @@ public class DefaultProjectGeneratorTest {
             );
         }
 
-        return new Integration.Builder()
-            .id("test-integration")
+        return new IntegrationDeployment.Builder()
+            .integrationId("test-integration")
             .name("Test Integration")
-            .description("This is a test integration!")
-            .steps(Arrays.asList(steps))
+            .spec(new IntegrationDeploymentSpec.Builder().steps(Arrays.asList(steps)).build())
             .build();
     }
 
-    private Path generate(Integration integration, ProjectGeneratorProperties generatorProperties) throws IOException {
+    private Path generate(Integration integration, IntegrationDeployment integrationDeployment, ProjectGeneratorProperties generatorProperties) throws IOException {
         final DataManager dataManager = mock(DataManager.class);
         final ExtensionDataManager extensionDataManager = mock(ExtensionDataManager.class);
         final ProjectGenerator generator = new DefaultProjectGenerator(generatorProperties, registry, dataManager, extensionDataManager);
@@ -823,7 +862,7 @@ public class DefaultProjectGeneratorTest {
             return is;
         });
 
-        try (InputStream is = generator.generate(integration)) {
+        try (InputStream is = generator.generate(integration, integrationDeployment)) {
             Path ret = testFolder.newFolder("integration-runtime").toPath();
 
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {

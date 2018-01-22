@@ -169,9 +169,15 @@ public class Integration {
 
 ```java
 public class IntegrationDeployment {
-  
-    // Reference to the revision id of an Integration.
-    String integrationRevisionId;
+
+    // The actual deployment id.
+    String id;
+
+    // Reference to the id of an Integration.
+    String integratioId;
+
+    // The actual version of the deployment.
+    int version;
   
     // Current state of this revision
     IntegrationState currentState;
@@ -198,7 +204,7 @@ public class IntegrationDeployment {
 ```
 
 ```java
-public class IntegrationStatus {
+public class IntegrationHistory {
   List<IntegrationDeployment> deployments;
   List<String> messages;
 }
@@ -207,9 +213,9 @@ public class IntegrationStatus {
 ### REST API
 
 * You can get an `Integration` by doing an HTTP on `GET /api/v1/integrations/{integration-id}`.
-* You can get an `IntegrationStatus` and it's assoicated `IntegrationDeployment` objects by doing an HTTP on `GET /api/v1/integrations-status/{integration-id}`.
+* You can get the `IntegrationHistory` and it's assoicated `IntegrationDeployment` objects by doing an HTTP on `GET /api/v1/integrations/{integration-id}/history`.
 
-To keep the `IntegrationDeployment` objects smaller, the actual copy of the integration version can be accessed by doing a `GET /api/v1/integrations-revision/{integration-revision-id}`.  This reurns an `Integration` object.  
+To keep the `Integration` objects smaller, the actual copy of the integration deployment can be accessed by doing a `GET /api/v1/integrations/{integration-revision-id}/deployments/{version}`.  This returns an `IntegrationDeployment` object.  
 
 ## Use cases
 

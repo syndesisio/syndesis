@@ -32,6 +32,8 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
 import io.syndesis.project.converter.ProjectGenerator;
 import org.apache.commons.io.IOUtils;
@@ -99,8 +101,8 @@ public class IntegrationSupportHandler {
     @Path("/generate/pom.xml")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] projectPom(Integration integration) throws IOException {
-        return projectConverter.generatePom(integration);
+    public byte[] projectPom(IntegrationDeployment integrationRevision) throws IOException {
+        return projectConverter.generatePom(integrationOf(integrationRevision), integrationRevision);
     }
 
     @GET
@@ -118,12 +120,18 @@ public class IntegrationSupportHandler {
         }
 
         if( ids.contains("all") ) {
-            ListResult<Integration> all = dataManager.fetchAll(Integration.class);
-            for (Integration integration : all.getItems()) {
-                addToExport(export, integration);
+            List<Integration> allIntegrations = dataManager.fetchAll(Integration.class).getItems();
+            for (Integration integration : allIntegrations) {
+
+                List<IntegrationDeployment> deployments = dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integration.getId().get()).stream()
+                    .map(i -> dataManager.fetch(IntegrationDeployment.class, i))
+                    .collect(Collectors.toList());
+
+                addToExport(export, integration, deployments);
+
 
                 extensions.addAll(
-                    collectDependencies(dataManager, integration).stream()
+                    collectDependencies(dataManager, deployments).stream()
                     .filter(Dependency::isExtension)
                     .map(Dependency::getId)
                     .collect(Collectors.toCollection(TreeSet::new))
@@ -132,9 +140,13 @@ public class IntegrationSupportHandler {
         } else {
             for (String id : ids) {
                 Integration integration = integrationHandler.get(id);
-                addToExport(export, integration);
+                List<IntegrationDeployment> deployments = dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integration.getId().get()).stream()
+                    .map(i -> dataManager.fetch(IntegrationDeployment.class, i))
+                    .collect(Collectors.toList());
+
+                addToExport(export, integration, deployments);
                 extensions.addAll(
-                    collectDependencies(dataManager, integration).stream()
+                    collectDependencies(dataManager, deployments).stream()
                         .filter(Dependency::isExtension)
                         .map(Dependency::getId)
                         .collect(Collectors.toCollection(TreeSet::new))
@@ -159,22 +171,28 @@ public class IntegrationSupportHandler {
         };
     }
 
-    private void addToExport(LinkedHashMap<String, ModelData<?>> export, Integration integration) {
+    private void addToExport(LinkedHashMap<String, ModelData<?>> export, Integration integration, List<IntegrationDeployment> deployments) {
         addToExport(export, new ModelData<Integration>(Kind.Integration, integration));
-        for (Step step : integration.getSteps()) {
-            Optional<Connection> c = step.getConnection();
-            if( c.isPresent() ) {
-                Connection connection = c.get();
-                addToExport(export, new ModelData<Connection>(Kind.Connection, connection));
-                Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
-                if( connector != null ) {
-                    addToExport(export, new ModelData<Connector>(Kind.Connector, connector));
+
+        for (IntegrationDeployment deployment : deployments) {
+
+            addToExport(export, new ModelData<IntegrationDeployment>(Kind.IntegrationDeployment, deployment));
+
+            for (Step step : deployment.getSpec().getSteps()) {
+                Optional<Connection> c = step.getConnection();
+                if (c.isPresent()) {
+                    Connection connection = c.get();
+                    addToExport(export, new ModelData<Connection>(Kind.Connection, connection));
+                    Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
+                    if (connector != null) {
+                        addToExport(export, new ModelData<Connector>(Kind.Connector, connector));
+                    }
                 }
-            }
-            Optional<Extension> e = step.getExtension();
-            if( e.isPresent() ) {
-                Extension extension = e.get();
-                addToExport(export, new ModelData<Extension>(Kind.Extension, extension));
+                Optional<Extension> e = step.getExtension();
+                if (e.isPresent()) {
+                    Extension extension = e.get();
+                    addToExport(export, new ModelData<Extension>(Kind.Extension, extension));
+                }
             }
         }
     }
@@ -255,7 +273,7 @@ public class IntegrationSupportHandler {
                     Integration integration = (Integration) model.getData();
                     integration = new Integration.Builder()
                         .createFrom(integration)
-                        .desiredStatus(Integration.Status.Draft)
+                        .desiredStatus(IntegrationDeploymentState.Draft)
                         .build();
 
                     // Do we need to create it?
@@ -335,6 +353,10 @@ public class IntegrationSupportHandler {
 
             }
         }
+    }
+
+    private Integration integrationOf(IntegrationDeployment integrationRevision) {
+        return  dataManager.fetch(Integration.class, integrationRevision.getIntegrationId().orElseThrow(() -> new IllegalStateException("Integration Revision doesn't have integration id.")));
     }
 
     private static class DontClose extends FilterInputStream {

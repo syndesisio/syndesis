@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.Kind;
@@ -34,7 +33,6 @@ import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
-import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.user.User;
 import io.syndesis.model.validation.UniqueProperty;
@@ -48,42 +46,18 @@ import org.immutables.value.Value;
 @SuppressWarnings("immutables")
 public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
 
-    enum Status {
-        Draft, Pending, Activated, Deactivated, Deleted
-    }
-
     @Override
     default Kind getKind() {
         return Kind.Integration;
     }
 
-    /**
-     * The list of versioned revisions.
-     * The items in this list should be versioned and are not meant to be mutated.
-     * @return
-     */
-    Set<IntegrationRevision> getRevisions();
-
-    Optional<IntegrationRevision> getDraftRevision();
-
-    Optional<Integer> getDeployedRevisionId();
-
-    @JsonIgnore
-    default Optional<IntegrationRevision> getDeployedRevision() {
-        return getDeployedRevisionId().map(i -> getRevisions()
-            .stream()
-            .filter(r -> r.getVersion().isPresent() && i.equals(r.getVersion().get()))
-            .findFirst()
-            .orElse(null));
-    }
-
-    Optional<String> getConfiguration();
-
-    Optional<String> getIntegrationTemplateId();
+    Optional<Integer> getDeploymentId();
 
     Optional<String> getUserId();
 
     List<User> getUsers();
+
+    Optional<String> getConfiguration();
 
     @Value.Default
     default List<Connection> getConnections() {
@@ -102,9 +76,9 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     Optional<String> getDescription();
 
-    Optional<Status> getDesiredStatus();
+    Optional<IntegrationDeploymentState> getDesiredStatus();
 
-    Optional<Status> getCurrentStatus();
+    Optional<IntegrationDeploymentState> getCurrentStatus();
 
     @Value.Default
     default List<String> getStepsDone() {
@@ -118,38 +92,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     Optional<Date> getCreatedDate();
 
     Optional<BigInteger> getTimesUsed();
-
-    @Value.Derived
-    default boolean isInactive() {
-        return getCurrentStatus()
-            .map(s -> s == Status.Deleted || s == Status.Deactivated)
-            .orElse(getDesiredStatus().map(s -> s == Status.Deleted || s == Status.Deactivated)
-                .orElse(false));
-    }
-
-    @Value.Derived
-    default Set<String> getUsedConnectorIds() {
-        return getSteps().stream()//
-            .map(s -> s.getAction())//
-            .filter(Optional::isPresent)//
-            .map(Optional::get)//
-            .filter(ConnectorAction.class::isInstance)//
-            .map(ConnectorAction.class::cast)//
-            .map(a -> a.getDescriptor().getConnectorId())//
-            .filter(Objects::nonNull)//
-            .collect(Collectors.toSet());
-    }
-
-    @JsonIgnore
-    default IntegrationRevisionState getStatus() {
-        Optional<IntegrationRevision> deployedRevision = getDeployedRevision();
-
-        return deployedRevision.map(r -> r.getCurrentState()).orElse(IntegrationRevisionState.Pending);
-    }
-
-    default IntegrationRevision lastRevision() {
-        return getRevisions().stream().max(Comparator.comparingInt(r -> r.getVersion().orElse(0))).get();
-    }
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder

@@ -20,19 +20,21 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
 
 
 public interface ProjectGenerator {
 
     /**
      * Generate the project files in form of tar input stream
-     * @param integration the integration
-     * @return an {@link InputStream} which holds a tar archive and which can be directly used for
+     * @param integration               The integration
+     * @param integrationDeployment     The integration deployment
+     * @return an {@link InputStream}   which holds a tar archive and which can be directly used for
      * an S2I build
      *
      * @throws IOException if generating fails
      */
-    InputStream generate(Integration integration) throws IOException;
+    InputStream generate(Integration integration, IntegrationDeployment integrationDeployment) throws IOException;
 
-    byte[] generatePom(Integration integration) throws IOException;
+    byte[] generatePom(Integration integration, IntegrationDeployment integrationDeployment) throws IOException;
 }

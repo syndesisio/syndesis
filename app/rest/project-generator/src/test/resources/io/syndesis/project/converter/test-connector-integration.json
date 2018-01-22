@@ -1,5 +1,4 @@
 {
-  "revisions" : [ ],
   "users" : [ ],
   "connections" : [ ],
   "steps" : [ {
@@ -7,7 +6,7 @@
       "id" : "-L-bzND7D32OKcmKmSD1",
       "descriptor" : {
         "connectorId" : "timer",
-        "camelConnectorGAV" : "io.syndesis:timer-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV" : "io.syndesis:timer-connector:1.2-SNAPSHOT",
         "camelConnectorPrefix" : "periodic-timer-connector",
         "connectorCustomizers" : [ ],
         "propertyDefinitionSteps" : [ ],
@@ -17,7 +16,7 @@
       "actionType" : "connector",
       "dependencies" : [ {
         "type" : "MAVEN",
-        "id" : "io.syndesis:timer-connector:@syndesis-connectors.version@"
+        "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
       } ]
     },
     "connection" : {
@@ -27,7 +26,7 @@
           "id" : "-L-bzND7D32OKcmKmSD1",
           "descriptor" : {
             "connectorId" : "timer",
-            "camelConnectorGAV" : "io.syndesis:timer-connector:@syndesis-connectors.version@",
+            "camelConnectorGAV" : "io.syndesis:timer-connector:1.2-SNAPSHOT",
             "camelConnectorPrefix" : "periodic-timer-connector",
             "connectorCustomizers" : [ ],
             "propertyDefinitionSteps" : [ ],
@@ -37,7 +36,7 @@
           "actionType" : "connector",
           "dependencies" : [ {
             "type" : "MAVEN",
-            "id" : "io.syndesis:timer-connector:@syndesis-connectors.version@"
+            "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
           } ]
         } ],
         "properties" : {
@@ -127,7 +126,7 @@
         "configuredProperties" : { },
         "dependencies" : [ {
           "type" : "MAVEN",
-          "id" : "io.syndesis:camel-component-proxy:@syndesis-connectors.version@"
+          "id" : "io.syndesis:camel-component-proxy:1.2-SNAPSHOT"
         }, {
           "type" : "MAVEN",
           "id" : "org.apache.camel:camel-twitter:2.20.1"

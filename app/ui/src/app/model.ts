@@ -175,8 +175,8 @@ export interface Integration extends BaseEntity {
   users: Array<User>;
   connections: Array<Connection>;
   userId: string;
-  desiredStatus: 'Draft' | 'Pending' | 'Activated' | 'Deactivated' | 'Deleted';
-  currentStatus: 'Draft' | 'Pending' | 'Activated' | 'Deactivated' | 'Deleted';
+  desiredStatus: 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
+  currentStatus: 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
   stepsDone: Array<string>;
   lastUpdated: string;
   createdDate: string;

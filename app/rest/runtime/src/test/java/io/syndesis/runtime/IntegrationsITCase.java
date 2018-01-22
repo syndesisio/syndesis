@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Violation;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.rest.v1.handler.exception.RestError;
 
 import org.junit.Before;
@@ -69,8 +70,8 @@ public class IntegrationsITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("2001")
             .name("test")
-            .desiredStatus(Integration.Status.Draft)
-            .currentStatus(Integration.Status.Draft)
+            .desiredStatus(IntegrationDeploymentState.Draft)
+            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
@@ -82,8 +83,8 @@ public class IntegrationsITCase extends BaseITCase {
         integration = new Integration.Builder()
             .id("2002")
             .name("test2")
-            .desiredStatus(Integration.Status.Draft)
-            .currentStatus(Integration.Status.Draft)
+            .desiredStatus(IntegrationDeploymentState.Draft)
+            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
@@ -128,7 +129,7 @@ public class IntegrationsITCase extends BaseITCase {
 
     @Test
     public void shouldDetermineValidityForValidIntegrations() {
-        final Integration integration = new Integration.Builder().name("Test integration").desiredStatus(Integration.Status.Draft).build();
+        final Integration integration = new Integration.Builder().name("Test integration").desiredStatus(IntegrationDeploymentState.Draft).build();
 
         final ResponseEntity<List<Violation>> got = post("/api/v1/integrations/validation", integration, RESPONSE_TYPE,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);

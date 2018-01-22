@@ -22,7 +22,9 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.Violation;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentSpec;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.SimpleStep;
 
 import io.syndesis.rest.v1.handler.exception.RestError;
@@ -244,44 +246,45 @@ public class ExtensionsITCase extends BaseITCase {
 
         assertThat(got1.getBody()).isEmpty();
 
-        // Create a active integration that uses the extension
-        dataManager.create(new Integration.Builder()
-            .id("integration-extension-1")
-            .desiredStatus(Integration.Status.Activated)
-            .currentStatus(Integration.Status.Activated)
+        dataManager.create(new IntegrationDeployment.Builder()
+            .integrationId("integration-extension")
+            .version(1)
+            .targetState(IntegrationDeploymentState.Active)
+            .currentState(IntegrationDeploymentState.Active)
             .createdDate(new Date())
             .lastUpdated(new Date())
-            .userId("important user")
+            .spec(new IntegrationDeploymentSpec.Builder()
             .steps(Collections.singletonList(
                 new SimpleStep.Builder()
-                .id("step1")
-                .name("step1")
-                .stepKind("extension")
-                .extension(
-                    new Extension.Builder()
-                    .createFrom(created.getBody())
-                    .build())
-                .build()))
-            .build());
-
-        // Create a inactive integration that uses the extension
-        dataManager.create(new Integration.Builder()
-            .id("integration-extension-2")
-            .desiredStatus(Integration.Status.Deleted)
-            .currentStatus(Integration.Status.Activated)
-            .createdDate(new Date())
-            .lastUpdated(new Date())
-            .userId("important user")
-            .steps(Collections.singletonList(
-                new SimpleStep.Builder()
-                    .id("step2")
-                    .name("step2")
+                    .id("step1")
+                    .name("step1")
                     .stepKind("extension")
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())
                             .build())
-                    .build()))
+                    .build())).build())
+            .build());
+
+        // Create a inactive integration that uses the extension
+        dataManager.create(new IntegrationDeployment.Builder()
+            .integrationId("integration-extension")
+            .version(2)
+            .targetState(IntegrationDeploymentState.Undeployed)
+            .currentState(IntegrationDeploymentState.Active)
+            .createdDate(new Date())
+            .lastUpdated(new Date())
+            .spec(new IntegrationDeploymentSpec.Builder()
+            .steps(Collections.singletonList(
+                new SimpleStep.Builder()
+                    .id("step1")
+                    .name("step1")
+                    .stepKind("extension")
+                    .extension(
+                        new Extension.Builder()
+                            .createFrom(created.getBody())
+                            .build())
+                    .build())).build())
             .build());
 
         // Get extensions using it
@@ -289,10 +292,10 @@ public class ExtensionsITCase extends BaseITCase {
             new ParameterizedTypeReference<Set<ResourceIdentifier>>() {}, tokenRule.validToken(), HttpStatus.OK);
 
         assertThat(got2.getBody().size()).isEqualTo(1);
-        assertThat(got2.getBody()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension-1"));
+        assertThat(got2.getBody()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension:1"));
 
-        dataManager.delete(Integration.class, "integration-extension-1");
-        dataManager.delete(Integration.class, "integration-extension-2");
+        dataManager.delete(IntegrationDeployment.class, "integration-extension:1");
+        dataManager.delete(IntegrationDeployment.class, "integration-extension:2");
     }
 
     @Test
@@ -315,13 +318,15 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(got1.getBody().getUses()).hasValue(0);
 
         // Create a active integration that uses the extension
-        dataManager.create(new Integration.Builder()
-            .id("integration-extension-1")
-            .desiredStatus(Integration.Status.Activated)
-            .currentStatus(Integration.Status.Activated)
+        dataManager.create(new IntegrationDeployment.Builder()
+            .integrationId("integration-extension")
+            .version(1)
+            .targetState(IntegrationDeploymentState.Active)
+            .currentState(IntegrationDeploymentState.Active)
             .createdDate(new Date())
             .lastUpdated(new Date())
-            .userId("important user")
+            .spec(new IntegrationDeploymentSpec.Builder()
+            //.userId("important user")
             .steps(Collections.singletonList(
                 new SimpleStep.Builder()
                     .id("step1")
@@ -331,7 +336,7 @@ public class ExtensionsITCase extends BaseITCase {
                         new Extension.Builder()
                             .createFrom(created.getBody())
                             .build())
-                    .build()))
+                    .build())).build())
             .build());
 
 
@@ -348,7 +353,7 @@ public class ExtensionsITCase extends BaseITCase {
 
         assertThat(list.getBody().getItems()).hasSize(1);
 
-        dataManager.delete(Integration.class, "integration-extension-1");
+        dataManager.delete(IntegrationDeployment.class, "integration-extension:1");
     }
 
 

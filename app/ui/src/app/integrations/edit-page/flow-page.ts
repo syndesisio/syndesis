@@ -83,7 +83,7 @@ export abstract class FlowPage implements OnDestroy {
     });
   }
 
-  save(status: 'Draft' | 'Activated' | 'Deactivated' | 'Deleted' = undefined) {
+  save(status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = undefined) {
     if (status) {
       this.currentFlow.integration.desiredStatus = status;
     }
@@ -95,7 +95,7 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   publish(
-    status: 'Draft' | 'Activated' | 'Deactivated' | 'Deleted' = 'Activated'
+    status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = 'Active'
   ) {
     this.currentFlow.integration.desiredStatus = status;
     this.publishInProgress = true;

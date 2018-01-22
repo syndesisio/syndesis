@@ -20,12 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.connection.Connection;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = IntegrationRevisionSpec.Builder.class)
-public interface IntegrationRevisionSpec {
+@JsonDeserialize(builder = IntegrationDeploymentSpec.Builder.class)
+public interface IntegrationDeploymentSpec {
 
     Optional<String> getConfiguration();
 
@@ -39,7 +40,12 @@ public interface IntegrationRevisionSpec {
         return Collections.emptyList();
     }
 
-    class Builder extends ImmutableIntegrationRevisionSpec.Builder {
+    @Value.Default
+    default List<ResourceIdentifier> getResources() {
+        return Collections.emptyList();
+    }
+
+    class Builder extends ImmutableIntegrationDeploymentSpec.Builder {
         // allow access to ImmutableIntegrationRevisionSpec.Builder
     }
 

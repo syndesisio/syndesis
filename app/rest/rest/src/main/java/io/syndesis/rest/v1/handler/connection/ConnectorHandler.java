@@ -52,6 +52,7 @@ import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.icon.Icon;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
@@ -178,7 +179,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     }
 
     /* default */ List<Connector> augmentedWithUsage(final List<Connector> connectors) {
-        final Map<String, Long> connectorUsage = getDataManager().fetchAll(Integration.class).getItems().stream()//
+        final Map<String, Long> connectorUsage = getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()//
             .filter(i -> !i.isInactive())//
             .flatMap(i -> i.getUsedConnectorIds().stream())//
             .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
