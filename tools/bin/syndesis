@@ -188,6 +188,7 @@ git_rebase_upstream() {
 
 function run {
     local first_arg=${1:-}
+    shift
     local cmd_dir="$(basedir)/commands"
     local command
     if [ -n "${first_arg}" ] && [[ ${first_arg} != -* ]]; then
@@ -243,7 +244,7 @@ function run {
 
     source "$cmd_dir/$command"
 
-    eval "${command}::run"
+    eval "${command}::run $*"
 }
 
 if [ $(hasflag --verbose) ]; then
