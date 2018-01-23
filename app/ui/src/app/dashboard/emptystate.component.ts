@@ -7,7 +7,7 @@ import { log, getCategory } from '../logging';
 import { Connection, Connections, Integrations } from '../model';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../common/user.service';
+import { UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('Dashboard');
 

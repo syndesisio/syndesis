@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { CanDeactivateGuard } from '@syndesis/ui/platform';
+
 import { ConnectionsModule } from './connections.module';
 import { ConnectionsListPage } from './list-page/list-page.component';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -8,7 +10,6 @@ import { ConnectionsConnectionBasicsComponent } from './create-page/connection-b
 import { ConnectionsConfigureFieldsComponent } from './create-page/configure-fields/configure-fields.component';
 import { ConnectionsReviewComponent } from './create-page/review/review.component';
 import { ConnectionsCancelComponent } from './create-page/cancel.component';
-import { CanDeactivateGuard } from '../common/can-deactivate-guard.service';
 import { ConnectionDetailPageComponent } from './detail-page/detail-page.component';
 
 const routes: Routes = [

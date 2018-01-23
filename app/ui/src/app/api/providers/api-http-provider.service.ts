@@ -3,7 +3,11 @@ import { HttpClient, HttpHeaders, HttpRequest, HttpEventType, HttpProgressEvent,
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { ApiHttpService, ApiEndpoint, ApiRequestProgress, ActionReducerError, StringMap, FileMap } from '@syndesis/ui/platform';
+import {
+  ApiHttpService, ApiConfigService,
+  ApiEndpoint, ApiRequestProgress, ActionReducerError,
+  StringMap, FileMap
+} from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack strace';
@@ -12,30 +16,28 @@ const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack 
 export class ApiHttpProviderService extends ApiHttpService {
   private uploadProgressSubject = new Subject<ApiRequestProgress>();
   private apiBaseHost: string;
-  private apiChildEndpoints: StringMap<string>;
 
-  constructor(private httpClient: HttpClient, private configService: ConfigService) {
+  constructor(private httpClient: HttpClient, private apiConfigService: ApiConfigService) {
     super();
 
-    const { apiBase, apiEndpoint, apiChildEndpoints } = this.configService.getSettings();
-    this.apiBaseHost = `${apiBase}${apiEndpoint}`;
-    this.apiChildEndpoints = apiChildEndpoints || {};
+    this.apiBaseHost = this.apiConfigService.baseUrl;
   }
 
   getEndpointUrl(endpointKey: string, ...endpointParams: any[]): string {
-    let url = this.apiChildEndpoints[endpointKey] || endpointKey;
+    const apiEndpoints = this.apiConfigService.endpoints || {};
+    let endpoint = apiEndpoints[endpointKey] || endpointKey;
 
     if (endpointParams && endpointParams.length == 1 && endpointParams[0] === Object(endpointParams[0])) {
-      url = this.replaceNameMatches(url, endpointParams[0]);
+      endpoint = this.replaceNameMatches(endpoint, endpointParams[0]);
     } else if (endpointParams && endpointParams.length >= 1) {
-      url = this.replaceIndexMatches(url, endpointParams);
+      endpoint = this.replaceIndexMatches(endpoint, endpointParams);
     }
 
-    if (!url.startsWith('http')) {
-      url = `${this.apiBaseHost}${url}`;
+    if (!endpoint.startsWith('http')) {
+      endpoint = `${this.apiBaseHost}${endpoint}`;
     }
 
-    return url;
+    return endpoint;
   }
 
   setEndpointUrl(endpointKey: string, ...endpointParams: any[]): ApiEndpoint {

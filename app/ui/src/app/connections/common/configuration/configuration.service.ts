@@ -3,8 +3,8 @@ import {
   DynamicFormControlModel,
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
-import { FormFactoryService } from '../../../common/forms.service';
-import { Connection } from '../../../model';
+import { FormFactoryService } from '@syndesis/ui/platform';
+import { Connection } from '@syndesis/ui/model';
 
 @Injectable()
 export class ConnectionConfigurationService {

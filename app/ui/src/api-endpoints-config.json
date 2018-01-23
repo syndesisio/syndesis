@@ -1,6 +1,0 @@
-{
-  "selectApiConnector": "/connectors/{id}",
-  "getApiConnectorList": "/connectors?query=connectorGroupId%3D{template}",
-  "validateCustomConnectorInfo": "/connectors/custom/info",
-  "submitCustomConnector": "/connectors/custom"
-}

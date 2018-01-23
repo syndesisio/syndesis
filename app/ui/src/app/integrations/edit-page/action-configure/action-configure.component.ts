@@ -10,7 +10,7 @@ import {
 import { IntegrationSupportService } from '@syndesis/ui/store';
 import { Action, Step } from '@syndesis/ui/model';
 import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations/edit-page';
-import { FormFactoryService, UserService } from '@syndesis/ui/common';
+import { FormFactoryService, UserService } from '@syndesis/ui/platform';
 import { log } from '@syndesis/ui/logging';
 
 import { TourService } from 'ngx-tour-ngx-bootstrap';

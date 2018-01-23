@@ -10,7 +10,7 @@ import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsCreatePage');
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/common';
+import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integrations-save-or-add-step',

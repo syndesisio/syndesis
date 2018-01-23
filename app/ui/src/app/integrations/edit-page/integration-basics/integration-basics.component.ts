@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { CurrentFlow, FlowPage } from '@syndesis/ui/integrations/edit-page';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/common';
+import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integrations-integration-basics',

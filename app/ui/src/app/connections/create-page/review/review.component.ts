@@ -6,11 +6,10 @@ import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
-import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.service';
 import { ModalService } from '../../../common/modal/modal.service';
 import { ConnectionService } from '../../../store/connection/connection.service';
 import { log, getCategory } from '../../../logging';
-import { UserService } from '../../../common/user.service';
+import { UserService, CanComponentDeactivate } from '@syndesis/ui/platform';
 
 const category = getCategory('Connections');
 

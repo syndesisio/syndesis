@@ -4,7 +4,7 @@ import { OAuthApp, OAuthApps } from '../../model';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../../config.service';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '../../common/user.service';
+import { UserService } from '@syndesis/ui/platform';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../../common/object-property-sort.pipe';

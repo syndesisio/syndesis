@@ -1,6 +1,11 @@
+import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { StringMap, FileMap } from '@syndesis/ui/platform';
+
+export declare type Endpoints = StringMap<string>;
+
+export const API_ENDPOINTS = new InjectionToken('API_ENDPOINTS');
 
 export interface ApiErrorMessage {
   developerMsg?: string;

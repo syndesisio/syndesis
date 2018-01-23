@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ConfigurationProperty } from '../model';
+import { ConfigurationProperty } from '@syndesis/ui/model';
+import { FormFactoryService, ConfiguredConfigurationProperty } from '@syndesis/ui/platform';
 import {
   DynamicFormControlModel,
   DynamicCheckboxModel,
@@ -8,14 +9,12 @@ import {
   DynamicSelectModel
 } from '@ng-dynamic-forms/core';
 
-export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
-  value: any;
-  rows?: number;
-  cols?: number;
-}
-
 @Injectable()
-export class FormFactoryService {
+export class FormFactoryProviderService extends FormFactoryService {
+  constructor() {
+    super();
+  }
+
   createFormModel(
     properties:
       | Map<string, ConfiguredConfigurationProperty>

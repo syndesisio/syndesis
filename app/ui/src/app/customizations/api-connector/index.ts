@@ -1,4 +1,5 @@
 export * from './api-connector-list';
+export * from './api-connector.api';
 export * from './api-connector.actions';
 export * from './api-connector.reducer';
 export * from './api-connector.models';

@@ -2,7 +2,7 @@ import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
-import { ApiHttpService } from '@syndesis/ui/platform';
+import * as SYNDESIS_ABSTRACT_PROVIDERS from '@syndesis/ui/platform';
 import * as SYNDESIS_PROVIDERS from './providers';
 
 @NgModule({
@@ -11,7 +11,7 @@ import * as SYNDESIS_PROVIDERS from './providers';
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
-      throw new Error('Syndesis CoreModule is already loaded. Import it in the AppModule only');
+      throw new Error('CoreModule is already loaded. Import it in the AppModule only');
     }
   }
 
@@ -19,11 +19,16 @@ export class CoreModule {
     return [{
       ngModule: CoreModule,
       providers: [
-        SYNDESIS_PROVIDERS.ApiHttpProviderService,
+        SYNDESIS_PROVIDERS.FormFactoryProviderService,
         {
-          provide: ApiHttpService,
-          useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.FormFactoryService,
+          useClass: SYNDESIS_PROVIDERS.FormFactoryProviderService,
         },
+        SYNDESIS_PROVIDERS.UserProviderService,
+        {
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.UserService,
+          useClass: SYNDESIS_PROVIDERS.UserProviderService
+        }
       ]},
     ];
   }

@@ -9,8 +9,6 @@ import { CancelConfirmationModalComponent } from './cancel_confirmation_modal';
 import { DeleteConfirmationModalComponent } from './delete_confirmation_modal';
 import { SYNDESYS_EDITABLE_DIRECTIVES } from './editable';
 import { LoadingComponent } from './loading/loading.component';
-import { ModalComponent, ModalService } from './modal';
-import { NotificationService } from './ui-patternfly';
 import { SYNDESYS_VALIDATION_DIRECTIVES } from './validation';
 import { WizardProgressBarComponent } from './wizard_progress_bar';
 
@@ -25,9 +23,10 @@ import { SlugifyPipe } from './slugify.pipe';
 import { IconPathPipe } from './icon-path.pipe';
 import { ParseMarkdownLinksPipe } from './parse-markdown-links.pipe';
 import { ButtonComponent } from './button.component';
+
 // TODO: Move these services out to a CoreModule
-import { UserService } from './user.service';
-import { FormFactoryService } from './forms.service';
+import { NotificationService } from './ui-patternfly';
+import { ModalComponent, ModalService } from './modal';
 import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
 @NgModule({
@@ -78,16 +77,13 @@ import { NavigationService } from './navigation.service';
     DeleteConfirmationModalComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES
-  ],
-  providers: [FormFactoryService]
+  ]
 })
 export class SyndesisCommonModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: SyndesisCommonModule,
       providers: [
-        UserService,
-        FormFactoryService,
         ConfigService,
         ModalService,
         NotificationService,

@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { CurrentConnectionService } from '../current-connection';
 import { Connection } from '../../../model';
-import { CanComponentDeactivate } from '../../../common/can-deactivate-guard.service';
+import { CanComponentDeactivate } from '@syndesis/ui/platform';
 import { ModalService } from '../../../common/modal/modal.service';
 import { ConnectionConfigurationService } from '../../common/configuration/configuration.service';
 

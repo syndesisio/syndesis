@@ -22,15 +22,15 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
+import { ApiModule } from './api';
 import { CoreModule } from './core';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
-import { CanDeactivateGuard, SyndesisCommonModule } from './common';
-import { UserService } from './common/user.service';
+import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
-import { platformReducer } from './platform';
+import { platformReducer, SYNDESIS_GUARDS } from './platform';
 
 export function restangularProviderConfigurer(
   restangularProvider: any,
@@ -78,6 +78,7 @@ export function mapperRestangularProvider(
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    ApiModule.forRoot(),
     CoreModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
@@ -101,6 +102,7 @@ export function mapperRestangularProvider(
     TourNgxBootstrapModule.forRoot()
   ],
   providers: [
+    ...SYNDESIS_GUARDS,
     {
       provide: APP_INITIALIZER,
       useFactory: appConfigInitializer,
@@ -112,9 +114,7 @@ export function mapperRestangularProvider(
       useFactory: mapperRestangularProvider,
       deps: [Restangular, ConfigService]
     },
-    ConfigService,
-    UserService,
-    CanDeactivateGuard
+    ConfigService
   ],
   bootstrap: [AppComponent]
 })

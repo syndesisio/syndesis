@@ -11,7 +11,7 @@ import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integrations/edit
 import { ConnectorStore } from '@syndesis/ui/store';
 
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/common';
+import { UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('Integrations');
 
