@@ -24,7 +24,6 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
-import io.syndesis.model.ListResult;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.ModelExport;
 import io.syndesis.model.Schema;

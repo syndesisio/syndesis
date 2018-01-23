@@ -15,21 +15,19 @@
  */
 package io.syndesis.project.converter;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 
-import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-
 
 public interface ProjectGenerator {
 
     /**
      * Generate the project files in form of tar input stream
-     * @param integrationDeployment     The integration deployment
-     * @return an {@link InputStream}   which holds a tar archive and which can be directly used for
-     * an S2I build
+     *
+     * @param integrationDeployment The integration deployment
+     * @return an {@link InputStream} which holds a tar archive and which can be
+     *         directly used for an S2I build
      *
      * @throws IOException if generating fails
      */

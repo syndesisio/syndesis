@@ -42,7 +42,6 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
-import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.SimpleStep;

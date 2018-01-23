@@ -57,7 +57,6 @@ import io.syndesis.model.Dependency;
 import io.syndesis.model.WithDependencies;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.Step;
