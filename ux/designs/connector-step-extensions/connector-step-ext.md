@@ -90,11 +90,11 @@ This design covers the following workflows:
 
 1. 	The bottom part of the page would appear if user’s file uploaded successfully. Fields would auto-populate with information extracted from the uploaded file. User would be able to see the extension ID.
 
-2. 	User can review Name, Description, Type and steps included in the tech extension file. If importing a Connector Extension, the type would appear as Connector Extension.
+2. 	User can review Name, Description, Type and steps or actions included in the extension file. If importing a Connector Extension, the type would appear as Connector Extension.
 
 3. 	Select “Import” to confirm importing the extension.  
 
-## Update Existing Technical Extension
+## Update Existing Extension
 
 ![Image of update extension from list view](img/extensions_list_update.png)
 
@@ -128,15 +128,15 @@ Select "Delete" to delete a specific extension.
 
 3. 	Use destructive button styling for the “Delete” button.
 
-![Image of choosing connection](img/extensions_details_delete.png)
+![Image of details view delete](img/extensions_details_delete.png)
 
 1.  Delete an extension from the details page.
 
-![Image of choosing connection](img/extensions_details_delet_warning.png)
+![Image of details view delete warning](img/extensions_details_delet_warning.png)
 
 1.  Show a warning message to confirm delete action.  
 
-## Technical Extensions in Create Integration - Add a Step
+## Extensions in Create Integration - Add a Step
 
 ![Image of choosing connection](img/tech_ext_addstep_filter1.png)
 
