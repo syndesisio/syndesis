@@ -24,6 +24,7 @@ import io.syndesis.model.integration.Step;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Component;
 
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +109,12 @@ public class EncryptionComponent {
         }
         String result = value;
         if( result.startsWith(ENCRYPTED_PREFIX) ) {
-            result = textEncryptor.decrypt(stripPrefix(result, ENCRYPTED_PREFIX));
+            try {
+                result = textEncryptor.decrypt(stripPrefix(result, ENCRYPTED_PREFIX));
+            } catch (RuntimeException e) {
+                // We could fail to decrypt the value..
+                result = null;
+            }
         }
         return result;
     }
