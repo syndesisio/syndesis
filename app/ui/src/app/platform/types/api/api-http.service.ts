@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { StringMap, FileMap } from '@syndesis/ui/platform';
-import { ApiResponse, ApiEndpoint, ApiRequestProgress } from './api.models';
+import { ApiResponse, ApiEndpoint, ApiRequestProgress, ApiRequestOptions, ApiUploadOptions } from './api.models';
 
 @Injectable()
 export abstract class ApiHttpService {
@@ -45,40 +45,44 @@ export abstract class ApiHttpService {
   /**
    * Sends a GET request to the selected API endpoint URL.
    * @param endpoint URL of the API endpoint to use, provided by `ApiConfigService`.
+   * @param options Optional. Adds additional metadata to the request, such as custom headers or response types, credentials, etc.
    * @returns {Observable<T>} Observable typed as T containing the server response.
    */
-  abstract get<T>(endpoint: string | any[]): Observable<T>;
+  abstract get<T>(endpoint: string | any[], options?: ApiRequestOptions|any): Observable<T>;
 
   /**
    * Sends a POST request containing the given body to the selected API endpoint URL.
    * @param endpoint URL of the API endpoint to use, provided by `ApiConfigService`.
    * @param body Request body. Can be any type.
+   * @param options Optional. Adds additional metadata to the request, such as custom headers or response types, credentials, etc.
    * @returns {Observable<T>} Observable typed as T containing the server response.
    */
-  abstract post<T>(endpoint: string | any[], body: any): Observable<T>;
+  abstract post<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions|any): Observable<T>;
 
   /**
    * Sends a PUT request containing the given body to the selected API endpoint URL.
    * @param endpoint URL of the API endpoint to use, provided by `ApiConfigService`.
    * @param body Request body. Can be any type.
+   * @param options Optional. Adds additional metadata to the request, such as custom headers or response types, credentials, etc.
    * @returns {Observable<T>} Observable typed as T containing the server response.
    */
-  abstract put<T>(endpoint: string | any[], body: any): Observable<T>;
+  abstract put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions|any): Observable<T>;
 
   /**
    * Sends a DELETE request to the selected API endpoint URL.
    * @param endpoint URL of the API endpoint to use, provided by `ApiConfigService`.
+   * @param options Optional. Adds additional metadata to the request, such as custom headers or response types, credentials, etc.
    * @returns {Observable<T>} Observable typed as T containing the server response.
    */
-  abstract delete<T>(endpoint: string | any[]): Observable<T>;
+  abstract delete<T>(endpoint: string | any[], options?: ApiRequestOptions|any): Observable<T>;
 
   /**
    * Sends a multipart message wrapped by a POST/PUT request to the API, allowing one or several file uploads along with JSON objects.
    * @param endpoint URL of the API endpoint to use, provided by `ApiConfigService`.
    * @param fileMap Hash library containing key/value pairs of named files.
    * @param body Request body. Can be any type.
-   * @param verb Optional. Allows for selecting a particular request verb between POST and PUT. Defaults to POST.
+   * @param options Optional. Allows for adding additional metadata to the request, such as custom headers or response types, methods, etc.
    * @returns {Observable<T>} Observable typed as T containing the server response.
    */
-  abstract upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>, verb?: 'POST'|'PUT'): Observable<T>;
+  abstract upload<T>(endpoint: string | any[], fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions): Observable<T>;
 }

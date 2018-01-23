@@ -63,7 +63,7 @@ export class ApiConnectorService {
     const connector = this.sanitizeCustomConnectorRequest(rawConnector);
 
     if (icon) {
-      return apiHttpService.upload({ icon }, { connector }, 'PUT');
+      return apiHttpService.upload({ icon }, { connector }, { method: 'PUT' });
     } else {
       return apiHttpService.put(connector);
     }
