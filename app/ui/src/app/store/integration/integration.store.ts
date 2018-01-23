@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IntegrationService } from './integration.service';
-import { Integrations, Integration, TypeFactory } from '../../model';
+import { Observable } from 'rxjs/Observable';
 
+import { Integrations, Integration, TypeFactory } from '@syndesis/ui/model';
+
+import { IntegrationService } from './integration.service';
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';
 
@@ -22,16 +24,14 @@ export class IntegrationStore extends AbstractStore<
     return 'Integration';
   }
 
-  public activate(i: Integration) {
-    const _i = JSON.parse(JSON.stringify(i));
-    _i.desiredStatus = 'Active';
-    return this.update(_i);
+  public activate(integration: Integration): Observable<Integration> {
+    integration.desiredStatus = 'Active';
+    return this.update(integration);
   }
 
-  public deactivate(i: Integration) {
-    const _i = JSON.parse(JSON.stringify(i));
-    _i.desiredStatus = 'Inactive';
-    return this.update(_i);
+  public deactivate(integration: Integration): Observable<Integration> {
+    integration.desiredStatus = 'Inactive';
+    return this.update(integration);
   }
 
   newInstance(): Integration {
