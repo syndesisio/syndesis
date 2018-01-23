@@ -5,48 +5,37 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
 
-import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NotificationModule } from 'patternfly-ng';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
-import { SyndesisCommonModule } from '../common/common.module';
-import { IntegrationListModule } from '../integration/list/list.module';
-import { DashboardComponent } from './dashboard.component';
-import { EmptyStateComponent } from './emptystate.component';
-//import { PopularTemplatesComponent } from './populartemplates.component';
-//import { TemplatesListComponent } from '../templates/list/list.component';
-import { DashboardConnectionsComponent } from './connections.component';
-import { DashboardIntegrationsComponent } from './integrations.component';
-import { StoreModule } from '../store/store.module';
+import { SyndesisCommonModule } from '../../common/common.module';
+import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
+import { IntegrationListModule } from '../list/list.module';
+import { IntegrationListPage } from './list-page.component';
+import { StoreModule } from '../../store/store.module';
 
-describe('DashboardComponent', () => {
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+xdescribe('IntegrationsListPage', () => {
+  let component: IntegrationListPage;
+  let fixture: ComponentFixture<IntegrationListPage>;
 
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
         imports: [
           SyndesisCommonModule.forRoot(),
-          ChartsModule,
-          ModalModule.forRoot(),
-          TooltipModule.forRoot(),
-          BsDropdownModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule.forRoot(),
+          ModalModule.forRoot(),
+          TooltipModule.forRoot(),
+          TabsModule.forRoot(),
           NotificationModule,
+          PatternflyUIModule,
           IntegrationListModule
         ],
-        declarations: [
-          DashboardComponent,
-          EmptyStateComponent,
-          DashboardConnectionsComponent,
-          DashboardIntegrationsComponent
-        ],
+        declarations: [IntegrationListPage],
         providers: [
           MockBackend,
           { provide: RequestOptions, useClass: BaseRequestOptions },
@@ -56,15 +45,14 @@ describe('DashboardComponent', () => {
               return new Http(backend, options);
             },
             deps: [MockBackend, RequestOptions]
-          },
-          TourService
+          }
         ]
       }).compileComponents();
     })
   );
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(IntegrationListPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

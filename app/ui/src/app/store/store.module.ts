@@ -10,7 +10,6 @@ import { ConnectorService, ConnectorStore } from './connector';
 import { EventsService } from './entity/events.service';
 import { ExtensionService } from './extension/extension.service';
 import { ExtensionStore } from './extension/extension.store';
-import { IntegrationSupportService } from './integration-support.service';
 import { IntegrationService } from './integration/integration.service';
 import { IntegrationStore } from './integration/integration.store';
 import { OAuthAppService } from './oauthApp/oauth-app.service';
@@ -21,13 +20,12 @@ import { TemplateStore } from './template/template.store';
 import { TestSupportService } from './test-support.service';
 
 @NgModule({
-  imports: [HttpModule, RestangularModule],
+  imports: [HttpModule],
   providers: [
     ActionService,
     ConnectionService,
     ConnectorService,
     IntegrationService,
-    IntegrationSupportService,
     TemplateService,
     EventsService,
     ExtensionService,

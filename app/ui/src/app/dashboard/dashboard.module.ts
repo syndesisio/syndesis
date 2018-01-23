@@ -8,7 +8,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { SyndesisCommonModule } from '../common/common.module';
-import { IntegrationsListModule } from '../integrations/list/list.module';
+import { IntegrationListModule } from '../integration/list/list.module';
 
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
@@ -28,7 +28,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    IntegrationsListModule,
+    IntegrationListModule,
     RouterModule.forChild(routes),
     TemplatesModule,
     SyndesisCommonModule,

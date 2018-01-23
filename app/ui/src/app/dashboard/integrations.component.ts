@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { log, getCategory } from '../logging';
 
-import { Connection, Connections, Integration, Integrations } from '../model';
+import { Connection, Connections } from '../model';
+import { Integration, Integrations } from '@syndesis/ui/integration';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
 import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
@@ -156,7 +157,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
 
   goto(integration: Integration) {
     this.router.navigate(
-      ['/integrations/edit', integration.id, 'save-or-add-step'],
+      ['/integration/edit', integration.id, 'save-or-add-step'],
       { relativeTo: this.route }
     );
   }
