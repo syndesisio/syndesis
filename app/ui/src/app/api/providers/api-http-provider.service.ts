@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import {
   ApiHttpService, ApiConfigService,
   ApiEndpoint, ApiRequestProgress, ActionReducerError,
+  ApiRequestOptions, ApiUploadOptions,
   StringMap, FileMap
 } from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -45,45 +46,45 @@ export class ApiHttpProviderService extends ApiHttpService {
 
     return {
       url,
-      get: <T>() => this.get<T>(url),
-      post: <T>(body: any) => this.post<T>([endpointKey, ...endpointParams], body),
-      put: <T>(body: any) => this.put<T>([endpointKey, ...endpointParams], body),
-      delete: <T>() => this.delete<T>(url),
-      upload: <T>(fileMap?: FileMap, body?: StringMap<any>, verb?: 'POST'|'PUT') => {
-        return this.upload<T>([endpointKey, ...endpointParams], fileMap, body, verb);
+      get: <T>(options?: ApiRequestOptions|any) => this.get<T>(url, options),
+      post: <T>(body: any, options?: ApiRequestOptions|any) => this.post<T>([endpointKey, ...endpointParams], body, options),
+      put: <T>(body: any, options?: ApiRequestOptions|any) => this.put<T>([endpointKey, ...endpointParams], body, options),
+      delete: <T>(options?: ApiRequestOptions|any) => this.delete<T>(url, options),
+      upload: <T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions) => {
+        return this.upload<T>([endpointKey, ...endpointParams], fileMap, body, options);
       }
     };
   }
 
-  get<T>(endpoint: string | any[]): Observable<T> {
+  get<T>(endpoint: string | any[], options?: ApiRequestOptions|any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
-      .get<T>(url)
+      .get(url, options)
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
-  post<T>(endpoint: string | any[], body?: any): Observable<T> {
+  post<T>(endpoint: string | any[], body?: any, options?: ApiRequestOptions|any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
-      .post<T>(url, body)
+      .post<T>(url, body, options)
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
-  put<T>(endpoint: string | any[], body: any): Observable<T> {
+  put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions|any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
-      .put<T>(url, body)
+      .put<T>(url, body, options)
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
-  delete<T>(endpoint: string | any[]): Observable<T> {
+  delete<T>(endpoint: string | any[], options?: ApiRequestOptions|any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
-      .delete<T>(url)
+      .delete<T>(url, options)
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
@@ -91,10 +92,15 @@ export class ApiHttpProviderService extends ApiHttpService {
     return this.uploadProgressSubject.asObservable();
   }
 
-  upload<T>(endpoint: string | any[], fileMap: FileMap, body?: StringMap<any>, verb = 'POST'): Observable<T> {
+  upload<T>(endpoint: string | any[], fileMap: FileMap, body?: StringMap<any>, options?: ApiUploadOptions): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
+    const method = options && options.method ? options.method : 'POST';
     const headers = new HttpHeaders();
+    const requestOptions = {
+      reportProgress: true,
+      ...options
+    };
 
     const multipartFormData = new FormData();
 
@@ -116,7 +122,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       }
     }
 
-    const request = new HttpRequest(verb, url, multipartFormData, { headers, reportProgress: true });
+    const request = new HttpRequest(method, url, multipartFormData, requestOptions);
 
     return this.httpClient.request(request)
       .do(requestEvent => {

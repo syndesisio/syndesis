@@ -1,7 +1,9 @@
+import { HttpHeaders } from '@angular/common/http';
 import { InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { StringMap, FileMap } from '@syndesis/ui/platform';
+import { HttpParams } from '@angular/common/http/src/params';
 
 export declare type Endpoints = StringMap<string>;
 
@@ -27,13 +29,24 @@ export interface ApiResponse extends ApiErrors {
   kind?: string;
 }
 
+export interface ApiRequestOptions {
+  headers?: HttpHeaders;
+  params?: HttpParams;
+  responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  withCredentials?: boolean;
+}
+
+export interface ApiUploadOptions extends ApiRequestOptions {
+  method?: 'POST' | 'PUT';
+}
+
 export interface ApiEndpoint {
   url: string;
-  get<T>(): Observable<T>;
-  post<T>(payload: any): Observable<T>;
-  put<T>(payload: any): Observable<T>;
-  delete<T>(payload?: any): Observable<T>;
-  upload<T>(fileMap?: FileMap, body?: StringMap<any>, verb?: 'POST'|'PUT'): Observable<T>;
+  get<T>(options?: ApiRequestOptions): Observable<T>;
+  post<T>(body: any, options?: ApiRequestOptions): Observable<T>;
+  put<T>(body: any, options?: ApiRequestOptions): Observable<T>;
+  delete<T>(body?: any, options?: ApiRequestOptions): Observable<T>;
+  upload<T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions): Observable<T>;
 }
 
 export interface ApiRequestProgress {
