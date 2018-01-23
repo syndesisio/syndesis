@@ -8,7 +8,7 @@ minishift::usage() {
     cat <<EOT
     --install                 Install templates to a running Minishift.
 -p  --project                 Install into this project. Delete this project if it already exists
--c  --context                 Install into this context. 
+-c  --context                 Install into this context. Default is 'minishift'
     --reset                   Reset the minishift installation by
                               'minishift delete && minishift start'.
     --full-reset              Full reset by
