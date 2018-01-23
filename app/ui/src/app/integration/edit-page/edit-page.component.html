@@ -1,0 +1,16 @@
+<syndesis-loading [loading]="loading | async">
+  <div class="integrations edit">
+    <div [class]="getPageRow()">
+
+      <!-- Sidebar -->
+      <div [class]="getSidebarClass()">
+        <syndesis-integration-flow-view></syndesis-integration-flow-view>
+      </div>
+
+      <!-- Add/Edit Integration -->
+      <div [class]="getPageContainer()">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</syndesis-loading>

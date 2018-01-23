@@ -1,3 +1,4 @@
+
 export interface BaseEntity {
   readonly id?: string;
   // TODO we'll make this optional for now
@@ -162,62 +163,6 @@ export interface Environment extends BaseEntity {
 }
 export type Environments = Array<Environment>;
 
-export interface Integration extends BaseEntity {
-  configuration: string;
-  description: string;
-  deployedRevisionId: number;
-  revisions: Array<IntegrationRevision>;
-  statusMessage: string;
-  token: string;
-  steps: Array<Step>;
-  draftRevision: IntegrationRevision;
-  gitRepo: string;
-  users: Array<User>;
-  connections: Array<Connection>;
-  userId: string;
-  desiredStatus: 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
-  currentStatus: 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
-  stepsDone: Array<string>;
-  lastUpdated: string;
-  createdDate: string;
-  timesUsed: number;
-  integrationTemplateId: string;
-  id: string;
-  tags: Array<string>;
-  name: string;
-}
-export type Integrations = Array<Integration>;
-
-export interface IntegrationRevision extends BaseEntity {
-  currentMessage: string;
-  parentVersion: number;
-  targetState:
-    | 'Draft'
-    | 'Active'
-    | 'Inactive'
-    | 'Undeployed'
-    | 'Error'
-    | 'Pending';
-  targetMessage: string;
-  version: number;
-  spec: IntegrationRevisionSpec;
-  currentState:
-    | 'Draft'
-    | 'Active'
-    | 'Inactive'
-    | 'Undeployed'
-    | 'Error'
-    | 'Pending';
-}
-export type IntegrationRevisions = Array<IntegrationRevision>;
-
-export interface IntegrationRevisionSpec extends BaseEntity {
-  configuration: string;
-  steps: Array<Step>;
-  connections: Array<Connection>;
-}
-export type IntegrationRevisionSpecs = Array<IntegrationRevisionSpec>;
-
 export interface Organization extends BaseEntity {
   environments: Array<Environment>;
   users: Array<User>;
@@ -232,16 +177,6 @@ export interface PropertyValue extends BaseEntity {
 }
 export type PropertyValues = Array<PropertyValue>;
 
-export interface Step extends BaseEntity {
-  action: Action;
-  connection: Connection;
-  name: string;
-  configuredProperties: {};
-  stepKind: string;
-  id: string;
-}
-export type Steps = Array<Step>;
-
 export interface User extends BaseEntity {
   fullName: string;
   name: string;
@@ -249,7 +184,8 @@ export interface User extends BaseEntity {
   username: string;
   firstName: string;
   lastName: string;
-  integrations: Array<Integration>;
+  // TODO
+  //integrations: Array<Integration>;
   roleId: string;
   id: string;
 }
@@ -492,53 +428,6 @@ class TypeFactoryClass {
     };
   }
 
-  createIntegration() {
-    return <Integration>{
-      configuration: undefined,
-      description: undefined,
-      deployedRevisionId: undefined,
-      revisions: undefined,
-      statusMessage: undefined,
-      token: undefined,
-      steps: undefined,
-      draftRevision: undefined,
-      gitRepo: undefined,
-      users: undefined,
-      connections: undefined,
-      userId: undefined,
-      desiredStatus: undefined,
-      currentStatus: undefined,
-      stepsDone: undefined,
-      lastUpdated: undefined,
-      createdDate: undefined,
-      timesUsed: undefined,
-      integrationTemplateId: undefined,
-      id: undefined,
-      tags: undefined,
-      name: undefined
-    };
-  }
-
-  createIntegrationRevision() {
-    return <IntegrationRevision>{
-      currentMessage: undefined,
-      parentVersion: undefined,
-      targetState: undefined,
-      targetMessage: undefined,
-      version: undefined,
-      spec: undefined,
-      currentState: undefined
-    };
-  }
-
-  createIntegrationRevisionSpec() {
-    return <IntegrationRevisionSpec>{
-      configuration: undefined,
-      steps: undefined,
-      connections: undefined
-    };
-  }
-
   createOrganization() {
     return <Organization>{
       environments: undefined,
@@ -552,17 +441,6 @@ class TypeFactoryClass {
     return <PropertyValue>{
       value: undefined,
       label: undefined
-    };
-  }
-
-  createStep() {
-    return <Step>{
-      action: undefined,
-      connection: undefined,
-      name: undefined,
-      configuredProperties: undefined,
-      stepKind: undefined,
-      id: undefined
     };
   }
 

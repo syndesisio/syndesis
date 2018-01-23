@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 
 import { log, getCategory } from '../logging';
 
-import { Connection, Connections, Integrations } from '../model';
+import { Connection, Connections } from '../model';
+import { Integrations } from '@syndesis/ui/integration';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { UserService } from '@syndesis/ui/platform';

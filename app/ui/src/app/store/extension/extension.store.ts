@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { ExtensionService } from './extension.service';
-import { Extension, Extensions, Integrations, TypeFactory } from '../../model';
+import { Extension, Extensions, TypeFactory } from '../../model';
+import { Integrations } from '@syndesis/ui/integration';
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';
 

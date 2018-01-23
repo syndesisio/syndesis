@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: 'integrations',
-    loadChildren: './integrations/integrations.module#IntegrationsModule'
+    loadChildren: './integration/integration.module#IntegrationModule'
   },
   {
     path: 'templates',
