@@ -8,6 +8,7 @@ minishift::usage() {
     cat <<EOT
     --install                 Install templates to a running Minishift.
 -p  --project                 Install into this project. Delete this project if it already exists
+-c  --context                 Install into this context. Delete this context if it already exists
     --reset                   Reset the minishift installation by
                               'minishift delete && minishift start'.
     --full-reset              Full reset by
@@ -51,8 +52,14 @@ minishift::run() {
 
     if [ $(hasflag --install) ]; then
 
+        local context=$(readopt --context -c)
+        if [ -z "${context}" ]; then
+            #recreate_context $context
+            context="minishift"
+        fi
+
         # Switch to minishift to be safe when deleting projects
-        oc config use-context minishift
+        oc config use-context $context
 
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
