@@ -25,7 +25,7 @@ export class ApiConfigProviderService extends ApiConfigService {
       return {
         ...aggregatedEndpoints,
         ...newEndpoint
-      };
+      }[0];
     }, initialEndpoints);
   }
 }

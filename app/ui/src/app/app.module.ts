@@ -22,6 +22,7 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
+import { ApiModule } from './api';
 import { CoreModule } from './core';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -30,7 +31,6 @@ import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
 import { platformReducer, SYNDESIS_GUARDS } from './platform';
-import { ApiModule } from './api';
 
 export function restangularProviderConfigurer(
   restangularProvider: any,
@@ -78,8 +78,8 @@ export function mapperRestangularProvider(
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    CoreModule.forRoot(),
     ApiModule.forRoot(),
+    CoreModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
     TabsModule.forRoot(),
