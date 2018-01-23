@@ -36,7 +36,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@IndexedProperty("integrationId")
+@IndexedProperty.Multiple({
+    @IndexedProperty("integrationId"),
+    @IndexedProperty("currentState")
+})
 @JsonDeserialize(builder = IntegrationDeployment.Builder.class)
 public class IntegrationDeployment implements WithKind, WithId<IntegrationDeployment>, WithName {
 
