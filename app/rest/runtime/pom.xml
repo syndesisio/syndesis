@@ -183,12 +183,6 @@
             <artifactId>sql-stored-start-connector</artifactId>
             <version>${project.version}</version>
           </dependency>
-          <!-- ==== AWS S3 ==== -->
-          <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>aws-s3-connector</artifactId>
-            <version>${project.version}</version>
-          </dependency>
           <!-- ==== REST Swagger ==== -->
           <dependency>
             <groupId>io.syndesis</groupId>
