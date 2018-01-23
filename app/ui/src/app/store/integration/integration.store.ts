@@ -24,13 +24,13 @@ export class IntegrationStore extends AbstractStore<
 
   public activate(i: Integration) {
     const _i = JSON.parse(JSON.stringify(i));
-    _i.desiredStatus = 'Activated';
+    _i.desiredStatus = 'Active';
     return this.update(_i);
   }
 
   public deactivate(i: Integration) {
     const _i = JSON.parse(JSON.stringify(i));
-    _i.desiredStatus = 'Deactivated';
+    _i.desiredStatus = 'Inactive';
     return this.update(_i);
   }
 
