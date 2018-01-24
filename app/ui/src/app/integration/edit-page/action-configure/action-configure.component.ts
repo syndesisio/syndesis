@@ -113,13 +113,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
             this.integrationSupport
               .fetchMetadata(this.step.connection, this.step.action, data)
               .toPromise()
-              .then(response => {
-                log.debug(
-                  'Response: ' + JSON.stringify(response, undefined, 2)
-                );
-                const descriptor: any = response['_body']
-                  ? JSON.parse(response['_body'])
-                  : undefined;
+              .then(descriptor => {
                 for (const actionProperty of Object.keys(data)) {
                   if (data[actionProperty] == null) {
                     this.step.configuredProperties[

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Integration } from '@syndesis/ui/integration';
+import { Integration } from '../integration.model';
 
 @Component({
   selector: 'syndesis-integration-status',
