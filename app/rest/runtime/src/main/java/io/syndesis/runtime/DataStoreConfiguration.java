@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Creates and configures the main datastore
@@ -36,28 +37,16 @@ import java.util.List;
 @Configuration
 public class DataStoreConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(SchemaCheck.class);
-    private static final Index FAKE_INDEX = new Index(null, null);
-
-    /**
-     * This basically ensures that we get at least one Index created in the system so
-     * that the index list injection in the jsonDB does not fail due to no Indexes
-     * being defined.
-     *
-     * @return
-     */
-    @Bean
-    public Index fakeIndex() {
-        return FAKE_INDEX;
-    }
 
     @Bean
     @Autowired
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    public SqlJsonDB jsonDB(DBI dbi, List<Index> beanIndexes) {
+    public SqlJsonDB jsonDB(DBI dbi, Optional<List<Index>> beanIndexes) {
 
         ArrayList<Index> indexes = new ArrayList<>();
-        indexes.addAll(beanIndexes);
-        indexes.remove(FAKE_INDEX);
+        if(beanIndexes.isPresent()) {
+            indexes.addAll(beanIndexes.get());
+        }
 
         for (Kind kind : Kind.values()) {
             addIndex(indexes, kind, kind.getModelClass().getAnnotation(UniqueProperty.class));
