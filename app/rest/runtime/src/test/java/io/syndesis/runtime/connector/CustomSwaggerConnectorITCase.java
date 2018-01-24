@@ -22,7 +22,6 @@ import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 import io.syndesis.model.Violation;
 import io.syndesis.model.action.ActionsSummary;
-import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorSummary;
@@ -57,8 +56,6 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         private static final ActionsSummary ACTIONS_SUMMARY = new ActionsSummary.Builder().totalActions(5)
             .putActionCountByTag("updating", 1).putActionCountByTag("creating", 1).putActionCountByTag("fetching", 2)
             .putActionCountByTag("destruction", 1).putActionCountByTag("tasks", 5).build();
-
-        private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
 
         @Bean(TEMPLATE_ID)
         public ConnectorGenerator swaggerConnectorGenerator() {

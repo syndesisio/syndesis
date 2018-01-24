@@ -26,9 +26,13 @@ import java.util.Map;
 
 import io.syndesis.core.SyndesisServerException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.github.mustachejava.MustacheNotFoundException;
 import com.google.common.escape.Escaper;
 import com.google.common.io.CharStreams;
 import com.google.common.net.PercentEscaper;
@@ -43,15 +47,32 @@ public final class IconGenerator {
 
     private static final Map<Character, String> LETTERS = loadLetters();
 
-    private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory(
-        resourceName -> new InputStreamReader(IconGenerator.class.getResourceAsStream(resourceName), StandardCharsets.UTF_8));
+    private static final Logger LOG = LoggerFactory.getLogger(IconGenerator.class);
+
+    private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory(resourceName -> {
+        final InputStream resourceStream = IconGenerator.class.getResourceAsStream(resourceName);
+
+        if (resourceStream == null) {
+            return null;
+        }
+
+        return new InputStreamReader(resourceStream, StandardCharsets.UTF_8);
+    });
 
     private IconGenerator() {
         // utility class
     }
 
     public static String generate(final String template, final String name) {
-        final Mustache mustache = MUSTACHE_FACTORY.compile("/icon-generator/" + template + ".svg.mustache");
+        Mustache mustache;
+        try {
+            mustache = MUSTACHE_FACTORY.compile("/icon-generator/" + template + ".svg.mustache");
+        } catch (final MustacheNotFoundException e) {
+            LOG.warn("Unable to load icon template for: `{}`, will use default template", template);
+            LOG.debug("Unable to load icon template for: {}", template, e);
+
+            mustache = MUSTACHE_FACTORY.compile("/icon-generator/default.svg.mustache");
+        }
 
         final Map<String, String> data = new HashMap<>();
         final String color = COLORS[(int) (Math.random() * COLORS.length)];
