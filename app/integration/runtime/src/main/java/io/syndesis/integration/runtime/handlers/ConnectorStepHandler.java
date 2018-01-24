@@ -15,6 +15,7 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         final TypeConverter converter = context.getTypeConverter();
         final String componentId = scheme + "-" + index;
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, descriptor);
-        final List<String> customizers = descriptor.getConnectorCustomizers();
+        final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
 
         Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
 
