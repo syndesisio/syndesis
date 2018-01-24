@@ -15,32 +15,45 @@
  */
 package io.syndesis.connector.generator.util;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Base64;
+import java.io.PrintStream;
 
-import javax.imageio.ImageIO;
-
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IconGeneratorTest {
 
-    private static final String PREFIX = "data:image/png;base64,";
+    private static final String PREFIX = "data:image/svg+xml;charset=utf-8,%3C%3Fxml";
 
     @Test
-    public void shouldGenerateIcon() throws IOException {
-        final String icon = IconGenerator.generate("swagger-connector-template", "Hello");
+    @Ignore("Generates test.html for visual inspection")
+    public void generateTestHtml() throws IOException {
+        try (PrintStream out = new PrintStream(new FileOutputStream("test.html"))) {
+            out.println("<html><body>");
 
-        assertThat(icon).startsWith(PREFIX);
+            for (int letter = 'A'; letter <= 'Z'; letter++) {
+                final String letterString = String.valueOf((char) letter);
+                final String icon = IconGenerator.generate("swagger-connector-template", letterString);
 
-        final byte[] png = Base64.getDecoder().decode(icon.substring(PREFIX.length()));
+                assertThat(icon).startsWith(PREFIX);
+                out.println("<br/>");
+                out.println("<img src=\"" + icon + "\" />");
+            }
+        }
+    }
 
-        final BufferedImage image = ImageIO.read(new ByteArrayInputStream(png));
+    @Test
+    public void shouldGenerateIcon() {
+        for (int letter = 'A'; letter <= 'Z'; letter++) {
+            final String letterString = String.valueOf((char) letter);
+            final String icon = IconGenerator.generate("swagger-connector-template", letterString);
 
-        assertThat(image.getHeight()).isEqualTo(200);
-        assertThat(image.getWidth()).isEqualTo(200);
+            assertThat(icon).startsWith(PREFIX);
+            assertThat(icon).contains("circle%20style%3D%22fill%3A%23ffffff");
+            assertThat(icon).contains("path%20style%3D%22fill%3A%23ffffff");
+        }
     }
 }

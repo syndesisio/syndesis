@@ -15,66 +15,81 @@
  */
 package io.syndesis.connector.generator.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Base64;
-import java.util.function.Consumer;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.syndesis.core.SyndesisServerException;
 
-import org.apache.batik.script.Interpreter;
-import org.apache.batik.transcoder.SVGAbstractTranscoder;
-import org.apache.batik.transcoder.Transcoder;
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.transcoder.TranscoderInput;
-import org.apache.batik.transcoder.TranscoderOutput;
-import org.apache.batik.transcoder.image.PNGTranscoder;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import com.google.common.escape.Escaper;
+import com.google.common.io.CharStreams;
+import com.google.common.net.PercentEscaper;
 
 public final class IconGenerator {
 
-    /* default */ static final class CustomTranscoder extends PNGTranscoder {
+    private static final String[] COLORS = {"#cc0000", "#a30000", "#8b0000", "#470000", "#2c0000", "#ec7a08", "#b35c00", "#773d00",
+        "#3b1f00", "#b58100", "#795600", "#3d2c00", "#6ca100", "#486b00", "#253600", "#3f9c35", "#2d7623", "#1e4f18", "#0f280d", "#007a87",
+        "#005c66", "#003d44", "#001f22", "#00b9e4", "#008bad", "#005c73", "#002d39", "#8461f7", "#703fec", "#582fc0", "#40199a", "#1f0066"};
 
-        private final Consumer<Interpreter> hook;
+    private static final Escaper ESCAPER = new PercentEscaper("", false);
 
-        /* default */ CustomTranscoder(final Consumer<Interpreter> hook) {
-            this.hook = hook;
-        }
+    private static final Map<String, String> LETTERS = loadLetters();
 
-        @Override
-        protected void setImageSize(final float docWidth, final float docHeight) {
-            // convenient method that is invoked (execution-wise) after the
-            // scripts have been parsed
-            super.setImageSize(docWidth, docHeight);
-
-            final Interpreter interpreter = ctx.getInterpreter("text/ecmascript");
-
-            hook.accept(interpreter);
-        }
-    }
+    private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory(
+        resourceName -> new InputStreamReader(IconGenerator.class.getResourceAsStream(resourceName), StandardCharsets.UTF_8));
 
     private IconGenerator() {
         // utility class
     }
 
     public static String generate(final String template, final String name) {
-        final Transcoder transcoder = new CustomTranscoder(interpreter -> interpreter.evaluate("applyTemplate('" + name + "')"));
+        final Mustache mustache = MUSTACHE_FACTORY.compile("/icon-generator/" + template + ".svg.mustache");
 
-        transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, 200f);
-        transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, 200f);
-        transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, true);
+        final Map<String, String> data = new HashMap<>();
+        final String color = COLORS[(int) (Math.random() * COLORS.length)];
+        data.put("color", color);
 
-        try (InputStream in = IconGenerator.class.getResourceAsStream("/icon-generator/" + template + ".svg");
-            ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            final TranscoderInput input = new TranscoderInput(in);
+        data.put("letter", LETTERS.get(name.substring(0, 1).toUpperCase()));
 
-            final TranscoderOutput output = new TranscoderOutput(out);
+        try (StringWriter icon = new StringWriter()) {
+            mustache.execute(icon, data).flush();
 
-            transcoder.transcode(input, output);
+            final String trimmed = trimXml(icon.toString());
 
-            return "data:image/png;base64," + Base64.getEncoder().encodeToString(out.toByteArray());
-        } catch (IOException | TranscoderException e) {
-            throw new SyndesisServerException("Unable to generate icon", e);
+            return "data:image/svg+xml;charset=utf-8," + ESCAPER.escape(trimmed);
+        } catch (final IOException e) {
+            throw new SyndesisServerException("Unable to generate icon from template `" + template + "`, for name: " + name, e);
         }
+    }
+
+    /* default */static String trimXml(final String xml) {
+        return xml.replaceAll(">\\s*<", "><").replaceAll("\\s\\s+", " ").replaceAll(" />", "/>");
+    }
+
+    private static Map<String, String> loadLetters() {
+        final Map<String, String> letters = new HashMap<>();
+
+        for (int i = 'A'; i <= 'Z'; i++) {
+            final String letter = String.valueOf((char) i);
+
+            try (final InputStream letterStream = IconGenerator.class.getResourceAsStream("/icon-generator/" + letter + ".svg");
+                final InputStreamReader letterReader = new InputStreamReader(letterStream, StandardCharsets.UTF_8)) {
+                final String path = CharStreams.toString(letterReader);
+
+                letters.put(letter, path);
+            } catch (final IOException e) {
+                throw new IllegalStateException("Unable to load SVG path for letter: " + letter, e);
+            }
+        }
+
+        return Collections.unmodifiableMap(letters);
     }
 }
