@@ -24,7 +24,7 @@ This design covers the following workflows:
 
 
 
-## Exporting a Single Integration
+## Importing a Single Integration
 
 ![Image of choosing connection](img/import.png)
 
@@ -85,7 +85,7 @@ If only one integration imported, then user will be taken to the Integration sum
 
 1. Connections that require configuration will be indicated by message on card in connections page.
 
-## Exporting Multiple Integrations
+## Importing Multiple Integrations
 Same general behavior of integrating a single integration with a couple differences described below.
 
 ![Image of choosing connection](img/importmultiple.png)
