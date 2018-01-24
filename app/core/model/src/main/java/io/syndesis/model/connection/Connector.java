@@ -16,6 +16,8 @@
 package io.syndesis.model.connection;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -70,6 +72,11 @@ public interface Connector extends WithId<Connector>, WithActions<ConnectorActio
     Optional<String> getComponentScheme();
 
     Optional<String> getConnectorFactory();
+
+    @Value.Default
+    default List<String> getConnectorCustomizers() {
+        return Collections.emptyList();
+    }
 
     Optional<ActionsSummary> getActionsSummary();
 

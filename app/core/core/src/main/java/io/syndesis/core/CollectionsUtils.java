@@ -15,7 +15,9 @@
  */
 package io.syndesis.core;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,5 +32,17 @@ public final class CollectionsUtils {
             .flatMap(map -> map.entrySet().stream())
             .filter(entry -> entry.getValue() != null)
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @SafeVarargs
+    @SuppressWarnings("varargs")
+    public static <C extends Collection<T>, T> C aggregate(Supplier<C> collectionFactory, Collection<T>... collections) {
+        final C result = collectionFactory.get();
+
+        for (Collection<T> collection: collections) {
+            result.addAll(collection);
+        }
+
+        return result;
     }
 }

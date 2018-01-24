@@ -26,6 +26,7 @@
       },
       "connection" : {
         "connector" : {
+          "connectorCustomizers" : [ ],
           "id" : "timer",
           "actions" : [ {
             "id" : "periodic-timer-action",
@@ -206,6 +207,7 @@
       },
       "connection" : {
         "connector" : {
+          "connectorCustomizers" : [ ],
           "id" : "http",
           "actions" : [ {
             "id" : "http-get-action",
