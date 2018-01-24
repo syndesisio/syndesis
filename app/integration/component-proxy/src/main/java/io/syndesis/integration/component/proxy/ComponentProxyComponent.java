@@ -157,7 +157,6 @@ public class ComponentProxyComponent extends DefaultComponent {
         return beforeProducer;
     }
 
-
     public void setBeforeProducer(Processor beforeProducer) {
         this.beforeProducer = beforeProducer;
     }

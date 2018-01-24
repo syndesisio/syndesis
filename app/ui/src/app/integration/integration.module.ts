@@ -42,6 +42,7 @@ import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { IntegrationSupportService } from './integration-support.service';
+import { IntegrationLogsComponent } from '@syndesis/ui/integration/components/logs.component';
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationSaveOrAddStepComponent },
@@ -121,6 +122,7 @@ const routes: Routes = [
     IntegrationStepSelectComponent,
     IntegrationStepConfigureComponent,
     IntegrationListPage,
+    IntegrationLogsComponent,
     IntegrationSaveOrAddStepComponent,
     IntegrationSelectActionComponent,
     IntegrationSelectConnectionComponent,

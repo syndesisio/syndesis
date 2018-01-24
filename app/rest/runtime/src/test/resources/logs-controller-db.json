@@ -1,0 +1,120 @@
+{
+  "logs" : {
+    "exchanges" : {
+      "my-integration" : {
+        "-L2Xz0iYO5xKUurlVa7b" : {
+          "steps" : {
+            "step-2" : {
+              "-L2Xz0iuO5xKUurlVa7c" : {
+                "exchange" : "-L2Xz0iYO5xKUurlVa7b",
+                "id" : "-L2Xz0iuO5xKUurlVa7c",
+                "message" : "Hello { \"id\": 0 }",
+                "step" : "step-2"
+              }
+            },
+            "step-3" : {
+              "-L2Xz0jaO5xKUurlVa7d" : {
+                "action" : "begin",
+                "exchange" : "-L2Xz0iYO5xKUurlVa7b",
+                "id" : "-L2Xz0jaO5xKUurlVa7d",
+                "step" : "step-3"
+              },
+              "-L2Xz0jbO5xKUurlVa7f" : {
+                "action" : "end",
+                "exchange" : "-L2Xz0iYO5xKUurlVa7b",
+                "id" : "-L2Xz0jbO5xKUurlVa7f",
+                "step" : "step-3"
+              }
+            }
+          }
+        },
+        "-L2Xz0jbO5xKUurlVa7g" : {
+          "steps" : {
+            "step-2" : {
+              "-L2Xz0jbO5xKUurlVa7h" : {
+                "exchange" : "-L2Xz0jbO5xKUurlVa7g",
+                "id" : "-L2Xz0jbO5xKUurlVa7h",
+                "message" : "Hello { \"id\": 1 }",
+                "step" : "step-2"
+              }
+            },
+            "step-3" : {
+              "-L2Xz0jcO5xKUurlVa7i" : {
+                "action" : "begin",
+                "exchange" : "-L2Xz0jbO5xKUurlVa7g",
+                "id" : "-L2Xz0jcO5xKUurlVa7i",
+                "step" : "step-3"
+              },
+              "-L2Xz0jcO5xKUurlVa7k" : {
+                "action" : "end",
+                "exchange" : "-L2Xz0jbO5xKUurlVa7g",
+                "id" : "-L2Xz0jcO5xKUurlVa7k",
+                "step" : "step-3"
+              }
+            }
+          }
+        },
+        "-L2Xz0jcO5xKUurlVa7l" : {
+          "steps" : {
+            "step-2" : {
+              "-L2Xz0jcO5xKUurlVa7m" : {
+                "exchange" : "-L2Xz0jcO5xKUurlVa7l",
+                "id" : "-L2Xz0jcO5xKUurlVa7m",
+                "message" : "Hello { \"id\": 2 }",
+                "step" : "step-2"
+              }
+            },
+            "step-3" : {
+              "-L2Xz0jdO5xKUurlVa7n" : {
+                "action" : "begin",
+                "exchange" : "-L2Xz0jcO5xKUurlVa7l",
+                "id" : "-L2Xz0jdO5xKUurlVa7n",
+                "step" : "step-3"
+              },
+              "-L2Xz0jdO5xKUurlVa7p" : {
+                "action" : "end",
+                "exchange" : "-L2Xz0jcO5xKUurlVa7l",
+                "id" : "-L2Xz0jdO5xKUurlVa7p",
+                "step" : "step-3"
+              }
+            }
+          }
+        },
+        "-L2Xz0jdO5xKUurlVa7q" : {
+          "steps" : {
+            "step-2" : {
+              "-L2Xz0jdO5xKUurlVa7r" : {
+                "exchange" : "-L2Xz0jdO5xKUurlVa7q",
+                "id" : "-L2Xz0jdO5xKUurlVa7r",
+                "message" : "Hello { \"id\": 3 }",
+                "step" : "step-2"
+              }
+            },
+            "step-3" : {
+              "-L2Xz0jeO5xKUurlVa7s" : {
+                "action" : "begin",
+                "exchange" : "-L2Xz0jdO5xKUurlVa7q",
+                "id" : "-L2Xz0jeO5xKUurlVa7s",
+                "step" : "step-3"
+              },
+              "-L2Xz0jeO5xKUurlVa7u" : {
+                "action" : "end",
+                "exchange" : "-L2Xz0jdO5xKUurlVa7q",
+                "id" : "-L2Xz0jeO5xKUurlVa7u",
+                "step" : "step-3"
+              }
+            }
+          }
+        }
+      }
+    },
+    "integrations" : {
+      "my-integration" : true
+    },
+    "pods" : {
+      "test-pod-x23x" : {
+        "time" : "2018-01-12T21:22:02.068338027Z"
+      }
+    }
+  }
+}

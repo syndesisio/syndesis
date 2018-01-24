@@ -16,6 +16,7 @@
 package io.syndesis.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,5 +41,13 @@ public final class Json {
 
     public static ObjectMapper mapper() {
         return OBJECT_MAPPER;
+    }
+
+    public static String toString(Object value) {
+        try {
+            return mapper().writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            throw new SyndesisServerException(e);
+        }
     }
 }

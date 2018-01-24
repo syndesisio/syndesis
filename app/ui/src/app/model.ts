@@ -5,6 +5,25 @@ export interface BaseEntity {
   kind?: string;
 }
 
+export interface Exchange extends BaseEntity {
+  logts?: string;
+  at: number;
+  pod: string;
+  ver: string;
+  status: string;
+  failed: boolean;
+  steps?: ExchangeStep[];
+  metadata?: any;
+}
+
+export interface ExchangeStep extends BaseEntity {
+  at: number;
+  duration?: number;
+  failure?: string;
+  message?: string[];
+  events?: any;
+}
+
 // TODO local hack to avoid deleting all the related code
 /* tslint:disable */
 export interface IntegrationTemplate extends BaseEntity {}

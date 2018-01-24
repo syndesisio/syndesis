@@ -26,7 +26,9 @@ import io.fabric8.openshift.api.model.User;
 public interface OpenShiftService {
 
     String DEPLOYMENT_ID_ANNOTATION = "syndesis.io/deployment-id";
+    String INTEGRATION_ID_ANNOTATION = "syndesis.io/integration-id";
     String USERNAME_LABEL = "syndesis.io/username";
+    String COMPONENT_LABEL = "component";
 
     /**
      * Start a previously created build with the data from the given directory

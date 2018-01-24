@@ -48,6 +48,7 @@ import java.util.function.Consumer;
     private final Set<String> shallowObjects = new LinkedHashSet<>();
     private int entriesAdded;
     private boolean closed;
+    private String currentRootField;
 
     /* default */ JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
         this.base = base;
@@ -83,8 +84,9 @@ import java.util.function.Consumer;
 
             // Handle limit options.
             if( this.options.limit() !=null ) {
-                if ( newPath.size() == 1 ) {
+                if( !newPath.get(0).equals(currentRootField) ) {
                     this.entriesAdded++;
+                    currentRootField = newPath.get(0);
                 }
                 if( this.entriesAdded > this.options.limit() ) {
                     close();

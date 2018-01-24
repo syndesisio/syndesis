@@ -150,6 +150,10 @@ public class SqlJsonDB implements JsonDB {
         // Lets normalize the path a bit
         String baseDBPath = JsonRecordSupport.convertToDBPath(path);
         String like = baseDBPath + "%";
+        GetOptions.Order order = o.order();
+        if( order == null ) {
+            order = GetOptions.Order.ASC;
+        }
 
         Consumer<OutputStream> result = null;
         final Handle h = dbi.open();
@@ -160,9 +164,18 @@ public class SqlJsonDB implements JsonDB {
             if( o.after()!=null ) {
 
                 // yes terminate with | instead of / so that we skip that entire tree of values.
-                String after = baseDBPath + validateKey(o.after()) + "|";
+                String after;
 
-                String sql = "select path,value,kind from jsondb where path LIKE :like and path >= :after order by path";
+                String operator;
+                if ( o.order() == GetOptions.Order.DESC ) {
+                    operator = "<=";
+                    after = baseDBPath + validateKey(o.after());
+                } else {
+                    operator = ">=";
+                    after = baseDBPath + validateKey(o.after()) + "|";
+                }
+
+                String sql = "select path,value,kind from jsondb where path LIKE :like and path "+operator+" :after order by path "+order;
                 iterator = h.createQuery(sql)
                     .bind("like", like)
                     .bind("after", after)
@@ -171,7 +184,7 @@ public class SqlJsonDB implements JsonDB {
 
             } else {
 
-                String sql = "select path,value,kind from jsondb where path LIKE :like order by path";
+                String sql = "select path,value,kind from jsondb where path LIKE :like order by path "+order;
                 iterator = h.createQuery(sql)
                     .bind("like", like)
                     .map(JsonRecordMapper.INSTANCE)

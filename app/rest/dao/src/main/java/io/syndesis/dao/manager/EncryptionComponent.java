@@ -108,7 +108,12 @@ public class EncryptionComponent {
         }
         String result = value;
         if( result.startsWith(ENCRYPTED_PREFIX) ) {
-            result = textEncryptor.decrypt(stripPrefix(result, ENCRYPTED_PREFIX));
+            try {
+                result = textEncryptor.decrypt(stripPrefix(result, ENCRYPTED_PREFIX));
+            } catch (RuntimeException e) {
+                // We could fail to decrypt the value..
+                result = null;
+            }
         }
         return result;
     }

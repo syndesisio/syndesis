@@ -167,9 +167,10 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
             final ProducerTemplate template = context.createProducerTemplate();
             final MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
             final String body = "a|b|c";
+            final String[] expected = body.toUpperCase().split("|");
 
             result.expectedMessageCount(3);
-            result.expectedBodiesReceived(body.toUpperCase().split("|"));
+            result.expectedBodiesReceived((Object[])expected);
             template.sendBody("direct:start", body);
 
             result.assertIsSatisfied();
