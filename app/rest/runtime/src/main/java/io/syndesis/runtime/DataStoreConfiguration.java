@@ -75,13 +75,13 @@ public class DataStoreConfiguration {
         return jsondb;
     }
 
-    private void addIndex(ArrayList<Index> indexes, Kind kind, IndexedProperty indexedProperty) {
+    private void addIndex(List<Index> indexes, Kind kind, IndexedProperty indexedProperty) {
         if (indexedProperty != null) {
             indexes.add(new Index("/" + kind.getModelName() + "s", indexedProperty.value()));
         }
     }
 
-    private void addIndex(ArrayList<Index> indexes, Kind kind, UniqueProperty p) {
+    private void addIndex(List<Index> indexes, Kind kind, UniqueProperty p) {
         if (p != null) {
             indexes.add(new Index("/" + kind.getModelName() + "s", p.value()));
         }
