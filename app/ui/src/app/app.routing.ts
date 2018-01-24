@@ -21,13 +21,17 @@ const routes: Routes = [
       './connections/connections-routes.module#ConnectionsRoutesModule'
   },
   {
+    path: 'customizations',
+    loadChildren: './customizations/customizations.module#CustomizationsModule'
+  },
+  {
+    path: 'monitor',
+    loadChildren: './monitor/monitor.module#MonitorModule'
+  },
+  {
     path: 'settings',
     loadChildren: './settings/settings.module#SettingsModule'
   },
-  {
-    path: 'customizations',
-    loadChildren: './customizations/customizations.module#CustomizationsModule'
-  }
 ];
 
 @NgModule({

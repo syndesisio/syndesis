@@ -155,7 +155,7 @@
     <ul class="list-group">
       <li class="list-group-item"
           routerLinkActive="active">
-        <a [routerLink]=" ['dashboard'] ">
+        <a routerLink="dashboard">
           <span class="fa fa-tachometer"
                 data-toggle="tooltip"
                 title="Dashboard"></span>
@@ -164,7 +164,7 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a [routerLink]=" ['integrations'] ">
+        <a routerLink="integrations">
           <span class="pficon pficon-topology"
                 data-toggle="tooltip"
                 title="Integrations"></span>
@@ -182,7 +182,7 @@
       <li class="list-group-item"
           routerLinkActive="active"
           tourAnchor="dashboard.navigation">
-        <a [routerLink]=" ['connections'] ">
+        <a routerLink="connections">
           <span class="pficon pficon-network"
                 data-toggle="tooltip"
                 title="Connections"></span>
@@ -191,7 +191,7 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a [routerLink]=" ['customizations'] ">
+        <a routerLink="customizations">
           <span class="pficon pficon-network"
                 data-toggle="tooltip"
                 title="Customizations"></span>
@@ -200,7 +200,16 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a [routerLink]=" ['settings'] ">
+        <a routerLink="monitor">
+          <span class="pficon pficon-network"
+                data-toggle="tooltip"
+                title="Monitor"></span>
+          <span class="list-group-item-value">Monitor</span>
+        </a>
+      </li>
+      <li class="list-group-item"
+          routerLinkActive="active">
+        <a routerLink="settings">
           <span class="fa fa-lock"
                 data-toggle="tooltip"
                 title="Settings"></span>
