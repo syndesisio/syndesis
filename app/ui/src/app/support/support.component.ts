@@ -6,9 +6,9 @@ import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 import { Restangular } from 'ngx-restangular';
 import { Http } from '@angular/http'
 
-import { Integrations, Integration } from '../model';
+import { Integrations, Integration } from '../integration/integration.model';
 import { IntegrationStore } from '../store/integration/integration.store';
-import { IntegrationSupportService } from '../store/integration-support.service';
+import { IntegrationSupportService } from '../integration/integration-support.service';
 import { log, getCategory } from '../logging';
 
 import fileSaver = require("file-saver");
@@ -37,7 +37,7 @@ export class SupportComponent {
   // Used to bind patternfly behavior with foreign form elements
   @ViewChild('alllogs') allogs: ElementRef;
   @ViewChild('specificlogs') specificlogs: ElementRef;
-  
+
   allLogsSelected : boolean = true;
   loading : boolean= true;
 
@@ -74,7 +74,7 @@ export class SupportComponent {
           title: 'Description',
           placeholder: 'Filter by Description...',
           type: 'text'
-        } 
+        }
       ]
     },
     sortConfig: {
@@ -90,11 +90,11 @@ export class SupportComponent {
   };
 
   items: Array<any> = [
-    { 
+    {
         name: "Integration Name 1",
         description: "Description about the integration goes here"
     },
-    { 
+    {
         name: "Integration Name 2",
         description: "Description about the integration goes here"
     }
@@ -115,7 +115,7 @@ export class SupportComponent {
       });
   }
 
-  
+
 
   // loadForm() {
   //   //this.formConfig = SUPPORT_FORM_CONFIG;
@@ -137,14 +137,14 @@ export class SupportComponent {
   // download() {
   //   this.buildData();
   // }
-
+  
   // buildData(data: any = {}) {
   //   const formValue = this.formGroup ? this.formGroup.value : {};
   //   console.log(formValue);
   //   this.integrationSupportService
   //   .downloadSupportData(formValue)
   //   .map(res => res.blob())
-  //   .subscribe(response => {  
+  //   .subscribe(response => {
   //     fileSaver.saveAs(response, "syndesis.zip");
   //   },
   //   error => console.log("Error downloading the file."),
