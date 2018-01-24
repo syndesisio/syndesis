@@ -55,9 +55,9 @@ class PodLogHandler implements Consumer<InputStream> {
         this.logsController = logsController;
         this.podName = pod.getMetadata().getName();
         Map<String, String> annotations = pod.getMetadata().getAnnotations();
-        this.integrationId = annotations.get(OpenShiftService.INTEGRATION_ID_ANNOTATION);
+        this.integrationId = annotations.get(OpenShiftService.INTEGRATION_ID_LABEL);
         Map<String, String> labels = pod.getMetadata().getLabels();
-        this.deploymentId = labels.get(OpenShiftService.DEPLOYMENT_ID_ANNOTATION);
+        this.deploymentId = labels.get(OpenShiftService.DEPLOYMENT_ID_LABEL);
     }
 
     public void start() throws IOException {

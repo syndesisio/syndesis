@@ -29,11 +29,11 @@ import java.util.Set;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
+import io.syndesis.core.Labels;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.controllers.integration.IntegrationSupport;
-import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
@@ -50,11 +50,11 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
     @SuppressWarnings("PMD.DefaultPackage")
     ActivateHandler(
-            DataManager dataManager,
-            OpenShiftService openShiftService,
-            ProjectGenerator projectGenerator,
-            ControllersConfigurationProperties properties,
-            EncryptionComponent encryptionComponent) {
+        DataManager dataManager,
+        OpenShiftService openShiftService,
+        ProjectGenerator projectGenerator,
+        ControllersConfigurationProperties properties,
+        EncryptionComponent encryptionComponent) {
 
         super(openShiftService);
 
@@ -92,8 +92,8 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             }
         }
 
-        logInfo(integrationDeployment,"Build started: {}, isRunning: {}, Deployment ready: {}",
-                isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
+        logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
+            isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
         BuildStepPerformer stepPerformer = new BuildStepPerformer(integrationDeployment);
         logInfo(integrationDeployment, "Steps performed so far: " + stepPerformer.getStepsPerformed());
         try {
@@ -104,7 +104,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             stepPerformer.perform("build", this::build, deploymentData);
             stepPerformer.perform("deploy", this::deploy, deploymentData);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            logError(integrationDeployment,"[ERROR] Activation failure");
+            logError(integrationDeployment, "[ERROR] Activation failure");
             // Setting a message to update means implicitly thats in an error state (for the UI)
             return new StateUpdate(IntegrationDeploymentState.Pending, e.getMessage());
         }
@@ -116,8 +116,8 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             return new StateUpdate(IntegrationDeploymentState.Active);
         }
 
-        logInfo(integrationDeployment,"Build started: {}, isRunning: {}, Deployment ready: {}",
-                isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
+        logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
+            isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
         logInfo(integrationDeployment, "[PENDING] [" + stepPerformer.getStepsPerformed() + "]");
 
         return new StateUpdate(IntegrationDeploymentState.Pending, stepPerformer.getStepsPerformed());
@@ -129,9 +129,9 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         return DeploymentData.builder()
-            .addLabel(OpenShiftService.DEPLOYMENT_ID_ANNOTATION, integrationDeployment.getVersion().orElse(0).toString())
-            .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integration.getId().get().toString())
-            .addLabel(OpenShiftService.USERNAME_LABEL, Names.sanitize(username))
+            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"))))
+            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL, integrationDeployment.getVersion().orElse(0).toString())
+            .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
@@ -185,7 +185,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     }
 
     public boolean isRunning(IntegrationDeployment integrationDeployment) {
-        return openShiftService().isScaled(integrationDeployment.getName(),1);
+        return openShiftService().isScaled(integrationDeployment.getName(), 1);
     }
 
     private static String propsToString(Properties data) {
@@ -203,21 +203,22 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
 
     private Integration integrationOf(IntegrationDeployment integrationDeployment) {
-        return  dataManager.fetch(Integration.class, integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment doesn't have integration id.")));
+        return dataManager.fetch(Integration.class, integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment doesn't have integration id.")));
     }
 
     /**
      * Counts active integrations (in DB) of the owner of the specified integration.
-     * @param integration   The specified integration.
-     * @return              The number of integrations (excluding the current).
+     *
+     * @param integration The specified integration.
+     * @return The number of integrations (excluding the current).
      */
     private int countActiveIntegrationsOfSameUserAs(Integration integration) {
-        String id = integration.getId().orElse(null);
+        String integrationId = integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration."));
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         return (int) dataManager.fetchAll(IntegrationDeployment.class).getItems()
             .stream()
-            .filter(i -> !i.getIntegrationId().get().equals(id)) //The "current" integration will already be in the database.
+            .filter(i -> !i.getIntegrationId().get().equals(integrationId)) //The "current" integration will already be in the database.
             .filter(i -> IntegrationDeploymentState.Active == i.getCurrentState())
             .map(i -> i.getIntegrationId().get())
             .distinct()
@@ -228,19 +229,20 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
     /**
      * Count the deployments of the owner of the specified integration.
-     * @param integration   The specified integration.
-     * @return              The number of deployed integrations (excluding the current).
+     *
+     * @param integration The specified integration.
+     * @return The number of deployed integrations (excluding the current).
      */
     private int countDeployments(Integration integration) {
-        String name = integration.getName();
+        String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
         String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.USERNAME_LABEL, Names.sanitize(username));
+        labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()
-            .filter(d -> !Names.sanitize(name).equals(d.getMetadata().getName())) //this is also called on updates (so we need to exclude)
+            .filter(d -> !id.equals(d.getMetadata().getLabels().get(OpenShiftService.INTEGRATION_ID_LABEL)))
             .filter(d -> d.getSpec().getReplicas() > 0)
             .count();
     }
@@ -257,7 +259,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     // Some helper method to conditional execute certain steps
     @FunctionalInterface
     public interface IoCheckedFunction<T> {
-         void apply(T t, DeploymentData data) throws IOException;
+        void apply(T t, DeploymentData data) throws IOException;
     }
 
     private class BuildStepPerformer {

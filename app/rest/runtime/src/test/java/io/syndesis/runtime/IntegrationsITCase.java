@@ -17,7 +17,6 @@ package io.syndesis.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Violation;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeploymentState;
@@ -111,8 +110,7 @@ public class IntegrationsITCase extends BaseITCase {
         assertThat(list.getBody().getItems()).as("items").hasSize(1);
 
         // Lets now re-import the integration:
-        post("/api/v1/integration-support/import", exportData.getBody(), ChangeEvent[].class);
-
+        post("/api/v1/integration-support/import", exportData.getBody(), byte[].class);
     }
 
         @Test
