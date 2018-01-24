@@ -217,7 +217,7 @@ class PodLogHandler implements Consumer<InputStream> {
         }
     }
 
-    private void trackState(String time, HashMap<String, Object> batch) {
+    private void trackState(String time, Map<String, Object> batch) {
         state.time = time;
         String podStatPath = "/pods/" + podName;
         batch.put(podStatPath, state);

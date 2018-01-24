@@ -36,6 +36,9 @@ import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
  */
 public class SyndesisLoggingSupport {
 
+    private SyndesisLoggingSupport() {
+    }
+
     private static final DefaultExchangeFormatter FORMATTER = new DefaultExchangeFormatter();
     static {
         FORMATTER.setShowOut(true);
@@ -104,7 +107,7 @@ public class SyndesisLoggingSupport {
                 long startedAt = System.nanoTime();
                 try {
                     target.process(exchange);
-                } catch (Throwable e) {
+                } catch (RuntimeException e) {
                     exchange.setException(e);
                 } finally {
                     // currentTimeMillis is not monotonic, nanoTime likely is

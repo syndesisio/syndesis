@@ -130,6 +130,7 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
                 template.sendBody("direct:expression", "2");
                 fail("Expected exception");
             } catch (CamelExecutionException e) {
+                // expected.
             }
             template.sendBody("direct:expression", "3");
             result.assertIsSatisfied();
@@ -155,7 +156,7 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
     }
 
     public static class ErrorExtension implements SyndesisStepExtension {
-        static int count = 0;
+        private static int count;
 
         @Override
         public Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters) {

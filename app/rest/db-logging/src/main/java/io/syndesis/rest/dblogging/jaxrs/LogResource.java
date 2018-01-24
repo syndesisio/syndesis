@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -60,10 +59,10 @@ import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.removeString;
 public class LogResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogsController.class);
+    private static final Set<String> EVENT_FIELDS_SKIP_LIST = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "at", "logts")));
 
     private final JsonDB jsondb;
 
-    Set<String> EVENT_FIELDS_SKIP_LIST = new HashSet<>(Arrays.asList("id", "at", "logts"));
 
     public LogResource(final JsonDB jsondb) {
         this.jsondb = jsondb;
@@ -75,13 +74,14 @@ public class LogResource {
     public List<Exchange> getLogs(
         @PathParam("integrationId") String integrationId,
         @QueryParam("from") String from,
-        @QueryParam("limit") Integer limit
+        @QueryParam("limit") Integer requestedLimit
     ) throws IOException {
 
         String path = "/logs/exchanges/" + integrationId;
 
-        if( limit == null ) {
-            limit = 10; // default to 10 exchanges per query//
+        int limit = 10;
+        if( requestedLimit != null ) {
+            limit = requestedLimit;
         }
         if( limit > 1000 ) {
             limit = 1000; // max out to 1000 per request.
@@ -96,8 +96,7 @@ public class LogResource {
             return new ArrayList<>();
         }
 
-        List<Exchange> result = toAPIAPITxLogEntryList(Json.mapper().readTree(data));
-        return result;
+        return toAPIAPITxLogEntryList(Json.mapper().readTree(data));
     }
 
     private List<Exchange> toAPIAPITxLogEntryList(JsonNode from) {
@@ -119,7 +118,7 @@ public class LogResource {
                 ExchangeStep toStep = new ExchangeStep();
                 toStep.setId(removeString(fromStepEvents, "id"));
                 fromStepEvents.remove("at");
-                
+
                 toStep.setEvents(toList(fromStepEvents, fromStepEvent -> {
 
                     Long at = getLong(fromStepEvent, "at");

@@ -62,12 +62,14 @@ public class KubernetesSupport {
     protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime, Executor executor) throws IOException {
         try {
             PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(podName);
-            String url = pod.getResourceUrl().toString() + "/log?pretty=false&follow=true&timestamps=true";
+            StringBuilder url = new StringBuilder()
+                .append(pod.getResourceUrl().toString())
+                .append("/log?pretty=false&follow=true&timestamps=true");
             if (sinceTime != null) {
-                url += "&sinceTime=" + URLEncoder.encode(sinceTime, "UTF-8");
+                url.append("&sinceTime=")
+                   .append("&sinceTime=");
             }
-            // URL url = new URL(URLUtils.join());
-            Request request = new Request.Builder().url(new URL(url)).get().build();
+            Request request = new Request.Builder().url(new URL(url.toString())).get().build();
             OkHttpClient clone = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
             clone.newCall(request).enqueue(new Callback() {
                 @Override
@@ -92,7 +94,7 @@ public class KubernetesSupport {
                     });
                 }
             });
-        } catch (Exception t) {
+        } catch (RuntimeException t) {
             throw new IOException("Unexpected Error", t);
         }
     }

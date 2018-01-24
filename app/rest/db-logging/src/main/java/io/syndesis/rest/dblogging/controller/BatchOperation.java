@@ -16,11 +16,11 @@
 package io.syndesis.rest.dblogging.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by chirino on 1/17/18.
  */
 public interface BatchOperation {
-    void apply(HashMap<String, Object> batch) throws IOException;
+    void apply(Map<String, Object> batch) throws IOException;
 }

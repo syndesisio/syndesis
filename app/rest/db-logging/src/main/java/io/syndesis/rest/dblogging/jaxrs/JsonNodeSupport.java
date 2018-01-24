@@ -27,6 +27,9 @@ import java.util.Set;
  */
 public class JsonNodeSupport {
 
+    private JsonNodeSupport(){
+    }
+
     public static String getString(JsonNode json, String field) {
         JsonNode value = json.get(field);
         if( value==null ) {

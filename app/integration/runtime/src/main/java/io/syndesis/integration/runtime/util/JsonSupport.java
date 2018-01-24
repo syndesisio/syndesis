@@ -26,6 +26,9 @@ import java.io.StringWriter;
  */
 public class JsonSupport {
 
+    private JsonSupport(){
+    }
+
     public static String toJsonObject(Object... fields) {
         try {
             StringWriter w = new StringWriter();

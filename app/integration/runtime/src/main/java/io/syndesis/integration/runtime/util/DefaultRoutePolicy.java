@@ -26,33 +26,41 @@ public class DefaultRoutePolicy implements RoutePolicy {
 
     @Override
     public void onInit(Route route) {
+        // empty
     }
 
     @Override
     public void onRemove(Route route) {
+        // empty
     }
 
     @Override
     public void onStart(Route route) {
+        // empty
     }
 
     @Override
     public void onStop(Route route) {
+        // empty
     }
 
     @Override
     public void onSuspend(Route route) {
+        // empty
     }
 
     @Override
     public void onResume(Route route) {
+        // empty
     }
 
     @Override
     public void onExchangeBegin(Route route, Exchange exchange) {
+        // empty
     }
 
     @Override
     public void onExchangeDone(Route route, Exchange exchange) {
+        // empty
     }
 }
