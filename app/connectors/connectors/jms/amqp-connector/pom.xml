@@ -61,6 +61,18 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-amqp</artifactId>
       <version>${camel.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-jms_2.0_spec</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- include JMS 1.1. spec to avoid clash with AMQ connector -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jms_1.1_spec</artifactId>
+      <version>1.1.1</version>
     </dependency>
 
     <!-- Testing -->
