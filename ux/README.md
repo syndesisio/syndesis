@@ -5,6 +5,7 @@ Access UX design resource and documentation for Syndesis.
 
 ## Navigation
 * ### [Integration Breadcrumb](designs/navigation/navigation_breadcrumb_integration.md)
+* ### [Support Page](designs/support-page/support-page.md)
 
 
 ## First Time User Experience (FTUE)
