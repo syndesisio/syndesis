@@ -58,6 +58,11 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>db-logging</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>verifier</artifactId>
     </dependency>
     <dependency>

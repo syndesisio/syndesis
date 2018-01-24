@@ -1,0 +1,97 @@
+{
+  "logs" : {
+    "exchanges" : {
+      "my-integration" : {
+        "-L38cZ51d1L876xV4vEF" : {
+          "failed" : false,
+          "logts" : "2018-01-12T21:22:02.068338027Z",
+          "pod" : "test-pod-x23x",
+          "status" : "done",
+          "steps" : {
+            "s2" : {
+              "-L38cZ5Jd1L876xV4vEG" : {
+                "duration" : 582977,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              },
+              "-L38cZ5Jd1L876xV4vEH" : {
+                "logts" : "2018-01-12T21:22:02.068338027Z",
+                "message" : "Hello World"
+              }
+            },
+            "s3" : {
+              "-L38cZ5Nd1L876xV4vEI" : {
+                "duration" : 18087,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              }
+            },
+            "s4" : {
+              "-L38cZ5Od1L876xV4vEJ" : {
+                "duration" : 494949,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              }
+            }
+          },
+          "ver" : "3"
+        },
+        "-L38cZ5Pd1L876xV4vEL" : {
+          "failed" : true,
+          "logts" : "2018-01-12T21:22:02.068338027Z",
+          "pod" : "test-pod-x23x",
+          "status" : "done",
+          "steps" : {
+            "s2" : {
+              "-L38cZ5Pd1L876xV4vEM" : {
+                "duration" : 213613,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              },
+              "-L38cZ5Pd1L876xV4vEN" : {
+                "logts" : "2018-01-12T21:22:02.068338027Z",
+                "message" : "Hello World"
+              }
+            }
+          },
+          "ver" : "3"
+        },
+        "-L38cZ5Ud1L876xV4vEQ" : {
+          "failed" : false,
+          "logts" : "2018-01-12T21:22:02.068338027Z",
+          "pod" : "test-pod-x23x",
+          "status" : "done",
+          "steps" : {
+            "s2" : {
+              "-L38cZ5Vd1L876xV4vER" : {
+                "duration" : 247312,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              },
+              "-L38cZ5Vd1L876xV4vES" : {
+                "logts" : "2018-01-12T21:22:02.068338027Z",
+                "message" : "Hello World"
+              }
+            },
+            "s3" : {
+              "-L38cZ5Vd1L876xV4vET" : {
+                "duration" : 4242,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              }
+            },
+            "s4" : {
+              "-L38cZ5Vd1L876xV4vEU" : {
+                "duration" : 70724,
+                "logts" : "2018-01-12T21:22:02.068338027Z"
+              }
+            }
+          },
+          "ver" : "3"
+        }
+      }
+    },
+    "integrations" : {
+      "my-integration" : true
+    },
+    "pods" : {
+      "test-pod-x23x" : {
+        "time" : "2018-01-12T21:22:02.068338027Z"
+      }
+    }
+  }
+}

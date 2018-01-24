@@ -24,6 +24,8 @@ endpoints:
 controllers:
   integration:
     enabled: 'noop'
+  dblogging:
+    retention: '1000000000 days'
 
 spring:
   datasource:

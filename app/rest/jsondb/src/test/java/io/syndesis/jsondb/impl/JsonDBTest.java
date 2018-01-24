@@ -157,6 +157,45 @@ public class JsonDBTest {
     }
 
     @Test
+    public void testGetLimitDeeper() throws IOException {
+
+        jsondb.update("/test", mapper.writeValueAsString(map(
+            "user1/value", "test 1",
+            "user2/value", "test 2",
+            "user3/value", "test 3",
+            "user4/value", "test 4",
+            "user5/value", "test 5",
+            "user6/value", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().limit(3));
+        assertThat(json).isEqualTo("{\"user1\":{\"value\":\"test 1\"},\"user2\":{\"value\":\"test 2\"},\"user3\":{\"value\":\"test 3\"}}");
+    }
+
+    @Test
+    public void testGetOrder() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3"
+        )));
+
+        // Default order is ASC
+        String json = jsondb.getAsString("/test", new GetOptions());
+        assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\"}");
+
+        // Explicit ASC should give us the same.
+        json = jsondb.getAsString("/test", new GetOptions().order(GetOptions.Order.ASC));
+        assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\"}");
+
+        // DESC ord should reverse the output order.
+        json = jsondb.getAsString("/test", new GetOptions().order(GetOptions.Order.DESC));
+        assertThat(json).isEqualTo("{\"user3\":\"test 3\",\"user2\":\"test 2\",\"user1\":\"test 1\"}");
+    }
+
+
+    @Test
     public void testGetAfter() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(
@@ -170,6 +209,22 @@ public class JsonDBTest {
 
         String json = jsondb.getAsString("/test", new GetOptions().after("user3"));
         assertThat(json).isEqualTo("{\"user4\":\"test 4\",\"user5\":\"test 5\",\"user6\":\"test 6\"}");
+    }
+
+    @Test
+    public void testGetAfterWithDESC() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().after("user3").order(GetOptions.Order.DESC));
+        assertThat(json).isEqualTo("{\"user2\":\"test 2\",\"user1\":\"test 1\"}");
     }
 
     @Test

@@ -22,11 +22,17 @@ import io.syndesis.model.ToJson;
  */
 public class GetOptions implements ToJson, Cloneable {
 
+    public enum Order {
+        ASC,
+        DESC
+    };
+
     private boolean prettyPrint;
     private Integer depth;
     private String callback;
     private String startingAt;
     private Integer limit;
+    private Order order;
 
     public boolean prettyPrint() {
         return prettyPrint;
@@ -75,6 +81,15 @@ public class GetOptions implements ToJson, Cloneable {
 
     public GetOptions limit(Integer limit) {
         this.limit = limit;
+        return this;
+    }
+
+    public Order order() {
+        return order;
+    }
+
+    public GetOptions order(Order order) {
+        this.order = order;
         return this;
     }
 }

@@ -16,6 +16,7 @@ import { Integration, Step } from '@syndesis/ui/integration';
 import { IntegrationViewBase } from '../components';
 import { NotificationType } from 'patternfly-ng';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 @Component({
   selector: 'syndesis-integration-detail-page',
@@ -29,6 +30,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   integration: Integration;
   readonly loading$: Observable<boolean>;
   routeSubscription: Subscription;
+  loggingEnabled = false;
 
   constructor(
     public store: IntegrationStore,
@@ -39,6 +41,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
+    private config: ConfigService
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.integration$ = this.store.resource;
@@ -93,6 +96,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   ngOnInit() {
+    this.loggingEnabled = this.config.getSettings('features', 'logging', false);
     this.integrationSubscription = this.integration$.subscribe(i => {
       this.integration = i;
     });
