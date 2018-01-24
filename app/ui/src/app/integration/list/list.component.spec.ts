@@ -11,7 +11,7 @@ import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { IntegrationListComponent } from './list.component';
-import { IntegrationStatusComponent } from '../components/status.component';
+import { IntegrationStatusComponent } from './status.component';
 import { StoreModule } from '../../store/store.module';
 
 xdescribe('IntegrationsListComponent', () => {

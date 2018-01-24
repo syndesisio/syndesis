@@ -5,17 +5,17 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationSupportModule } from '../integration-support.module';
-import { IntegrationStatusComponent } from '../components';
+import { IntegrationStatusComponent } from './status.component';
 import { IntegrationListComponent } from './list.component';
 
 @NgModule({
   imports: [
     ActionModule,
     CommonModule,
+    TooltipModule,
     ListModule,
     SyndesisCommonModule,
-    IntegrationSupportModule,
-    TooltipModule
+    IntegrationSupportModule
   ],
   declarations: [IntegrationStatusComponent, IntegrationListComponent],
   exports: [IntegrationListComponent, IntegrationStatusComponent]

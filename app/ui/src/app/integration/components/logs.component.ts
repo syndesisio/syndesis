@@ -2,8 +2,9 @@ import { Component, Input } from '@angular/core';
 
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Observable } from 'rxjs/Observable';
-import { Integration, IntegrationSupportService } from '@syndesis/ui/integration';
 import { Exchange } from '@syndesis/ui/model';
+import { Integration } from '../integration.model';
+import { IntegrationSupportService } from '../integration-support.service';
 
 @Component({
   selector: 'syndesis-integration-logs',
