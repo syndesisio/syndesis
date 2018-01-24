@@ -60,7 +60,7 @@ public class ComponentProxySplitTokenizeTest {
         final String[] result = values.split(",");
 
         mock.expectedMessageCount(result.length);
-        mock.expectedBodiesReceived(result);
+        mock.expectedBodiesReceived((Object[])result);
 
         template.sendBody("direct:start", values);
 

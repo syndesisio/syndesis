@@ -70,10 +70,11 @@ public class SplitStepHandlerJsonTest extends StepHandlerTestSupport {
 
             final ProducerTemplate template = context.createProducerTemplate();
             final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
-            final List<String> body = Arrays.asList("a","b","c");
+            final String[] expected = { "a","b","c" };
+            final List<String> body = Arrays.asList(expected);
 
             result.expectedMessageCount(3);
-            result.expectedBodiesReceived(body);
+            result.expectedBodiesReceived((Object[])expected);
 
             template.sendBody("direct:expression", body);
 

@@ -61,7 +61,7 @@ public class ComponentProxySplitCollectionTest {
         final String[] values = { "a","b","c" };
 
         mock.expectedMessageCount(values.length);
-        mock.expectedBodiesReceived(values);
+        mock.expectedBodiesReceived((Object[])values);
 
         template.sendBody("direct:start", Arrays.asList(values));
 
