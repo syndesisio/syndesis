@@ -13,8 +13,8 @@ import {
   NotificationType
 } from 'patternfly-ng';
 
-import { Integrations, Integration } from '@syndesis/ui/integration';
 import { IntegrationSupportService } from '../integration-support.service';
+import { Integrations, Integration } from '@syndesis/ui/integration';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
@@ -42,7 +42,7 @@ export class IntegrationListComponent extends IntegrationViewBase implements OnI
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
-    integrationSupportService: IntegrationSupportService,
+    public integrationSupportService: IntegrationSupportService,
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
   }

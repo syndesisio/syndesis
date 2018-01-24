@@ -20,7 +20,7 @@ export class IntegrationViewBase {
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
-    private integrationSupportService: IntegrationSupportService,
+    public integrationSupportService: IntegrationSupportService,
   ) {}
 
   canEdit = int => int.currentStatus !== 'Undeployed';
@@ -44,7 +44,7 @@ export class IntegrationViewBase {
         return this.integrationSupportService
           .exportIntegration(integration.id).toPromise()
           .then(value => {
-            saveAs(value.blob(), integration.name + '-export.zip');
+            saveAs(value, integration.name + '-export.zip');
           });
       case 'activate':
         header = 'Integration is activating';
