@@ -89,11 +89,11 @@ export class IntegrationSupportService {
       .getRestangularUrl();
     return this.http.get(url);
   }
-  downloadSupportData(configuredProperties: any): Observable<Response>  {
+  downloadSupportData(data: Array<any>): Observable<Response>  {
     const url = this.supportService
       .one('downloadSupportZip')
       .getRestangularUrl();
-    return this.http.post(url, configuredProperties, {
+    return this.http.post(url, data, {
       method: RequestMethod.Post,
       responseType: ResponseContentType.Blob
   });

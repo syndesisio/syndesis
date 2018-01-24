@@ -133,25 +133,19 @@ export class SupportComponent {
   //       this.formGroup = this.formService.createFormGroup(this.formModel);
   //     });
   // }
-
-  // download() {
-  //   this.buildData();
-  // }
   
-  // buildData(data: any = {}) {
-  //   const formValue = this.formGroup ? this.formGroup.value : {};
-  //   console.log(formValue);
-  //   this.integrationSupportService
-  //   .downloadSupportData(formValue)
-  //   .map(res => res.blob())
-  //   .subscribe(response => {
-  //     fileSaver.saveAs(response, "syndesis.zip");
-  //   },
-  //   error => console.log("Error downloading the file."),
-  //   ()    => this.close('supportPage')
-  // );
-  //   return {  };
-  // }
+  buildData(data: Array<any>) {
+    console.log(data);
+    this.integrationSupportService
+      .downloadSupportData(data)
+      .map(res => res.blob())
+      .subscribe(response => {
+        fileSaver.saveAs(response, "syndesis.zip");
+      },
+      error => console.log("Error downloading the file.")
+    );
+    return {  };
+  }
 
   // Handles events when the user interacts with the toolbar filter
   filterChanged($event) {
@@ -178,7 +172,7 @@ export class SupportComponent {
     } else {
       chosen = this.items.filter(x => x.selected === true);
     }
-    console.log(chosen);
+    this.buildData(chosen);
   }
 
   deselectAll() {
