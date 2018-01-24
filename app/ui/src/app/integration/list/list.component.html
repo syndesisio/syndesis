@@ -52,7 +52,7 @@
                  let-integration="item"
                  let-index="index">
       <pfng-action class="list-pf-actions"
-                   [config]="getActionConfig(integration)"
+                   [config]="actionConfigs[integration.id]"
                    (onActionSelect)="requestAction($event.id, integration)">
       </pfng-action>
     </ng-template>
