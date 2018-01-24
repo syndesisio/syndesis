@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
-import { RestangularModule } from 'ngx-restangular';
+import { integrationSupportEndpoints } from './integration-support.api';
 import { IntegrationSupportService } from './integration-support.service';
+import { ApiModule } from '@syndesis/ui/api';
 
 @NgModule({
   imports: [
-    HttpModule
+    ApiModule.forChild(integrationSupportEndpoints)
   ],
   providers: [
     IntegrationSupportService

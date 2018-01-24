@@ -1,8 +1,8 @@
 <syndesis-modal [title]="'Confirm ' + getActionTitle()"
                 [message]="'Are you sure you would like to ' + getAction() + ' the \'' + selectedIntegration?.name + '\' integration?'">
 </syndesis-modal>
-<syndesis-loading [loading]="i && loading | async">
-  <div *ngIf="i"
+<syndesis-loading [loading]="loading$ | async">
+  <div *ngIf="integration$ | async; let integration"
        class="row integration-detail">
     <div class=" toolbar-pf toolbar">
       <div class="col-sm-12">
@@ -32,9 +32,9 @@
     </div>
     <div class="col-md-12 details">
       <h1>
-        <syndesis-editable-text [value]="i.name"
+        <syndesis-editable-text [value]="integration.name"
                                 [validationFn]="validateName"
-                                (onSave)="onAttributeUpdated('name', $event)"></syndesis-editable-text>
+                                (onSave)="attributeUpdated('name', $event, integration)"></syndesis-editable-text>
       </h1>
       <dl class="dl-horizontal">
         <dt>
@@ -44,7 +44,7 @@
           <p>
             <ng-template ngFor
                          let-step
-                         [ngForOf]="i.steps"
+                         [ngForOf]="integration.steps"
                          let-index="index">
               <div *ngIf="step"
                    class="step-block inline-block text-center">
@@ -76,9 +76,9 @@
             </ng-template>
           </p>
           <p>
-            <syndesis-editable-textarea [value]="i.description"
+            <syndesis-editable-textarea [value]="integration.description"
                                         placeholder="No description set..."
-                                        (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable-textarea>
+                                        (onSave)="attributeUpdated('description', $event, integration)"></syndesis-editable-textarea>
           </p>
         </dd>
       </dl>
@@ -86,7 +86,7 @@
       <dl class="dl-horizontal">
         <dt>Tags:</dt>
         <dd>
-          <syndesis-editable-tags [value]="i.tags"
+          <syndesis-editable-tags [value]="integration.tags"
                                   placeholder="No tags set..."
                                   (onSave)="onAttributeUpdated('tags', $event)"></syndesis-editable-tags>
 
@@ -99,85 +99,28 @@
         </dt>
         <dd>
           <p>
-            <syndesis-integration-status [integration]="i"></syndesis-integration-status>
+            <syndesis-integration-status [integration]="integration"></syndesis-integration-status>
           </p>
           <p>
-            <button *ngIf="canDeactivate(i)"
+            <button *ngIf="canDeactivate(integration)"
                     class="btn btn-default"
-                    (click)="requestAction('deactivate', i)">Stop Integration</button>
-            <button *ngIf="canActivate(i)"
+                    (click)="requestAction('deactivate', integration)">Stop Integration</button>
+            <button *ngIf="canActivate(integration)"
                     class="btn btn-default"
-                    (click)="requestAction('activate', i)">Start Integration</button>
+                    (click)="requestAction('activate', integration)">Start Integration</button>
             <!--
             <button class="btn btn-default">Undeploy Integration</button>
             -->
           </p>
         </dd>
       </dl>
-      <!--
-      <dl class="dl-horizontal">
-        <dt>
-          History:
-        </dt>
-        <dd>
-          <syndesis-loading [loading]="!history">
-            <table class="table table-striped table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>Version</th>
-                  <th>Start date/time</th>
-                  <th>Run Length</th>
-                  <th>Uses</th>
-                  <th>Status</th>
-                  <th width="25%">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-template ngFor
-                             let-row
-                             [ngForOf]="history">
-                  <tr>
-                    <td>
-                      <ng-container *ngIf="row.version === 'Draft'">
-                        <i>Draft</i>
-                      </ng-container>
-                      <ng-container *ngIf="row.version !== 'Draft'">
-                        {{ row.version }}
-                      </ng-container>
-                    </td>
-                    <td>{{ row.startTime | date:"M/d/y H:m:s" }}</td>
-                    <td>
-                      <ng-container *ngIf="row.runLength || row.runLength === 0">
-                        {{ row.runLength }}s
-                      </ng-container>
-                    </td>
-                    <td>{{ row.uses }}</td>
-                    <td>
-                      <span *ngFor="let status of row.status"
-                            [class]="status.class">
-                          <i *ngIf="status.icon" [class]="status.icon"></i>
-                          {{ status.label }}
-                        </span>
-                    </td>
-                    <td>
-                      <button class="btn btn-default"
-                              *ngFor="let action of row.actions" (click)="onRevisionAction(action, row.revision)">{{action.label}}</button>
-                    </td>
-                  </tr>
-                </ng-template>
-              </tbody>
-            </table>
-          </syndesis-loading>
-        </dd>
-      </dl>
-      -->
       <dl class="dl-horizontal">
         <dt>
         </dt>
         <dd>
-          <button *ngIf="canDelete(i)"
+          <button *ngIf="canDelete(integration)"
                   class="btn btn-danger"
-                  (click)="requestAction('delete', i)">Delete Integration</button>
+                  (click)="requestAction('delete', integration)">Delete Integration</button>
         </dd>
       </dl>
 

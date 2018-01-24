@@ -24,109 +24,11 @@ import { ModalService, NotificationService } from '@syndesis/ui/common';
 })
 export class IntegrationDetailComponent extends IntegrationViewBase
   implements OnInit, OnDestroy {
-  integration: Observable<Integration>;
+  integration$: Observable<Integration>;
   integrationSubscription: Subscription;
-  i: Integration;
-  readonly loading: Observable<boolean>;
+  integration: Integration;
+  readonly loading$: Observable<boolean>;
   routeSubscription: Subscription;
-  history = undefined;
-  tableTestData = [
-    {
-      version: 'Draft',
-      startTime: new Date(),
-      runLength: '',
-      uses: undefined,
-      status: undefined,
-      actions: [
-        {
-          label: 'Edit Draft'
-        }
-      ]
-    },
-    {
-      version: 'V. 1.4',
-      startTime: new Date(),
-      runLength: 8,
-      uses: 10,
-      status: [
-        {
-          icon: 'pf-icon pficon-ok',
-          class: '',
-          label: 'Success'
-        },
-        {
-          icon: undefined,
-          class: 'label label-info pull-right',
-          label: 'Running'
-        }
-      ],
-      actions: [
-        {
-          label: 'Duplicate'
-        }
-      ]
-    },
-    {
-      version: 'V. 1.3',
-      startTime: new Date(),
-      runLength: 12,
-      uses: 23,
-      status: [
-        {
-          icon: 'pf-icon pficon-ok',
-          label: 'Success'
-        }
-      ],
-      actions: [
-        {
-          label: 'Deploy'
-        },
-        {
-          label: 'Duplicate'
-        }
-      ]
-    },
-    {
-      version: 'V. 1.2',
-      startTime: new Date(),
-      runLength: 5,
-      uses: 7,
-      status: [
-        {
-          icon: 'pf-icon pficon-ok',
-          label: 'Success'
-        }
-      ],
-      actions: [
-        {
-          label: 'Deploy'
-        },
-        {
-          label: 'Duplicate'
-        }
-      ]
-    },
-    {
-      version: 'V. 1.1',
-      startTime: new Date(),
-      runLength: 22,
-      uses: 3,
-      status: [
-        {
-          icon: 'pf-icon pficon-error-circle-o',
-          label: 'Failure'
-        }
-      ],
-      actions: [
-        {
-          label: 'Deploy'
-        },
-        {
-          label: 'Duplicate'
-        }
-      ]
-    }
-  ];
 
   constructor(
     public store: IntegrationStore,
@@ -136,11 +38,11 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     public notificationService: NotificationService,
     public modalService: ModalService,
     public application: ApplicationRef,
-    integrationSupportService: IntegrationSupportService
+    public integrationSupportService: IntegrationSupportService,
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
-    this.integration = this.store.resource;
-    this.loading = this.store.loading;
+    this.integration$ = this.store.resource;
+    this.loading$ = this.store.loading;
   }
 
   viewDetails(step: Step) {
@@ -153,7 +55,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     if (index === 0) {
       return 'start';
     }
-    if (index === this.i.steps.length - 1) {
+    if (index === this.integration.steps.length - 1) {
       return 'finish';
     }
     return '';
@@ -165,31 +67,10 @@ export class IntegrationDetailComponent extends IntegrationViewBase
       .then(_ => this.router.navigate(['/integrations']));
   }
 
-  onNameUpdated(name: string) {
-    this.i.name = name;
+  attributeUpdated(attr: string, value: string) {
+    this.integration[attr] = value;
     this.store
-      .update(this.i)
-      .toPromise()
-      .then((update: Integration) => {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Update Successful',
-          message: 'Updated description'
-        });
-      })
-      .catch(reason => {
-        this.notificationService.popNotification({
-          type: NotificationType.WARNING,
-          header: 'Update Failed',
-          message: `Failed to update description: ${reason}`
-        });
-      });
-  }
-
-  onAttributeUpdated(attr: string, value: string) {
-    this.i[attr] = value;
-    this.store
-      .update(this.i)
+      .update(this.integration)
       .toPromise()
       .then((update: Integration) => {
         this.notificationService.popNotification({
@@ -207,181 +88,17 @@ export class IntegrationDetailComponent extends IntegrationViewBase
       });
   }
 
-  duplicateRevision(revision) {
-    const integration = JSON.parse(JSON.stringify(this.i));
-    delete integration.id;
-    // update these fields
-    integration.name = integration.name + ' (copy)';
-    integration.steps = revision.spec.steps;
-    // initialize these fields
-    integration.desiredStatus = 'Draft';
-    integration.currentStatus = undefined;
-    integration.createdDate = undefined;
-    integration.lastUpdated = undefined;
-    integration.revisions = [];
-    this.notificationService.popNotification({
-      type: NotificationType.INFO,
-      header: 'Duplicating revision',
-      message: `Duplicating revision ${revision.version}`
-    });
-    const sub = this.store.create(integration).subscribe(
-      created => {
-        this.router.navigate(['/integrations', created.id]);
-        sub.unsubscribe();
-      },
-      resp => {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to duplicate revision',
-          message:
-            resp.length !== undefined ? resp.data[0].message : resp.data.message
-        });
-        sub.unsubscribe();
-      }
-    );
-  }
-
-  deployRevision(revision) {
-    const integration = JSON.parse(JSON.stringify(this.i));
-    integration.steps = revision.spec.steps;
-    this.notificationService.popNotification({
-      type: NotificationType.INFO,
-      header: 'Deploying revision',
-      message: `Deploying revision ${revision.version}`
-    });
-    const sub = this.store.update(integration).subscribe(
-      updated => {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Deployment successful',
-          message: `Deployed revision ${revision.version}`
-        });
-        sub.unsubscribe();
-      },
-      resp => {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Failed to deploy revision',
-          message:
-            resp.length !== undefined ? resp.data[0].message : resp.data.message
-        });
-        sub.unsubscribe();
-      }
-    );
-  }
-
-  onRevisionAction(action: any, revision): void {
-    switch (action.action) {
-      case 'duplicate':
-        this.duplicateRevision(revision);
-        break;
-      case 'deploy':
-        this.deployRevision(revision);
-        break;
-      default:
-        break;
-    }
-  }
-
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
   }
 
   ngOnInit() {
-    this.integrationSubscription = this.integration.subscribe(
-      (i: Integration) => {
-        if (!i || !i.id) {
-          return;
-        }
-        this.i = i;
-        this.history = [];
-        if (i.revisions) {
-          this.history = i.revisions
-            .sort((a, b) => {
-              return b.version - a.version;
-            })
-            .map(rev => {
-              const status = {
-                icon: undefined,
-                class: '',
-                label: ''
-              };
-              // TODO this is kinda fake data
-              switch (rev.currentState) {
-                case 'Draft':
-                case 'Pending':
-                case 'Inactive':
-                case 'Undeployed':
-                  break;
-                case 'Active':
-                  (status.icon = 'pf-icon pficon-ok'),
-                    (status.label = 'Success');
-                  break;
-                case 'Error':
-                  status.icon = 'pf-icon pficon-error-circle-o';
-                  status.label = 'Failure';
-                  break;
-                default:
-                  break;
-              }
-              const row = {
-                revision: rev,
-                version: rev.version,
-                // TODO this is totally fake data
-                startTime: Date.parse(rev['startTime'] || '2017/9/15'),
-                uses: rev['uses'] || Math.floor(Math.random() * 10),
-                runLength: rev['runLength'] || Math.floor(Math.random() * 300),
-                status: [status],
-                actions: [
-                  /*
-                  {
-                    label: 'Duplicate',
-                    action: 'duplicate',
-                  },
-                  */
-                ]
-              };
-              let isDeployed = false;
-              if (row.version === i.deployedRevisionId) {
-                isDeployed = true;
-                const state = {
-                  icon: undefined,
-                  class: '',
-                  label: rev.currentState
-                };
-                switch (rev.currentState) {
-                  case 'Draft':
-                  case 'Pending':
-                  case 'Inactive':
-                  case 'Undeployed':
-                    state.class = 'label label-info pull-right';
-                    break;
-                  case 'Active':
-                    state.class = 'label label-success pull-right';
-                    break;
-                  case 'Error':
-                    state.class = 'label label-warning pull-right';
-                    break;
-                  default:
-                    break;
-                }
-                row.status.push(state);
-              }
-              if (!isDeployed && rev.spec && rev.spec.steps) {
-                row.actions.push({
-                  label: 'Deploy',
-                  action: 'deploy'
-                });
-              }
-              return row;
-            });
-        }
-      }
-    );
-    this.routeSubscription = this.route.params
-      .pluck<Params, string>('integrationId')
-      .map((id: string) => this.store.load(id))
-      .subscribe();
+    this.integrationSubscription = this.integration$.subscribe(i => {
+      this.integration = i;
+    });
+    this.routeSubscription = this.route.paramMap
+      .first( params => params.has('integrationId'))
+      .subscribe(paramMap => this.store.load(paramMap.get('integrationId')));
   }
 
   ngOnDestroy() {
@@ -390,6 +107,6 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   exportIntegration() {
-    super.requestAction('export', this.i);
+    super.requestAction('export', this.integration);
   }
 }

@@ -179,11 +179,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
         this.configuredPropertiesForMetadataCall()
       )
       .toPromise()
-      .then(response => {
-        log.debug('Response: ' + JSON.stringify(response, undefined, 2));
-        const descriptor: any = response[ '_body' ]
-          ? JSON.parse(response[ '_body' ])
-          : undefined;
+      .then(descriptor => {
         this.initForm(position, page, descriptor);
       })
       .catch(response => {

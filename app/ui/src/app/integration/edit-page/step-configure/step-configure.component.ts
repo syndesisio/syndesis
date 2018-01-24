@@ -156,11 +156,7 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
         step.configuredProperties || {}
         )
         .toPromise()
-        .then(response => {
-          log.debug('Response: ' + JSON.stringify(response, undefined, 2));
-          const definition: any = response['_body']
-            ? JSON.parse(response['_body'])
-            : undefined;
+        .then(definition => {
           if (output) {
             this.outputDataShape = definition.outputDataShape;
           } else {

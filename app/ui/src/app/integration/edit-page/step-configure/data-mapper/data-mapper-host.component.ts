@@ -111,7 +111,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
           this.addInitializationTask();
           this.support.requestJavaInspection(connectorId, type).toPromise().then(
             data => {
-              const inspection: string = data['_body'];
+              const inspection: string = data['_body'] || data;
               log.infoc( () => `Precomputed java document found for ${type}`, category);
               log.debugc(() => inspection, category);
               docDef.initCfg.inspectionResultContents = inspection;
