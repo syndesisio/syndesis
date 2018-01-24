@@ -51,7 +51,6 @@ import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.icon.Icon;
-import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
