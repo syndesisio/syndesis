@@ -110,31 +110,12 @@ export class SupportComponent {
       .getPods()
       .toPromise()
       .then((resp: any) => {
-        const body = JSON.parse(resp['_body']);
-        console.log('++++++++++++++++++++' + body );
+        const body = JSON.parse(resp['_body']); 
+        return body;
       });
   }
-
-
-
-  // loadForm() {
-  //   //this.formConfig = SUPPORT_FORM_CONFIG;
-  //   this.integrationSupportService
-  //     .getSupportFormConfiguration()
-  //     .toPromise()
-  //     .then((resp: any) => {
-  //       this.loading = false;
-  //       this.formConfig = JSON.parse(resp['_body']);
-  //       this.formModel = this.formFactory.createFormModel( this.formConfig, {} );
-  //       // eventually customize form
-  //       // this.formModel
-  //       // .filter(model => model instanceof DynamicInputModel)
-  //       // .forEach(model => ((<DynamicInputModel>model).readOnly = readOnly));
-  //       this.formGroup = this.formService.createFormGroup(this.formModel);
-  //     });
-  // }
   
-  buildData(data: Array<any>) {
+  buildData(data: any = {}) {
     console.log(data);
     this.integrationSupportService
       .downloadSupportData(data)
@@ -166,13 +147,17 @@ export class SupportComponent {
   }
 
   onSubmit() {
+    let pods = this.getPods();
+    console.log("pods: " + pods);
     let chosen = [];
     if(this.allLogsSelected) {
       chosen = this.items;
     } else {
       chosen = this.items.filter(x => x.selected === true);
     }
-    this.buildData(chosen);
+    let input = {};
+    chosen.forEach(el => input[el.name] = true);
+    this.buildData(input);
   }
 
   deselectAll() {

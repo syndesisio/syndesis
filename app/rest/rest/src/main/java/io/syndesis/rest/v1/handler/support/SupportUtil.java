@@ -101,44 +101,42 @@ public class SupportUtil {
 
         try ( ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));) {
             configurationMap.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).forEach(integrationName -> {
-                        switch(integrationName){
-                            case "platformLogs":
-                                Stream.of("syndesis-atlasmap","syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier").forEach(componentName -> {
-                                    getComponentLogs(componentName).ifPresent((Reader reader) -> {
+                switch(integrationName){
+                    case "platformLogs":
+                        Stream.of("syndesis-atlasmap","syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier").forEach(componentName -> {
+                            getComponentLogs(componentName).ifPresent((Reader reader) -> {
+                                try {
+                                    addEntryToZip(componentName, reader, os);
+                                } catch (IOException e) {
+                                    LOG.error("Error preparing logs for: " + componentName, e);
+                                }
+                            });
+                        });
+                        break;
+                    default:
+                        getIntegrationLogs(integrationName).ifPresent((String fileContent) -> {
+                            try {
+                                addEntryToZip(integrationName, fileContent, os);
+                            } catch (IOException e) {
+                                LOG.error("Error preparing logs for: " + integrationName, e);
+                            }
+
+                            ListResult<Integration> list = integrationHandler.list(uriInfo);
+                            list.getItems().stream().filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-'))).forEach(
+                                integration -> {
+                                    integration.getId().ifPresent(id -> {
                                         try {
-                                            addEntryToZip(componentName, reader, os);
+                                            addSourceEntryToZip(integrationName, id, os);
                                         } catch (IOException e) {
-                                            LOG.error("Error preparing logs for: " + componentName, e);
+                                            e.printStackTrace();
                                         }
                                     });
-                                });
-                                break;
-                            default:
-                                getIntegrationLogs(integrationName).ifPresent((String fileContent) -> {
-                                    try {
-                                        addEntryToZip(integrationName, fileContent, os);
-                                    } catch (IOException e) {
-                                        LOG.error("Error preparing logs for: " + integrationName, e);
-                                    }
+                                }
+                            );
+                        });
 
-                                    ListResult<Integration> list = integrationHandler.list(uriInfo);
-                                    list.getItems().stream().filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-'))).forEach(
-                                            integration -> {
-                                                integration.getId().ifPresent(id -> {
-                                                    try {
-                                                        addSourceEntryToZip(integrationName, id, os);
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                });
-                                            }
-                                    );
-                                });
-
-                        }
-                    }
-
-            );
+                }
+            });
             LOG.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             LOG.error("Error producing Support zip file", e);
