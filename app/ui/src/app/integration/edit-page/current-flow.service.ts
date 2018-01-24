@@ -8,12 +8,19 @@ import {
   Connection
 } from '@syndesis/ui/model';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { key } from '@syndesis/ui/core/key';
 
 const category = getCategory('CurrentFlow');
 
 export class FlowEvent {
   kind: string;
   [name: string]: any;
+}
+
+function createStepWithId(): Step {
+  const step = createStep();
+  step.id = key();
+  return step;
 }
 
 @Injectable()
@@ -313,7 +320,7 @@ export class CurrentFlow {
             position === this.getFirstPosition() ||
             position === this.getLastPosition()
           ) {
-            this.steps[position] = createStep();
+            this.steps[position] = createStepWithId();
             this.steps[position].stepKind = 'endpoint';
           } else {
             this.steps.splice(position, 1);
@@ -325,7 +332,10 @@ export class CurrentFlow {
       case 'integration-set-step': {
         const position = +event['position'];
         const step = <Step>event['step'];
-        this.steps[position] = { ...createStep(), ...step };
+        this.steps[position] = { ...createStepWithId(), ...step };
+        if (this.steps[position].id == undefined) {
+          this.steps[position].id = key();
+        }
         this.maybeDoAction(event['onSave']);
         log.debugc(() => 'Set step at position: ' + position, category);
         break;
@@ -334,7 +344,7 @@ export class CurrentFlow {
         const position = +event['position'];
         const action = event['action'];
         const properties = this.stringifyValues(event['properties']);
-        const step = this.steps[position] || createStep();
+        const step = this.steps[position] || createStepWithId();
         step.configuredProperties = properties;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
@@ -352,7 +362,7 @@ export class CurrentFlow {
         const position = +event['position'];
         const action = event['action'];
         // TODO no step here should really raise an error
-        const step = this.steps[position] || createStep();
+        const step = this.steps[position] || createStepWithId();
         step.action = action;
         step.stepKind = 'endpoint';
         this.steps[position] = step;
@@ -366,7 +376,7 @@ export class CurrentFlow {
       case 'integration-set-connection': {
         const position = +event['position'];
         const connection = event['connection'];
-        const step = createStep();
+        const step = createStepWithId();
         step.stepKind = 'endpoint';
         step.connection = connection;
         this.steps[position] = step;
@@ -497,13 +507,13 @@ export class CurrentFlow {
 
   private insertStepAfter(position: number) {
     const target = position + 1;
-    const step = createStep();
+    const step = createStepWithId();
     this.steps.splice(target, 0, step);
   }
 
   private insertConnectionAfter(position: number) {
     const target = position + 1;
-    const step = createStep();
+    const step = createStepWithId();
     step.stepKind = 'endpoint';
     this.steps.splice(target, 0, step);
   }
