@@ -41,7 +41,7 @@ public final class IconGenerator {
 
     private static final Escaper ESCAPER = new PercentEscaper("", false);
 
-    private static final Map<String, String> LETTERS = loadLetters();
+    private static final Map<Character, String> LETTERS = loadLetters();
 
     private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory(
         resourceName -> new InputStreamReader(IconGenerator.class.getResourceAsStream(resourceName), StandardCharsets.UTF_8));
@@ -57,7 +57,7 @@ public final class IconGenerator {
         final String color = COLORS[(int) (Math.random() * COLORS.length)];
         data.put("color", color);
 
-        data.put("letter", LETTERS.get(name.substring(0, 1).toUpperCase()));
+        data.put("letter", LETTERS.get(Character.toUpperCase(name.charAt(0))));
 
         try (StringWriter icon = new StringWriter()) {
             mustache.execute(icon, data).flush();
@@ -74,19 +74,17 @@ public final class IconGenerator {
         return xml.replaceAll(">\\s*<", "><").replaceAll("\\s\\s+", " ").replaceAll(" />", "/>");
     }
 
-    private static Map<String, String> loadLetters() {
-        final Map<String, String> letters = new HashMap<>();
+    private static Map<Character, String> loadLetters() {
+        final Map<Character, String> letters = new HashMap<>();
 
-        for (int i = 'A'; i <= 'Z'; i++) {
-            final String letter = String.valueOf((char) i);
-
-            try (final InputStream letterStream = IconGenerator.class.getResourceAsStream("/icon-generator/" + letter + ".svg");
+        for (char ch = 'A'; ch <= 'Z'; ch++) {
+            try (final InputStream letterStream = IconGenerator.class.getResourceAsStream("/icon-generator/" + ch + ".svg");
                 final InputStreamReader letterReader = new InputStreamReader(letterStream, StandardCharsets.UTF_8)) {
                 final String path = CharStreams.toString(letterReader);
 
-                letters.put(letter, path);
+                letters.put(ch, path);
             } catch (final IOException e) {
-                throw new IllegalStateException("Unable to load SVG path for letter: " + letter, e);
+                throw new IllegalStateException("Unable to load SVG path for letter: " + ch, e);
             }
         }
 

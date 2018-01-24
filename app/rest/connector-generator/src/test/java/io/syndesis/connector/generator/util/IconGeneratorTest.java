@@ -30,6 +30,7 @@ public class IconGeneratorTest {
 
     @Test
     @Ignore("Generates test.html for visual inspection")
+    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     public void generateTestHtml() throws IOException {
         try (PrintStream out = new PrintStream(new FileOutputStream("test.html"))) {
             out.println("<html><body>");
