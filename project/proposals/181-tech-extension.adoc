@@ -418,7 +418,7 @@ A step would then look like:
             }
         ],
         "dependencies": [
-            "io.syndesis.integration-runtime:runtime-api:jar:1.2.1",
+            "io.syndesis.integration:runtime:jar:1.2.3",
             "org.apache.camel:camel-core:jar:2.20.0",
             "org.springframework.boot:spring-boot-starter:jar:1.5.8.RELEASE"
         ],

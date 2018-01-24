@@ -127,9 +127,6 @@
   } ],
   "dependencies" : [{
       "type": "MAVEN",
-      "id": "io.syndesis.integration-runtime:runtime-api:jar:1.2.1"
-    }, {
-      "type": "MAVEN",
       "id": "org.apache.camel:camel-core:jar:2.20.0"
     }, {
       "type": "MAVEN",

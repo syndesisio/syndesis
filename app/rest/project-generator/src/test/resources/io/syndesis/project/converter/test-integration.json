@@ -1,9 +1,0 @@
-{
-  "kind": "integration",
-  "data": {
-    "description": "This is an example of a Timed Pull to Post Integration",
-    "id": "2",
-    "name": "Timed Pull to Post Example",
-    "version": "1"
-  }
-}

@@ -23,12 +23,14 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfiguredProperties;
 import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
+import io.syndesis.model.WithMetadata;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
 
 @JsonDeserialize(using = StepDeserializer.class)
-public interface Step extends WithId<Step>, WithConfiguredProperties, WithDependencies, Serializable {
+public interface Step extends WithId<Step>, WithConfiguredProperties, WithDependencies, WithMetadata, Serializable {
+    String METADATA_STEP_INDEX = "step.index";
 
     @Override
     default Kind getKind() {
@@ -44,8 +46,4 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     String getStepKind();
 
     String getName();
-
-    class Builder extends ImmutableIntegration.Builder {
-        // allow access to ImmutableIntegration.Builder
-    }
 }

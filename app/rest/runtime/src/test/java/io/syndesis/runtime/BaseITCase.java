@@ -63,6 +63,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         DataStoreConfiguration.class,
         FileStoreConfiguration.class,
         ExtensionConfiguration.class,
+        IntegrationConfiguration.class,
         SyndesisCorsConfiguration.class
 })
 public abstract class BaseITCase {

@@ -49,12 +49,7 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>project-generator</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.integration-runtime</groupId>
-      <artifactId>model</artifactId>
+      <artifactId>integration-project-generator</artifactId>
     </dependency>
 
     <dependency>

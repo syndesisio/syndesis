@@ -29,6 +29,8 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.filter.ExpressionFilterStep;
+import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
@@ -169,8 +171,6 @@ public class IntegrationSupportTest {
     // ***************************
 
     private Integration newIntegration(Map<String, Object> resources, Step... steps) {
-
-
         return new Integration.Builder()
             .id("test-integration")
             .name("Test Integration")
@@ -179,16 +179,26 @@ public class IntegrationSupportTest {
     }
 
     private IntegrationDeployment newIntegrationRevision(Map<String, Object> resources, Step... steps) {
-        for (Step step : steps) {
+        for (int i = 0; i < steps.length; i++) {
+            final Step step = steps[i];
+
             step.getConnection().ifPresent(
                 resource -> resources.put(resource.getId().get(), resource)
             );
-            step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(
+            steps[i].getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(
                 resource -> resources.put(resource.getId().get(), resource)
             );
-            step.getExtension().ifPresent(
+            steps[i].getExtension().ifPresent(
                 resource -> resources.put(resource.getId().get(), resource)
             );
+
+            if (steps[i] instanceof SimpleStep) {
+                steps[i] = new SimpleStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            } else if (steps[i] instanceof ExpressionFilterStep) {
+                steps[i] = new ExpressionFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            } else if (steps[i] instanceof RuleFilterStep) {
+                steps[i] = new RuleFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            }
         }
 
         return new IntegrationDeployment.Builder()

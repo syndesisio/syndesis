@@ -15,24 +15,10 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.dao.icon.IconDataAccessObject;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.integration.support.Strings;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.icon.Icon;
-import io.syndesis.rest.v1.handler.BaseHandler;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okio.BufferedSink;
-import okio.Okio;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -40,13 +26,27 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.icon.Icon;
+import io.syndesis.rest.v1.handler.BaseHandler;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okio.BufferedSink;
+import okio.Okio;
+import org.apache.commons.lang3.StringUtils;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @Api(tags = {"connector", "connector-icon"})
 public final class ConnectorIconHandler extends BaseHandler {
@@ -160,7 +160,7 @@ public final class ConnectorIconHandler extends BaseHandler {
             };
 
             final Response.ResponseBuilder actualResponse = Response.ok(streamingOutput, contentType);
-            if (!Strings.isEmpty(contentLength)) {
+            if (!StringUtils.isEmpty(contentLength)) {
                 actualResponse.header(CONTENT_LENGTH, contentLength);
             }
 

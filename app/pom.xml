@@ -101,10 +101,10 @@
 	</properties>
 
 	<modules>
-		<module>runtime</module>
 		<module>core</module>
-		<module>connectors</module>
 		<module>extension</module>
+		<module>integration</module>
+		<module>connectors</module>
 		<module>rest</module>
 		<module>s2i</module>
 		<module>verifier</module>
@@ -469,6 +469,7 @@
 							<exclude>**/.gitkeep</exclude>
 							<exclude>**/*.webapp</exclude>
 							<exclude>**/browserconfig.xml</exclude>
+							<exclude>connectors/connectors/**/META-INF/syndesis/connector/verifier/*</exclude>
 							<exclude>connectors/connectors/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
 							<exclude>connectors/connectors/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
 							<exclude>rest/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
@@ -678,7 +679,19 @@
 
 			<dependency>
 				<groupId>io.syndesis</groupId>
-				<artifactId>runtime</artifactId>
+				<artifactId>integration-project-generator</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.syndesis</groupId>
+				<artifactId>integration-component-proxy</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.syndesis</groupId>
+				<artifactId>integration-runtime</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -735,13 +748,7 @@
 				<artifactId>connectors-catalog</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis.integration-runtime</groupId>
-				<artifactId>model</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
+			
 			<dependency>
 				<groupId>io.syndesis</groupId>
 				<artifactId>extension-annotation-processor</artifactId>

@@ -1,0 +1,64 @@
+{
+  "id" : "test-integration:1",
+  "version" : 1,
+  "integrationId" : "test-integration",
+  "name" : "Test Integration",
+  "spec" : {
+    "description" : "This is a test integration!",
+    "connections" : [ ],
+    "steps" : [ {
+      "action" : {
+        "descriptor" : {
+          "componentScheme" : "direct",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : {
+            "name" : "expression"
+          }
+        },
+        "tags" : [ ],
+        "actionType" : "connector",
+        "dependencies" : [ ]
+      },
+      "stepKind" : "endpoint",
+      "configuredProperties" : { },
+      "dependencies" : [ ],
+      "metadata" : {
+        "step.index" : "1"
+      }
+    }, {
+      "stepKind" : "split",
+      "configuredProperties" : { },
+      "dependencies" : [ ],
+      "metadata" : {
+        "step.index" : "2"
+      }
+    }, {
+      "action" : {
+        "descriptor" : {
+          "componentScheme" : "mock",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : {
+            "name" : "expression"
+          }
+        },
+        "tags" : [ ],
+        "actionType" : "connector",
+        "dependencies" : [ ]
+      },
+      "stepKind" : "endpoint",
+      "configuredProperties" : { },
+      "dependencies" : [ ],
+      "metadata" : {
+        "step.index" : "3"
+      }
+    } ],
+    "resources" : [ ],
+    "tags" : [ ]
+  },
+  "stepsDone" : [ ],
+  "timesUsed" : 0,
+  "lastUpdated" : 1516703720620,
+  "createdDate" : 1516703720620
+}

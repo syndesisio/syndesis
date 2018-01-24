@@ -1,1 +1,0 @@
-The main runtime of syndesis

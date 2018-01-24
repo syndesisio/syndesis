@@ -40,7 +40,6 @@
     <dep.plugin.compiler.version>3.7.0</dep.plugin.compiler.version>
 
     <syndesis-connectors.version>${project.version}</syndesis-connectors.version>
-    <syndesis-integration-runtime.version>${project.version}</syndesis-integration-runtime.version>
 
     <camel.runtime.version>${camel.version}</camel.runtime.version>
     <derby.version>10.14.1.0</derby.version>
@@ -88,7 +87,6 @@
     <module>inspector</module>
     <module>jsondb</module>
     <module>openshift</module>
-    <module>project-generator</module>
     <module>rest</module>
     <module>runtime</module>
     <module>syndesis-build-helper-maven-plugin</module>

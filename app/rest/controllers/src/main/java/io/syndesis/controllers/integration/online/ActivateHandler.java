@@ -29,17 +29,17 @@ import java.util.Set;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.controllers.integration.IntegrationSupport;
 import io.syndesis.core.Names;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.openshift.DeploymentData;
 import io.syndesis.openshift.OpenShiftService;
-import io.syndesis.project.converter.ProjectGenerator;
 
 public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
@@ -70,8 +70,9 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     }
 
     @Override
-    public StateUpdate execute(IntegrationDeployment integrationDeployment) {
-        Integration integration = integrationOf(integrationDeployment);
+    public StateUpdate execute(IntegrationDeployment integrationDeploymentDefinition) {
+        final IntegrationDeployment integrationDeployment = IntegrationSupport.sanitize(integrationDeploymentDefinition, dataManager, encryptionComponent);
+        final Integration integration = integrationOf(integrationDeployment);
 
         final int maxIntegrationsPerUser = properties.getMaxIntegrationsPerUser();
         if (maxIntegrationsPerUser != ControllersConfigurationProperties.UNLIMITED) {
