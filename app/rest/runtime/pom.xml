@@ -58,6 +58,18 @@
       <url>https://jcenter.bintray.com</url>
     </pluginRepository>
 
+    <pluginRepository>
+      <id>sonatype-snapshot</id>
+      <name>Sonatype snapshot repository</name>
+      <url>https://oss.sonatype.org/service/local/repositories/snapshots/content</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+
   </pluginRepositories>
 
   <build>
