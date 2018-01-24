@@ -64,7 +64,7 @@ public final class IconGenerator {
 
             final String trimmed = trimXml(icon.toString());
 
-            return "data:image/svg+xml;charset=utf-8," + ESCAPER.escape(trimmed);
+            return "data:image/svg+xml," + ESCAPER.escape(trimmed);
         } catch (final IOException e) {
             throw new SyndesisServerException("Unable to generate icon from template `" + template + "`, for name: " + name, e);
         }

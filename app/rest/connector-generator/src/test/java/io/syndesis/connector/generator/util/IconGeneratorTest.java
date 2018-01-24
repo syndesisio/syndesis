@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IconGeneratorTest {
 
-    private static final String PREFIX = "data:image/svg+xml;charset=utf-8,%3C%3Fxml";
+    private static final String PREFIX = "data:image/svg+xml,%3Csvg";
 
     @Test
     @Ignore("Generates test.html for visual inspection")
@@ -38,9 +38,8 @@ public class IconGeneratorTest {
                 final String letterString = String.valueOf((char) letter);
                 final String icon = IconGenerator.generate("swagger-connector-template", letterString);
 
-                assertThat(icon).startsWith(PREFIX);
                 out.println("<br/>");
-                out.println("<img src=\"" + icon + "\" />");
+                out.println("<img src=\"" + icon + "\" /> (" + icon.length() + ")");
             }
         }
     }
@@ -52,8 +51,8 @@ public class IconGeneratorTest {
             final String icon = IconGenerator.generate("swagger-connector-template", letterString);
 
             assertThat(icon).startsWith(PREFIX);
-            assertThat(icon).contains("circle%20style%3D%22fill%3A%23ffffff");
-            assertThat(icon).contains("path%20style%3D%22fill%3A%23ffffff");
+            assertThat(icon).matches(".*circle.*%20style%3D%22fill%3A%23fff.*");
+            assertThat(icon).matches(".*path.*%20style%3D%22fill%3A%23fff.*");
         }
     }
 }
