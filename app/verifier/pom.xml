@@ -304,6 +304,12 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>amqp-connector</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
@@ -375,6 +381,7 @@
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-broker</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-client</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-openwire-legacy</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:amqp-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>

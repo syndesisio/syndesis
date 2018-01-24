@@ -16,6 +16,7 @@ export class ConnectionConfigurationService {
       case 'twitter':
       case 'sql':
       case 'activemq':
+      case 'amqp':
         return true;
       default:
         return false;
