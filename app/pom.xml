@@ -80,6 +80,7 @@
 
 		<!-- Plugin versions -->
 		<exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+		<spring-cloud-contract.version>1.2.2.RELEASE</spring-cloud-contract.version>
 
 		<!-- Maven versions -->
 		<maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
@@ -502,6 +503,18 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>fabric8-maven-plugin</artifactId>
 					<version>${fabric8.maven.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-contract-maven-plugin</artifactId>
+					<version>${spring-cloud-contract.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${exec-maven-plugin.version}</version>
 				</plugin>
 
 			</plugins>

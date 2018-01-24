@@ -191,6 +191,153 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>stubs</id>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-contract-stub-runner</artifactId>
+          <version>${spring-cloud-contract.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+          <version>1.2.3</version>
+        </dependency>
+      </dependencies>
+
+      <build>
+
+        <plugins>
+
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>install node and npm</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>install yarn</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>yarn install</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>yarn cache dir</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>yarn ng build</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>dist</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-tests</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+              <contractsDirectory>../contracts</contractsDirectory>
+            </configuration>
+            <executions>
+              <execution>
+                <id>default-generateTests</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <inherited>false</inherited>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <mainClass>org.springframework.cloud.contract.stubrunner.StubRunnerMain</mainClass>
+                  <systemProperties>
+                    <systemProperty>
+                      <key>logback.configurationFile</key>
+                      <value>${basedir}/logback.xml</value>
+                    </systemProperty>
+                  </systemProperties>
+                  <arguments>
+                    <argument>--minPort</argument>
+                    <argument>10080</argument>
+                    <argument>--maxPort</argument>
+                    <argument>10080</argument>
+                    <argument>-s</argument>
+                    <argument>io.syndesis:syndesis-ui</argument>
+                  </arguments>
+                  <additionalClasspathElements>${project.build.directory}/syndesis-ui-${project.version}-stubs.jar</additionalClasspathElements>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 </project>

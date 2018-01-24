@@ -826,6 +826,13 @@
         <artifactId>okio</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+      <version>${spring-cloud-contract.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <profiles>
@@ -930,6 +937,42 @@
               <execution>
                 <id>reserve-ports</id>
                 <phase />
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>non-m2e</id>
+      <activation>
+        <!-- active only when not running under M2E in Eclipse -->
+        <property>
+          <name>!m2e.version</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+              <baseClassForTests>io.syndesis.runtime.contracts.ContractsBase</baseClassForTests>
+              <contractsDirectory>../../contracts</contractsDirectory>
+              <testMode>JAXRSCLIENT</testMode>
+              <nameSuffixForTests>ITContract</nameSuffixForTests>
+              <indentSize>4</indentSize>
+            </configuration>
+            <executions>
+              <execution>
+                <id>default-generateStubs</id>
+                <phase>none</phase>
+              </execution>
+              <execution>
+                <id>default-convert</id>
+                <phase>none</phase>
               </execution>
             </executions>
           </plugin>
