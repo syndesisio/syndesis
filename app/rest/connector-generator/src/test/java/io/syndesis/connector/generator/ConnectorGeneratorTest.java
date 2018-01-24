@@ -75,7 +75,7 @@ public class ConnectorGeneratorTest {
                 .putConfiguredProperty("property2", "value2")//
                 .build(),
             "id", "icon");
-        assertThat(connector.getIcon()).startsWith("data:image");
+        assertThat(connector.getIcon()).isEqualTo("data:image/svg+xml,dummy");
     }
 
     @Test
@@ -94,6 +94,6 @@ public class ConnectorGeneratorTest {
                 .properties(template.getConnectorProperties())//
                 .putConfiguredProperty("property2", "value2").build(),
             "id", "icon");
-        assertThat(connector.getIcon()).startsWith("data:image");
+        assertThat(connector.getIcon()).isEqualTo("data:image/svg+xml,dummy");
     }
 }
