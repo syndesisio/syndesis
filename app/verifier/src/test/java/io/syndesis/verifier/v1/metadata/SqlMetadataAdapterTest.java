@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import io.syndesis.connector.sql.DatabaseProduct;
 import io.syndesis.connector.sql.SqlConnectorMetaDataExtension;
-import io.syndesis.connector.sql.stored.SampleStoredProcedures;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
@@ -53,6 +52,17 @@ public class SqlMetadataAdapterTest {
             "LANGUAGE JAVA " +
             "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
 
+    public static String DERBY_DEMO_ADD_SQL =
+            "CREATE PROCEDURE DEMO_ADD( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
+            "PARAMETER STYLE JAVA " +
+            "LANGUAGE JAVA " +
+            "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
+    public static String DERBY_DEMO_OUT_SQL =
+            "CREATE PROCEDURE DEMO_OUT( OUT C INTEGER ) " +
+            "PARAMETER STYLE JAVA " +
+            "LANGUAGE JAVA " +
+            "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("application.properties")) {
@@ -69,8 +79,8 @@ public class SqlMetadataAdapterTest {
             }
             if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
                 try (Statement stmt = connection.createStatement()) {
-                    stmt.execute(SampleStoredProcedures.DERBY_DEMO_OUT_SQL);
-                    stmt.execute(SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
+                    stmt.execute(DERBY_DEMO_OUT_SQL);
+                    stmt.execute(DERBY_DEMO_ADD_SQL);
                     stmt.execute(DERBY_DEMO_ADD2_SQL);
                 } catch (Exception e) {
                     fail("Exception during Stored Procedure Creation.", e);

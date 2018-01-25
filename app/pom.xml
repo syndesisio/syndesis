@@ -179,6 +179,59 @@
 			</properties>
 		</profile>
 
+    <!-- Release profile -->
+    <profile>
+			<id>release</id>
+			<build>
+        <plugins>
+
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <serverId>oss-sonatype-staging</serverId>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>2.5.3</version>
+						<configuration>
+							<preparationGoals>exec:exec@commit-connector-json</preparationGoals>
+						</configuration>
+					</plugin>
+
+					<!-- Check in all generated json schema files before checking
+					     in the new version -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.5.0</version>
+						<executions>
+							<execution>
+								<!-- Commit generated json files -->
+								<id>commit-connector-json</id>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>bash</executable>
+									<commandlineArgs>
+										-c 'if [ "${project.artifactId}" = "syndesis-connectors-project" ]; then mvn -Pflash clean install &amp;&amp; git status -s *-connector*.json | grep " M " | cut -d " " -f3 | xargs git commit -m "Update connector meta data for ${project.version}"; fi'
+                  </commandlineArgs>
+								</configuration>
+              </execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+
+		</profile>
 		<!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
 		<profile>
 			<id>flash</id>
@@ -398,6 +451,7 @@
 				</plugins>
 			</build>
 		</profile>
+
 		<profile>
 			<id>deploy-local-nexus</id>
 			<distributionManagement>
@@ -503,6 +557,23 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>fabric8-maven-plugin</artifactId>
 					<version>${fabric8.maven.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 
 			</plugins>
@@ -812,7 +883,7 @@
 		<connection>scm:git:https://github.com/syndesisio/syndesis.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
 		<url>http://github.com/syndesisio/syndesis</url>
-	</scm>
+  </scm>
 
 	<distributionManagement>
 		<snapshotRepository>
