@@ -63,8 +63,9 @@ public class AMQPConnectorFactory implements ComponentProxyFactory {
 
             // create and set ConnectionFactory on delegate
             AMQPComponent delegate = (AMQPComponent) getCamelContext().getComponent(getComponentScheme());
-            final JmsConnectionFactory connectionFactory = AMQPUtil.createConnectionFactory(connectionUri, username,
-                    password, brokerCertificate, clientCertificate, skipCertificateCheck);
+            final AMQPUtil.ConnectionParameters connectionParameters = new AMQPUtil.ConnectionParameters
+                    (connectionUri, username, password, brokerCertificate, clientCertificate, skipCertificateCheck);
+            final JmsConnectionFactory connectionFactory = AMQPUtil.createConnectionFactory(connectionParameters);
             delegate.setConnectionFactory(connectionFactory);
 
             return super.createEndpoint(uri, remaining, parameters);

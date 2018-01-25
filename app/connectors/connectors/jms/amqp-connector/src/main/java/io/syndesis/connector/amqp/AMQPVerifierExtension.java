@@ -75,9 +75,10 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
         final String brokerCertificate = (String) parameters.get("brokerCertificate");
         final String clientCertificate = (String) parameters.get("clientCertificate");
 
-        LOG.debug("Validating AMQP connection to " + connectionUri);
-        JmsConnectionFactory connectionFactory = AMQPUtil.createConnectionFactory(
-                connectionUri, username, password, brokerCertificate, clientCertificate, skipCertificateCheck);
+        LOG.debug("Validating AMQP connection to {}", connectionUri);
+        final AMQPUtil.ConnectionParameters connectionParameters = new AMQPUtil.ConnectionParameters(connectionUri,
+                username, password, brokerCertificate, clientCertificate, skipCertificateCheck);
+        JmsConnectionFactory connectionFactory = AMQPUtil.createConnectionFactory(connectionParameters);
         Connection connection = null;
         try {
             // try to create and start the JMS connection
@@ -98,9 +99,7 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (JMSException e) {
-                    // ignore close errors
-                }
+                } catch (JMSException e) {}
             }
         }
     }

@@ -24,25 +24,26 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhirajsb
  */
-public class AMQPUtil {
+public abstract class AMQPUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(AMQPUtil.class);
 
-    public static JmsConnectionFactory createConnectionFactory(String connectionUri, String username, String password,
-               String brokerCertificate, String clientCertificate, boolean skipCertificateCheck) {
+    public static JmsConnectionFactory createConnectionFactory(ConnectionParameters connectionParameters) {
 
         final JmsConnectionFactory result;
-        if (!connectionUri.contains("amqps:")) {
-            result = new JmsConnectionFactory(username, password, connectionUri);
+        if (!connectionParameters.getConnectionUri().contains("amqps:")) {
+            result = new JmsConnectionFactory(connectionParameters.getUsername(), connectionParameters.getPassword(), connectionParameters.getConnectionUri());
         } else {
-            if (skipCertificateCheck) {
-                if (!connectionUri.contains("transport.trustAll")) {
-                    LOG.warn("Skipping Certificate check for AMQP Connection " + connectionUri);
-                    connectionUri = connectionUri +
-                            (connectionUri.contains("?") ? "&" : "?") +
+            String newConnectionUri = connectionParameters.getConnectionUri();
+            if (connectionParameters.isSkipCertificateCheck()) {
+                if (!connectionParameters.getConnectionUri().contains("transport.trustAll")) {
+                    LOG.warn("Skipping Certificate check for AMQP Connection {}", connectionParameters
+                            .getConnectionUri());
+                    newConnectionUri = connectionParameters.getConnectionUri() +
+                            (connectionParameters.getConnectionUri().contains("?") ? "&" : "?") +
                             "transport.trustAll=true&transport.verifyHost=false";
                 }
-                result = new JmsConnectionFactory(username, password, connectionUri);
+                result = new JmsConnectionFactory(connectionParameters.getUsername(), connectionParameters.getPassword(), newConnectionUri);
             } else {
                 // TODO add amqps connection support, see CAMEL-11780
                 throw new IllegalArgumentException("SSL Not supported, yet!");
@@ -50,5 +51,48 @@ public class AMQPUtil {
         }
 
         return result;
+    }
+
+    static class ConnectionParameters {
+        private final String connectionUri;
+        private final String username;
+        private final String password;
+        private final String brokerCertificate;
+        private final String clientCertificate;
+        private final boolean skipCertificateCheck;
+
+        ConnectionParameters(String connectionUri, String username, String password, String brokerCertificate, String
+                clientCertificate, boolean skipCertificateCheck) {
+            this.connectionUri = connectionUri;
+            this.username = username;
+            this.password = password;
+            this.brokerCertificate = brokerCertificate;
+            this.clientCertificate = clientCertificate;
+            this.skipCertificateCheck = skipCertificateCheck;
+        }
+
+        public String getConnectionUri() {
+            return connectionUri;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getBrokerCertificate() {
+            return brokerCertificate;
+        }
+
+        public String getClientCertificate() {
+            return clientCertificate;
+        }
+
+        public boolean isSkipCertificateCheck() {
+            return skipCertificateCheck;
+        }
     }
 }
