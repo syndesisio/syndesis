@@ -38,7 +38,7 @@ public enum Kind {
     EnvironmentType(io.syndesis.model.environment.EnvironmentType.class),
 
     Extension(io.syndesis.model.extension.Extension.class),
-    ExtensionAction(io.syndesis.model.action.ExtensionAction.class),
+    StepAction(io.syndesis.model.action.StepAction.class),
 
     Organization(io.syndesis.model.environment.Organization.class),
 

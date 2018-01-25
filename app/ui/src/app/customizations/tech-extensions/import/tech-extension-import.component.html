@@ -64,7 +64,8 @@
           <div [class]="error.level" [innerHtml]="error.message">
           </div>
         </ng-container>
-        <dl class="dl-horizontal"
+
+        <dl class="dl-horizontal dl-file-uploader"
             ng2FileDrop
             [uploader]="uploader">
           <dt>
@@ -119,7 +120,25 @@
           </dl>
           <dl class="dl-horizontal">
             <dt>
-              Steps
+              Type
+            </dt>
+            <dd>
+              <ng-container *ngIf="response.extensionType == 'Steps'; else typeDescConnector">
+                Step Extension
+              </ng-container>
+              <ng-template #typeDescConnector>
+                Connector Extension
+              </ng-template>
+            </dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>
+              <ng-container *ngIf="response.extensionType == 'Steps'; else typeConnector">
+                Steps
+              </ng-container>
+              <ng-template #typeConnector>
+                Actions
+              </ng-template>
             </dt>
             <dd>
               <div *ngFor="let action of response.actions">

@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import io.syndesis.model.Dependency;
-import io.syndesis.model.action.ExtensionAction;
-import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.filter.FilterPredicate;
@@ -100,10 +100,10 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                     .build())
                 .putConfiguredProperty("key-1", "val-1")
                 .putConfiguredProperty("key-2", "val-2")
-                .action(new ExtensionAction.Builder()
+                .action(new StepAction.Builder()
                     .id("my-extension-1-action-1")
-                    .descriptor(new ExtensionDescriptor.Builder()
-                        .kind(ExtensionAction.Kind.ENDPOINT)
+                    .descriptor(new StepDescriptor.Builder()
+                        .kind(StepAction.Kind.ENDPOINT)
                         .entrypoint("direct:extension")
                         .build()
                     ).build())
@@ -116,10 +116,10 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                     .build())
                 .putConfiguredProperty("key-1", "val-1")
                 .putConfiguredProperty("key-2", "val-2")
-                .action(new ExtensionAction.Builder()
+                .action(new StepAction.Builder()
                     .id("my-extension-1-action-1")
-                    .descriptor(new ExtensionDescriptor.Builder()
-                        .kind(ExtensionAction.Kind.BEAN)
+                    .descriptor(new StepDescriptor.Builder()
+                        .kind(StepAction.Kind.BEAN)
                         .entrypoint("com.example.MyExtension::action")
                         .build()
                     ).build())
@@ -132,10 +132,10 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                     .build())
                 .putConfiguredProperty("key-1", "val-1")
                 .putConfiguredProperty("key-2", "val-2")
-                .action(new ExtensionAction.Builder()
+                .action(new StepAction.Builder()
                     .id("my-extension-2-action-1")
-                    .descriptor(new ExtensionDescriptor.Builder()
-                        .kind(ExtensionAction.Kind.STEP)
+                    .descriptor(new StepDescriptor.Builder()
+                        .kind(StepAction.Kind.STEP)
                         .entrypoint("com.example.MyStep")
                         .build()
                     ).build())

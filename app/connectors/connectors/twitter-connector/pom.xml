@@ -103,6 +103,7 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 </project>

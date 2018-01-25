@@ -302,12 +302,12 @@ public interface Descriptor {
         value = ImmutableConnectorAction.class,
         name  = Action.TYPE_CONNECTOR),
     @JsonSubTypes.Type(
-        value = ImmutableExtensionAction.class,
+        value = ImmutableStepAction.class,
         name  = Action.TYPE_EXTENSION)
 })
 public interface Action<D extends Descriptor> {
     String TYPE_CONNECTOR = "connector";
-    String TYPE_EXTENSION = "extension";
+    String TYPE_STEP = "step";
 
     /**
      * Only used as marker purpose
@@ -342,7 +342,7 @@ public interface ExtensionAction extends Action<ExtensionDescriptor> {
         return Action.TYPE_EXTENSION;
     }
 
-    class Builder extends ImmutableExtensionAction.Builder {
+    class Builder extends ImmutableStepAction.Builder {
     }
 }
 

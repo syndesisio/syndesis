@@ -37,33 +37,16 @@ export interface Extension extends BaseEntity {
   extensionId: string;
   version: string;
   tags: Array<string>;
-  actions: Array<ExtensionAction>;
+  actions: Array<Action>;
   dependencies: Array<string>;
   status: 'Draft' | 'Installed' | 'Deleted';
   id: string;
+  schemaVersion: string;
   properties: {};
+  configuredProperties: {};
+  extensionType: string;
 }
 export type Extensions = Array<Extension>;
-
-export interface ExtensionAction extends BaseEntity {
-  id: string;
-  name: string;
-  description: string;
-  descriptor: ExtensionDescriptor;
-  tags: Array<string>;
-  actionType: string;
-  pattern: 'From' | 'To';
-}
-export type ExtensionActions = Array<ExtensionAction>;
-
-export interface ExtensionDescriptor extends BaseEntity {
-  kind: 'STEP' | 'BEAN' | 'ENDPOINT';
-  entrypoint: string;
-  propertyDefinitionSteps: Array<ActionDescriptorStep>;
-  inputDataShape: DataShape;
-  outputDataShape: DataShape;
-}
-export type ExtensionDescriptors = Array<ExtensionDescriptor>;
 
 export interface Action extends BaseEntity {
   actionType: string;
@@ -422,28 +405,6 @@ class TypeFactoryClass {
       status: undefined,
       id: undefined,
       properties: undefined
-    };
-  }
-
-  createExtensionAction() {
-    return <ExtensionAction>{
-      id: undefined,
-      name: undefined,
-      description: undefined,
-      descriptor: undefined,
-      tags: undefined,
-      actionType: undefined,
-      pattern: undefined
-    };
-  }
-
-  createExtensionDescriptor() {
-    return <ExtensionDescriptor>{
-      kind: undefined,
-      entrypoint: undefined,
-      propertyDefinitionSteps: undefined,
-      inputDataShape: undefined,
-      outputDataShape: undefined
     };
   }
 

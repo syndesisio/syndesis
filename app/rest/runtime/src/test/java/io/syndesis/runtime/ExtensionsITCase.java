@@ -247,7 +247,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(got1.getBody()).isEmpty();
 
         dataManager.create(new IntegrationDeployment.Builder()
-            .integrationId("integration-extension")
+            .integrationId("integration-extension-1")
             .version(1)
             .targetState(IntegrationDeploymentState.Active)
             .currentState(IntegrationDeploymentState.Active)
@@ -268,8 +268,8 @@ public class ExtensionsITCase extends BaseITCase {
 
         // Create a inactive integration that uses the extension
         dataManager.create(new IntegrationDeployment.Builder()
-            .integrationId("integration-extension")
-            .version(2)
+            .integrationId("integration-extension-2")
+            .version(1)
             .targetState(IntegrationDeploymentState.Undeployed)
             .currentState(IntegrationDeploymentState.Active)
             .createdDate(new Date())
@@ -292,10 +292,10 @@ public class ExtensionsITCase extends BaseITCase {
             new ParameterizedTypeReference<Set<ResourceIdentifier>>() {}, tokenRule.validToken(), HttpStatus.OK);
 
         assertThat(got2.getBody().size()).isEqualTo(1);
-        assertThat(got2.getBody()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension:1"));
+        assertThat(got2.getBody()).allMatch(ri -> ri.getId().isPresent() && ri.getId().get().equals("integration-extension-1"));
 
-        dataManager.delete(IntegrationDeployment.class, "integration-extension:1");
-        dataManager.delete(IntegrationDeployment.class, "integration-extension:2");
+        dataManager.delete(IntegrationDeployment.class, "integration-extension-1");
+        dataManager.delete(IntegrationDeployment.class, "integration-extension-2");
     }
 
     @Test
@@ -372,6 +372,7 @@ public class ExtensionsITCase extends BaseITCase {
                 .name("Extension " + prg)
                 .description("Extension Description " + prg)
                 .version("1.0")
+                .extensionType(Extension.Type.Steps)
                 .build();
 
             JsonNode extensionTree = ExtensionConverter.getDefault().toPublicExtension(extension);

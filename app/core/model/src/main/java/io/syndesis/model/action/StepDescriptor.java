@@ -26,14 +26,14 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = ExtensionDescriptor.Builder.class)
+@JsonDeserialize(builder = StepDescriptor.Builder.class)
 @SuppressWarnings("immutables")
-public interface ExtensionDescriptor extends ActionDescriptor, Serializable {
+public interface StepDescriptor extends ActionDescriptor, Serializable {
 
-    final class Builder extends ImmutableExtensionDescriptor.Builder {
+    final class Builder extends ImmutableStepDescriptor.Builder {
         // make ImmutableActionDefinition.Builder accessible
 
-        public ExtensionDescriptor.Builder withActionDefinitionStep(
+        public StepDescriptor.Builder withActionDefinitionStep(
             final String name,
             final String description,
             final Consumer<ActionDescriptorStep.Builder> stepConfigurator) {
@@ -49,9 +49,9 @@ public interface ExtensionDescriptor extends ActionDescriptor, Serializable {
             return this;
         }
 
-        public ExtensionDescriptor.Builder replaceConfigurationProperty(final String propertyName,
-                                                                        final Consumer<ConfigurationProperty.Builder> configurationPropertyConfigurator) {
-            final ExtensionDescriptor definition = build();
+        public StepDescriptor.Builder replaceConfigurationProperty(final String propertyName,
+                                                                   final Consumer<ConfigurationProperty.Builder> configurationPropertyConfigurator) {
+            final StepDescriptor definition = build();
             final List<ActionDescriptorStep> steps = definition.getPropertyDefinitionSteps();
 
             int stepIdx;
@@ -88,7 +88,7 @@ public interface ExtensionDescriptor extends ActionDescriptor, Serializable {
     }
 
 
-    ExtensionAction.Kind getKind();
+    StepAction.Kind getKind();
 
     String getEntrypoint();
 }

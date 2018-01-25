@@ -192,18 +192,20 @@ export class StepStore {
     const allSteps = [];
     for ( const extension of extensions ) {
       for ( const action of extension.actions) {
-        const properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
-          return { ...acc, ...current.properties };
-        }, {});
-        allSteps.push({
-          name: action.name,
-          description: action.description,
-          stepKind: 'extension',
-          properties: properties,
-          extension: extension,
-          action: action,
-          configuredProperties: undefined,
-        });
+        if (action.actionType == 'step') {
+          const properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
+            return {...acc, ...current.properties};
+          }, {});
+          allSteps.push({
+            name: action.name,
+            description: action.description,
+            stepKind: 'extension',
+            properties: properties,
+            extension: extension,
+            action: action,
+            configuredProperties: undefined,
+          });
+        }
       }
     }
     return this.steps.concat(allSteps).sort((a, b) => a.name.localeCompare(b.name));

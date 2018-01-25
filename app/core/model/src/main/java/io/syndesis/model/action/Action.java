@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfigurationProperties;
+import io.syndesis.model.WithResourceId;
 import io.syndesis.model.WithKind;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
@@ -46,14 +47,14 @@ import io.syndesis.model.connection.ConfigurationProperty;
         value = ImmutableConnectorAction.class,
         name  = Action.TYPE_CONNECTOR),
     @JsonSubTypes.Type(
-        value = ImmutableExtensionAction.class,
-        name  = Action.TYPE_EXTENSION)
+        value = ImmutableStepAction.class,
+        name  = Action.TYPE_STEP)
 })
 @JsonPropertyOrder({ "id", "name", "description", "descriptor", "tags", "actionType" })
 @JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
-public interface Action<D extends ActionDescriptor> extends WithKind, WithName, WithTags, WithConfigurationProperties, Serializable {
+public interface Action extends WithResourceId, WithKind, WithName, WithTags, WithConfigurationProperties, Serializable {
     String TYPE_CONNECTOR = "connector";
-    String TYPE_EXTENSION = "extension";
+    String TYPE_STEP = "step";
 
     enum Pattern { From, To }
 
@@ -66,7 +67,7 @@ public interface Action<D extends ActionDescriptor> extends WithKind, WithName, 
 
     String getDescription();
 
-    D getDescriptor();
+    ActionDescriptor getDescriptor();
 
     Pattern getPattern();
 

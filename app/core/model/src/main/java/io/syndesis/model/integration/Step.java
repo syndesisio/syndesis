@@ -37,7 +37,7 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
         return Kind.Step;
     }
 
-    Optional<Action<?>> getAction();
+    Optional<Action> getAction();
 
     Optional<Connection> getConnection();
 

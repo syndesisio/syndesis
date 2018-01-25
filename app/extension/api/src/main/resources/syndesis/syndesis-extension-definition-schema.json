@@ -25,6 +25,13 @@
     "extensionId": {
       "type": "string"
     },
+    "extensionType": {
+      "type": "string",
+      "enum": [
+        "Steps",
+        "Connectors"
+      ]
+    },
     "version": {
       "type": "string"
     },
@@ -38,8 +45,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "id": "urn:jsonschema:io:syndesis:model:action:ExtensionAction",
-        "additionalProperties": false,
+        "id": "urn:jsonschema:io:syndesis:model:action:Action",
         "properties": {
           "id": {
             "type": "string"
@@ -52,20 +58,8 @@
           },
           "descriptor": {
             "type": "object",
-            "id": "urn:jsonschema:io:syndesis:model:action:ExtensionDescriptor",
-            "additionalProperties": false,
+            "id": "urn:jsonschema:io:syndesis:model:action:ActionDescriptor",
             "properties": {
-              "kind": {
-                "type": "string",
-                "enum": [
-                  "STEP",
-                  "BEAN",
-                  "ENDPOINT"
-                ]
-              },
-              "entrypoint": {
-                "type": "string"
-              },
               "propertyDefinitionSteps": {
                 "type": "array",
                 "items": {
@@ -86,6 +80,9 @@
                         "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty",
                         "additionalProperties": false,
                         "properties": {
+                          "displayName": {
+                            "type": "string"
+                          },
                           "description": {
                             "type": "string"
                           },
@@ -94,22 +91,6 @@
                           },
                           "required": {
                             "type": "boolean"
-                          },
-                          "enum": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty:PropertyValue",
-                              "additionalProperties": false,
-                              "properties": {
-                                "label": {
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "type": "string"
-                                }
-                              }
-                            }
                           },
                           "group": {
                             "type": "string"
@@ -126,13 +107,25 @@
                           "deprecated": {
                             "type": "boolean"
                           },
+                          "enum": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "id": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty:PropertyValue",
+                              "properties": {
+                                "label": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
                           "type": {
                             "type": "string"
                           },
                           "defaultValue": {
-                            "type": "string"
-                          },
-                          "displayName": {
                             "type": "string"
                           },
                           "tags": {
@@ -142,6 +135,12 @@
                             }
                           }
                         }
+                      }
+                    },
+                    "configuredProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
                       }
                     }
                   }
@@ -237,6 +236,12 @@
       "additionalProperties": {
         "type": "object",
         "$ref": "urn:jsonschema:io:syndesis:model:connection:ConfigurationProperty"
+      }
+    },
+    "configuredProperties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
       }
     },
     "metadata": {

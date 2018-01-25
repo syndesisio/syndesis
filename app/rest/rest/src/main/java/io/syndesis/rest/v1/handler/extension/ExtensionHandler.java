@@ -15,39 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.extension;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.syndesis.core.KeyGenerator;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.dao.extension.ExtensionDataAccessObject;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.Kind;
-import io.syndesis.model.ListResult;
-import io.syndesis.model.ResourceIdentifier;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.validation.AllValidations;
-import io.syndesis.model.validation.NonBlockingValidations;
-import io.syndesis.rest.util.FilterOptionsParser;
-import io.syndesis.rest.util.PaginationFilter;
-import io.syndesis.rest.util.ReflectiveFilterer;
-import io.syndesis.rest.util.ReflectiveSorter;
-import io.syndesis.rest.v1.SyndesisRestException;
-import io.syndesis.rest.v1.handler.BaseHandler;
-import io.syndesis.rest.v1.operations.Deleter;
-import io.syndesis.rest.v1.operations.Getter;
-import io.syndesis.rest.v1.operations.Lister;
-import io.syndesis.model.Violation;
-import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
-import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Component;
-
 import javax.annotation.Nonnull;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -75,6 +42,41 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.syndesis.core.KeyGenerator;
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.dao.extension.ExtensionDataAccessObject;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.Dependency;
+import io.syndesis.model.Kind;
+import io.syndesis.model.ListResult;
+import io.syndesis.model.ResourceIdentifier;
+import io.syndesis.model.Violation;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
+import io.syndesis.model.integration.Step;
+import io.syndesis.model.validation.AllValidations;
+import io.syndesis.model.validation.NonBlockingValidations;
+import io.syndesis.rest.util.FilterOptionsParser;
+import io.syndesis.rest.util.PaginationFilter;
+import io.syndesis.rest.util.ReflectiveFilterer;
+import io.syndesis.rest.util.ReflectiveSorter;
+import io.syndesis.rest.v1.SyndesisRestException;
+import io.syndesis.rest.v1.handler.BaseHandler;
+import io.syndesis.rest.v1.operations.Deleter;
+import io.syndesis.rest.v1.operations.Getter;
+import io.syndesis.rest.v1.operations.Lister;
+import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.stereotype.Component;
+
 @Path("/extensions")
 @Api(value = "extensions")
 @Component
@@ -85,16 +87,20 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     private final ExtensionAnalyzer extensionAnalyzer;
 
+    private final ExtensionActivator extensionActivator;
+
     private final Validator validator;
 
     public ExtensionHandler(final DataManager dataMgr,
                             final ExtensionDataAccessObject fileStore,
                             final ExtensionAnalyzer extensionAnalyzer,
+                            final ExtensionActivator extensionActivator,
                             final Validator validator) {
         super(dataMgr);
 
         this.fileStore = fileStore;
         this.extensionAnalyzer = extensionAnalyzer;
+        this.extensionActivator = extensionActivator;
         this.validator = validator;
     }
 
@@ -176,7 +182,8 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     public void delete(String id) {
         // Not a real delete of the extension: changing the status to Deleted
         Extension extension = getDataManager().fetch(Extension.class, id);
-        this.doDelete(extension);
+
+        extensionActivator.deleteExtension(extension);
     }
 
     @POST
@@ -215,17 +222,10 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             response = Violation.class)
     })
     public void install(@NotNull @PathParam("id") final String id) {
-        Date rightNow = new Date();
         Extension extension = getDataManager().fetch(Extension.class, id);
         doValidate(extension);
 
-        // Uninstall other active extensions
-        doDeleteInstalled(extension.getExtensionId());
-
-        getDataManager().update(new Extension.Builder().createFrom(extension)
-            .status(Extension.Status.Installed)
-            .lastUpdated(rightNow)
-            .build());
+        extensionActivator.activateExtension(extension);
     }
 
     @GET
@@ -325,37 +325,18 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .collect(Collectors.toSet());
     }
 
-    private void doDeleteInstalled(String logicalExtensionId) {
-        Set<String> ids = getDataManager().fetchIdsByPropertyValue(Extension.class, "extensionId", logicalExtensionId);
-        for (String id : ids) {
-            Extension extension = getDataManager().fetch(Extension.class, id);
-            if (extension.getStatus().isPresent() && extension.getStatus().get() == Extension.Status.Installed) {
-                doDelete(extension);
-            }
-        }
-    }
-
-    private void doDelete(Extension extension) {
-        Date rightNow = new Date();
-        getDataManager().update(new Extension.Builder()
-            .createFrom(extension)
-            .status(Extension.Status.Deleted)
-            .lastUpdated(rightNow)
-            .build());
-    }
-
     private Set<ResourceIdentifier> integrations(Extension extension) {
         return getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()
             .filter(integrationDeployment -> isIntegrationActiveAndUsingExtension(integrationDeployment, extension))
-            .map(this::toResourceIdentifier)
+            .map(this::toIntegrationResourceIdentifier)
             .distinct()
             .collect(Collectors.toSet());
     }
 
-    private ResourceIdentifier toResourceIdentifier(IntegrationDeployment integrationDeployment) {
+    private ResourceIdentifier toIntegrationResourceIdentifier(IntegrationDeployment integrationDeployment) {
         return new ResourceIdentifier.Builder()
-            .id(integrationDeployment.getId())
-            .kind(integrationDeployment.getKind())
+            .id(integrationDeployment.getIntegrationId())
+            .kind(Kind.Integration)
             .name(Optional.ofNullable(integrationDeployment.getName()))
             .build();
     }
@@ -369,14 +350,23 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             return false;
         }
 
-        return integrationDeployment.getSpec().getSteps().stream().anyMatch(step ->
-            extension.getExtensionId().equals(
+        return integrationDeployment.getSpec().getSteps().stream().anyMatch(step -> {
+            boolean usedAsStep = extension.getExtensionId().equals(
                 Optional.ofNullable(step)
-                .flatMap(Step::getExtension)
-                .map(Extension::getExtensionId)
-                .orElse(null)
-            )
-        );
+                    .flatMap(Step::getExtension)
+                    .map(Extension::getExtensionId)
+                    .orElse(null)
+            );
+            boolean usedAsConnector = extension.getExtensionId().equals(
+                Optional.ofNullable(step)
+                    .flatMap(Step::getConnection)
+                    .flatMap(Connection::getConnector)
+                    .flatMap(c -> c.getDependencies().stream().filter(Dependency::isExtension).findFirst())
+                    .map(Dependency::getId)
+                    .orElse(null)
+            );
+            return usedAsStep || usedAsConnector;
+        });
     }
 
     private Extension enhance(Extension extension) {
