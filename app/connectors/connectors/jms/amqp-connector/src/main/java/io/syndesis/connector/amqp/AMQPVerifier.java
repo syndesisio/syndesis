@@ -29,6 +29,6 @@ public class AMQPVerifier extends ComponentVerifier {
 
     @Override
     protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new AMQPVerifierExtension(scheme);
+        return new AMQPVerifierExtension(scheme, context);
     }
 }

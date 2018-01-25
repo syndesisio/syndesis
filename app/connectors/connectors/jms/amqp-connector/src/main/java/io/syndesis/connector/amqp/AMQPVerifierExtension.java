@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
@@ -37,8 +38,8 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
 
     private static final Logger LOG = LoggerFactory.getLogger(AMQPVerifierExtension.class);
 
-    protected AMQPVerifierExtension(String defaultScheme) {
-        super(defaultScheme);
+    protected AMQPVerifierExtension(String defaultScheme, CamelContext context) {
+        super(defaultScheme, context);
     }
 
     // *********************************

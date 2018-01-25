@@ -44,7 +44,7 @@ public class AMQPConnectorFactory implements ComponentProxyFactory {
         }
 
         private ComponentExtension getComponentVerifier() {
-            return new AMQPVerifierExtension(getComponentId());
+            return new AMQPVerifierExtension(getComponentId(), getCamelContext());
         }
 
 
