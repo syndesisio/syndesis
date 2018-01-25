@@ -13,8 +13,7 @@ import {
   NotificationType
 } from 'patternfly-ng';
 
-import { IntegrationSupportService } from '../integration-support.service';
-import { Integrations, Integration } from '@syndesis/ui/integration';
+import { IntegrationSupportService, Integrations, Integration } from '@syndesis/ui/integration';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
