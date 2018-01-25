@@ -24,9 +24,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhirajsb
  */
-public abstract class AMQPUtil {
+public final class AMQPUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(AMQPUtil.class);
+
+    private AMQPUtil() {
+        // empty
+    }
 
     public static JmsConnectionFactory createConnectionFactory(ConnectionParameters connectionParameters) {
 
@@ -53,7 +57,7 @@ public abstract class AMQPUtil {
         return result;
     }
 
-    static class ConnectionParameters {
+    public static class ConnectionParameters {
         private final String connectionUri;
         private final String username;
         private final String password;

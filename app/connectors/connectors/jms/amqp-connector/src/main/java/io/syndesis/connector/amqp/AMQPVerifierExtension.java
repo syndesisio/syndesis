@@ -99,7 +99,9 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (JMSException e) {}
+                } catch (JMSException e) {
+                    // ignore
+                }
             }
         }
     }
