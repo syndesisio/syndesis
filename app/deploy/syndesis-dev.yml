@@ -632,7 +632,7 @@ objects:
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            
+
           env:
           - name: OAUTH_COOKIE_SECRET
             valueFrom:
@@ -666,6 +666,7 @@ objects:
               memory: 200Mi
             requests:
               memory: 20Mi
+
         volumes:
         - name: syndesis-oauthproxy-tls
           secret:
@@ -673,6 +674,7 @@ objects:
     triggers:
 
     - type: ConfigChange
+
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
