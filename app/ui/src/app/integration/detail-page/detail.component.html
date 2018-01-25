@@ -42,9 +42,10 @@
         </dt>
         <dd>
           <p>
+            <!--<pre>{{ currentDeployment | json }}</pre>-->
             <ng-template ngFor
                          let-step
-                         [ngForOf]="integration.steps"
+                         [ngForOf]="((currentDeployment ? currentDeployment.spec : undefined) || integration).steps"
                          let-index="index">
               <div *ngIf="step"
                    class="step-block inline-block text-center">
@@ -119,8 +120,10 @@
             </dt>
             <dd>
               <pfng-list [items]="integrationDeployments"
-                         [config]="listConfig"
-                         [itemTemplate]="itemTemplate">
+                         [config]="deploymentListConfig"
+                         [itemTemplate]="itemTemplate"
+                         [expandTemplate]="expandTemplate"
+                         [actionTemplate]="actionTemplate">
                 <ng-template #itemTemplate
                              let-deployment="item"
                              let-index="index">
@@ -139,8 +142,29 @@
                   <div class="list-pf-additional-content">
                     <span>Last published on {{ deployment.lastUpdated | date }}</span>
                     <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
-
                   </div>
+                </ng-template>
+                <ng-template #expandTemplate let-deployment="item" let-index="index">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <dl class="dl-horizontal">
+                        <dt>Created at:</dt>
+                        <dd>{{ deployment.createdDate | date }}</dd>
+                      </dl>
+                    </div>
+                    <div class="col-md-6">
+                      <dl class="dl-horizontal">
+                        <dt></dt>
+                        <dd></dd>
+                      </dl>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template #actionTemplate let-deployment="item" let-index="index">
+                  <pfng-action class="list-pf-actions"
+                               [config]="deploymentActionConfigs[deployment.id]"
+                               (onActionSelect)="DeploymentAction($event, deployment)">
+                  </pfng-action>
                 </ng-template>
               </pfng-list>
             </dd>

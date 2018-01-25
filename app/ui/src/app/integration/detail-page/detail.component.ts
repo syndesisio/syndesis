@@ -13,10 +13,32 @@ import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from '
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
 import { Connection, Action } from '@syndesis/ui/model';
-import { Integration, Step } from '@syndesis/ui/integration';
+import { Integration, Step, IntegrationDeployment } from '@syndesis/ui/integration';
 import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
+
+// menu items and buttons
+const replaceDraft = {
+  id: 'replaceDraft',
+  title: 'Replace Draft',
+  tooltip: 'Replace the current draft with this version'
+} as PFAction;
+const stopIntegration = {
+  id: 'stopIntegration',
+  title: 'Stop Integration',
+  tooltip: 'Stop this integration'
+} as PFAction;
+const createDraft = {
+  id: 'createDraft',
+  title: 'Create Draft',
+  tooltip: 'Create a new draft from this version'
+} as PFAction;
+const publish = {
+  id: 'publish',
+  title: 'Publish',
+  tooltip: 'Publish this version of the integration'
+} as PFAction;
 
 @Component({
   selector: 'syndesis-integration-detail-page',
@@ -26,7 +48,7 @@ import { ConfigService } from '@syndesis/ui/config.service';
 export class IntegrationDetailComponent extends IntegrationViewBase
   implements OnInit, OnDestroy {
   integration$: Observable<Integration>;
-  integrationDeployments$: Observable<any>;
+  integrationDeployments$: Observable<Array<IntegrationDeployment>>;
   integrationSubscription: Subscription;
   eventsSubscription: Subscription;
   integration: Integration;
@@ -38,7 +60,9 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     '=1': '1 Use',
     'other': '# Uses'
   };
-  listConfig: ListConfig;
+  deploymentListConfig: ListConfig;
+  deploymentActionConfigs: { [id: string]: ActionConfig } = {};
+  currentDeployment: IntegrationDeployment;
 
   constructor(
     public store: IntegrationStore,
@@ -100,6 +124,10 @@ export class IntegrationDetailComponent extends IntegrationViewBase
       });
   }
 
+  deploymentAction($event, deployment) {
+   console.log('Deployment action: ', $event, deployment);
+  }
+
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
   }
@@ -109,7 +137,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   ngOnInit() {
-    this.listConfig = {
+    this.deploymentListConfig = {
       selectItems: false,
       showCheckbox: false,
       useExpandItems: true
@@ -119,13 +147,33 @@ export class IntegrationDetailComponent extends IntegrationViewBase
       .first( i => i.id !== undefined )
       .subscribe(i => {
         this.integration = i;
-        this.integrationDeployments$ = Observable.merge(
-          this.integrationSupportService.getDeployments(this.integration.id),
-          this.eventsService.changeEvents
-            .filter( event => event.kind === 'integration-deployment')
-            // TODO it would obviously be better to just fetch one, not all of 'em
-            .flatMap(event => this.integrationSupportService.getDeployments(this.integration.id)))
-            .map(val => val.items.sort((a, b) => b.version - a.version));
+        this.integrationDeployments$ = this.integrationSupportService.watchDeployments(this.integration.id)
+            .map(val => {
+              this.deploymentActionConfigs = {};
+              const answer = val.items.sort((a, b) => b.version - a.version);
+              const integration = this.integration;
+              // build our map of actions for all the deployments
+              for (const deployment of answer) {
+                const actionConfig = {
+                  primaryActions: [],
+                  moreActions: [],
+                  moreActionsVisible: true
+                } as ActionConfig;
+                actionConfig.moreActions.push(replaceDraft);
+                if (deployment.version === (integration.version || integration.deploymentId)) {
+                  this.currentDeployment = deployment;
+                  if (integration.currentStatus === 'Active') {
+                    actionConfig.moreActions.push(stopIntegration);
+                  } else {
+                    actionConfig.moreActions.push(publish);
+                  }
+                } else {
+                  actionConfig.moreActions.push(publish);
+                }
+                this.deploymentActionConfigs[deployment.id] = actionConfig;
+              }
+              return answer;
+            });
     });
     this.routeSubscription = this.route.paramMap
       .first( params => params.has('integrationId'))
