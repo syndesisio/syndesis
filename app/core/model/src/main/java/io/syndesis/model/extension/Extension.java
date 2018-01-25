@@ -23,6 +23,7 @@ import java.util.OptionalInt;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.core.IndexedProperty;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithDependencies;
@@ -41,6 +42,10 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
 @JsonPropertyOrder({"name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies", "schemaVersion"})
+@IndexedProperty.Multiple({
+    @IndexedProperty("extensionId"),
+    @IndexedProperty("status")
+})
 @SuppressWarnings("immutables")
 public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, WithMetadata, Serializable {
 

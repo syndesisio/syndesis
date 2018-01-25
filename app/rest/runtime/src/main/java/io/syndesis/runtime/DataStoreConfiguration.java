@@ -28,6 +28,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Creates and configures the main datastore
@@ -39,18 +41,28 @@ public class DataStoreConfiguration {
     @Bean
     @Autowired
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    public SqlJsonDB realTimeDB(DBI dbi) {
+    public SqlJsonDB jsonDB(DBI dbi, Optional<List<Index>> beanIndexes) {
 
         ArrayList<Index> indexes = new ArrayList<>();
+        if(beanIndexes.isPresent()) {
+            indexes.addAll(beanIndexes.get());
+        }
+
         for (Kind kind : Kind.values()) {
-            UniqueProperty uniqueProperty = kind.getModelClass().getAnnotation(UniqueProperty.class);
-            if (uniqueProperty != null) {
-                indexes.add(new Index("/" + kind.getModelName() + "s", uniqueProperty.value()));
+            addIndex(indexes, kind, kind.getModelClass().getAnnotation(UniqueProperty.class));
+            UniqueProperty.Multiple ump = kind.getModelClass().getAnnotation(UniqueProperty.Multiple.class);
+            if (ump != null) {
+                for (UniqueProperty p : ump.value()) {
+                    addIndex(indexes, kind, p);
+                }
             }
 
-            IndexedProperty indexedProperty = kind.getModelClass().getAnnotation(IndexedProperty.class);
-            if (indexedProperty != null) {
-                indexes.add(new Index("/" + kind.getModelName() + "s", indexedProperty.value()));
+            addIndex(indexes, kind, kind.getModelClass().getAnnotation(IndexedProperty.class));
+            IndexedProperty.Multiple imp = kind.getModelClass().getAnnotation(IndexedProperty.Multiple.class);
+            if (imp != null) {
+                for (IndexedProperty p : imp.value()) {
+                    addIndex(indexes, kind, p);
+                }
             }
         }
 
@@ -61,6 +73,18 @@ public class DataStoreConfiguration {
             LOG.debug("Could not create tables", ignore);
         }
         return jsondb;
+    }
+
+    private void addIndex(List<Index> indexes, Kind kind, IndexedProperty indexedProperty) {
+        if (indexedProperty != null) {
+            indexes.add(new Index("/" + kind.getModelName() + "s", indexedProperty.value()));
+        }
+    }
+
+    private void addIndex(List<Index> indexes, Kind kind, UniqueProperty p) {
+        if (p != null) {
+            indexes.add(new Index("/" + kind.getModelName() + "s", p.value()));
+        }
     }
 
 }
