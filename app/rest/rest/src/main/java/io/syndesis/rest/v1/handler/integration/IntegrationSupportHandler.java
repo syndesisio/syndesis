@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -151,27 +152,27 @@ public class IntegrationSupportHandler {
         };
     }
 
-    private void addToExport(LinkedHashMap<String, ModelData<?>> export, Integration integration) {
-        addToExport(export, new ModelData<Integration>(Kind.Integration, integration));
+    private void addToExport(Map<String, ModelData<?>> export, Integration integration) {
+        addToExport(export, new ModelData<>(Kind.Integration, integration));
         for (Step step : integration.getSteps()) {
             Optional<Connection> c = step.getConnection();
             if (c.isPresent()) {
                 Connection connection = c.get();
-                addToExport(export, new ModelData<Connection>(Kind.Connection, connection));
+                addToExport(export, new ModelData<>(Kind.Connection, connection));
                 Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
                 if (connector != null) {
-                    addToExport(export, new ModelData<Connector>(Kind.Connector, connector));
+                    addToExport(export, new ModelData<>(Kind.Connector, connector));
                 }
             }
             Optional<Extension> e = step.getExtension();
             if (e.isPresent()) {
                 Extension extension = e.get();
-                addToExport(export, new ModelData<Extension>(Kind.Extension, extension));
+                addToExport(export, new ModelData<>(Kind.Extension, extension));
             }
         }
     }
 
-    private void addToExport(LinkedHashMap<String, ModelData<?>> export, ModelData<?> model) {
+    private void addToExport(Map<String, ModelData<?>> export, ModelData<?> model) {
         try {
             String key = model.getKind().getModelName()+":"+model.getData().getId();
             if ( !export.containsKey(key) )  {
