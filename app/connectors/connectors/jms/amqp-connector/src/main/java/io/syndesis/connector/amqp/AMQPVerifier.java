@@ -15,13 +15,10 @@
  */
 package io.syndesis.connector.amqp;
 
-import java.util.List;
-import java.util.Map;
-
 import io.syndesis.verifier.api.ComponentVerifier;
-import io.syndesis.verifier.api.VerifierResponse;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.springframework.stereotype.Component;
 
 @Component("amqp")
@@ -31,12 +28,7 @@ public class AMQPVerifier extends ComponentVerifier {
     }
 
     @Override
-    public List<VerifierResponse> verify(CamelContext context, String connectorId, Map<String, Object> params) {
-        // create and register amqp-publish component, if needed
-        if (context.getComponent("amqp-publish") == null) {
-            context.addComponent("amqp-publish",
-                    new AMQPConnectorFactory().newInstance(connectorId, "amqp"));
-        }
-        return super.verify(context, connectorId, params);
+    protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
+        return new AMQPVerifierExtension(scheme);
     }
 }
