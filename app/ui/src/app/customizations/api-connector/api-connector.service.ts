@@ -4,8 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { ApiHttpService } from '@syndesis/ui/platform';
 import { ApiConnectors, ApiConnectorData, CustomConnectorRequest } from './api-connector.models';
 
-
-import { apiConnectorEndpoints } from '../../customizations/api-connector/api-connector.api';
+import { apiConnectorEndpoints } from './api-connector.api';
 
 @Injectable()
 export class ApiConnectorService {
