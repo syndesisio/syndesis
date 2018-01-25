@@ -125,7 +125,8 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   deploymentAction($event, deployment) {
-   console.log('Deployment action: ', $event, deployment);
+   //console.log('Deployment action: ', $event, deployment);
+   // TODO
   }
 
   validateName(name: string) {
