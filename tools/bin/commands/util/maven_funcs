@@ -50,7 +50,7 @@ extract_modules() {
     local modules=""
 
     if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules runtime core connectors rest verifier"
+        modules="$modules core extension integration connectors rest verifier"
     fi
 
     if [ "$(hasflag --images)" ]; then

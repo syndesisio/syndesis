@@ -192,7 +192,7 @@ public class ProjectGeneratorTestSupport {
                     .secret(true)
                     .build())
             .componentScheme("twitter")
-            .addDependency(Dependency.maven("io.syndesis:camel-component-proxy:" + SYNDESIS_CONNECTORS_VERSION))
+            .addDependency(Dependency.maven("io.syndesis:integration-component-proxy:" + SYNDESIS_CONNECTORS_VERSION))
             .addDependency(Dependency.maven("org.apache.camel:camel-twitter:" + CAMEL_VERSION))
             .addAction(TWITTER_MENTION_ACTION)
             .build();

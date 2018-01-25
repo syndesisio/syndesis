@@ -109,7 +109,7 @@ public class ConnectorStepHandlerTest extends StepHandlerTestSupport {
                 .secret(true)
                 .build())
         .componentScheme("twitter")
-        .addDependency(Dependency.maven("io.syndesis:camel-component-proxy:latest"))
+        .addDependency(Dependency.maven("io.syndesis:integration-component-proxy:latest"))
         .addDependency(Dependency.maven("org.apache.camel:camel-twitter:latest"))
         .addAction(TWITTER_MENTION_ACTION)
         .build();

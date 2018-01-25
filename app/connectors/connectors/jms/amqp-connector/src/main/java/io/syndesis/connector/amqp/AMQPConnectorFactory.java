@@ -17,16 +17,15 @@ package io.syndesis.connector.amqp;
 
 import java.util.Map;
 
-import io.syndesis.camel.component.proxy.ComponentProxyComponent;
-import io.syndesis.camel.component.proxy.ComponentProxyFactory;
-
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.amqp.AMQPComponent;
 import org.apache.camel.component.extension.ComponentExtension;
 import org.apache.qpid.jms.JmsConnectionFactory;
 
 /**
- * {@link io.syndesis.camel.component.proxy.ComponentProxyFactory} to create AMQP Connectors.
+ * {@link ComponentProxyFactory} to create AMQP Connectors.
  * @author dhirajsb
  */
 public class AMQPConnectorFactory implements ComponentProxyFactory {
