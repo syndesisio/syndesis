@@ -4,25 +4,28 @@ import { Observable } from 'rxjs/Observable';
 import { ApiHttpService } from '@syndesis/ui/platform';
 import { ApiConnectors, ApiConnectorData, CustomConnectorRequest } from './api-connector.models';
 
+
+import { apiConnectorEndpoints } from '../../customizations/api-connector/api-connector.api';
+
 @Injectable()
 export class ApiConnectorService {
   constructor(private apiHttpService: ApiHttpService) { }
 
   getCustomConnector(id: string): Observable<ApiConnectorData> {
     return this.apiHttpService
-      .setEndpointUrl('selectApiConnector', { id })
+      .setEndpointUrl(apiConnectorEndpoints.selectApiConnector, { id })
       .get<ApiConnectorData>();
   }
 
   getCustomConnectorList(): Observable<ApiConnectors> {
     return this.apiHttpService
-      .setEndpointUrl('getApiConnectorList', { template: 'swagger-connector-template' })
+      .setEndpointUrl(apiConnectorEndpoints.getApiConnectorList, { template: 'swagger-connector-template' })
       .get<{ items: ApiConnectors }>() // TODO: Provide a better <T> typing here
       .map(response => response.items);
   }
 
   validateCustomConnectorInfo(customConnectorRequest: CustomConnectorRequest): Observable<ApiConnectorData> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl('validateCustomConnectorInfo');
+    const apiHttpService = this.apiHttpService.setEndpointUrl(apiConnectorEndpoints.validateCustomConnectorInfo);
     const { specificationFile, connectorTemplateId } = customConnectorRequest;
     if (specificationFile) {
       return apiHttpService.upload<ApiConnectorData>({
@@ -36,7 +39,7 @@ export class ApiConnectorService {
   }
 
   createCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl('submitCustomConnector');
+    const apiHttpService = this.apiHttpService.setEndpointUrl(apiConnectorEndpoints.submitCustomConnector);
     const [rawConnectorSettings, icon, specification] = [
       customConnectorRequest,
       customConnectorRequest.iconFile,
@@ -54,7 +57,7 @@ export class ApiConnectorService {
   }
 
   updateCustomConnector(customConnectorRequest: CustomConnectorRequest): Observable<any> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl('selectApiConnector', { id: customConnectorRequest.id });
+    const apiHttpService = this.apiHttpService.setEndpointUrl(apiConnectorEndpoints.selectApiConnector, { id: customConnectorRequest.id });
     const [rawConnector, icon] = [
       customConnectorRequest,
       customConnectorRequest.iconFile
@@ -71,7 +74,7 @@ export class ApiConnectorService {
 
   deleteCustomConnector(id: string): Observable<any> {
     return this.apiHttpService
-      .setEndpointUrl('selectApiConnector', { id })
+      .setEndpointUrl(apiConnectorEndpoints.selectApiConnector, { id })
       .delete<any>();
   }
 
