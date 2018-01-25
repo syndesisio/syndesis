@@ -1,4 +1,4 @@
-import { Component,  Input,  ViewChild, ElementRef } from '@angular/core';
+import { Component,  Input,  ViewChild, ElementRef, OnInit } from '@angular/core';
 
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
@@ -10,6 +10,7 @@ import { Integrations, Integration } from '../integration/integration.model';
 import { IntegrationStore } from '../store/integration/integration.store';
 import { IntegrationSupportService } from '../integration/integration-support.service';
 import { log, getCategory } from '../logging';
+import { Observable } from 'rxjs/Observable';
 
 import fileSaver = require("file-saver");
 
@@ -32,7 +33,7 @@ const SUPPORT_FORM_CONFIG = {
   templateUrl: './support.component.html',
   styleUrls: ['./support.component.scss']
 })
-export class SupportComponent {
+export class SupportComponent implements OnInit {
 
   // Used to bind patternfly behavior with foreign form elements
   @ViewChild('alllogs') allogs: ElementRef;
@@ -103,19 +104,16 @@ export class SupportComponent {
   constructor(
     public store: IntegrationStore,
     public integrationSupportService: IntegrationSupportService,
-  ) {}
+  ) {
+  }
 
-  getPods() {
-    this.integrationSupportService
-      .getPods()
-      .toPromise()
-      .then((resp: any) => {
-        const body = JSON.parse(resp['_body']); 
-        return body;
-      });
+  getPods(): Observable<any>{
+    return this.integrationSupportService
+      .getPods();
   }
   
   buildData(data: any = {}) {
+    this.getPods();
     console.log(data);
     this.integrationSupportService
       .downloadSupportData(data)
@@ -147,8 +145,10 @@ export class SupportComponent {
   }
 
   onSubmit() {
-    let pods = this.getPods();
-    console.log("pods: " + pods);
+    
+
+
+    debugger;
     let chosen = [];
     if(this.allLogsSelected) {
       chosen = this.items;
@@ -157,6 +157,7 @@ export class SupportComponent {
     }
     let input = {};
     chosen.forEach(el => input[el.name] = true);
+    console.log("integrations: " + JSON.stringify(chosen));
     this.buildData(input);
   }
 
@@ -174,6 +175,13 @@ export class SupportComponent {
 
   selectedItems() : number {
     return this.items.filter(x => x.selected === true).length;
+  }
+
+  public ngOnInit() {
+    this.store.list.subscribe(integration  => {
+      this.items = integration as Integration[];
+    });
+    this.store.loadAll();
   }
 
 }
