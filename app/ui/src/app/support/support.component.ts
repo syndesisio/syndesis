@@ -106,18 +106,11 @@ export class SupportComponent implements OnInit {
     public integrationSupportService: IntegrationSupportService,
   ) {
   }
-
-  getPods(): Observable<any>{
-    return this.integrationSupportService
-      .getPods();
-  }
   
   buildData(data: any = {}) {
-    this.getPods();
     console.log(data);
     this.integrationSupportService
       .downloadSupportData(data)
-      .map(res => res.blob())
       .subscribe(response => {
         fileSaver.saveAs(response, "syndesis.zip");
       },
@@ -145,9 +138,6 @@ export class SupportComponent implements OnInit {
   }
 
   onSubmit() {
-    
-
-
     debugger;
     let chosen = [];
     if(this.allLogsSelected) {

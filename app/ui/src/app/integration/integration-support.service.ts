@@ -7,6 +7,9 @@ import { Exchange } from '@syndesis/ui/model';
 import { Integration } from './integration.model';
 import { integrationSupportEndpoints } from './integration-support.api';
 
+
+import { RequestMethod, ResponseContentType } from '@angular/http';
+
 @Injectable()
 export class IntegrationSupportService {
 
@@ -77,28 +80,9 @@ export class IntegrationSupportService {
     });
   }
 
-  getPods(): Observable<Response> {
-    const url = this.supportService
-      .one('pods')
-      .getRestangularUrl();
-    return this.http.get(url);
+  downloadSupportData(data: Array<any>): Observable<Blob>  {
+    const url = integrationSupportEndpoints.supportData;
+    return this.apiHttpService.post<Blob>(url, data, { responseType: ResponseContentType.Blob, method: RequestMethod.Post  });
   }
-  getSupportFormConfiguration(): Observable<Response> {
-    const url = this.supportService
-      .one('formConfig')
-      .getRestangularUrl();
-    return this.http.get(url);
-  }
-  downloadSupportData(data: Array<any>): Observable<Response>  {
-    const url = this.supportService
-      .one('downloadSupportZip')
-      .getRestangularUrl();
-    return this.http.post(url, data, {
-      method: RequestMethod.Post,
-      responseType: ResponseContentType.Blob
-  });
-  }
-
-
 
 }
