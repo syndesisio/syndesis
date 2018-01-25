@@ -41,7 +41,82 @@
           "required": true,
           "type": "string",
           "javaType": "java.lang.String",
+          "enum": [
+            {
+              "value": "AP_NORTHEAST_1",
+              "label": "AP NORTHEAST 1"
+            },
+            {
+              "value": "AP_NORTHEAST_2",
+              "label": "AP NORTHEAST 2"
+            },
+            {
+              "value": "AP_SOUTH_1",
+              "label": "AP SOUTH 1"
+            },
+            {
+              "value": "AP_SOUTHEAST_1",
+              "label": "AP SOUTHEAST 1"
+            },
+            {
+              "value": "AP_SOUTHEAST_2",
+              "label": "AP SOUTHEAST 2"
+            },
+            {
+              "value": "CA_CENTRAL_1",
+              "label": "CA CENTRAL 1"
+            },
+            {
+              "value": "CN_NORTH_1",
+              "label": "CN NORTH 1"
+            },
+            {
+              "value": "CN_NORTHWEST_1",
+              "label": "CN NORTHWEST 1"
+            },
+            {
+              "value": "EU_CENTRAL_1",
+              "label": "EU CENTRAL 1"
+            },
+            {
+              "value": "EU_WEST_1",
+              "label": "EU WEST 1"
+            },
+            {
+              "value": "EU_WEST_2",
+              "label": "EU WEST 2"
+            },
+            {
+              "value": "EU_WEST_3",
+              "label": "EU WEST 3"
+            },
+            {
+              "value": "GovCloud",
+              "label": "Gov Cloud"
+            },
+            {
+              "value": "SA_EAST_1",
+              "label": "SA EAST 1"
+            },
+            {
+              "value": "US_EAST_1",
+              "label": "US EAST 1"
+            },
+            {
+              "value": "US_EAST_2",
+              "label": "US EAST 2"
+            },
+            {
+              "value": "US_WEST_1",
+              "label": "US WEST 1"
+            },
+            {
+              "value": "US_WEST_2",
+              "label": "US WEST 2"
+            }
+          ],
           "deprecated": false,
+          "defaultValue" : "US_EAST_1",
           "secret": false,
           "description": "The region where the bucket is located. This option is used in the com.amazonaws.services.s3.model.CreateBucketRequest."
         },
