@@ -39,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.credential.Credentials;
+import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
@@ -70,6 +71,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     private final ApplicationContext applicationContext;
     private final IconDataAccessObject iconDao;
+    private final ExtensionDataManager extensionDataManager;
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
@@ -78,7 +80,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
                             final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
-                            final IconDataAccessObject iconDao) {
+                            final IconDataAccessObject iconDao, final ExtensionDataManager extensionDataManager) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -87,6 +89,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         this.encryptionComponent = encryptionComponent;
         this.applicationContext = applicationContext;
         this.iconDao = iconDao;
+        this.extensionDataManager = extensionDataManager;
     }
 
     @Path("/{id}/credentials")
@@ -122,7 +125,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     public ConnectorIconHandler getConnectorIcon(@NotNull @PathParam("id") final String connectorId) {
         final Connector connector = get(connectorId);
 
-        return new ConnectorIconHandler(getDataManager(), connector, iconDao);
+        return new ConnectorIconHandler(getDataManager(), connector, iconDao, extensionDataManager);
     }
 
     @GET

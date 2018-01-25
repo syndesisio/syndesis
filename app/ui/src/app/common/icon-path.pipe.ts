@@ -37,7 +37,7 @@ export class IconPathPipe implements PipeTransform {
       const defaultIconSuffix = isConnector ? 'connection' : 'integration';
       let iconPath = `./../../assets/icons/${defaultIcon}.${defaultIconSuffix}.png`;
 
-      if (connection.icon.toLowerCase().startsWith('db:')) {
+      if (connection.icon.toLowerCase().startsWith('db:') || connection.icon.startsWith('extension:')) {
         connectionId = isConnector ? connection.id : connectionId;
         iconPath = `${this.apiEndpoint}/connectors/${connectionId}/icon`;
       }

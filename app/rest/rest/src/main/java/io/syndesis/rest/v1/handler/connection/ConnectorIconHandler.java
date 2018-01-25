@@ -19,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Optional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,8 +36,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.SyndesisServerException;
+import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.Dependency;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.icon.Icon;
 import io.syndesis.rest.v1.handler.BaseHandler;
@@ -53,11 +56,14 @@ public final class ConnectorIconHandler extends BaseHandler {
 
     private final Connector connector;
     private final IconDataAccessObject iconDao;
+    private final ExtensionDataManager extensionDataManager;
 
-    /* default */ ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao) {
+    /* default */ ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao,
+                                       final ExtensionDataManager extensionDataManager) {
         super(dataMgr);
         this.connector = connector;
         this.iconDao = iconDao;
+        this.extensionDataManager = extensionDataManager;
     }
 
     @POST
@@ -139,6 +145,24 @@ public final class ConnectorIconHandler extends BaseHandler {
                 sink.close();
             };
             return Response.ok(streamingOutput, icon.getMediaType()).build();
+        } else if (connectorIcon.startsWith("extension:")) {
+            String iconFile = connectorIcon.substring(10);
+            Optional<InputStream> extensionIcon = connector.getDependencies().stream()
+                .filter(Dependency::isExtension)
+                .map(Dependency::getId)
+                .findFirst()
+                .flatMap(extensionId -> extensionDataManager.getExtensionIcon(extensionId, iconFile));
+
+            if (extensionIcon.isPresent()) {
+                final StreamingOutput streamingOutput = (out) -> {
+                    final BufferedSink sink = Okio.buffer(Okio.sink(out));
+                    sink.writeAll(Okio.source(extensionIcon.get()));
+                    sink.close();
+                };
+                return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         }
 
         // If the specified icon is a data URL, or a non-URL like value (e.g.

@@ -134,6 +134,7 @@ public class ExtensionActivator {
         return new Connection.Builder()
             .createFrom(existingConnection)
             .connector(connectorToUse)
+            .icon(newConnector.getIcon())
             .configuredProperties(confProperties)
             .build();
     }
