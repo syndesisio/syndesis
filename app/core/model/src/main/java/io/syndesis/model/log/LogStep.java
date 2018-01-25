@@ -15,12 +15,14 @@
  */
 package io.syndesis.model.log;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.integration.Step;
 import org.immutables.value.Value;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Value.Immutable
 @JsonDeserialize(builder = LogStep.Builder.class)
@@ -29,20 +31,47 @@ public interface LogStep extends Step {
 
     String STEP_KIND = "log";
 
-    @JsonProperty("propertyNames")
-    List<String> getPropertyNames();
+    default List<String> getPropertyNames() {
+        return asList("propertyNames", getConfiguredProperties());
+    }
 
-    @JsonProperty("inHeaderNames")
-    List<String> getInHeaderNames();
 
-    @JsonProperty("outHeaderNames")
-    List<String> getOutHeaderNames();
+    default List<String> getInHeaderNames() {
+        return asList("inHeaderNames", getConfiguredProperties());
+    }
 
-    @JsonProperty("bodyLoggingEnabled")
-    boolean isBodyLoggingEnabled();
 
-    @JsonProperty("expression")
-    String getExpression();
+    default List<String> getOutHeaderNames() {
+        return asList("outHeaderNames", getConfiguredProperties());
+    }
+
+    default Boolean isBodyLoggingEnabled() {
+        final Map<String, String> props = getConfiguredProperties();
+        if (props == null || props.isEmpty()) {
+            return null;
+        }
+        return Boolean.parseBoolean(props.getOrDefault("bodyLoggingEnabled", "false"));
+    }
+
+    default String getExpression() {
+        final Map<String, String> props = getConfiguredProperties();
+        if (props == null || props.isEmpty()) {
+            return null;
+        }
+        return props.get("expression");
+    }
+
+
+    static List<String> asList(String propertyName, Map<String, String> props) {
+        if (props == null || props.isEmpty()) {
+            return null;
+        }
+        String names = props.get(propertyName);
+        if (names == null || names.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(names.split("[ \\n,]+"));
+    }
 
     class Builder extends ImmutableLogStep.Builder { }
 }

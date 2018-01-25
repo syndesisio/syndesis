@@ -68,6 +68,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new RuleFilterStepHandler());
         this.stepHandlerList.add(new ExtensionStepHandler());
         this.stepHandlerList.add(new SplitStepHandler());
+        this.stepHandlerList.add(new LogStepHandler());
         this.stepHandlerList.addAll(handlers);
     }
 
