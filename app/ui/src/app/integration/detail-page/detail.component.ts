@@ -9,7 +9,7 @@ import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IntegrationStore, StepStore } from '@syndesis/ui/store';
+import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
 import { Connection, Action } from '@syndesis/ui/model';
 import { Integration, Step } from '@syndesis/ui/integration';
@@ -26,11 +26,18 @@ import { ConfigService } from '@syndesis/ui/config.service';
 export class IntegrationDetailComponent extends IntegrationViewBase
   implements OnInit, OnDestroy {
   integration$: Observable<Integration>;
+  integrationDeployments$: Observable<any>;
   integrationSubscription: Subscription;
+  eventsSubscription: Subscription;
   integration: Integration;
   readonly loading$: Observable<boolean>;
   routeSubscription: Subscription;
   loggingEnabled = false;
+  usesMapping: { [valueComparator: string]: string } = {
+    '=0': '0 Uses',
+    '=1': '1 Use',
+    'other': '# Uses'
+  };
 
   constructor(
     public store: IntegrationStore,
@@ -41,7 +48,8 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
-    private config: ConfigService
+    private config: ConfigService,
+    private eventsService: EventsService
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.integration$ = this.store.resource;
@@ -95,10 +103,22 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     return name && name.length > 0 ? null : 'Name is required';
   }
 
+  exportIntegration() {
+    super.requestAction('export', this.integration);
+  }
+
   ngOnInit() {
     this.loggingEnabled = this.config.getSettings('features', 'logging', false);
-    this.integrationSubscription = this.integration$.subscribe(i => {
-      this.integration = i;
+    this.integrationSubscription = this.integration$
+      .first( i => i.id !== undefined )
+      .subscribe(i => {
+        this.integration = i;
+        this.integrationDeployments$ = Observable.merge(
+          this.integrationSupportService.getDeployments(this.integration.id),
+          this.eventsService.changeEvents
+            .filter( event => event.kind === 'integration-deployment')
+            // TODO it would obviously be better to just fetch one, not all of 'em
+            .flatMap(event => this.integrationSupportService.getDeployments(this.integration.id)));
     });
     this.routeSubscription = this.route.paramMap
       .first( params => params.has('integrationId'))
@@ -110,7 +130,4 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     this.routeSubscription.unsubscribe();
   }
 
-  exportIntegration() {
-    super.requestAction('export', this.integration);
-  }
 }

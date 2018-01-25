@@ -2,7 +2,7 @@
                 [message]="'Are you sure you would like to ' + getAction() + ' the \'' + selectedIntegration?.name + '\' integration?'">
 </syndesis-modal>
 <syndesis-loading [loading]="loading$ | async">
-  <div *ngIf="integration$ | async; let integration"
+  <div *ngIf="integration"
        class="row integration-detail">
     <div class=" toolbar-pf toolbar">
       <div class="col-sm-12">
@@ -108,12 +108,43 @@
             <button *ngIf="canActivate(integration)"
                     class="btn btn-default"
                     (click)="requestAction('activate', integration)">Start Integration</button>
-            <!--
-            <button class="btn btn-default">Undeploy Integration</button>
-            -->
           </p>
         </dd>
       </dl>
+      <ng-container *ngIf="integrationDeployments$ | async; let integrationDeployments">
+        <syndesis-loading [loading]="integrationDeployments === undefined">
+          <dl class="dl-horizontal">
+            <dt>
+              History:
+            </dt>
+            <dd>
+              <pfng-list [items]="integrationDeployments.items"
+                         [itemTemplate]="itemTemplate">
+                <ng-template #itemTemplate
+                             let-deployment="item"
+                             let-index="index">
+                  <div class="list-pf-left">
+                    <i class=""></i>
+
+                  </div>
+                  <div class="list-pf-content-wrapper">
+                    <div class="list-pf-main-content">
+                      <div class="list-pf-title">
+                        Version: {{ deployment.version }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-pf-additional-content">
+                    <span>Last published on {{ deployment.lastUpdated | date }}</span>
+                    <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
+
+                  </div>
+                </ng-template>
+              </pfng-list>
+            </dd>
+          </dl>
+        </syndesis-loading>
+      </ng-container>
       <dl class="dl-horizontal">
         <dt>
         </dt>
