@@ -18,8 +18,8 @@ package io.syndesis.integration.runtime;
 import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.ExtensionAction;
-import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.integration.SimpleStep;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
@@ -81,9 +81,9 @@ public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSuppo
                     new SimpleStep.Builder()
                             .id("s2")
                             .stepKind("extension")
-                            .action(new ExtensionAction.Builder()
-                                    .descriptor(new ExtensionDescriptor.Builder()
-                                            .kind(ExtensionAction.Kind.BEAN)
+                            .action(new StepAction.Builder()
+                                    .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.BEAN)
                                             .entrypoint(Bean1.class.getName())
                                             .build())
                                     .build())
@@ -91,9 +91,9 @@ public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSuppo
                     new SimpleStep.Builder()
                             .id("s3")
                             .stepKind("extension")
-                            .action(new ExtensionAction.Builder()
-                                    .descriptor(new ExtensionDescriptor.Builder()
-                                            .kind(ExtensionAction.Kind.BEAN)
+                            .action(new StepAction.Builder()
+                                    .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.BEAN)
                                             .entrypoint(Bean2.class.getName())
                                             .build())
                                     .build())

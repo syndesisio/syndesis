@@ -49,6 +49,7 @@ import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.extension.ExtensionDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
@@ -85,21 +86,17 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     private final ExtensionDataAccessObject fileStore;
 
-    private final ExtensionAnalyzer extensionAnalyzer;
-
     private final ExtensionActivator extensionActivator;
 
     private final Validator validator;
 
     public ExtensionHandler(final DataManager dataMgr,
                             final ExtensionDataAccessObject fileStore,
-                            final ExtensionAnalyzer extensionAnalyzer,
                             final ExtensionActivator extensionActivator,
                             final Validator validator) {
         super(dataMgr);
 
         this.fileStore = fileStore;
-        this.extensionAnalyzer = extensionAnalyzer;
         this.extensionActivator = extensionActivator;
         this.validator = validator;
     }
@@ -271,7 +268,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @Nonnull
     private Extension extractExtension(String location) {
         try (InputStream file = fileStore.read(location)) {
-            return extensionAnalyzer.analyze(file);
+            return BinaryExtensionAnalyzer.getDefault().getExtension(file);
         } catch (IOException ex) {
             throw SyndesisServerException.
                 launderThrowable("Unable to load extension from filestore location " + location, ex);

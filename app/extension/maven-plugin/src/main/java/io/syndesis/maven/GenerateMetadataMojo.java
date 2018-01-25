@@ -47,6 +47,7 @@ import io.atlasmap.java.service.AtlasJsonProvider;
 import io.atlasmap.java.v2.JavaClass;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.Action;
@@ -148,6 +149,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
         processAnnotations();
         overrideConfigFromMavenPlugin();
         includeDependencies();
+        addIcon();
         generateAtlasMapInspections();
         detectExtensionType();
 
@@ -585,6 +587,22 @@ public class GenerateMetadataMojo extends AbstractMojo {
             throw new MojoFailureException("Extension contains " + steps + " steps and " + connectors + " connectors. Mixed extensions are not allowed, you should use only one type of actions.");
         }
 
+    }
+
+    // ****************************************
+    // Icon
+    // ****************************************
+    private void addIcon() throws MojoFailureException {
+        // Add a default icon if a icon.png or icon.svg file is found
+        if (extensionBuilder.build().getIcon() == null) {
+            for (String iconFileName : BinaryExtensionAnalyzer.getDefault().getAllowedIconFileNames()) {
+                File iconFile = new File(syndesisMetadataSourceDir, iconFileName);
+                if (iconFile.exists()) {
+                    extensionBuilder.icon("extension:" + iconFileName);
+                    break;
+                }
+            }
+        }
     }
 
     // ****************************************
