@@ -21,7 +21,7 @@ export function key() {
     }
   }
 
-  // we build the resulting key front to back.
+  // we build the resulting key backwards. The most significant bits at the front of the key.
   let result = '';
   const timestamp = new Date().getTime();
 
