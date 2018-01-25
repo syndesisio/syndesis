@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+set -x
+
 set -euo pipefail
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
@@ -11,7 +14,9 @@ echo "Local IP is: ${LOCAL_IP}"
 # Let's also just back this up in case.
 mv -f src/config.json src/config.json.bak || true
 cp src/config.json.minishift src/config.json
-sed -i.bu "s/192.168.64.2/$(minishift ip)/" src/config.json
+
+
+sed -i.bu "s#syndesis.192.168.64.2.nip.io#$(oc get route syndesis  --template={{.spec.host}})#" src/config.json
 sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" src/config.json
 rm src/config.json.bu
 
