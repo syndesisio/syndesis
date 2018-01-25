@@ -8,13 +8,13 @@ import {
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from 'patternfly-ng';
 
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
 import { Connection, Action } from '@syndesis/ui/model';
 import { Integration, Step } from '@syndesis/ui/integration';
 import { IntegrationViewBase } from '../components';
-import { NotificationType } from 'patternfly-ng';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
 
@@ -38,6 +38,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     '=1': '1 Use',
     'other': '# Uses'
   };
+  listConfig: ListConfig;
 
   constructor(
     public store: IntegrationStore,
@@ -108,6 +109,11 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   ngOnInit() {
+    this.listConfig = {
+      selectItems: false,
+      showCheckbox: false,
+      useExpandItems: true
+    } as ListConfig;
     this.loggingEnabled = this.config.getSettings('features', 'logging', false);
     this.integrationSubscription = this.integration$
       .first( i => i.id !== undefined )
@@ -118,7 +124,8 @@ export class IntegrationDetailComponent extends IntegrationViewBase
           this.eventsService.changeEvents
             .filter( event => event.kind === 'integration-deployment')
             // TODO it would obviously be better to just fetch one, not all of 'em
-            .flatMap(event => this.integrationSupportService.getDeployments(this.integration.id)));
+            .flatMap(event => this.integrationSupportService.getDeployments(this.integration.id)))
+            .map(val => val.items.sort((a, b) => b.version - a.version));
     });
     this.routeSubscription = this.route.paramMap
       .first( params => params.has('integrationId'))

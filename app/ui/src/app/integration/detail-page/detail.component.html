@@ -118,14 +118,16 @@
               History:
             </dt>
             <dd>
-              <pfng-list [items]="integrationDeployments.items"
+              <pfng-list [items]="integrationDeployments"
+                         [config]="listConfig"
                          [itemTemplate]="itemTemplate">
                 <ng-template #itemTemplate
                              let-deployment="item"
                              let-index="index">
                   <div class="list-pf-left">
-                    <i class=""></i>
-
+                    <ng-container *ngIf="deployment.version === (integration.deploymentId || integration.version)">
+                      <span class="pficon pficon-ok list-pf-icon-small"></span>
+                    </ng-container>
                   </div>
                   <div class="list-pf-content-wrapper">
                     <div class="list-pf-main-content">
