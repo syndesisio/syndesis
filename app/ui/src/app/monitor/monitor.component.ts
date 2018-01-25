@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+
+import { MonitorStore, MonitorState, getMonitorState } from '@syndesis/ui/monitor';
 
 @Component({
   selector: 'syndesis-monitor',
@@ -15,4 +19,12 @@ import { Component } from '@angular/core';
   <router-outlet></router-outlet>
   `
 })
-export class MonitorComponent {}
+export class MonitorComponent implements OnInit {
+  monitorState$: Observable<MonitorState>;
+
+  constructor(private monitorStore: Store<MonitorStore>) { }
+
+  ngOnInit() {
+    this.monitorState$ = this.monitorStore.select<MonitorState>(getMonitorState);
+  }
+}

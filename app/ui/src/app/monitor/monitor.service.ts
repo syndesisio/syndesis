@@ -10,11 +10,20 @@ import { monitorEndpoints } from './monitor.api';
 export class MonitorService {
   constructor(private apiHttpService: ApiHttpService) { }
 
-  getMetrics(integration: Integration): Observable<any> { // TBD: Assign proper <T> typing
-    return this.apiHttpService.setEndpointUrl(monitorEndpoints.metrics, integration.id).get();
+  getIntegrationMetrics(): Observable<any> { // TODO: Assign proper <T> typing
+    return this.apiHttpService.setEndpointUrl(monitorEndpoints.integrations).get();
   }
 
-  getLogs(integration: Integration): Observable<any> { // TBD: Assign proper <T> typing
+  getIntegration(integration: Integration): Observable<any> { // TODO: Assign proper <T> typing
+    return this.apiHttpService.setEndpointUrl(monitorEndpoints.integration, integration.id).get();
+  }
+
+  getLogs(integration: Integration): Observable<any> { // TODO: Assign proper <T> typing
     return this.apiHttpService.setEndpointUrl(monitorEndpoints.logs, integration.id).get();
+  }
+
+  getLogDeltas(payload: { integration: Integration; timestamp: number; }): Observable<any> { // TODO: Assign proper <T> typing
+    const { integration, timestamp } = payload;
+    return this.apiHttpService.setEndpointUrl(monitorEndpoints.logDeltas, integration.id, timestamp).get();
   }
 }
