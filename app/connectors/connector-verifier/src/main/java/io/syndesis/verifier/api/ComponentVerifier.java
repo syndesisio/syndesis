@@ -60,12 +60,14 @@ public class ComponentVerifier implements Verifier {
         this.verifierExtensionClass = verifierExtensionClass;
     }
 
-    // ========================================================
+    // *************************************
+    // Impl
+    // *************************************
 
     @Override
     public List<VerifierResponse> verify(CamelContext context, String connectorId, Map<String, Object> params) {
-        String scheme = getConnectorAction().orElse(connectorId);
-        ComponentVerifierExtension verifier = getComponentVerifierExtension(context, scheme);
+        final String scheme = getConnectorAction().orElse(connectorId);
+        final ComponentVerifierExtension verifier = resolveComponentVerifierExtension(context, scheme);
 
         if (verifier == null) {
             return Collections.singletonList(createUnsupportedResponse(scheme));
@@ -73,32 +75,12 @@ public class ComponentVerifier implements Verifier {
 
         customize(params);
 
-        // the connector must support ping check if its verifiable
-        List<VerifierResponse> resp = new ArrayList<>();
-        for (Verifier.Scope scope :  Verifier.Scope.values()) {
-            try {
-                ComponentVerifierExtension.Result result = verifier.verify(toComponentScope(scope), params);
-                resp.add(toVerifierResponse(result));
-                log.info("PING: {} === {}", scheme, result.getStatus());
-                if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR) {
-                    log.error("{} --> ", scheme);
-                    for (ComponentVerifierExtension.VerificationError error : result.getErrors()) {
-                        log.error("   {} : {}", error.getCode(), error.getDescription());
-                    }
-                }
-                if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR ||
-                    result.getStatus() == ComponentVerifierExtension.Result.Status.UNSUPPORTED) {
-                    break;
-                }
-            } catch (Exception exp) {
-                resp.add(toExceptionResponse(exp, scope, params.keySet()));
-                log.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
-            }
-        }
-        return resp;
+        return doVerify(verifier, scheme, params);
     }
 
-    // ========================================================
+    // *************************************
+    // Customizations
+    // *************************************
 
     protected Optional<String> getConnectorAction() {
         return Optional.ofNullable(defaultComponentScheme);
@@ -108,9 +90,7 @@ public class ComponentVerifier implements Verifier {
         // Hook for customizing params
     }
 
-    // ========================================================
-
-    private ComponentVerifierExtension getComponentVerifierExtension(CamelContext context, String scheme) {
+    protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
         if (verifierExtension == null) {
             synchronized (this) {
                 if (verifierExtension == null) {
@@ -122,7 +102,6 @@ public class ComponentVerifier implements Verifier {
                         if (verifierExtension == null) {
                             log.warn("Component {} does not support verifier extension", scheme);
                         }
-
                     }
                 }
             }
@@ -131,7 +110,42 @@ public class ComponentVerifier implements Verifier {
         return verifierExtension;
     }
 
-    private ComponentVerifierExtension.Scope toComponentScope(Scope scope) {
+    protected List<VerifierResponse> doVerify(ComponentVerifierExtension verifier, String scheme, Map<String, Object> params) {
+        // the connector must support ping check if its verifiable
+        final List<VerifierResponse> resp = new ArrayList<>();
+
+        for (Verifier.Scope scope :  Verifier.Scope.values()) {
+            try {
+                ComponentVerifierExtension.Result result = verifier.verify(toComponentScope(scope), params);
+                resp.add(toVerifierResponse(result));
+
+                log.info("Verify ({}): {} === {}", scope, scheme, result.getStatus());
+
+                if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR) {
+                    log.error("{} --> ", scheme);
+                    for (ComponentVerifierExtension.VerificationError error : result.getErrors()) {
+                        log.error("   {} : {}", error.getCode(), error.getDescription());
+                    }
+                }
+
+                if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR ||
+                    result.getStatus() == ComponentVerifierExtension.Result.Status.UNSUPPORTED) {
+                    break;
+                }
+            } catch (Exception exp) {
+                resp.add(toExceptionResponse(exp, scope, params.keySet()));
+                log.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
+            }
+        }
+
+        return resp;
+    }
+
+    // *************************************
+    // Helpers
+    // *************************************
+
+    protected ComponentVerifierExtension.Scope toComponentScope(Scope scope) {
         switch (scope) {
             case CONNECTIVITY:
                 return ComponentVerifierExtension.Scope.CONNECTIVITY;
@@ -142,52 +156,50 @@ public class ComponentVerifier implements Verifier {
         }
     }
 
-    private VerifierResponse createUnsupportedResponse(String connectorId) {
+    protected VerifierResponse createUnsupportedResponse(String connectorId) {
         return new VerifierResponse.Builder(Status.UNSUPPORTED, Scope.PARAMETERS)
-            .error("internal-error",
-                   String.format("No action %s used for the verification known", connectorId))
+            .error("internal-error", String.format("No action %s used for the verification known", connectorId))
             .build();
     }
 
-    private VerifierResponse toVerifierResponse(ComponentVerifierExtension.Result result) {
+    protected VerifierResponse toVerifierResponse(ComponentVerifierExtension.Result result) {
         VerifierResponse.Builder builder =
             new VerifierResponse.Builder(result.getStatus().name(),
                                          result.getScope().name());
         if (result.getErrors() != null) {
             for (ComponentVerifierExtension.VerificationError error : result.getErrors()) {
                 builder.withError(error.getCode().getName())
-                         .description(error.getDescription())
-                         .parameters(error.getParameterKeys())
-                         .attributes(
-                             error.getDetails().entrySet().stream().collect(
-                                 Collectors.toMap(
-                                     e -> e.getKey().name(),
-                                     e -> e.getValue()
-                                 )
+                     .description(error.getDescription())
+                     .parameters(error.getParameterKeys())
+                     .attributes(
+                         error.getDetails().entrySet().stream().collect(
+                             Collectors.toMap(
+                                 e -> e.getKey().name(),
+                                 e -> e.getValue()
                              )
                          )
-                       .endError();
+                     )
+                   .endError();
             }
         }
         return builder.build();
     }
 
-    private VerifierResponse toExceptionResponse(Exception exp, Scope scope, Set<String> params) {
+    protected VerifierResponse toExceptionResponse(Exception exp, Scope scope, Set<String> params) {
         VerifierResponse.Builder builder = new VerifierResponse.Builder(Status.ERROR, scope);
 
         return builder
             .withError(ComponentVerifierExtension.VerificationError.StandardCode.EXCEPTION.name())
-              .description(exp.getMessage())
-              .parameters(params)
-              .attributes(extractExceptionDetails(exp))
+                .description(exp.getMessage())
+                .parameters(params)
+                .attributes(extractExceptionDetails(exp))
             .endError()
             .build();
     }
 
-    private Map<String, Object> extractExceptionDetails(Exception exp) {
+    protected Map<String, Object> extractExceptionDetails(Exception exp) {
         Map<String, Object> details = new HashMap<>();
-        details.put(ComponentVerifierExtension.VerificationError.ExceptionAttribute.EXCEPTION_CLASS.name(),
-                    exp.getClass().getName());
+        details.put(ComponentVerifierExtension.VerificationError.ExceptionAttribute.EXCEPTION_CLASS.name(), exp.getClass().getName());
         details.put(ComponentVerifierExtension.VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE.name(), exp);
         return details;
     }

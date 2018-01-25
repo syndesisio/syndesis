@@ -39,7 +39,7 @@ public interface SimpleStep extends Step {
     }
 
     @Override
-    Optional<Action<?>> getAction();
+    Optional<Action> getAction();
 
     @Override
     Optional<Connection> getConnection();

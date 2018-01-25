@@ -32,7 +32,7 @@
         <div class="panel-heading">
           <h1 class="panel-title inline-block">
             {{ extension.name }}
-            <small>({{ extension.extensionId }})</small>
+            <small>(ID: {{ extension.extensionId }})</small>
           </h1>
           <div class="pull-right">
             <button type="button"
@@ -44,7 +44,7 @@
           </div>
         </div>
         <div class="panel-body">
-          <h4>Overview</h4>
+          <h2 class="section-heading">Overview</h2>
           <dl class="dl-horizontal">
             <dt>
               Name
@@ -61,8 +61,33 @@
               {{ extension.description }}
             </dd>
           </dl>
-          <p></p>
-          <h4>Supported Steps</h4>
+          <dl class="dl-horizontal">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <ng-container *ngIf="extension.extensionType == 'Steps'; else typeDescConnector">
+                Step Extension
+              </ng-container>
+              <ng-template #typeDescConnector>
+                Connector Extension
+              </ng-template>
+            </dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>
+              Last Update
+            </dt>
+            <dd>
+              {{ extension.lastUpdated | date : 'medium' }}
+            </dd>
+          </dl>
+          <ng-container *ngIf="extension.extensionType == 'Steps'; else supportedTypeConnector">
+            <h2 class="section-heading intermediate">Supported Steps</h2>
+          </ng-container>
+          <ng-template #supportedTypeConnector>
+            <h2 class="section-heading intermediate">Supported Actions</h2>
+          </ng-template>
           <div class="row">
             <div class="col-xs-1">
             </div>
@@ -76,8 +101,7 @@
             </div>
           </div>
           <ng-container *ngIf="integrations$ | async; let integrations">
-              <p></p>
-              <h4>Usage</h4>
+              <h2 class="section-heading intermediate">Usage</h2>
               <div class="row">
                 <div class="col-xs-1">
                 </div>

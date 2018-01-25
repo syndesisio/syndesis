@@ -100,7 +100,7 @@
           "propertyDefinitionSteps" : [ ]
         },
         "tags" : [ ],
-        "actionType" : "extension"
+        "actionType" : "step"
       },
       "stepKind" : "extension",
       "configuredProperties" : {
@@ -123,6 +123,7 @@
         } ],
         "id" : "my-extension-1",
         "properties" : { },
+        "configuredProperties" : { },
         "metadata" : { }
       },
       "dependencies" : [ ],
@@ -138,7 +139,7 @@
           "propertyDefinitionSteps" : [ ]
         },
         "tags" : [ ],
-        "actionType" : "extension"
+        "actionType" : "step"
       },
       "stepKind" : "extension",
       "configuredProperties" : {
@@ -152,6 +153,7 @@
         "dependencies" : [ ],
         "id" : "my-extension-2",
         "properties" : { },
+        "configuredProperties" : { },
         "metadata" : { }
       },
       "dependencies" : [ ],
@@ -167,7 +169,7 @@
           "propertyDefinitionSteps" : [ ]
         },
         "tags" : [ ],
-        "actionType" : "extension"
+        "actionType" : "step"
       },
       "stepKind" : "extension",
       "configuredProperties" : {
@@ -181,6 +183,7 @@
         "dependencies" : [ ],
         "id" : "my-extension-3",
         "properties" : { },
+        "configuredProperties" : { },
         "metadata" : { }
       },
       "dependencies" : [ ],

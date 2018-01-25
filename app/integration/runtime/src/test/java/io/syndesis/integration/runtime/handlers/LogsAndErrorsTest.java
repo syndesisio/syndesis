@@ -19,8 +19,8 @@ import io.syndesis.extension.api.SyndesisStepExtension;
 import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.ExtensionAction;
-import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.integration.SimpleStep;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
@@ -84,9 +84,9 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
                     new SimpleStep.Builder()
                             .id("s2")
                             .stepKind("extension")
-                            .action(new ExtensionAction.Builder()
-                                    .descriptor(new ExtensionDescriptor.Builder()
-                                            .kind(ExtensionAction.Kind.STEP)
+                            .action(new StepAction.Builder()
+                                    .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.STEP)
                                             .entrypoint(LogExtension.class.getName())
                                             .build())
                                     .build())
@@ -94,9 +94,9 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
                     new SimpleStep.Builder()
                             .id("s3")
                             .stepKind("extension")
-                            .action(new ExtensionAction.Builder()
-                                    .descriptor(new ExtensionDescriptor.Builder()
-                                            .kind(ExtensionAction.Kind.STEP)
+                            .action(new StepAction.Builder()
+                                    .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.STEP)
                                             .entrypoint(ErrorExtension.class.getName())
                                             .build())
                                     .build())

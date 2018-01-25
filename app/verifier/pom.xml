@@ -304,15 +304,13 @@
       </exclusions>
     </dependency>
 
-    <!-- === Testing Dependencies ======================================================== -->
-
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>sql-common</artifactId>
-      <type>test-jar</type>
+      <artifactId>amqp-connector</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
+
+    <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
       <groupId>junit</groupId>
@@ -383,6 +381,7 @@
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-broker</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-client</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-openwire-legacy</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:amqp-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>

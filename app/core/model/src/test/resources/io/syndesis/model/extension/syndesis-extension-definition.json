@@ -6,7 +6,7 @@
   "version" : "1.0.0-SNAPSHOT",
   "tags" : [ ],
   "actions" : [ {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-bean-binding",
     "name" : "BeanBindingLogExtension",
     "description" : "A simple bean-binding based logging extension",
@@ -23,7 +23,7 @@
     },
     "tags" : [ ]
   }, {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-function-1",
     "name" : "FunctionLogExtension1",
     "description" : "A simple function based logging extension (1)",
@@ -40,7 +40,7 @@
     },
     "tags" : [ ]
   }, {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-function-2",
     "name" : "FunctionLogExtension2",
     "description" : "A simple function based logging extension (2)",
@@ -57,7 +57,7 @@
     },
     "tags" : [ ]
   }, {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-boot-1",
     "name" : "BootLogExtension1",
     "description" : "A simple route-definition based logging extension (1)",
@@ -74,7 +74,7 @@
     },
     "tags" : [ ]
   }, {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-boot-2",
     "name" : "BootLogExtension2",
     "description" : "A simple route-builder based logging extension (2)",
@@ -91,7 +91,7 @@
     },
     "tags" : [ ]
   }, {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-boot-3",
     "name" : "BootLogExtension3",
     "description" : "A simple processor based logging extension (2)",
@@ -108,7 +108,7 @@
     },
     "tags" : [ ]
   }, {
-    "actionType" : "extension",
+    "actionType" : "step",
     "id" : "my-step",
     "name" : "StepLogExtension",
     "description" : "A simple step based logging extension",

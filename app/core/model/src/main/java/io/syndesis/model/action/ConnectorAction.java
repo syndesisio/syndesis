@@ -27,7 +27,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<ConnectorAction>, WithDependencies {
+public interface ConnectorAction extends Action, WithId<ConnectorAction>, WithDependencies {
 
     @Override
     @Value.Default
@@ -39,6 +39,9 @@ public interface ConnectorAction extends Action<ConnectorDescriptor>, WithId<Con
     default ConnectorAction withId(String id) {
         return new Builder().createFrom(this).id(id).build();
     }
+
+    @Override
+    ConnectorDescriptor getDescriptor();
 
     @Override
     default List<Dependency> getDependencies() {

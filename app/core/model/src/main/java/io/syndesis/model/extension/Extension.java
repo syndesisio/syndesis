@@ -18,19 +18,25 @@ package io.syndesis.model.extension;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.core.IndexedProperty;
 import io.syndesis.model.Kind;
-import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithMetadata;
 import io.syndesis.model.WithName;
+import io.syndesis.model.WithProperties;
 import io.syndesis.model.WithTags;
-import io.syndesis.model.action.ExtensionAction;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.WithActions;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.model.validation.NonBlockingValidations;
@@ -40,14 +46,23 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Extension.Builder.class)
 @NoDuplicateExtension(groups = NonBlockingValidations.class)
-@JsonPropertyOrder({"name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies", "schemaVersion"})
+@JsonPropertyOrder({"schemaVersion", "name", "description", "icon", "extensionId", "version", "tags", "actions", "dependencies"})
+@IndexedProperty.Multiple({
+    @IndexedProperty("extensionId"),
+    @IndexedProperty("status")
+})
 @SuppressWarnings("immutables")
-public interface Extension extends WithId<Extension>, WithActions<ExtensionAction>, WithName, WithTags, WithConfigurationProperties, WithDependencies, WithMetadata, Serializable {
+public interface Extension extends WithId<Extension>, WithActions<Action>, WithName, WithTags, WithProperties, WithDependencies, WithMetadata, Serializable {
 
     enum Status {
         Draft,
         Installed,
         Deleted
+    }
+
+    enum Type {
+        Steps,
+        Connectors
     }
 
     @Override
@@ -84,6 +99,21 @@ public interface Extension extends WithId<Extension>, WithActions<ExtensionActio
     Optional<Date> getLastUpdated();
 
     Optional<Date> getCreatedDate();
+
+    @NotNull(groups = AllValidations.class)
+    Type getExtensionType();
+
+    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    default List<StepAction> getStepActions() {
+        return getActions(StepAction.class);
+    }
+
+    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    default List<ConnectorAction> getConnectorActions() {
+        return getActions(ConnectorAction.class);
+    }
 
     @Override
     default Extension withId(String id) {

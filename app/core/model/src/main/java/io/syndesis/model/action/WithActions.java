@@ -17,15 +17,25 @@ package io.syndesis.model.action;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.syndesis.model.WithId;
 import io.syndesis.model.validation.AllValidations;
 
-public interface WithActions<T extends Action<? extends ActionDescriptor>> {
+public interface WithActions<T extends Action> {
 
     @NotNull(groups = AllValidations.class)
     List<T> getActions();
+
+    @JsonIgnore
+    default <S extends T> List<S> getActions(Class<S> clazz) {
+        return getActions().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .collect(Collectors.toList());
+    }
 
     default Optional<T> findActionById(String actionId) {
         if (getActions() == null) {
@@ -34,8 +44,8 @@ public interface WithActions<T extends Action<? extends ActionDescriptor>> {
 
         return getActions().stream()
             .filter(WithId.class::isInstance)
-            .filter(action -> ((WithId)action).getId().isPresent())
-            .filter(action -> actionId.equals(((WithId)action).getId().get()))
+            .filter(action -> action.getId().isPresent())
+            .filter(action -> actionId.equals(action.getId().get()))
             .findFirst();
     }
 }

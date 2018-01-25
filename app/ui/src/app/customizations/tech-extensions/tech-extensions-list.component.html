@@ -38,6 +38,14 @@
               <div class="list-pf-description" text-overflow-pf>{{ item.description }}</div>
             </div>
             <div class="list-pf-additional-content">
+              <span>
+                <ng-container *ngIf="item.extensionType == 'Steps'; else typeDescConnector">
+                  Step Extension
+                </ng-container>
+                <ng-template #typeDescConnector>
+                  Connector Extension
+                </ng-template>
+              </span>
               <span *ngIf="item.uses">
                 Used by <span [innerHtml]="item.uses | i18nPlural: itemUseMapping"></span>
               </span>

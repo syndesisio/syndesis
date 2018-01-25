@@ -15,6 +15,7 @@
  */
 package io.syndesis.maven;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -34,9 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,9 +49,12 @@ import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ExtensionAction;
-import io.syndesis.model.action.ExtensionDescriptor;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.extension.Extension;
 import org.apache.maven.artifact.Artifact;
@@ -59,6 +63,7 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -93,7 +98,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     private String inspectionsResourceDir;
 
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis")
-    private File inspectionsOutputDir;
+    private File syndesisMetadataSourceDir;
 
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/syndesis-extension-definition.json")
     private String metadataDestination;
@@ -135,14 +140,16 @@ public class GenerateMetadataMojo extends AbstractMojo {
     private Boolean listAllArtifacts;
 
     protected Extension.Builder extensionBuilder = new Extension.Builder();
-    protected Map<String, ExtensionAction> actions = new HashMap<>();
+    protected Map<String, Action> actions = new HashMap<>();
 
     @Override
-    public void execute() throws MojoExecutionException {
+    public void execute() throws MojoExecutionException, MojoFailureException {
         tryImportingPartialJSON();
         processAnnotations();
         overrideConfigFromMavenPlugin();
         includeDependencies();
+        generateAtlasMapInspections();
+        detectExtensionType();
 
         Extension extension = extensionBuilder.actions(actions.values()).build();
 
@@ -171,7 +178,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                         getLog().error("Error reading file " + path);
                     }
                 };
-            } catch (Exception e) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 throw new MojoExecutionException("Error checking annotations.", e);
             }
         } else {
@@ -179,7 +186,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
     }
 
-    @SuppressWarnings("PMD.PrematureDeclaration")
+    @SuppressWarnings({"PMD.PrematureDeclaration", "PMD.SignatureDeclareThrowsException"})
     protected void assignProperties(Properties p) throws Exception {
 
         final String actionId = p.getProperty("id");
@@ -204,7 +211,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
             return;
         }
 
-        ExtensionAction.Builder actionBuilder = new ExtensionAction.Builder();
+        StepAction.Builder actionBuilder = new StepAction.Builder();
         if (actions.containsKey(actionId)) {
             // Create action from existing action if available in the partial json
             actionBuilder = actionBuilder.createFrom(actions.get(actionId));
@@ -229,22 +236,23 @@ public class GenerateMetadataMojo extends AbstractMojo {
             actionBuilder.id(actionId)
                 .name(actionName)
                 .descriptor(
-                    new ExtensionDescriptor.Builder()
-                        .kind(ExtensionAction.Kind.valueOf(actionKind))
+                    new StepDescriptor.Builder()
+                        .kind(StepAction.Kind.valueOf(actionKind))
                         .entrypoint(actionEntry)
-                        .inputDataShape(buildDataShape(actionId, p.getProperty("inputDataShape")))
-                        .outputDataShape(buildDataShape(actionId, p.getProperty("outputDataShape")))
+                        .inputDataShape(buildDataShape(p.getProperty("inputDataShape")))
+                        .outputDataShape(buildDataShape(p.getProperty("outputDataShape")))
                         .propertyDefinitionSteps(propertyDefinitionSteps)
                         .build())
                 .build()
         );
     }
 
-    protected DataShape buildDataShape(String actionId, String dataShape) throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    protected DataShape buildDataShape(String dataShape) throws Exception {
         DataShape.Builder builder = new DataShape.Builder();
         if (StringUtils.isNotEmpty(dataShape)) {
             int separator = dataShape.indexOf(':');
-            String kind = null;
+            String kind;
             String type = null;
 
             if (separator == -1) {
@@ -260,10 +268,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
             }
             if (StringUtils.isNotEmpty(type)) {
                 builder.type(type);
-            }
-
-            if (StringUtils.isNotEmpty(kind) && StringUtils.isNotEmpty(type)) {
-                generateInspections(actionId, kind, type).ifPresent(builder::specification);
             }
         } else {
             builder.kind("any");
@@ -458,13 +462,70 @@ public class GenerateMetadataMojo extends AbstractMojo {
     // Inspections
     // ****************************************
 
+    /**
+     * Generate atlasmap inspections, no matter if they come from annotations or they are written directly into source json
+     */
+    private void generateAtlasMapInspections() throws MojoExecutionException {
+        try {
+            Map<String, Action> processedActions = new TreeMap<>();
+            for (Map.Entry<String, Action> actionEntry : actions.entrySet()) {
+                Optional<DataShape> input = generateInspections(actionEntry.getKey(), actionEntry.getValue().getInputDataShape());
+                Optional<DataShape> output = generateInspections(actionEntry.getKey(), actionEntry.getValue().getOutputDataShape());
+
+                Action newAction;
+                if (Action.TYPE_CONNECTOR.equals(actionEntry.getValue().getActionType())) {
+                    newAction = new ConnectorAction.Builder()
+                            .createFrom((ConnectorAction) actionEntry.getValue())
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                    .createFrom((ConnectorDescriptor) actionEntry.getValue().getDescriptor())
+                                    .inputDataShape(input)
+                                    .outputDataShape(output)
+                                    .build())
+                            .build();
+                } else if (Action.TYPE_STEP.equals(actionEntry.getValue().getActionType())) {
+                    newAction = new StepAction.Builder()
+                            .createFrom((StepAction) actionEntry.getValue())
+                            .descriptor(new StepDescriptor.Builder()
+                                    .createFrom((StepDescriptor) actionEntry.getValue().getDescriptor())
+                                    .inputDataShape(input)
+                                    .outputDataShape(output)
+                                    .build())
+                            .build();
+                } else {
+                    throw new IllegalArgumentException("Unsupported action type: " + actionEntry.getValue().getActionType());
+                }
+
+                processedActions.put(actionEntry.getKey(), newAction);
+            }
+            this.actions = processedActions;
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
+            throw new MojoExecutionException("Error processing atlasmap inspections", ex);
+        }
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private Optional<DataShape> generateInspections(String actionId, Optional<DataShape> dataShape) throws Exception {
+        if (dataShape.isPresent()) {
+            Optional<String> specs = generateInspections(actionId, dataShape.get().getKind(), dataShape.get().getType());
+            if (specs.isPresent()) {
+                return Optional.of(new DataShape.Builder().createFrom(dataShape.get())
+                        .specification(specs.get())
+                        .build());
+            }
+
+            return dataShape;
+        }
+        return Optional.empty();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private Optional<String> generateInspections(String actionId, String kind, String type) throws Exception {
         Optional<String> specification = Optional.empty();
 
         if (StringUtils.equals("java", kind)) {
             final String name = Names.sanitize(actionId);
 
-            File outputFile = new File(inspectionsOutputDir, String.format("%s/%s/%s.json", inspectionsResourceDir, name, type));
+            File outputFile = new File(syndesisMetadataSourceDir, String.format("%s/%s/%s.json", inspectionsResourceDir, name, type));
             if (!outputFile.getParentFile().exists()) {
                 if (outputFile.getParentFile().mkdirs()) {
                     getLog().debug("Directory " + outputFile.getParentFile() + " created");
@@ -504,6 +565,26 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
 
         return specification;
+    }
+
+    // ****************************************
+    // Extension Type
+    // ****************************************
+    private void detectExtensionType() throws MojoFailureException {
+        // An extension can be of type Steps or Connectors, but not both.
+        long steps = actions.values().stream().filter(StepAction.class::isInstance).count();
+        long connectors = actions.values().stream().filter(ConnectorAction.class::isInstance).count();
+
+        if (steps == 0 && connectors == 0) {
+            getLog().warn("No steps or connectors found: extensionType cannot be detected");
+        } else if (steps > 0 && connectors == 0) {
+            extensionBuilder.extensionType(Extension.Type.Steps);
+        } else if (steps == 0 && connectors > 0) {
+            extensionBuilder.extensionType(Extension.Type.Connectors);
+        } else {
+            throw new MojoFailureException("Extension contains " + steps + " steps and " + connectors + " connectors. Mixed extensions are not allowed, you should use only one type of actions.");
+        }
+
     }
 
     // ****************************************

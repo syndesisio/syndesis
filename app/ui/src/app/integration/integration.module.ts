@@ -13,8 +13,8 @@ import {
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 import { ToolbarModule } from 'patternfly-ng';
 
-import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationListModule } from './list';
+import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationDetailComponent } from './detail-page';
 import { IntegrationListPage } from './list-page';
 
@@ -41,7 +41,6 @@ import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
-import { IntegrationSupportService } from './integration-support.service';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/components/logs.component';
 
 const editIntegrationChildRoutes = [
@@ -94,7 +93,6 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     DynamicFormsCoreModule,
-    IntegrationListModule,
     PatternflyUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
@@ -108,7 +106,8 @@ const routes: Routes = [
     FileUploadModule,
     TourNgxBootstrapModule,
     ToolbarModule,
-    IntegrationSupportModule
+    IntegrationSupportModule,
+    IntegrationListModule,
   ],
   declarations: [
     DataMapperHostComponent,

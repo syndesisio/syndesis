@@ -15,31 +15,19 @@
    limitations under the License.
 -->
 <assembly>
-
     <id>dist</id>
-
     <formats>
         <format>tar.gz</format>
-        <format>zip</format>
     </formats>
     <includeBaseDirectory>False</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/dist</directory>
-            <outputDirectory>/srv</outputDirectory>
+            <outputDirectory>/</outputDirectory>
             <includes>
                 <include>**</include>
             </includes>
             <fileMode>0644</fileMode>
         </fileSet>
-        <fileSet>
-            <directory>${project.basedir}</directory>
-            <outputDirectory>/etc/</outputDirectory>
-            <includes>
-                <include>Caddyfile</include>
-            </includes>
-            <fileMode>0644</fileMode>
-        </fileSet>
-
     </fileSets>
 </assembly>

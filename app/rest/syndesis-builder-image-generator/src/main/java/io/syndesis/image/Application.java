@@ -102,7 +102,7 @@ public class Application implements ApplicationRunner {
         for (final ModelData<?> model : modelList) {
             if (model.getKind() == Kind.Connector) {
                 final Connector connector = (Connector) model.getData();
-                for (final Action<?> action : connector.getActions()) {
+                for (final Action action : connector.getActions()) {
                     steps.add(
                         new SimpleStep.Builder()
                             .stepKind("endpoint")
@@ -144,7 +144,7 @@ public class Application implements ApplicationRunner {
                     Connector connector = Json.mapper().readValue(resource.getInputStream(), Connector.class);
 
                     if (connector != null) {
-                        for (final Action<?> action : connector.getActions()) {
+                        for (final Action action : connector.getActions()) {
                             steps.add(
                                 new SimpleStep.Builder()
                                     .stepKind("endpoint")

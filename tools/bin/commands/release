@@ -16,29 +16,29 @@ release::description() {
 
 release::usage() {
     cat - <<EOT
-    --dry-run                 Dry run. This will stage and drop a release
-    --release-snapshots      Indicates that this is a snapshot release
-    --release-version         The release version
-    --dev-version             The development version
-    --profiles                Additional profiles to specify
-    --settings-xml            Path to a custom settings.xml to use for the release
+-n  --dry-run                      Dry run. This will stage and drop a release
+    --release-snapshots            Indicates that this is a snapshot release, so no versions will be updated
+    --release-version <version>    Version to release (e.g. "1.2.1")
+    --dev-version <version>        Next development version
+    --profiles <p1,p2,..>          Profiles to use (default: "release")
+    --settings-xml <settings.xml>  Path to a custom settings.xml to use for the reelase
 
-    --sonatype-username       The sonatype username
-    --sonatype-password       The sonatype password
+    --sonatype-username <user>     Sonatype username
+    --sonatype-password <password> Sonatype password
 
-    --docker-registry         The docker registry
-    --docker-server-id        The docker server id (as defined in settings.xml)
-    --docker-username         The docker username
-    --docker-email            The docker email
-    --docker-password         The docker password
+    --docker-registry <registry>   Docker registry
+    --docker-server-id <server>    Docker server id (as defined in settings.xml)
+    --docker-username <user>       Registry username
+    --docker-email <email>         Registry user's email
+    --docker-password <password>   Registry password
 
 
 EOT
 }
 
 release::run() {
-    source "$(basedir)/commands/build"
-    local dry_run=$(hasflag --dry-run)
+    source "$(basedir)/commands/util/maven_funcs"
+    local dry_run=$(hasflag --dry-run -n)
     local release_snapshots=$(hasflag --release-snapshots)
     local release_version=$(readopt --release-version)
     local dev_version=$(readopt --dev-version)
@@ -71,16 +71,22 @@ release::run() {
     fi
 
     echo "Creating new staging repository..."
-    local repo_id=$(open_staging_repository "$maven_opts")
+    local repo_id=$(open_staging_repository "$maven_opts" $release_version)
     echo "Opened staging repository: $repo_id"
 
     #There is no tag yet, so let's pass $NO_TAG instead.
     trap "do_cleanup \"$repo_id\" \"$NO_TAG\" \"$maven_opts\"" EXIT
 
-    do_release "$release_snapshots" "$release_version" "$dev_version" "$maven_opts"
+    local maven_args=""
+    if [ -n "${release_snapshots}" ]; then
+        maven_args="clean package deploy:deploy -DstagingRepositoryId=$repo_id $maven_opts"
+    else
+        maven_args="-B release:clean release:prepare release:perform -DstagingRepositoryId=$repo_id -DpushChanges=false -DreleaseVersion=${release_version} -DdevelopmentVersion=${dev_version} -Dtag=$release_version $maven_opts"
+    fi
+    call_maven "$maven_args"
 
     if [ -z "${release_snapshots}" ]; then
-        #Update the trap with the tag created.
+        # Update the trap with the tag created.
         local tag=$(find_tag)
         trap "do_cleanup \"$repo_id\" \"$tag\" \"$maven_opts\"" EXIT
     fi
@@ -90,9 +96,9 @@ release::run() {
 
     if [ -n "$dry_run" ]; then
         echo "This is a dry run ..."
-        echo "Droping tag $tag"
+        echo "Dropping tag $tag"
         git tag -d $tag
-        echo "Droping staging repository: $repo_id"
+        echo "Dropping staging repository: $repo_id"
         drop_staging_repository "$repo_id" "$maven_opts"
     else
         echo "Releasing staging repository: $repo_id"
@@ -109,39 +115,28 @@ release::run() {
 
 open_staging_repository() {
     local maven_opts=$1
-    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-open -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingProfileId=${NEXUS_DEFAULT_STAGING_PROFILE_ID} -DopenedRepositoryMessageFormat='$REPO_ANNOUNCEMENT_PREFIX:%s' $maven_opts"
+    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-open -DnexusUrl=${NEXUS_URL} -DstagingDescription='Version $release_version' -DserverId=${NEXUS_SERVER_ID} -DstagingProfileId=${NEXUS_DEFAULT_STAGING_PROFILE_ID} -DopenedRepositoryMessageFormat='$REPO_ANNOUNCEMENT_PREFIX:%s' $maven_opts"
     #Call maven and just grab the last line that contains $REPO_ANNOUNCEMENT_PREFIX discard the line that displays the whole command and get the string that is between `:` and `'`.
-    call_maven "$maven_args" tail -n 1 | grep -v maven | grep $REPO_ANNOUNCEMENT_PREFIX | awk -F ":" '{print $2}' | awk -F "'" '{print $1}'
+    call_maven "$maven_args" | tee /tmp/x.log | grep -v maven | grep $REPO_ANNOUNCEMENT_PREFIX | tail -n 1 | awk -F ":" '{print $2}' | awk -F "'" '{print $1}'
 }
 
 close_staging_repository() {
-    local repo_id=$1
-    local maven_opts=$2
-    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-close -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingRepositoryId=$repo_id $maven_opts"
-    call_maven "$maven_args" > /dev/null
+    call_sonatype "rc-close" "$1" "$2"
+}
+
+release_staging_repository() {
+    call_sonatype "rc-release" "$1" "$2"
 }
 
 drop_staging_repository() {
-    local repo_id=$1
-    local maven_opts=$2
-    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-drop -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingRepositoryId=$repo_id $maven_opts"
-    call_maven "$maven_args" > /dev/null
+    call_sonatype "rc-drop" "$1" "$2"
 }
 
-do_release() {
-    local release_snapshots=$1
-    local release_version=$2
-    local dev_version=$4
-    local maven_opts=$4
-
-    local maven_args=""
-
-    if [ -n "${release_snapshots}" ]; then
-        maven_args="clean package deploy:deploy $maven_opts"
-    else
-        maven_args="-B release:clean release:prepare release:perform -DpushChanges=false -Dtag=$release_version $maven_opts"
-    fi
-
+call_sonatype() {
+    local command=$1
+    local repo_id=$2
+    local maven_opts=$3
+    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:${command} -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingRepositoryId=$repo_id $maven_opts"
     call_maven "$maven_args"
 }
 
