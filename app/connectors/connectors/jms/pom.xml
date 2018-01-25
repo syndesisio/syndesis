@@ -30,5 +30,6 @@
 
     <modules>
         <module>activemq-connectors</module>
+        <module>amqp-connector</module>
     </modules>
 </project>
