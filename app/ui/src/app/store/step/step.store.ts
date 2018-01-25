@@ -85,6 +85,33 @@ export class StepStore {
       description: "Sends a message to the integration's log",
       configuredProperties: undefined,
       properties: {
+        /*
+        loggingLevel: {
+          type: 'select',
+          displayName: 'Level',
+          value: 'INFO',
+          required: true,
+          enum: [{ value: 'INFO', label: 'INFO' }, { value: 'WARN', label: 'WARN' }, { value: 'ERROR', label: 'ERROR'}, {value: 'DEBUG', label: 'DEBUG'}, {value: 'TRACE', label: 'TRACE'}],
+        },
+         propertyNames: {
+         type: 'textarea',
+         displayName: 'Exchange Property Names',
+         required: false,
+         rows: 10
+         },
+         inHeaderNames: {
+         type: 'textarea',
+         displayName: 'Input Message Header Names',
+         required: false,
+         rows: 10
+         },
+         outHeaderNames: {
+         type: 'textarea',
+         displayName: 'Output Message Header Names',
+         required: false,
+         rows: 10
+         },
+        */
         expression: {
           type: 'string',
           displayName: 'Log Message',
@@ -94,12 +121,6 @@ export class StepStore {
           type: 'boolean',
           displayName: 'Body Logging Enabled',
           required: false,
-        },
-        loggingLevel: {
-          type: 'hidden',
-          displayName: 'Level',
-          defaultValue: 'INFO',
-          required: true,
         },
       },
     },
