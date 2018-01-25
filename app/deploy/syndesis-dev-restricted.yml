@@ -629,7 +629,7 @@ objects:
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
             - --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}
-            - --openshift-delegate-urls={"/api":{"resource":"projects","verb":"*","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}
+            - --openshift-delegate-urls={"/api":{"resource":"projects","verb":"get","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}
 
           env:
           - name: OAUTH_COOKIE_SECRET
@@ -674,17 +674,6 @@ objects:
     triggers:
 
     - type: ConfigChange
-- apiVersion: v1
-  kind: ClusterRoleBinding
-  roleRef:
-    name: system:auth-delegator
-  subjects:
-  - kind: ServiceAccount
-    name: syndesis-oauth-client
-    namespace: ${OPENSHIFT_PROJECT}
-  userNames:
-  - system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
-
 - apiVersion: v1
   kind: ServiceAccount
   metadata:

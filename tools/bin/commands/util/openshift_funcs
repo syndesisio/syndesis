@@ -49,6 +49,12 @@ create_oauthclient() {
         "app/deploy/support/serviceaccount-as-oauthclient-restricted.yml" \
         "$tag" \
         "$use_local_resource"
+
+    local currentUser=$(oc whoami)
+    oc login -u system:admin
+    oc adm policy add-cluster-role-to-user system:auth-delegator -z syndesis-oauth-client
+    oc login -u $currentUser
+
 }
 
 create_and_apply_template() {

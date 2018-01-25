@@ -141,15 +141,3 @@
       type: ImageChange
 {{/WithDockerImages}}
     - type: ConfigChange
-{{#Restricted}}
-- apiVersion: v1
-  kind: ClusterRoleBinding
-  roleRef:
-    name: system:auth-delegator
-  subjects:
-  - kind: ServiceAccount
-    name: syndesis-oauth-client
-    namespace: ${OPENSHIFT_PROJECT}
-  userNames:
-  - system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
-{{/Restricted}}

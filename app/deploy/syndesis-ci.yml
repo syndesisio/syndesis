@@ -744,7 +744,6 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
-
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
