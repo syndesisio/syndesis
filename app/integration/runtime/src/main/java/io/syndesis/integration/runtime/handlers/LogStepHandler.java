@@ -23,6 +23,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.ProcessorDefinition;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,27 +42,36 @@ public class LogStepHandler implements IntegrationStepHandler {
 
     private static String createMessage(LogStep l) {
         StringBuilder sb = new StringBuilder(128);
-        configureProperties(sb, l.getPropertyNames());
-        configureHeaders(sb, HeaderKind.in, l.getInHeaderNames());
-        configureHeaders(sb, HeaderKind.out, l.getOutHeaderNames());
+        if (l.getExpression() != null && !l.getExpression().isEmpty()) {
+            sb.append(l.getExpression());
+        }
 
         if (l.isBodyLoggingEnabled()) {
             sb.append("Body: [${body}] ");
         }
 
-        if (l.getExpression() != null && !l.getExpression().isEmpty()) {
-            sb.append(l.getExpression());
-        }
-
+        configureHeaders(sb, HeaderKind.in, l.getInHeaderNames());
+        configureHeaders(sb, HeaderKind.out, l.getOutHeaderNames());
+        configureProperties(sb, l.getPropertyNames());
         return sb.toString();
     }
 
     private static void configureProperties(StringBuilder sb, Collection<String> names) {
-        if (names != null && !names.isEmpty()) {
-            sb.append("Exchange properties: [");
-            sb.append(names.stream().map(p -> "$property." + p).collect(Collectors.joining(" ")));
-            sb.append("] ");
+        if (names == null) {
+            return;
         }
+
+        List<String> filtered = names
+                .stream()
+                .filter(n -> !n.equals("null"))
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) {
+            return;
+        }
+
+        sb.append(filtered.stream().map(p->"p = $property."+p)
+                .collect(Collectors.joining(" ", "Properties[", "] ")));
     }
 
 
@@ -69,12 +79,22 @@ public class LogStepHandler implements IntegrationStepHandler {
         if (kind == null) {
             throw new NullPointerException("Kind should not be null. Please specify a valid value.");
         }
-        if (names != null && !names.isEmpty()) {
-            sb.append(kind.getLabel());
-            sb.append(" Headers: [");
-            sb.append(names.stream().map(h -> "$"+kind.name()+".header." + h).collect(Collectors.joining(" ")));
-            sb.append("] ");
+
+        if (names == null) {
+            return;
         }
+
+        List<String> filtered = names
+                .stream()
+                .filter(n -> !n.equals("null"))
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) {
+            return;
+        }
+
+        sb.append(filtered.stream().map(p->"h = $"+kind.name()+"header."+p)
+                .collect(Collectors.joining(" ", kind.getLabel()+ " Headers[", "] ")));
     }
 
     private enum HeaderKind {
