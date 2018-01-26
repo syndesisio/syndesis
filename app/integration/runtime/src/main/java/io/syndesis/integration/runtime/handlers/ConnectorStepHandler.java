@@ -34,7 +34,6 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
-import org.apache.camel.TypeConverter;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.ClassResolver;
 import org.apache.camel.util.IntrospectionSupport;
@@ -77,7 +76,6 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
-        final TypeConverter converter = context.getTypeConverter();
         final String componentId = scheme + "-" + index;
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, descriptor);
         final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
@@ -95,16 +93,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         descriptor.getConfiguredProperties().forEach(properties::put);
 
         try {
-            final Map<String, Object> customizersOptions = new HashMap<>();
-            properties.forEach(
-                (k, v) -> {
-                    try {
-                        customizersOptions.put(k, context.resolvePropertyPlaceholders(v));
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            );
+            final Map<String, Object> customizersOptions = new HashMap<>(properties);
 
             for (String customizerType : customizers) {
                 ComponentProxyCustomizer customizer = resolveCustomizer(context, customizerType);
@@ -113,26 +102,24 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
                 // the CamelContextAware interface.
                 ObjectHelper.trySetCamelContext(customizer, context);
 
-                // Bind properties to the customizer
-                IntrospectionSupport.setProperties(converter, customizer, customizersOptions);
+                for (Map.Entry<String, Object> entry: customizersOptions.entrySet()) {
+                    String key = entry.getKey();
+                    Object val = entry.getValue();
+
+                    if (val instanceof String) {
+                        val = context.resolvePropertyPlaceholders((String)val);
+                    }
+
+                    // Bind properties to the customizer
+                    if (IntrospectionSupport.setProperty(context, customizer, key, val)) {
+                        properties.remove(key);
+                    }
+                }
 
                 customizer.customize(component, customizersOptions);
             }
 
-            final Map<String, Object> componentOptions = new HashMap<>();
-
-            // Set connector options with remaining properties and original values
-            // to keep placeholders and delegate resolution to the final endpoint.
-            properties.entrySet().stream()
-                .filter(e -> customizersOptions.containsKey(e.getKey()))
-                .forEach(e -> componentOptions.put(e.getKey(), e.getValue()));
-
-            // Include properties added by the customizers
-            customizersOptions.entrySet().stream()
-                .filter(e -> !properties.containsKey(e.getKey()))
-                .forEach(e -> componentOptions.put(e.getKey(), e.getValue()));
-
-            component.setOptions(componentOptions);
+            component.setOptions(customizersOptions);
 
             // Remove component
             context.removeComponent(component.getComponentId());
