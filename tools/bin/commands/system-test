@@ -20,6 +20,8 @@ EOT
 }
 
 system-test::run() {
+    source "$(basedir)/commands/util/maven_funcs"
+
     local server=$(readopt --server)
     local pool=$(readopt --pool)
     if [ -z "${pool}" ]; then
