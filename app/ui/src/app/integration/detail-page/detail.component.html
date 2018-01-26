@@ -1,5 +1,5 @@
 <syndesis-modal [title]="'Confirm ' + getActionTitle()"
-                [message]="'Are you sure you would like to ' + getAction() + ' the \'' + selectedIntegration?.name + '\' integration?'">
+                [message]="'Are you sure you would like to ' + getAction() +  + (getAction() === 'publish' ? ' this deployment?' : ' the \'' + selectedIntegration?.name + '\' integration?')">
 </syndesis-modal>
 <syndesis-loading [loading]="loading$ | async">
   <div *ngIf="integration"
@@ -163,7 +163,7 @@
                 <ng-template #actionTemplate let-deployment="item" let-index="index">
                   <pfng-action class="list-pf-actions"
                                [config]="deploymentActionConfigs[deployment.id]"
-                               (onActionSelect)="DeploymentAction($event, deployment)">
+                               (onActionSelect)="deploymentAction($event, deployment)">
                   </pfng-action>
                 </ng-template>
               </pfng-list>

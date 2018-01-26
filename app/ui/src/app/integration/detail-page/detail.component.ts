@@ -13,29 +13,33 @@ import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from '
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
 import { Connection, Action } from '@syndesis/ui/model';
-import { ACTIVE, Integration, Step, IntegrationDeployment } from '@syndesis/ui/integration';
+import { ACTIVE, INACTIVE, DRAFT, Integration, Step, IntegrationDeployment } from '@syndesis/ui/integration';
 import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
 
+const REPLACE_DRAFT = 'replaceDraft';
+const STOP_INTEGRATION = 'stopIntegration';
+const CREATE_DRAFT = 'createDraft';
+const PUBLISH = 'publish';
 // menu items and buttons
 const replaceDraft = {
-  id: 'replaceDraft',
+  id: REPLACE_DRAFT,
   title: 'Replace Draft',
   tooltip: 'Replace the current draft with this version'
 } as PFAction;
 const stopIntegration = {
-  id: 'stopIntegration',
+  id: STOP_INTEGRATION,
   title: 'Stop Integration',
   tooltip: 'Stop this integration'
 } as PFAction;
 const createDraft = {
-  id: 'createDraft',
+  id: CREATE_DRAFT,
   title: 'Create Draft',
   tooltip: 'Create a new draft from this version'
 } as PFAction;
 const publish = {
-  id: 'publish',
+  id: PUBLISH,
   title: 'Publish',
   tooltip: 'Publish this version of the integration'
 } as PFAction;
@@ -124,9 +128,29 @@ export class IntegrationDetailComponent extends IntegrationViewBase
       });
   }
 
-  deploymentAction($event, deployment) {
-   //console.log('Deployment action: ', $event, deployment);
-   // TODO
+  deploymentAction(event, deployment) {
+    switch (event.id) {
+      case REPLACE_DRAFT:
+        // TODO
+        /*
+        this.integration.steps = deployment.spec.steps;
+        this.integration.desiredStatus = DRAFT;
+        */
+        break;
+      case CREATE_DRAFT:
+        // TODO doesn't this just mean edit?
+        break;
+      case STOP_INTEGRATION:
+        this.requestAction('deactivate', this.integration);
+        break;
+      case PUBLISH:
+        const integration = { ...this.integration };
+        integration.steps = deployment.spec.steps;
+        this.integration.desiredStatus = ACTIVE;
+        this.requestAction('publish', integration);
+        break;
+      default:
+    }
   }
 
   validateName(name: string) {

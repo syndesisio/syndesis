@@ -46,6 +46,23 @@ export class IntegrationViewBase {
           .then(value => {
             saveAs(value, integration.name + '-export.zip');
           });
+      /*
+      case 'replaceDraft':
+        header = 'Updating draft';
+        message = 'Replacing the current draft of the integration';
+        danger = 'Failed to update integration draft';
+        reason = 'Error updating integration';
+        request = this.requestReplaceDraft(integration);
+        break;
+      */
+      case 'publish':
+        header = 'Publishing deployment';
+        message =
+          'Please allow a moment for the integration to fully activate.';
+        danger = 'Failed to publish integration deployment';
+        reason = 'Error publishing integration';
+        request = this.requestPublish(integration);
+        break;
       case 'activate':
         header = 'Integration is activating';
         message =
@@ -98,6 +115,7 @@ export class IntegrationViewBase {
   doAction(action: string, integration: Integration) {
     switch (action) {
       case 'activate':
+      case 'publish':
         return this.activateAction(integration);
       case 'deactivate':
         return this.deactivateAction(integration);
@@ -109,6 +127,15 @@ export class IntegrationViewBase {
   }
 
   //-----  Activate/Deactivate ------------------->>
+  requestReplaceDraft(integration: Integration) {
+    this.selectedIntegration = integration;
+    return this.showModal('replaceDraft');
+  }
+
+  requestPublish(integration: Integration) {
+    this.selectedIntegration = integration;
+    return this.showModal('publish');
+  }
 
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
@@ -201,6 +228,10 @@ export class IntegrationViewBase {
 
   getActionTitle() {
     switch (this.currentAction) {
+      case 'replaceDraft':
+        return 'Replace Draft';
+      case 'publish':
+        return 'Publish';
       case 'activate':
         return 'Activation';
       case 'deactivate':
