@@ -15,4 +15,3 @@ cd ${local_repo}
 find ./io/syndesis | grep -F -- "/${version}/" | grep -v -- "-sources\." | grep -v -- "-tests\." | xargs tar -c | tar -vx -C "${target_dir}/m2"
 
 cp "${project_dir}/src/main/docker/Dockerfile" $target_dir
-
