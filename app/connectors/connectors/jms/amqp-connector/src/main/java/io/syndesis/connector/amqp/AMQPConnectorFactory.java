@@ -37,6 +37,13 @@ public class AMQPConnectorFactory implements ComponentProxyFactory {
 
     private static class AMQPProxyComponent extends ComponentProxyComponent {
 
+        private String connectionUri;
+        private String username;
+        private String password;
+        private String brokerCertificate;
+        private String clientCertificate;
+        private boolean skipCertificateCheck;
+
         public AMQPProxyComponent(String componentId, String componentScheme) {
             super(componentId, componentScheme);
             // support connection verification
@@ -44,21 +51,25 @@ public class AMQPConnectorFactory implements ComponentProxyFactory {
         }
 
         private ComponentExtension getComponentVerifier() {
-            return new AMQPVerifierExtension(getComponentId());
+            return new AMQPVerifierExtension(getComponentId(), getCamelContext());
         }
 
+        @Override
+        public void setOptions(Map<String, Object> options) {
+            // connection parameters
+            connectionUri = (String) options.remove("connectionUri");
+            username = (String) options.remove("username");
+            password = (String) options.remove("password");
+            brokerCertificate = (String) options.remove("brokerCertificate");
+            clientCertificate = (String) options.remove("clientCertificate");
+            skipCertificateCheck = Boolean.TRUE.equals(options.remove("skipCertificateCheck"));
+
+            super.setOptions(options);
+        }
 
         @Override
         protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws
                 Exception {
-
-            // connection parameters
-            final String connectionUri = (String) parameters.remove("connectionUri");
-            final String username = (String) parameters.remove("username");
-            final String password = (String) parameters.remove("password");
-            final String brokerCertificate = (String) parameters.remove("brokerCertificate");
-            final String clientCertificate = (String) parameters.remove("clientCertificate");
-            final boolean skipCertificateCheck = Boolean.TRUE.equals(parameters.remove("skipCertificateCheck"));
 
             // create and set ConnectionFactory on delegate
             AMQPComponent delegate = (AMQPComponent) getCamelContext().getComponent(getComponentScheme());
