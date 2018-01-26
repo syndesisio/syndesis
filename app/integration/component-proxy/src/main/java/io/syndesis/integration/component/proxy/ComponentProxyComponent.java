@@ -17,14 +17,15 @@ package io.syndesis.integration.component.proxy;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
@@ -42,6 +43,7 @@ import org.apache.camel.impl.DefaultComponent;
 import org.apache.camel.util.IntrospectionSupport;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
+import org.apache.camel.util.function.Predicates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -216,15 +218,25 @@ public class ComponentProxyComponent extends DefaultComponent {
 
         // configure component with extra options
         if (componentClass != null && !options.isEmpty()) {
+            final List<Map.Entry<String, Object>> entries = new ArrayList<>();
+
             // Get the list of options from the connector catalog that
             // are configured to target the endpoint
             Collection<String> endpointOptions = definition.getEndpointProperties().keySet();
 
             // Check if any of the option applies to the component, if not
             // there's no need to create a dedicated component.
-            Collection<Map.Entry<String, Object>> entries = options.entrySet().stream()
+            options.entrySet().stream()
                 .filter(e -> !endpointOptions.contains(e.getKey()))
-                .collect(Collectors.toList());
+                .forEach(entries::add);
+
+            // Options set on a step are strings so if any of the options is
+            // not a string, is should have been added by a customizer so try to
+            // bind them to the component first.
+            options.entrySet().stream()
+                .filter(e -> e.getValue() != null)
+                .filter(Predicates.negate(e -> e.getValue() instanceof String))
+                .forEach(entries::add);
 
             if (!entries.isEmpty()) {
                 // create a new instance of this base component
@@ -243,7 +255,9 @@ public class ComponentProxyComponent extends DefaultComponent {
                         val = getCamelContext().resolvePropertyPlaceholders((String) val);
                     }
 
-                    IntrospectionSupport.setProperty(context, component, key, val);
+                    if (IntrospectionSupport.setProperty(context, component, key, val)) {
+                        options.remove(key);
+                    }
                 }
 
                 return Optional.of(component);
