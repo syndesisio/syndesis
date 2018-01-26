@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,13 +97,16 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
             final Map<String, Object> customizersOptions = new HashMap<>(properties);
 
             for (String customizerType : customizers) {
-                ComponentProxyCustomizer customizer = resolveCustomizer(context, customizerType);
+                final ComponentProxyCustomizer customizer = resolveCustomizer(context, customizerType);
+                final Iterator<Map.Entry<String, Object>> iterator = customizersOptions.entrySet().iterator();
 
                 // Set the camel context if the customizer implements
                 // the CamelContextAware interface.
                 ObjectHelper.trySetCamelContext(customizer, context);
 
-                for (Map.Entry<String, Object> entry: customizersOptions.entrySet()) {
+                while (iterator.hasNext()){
+                    Map.Entry<String, Object> entry = iterator.next();
+
                     String key = entry.getKey();
                     Object val = entry.getValue();
 
@@ -112,7 +116,8 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
 
                     // Bind properties to the customizer
                     if (IntrospectionSupport.setProperty(context, customizer, key, val)) {
-                        properties.remove(key);
+                        // Remove property if bound to the customizer.
+                        iterator.remove();
                     }
                 }
 

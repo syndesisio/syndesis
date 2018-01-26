@@ -19,38 +19,11 @@ import java.util.Map;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-import org.apache.camel.CamelContext;
-import org.apache.camel.CamelContextAware;
-import org.apache.camel.util.ObjectHelper;
 
-public class AWSS3Customizer implements CamelContextAware, ComponentProxyCustomizer {
-    private CamelContext camelContext;
-
-    @Override
-    public void setCamelContext(CamelContext camelContext) {
-        this.camelContext = camelContext;
-    }
-
-    @Override
-    public CamelContext getCamelContext() {
-        return camelContext;
-    }
-
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+public class AWSS3Customizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        final String accessKey = (String)options.get("accessKey");
-        final String secretKey = (String)options.get("secretKey");
-
-        try {
-            if (accessKey != null) {
-                options.put("accessKey", "RAW(" + camelContext.resolvePropertyPlaceholders(accessKey) + ")");
-            }
-            if (secretKey != null) {
-                options.put("secretKey", "RAW(" + camelContext.resolvePropertyPlaceholders(secretKey) + ")");
-            }
-        } catch (Exception e) {
-            throw ObjectHelper.wrapRuntimeCamelException(e);
-        }
+        options.computeIfPresent("accessKey", (k, v) -> "RAW(" + v + ")");
+        options.computeIfPresent("secretKey", (k, v) -> "RAW(" + v + ")");
     }
 }

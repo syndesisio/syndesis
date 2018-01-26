@@ -24,7 +24,7 @@ public interface ComponentProxyCustomizer {
      * has to remove remove customizer specific properties once they are consumed.
      *
      * @param component the component to customize
-     * @param options the component options, note that values can be placeholders.
+     * @param options the component options
      */
     void customize(ComponentProxyComponent component, Map<String, Object> options);
 }
