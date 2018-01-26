@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Restangular } from 'ngx-restangular';
 import { ValidationErrors } from '@angular/forms';
 
+import { Connection, Connections } from '@syndesis/ui/platform';
+import { TypeFactory } from '@syndesis/ui/model';
 import { RESTService } from '../entity/rest.service';
-import { Connection, Connections, TypeFactory } from '../../model';
 
 @Injectable()
 export class ConnectionService extends RESTService<Connection, Connections> {

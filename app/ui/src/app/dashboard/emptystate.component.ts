@@ -4,11 +4,10 @@ import { Router } from '@angular/router';
 
 import { log, getCategory } from '../logging';
 
-import { Connection, Connections } from '../model';
+import { Connection, Connections, UserService } from '@syndesis/ui/platform';
 import { Integrations } from '@syndesis/ui/integration';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('Dashboard');
 

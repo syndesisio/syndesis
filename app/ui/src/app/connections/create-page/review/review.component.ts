@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-
 import { Subscription } from 'rxjs/Subscription';
+
+import { Connection, UserService, CanComponentDeactivate } from '@syndesis/ui/platform';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { ModalService } from '@syndesis/ui/common';
 import { CurrentConnectionService } from '../current-connection';
-import { Connection } from '../../../model';
-import { ModalService } from '../../../common/modal/modal.service';
 import { ConnectionService } from '../../../store/connection/connection.service';
-import { log, getCategory } from '../../../logging';
-import { UserService, CanComponentDeactivate } from '@syndesis/ui/platform';
 
 const category = getCategory('Connections');
 

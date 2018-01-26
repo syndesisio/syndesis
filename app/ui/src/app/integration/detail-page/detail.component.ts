@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IntegrationStore, StepStore } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
-import { Connection, Action } from '@syndesis/ui/model';
+import { Connection, Action } from '@syndesis/ui/platform';
 import { Integration, Step } from '@syndesis/ui/integration';
 import { IntegrationViewBase } from '../components';
 import { NotificationType } from 'patternfly-ng';

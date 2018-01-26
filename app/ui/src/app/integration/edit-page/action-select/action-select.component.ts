@@ -1,18 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { Step } from '@syndesis/ui/integration';
-import { Actions, Action, Connector } from '@syndesis/ui/model';
+import { Actions, Action, Connector, UserService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
-
-import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('Integrations');
 

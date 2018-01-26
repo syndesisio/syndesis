@@ -4,10 +4,10 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 
+import { Connectors, Connector, Connection, UserService } from '@syndesis/ui/platform';
+import { TypeFactory } from '@syndesis/ui/model';
 import { CurrentConnectionService } from '../current-connection';
-import { Connectors, Connector, TypeFactory } from '../../../model';
 import { ConnectorStore } from '../../../store/connector/connector.store';
-import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-connections-connection-basics',

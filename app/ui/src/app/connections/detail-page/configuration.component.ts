@@ -7,12 +7,9 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {
-  DynamicFormControlModel,
-  DynamicFormService
-} from '@ng-dynamic-forms/core';
+import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
-import { Connection } from '../../model';
+import { Connection } from '@syndesis/ui/platform';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { Connection, Connector } from '../../../model';
+import { Connection, Connector } from '@syndesis/ui/platform';
 import { ConnectionConfigurationService } from './configuration.service';
 import { ConnectorStore } from '../../../store/connector/connector.store';
 

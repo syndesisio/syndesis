@@ -10,9 +10,9 @@ import { IntegrationListComponent } from './list.component';
 
 @NgModule({
   imports: [
-    ActionModule,
     CommonModule,
     TooltipModule,
+    ActionModule,
     ListModule,
     SyndesisCommonModule,
     IntegrationSupportModule

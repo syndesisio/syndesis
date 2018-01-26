@@ -1,20 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import {
-  DynamicFormControlModel,
-  DynamicFormService
-} from '@ng-dynamic-forms/core';
-
-import { FormFactoryService, UserService } from '@syndesis/ui/platform';
-import { IntegrationSupportService } from '../../integration-support.service';
-import { Step } from '@syndesis/ui/integration';
-import { Action } from '@syndesis/ui/model';
-import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
-import { log } from '@syndesis/ui/logging';
-
+import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { Subscription } from 'rxjs/Subscription';
+
+import { FormFactoryService, UserService, Action } from '@syndesis/ui/platform';
+import { log } from '@syndesis/ui/logging';
+import { Step } from '@syndesis/ui/integration';
+import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
+
+import { IntegrationSupportService } from '../../integration-support.service';
 
 @Component({
   selector: 'syndesis-integration-action-configure',

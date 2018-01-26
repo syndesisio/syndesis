@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Connections } from '../model';
+import { Connections, UserService } from '@syndesis/ui/platform';
 import { Integrations } from '@syndesis/ui/integration';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-dashboard',

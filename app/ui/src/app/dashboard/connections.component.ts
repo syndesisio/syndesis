@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { Connection, Connections } from '@syndesis/ui/model';
+import { Connection, Connections } from '@syndesis/ui/platform';
 import { ConnectionStore } from '@syndesis/ui/store';
 
 const category = getCategory('Dashboard');

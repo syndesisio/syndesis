@@ -1,4 +1,5 @@
 export * from './api';
+export * from './connection';
 export * from './form-factory';
 export * from './metadata';
 export * from './user';

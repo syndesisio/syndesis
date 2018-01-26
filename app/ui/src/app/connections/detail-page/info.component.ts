@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Connection } from '../../model';
+import { Connection } from '@syndesis/ui/platform';
 import { ConnectionService } from '../../store/connection/connection.service';
 import { ConnectionConfigurationService } from '../common/configuration/configuration.service';
 

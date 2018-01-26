@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActionService } from './action.service';
-import { Actions, Action } from '../../model';
+import { Actions, Action } from '@syndesis/ui/platform';
 
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';

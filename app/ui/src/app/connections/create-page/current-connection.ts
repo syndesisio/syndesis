@@ -3,11 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
+import { Connection, Connector, Connections, Connectors } from '@syndesis/ui/platform';
+import { log, getCategory } from '@syndesis/ui/logging';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { ConnectorStore } from '../../store/connector/connector.store';
-import { Connection, Connector, Connections, Connectors } from '../../model';
-
-import { log, getCategory } from '../../logging';
 
 const category = getCategory('CurrentConnectionService');
 
