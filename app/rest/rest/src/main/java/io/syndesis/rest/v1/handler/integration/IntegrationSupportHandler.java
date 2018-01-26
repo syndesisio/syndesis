@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -110,10 +111,9 @@ public class IntegrationSupportHandler {
     @GET
     @Path("/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> ids) throws IOException {
+    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> requestedIds) throws IOException {
 
-        System.out.println("ids: "+ids);
-
+        List<String> ids = requestedIds;
         if ( ids ==null || ids.isEmpty() ) {
             throw new ClientErrorException("No 'integration' query parameter specified.", Response.Status.BAD_REQUEST);
         }
@@ -122,37 +122,18 @@ public class IntegrationSupportHandler {
         LinkedHashSet<String> extensions = new LinkedHashSet<>();
 
         if( ids.contains("all") ) {
-            List<Integration> allIntegrations = dataManager.fetchAll(Integration.class).getItems();
-            for (Integration integration : allIntegrations) {
-
-                List<IntegrationDeployment> deployments = dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integration.getId().get()).stream()
-                    .map(i -> dataManager.fetch(IntegrationDeployment.class, i))
-                    .collect(Collectors.toList());
-
-                addToExport(export, integration, deployments);
-
-                ProjectGeneratorHelper.collectDependencies(resourceManager, integration.getSteps()).stream()
-                    .filter(Dependency::isExtension)
-                    .map(Dependency::getId)
-                    .forEach(extensions::add);
+            ids = new ArrayList<>();
+            for (Integration integration : dataManager.fetchAll(Integration.class).getItems()) {
+                ids.add(integration.getId().get());
             }
-        } else {
-            for (String id : ids) {
-                Integration integration = integrationHandler.get(id);
-                List<IntegrationDeployment> deployments = dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integration.getId().get()).stream()
-                    .map(i -> dataManager.fetch(IntegrationDeployment.class, i))
-                    .collect(Collectors.toList());
-
-                addToExport(export, integration, deployments);
-
-                deployments.forEach(
-                    deployment -> {
-                        ProjectGeneratorHelper.collectDependencies(resourceManager, deployment).stream()
-                            .map(Dependency::getId)
-                            .forEach(extensions::add);
-                    }
-                );
-            }
+        }
+        for (String id : ids) {
+            Integration integration = integrationHandler.get(id);
+            addToExport(export, integration);
+            ProjectGeneratorHelper.collectDependencies(resourceManager, integration.getSteps()).stream()
+                .filter(Dependency::isExtension)
+                .map(Dependency::getId)
+                .forEach(extensions::add);
         }
 
         System.out.println("Extensions: "+extensions);
@@ -171,33 +152,27 @@ public class IntegrationSupportHandler {
         };
     }
 
-    private void addToExport(LinkedHashMap<String, ModelData<?>> export, Integration integration, List<IntegrationDeployment> deployments) {
-        addToExport(export, new ModelData<Integration>(Kind.Integration, integration));
-
-        for (IntegrationDeployment deployment : deployments) {
-
-            addToExport(export, new ModelData<IntegrationDeployment>(Kind.IntegrationDeployment, deployment));
-
-            for (Step step : deployment.getSpec().getSteps()) {
-                Optional<Connection> c = step.getConnection();
-                if (c.isPresent()) {
-                    Connection connection = c.get();
-                    addToExport(export, new ModelData<Connection>(Kind.Connection, connection));
-                    Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
-                    if (connector != null) {
-                        addToExport(export, new ModelData<Connector>(Kind.Connector, connector));
-                    }
+    private void addToExport(Map<String, ModelData<?>> export, Integration integration) {
+        addToExport(export, new ModelData<>(Kind.Integration, integration));
+        for (Step step : integration.getSteps()) {
+            Optional<Connection> c = step.getConnection();
+            if (c.isPresent()) {
+                Connection connection = c.get();
+                addToExport(export, new ModelData<>(Kind.Connection, connection));
+                Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
+                if (connector != null) {
+                    addToExport(export, new ModelData<>(Kind.Connector, connector));
                 }
-                Optional<Extension> e = step.getExtension();
-                if (e.isPresent()) {
-                    Extension extension = e.get();
-                    addToExport(export, new ModelData<Extension>(Kind.Extension, extension));
-                }
+            }
+            Optional<Extension> e = step.getExtension();
+            if (e.isPresent()) {
+                Extension extension = e.get();
+                addToExport(export, new ModelData<>(Kind.Extension, extension));
             }
         }
     }
 
-    private void addToExport(LinkedHashMap<String, ModelData<?>> export, ModelData<?> model) {
+    private void addToExport(Map<String, ModelData<?>> export, ModelData<?> model) {
         try {
             String key = model.getKind().getModelName()+":"+model.getData().getId();
             if ( !export.containsKey(key) )  {
@@ -324,7 +299,6 @@ public class IntegrationSupportHandler {
                     break;
                 }
                 default: {
-
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Cannot import unsupported model kind: " + model.getKind());
                     }

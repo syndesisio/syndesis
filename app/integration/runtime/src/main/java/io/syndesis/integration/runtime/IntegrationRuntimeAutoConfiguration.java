@@ -64,7 +64,7 @@ public class IntegrationRuntimeAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "syndesis.integration.runtime", name = "capture", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "syndesis.integration.runtime.capture", name = "enabled", matchIfMissing = true)
     public InterceptStrategy createOutMessageCaptureInterceptStrategy() {
         return new OutMessageCaptureInterceptStrategy();
     }

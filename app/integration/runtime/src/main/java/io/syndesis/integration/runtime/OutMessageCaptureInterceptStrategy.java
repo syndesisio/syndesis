@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class OutMessageCaptureInterceptStrategy implements InterceptStrategy {
 
-    public static final String CAPTURED_OUT_MESSAGES_MAP = "CAPTURED_OUT_MESSAGES_MAP";
+    public static final String CAPTURED_OUT_MESSAGES_MAP = "Syndesis.CAPTURED_OUT_MESSAGES_MAP";
 
     @Override
     public Processor wrapProcessorInInterceptors(CamelContext context, ProcessorDefinition<?> definition, Processor target, Processor nextTarget) throws Exception {

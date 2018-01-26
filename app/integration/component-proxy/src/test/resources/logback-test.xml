@@ -23,7 +23,7 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
     </encoder>
-    <file>target/camel-component-proxy.log</file>
+    <file>target/integration-component-proxy.log</file>
   </appender>
 
   <root level="INFO">

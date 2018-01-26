@@ -16,10 +16,12 @@
 package io.syndesis.dao.extension;
 
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
 
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.model.extension.Extension;
 
 public class ExtensionDataManager {
@@ -39,6 +41,15 @@ public class ExtensionDataManager {
     public InputStream getExtensionBinaryFile(String extensionId) {
         String id = getInstalledPhysicalId(extensionId);
         return extensionDataAccess.read("/extensions/" + id);
+    }
+
+    public Optional<InputStream> getExtensionIcon(String extensionId, String iconFile) {
+        String id = getInstalledPhysicalId(extensionId);
+        return BinaryExtensionAnalyzer.getDefault().getIcon(extensionDataAccess.read("/extensions/" + id), iconFile);
+    }
+
+    public String getExtensionIconMediaType(String iconFile) {
+        return BinaryExtensionAnalyzer.getDefault().getIconMediaType(iconFile);
     }
 
     // ==========================================================

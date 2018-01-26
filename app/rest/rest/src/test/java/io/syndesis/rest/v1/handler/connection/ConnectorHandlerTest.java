@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import io.syndesis.credential.Credentials;
+import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.icon.IconDataAccessObject;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
@@ -82,8 +83,10 @@ public class ConnectorHandlerTest {
 
     private final IconDataAccessObject NO_ICON_DAO = null;
 
+    private final ExtensionDataManager NO_EXTENSION_DATA_MANAGER = null;
+
     private final ConnectorHandler handler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
-        NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO);
+        NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER);
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {
