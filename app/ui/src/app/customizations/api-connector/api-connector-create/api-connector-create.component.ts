@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { ModalService } from '@syndesis/ui/common';

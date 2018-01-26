@@ -1,4 +1,3 @@
 @import './base/module';
-@import 'common';
-@import 'overrides';
-@import 'forms';
+@import './utils/module';
+@import './components/module';

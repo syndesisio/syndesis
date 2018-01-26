@@ -1,5 +1,5 @@
 import { Injectable, Input } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 
 import { UserService, ApiHttpService } from '@syndesis/ui/platform';
 import { User } from '@syndesis/ui/model';

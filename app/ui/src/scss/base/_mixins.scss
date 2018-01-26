@@ -24,3 +24,8 @@
   -webkit-transition: $transition;
   transition:         $transition;
 }
+
+@mixin syn-icon-box($size) {
+  max-height: $size;
+  max-width: $size;
+}

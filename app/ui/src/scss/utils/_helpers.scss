@@ -1,0 +1,81 @@
+/// Generates speciifc classNames for all colors defined in _palette.scss, so we can assign
+/// directly on DOM elements without havint to resource to a particular style definition or stylesheet.
+/// Colors generated with the following names:
+/// + Text color classNames      ->      .syn-color--red
+/// + Text color+tone classNames ->      .syn-color--red-light
+/// + Text color classNames      ->      .syn-background-color--red
+/// + Text color+tone classNames ->      .syn-background-color--red-light
+/// + Text color classNames      ->      .syn-border-color--red
+/// + Text color+tone classNames ->      .syn-border-color--red-light
+
+@each $color in map-keys($colors) {
+  .syn-color--#{$color} {
+    color: color($color);
+  }
+
+  .syn-bg--#{$color} {
+    background-color: color($color);
+  }
+
+  .syn-border--#{$color} {
+    border-color: color($color);
+  }
+
+  @each $tone in map-keys(map-get($colors, nth($color, 1))) { 
+    .syn-color--#{$color}-#{$tone} {
+      color: color($color, $tone);
+    }
+
+    .syn-bg--#{$color}-#{$tone} {
+      background-color: color($color, $tone);
+    }
+    
+    .syn-border--#{$color}-#{$tone} {
+      border-color: color($color, $tone);
+    }
+  }
+}
+
+/// Presentational, display, layout and alignment class helpers
+.center {
+  margin: 0 auto;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.vertical-align {
+  display: flex;
+  flex-direction: row;
+
+  [class^='col-'],
+  [class*=' col-'] {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.syn-visuallyhidden {
+  @include visuallyhidden;
+}
+
+/// Convenience helpers mapping our own custom SASS mixins
+.syn-preventclick,
+.disabled {
+  @include preventclick;
+}
+
+/// Icon display styling class names
+.syn-icon-large {
+  @include syn-icon-box(100px);
+}
+
+.syn-icon-medium {
+  @include syn-icon-box(46px);
+  padding: 3px;
+}
+
+.syn-icon-small {
+  @include syn-icon-box(24px);
+}

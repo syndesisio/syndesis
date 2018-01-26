@@ -1,15 +1,10 @@
-////////////////////////////////////////////////////////////////////////////////
-// GENERAL UI OVERRIDES
-////////////////////////////////////////////////////////////////////////////////
+/// Common CSS overrides for UI normalization and styles referred to generic (PF/component-agnostic) items
 html,
 body {
   height: 100%;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// PATTERNFLY CARD LAYOUT
-////////////////////////////////////////////////////////////////////////////////
-
+/// Patternfly Card overrides
 body.cards-pf {
   background-color: $color-pf-custom-gray;
 }
@@ -19,10 +14,6 @@ body.cards-pf {
   font-weight: 600;
   margin-bottom: 10px;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// PATTERNFLY VERTICAL NAVIGATION
-////////////////////////////////////////////////////////////////////////////////
 
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
   margin-left: 0;
@@ -49,10 +40,7 @@ body.cards-pf {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// TABS
-////////////////////////////////////////////////////////////////////////////////
-
+/// Patternfly Tabbed Nav overrides (which also override ngx-bootstrap's tab style)
 .tab-container {
   .nav-tabs {
     border-bottom: solid 1px $color-pf-black-300;
@@ -85,7 +73,7 @@ body.cards-pf {
   }
 }
 
-// override the background that seems off with patternfly-ng's list
+// Override the background that seems off with patternfly-ng's list
 .list-pf {
   .list-pf-item {
     background: $color-pf-white;
@@ -100,12 +88,12 @@ body.cards-pf {
   background-color: inherit;
 }
 
-// override classes to help sort padding issues
+// Override classes to help sort padding issues
 .no-bottom-margin {
   margin-bottom: 0px;
 }
 
-// wrapper for toolbar-pf buttons where a breadcrumb is also used
+// Wrapper for toolbar-pf buttons where a breadcrumb is also used
 .toolbar-pf-action-right-alignment {
   margin-top: 5px;
   position: relative;

@@ -1,4 +1,4 @@
-import { StringMap, BaseReducerModel, BaseRequestModel, PlatformStore } from '@syndesis/ui/platform';
+import { StringMap, BaseReducerModel, BaseRequestModel } from '@syndesis/ui/platform';
 import { BaseEntity } from '@syndesis/ui/model';
 
 export interface ApiConnectorValidationError {
