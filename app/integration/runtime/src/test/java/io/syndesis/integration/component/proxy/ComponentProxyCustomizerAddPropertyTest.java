@@ -15,9 +15,10 @@
  */
 package io.syndesis.integration.component.proxy;
 
-import java.util.Arrays;
+import java.util.Map;
 
 import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
+import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -26,9 +27,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -36,18 +41,23 @@ import org.springframework.test.context.junit4.SpringRunner;
     classes = {
         CamelAutoConfiguration.class,
         IntegrationRuntimeAutoConfiguration.class,
-        ComponentProxySplitCollectionTest.TestConfiguration.class
+        ComponentProxyCustomizerAddPropertyTest.TestConfiguration.class,
+        ComponentProxyCustomizerAddPropertyTest.MyBean.class
     },
     properties = {
+        "debug = true",
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG",
         "syndesis.integration.runtime.capture.enabled = false",
         "syndesis.integration.runtime.enabled = true",
-        "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxySplitCollectionTest.json"
+        "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxyCustomizerAddPropertyTest.json"
     }
 )
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class ComponentProxySplitCollectionTest {
+@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.UseLocaleWithCaseConversions"})
+public class ComponentProxyCustomizerAddPropertyTest {
+
+    @Autowired
+    private ApplicationContext context;
     @Autowired
     private CamelContext camelContext;
 
@@ -56,15 +66,30 @@ public class ComponentProxySplitCollectionTest {
     // ***************************
 
     @Test
-    public void testSplit() throws InterruptedException {
+    public void testRequest() {
+        assertThat(context.getBean("my-bean", MyBean.class)).isNotNull();
+
+        final ProducerTemplate template = camelContext.createProducerTemplate();
+        final String body = "hello";
+        final String result = template.requestBody("direct:start", body, String.class);
+        final String expected = "HELLO";
+
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    public void testSend() throws Exception {
+        assertThat(context.getBean("my-bean", MyBean.class)).isNotNull();
+
         final ProducerTemplate template = camelContext.createProducerTemplate();
         final MockEndpoint mock = camelContext.getEndpoint("mock:result", MockEndpoint.class);
-        final String[] values = { "a","b","c" };
+        final String body = "hello";
+        final String expected = "HELLO";
 
-        mock.expectedMessageCount(values.length);
-        mock.expectedBodiesReceived((Object[])values);
+        mock.expectedMessageCount(1);
+        mock.expectedBodiesReceived(expected);
 
-        template.sendBody("direct:start", Arrays.asList(values));
+        template.sendBody("direct:start", body);
 
         mock.assertIsSatisfied();
     }
@@ -75,5 +100,20 @@ public class ComponentProxySplitCollectionTest {
 
     @Configuration
     public static class TestConfiguration {
+    }
+
+    @Component("my-bean")
+    public static class MyBean {
+        public String process(@Body String body) {
+            return body.toUpperCase();
+        }
+    }
+
+    public static class MyCustomizer implements ComponentProxyCustomizer {
+        @Override
+        public void customize(ComponentProxyComponent connector, Map<String, Object> options) {
+            Object beanName = options.remove("theNameOfTheBean");
+            options.put("beanName", beanName);
+        }
     }
 }

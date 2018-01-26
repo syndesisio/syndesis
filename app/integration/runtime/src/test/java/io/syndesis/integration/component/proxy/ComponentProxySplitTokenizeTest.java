@@ -39,6 +39,7 @@ import org.springframework.test.context.junit4.SpringRunner;
     properties = {
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG",
+        "syndesis.integration.runtime.capture.enabled = false",
         "syndesis.integration.runtime.enabled = true",
         "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxySplitTokenizeTest.json"
     }

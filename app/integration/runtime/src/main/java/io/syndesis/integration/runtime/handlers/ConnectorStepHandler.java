@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import io.syndesis.core.CollectionsUtils;
 import io.syndesis.core.Optionals;
@@ -82,8 +81,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         final String componentId = scheme + "-" + index;
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, descriptor);
         final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
-
-        Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
+        final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
 
         // if the option is marked as secret use property placeholder as the
         // value is added to the integration secret.
@@ -121,13 +119,20 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
                 customizer.customize(component, customizersOptions);
             }
 
+            final Map<String, Object> componentOptions = new HashMap<>();
+
             // Set connector options with remaining properties and original values
             // to keep placeholders and delegate resolution to the final endpoint.
-            component.setOptions(
-                properties.entrySet().stream()
-                    .filter(e -> customizersOptions.containsKey(e.getKey()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-            );
+            properties.entrySet().stream()
+                .filter(e -> customizersOptions.containsKey(e.getKey()))
+                .forEach(e -> componentOptions.put(e.getKey(), e.getValue()));
+
+            // Include properties added by the customizers
+            customizersOptions.entrySet().stream()
+                .filter(e -> !properties.containsKey(e.getKey()))
+                .forEach(e -> componentOptions.put(e.getKey(), e.getValue()));
+
+            component.setOptions(componentOptions);
 
             // Remove component
             context.removeComponent(component.getComponentId());

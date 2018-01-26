@@ -17,6 +17,7 @@ package io.syndesis.core;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,5 +45,11 @@ public final class CollectionsUtils {
         }
 
         return result;
+    }
+
+    public static <K, V> Stream<Map.Entry<K, V>> filter(Map<K, V> map, Predicate<Map.Entry<K, V>> predicate) {
+        return map.entrySet().stream()
+            .filter(entry -> entry.getValue() != null)
+            .filter(predicate);
     }
 }

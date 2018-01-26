@@ -47,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     properties = {
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG",
+        "syndesis.integration.runtime.capture.enabled = false",
         "syndesis.integration.runtime.enabled = true",
         "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxyFactoryTest.json"
     }
