@@ -51,6 +51,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
         return Kind.Integration;
     }
 
+    //TODO: This is actually the deployment version and not the deployment. At some point we need to rename it.
     Optional<Integer> getDeploymentId();
 
     Optional<String> getUserId();

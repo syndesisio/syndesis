@@ -1,8 +1,8 @@
-<syndesis-modal [title]="'Confirm ' + getActionTitle()"
-                [message]="'Are you sure you would like to ' + getAction() + ' the \'' + selectedIntegration?.name + '\' integration?'">
+<syndesis-modal [title]="modalTitle"
+                [message]="modalMessage">
 </syndesis-modal>
 <syndesis-loading [loading]="loading$ | async">
-  <div *ngIf="integration$ | async; let integration"
+  <div *ngIf="integration"
        class="row integration-detail">
     <div class=" toolbar-pf toolbar">
       <div class="col-sm-12">
@@ -42,6 +42,7 @@
         </dt>
         <dd>
           <p>
+            <!--<pre>{{ currentDeployment | json }}</pre>-->
             <ng-template ngFor
                          let-step
                          [ngForOf]="integration.steps"
@@ -108,12 +109,68 @@
             <button *ngIf="canActivate(integration)"
                     class="btn btn-default"
                     (click)="requestAction('activate', integration)">Start Integration</button>
-            <!--
-            <button class="btn btn-default">Undeploy Integration</button>
-            -->
           </p>
         </dd>
       </dl>
+      <ng-container *ngIf="integrationDeployments$ | async; let integrationDeployments">
+        <syndesis-loading [loading]="integrationDeployments === undefined">
+          <dl class="dl-horizontal">
+            <dt>
+              History:
+            </dt>
+            <dd>
+              <pfng-list [items]="integrationDeployments"
+                         [config]="deploymentListConfig"
+                         [itemTemplate]="itemTemplate"
+                         [expandTemplate]="expandTemplate"
+                         [actionTemplate]="actionTemplate">
+                <ng-template #itemTemplate
+                             let-deployment="item"
+                             let-index="index">
+                  <div class="list-pf-left">
+                    <ng-container *ngIf="deployment.version === (integration.deploymentId || integration.version)">
+                      <span class="pficon pficon-ok list-pf-icon-small"></span>
+                    </ng-container>
+                  </div>
+                  <div class="list-pf-content-wrapper">
+                    <div class="list-pf-main-content">
+                      <div class="list-pf-title">
+                        Version: {{ deployment.version }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-pf-additional-content">
+                    <span>Last published on {{ deployment.lastUpdated | date }}</span>
+                    <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
+                  </div>
+                </ng-template>
+                <ng-template #expandTemplate let-deployment="item" let-index="index">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <dl class="dl-horizontal">
+                        <dt>Created at:</dt>
+                        <dd>{{ deployment.createdDate | date }}</dd>
+                      </dl>
+                    </div>
+                    <div class="col-md-6">
+                      <dl class="dl-horizontal">
+                        <dt></dt>
+                        <dd></dd>
+                      </dl>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template #actionTemplate let-deployment="item" let-index="index">
+                  <pfng-action class="list-pf-actions"
+                               [config]="deploymentActionConfigs[deployment.id]"
+                               (onActionSelect)="deploymentAction($event, deployment)">
+                  </pfng-action>
+                </ng-template>
+              </pfng-list>
+            </dd>
+          </dl>
+        </syndesis-loading>
+      </ng-container>
       <dl class="dl-horizontal">
         <dt>
         </dt>

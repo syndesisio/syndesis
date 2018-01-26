@@ -1,7 +1,7 @@
 <div class="integrations list">
 
-  <syndesis-modal [title]="'Confirm ' + getActionTitle()"
-                  [message]="'Are you sure you would like to ' + getAction() + ' the \'' + selectedIntegration?.name + '\' integration?'">
+  <syndesis-modal [title]="modalTitle"
+                  [message]="modalMessage">
   </syndesis-modal>
 
   <!-- List Container -->

@@ -59,7 +59,7 @@ public class T3stSupportITCase extends BaseITCase {
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r2 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r2.getBody().length).isEqualTo(1);
+        assertThat(r2.getBody().length).isEqualTo(2);
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
@@ -73,7 +73,7 @@ public class T3stSupportITCase extends BaseITCase {
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r4 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r4.getBody().length).isEqualTo(1);
+        assertThat(r4.getBody().length).isEqualTo(2);
 
     }
 
