@@ -664,7 +664,6 @@ objects:
               memory: 200Mi
             requests:
               memory: 20Mi
-        serviceAccount: syndesis-oauth-client
         serviceAccountName: syndesis-oauth-client
 
         volumes:
