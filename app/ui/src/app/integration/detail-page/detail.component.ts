@@ -13,7 +13,7 @@ import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from '
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
 import { Connection, Action } from '@syndesis/ui/model';
-import { Integration, Step, IntegrationDeployment } from '@syndesis/ui/integration';
+import { ACTIVE, Integration, Step, IntegrationDeployment } from '@syndesis/ui/integration';
 import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
@@ -163,7 +163,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
                 actionConfig.moreActions.push(replaceDraft);
                 if (deployment.version === (integration.version || integration.deploymentId)) {
                   this.currentDeployment = deployment;
-                  if (integration.currentStatus === 'Active') {
+                  if (integration.currentStatus === ACTIVE) {
                     actionConfig.moreActions.push(stopIntegration);
                   } else {
                     actionConfig.moreActions.push(publish);

@@ -1,6 +1,6 @@
 import { ApplicationRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Integration } from '@syndesis/ui/integration';
+import { Integration, DRAFT, PENDING, ACTIVE, INACTIVE, UNDEPLOYED } from '@syndesis/ui/integration';
 import { IntegrationSupportService } from '../integration-support.service';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
@@ -23,13 +23,13 @@ export class IntegrationViewBase {
     public integrationSupportService: IntegrationSupportService,
   ) {}
 
-  canEdit = int => int.currentStatus !== 'Undeployed';
+  canEdit = int => int.currentStatus !== UNDEPLOYED;
   /* tslint:disable semicolon */
   canActivate = int =>
-    int.currentStatus === 'Inactive' || int.currentStatus === 'Draft';
+    int.currentStatus === INACTIVE || int.currentStatus === DRAFT;
   /* tslint:enable semicolon */
-  canDeactivate = int => int.currentStatus === 'Active';
-  canDelete = int => int.currentStatus !== 'Undeployed';
+  canDeactivate = int => int.currentStatus === ACTIVE || int.currentStatus === PENDING;
+  canDelete = int => int.currentStatus !== UNDEPLOYED;
 
   //----- Actions ------------------->>
 

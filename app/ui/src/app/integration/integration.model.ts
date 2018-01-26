@@ -10,6 +10,12 @@ export interface Step extends BaseEntity {
 }
 export type Steps = Array<Step>;
 
+export const DRAFT = 'Draft';
+export const PENDING = 'Pending';
+export const ACTIVE = 'Active';
+export const INACTIVE = 'Inactive';
+export const UNDEPLOYED = 'Undeployed';
+
 export type IntegrationState = 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
 
 export interface Integration extends BaseEntity {
