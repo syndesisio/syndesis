@@ -7,4 +7,17 @@ This is just a placeholder, still in the planning phased.
 Nevertheless we already start to document the feature for an "UX first" approach.
 ****
 
+
+
+* Update versions to target version in pom.xml via `mvn release:setversions`
+* Run a test build on a clean Maven repository
+* Commit all files which has been generated during the build
+* Recreate OpenShift templates for referencing Docker images with the release version & commit
+* Tag local git repo with target version
+* Run build again and deploy to Sonatype with auto-release
+* Create Docker images and push to Docker-Hub
+* Update pom.xml with next snapshot version
+* Revert templates to use 'latest' image
+* Commit
+* Git push to 'upstream'
 // ### Usage

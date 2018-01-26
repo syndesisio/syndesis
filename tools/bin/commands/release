@@ -1,161 +1,370 @@
 #!/bin/bash
 
-NEXUS_URL="https://oss.sonatype.org"
-NEXUS_STAGING_PLUGIN_VERSION="1.6.8"
-NEXUS_SERVER_ID="oss-sonatype-staging"
-NEXUS_STAGING_REPO_PREFIX="iosyndesis" #This is the parent groupId with dots removed.
-NEXUS_DEFAULT_STAGING_PROFILE_ID="61015c63f807ce" #This this is the id of the staging profile. Just go to the list of staging profiles, click the one u need and grab that id from the url (its not displayed in the actual list).
-
-REPO_ANNOUNCEMENT_PREFIX="OpenedStagingProfile"
-
-NO_TAG="notag"
+# Maven modules which create Docker images
+IMAGE_MODULES="ui rest verifier s2i"
 
 release::description() {
-    echo "Perform a release"
+    cat - <<EOT
+Perform a release
+
+This command performs a release but does *no* automated rollback when something fails.
+Please refer to the manual at https://docs.syndesis.io for more details and what needs
+to be cleaned up in case of a failure.
+EOT
 }
 
 release::usage() {
     cat - <<EOT
--n  --dry-run                      Dry run. This will stage and drop a release
-    --release-snapshots            Indicates that this is a snapshot release, so no versions will be updated
-    --release-version <version>    Version to release (e.g. "1.2.1")
-    --dev-version <version>        Next development version
-    --profiles <p1,p2,..>          Profiles to use (default: "release")
-    --settings-xml <settings.xml>  Path to a custom settings.xml to use for the reelase
-
-    --sonatype-username <user>     Sonatype username
-    --sonatype-password <password> Sonatype password
-
-    --docker-registry <registry>   Docker registry
-    --docker-server-id <server>    Docker server id (as defined in settings.xml)
-    --docker-username <user>       Registry username
-    --docker-email <email>         Registry user's email
-    --docker-password <password>   Registry password
-
-
+-n  --dry-run                 Dry run. This will perform the whole build but does no tagging, artefact
+                              upload or pushing Docker images
+    --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
+    --dev-version <version>   Next development version. If not given, set to "<major>.<minor>-SNAPSHOT"
+                              as calculated from --release-version (e.g. "1.2-SNAPSHOT")
+    --settings-xml <file>     Path to a custom settings.xml to use for the release. Please not that
+                              this file must contain all the credentials to be used for Sonatype and
+                              Docker. By default ~/.m2/settings.xml is used. Refer to the Manual for
+                              more details.
+    --local-maven-repo <dir>  Local dir for holding the local Maven repo cache. If not given, then a new
+                              temporary directory will be used (and removed after the release)
+    --docker-user <user>      Docker user for Docker Hub
+    --docker-password <pwd>   Docker password for Docker Hub
+    --product-templates       Create templates for the productised version only and tag
+    --git-push                Automatically push
+    --log <log-file>          Write full log to <log-file>, only print progress to screen
 EOT
 }
 
 release::run() {
     source "$(basedir)/commands/util/maven_funcs"
-    local dry_run=$(hasflag --dry-run -n)
-    local release_snapshots=$(hasflag --release-snapshots)
+
+    # Main application directory
+    local appdir=$(appdir)
+
+    # Validate release versions
     local release_version=$(readopt --release-version)
+    if [ -z "${release_version}" ]; then
+        echo "Please specify --release-version"
+        exit 1
+    fi
+
+    # Caluclate tags and versions used in templates and images
+    local syndesis_tag=$(extract_minor_version $release_version)
+    check_error $syndesis_tag
+    local atlasmap_version=$(extract_atlasmap_version)
+    check_error $atlasmap_version
+    local atlasmap_tag=$(extract_minor_version $atlasmap_version)
+    check_error $atlasmap_tag
+
+    # Generate product templates only if desired
+    if [ $(has_flag --product-templates) ]; then
+        do_product_templates $appdir $syndesis_tag $atlasmap_tag "fuse-ignite"
+        exit 0
+    fi
+
+    # Write to logfile if requestes
+    if [ $(readopt --log) ]; then
+        local logfile=$(readopt --log)
+        touch $logfile
+        tail -f $logfile > >(grep ^====) &
+        local tail_pid=$!
+        trap "kill $tail_pid" EXIT
+
+        exec >>$logfile 2>&1
+        sleep 1
+    fi
+
+    # Verify that there are no modified file in git repo
+    ## check_git_clean $appdir
+
+    # Calculate common maven options
+    local maven_opts=$(extract_maven_opts)
+
+    # Set pom.xml version to the given release_version
+    update_pom_versions $appdir $release_version "$maven_opts"
+
+    # Make a clean install
+    mvn_clean_install $appdir "$maven_opts"
+
+    # Create templates for the given version
+    generate_templates $appdir $syndesis_tag $atlasmap_tag
+
+    # Stage artefacts to Sonatype
+    stage_artefacts $appdir "$maven_opts"
+
+    # Build all Docker Images
+    docker_login
+    create_docker_images $appdir "$maven_opts"
+
+    # For a test run, we are done
+    if [ $(hasflag --dry-run -n) ]; then
+        drop_staging_repo $appdir
+
+        echo "==== Dry run finished, nothing has been committed"
+        echo "==== Use 'git reset --hard' to cleanup"
+        exit 0
+    fi
+
+    # ========================================================================
+    # Commit, tag, release, push
+    # --------------------------
+
+    # Pushing to Docker Hub
+    docker_push $release_version $syndesis_tag
+
+    # Release staging repo
+    release_staging_repo $appdir "$maven_opts"
+
+    # Git Commit all changed files
+    git_commit_files $appdir $release_version $syndesis_tag $atlasmap_tag
+
+    # Tag the release version
+    echo "==== Tagging version $release_version"
+    git tag -f $release_version
+
+    # Update files for SNAPSHOT and 'latest version'
+    change_to_dev_version $appdir "$maven_opts"
+
+    # Push everything (if configured)
+    git_push
+}
+
+# ===================================================================================================
+# Prep actions:
+
+check_git_clean() {
+    local appdir=$1
+
+    cd $appdir
+    echo "==== Checking for clean Git Repo"
+    set +e
+    git diff-index --quiet HEAD --
+    local git_uncommitted=$?
+    set -e
+    if [ $git_uncommitted != 0 ]; then
+       echo "Untracked or changed files exist. Please run release on a clean repo"
+       git status
+       exit 1
+    fi
+}
+
+update_pom_versions() {
+    local appdir="$1"
+    local version="$2"
+    local maven_opts="$3"
+
+    cd $appdir
+    echo "==== Updating pom.xml versions to $version"
+    ./mvnw ${maven_opts} versions:set -DnewVersion=$version -DprocessAllModules=true -DgenerateBackupPoms=false
+}
+
+mvn_clean_install() {
+    local appdir="$1"
+    local maven_opts="$2"
+
+    echo "==== Running 'mvn clean install'"
+    cd $appdir
+    ./mvnw ${maven_opts} clean install
+}
+
+generate_templates() {
+    local appdir="$1"
+    local syndesis_tag="$2"
+    local atlasmap_tag="$3"
+
+    echo "==== Creating templates for $syndesis_tag"
+    cd $appdir/deploy/generator
+    sh run.sh --syndesis-tag="$syndesis_tag" --atlasmap-tag="$atlasmap_tag"
+}
+
+stage_artefacts() {
+    local appdir="$1"
+    local maven_opts="$2"
+
+    echo "==== Staging Maven artefacts to Sonatype"
+    cd $appdir
+    ./mvnw ${maven_opts} -Prelease clean deploy -DstagingDescription="Staging Syndesis for $(readopt --release-version)"
+}
+
+docker_login() {
+    if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-user)" ]; then
+        echo "==== Login to Docker Hub"
+        docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-user)"
+    fi
+}
+
+create_docker_images() {
+    local appdir=$1
+    local maven_opts="$2"
+
+    echo "==== Creating Docker images"
+    cd $appdir
+    for module in $IMAGE_MODULES; do
+        # -Pimage binds to fabric8:build
+        ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -f $module package
+    done
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Commit, push, release actions
+
+docker_push() {
+    local release_version=$1
+    local syndesis_tag=$2
+
+    echo "==== Pushing to Docker Hub"
+    for module in $IMAGE_MODULES; do
+        local image="syndesis/syndesis-$module"
+        docker tag "$image:$release_version" "$image:$syndesis_tag"
+        docker push "$image:$release_version"
+        docker push "$image:$syndesis_tag"
+    done
+}
+
+release_staging_repo() {
+    local appdir="$1"
+    local maven_opts="$2"
+
+    echo "==== Releasing Sonatype staging repo"
+    cd $appdir
+    ./mvnw ${maven_opts} -Prelease nexus-staging:release -DstagingDescription="Releasing $(readopt --release-version)"
+}
+
+git_commit_files() {
+    local appdir=$1
+    local version=$2
+    local syndesis_tag=$3
+    local atlasmap_tag=$4
+
+    echo "==== Committing files to local git"
+    cd $appdir
+    git_commit pom.xml "Update pom.xmls to $release_version"
+    git_commit ^connectors/ "Update generated connector files"
+    git_commit ^deploy/ "Update OpenShift templates for Syndesis '$syndesis_tag' and AtlasMap '$atlasmap_tag'"
+}
+
+change_to_dev_version() {
+    local appdir=$1
+    local maven_opts="$2"
+
+    # Calculate hte next development version
     local dev_version=$(readopt --dev-version)
-    local maven_opts=""
-
-    #Validation
-    if [ -z "${release_snapshots}" ]; then
-        if [ -z "${release_version}" ]; then
-            echo "Please specify --release-version"
-            exit 1
-        fi
-
-        if [ -z "${dev_version}" ]; then
-            echo "Please specify --dev-version"
-            exit 1
-        fi
+    if [ -z "${dev_version}" ]; then
+        dev_version=$(calc_dev_version $release_version)
+        check_error $dev_version
     fi
 
+    echo "==== Updating pom.xmls to snapshot version"
+    cd $appdir
+    ./mvnw ${maven_opts} versions:set -DnewVersion=$dev_version -DprocessAllModules=true -DgenerateBackupPoms=false
 
-    local profiles=$(readopt --profiles)
-    if [ -n "${profiles}" ]; then
-        maven_opts="$maven_opts -P${profiles}"
-    else
-        maven_opts="-Prelease"
+    echo "==== Updating OpenShift templates back to 'latest'"
+    cd $appdir/deploy/generator
+    sh run.sh --syndesis-tag="latest" --atlasmap-tag="latest"
+
+    echo "==== Committing files for current snapshot"
+    cd $appdir
+    git_commit pom.xml "Setting version $dev_version in pom.xml files"
+    git_commit ^deploy/ "Update OpenShift templates to latest images"
+}
+
+git_push() {
+    echo "==== Pushing to GitHub"
+    if [ $(hasflag --git-push) ]; then
+        git push
+        git push --tags
     fi
+}
+
+# =======================================================================
+# Side actions
+
+do_product_templates() {
+  local appdir=$1
+  local syndesis_tag=$2
+  local atlasmap_tag=$3
+  local tag_prefix=${4:-fuse-ignite}
+
+  cd $appdir/deploy/generator
+
+  echo "==== Creating product templates for $syndesis_tag"
+  sh run.sh --product --syndesis-tag="$syndesis_tag" --atlasmap-tag="$atlasmap_tag"
+
+  echo "==== Committing"
+  git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag and AtlasMap $atlasmap_tag"
+
+  echo "=== Tagging"
+  git tag "${tag_prefix}-${syndesis_tag}"
+
+  echo "=== Reverting template versions back to 'latest'"
+  sh run.sh --syndesis-tag="latest" --atlasmap-tag="latest"
+
+  echo "==== Committing"
+  git_commit ^deploy/ "Update OpenShift to latest images"
+
+  git_push
+}
+
+drop_staging_repo() {
+    local appdir="$1"
+
+    echo "==== Dropping Sonatype staging repo"
+    cd $appdir
+    ./mvnw nexus-staging:drop -DstagingDescription="Dropping repo"
+}
+
+# =======================================================================
+# Helper
+
+extract_maven_opts() {
+    # Temporary local repository to guarantee a clean build
+    local local_maven_repo=$(readopt --local-maven-repo)
+    if [ -z "$local_maven_repo" ]; then
+        local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
+        trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
+    fi
+    local maven_opts="-Dmaven.repo.local=$local_maven_repo --batch-mode"
 
     local settings_xml=$(readopt --settings-xml)
     if [ -n "${settings_xml}" ]; then
         maven_opts="$maven_opts -s $settings_xml"
     fi
 
-    echo "Creating new staging repository..."
-    local repo_id=$(open_staging_repository "$maven_opts" $release_version)
-    echo "Opened staging repository: $repo_id"
+    echo $maven_opts
+}
 
-    #There is no tag yet, so let's pass $NO_TAG instead.
-    trap "do_cleanup \"$repo_id\" \"$NO_TAG\" \"$maven_opts\"" EXIT
+git_commit() {
+    local pattern="$1"
+    local message="$2"
 
-    local maven_args=""
-    if [ -n "${release_snapshots}" ]; then
-        maven_args="clean package deploy:deploy -DstagingRepositoryId=$repo_id $maven_opts"
-    else
-        maven_args="-B release:clean release:prepare release:perform -DstagingRepositoryId=$repo_id -DpushChanges=false -DreleaseVersion=${release_version} -DdevelopmentVersion=${dev_version} -Dtag=$release_version $maven_opts"
-    fi
-    call_maven "$maven_args"
-
-    if [ -z "${release_snapshots}" ]; then
-        # Update the trap with the tag created.
-        local tag=$(find_tag)
-        trap "do_cleanup \"$repo_id\" \"$tag\" \"$maven_opts\"" EXIT
-    fi
-
-    echo "Closing staging repository: $repo_id"
-    close_staging_repository "$repo_id" "$maven_opts"
-
-    if [ -n "$dry_run" ]; then
-        echo "This is a dry run ..."
-        echo "Dropping tag $tag"
-        git tag -d $tag
-        echo "Dropping staging repository: $repo_id"
-        drop_staging_repository "$repo_id" "$maven_opts"
-    else
-        echo "Releasing staging repository: $repo_id"
-        trap "echo Done!" EXIT
-        exit
-        release_staging_repository "$repo_id" "$maven_opts"
-        git push origin master
-        git push orign $tag
+    local release_version=$(readopt --release-version)
+    if [ ! $(hasflag --dry-run -n) ]; then
+        git ls-files --modified | grep $pattern | xargs git commit -m "[$release_version]: $message"
     fi
 }
 
-# ======================================================
-# Staging / Release Helper Functions
-
-open_staging_repository() {
-    local maven_opts=$1
-    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:rc-open -DnexusUrl=${NEXUS_URL} -DstagingDescription='Version $release_version' -DserverId=${NEXUS_SERVER_ID} -DstagingProfileId=${NEXUS_DEFAULT_STAGING_PROFILE_ID} -DopenedRepositoryMessageFormat='$REPO_ANNOUNCEMENT_PREFIX:%s' $maven_opts"
-    #Call maven and just grab the last line that contains $REPO_ANNOUNCEMENT_PREFIX discard the line that displays the whole command and get the string that is between `:` and `'`.
-    call_maven "$maven_args" | tee /tmp/x.log | grep -v maven | grep $REPO_ANNOUNCEMENT_PREFIX | tail -n 1 | awk -F ":" '{print $2}' | awk -F "'" '{print $1}'
-}
-
-close_staging_repository() {
-    call_sonatype "rc-close" "$1" "$2"
-}
-
-release_staging_repository() {
-    call_sonatype "rc-release" "$1" "$2"
-}
-
-drop_staging_repository() {
-    call_sonatype "rc-drop" "$1" "$2"
-}
-
-call_sonatype() {
-    local command=$1
-    local repo_id=$2
-    local maven_opts=$3
-    local maven_args="org.sonatype.plugins:nexus-staging-maven-plugin:${NEXUS_STAGING_PLUGIN_VERSION}:${command} -DnexusUrl=${NEXUS_URL} -DserverId=${NEXUS_SERVER_ID} -DstagingRepositoryId=$repo_id $maven_opts"
-    call_maven "$maven_args"
-}
-
-do_cleanup() {
-    echo "Cleaning up ..."
-    local repo_id=$1
-    local tag=$2
-    local maven_opts=$3
-    if [ "$NO_TAG" == "$tag" ]; then
-        echo "No tag has been specified. Skipping!"
-    else
-        echo "Droping tag $tag"
-        git tag -d $tag || echo "Failed to drop tag: tag."
-    fi
-    echo "Droping staging repository: $repo_id"
-    drop_staging_repository "$repo_id" "$maven_opts"
-}
-
-find_tag() {
+calc_dev_version() {
     local release_version=$1
-    git tag -l | grep $release_version | tail -n 1
+    local minor_version=$(extract_minor_version $release_version)
+    check_error $minor_version
+    echo "${minor_version}-SNAPSHOT"
+}
+
+extract_minor_version() {
+    local version=$1
+    local minor_version=$(echo $version | sed 's/^\([0-9]*\.[0-9]*\)\.[0-9]*$/\1/')
+    if [ "$minor_version" = "$version" ]; then
+        echo "ERROR: Cannot extract minor version from $version"
+        return
+    fi
+    echo $minor_version
+}
+
+extract_atlasmap_version() {
+    cd $(appdir)
+    local version=$(cat pom.xml | grep atlasmap.version | head -1 | sed 's/^[^0-9]*\([0-9]*\.[0-9]*\(\.[0-9]*\)*\).*$/\1/')
+    if [ -n "${version//[0-9.]/}" ]; then
+       echo "ERROR: Cannot extract property atlasmap.version from parent pom.xml (found: $version)"
+       return
+    fi
+    echo $version
 }
