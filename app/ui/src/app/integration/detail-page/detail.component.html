@@ -45,7 +45,7 @@
             <!--<pre>{{ currentDeployment | json }}</pre>-->
             <ng-template ngFor
                          let-step
-                         [ngForOf]="((currentDeployment ? currentDeployment.spec : undefined) || integration).steps"
+                         [ngForOf]="integration.steps"
                          let-index="index">
               <div *ngIf="step"
                    class="step-block inline-block text-center">
