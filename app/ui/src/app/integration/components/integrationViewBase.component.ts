@@ -12,6 +12,8 @@ import { saveAs } from 'file-saver';
 export class IntegrationViewBase {
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
+  modalTitle: string;
+  modalMessage: string;
 
   constructor(
     public store: IntegrationStore,
@@ -46,7 +48,6 @@ export class IntegrationViewBase {
           .then(value => {
             saveAs(value, integration.name + '-export.zip');
           });
-      /*
       case 'replaceDraft':
         header = 'Updating draft';
         message = 'Replacing the current draft of the integration';
@@ -54,7 +55,6 @@ export class IntegrationViewBase {
         reason = 'Error updating integration';
         request = this.requestReplaceDraft(integration);
         break;
-      */
       case 'publish':
         header = 'Publishing deployment';
         message =
@@ -114,6 +114,8 @@ export class IntegrationViewBase {
 
   doAction(action: string, integration: Integration) {
     switch (action) {
+      case 'replaceDraft':
+        return this.replaceDraftAction(integration);
       case 'activate':
       case 'publish':
         return this.activateAction(integration);
@@ -209,6 +211,10 @@ export class IntegrationViewBase {
       .toPromise();
   }
 
+  replaceDraftAction(integration: Integration): Promise<any> {
+    return this.store.update(integration, true).take(1).toPromise();
+  }
+
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
@@ -223,25 +229,31 @@ export class IntegrationViewBase {
 
   showModal(action: string) {
     this.currentAction = action;
+    this.setModalProperties(action);
     return this.modalService.show();
   }
 
-  getActionTitle() {
-    switch (this.currentAction) {
+  setModalProperties(action) {
+    switch (action) {
       case 'replaceDraft':
-        return 'Replace Draft';
+        this.modalTitle =  'Confirm Replace Draft';
+        this.modalMessage = 'Are you sure you would like to replace the current draft for this integration?';
+        break;
       case 'publish':
-        return 'Publish';
+        this.modalTitle = 'Confirm Publish';
+        this.modalMessage = 'Are you sure you would like to publish this deployment?';
+        break;
       case 'activate':
-        return 'Activation';
+        this.modalTitle = 'Confirm Activation';
+        this.modalMessage = 'Are you sure you would like to activate the \'' + this.selectedIntegration.name + '\' integration?';
+        break;
       case 'deactivate':
-        return 'Deactivation';
+        this.modalTitle = 'Confirm Deactivation';
+        this.modalMessage = 'Are you sure you would like to deactivate the \'' + this.selectedIntegration.name + '\' integration?';
+        break;
       default:
-        return 'Deletion';
+        this.modalTitle = 'Confirm Deletion';
+        this.modalMessage = 'Are you sure you would like to delete the \'' + this.selectedIntegration.name + '\' integration?';
     }
-  }
-
-  getAction() {
-    return this.currentAction;
   }
 }

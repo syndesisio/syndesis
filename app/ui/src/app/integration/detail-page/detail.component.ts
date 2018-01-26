@@ -131,11 +131,12 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   deploymentAction(event, deployment) {
     switch (event.id) {
       case REPLACE_DRAFT:
-        // TODO
-        /*
-        this.integration.steps = deployment.spec.steps;
-        this.integration.desiredStatus = DRAFT;
-        */
+        {
+          const integration = { ...this.integration };
+          integration.steps = deployment.spec.steps;
+          integration.desiredStatus = DRAFT;
+          this.requestAction('replaceDraft', integration);
+        }
         break;
       case CREATE_DRAFT:
         // TODO doesn't this just mean edit?
@@ -144,11 +145,14 @@ export class IntegrationDetailComponent extends IntegrationViewBase
         this.requestAction('deactivate', this.integration);
         break;
       case PUBLISH:
-        const integration = { ...this.integration };
-        integration.steps = deployment.spec.steps;
-        this.integration.desiredStatus = ACTIVE;
-        this.requestAction('publish', integration);
-        break;
+        {
+          const integration = { ...this.integration };
+          delete integration.deploymentId;
+          integration.steps = deployment.spec.steps;
+          this.integration.desiredStatus = ACTIVE;
+          this.requestAction('publish', integration);
+          break;
+        }
       default:
     }
   }

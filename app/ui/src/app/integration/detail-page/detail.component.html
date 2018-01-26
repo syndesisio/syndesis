@@ -1,5 +1,5 @@
-<syndesis-modal [title]="'Confirm ' + getActionTitle()"
-                [message]="'Are you sure you would like to ' + getAction() +  + (getAction() === 'publish' ? ' this deployment?' : ' the \'' + selectedIntegration?.name + '\' integration?')">
+<syndesis-modal [title]="modalTitle"
+                [message]="modalMessage">
 </syndesis-modal>
 <syndesis-loading [loading]="loading$ | async">
   <div *ngIf="integration"
