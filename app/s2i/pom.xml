@@ -20,13 +20,13 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.5</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis</groupId>
   <artifactId>s2i</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2.5</version>
   <packaging>pom</packaging>
   <name>S2I</name>
 
@@ -116,9 +116,10 @@
             <configuration>
               <executable>bash</executable>
               <arguments>
-                <argument>${basedir}/copy_mvn_repo.sh </argument>
+                <argument>${basedir}/copy_mvn_repo.sh</argument>
                 <argument>${project.version}</argument>
                 <argument>${basedir}/target/generated-sources/docker</argument>
+                <argument>${maven.repo.local}</argument>
               </arguments>
             </configuration>
           </execution>
