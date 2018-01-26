@@ -9,6 +9,7 @@
       "id": "@project.groupId@:@project.artifactId@:@project.version@"
     }
   ],
+  "componentScheme": "amqp",
   "configuredProperties": {},
   "properties": {
     "connectionUri": {
@@ -122,7 +123,6 @@
       "pattern": "To",
       "actionType": "connector",
       "descriptor": {
-        "componentScheme": "amqp-publish",
         "inputDataShape": {
           "kind": "*"
         },
@@ -198,7 +198,6 @@
       "pattern": "From",
       "actionType": "connector",
       "descriptor": {
-        "componentScheme": "amqp-subscribe",
         "inputDataShape": {
           "kind": "none"
         },
@@ -286,7 +285,6 @@
       "pattern": "To",
       "actionType": "connector",
       "descriptor": {
-        "componentScheme": "amqp-request",
         "inputDataShape": {
           "kind": "*"
         },
