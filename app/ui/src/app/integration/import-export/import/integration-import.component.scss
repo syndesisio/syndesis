@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: visible;
+}
+
+syndesis-list-toolbar {
+  flex: 0 0 auto;
+}
+
+syndesis-loading {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  // Dock the scrollbar to the right
+  margin-right: -20px;
+  padding-right: 20px;
+}
+
+.max-height {
+  height:100%
+}

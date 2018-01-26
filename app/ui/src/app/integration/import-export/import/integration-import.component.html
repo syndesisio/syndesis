@@ -1,0 +1,62 @@
+<syndesis-list-toolbar [items]="integrations"
+                       [viewTemplate]="viewTemplate">
+  <ng-template #viewTemplate>
+    <div class="toolbar-pf-action-right">
+        <button type="button"
+                class="btn btn-default"
+                (click)="showImportDialog()">
+                Import
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                [routerLink]="['/integrations/create']">
+                Create Integration
+        </button>
+    </div>
+  </ng-template>
+</syndesis-list-toolbar>
+
+<ng-template>
+  Select the integration file to import:
+  <input #fileSelect type="file" ng2FileSelect [uploader]="uploader" (onFileSelected)="fileSelect.value=''" />
+
+  <!-- for more info/examples of how to use the ng2 file uploader, see https://valor-software.com/ng2-file-upload/ -->
+  <div ng2FileDrop
+       [uploader]="uploader"
+       class="well my-drop-zone">
+    Or drag and drop your integration files here
+  </div>
+
+  <div class="col-md-9" style="margin-bottom: 40px">
+    <h3>Upload queue</h3>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th width="50%">Name</th>
+        <th>Progress</th>
+        <th>&nbsp;</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of uploader.queue">
+        <td>
+          <strong>{{ item?.file?.name }}</strong>
+        </td>
+        <td>
+          <div class="progress" style="margin-bottom: 0;">
+            <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
+          </div>
+        </td>
+        <td nowrap>
+          <div *ngIf="!item.isUploaded">
+            <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel(); item.remove()">
+              <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
