@@ -7,7 +7,6 @@ Access UX design resource and documentation for Syndesis.
 * ### [Integration Breadcrumb](designs/navigation/navigation_breadcrumb_integration.md)
 * ### [Support Page](designs/support-page/support-page.md)
 
-
 ## First Time User Experience (FTUE)
 * ### [GitHub Settings](designs/github-settings/github-settings.md)
 
@@ -35,6 +34,9 @@ Access UX design resource and documentation for Syndesis.
 
 ## Connectors
 * ### AWS S3 Connector Icon: [svg](designs/aws-s3/icon/_iPaaS_ConnectionIcons_AWS-S3.svg), [png](designs/aws-s3/icon/aws-s3-icon-png.png)
+
+## Monitor
+* ### [System Metrics](designs/monitormetrics/monitormetrics.md) 
 
 ## Archives
 * ### [Integration Summary Page](designs/integrationsummary/integrationsummary.md)
