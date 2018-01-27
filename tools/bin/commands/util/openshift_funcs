@@ -25,6 +25,22 @@ recreate_project() {
     oc project "${project}"
 }
 
+is_docker_mode() {
+    if [ "$(readopt --image-mode -i)" = "docker" ] || [ $(hasflag --docker) ]; then
+        echo "true";
+    else
+        echo "false";
+    fi
+}
+
+select_template() {
+    if [ $(is_docker_mode) == "true" ]; then
+        echo "syndesis-dev-restricted"
+    else
+        echo "syndesis-restricted"
+    fi
+}
+
 create_oauthclient() {
     basedir=$(appdir)
     check_error "$basedir"
@@ -32,16 +48,17 @@ create_oauthclient() {
 }
 
 create_and_apply_template() {
-    basedir=$(appdir)
-    check_error "$basedir"
+    appdir=$(appdir)
+    check_error "$appdir"
     local route=$1
+    local template=${2:-syndesis-restricted}
+    local tag=${3:-master}
     if [ -z "$route" ]; then
         echo "No route given"
         exit 1
     fi
-    local template=${2:-syndesis-restricted.yml}
 
-    oc create -f ${basedir}/deploy/$template.yml
+    git show $tag:app/deploy/${template}.yml | oc create -f -
     oc new-app $template \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \

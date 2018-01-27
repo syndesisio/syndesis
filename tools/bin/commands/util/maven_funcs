@@ -32,8 +32,8 @@ call_maven() {
     else
       echo "Modules: $maven_modules"
       echo "=============================================================================="
-      echo "./mvnw -N install -Pflash ### Installing parent pom.xml"
-      ./mvnw -N install -Pflash
+      echo "./mvnw -N --batch-mode install -Pflash ### Installing parent pom.xml"
+      ./mvnw -N --batch-mode install -Pflash
       for module in $maven_modules; do
         echo "=============================================================================="
         echo "./mvnw $args -f $module ### Processing module $module"
