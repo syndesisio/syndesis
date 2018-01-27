@@ -291,10 +291,6 @@ public class ComponentProxyComponent extends DefaultComponent {
 
                 LOGGER.debug("Using component option: {}={}", key, val);
 
-                if (val instanceof String) {
-                    val = getCamelContext().resolvePropertyPlaceholders((String) val);
-                }
-
                 if (IntrospectionSupport.setProperty(context, component, key, val)) {
                     options.remove(key);
                 }

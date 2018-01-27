@@ -89,6 +89,12 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
             .filter(Predicates.or(connector::isSecret, action::isSecret))
             .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", scheme, index, e.getKey())));
 
+        // raw values.
+        properties.entrySet()
+            .stream()
+            .filter(Predicates.or(connector::isRaw, action::isRaw))
+            .forEach(e -> e.setValue(String.format("RAW(%s)", e.getValue())));
+
         //Connector/Action properties have the precedence
         connector.getConfiguredProperties().forEach(properties::put);
         descriptor.getConfiguredProperties().forEach(properties::put);
@@ -105,17 +111,10 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
                 ObjectHelper.trySetCamelContext(customizer, context);
 
                 while (iterator.hasNext()){
-                    Map.Entry<String, Object> entry = iterator.next();
-
-                    String key = entry.getKey();
-                    Object val = entry.getValue();
-
-                    if (val instanceof String) {
-                        val = context.resolvePropertyPlaceholders((String)val);
-                    }
+                    final Map.Entry<String, Object> entry = iterator.next();
 
                     // Bind properties to the customizer
-                    if (IntrospectionSupport.setProperty(context, customizer, key, val)) {
+                    if (IntrospectionSupport.setProperty(context, customizer, entry.getKey(), entry.getValue())) {
                         // Remove property if bound to the customizer.
                         iterator.remove();
                     }

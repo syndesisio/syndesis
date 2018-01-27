@@ -20,6 +20,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
+          "raw": true,
           "description": "Amazon AWS Access Key"
         },
         "secretKey": {
@@ -31,6 +32,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": true,
+          "raw": true,
           "description": "Amazon AWS Secret Key"
         },
         "region": {
