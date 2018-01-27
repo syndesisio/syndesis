@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.daytrade.DayTradePlaceComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "day-trade-place-connector",
-  "version" : "1.2.4",
+  "version" : "1.2.5",
   "description" : "Place trade on Day Trade API server",
   "labels" : [ "daytrade" ],
   "pattern" : "To",

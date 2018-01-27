@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.http.HttpGetComponent",
     "groupId":"io.syndesis",
     "artifactId":"http-get-connector",
-    "version":"1.2.4"
+    "version":"1.2.5"
   },
   "componentProperties":{
     "scheme":{
