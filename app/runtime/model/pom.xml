@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>integration-runtime</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.4</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
