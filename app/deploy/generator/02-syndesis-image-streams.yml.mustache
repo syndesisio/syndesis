@@ -44,7 +44,7 @@
         name: ${SYNDESIS_REGISTRY}/{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
       importPolicy:
         scheduled: true
-      name: "{{ Tags.Syndesis }}"
+      name: "{{ Tags.Atlasmap }}"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -79,7 +79,7 @@
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: {{ Images.S2i.ImageStream }}
+    name: {{ Images.Syndesis.S2i }}
     labels:
       app: syndesis
       component: s2i-java
@@ -87,8 +87,8 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{ Images.S2i.DockerImage }}:{{ Images.S2i.Tag }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.S2i }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
-      name: "{{ Images.S2i.Tag }}"
+      name: "{{ Tags.Syndesis }}"
 {{/Productized}}

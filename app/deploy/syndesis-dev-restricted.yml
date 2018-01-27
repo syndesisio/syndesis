@@ -117,7 +117,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: syndesis/syndesis-s2i:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
       importPolicy:
         scheduled: true
       name: "latest"
