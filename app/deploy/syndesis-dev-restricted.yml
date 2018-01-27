@@ -11,8 +11,8 @@ metadata:
 # Allow localhost refs: true
 # Use docker images: true
 # Without Probes: false
-# Atlasmap Tag: latest
-# Syndesis Tag: latest
+# Atlasmap Tag: 1.32.2
+# Syndesis Tag: 1.2.6
 # Restricted environment: true
 #
   labels:
@@ -117,10 +117,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.2.6
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.2.6"
 
 - apiVersion: v1
   kind: Secret
@@ -180,7 +180,7 @@ objects:
       spec:
         containers:
         - name: syndesis-ui
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.2.6
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -308,7 +308,7 @@ objects:
             value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
+          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:1.32.2
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -749,7 +749,7 @@ objects:
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
           - name: JAVA_DEBUG
             value: "true"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.2.6
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -834,7 +834,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:latest
+        builderImageStreamTag: syndesis-s2i:1.2.6
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -892,7 +892,7 @@ objects:
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           - name: JAVA_DEBUG
             value: "true"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.2.6
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
