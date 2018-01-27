@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>sql-connectors</artifactId>
-    <version>1.2.6</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>sql-stored-connector</artifactId>

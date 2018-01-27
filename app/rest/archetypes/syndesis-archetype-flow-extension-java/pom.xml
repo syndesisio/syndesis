@@ -21,13 +21,13 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>archetypes</artifactId>
-    <version>1.2.6</version>
+    <version>1.2-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-archetype-flow-extension-java</artifactId>
-  <version>1.2.6</version>
+  <version>1.2-SNAPSHOT</version>
   <name>REST :: Archetypes :: Java</name>
   <packaging>maven-archetype</packaging>
 
