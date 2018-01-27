@@ -12,15 +12,15 @@ For tweets that contain the specified text, the integration passes
 data related to the tweet, including the Twitter user name, to Salesforce
 and Salesforce creates a new contact. 
 
-To implement, deploy and test this sample integration, the main steps are:
+To implement, deploy, and test this sample integration, the main steps are:
 
-. <<register-with-twitter>>.
-. <<create-twitter-connection>>.
-. <<register-with-salesforce_{context}>>.
-. <<create-salesforce-connection_{context}>>.
-. <<create-twitter-sf-integration>>.
-. <<t2sf-confirm-working>>.
-. <<cleanup_{context}>>.
+. <<register-with-twitter>>
+. <<create-twitter-connection>>
+. <<register-with-salesforce_{context}>>
+. <<create-salesforce-connection_{context}>>
+. <<create-twitter-sf-integration>>
+. <<t2sf-confirm-working>>
+. <<cleanup_{context}>>
 
 Before you implement this sample integration, 
 see <<t2sf-prerequisites>>.

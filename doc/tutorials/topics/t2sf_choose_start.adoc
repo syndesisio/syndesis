@@ -8,7 +8,7 @@ To choose the start connection:
 . On the *Choose a Start Connection* page, click the Twitter connection
 you created. If you gave it the example name, you would 
 click *Twitter Connect 1*.
-When the integration starts it uses the credentials defined in 
+When the integration starts, it uses the credentials defined in 
 this connection to connect to Twitter.
 . On the *Choose an Action* page, click *Mention*. 
 

@@ -51,9 +51,10 @@ and append `api/v1/credentials/callback`. For example:
 ** *Allow access to your unique identifier*
 ** *Perform requests on your behalf at any time*       
 .. Select *Include ID token* and then *Include Standard Claims*. 
-.. After you save the connected app, Salesforce indicates a short wait:
+.. Scroll down and click *Save*.
+.. Scroll up to see that Salesforce indicates a short wait:
 image:shared/images/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
-.. Click *Continue* and wait a few minutes.
+.. Click *Continue*.
 .. Copy the consumer key that Salesforce provides. 
 . Return to your {prodname} installation *Settings* page and paste the 
 Salesforce-provided

@@ -1,8 +1,7 @@
 [id='sf2db-add-data-mapping-step']
 = Add a data mapping step
 
-Add a step that maps Salesforce fields to fields in the 
-database:
+To add a step that maps Salesforce fields to database fields:
 
 . In the left panel, hover over the plus sign immediately after the
 start connection to display a pop-up in which you click *Add a Step*.

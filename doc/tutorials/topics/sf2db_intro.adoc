@@ -7,13 +7,13 @@ calls a database
 stored procedure, which synchronizes that database
 with the Salesforce updates. 
 
-To implement, deploy and test this sample integration, the main steps are:
+To implement, deploy, and test this sample integration, the main steps are:
 
-. <<register-with-salesforce_{context}>>.
-. <<create-salesforce-connection_{context}>>.
-. <<create-sf-db-integration>>.
-. <<sf2db-confirm-working>>.
-. <<cleanup_{context}>>.
+. <<register-with-salesforce_{context}>>
+. <<create-salesforce-connection_{context}>>
+. <<create-sf-db-integration>>
+. <<sf2db-confirm-working>>
+. <<cleanup_{context}>>
 
 If you already created the Twitter to Salesforce sample integration:
 
