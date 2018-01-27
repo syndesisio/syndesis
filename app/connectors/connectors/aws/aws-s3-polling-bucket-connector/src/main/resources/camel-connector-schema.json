@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.s3.polling.S3PollingBucketConnectorComponent",
     "groupId":"io.syndesis",
     "artifactId":"aws-s3-polling-bucket-connector",
-    "version":"1.2.5"
+    "version":"1.2.6"
   },
   "componentProperties":{
     

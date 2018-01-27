@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceDeleteSObjectComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "salesforce-delete-sobject-connector",
-  "version" : "1.2.5",
+  "version" : "1.2.6",
   "description" : "Delete Salesforce SObject",
   "labels" : [ "salesforce" ],
   "pattern" : "To",
