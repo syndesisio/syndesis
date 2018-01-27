@@ -115,12 +115,12 @@
             </goals>
             <configuration>
               <executable>bash</executable>
-              <arguments>
-                <argument>${basedir}/copy_mvn_repo.sh</argument>
-                <argument>${project.version}</argument>
-                <argument>${basedir}/target/generated-sources/docker</argument>
-                <argument>${maven.repo.local}</argument>
-              </arguments>
+              <commandlineArgs>
+                ${basedir}/copy_mvn_repo.sh
+                ${project.version}
+                ${basedir}/target/generated-sources/docker
+                ${maven.repo.local}
+              </commandlineArgs>
             </configuration>
           </execution>
           <execution>
