@@ -21,14 +21,14 @@
   <parent>
     <artifactId>aws-connectors</artifactId>
     <groupId>io.syndesis</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.6</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>aws-s3-get-object-connector</artifactId>
   <name>Connectors :: AWS :: S3 Get Object Connector</name>
   <packaging>jar</packaging>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2.6</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

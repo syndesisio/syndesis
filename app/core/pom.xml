@@ -20,12 +20,12 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.6</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>syndesis-core-parent</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2.6</version>
   <packaging>pom</packaging>
 
   <name>Core :: Parent</name>
