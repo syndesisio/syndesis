@@ -11,8 +11,8 @@ metadata:
 # Allow localhost refs: false
 # Use docker images: false
 # Without Probes: false
-# Atlasmap Tag: 1.32.2
-# Syndesis Tag: 1.2.6
+# Atlasmap Tag: 1.32
+# Syndesis Tag: 1.2
 # Restricted environment: true
 #
   labels:
@@ -116,10 +116,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.2.6
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.2
       importPolicy:
         scheduled: true
-      name: "1.2.6"
+      name: "1.2"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -131,10 +131,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.2.6
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.2
       importPolicy:
         scheduled: true
-      name: "1.2.6"
+      name: "1.2"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -146,10 +146,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:1.32.2
+        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:1.32
       importPolicy:
         scheduled: true
-      name: "1.32.2"
+      name: "1.32"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -161,10 +161,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.2.6
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.2
       importPolicy:
         scheduled: true
-      name: "1.2.6"
+      name: "1.2"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -192,10 +192,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.2.6
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.2
       importPolicy:
         scheduled: true
-      name: "1.2.6"
+      name: "1.2"
 
 - apiVersion: v1
   kind: Secret
@@ -290,7 +290,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:1.2.6
+          name: syndesis-ui:1.2
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -432,7 +432,7 @@ objects:
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: atlasmap:1.32.2
+          name: atlasmap:1.32
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -892,7 +892,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:1.2.6
+          name: syndesis-rest:1.2
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -943,7 +943,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:1.2.6
+        builderImageStreamTag: syndesis-s2i:1.2
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -1045,7 +1045,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:1.2.6
+          name: syndesis-verifier:1.2
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
