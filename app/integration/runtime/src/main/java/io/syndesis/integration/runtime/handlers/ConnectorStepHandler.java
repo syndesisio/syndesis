@@ -113,8 +113,15 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
                 while (iterator.hasNext()){
                     final Map.Entry<String, Object> entry = iterator.next();
 
+                    String key = entry.getKey();
+                    Object val = entry.getValue();
+
+                    if (val instanceof String) {
+                        val = context.resolvePropertyPlaceholders((String) val);
+                    }
+
                     // Bind properties to the customizer
-                    if (IntrospectionSupport.setProperty(context, customizer, entry.getKey(), entry.getValue())) {
+                    if (IntrospectionSupport.setProperty(context, customizer, key, val)) {
                         // Remove property if bound to the customizer.
                         iterator.remove();
                     }
