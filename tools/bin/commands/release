@@ -262,6 +262,7 @@ change_to_dev_version() {
     sh run.sh --syndesis-tag="latest" --atlasmap-tag="latest"
 
     echo "==== Committing files for current snapshot"
+    cd $appdir
     git_commit pom.xml "Setting version $dev_version in pom.xml files"
     git_commit ^deploy/ "Update OpenShift templates to latest images"
 }
@@ -341,9 +342,10 @@ git_commit() {
 }
 
 calc_dev_version() {
-    local dev_version=$(extract_minor_version $1)
-    check_error $dev_version
-    echo "$dev_version-SNAPSHOT"
+    local release_version=$1
+    local minor_version=$(extract_minor_version $release_version)
+    check_error $minor_version
+    echo "${minor_version}-SNAPSHOT"
 }
 
 extract_minor_version() {
@@ -353,7 +355,7 @@ extract_minor_version() {
         echo "ERROR: Cannot extract minor version from $version"
         return
     fi
-    echo $version
+    echo $minor_version
 }
 
 extract_atlasmap_version() {

@@ -11,8 +11,8 @@ metadata:
 # Allow localhost refs: false
 # Use docker images: false
 # Without Probes: false
-# Atlasmap Tag: 1.32.2
-# Syndesis Tag: 1.2.4
+# Atlasmap Tag: latest
+# Syndesis Tag: latest
 # Restricted environment: true
 #
   labels:
@@ -116,10 +116,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.2.4
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
       importPolicy:
         scheduled: true
-      name: "1.2.4"
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -131,10 +131,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.2.4
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
       importPolicy:
         scheduled: true
-      name: "1.2.4"
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -146,10 +146,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:1.32.2
+        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
       importPolicy:
         scheduled: true
-      name: "1.2.4"
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -161,10 +161,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.2.4
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
       importPolicy:
         scheduled: true
-      name: "1.2.4"
+      name: "latest"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -290,7 +290,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:1.2.4
+          name: syndesis-ui:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -432,7 +432,7 @@ objects:
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: atlasmap:1.32.2
+          name: atlasmap:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -892,7 +892,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:1.2.4
+          name: syndesis-rest:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1045,7 +1045,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:1.2.4
+          name: syndesis-verifier:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
