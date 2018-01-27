@@ -284,8 +284,8 @@ change_to_dev_version() {
 }
 
 git_push() {
-    echo "==== Pushing to GitHub"
     if [ $(hasflag --git-push) ]; then
+        echo "==== Pushing to GitHub"
         git push
         git push --tags
     fi
