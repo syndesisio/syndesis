@@ -53,7 +53,8 @@ public class ComponentProxyComponent extends DefaultComponent {
     private final CamelCatalog catalog;
     private final String componentId;
     private final String componentScheme;
-    private final Map<String, Object> options;
+    private final Map<String, Object> configuredOptions;
+    private final Map<String, Object> remainingOptions;
     private final ComponentDefinition definition;
 
     private Optional<String> componentSchemeAlias;
@@ -67,7 +68,8 @@ public class ComponentProxyComponent extends DefaultComponent {
         this.componentId = componentId;
         this.componentScheme = componentScheme;
         this.componentSchemeAlias = Optional.empty();
-        this.options = new HashMap<>();
+        this.configuredOptions = new HashMap<>();
+        this.remainingOptions = new HashMap<>();
         this.catalog = new DefaultCamelCatalog(false);
 
         try {
@@ -80,23 +82,30 @@ public class ComponentProxyComponent extends DefaultComponent {
     }
 
     public void setOptions(Map<String, Object> options) {
-        this.options.clear();
-        this.options.putAll(options);
+        this.configuredOptions.clear();
+
+        // Filter out null values
+        options.entrySet().stream()
+            .filter(e -> e.getValue() != null)
+            .forEach(e -> this.configuredOptions.put(e.getKey(), e.getValue()));
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-        // grab the regular query parameters
-        Map<String, String> options = buildEndpointOptions(remaining, parameters);
+        // merge parameters
+        final Map<String, Object> options = new HashMap<>();
+        doAddOptions(options, this.remainingOptions);
+        doAddOptions(options, parameters);
 
-        // create the uri of the base component
-        String delegateUri = catalog.asEndpointUri(componentSchemeAlias.orElse(componentScheme), options, false);
-        Endpoint delegate = getCamelContext().getEndpoint(delegateUri);
+        // create the uri of the base component, DO NOT log the computed delegate
+        final Map<String, String> endpointOptions = buildEndpointOptions(remaining, options);
+        final String delegateUri = catalog.asEndpointUri(componentSchemeAlias.orElse(componentScheme), endpointOptions, false);
+        final Endpoint delegate = getCamelContext().getEndpoint(delegateUri);
 
         LOGGER.info("Connector resolved: {} -> {}", URISupport.sanitizeUri(uri), URISupport.sanitizeUri(delegateUri));
 
-        ComponentProxyEndpoint answer = new ComponentProxyEndpoint(uri, this, delegate);
+        final ComponentProxyEndpoint answer = new ComponentProxyEndpoint(uri, this, delegate);
         answer.setBeforeProducer(getBeforeProducer());
         answer.setAfterProducer(getAfterProducer());
         answer.setBeforeConsumer(getBeforeConsumer());
@@ -105,17 +114,28 @@ public class ComponentProxyComponent extends DefaultComponent {
         // clean-up parameters so that validation won't fail later on
         // in DefaultConnectorComponent.validateParameters()
         parameters.clear();
+        this.remainingOptions.clear();
 
         return answer;
     }
 
     @Override
     protected void doStart() throws Exception {
-        Optional<Component> component = createNewBaseComponent();
+        this.remainingOptions.clear();
+        this.remainingOptions.putAll(this.configuredOptions);
+
+        Optional<Component> component = createDelegateComponent(definition, this.remainingOptions);
         if (component.isPresent()) {
+
+            // Configure the component, options should be removed once consumed
+            configureDelegateComponent(definition, component.get(), this.remainingOptions);
+
+            // Create a unique delegate component alias
             componentSchemeAlias = Optional.of(componentScheme + "-" + componentId);
 
             if (!catalog.findComponentNames().contains(componentSchemeAlias.get())) {
+                // Create an alias for new scheme to the delegate component scheme
+                // so catalog can be used to build uri
                 catalog.addComponent(
                     componentSchemeAlias.get(),
                     definition.getComponent().getJavaType(),
@@ -130,7 +150,7 @@ public class ComponentProxyComponent extends DefaultComponent {
                 this.componentSchemeAlias.get()
             );
 
-            // remove old component if present so
+            // remove old component if present
             getCamelContext().removeComponent(this.componentSchemeAlias.get());
 
             // ensure component is started and stopped when Camel shutdown
@@ -199,66 +219,38 @@ public class ComponentProxyComponent extends DefaultComponent {
     // Helpers
     // ***************************************
 
-    private <T> void doAddOption(Map<String, T> options, String name, T value) {
-        LOGGER.trace("Adding option: {}={}", name, value);
-        T val = options.put(name, value);
-        if (val != null) {
-            LOGGER.debug("Options {} overridden, old value was {}", name, val);
-        }
-    }
-
     /**
      * Create the endpoint instance which either happens with a new base component
      * which has been pre-configured for this connector or we fallback and use
      * the default component in the camel context
      */
-    private Optional<Component> createNewBaseComponent() throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
         final String componentClass = definition.getComponent().getJavaType();
-        final CamelContext context = getCamelContext();
 
         // configure component with extra options
         if (componentClass != null && !options.isEmpty()) {
-            final List<Map.Entry<String, Object>> entries = new ArrayList<>();
-
             // Get the list of options from the connector catalog that
             // are configured to target the endpoint
-            Collection<String> endpointOptions = definition.getEndpointProperties().keySet();
+            final Collection<String> endpointOptions = definition.getEndpointProperties().keySet();
 
             // Check if any of the option applies to the component, if not
             // there's no need to create a dedicated component.
-            options.entrySet().stream()
-                .filter(e -> !endpointOptions.contains(e.getKey()))
-                .forEach(entries::add);
+            boolean hasComponentOptions = options.keySet().stream().anyMatch(Predicates.negate(endpointOptions::contains));
 
             // Options set on a step are strings so if any of the options is
             // not a string, is should have been added by a customizer so try to
             // bind them to the component first.
-            options.entrySet().stream()
-                .filter(e -> e.getValue() != null)
-                .filter(Predicates.negate(e -> e.getValue() instanceof String))
-                .forEach(entries::add);
+            boolean hasPojoOptions = options.values().stream().anyMatch(Predicates.negate(String.class::isInstance));
 
-            if (!entries.isEmpty()) {
+            if (hasComponentOptions || hasPojoOptions) {
+                final CamelContext context = getCamelContext();
+
                 // create a new instance of this base component
                 final Class<Component> type = context.getClassResolver().resolveClass(componentClass, Component.class);
                 final Component component = context.getInjector().newInstance(type);
 
                 component.setCamelContext(context);
-
-                for (Map.Entry<String, Object> entry : entries) {
-                    String key = entry.getKey();
-                    Object val = entry.getValue();
-
-                    LOGGER.debug("Using component option: {}={}", key, val);
-
-                    if (val instanceof String) {
-                        val = getCamelContext().resolvePropertyPlaceholders((String) val);
-                    }
-
-                    if (IntrospectionSupport.setProperty(context, component, key, val)) {
-                        options.remove(key);
-                    }
-                }
 
                 return Optional.of(component);
             }
@@ -267,10 +259,51 @@ public class ComponentProxyComponent extends DefaultComponent {
         return Optional.empty();
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) throws Exception {
+        final CamelContext context = getCamelContext();
+        final List<Map.Entry<String, Object>> entries = new ArrayList<>();
+
+        // Get the list of options from the connector catalog that
+        // are configured to target the endpoint
+        final Collection<String> endpointOptions = definition.getEndpointProperties().keySet();
+
+        // Check if any of the option applies to the component, if not
+        // there's no need to create a dedicated component.
+        options.entrySet().stream()
+            .filter(e -> !endpointOptions.contains(e.getKey()))
+            .forEach(entries::add);
+
+        // Options set on a step are strings so if any of the options is
+        // not a string, is should have been added by a customizer so try to
+        // bind them to the component first.
+        options.entrySet().stream()
+            .filter(e -> e.getValue() != null)
+            .filter(Predicates.negate(e -> e.getValue() instanceof String))
+            .forEach(entries::add);
+
+        if (!entries.isEmpty()) {
+            component.setCamelContext(context);
+
+            for (Map.Entry<String, Object> entry : entries) {
+                String key = entry.getKey();
+                Object val = entry.getValue();
+
+                if (val instanceof String) {
+                    val = getCamelContext().resolvePropertyPlaceholders((String) val);
+                }
+
+                if (IntrospectionSupport.setProperty(context, component, key, val)) {
+                    options.remove(key);
+                }
+            }
+        }
+    }
+
     /**
      * Gather all options to use when building the delegate uri.
      */
-    private Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> parameters) throws URISyntaxException, NoTypeConversionAvailableException {
+    private Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws URISyntaxException, NoTypeConversionAvailableException {
         final TypeConverter converter = getCamelContext().getTypeConverter();
         final Map<String, String> endpointOptions = new LinkedHashMap<>();
 
@@ -279,16 +312,9 @@ public class ComponentProxyComponent extends DefaultComponent {
         // parameters.
         Collection<String> endpointProperties = definition.getEndpointProperties().keySet();
         for (String key : endpointProperties) {
-            Object val = this.options.get(key);
+            Object val = options.get(key);
             if (val != null) {
                 doAddOption(endpointOptions, key, converter.mandatoryConvertTo(String.class, val));
-            }
-        }
-
-        // options from query parameters
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            if (entry.getValue() != null) {
-                doAddOption(endpointOptions, entry.getKey(), converter.mandatoryConvertTo(String.class, entry.getValue()));
             }
         }
 
@@ -302,6 +328,20 @@ public class ComponentProxyComponent extends DefaultComponent {
         }
 
         return endpointOptions;
+    }
+
+    private <T> void doAddOptions(Map<String, T> destination, Map<String, T> options) {
+        options.forEach(
+            (k, v) -> doAddOption(destination, k, v)
+        );
+    }
+
+    private <T> void doAddOption(Map<String, T> options, String name, T value) {
+        LOGGER.trace("Adding option: {}={}", name, value);
+        T val = options.put(name, value);
+        if (val != null) {
+            LOGGER.debug("Options {} overridden, old value was {}", name, val);
+        }
     }
 
     // ***************************************

@@ -26,6 +26,10 @@
     <file>target/aws-s3-connector.log</file>
   </appender>
 
+  <logger name="org.apache.camel.util.IntrospectionSupport" level="INFO"/>
+  <logger name="org.apache.camel" level="INFO"/>
+  <logger name="io.syndesis" level="DEBUG"/>
+
   <root level="INFO">
     <!--<appender-ref ref="STDOUT"/>-->
     <appender-ref ref="FILE"/>

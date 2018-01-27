@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,6 +89,12 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
             .filter(Predicates.or(connector::isSecret, action::isSecret))
             .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", scheme, index, e.getKey())));
 
+        // raw values.
+        properties.entrySet()
+            .stream()
+            .filter(Predicates.or(connector::isRaw, action::isRaw))
+            .forEach(e -> e.setValue(String.format("RAW(%s)", e.getValue())));
+
         //Connector/Action properties have the precedence
         connector.getConfiguredProperties().forEach(properties::put);
         descriptor.getConfiguredProperties().forEach(properties::put);
@@ -96,23 +103,27 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
             final Map<String, Object> customizersOptions = new HashMap<>(properties);
 
             for (String customizerType : customizers) {
-                ComponentProxyCustomizer customizer = resolveCustomizer(context, customizerType);
+                final ComponentProxyCustomizer customizer = resolveCustomizer(context, customizerType);
+                final Iterator<Map.Entry<String, Object>> iterator = customizersOptions.entrySet().iterator();
 
                 // Set the camel context if the customizer implements
                 // the CamelContextAware interface.
                 ObjectHelper.trySetCamelContext(customizer, context);
 
-                for (Map.Entry<String, Object> entry: customizersOptions.entrySet()) {
+                while (iterator.hasNext()){
+                    final Map.Entry<String, Object> entry = iterator.next();
+
                     String key = entry.getKey();
                     Object val = entry.getValue();
 
                     if (val instanceof String) {
-                        val = context.resolvePropertyPlaceholders((String)val);
+                        val = context.resolvePropertyPlaceholders((String) val);
                     }
 
                     // Bind properties to the customizer
                     if (IntrospectionSupport.setProperty(context, customizer, key, val)) {
-                        properties.remove(key);
+                        // Remove property if bound to the customizer.
+                        iterator.remove();
                     }
                 }
 

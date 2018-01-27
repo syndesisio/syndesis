@@ -82,6 +82,8 @@ public interface ConfigurationProperty extends WithTags, Serializable {
 
     Optional<String> getConnectorValue();
 
+    Boolean getRaw();
+
     @JsonIgnore
     default boolean isComponentProperty() {
         Boolean value = getComponentProperty();
@@ -95,6 +97,16 @@ public interface ConfigurationProperty extends WithTags, Serializable {
     @JsonIgnore
     default boolean isSecret() {
         Boolean value = getSecret();
+        if (value != null) {
+            return Boolean.TRUE.equals(value);
+        }
+
+        return false;
+    }
+
+    @JsonIgnore
+    default boolean isRaw() {
+        Boolean value = getRaw();
         if (value != null) {
             return Boolean.TRUE.equals(value);
         }

@@ -38,7 +38,7 @@ import org.junit.Test;
 
 @Ignore("AWS SDK starts even if route is set to not autostart")
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class AWSS3CustomizerTest extends CamelTestSupport {
+public class AWSS3RawOptionsTest extends CamelTestSupport {
     @Override
     protected CamelContext createCamelContext() throws Exception {
         CamelContext camelContext = super.createCamelContext();
@@ -75,12 +75,12 @@ public class AWSS3CustomizerTest extends CamelTestSupport {
                                 .putConfiguredProperty("region", "EU_CENTRAL_1")
                                 .putConfiguredProperty("bucketNameOrArn", "my-bucketNameOrArn")
                                 .connector(new Connector.Builder()
-                                    .addConnectorCustomizer(AWSS3Customizer.class.getName())
                                     .putProperty(
                                         "accessKey",
                                         new ConfigurationProperty.Builder()
                                             .kind("accessKey")
                                             .secret(true)
+                                            .raw(true)
                                             .componentProperty(false)
                                             .build())
                                     .putProperty(
@@ -88,6 +88,7 @@ public class AWSS3CustomizerTest extends CamelTestSupport {
                                         new ConfigurationProperty.Builder()
                                             .kind("secretKey")
                                             .secret(true)
+                                            .raw(true)
                                             .componentProperty(false)
                                             .build())
                                     .putProperty(

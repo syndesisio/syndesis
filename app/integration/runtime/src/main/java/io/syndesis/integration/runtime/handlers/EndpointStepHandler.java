@@ -81,6 +81,12 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
             .filter(Predicates.or(connector::isSecret, action::isSecret))
             .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, index, e.getKey())));
 
+        // raw values.
+        properties.entrySet()
+            .stream()
+            .filter(Predicates.or(connector::isRaw, action::isRaw))
+            .forEach(e -> e.setValue(String.format("RAW(%s)", e.getValue())));
+
         // any configuredProperties on action descriptor are considered
         properties.putAll(descriptor.getConfiguredProperties());
 
