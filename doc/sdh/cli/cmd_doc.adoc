@@ -13,11 +13,12 @@ Usage: syndesis doc [... options ...]
 Options for doc:
 -d  --directory <dir>         Top-level dir holding doc source and output directory. Default: "doc/sdh"
 -i  --input <file>            Input file to use. Default: "index.adoc"
--o  --out <dir>               Directory to generate files (default: "output")
+    --out <dir>               Directory to generate files (default: "output")
     --html                    Generate HTML pages
     --pdf <out>               Generate PDF and write it to <out> (default: "sdh.pdf")
     --epub <out>              Generate Epub and write it to <out> (default: "sdh.epub")
     --gh-pages <msg>          Create everything into the gh-pages branch and commit with <msg>
+-o  --open                    Open HTML documentation in default browser after doc generation
 -l  --local                   Use locally installed commands instead of Docker image
 ----
 

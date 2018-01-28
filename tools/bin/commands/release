@@ -15,15 +15,14 @@ EOT
 
 release::usage() {
     cat - <<EOT
--n  --dry-run                 Dry run. This will perform the whole build but does no tagging, artefact
+-n  --dry-run                 Dry run, which performs the whole build but does no tagging, artefact
                               upload or pushing Docker images
     --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
     --dev-version <version>   Next development version. If not given, set to "<major>.<minor>-SNAPSHOT"
                               as calculated from --release-version (e.g. "1.2-SNAPSHOT")
-    --settings-xml <file>     Path to a custom settings.xml to use for the release. Please not that
-                              this file must contain all the credentials to be used for Sonatype and
-                              Docker. By default ~/.m2/settings.xml is used. Refer to the Manual for
-                              more details.
+    --settings-xml <file>     Path to a custom settings.xml to use for the release.
+                              This file must contain all the credentials to be used for Sonatype.
+                              By default ~/.m2/settings.xml is used.
     --local-maven-repo <dir>  Local dir for holding the local Maven repo cache. If not given, then a new
                               temporary directory will be used (and removed after the release)
     --docker-user <user>      Docker user for Docker Hub
@@ -287,7 +286,7 @@ git_push() {
     if [ $(hasflag --git-push) ]; then
         echo "==== Pushing to GitHub"
         git push
-        git push --tags
+        git push -f --tags
     fi
 }
 
