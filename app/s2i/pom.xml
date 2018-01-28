@@ -30,6 +30,10 @@
   <packaging>pom</packaging>
   <name>S2I</name>
 
+  <properties>
+    <maven.repo.local></maven.repo.local>
+  </properties>
+
   <repositories>
     <repository>
       <snapshots>
@@ -117,6 +121,7 @@
               <executable>bash</executable>
               <commandlineArgs>
                 ${basedir}/copy_mvn_repo.sh
+                ${project.basedir}
                 ${project.version}
                 ${basedir}/target/generated-sources/docker
                 ${maven.repo.local}
@@ -195,4 +200,3 @@
 
   </profiles>
 </project>
-
