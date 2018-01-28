@@ -1,4 +1,0 @@
-[[process]]
-# Development Process
-
-include::labels.adoc[]

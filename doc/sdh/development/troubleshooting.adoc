@@ -1,5 +1,5 @@
+[[dev-troubleshooting]]
 ## Troubleshooting
-
 
 When things go wrong, you want to try to identify the area that is causing problems (UI, REST API, etc). If it's the UI, look for errors in the browser console or the terminal to see if it's a dependency issue.
 
@@ -53,4 +53,3 @@ Other things you can try:
 
 ### Still Having Trouble?
 Ask on IRC #syndesis
-

@@ -1,3 +1,4 @@
+[[dev-ui]]
 ## UI
 
 After you've set up your initial Local Development environment, you're ready to contribute to the UI.
@@ -85,4 +86,3 @@ Included in this stack are the following technologies:
 * Linting: https://github.com/palantir/tslint[TsLint] (Linting for TypeScript)
 * Logging: WIP
 * Code Analysis: https://github.com/mgechev/codelyzer[Codelyzer] (TsLint rules for static code analysis of Angular TypeScript projects) / WIP
-
