@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-4788-gec3bf8155,</span>
+<span id="revnumber">version 1.1.3-4791-g44c55ed2a,</span>
 <span id="revdate">2018-01-28</span>
 </div>
 <div id="toc" class="toc2">
@@ -572,7 +572,14 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_minor_version_templates">2.7.4. Minor Version Templates</a></li>
 <li><a href="#_fuse_online_templates">2.7.5. Fuse Online Templates</a></li>
 <li><a href="#dev-release-troubleshooting">2.7.6. Troubleshooting</a></li>
-<li><a href="#syndesis-deploy-usage">2.7.7. Usage</a></li>
+</ul>
+</li>
+<li><a href="#syndesis-deploy">2.8. syndesis deploy</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-deploy-usage">2.8.1. Usage</a></li>
+<li><a href="#_development_mode">2.8.2. Development mode</a></li>
+<li><a href="#_selecting_the_version">2.8.3. Selecting the version</a></li>
+<li><a href="#_example_2">2.8.4. Example</a></li>
 </ul>
 </li>
 </ul>
@@ -1758,35 +1765,168 @@ But these things should take care of if this should be the case:</p>
 <p>Remove Docker Hub tags for the pushed images, which is best done on the Docker Hub Web UI</p>
 </li>
 <li>
-<p>Revert your local git commits to the point before the release. If you did this on a fresh checked out repo (as recommended), you just could delete the whole clone.
-## syndesis deploy</p>
+<p>Revert your local git commits to the point before the release. If you did this on a fresh checked out repo (as recommended), you just could delete the whole clone.</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-deploy">2.8. syndesis deploy</h3>
 <div class="paragraph">
 <p>With <code>syndesis deploy</code> you can deploy Syndesis to an arbitrary OpenShift cluster.
-You have to be connected to the cluster with <code>oc login</code> for this command to work.
-It&#8217;s an alternative to <code>syndesis minishift</code> but does not support a Development workflow.</p>
+If you want to deploy to <a href="https://www.openshift.org/minishift/">Minishift</a> the <a href="#syndesis-minishift">syndesis minishift</a> command is recommended as it supports some additional features specific to Minishift.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-deploy-usage">2.8.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>-p  --project                 Install into this project. Delete this project
+                              if it already exists. By default, install into the current project (without deleting)
+    --route                   Route to use (mandatory host name)
+    --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
+                              version from master is installed
+    --dev                     Prepare for development of Syndesis so that S2I builds of
+                              Syndesis images are picked up properly (implies --watch)
+-w  --watch                   Wait until cluster is up
+-i  --image-mode &lt;mode&gt;       Which templates to install: "docker" for plain images,
+                              "openshift" for image streams (default: "openshift")
+    --docker                  Shortcut for "--image-mode docker"</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>You have to provide the route name with <code>--route</code>, how the project in the given cluster can be reached. E.g. <code>--route app-proj186023.6a63.fuse-ignite.openshiftapps.com</code>.
-By default this commands installs in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
-If this project already exists, it gets deleted unconditionally.</p>
+<p>The deployment will always happen for the currently connected OpenShift cluster.
+So it&#8217;s mandatory that have logged into the cluster with <code>oc login</code> before.
+You can check the status with <code>oc status</code>.</p>
+</div>
+<div class="paragraph">
+<p>You have to provide the route name with <code>--route</code>.
+This value depends on your OpenShift installation but typically is the name of your OpenShift project followed by the cluster&#8217;s hostname.
+E.g. a route <code>--route app-proj186023.6a63.fuse-ignite.openshiftapps.com</code> is specific to the Fuse Ignite test cluster <code>6a63.fuse-ignite.openshiftapps.com</code> and for the project <code>app-proj186023</code>.</p>
+</div>
+<div class="paragraph">
+<p>By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
+If this project already exists, it gets deleted unconditionally before the deployment, so be careful when specifying this option.</p>
+</div>
+<div class="paragraph">
+<p>If you want to wait until everything is running (including fetching of the Docker images), you can specify <code>--watch</code> (short: <code>-w</code>) which blocks the script until everything is set up.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="syndesis-deploy-usage">2.7.7. Usage</h4>
+<h4 id="_development_mode">2.8.2. Development mode</h4>
+<div class="paragraph">
+<p>As with <a href="#syndesis-minishift">syndesis minishift</a> you can also use this command to set up a development platform for Syndesis.
+<em>Development platform</em> here means, that you can create Docker images on your own with <a href="#syndesis-build">syndesis build</a> and can use them with an automatic redeployment after the build.</p>
+</div>
+<div class="paragraph">
+<p>You can switch on this mode with the option <code>--dev</code>.
+By default, the so-called <em>openshift</em> mode with image stream is used.
+When the template is deployed, these imagestreams refer to Docker images pushed to Docker Hub.
+To change the imagestream references to the images built with <code>syndesis build --images</code>, these imagestreams needs to be patched after the initial images have been fetched from Docker Hub.
+If you use the <code>--dev</code> option then this update is done automatically.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can also use plain Docker image. If you use the <code>--docker</code> option (or <code>--image-mode docker</code>), then the Syndesis OpenShift templates that used Docker images directly is used.</p>
+</div>
+<div class="paragraph">
+<p>See the section about the various <a href="#syndesis-build-image">image modes</a> for more information.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_selecting_the_version">2.8.3. Selecting the version</h4>
+<div class="paragraph">
+<p>With the option <code>--tag</code> you can select a specific version of Syndesis to install.
+By default, the template as it exists currently in your checked out branch is used.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis deploy --route syndesis.192.168.64.12.nip.io --tag 1.2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example will install the latest Syndesis version of the 1.2 branch to the local cluster.</p>
+</div>
+<div class="paragraph">
+<p>You can see a list of available tags with <code>git tag</code>.
+Tags prefixed with <code>fuse-ignite</code> are suited for the Fuse Online cluster as those templates do not contain images streams themselves but refer to the image streams installed on this cluster.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_2">2.8.4. Example</h4>
+<div class="paragraph">
+<p>Here is a full example how you can install Syndesis from scratch.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>Usage: syndesis deploy [... options ...]
+<pre class="CodeRay highlight"><code data-lang="bash"># Clone Syndes repository to /tmp
+cd /tmp
+git clone --depth=1 https://github.com/syndesisio/syndesis.git    <i class="conum" data-value="1"></i><b>(1)</b>
+cd syndesis
 
-Options for deploy:
--p  --project                 Install into this project. Delete this project if it
-                              already exists. If not given, install into the current project
-    --route                   Route to use (mandatory)
--w  --watch                   Wait until cluster is up
-    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
+# List tags
+git --depth=1 --tags fetch                                        <i class="conum" data-value="2"></i><b>(2)</b>
+git tag
+
+# Connect to the fuse-ignite cluster
+oc login https://api.fuse-ignite.openshift.com --token=...        <i class="conum" data-value="3"></i><b>(3)</b>
+
+# Check the project you want to deploy to
+oc project                                                        <i class="conum" data-value="4"></i><b>(4)</b>
+
+# Find out the route domain
+oc route                                                          <i class="conum" data-value="5"></i><b>(5)</b>
+
+# Deploy into the existing project
+tools/bin/syndesis deploy \                                       <i class="conum" data-value="6"></i><b>(6)</b>
+    --project $(oc project -q) \                                  <i class="conum" data-value="7"></i><b>(7)</b>
+    --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com \ <i class="conum" data-value="8"></i><b>(8)</b>
+    --tag 1.2 \                                                   <i class="conum" data-value="9"></i><b>(9)</b>
+    --watch</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Clone the Syndesis repository, without history (<code>--depth=1</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Fetch tags before you can list them.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Login into the target cluster with the token that you find on the OpenShift console.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Check the project. We will overwrite this in this example, so please be sure that you do not accidentally overwrite this project.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Find out the route domain. Either check the documentation of your cluster or, like here, examine already existing routes.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Run <code>syndesis</code> directly out of the cloned Git repository.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Specify the project as the current project.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>Construct the route from the project name and the route domain.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td>Specify the head tag 1.2 which means the latest 1.2 version (== latest upstream TP3 version)</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the last command is finished you will be able to access <code><a href="https://$(oc" class="bare">https://$(oc</a> project -q).6a63.fuse-ignite.openshiftapps.com</code> to access Syndesis version 1.2</p>
 </div>
 </div>
 </div>
@@ -2636,8 +2776,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-4788-gec3bf8155<br>
-Last updated 2018-01-28 17:25:59 UTC
+Version 1.1.3-4791-g44c55ed2a<br>
+Last updated 2018-01-28 17:58:37 UTC
 </div>
 </div>
 </body>
