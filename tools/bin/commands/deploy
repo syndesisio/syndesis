@@ -6,18 +6,17 @@ deploy::description() {
 
 deploy::usage() {
     cat <<EOT
--p  --project                 Install into this project. Delete this project if it already exists.
-                              If not given, install into the current project
-    --route                   Route to use (mandatory). This is a host name
+-p  --project                 Install into this project. Delete this project
+                              if it already exists. By default, install into the current project (without deleting)
+    --route                   Route to use (mandatory host name)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
-    --dev                     Prepare for development of Syndesis so that S2I builds of Syndesis images
-                              are picked up properly (implies watching)
+    --dev                     Prepare for development of Syndesis so that S2I builds of
+                              Syndesis images are picked up properly (implies --watch)
 -w  --watch                   Wait until cluster is up
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images,
                               "openshift" for image streams (default: "openshift")
     --docker                  Shortcut for "--image-mode docker"
-
 EOT
 }
 

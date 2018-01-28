@@ -52,13 +52,20 @@ create_and_apply_template() {
     check_error "$appdir"
     local route=$1
     local template=${2:-syndesis-restricted}
-    local tag=${3:-master}
+    local tag=${3:-}
     if [ -z "$route" ]; then
         echo "No route given"
         exit 1
     fi
 
-    git show $tag:app/deploy/${template}.yml | oc create -f -
+    if [ -n "$tag" ]; then
+        pushd ${appdir}
+        git fetch --tags
+        git show $tag:app/deploy/${template}.yml | oc create -f -
+        popd
+    else
+        oc create -f ${appdir}/deploy/${template}.yml
+    fi
     oc new-app $template \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
