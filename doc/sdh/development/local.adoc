@@ -1,3 +1,4 @@
+[[dev-local]]
 ## Local Development
 
 If you'd like to get a local development environment up and running, for both the UI and REST API, this is how you'd do it.

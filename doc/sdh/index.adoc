@@ -15,6 +15,5 @@ ifdef::basebackend-html[toc::[]]
 
 include::introduction.adoc[]
 
-include::build/syndesis.adoc[]
-include::process/process.adoc[]
-include::workflow/workflow.adoc[]
+include::cli/index.adoc[]
+include::development/index.adoc[]

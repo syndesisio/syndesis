@@ -1,4 +1,6 @@
+[[dev-rest]]
 ## REST API
+
 
 After you've set up your initial Local Development environment, you're ready to contribute to the REST API.
 

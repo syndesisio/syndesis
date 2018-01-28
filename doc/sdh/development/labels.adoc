@@ -1,5 +1,5 @@
-
-## Issue and Pull-Request Labels
+[[dev-labels]]
+## Issue Labels
 
 We use GitHub labels to categorize epics, issues and tasks.
 They are the foundation of our process, so please use labels for issues.
@@ -353,3 +353,4 @@ The current status labels are:
 {set:cellbgcolor:#fdfcb6}
 | Use this label to mark issues which should be self-merged without requiring a PR review, because of its "too small to fail". Be very careful with this label, and remember a review is a service to you to help in your code quality. It is alone your responsibility when you chose this label. It's useful for minor doc updates or one line where you are 100% sure that it doesn't break the system. Please use it sparingly and responsibly. (_Need still to be implemented_)
 {set:cellbgcolor!}
+|===
