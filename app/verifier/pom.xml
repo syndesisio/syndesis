@@ -309,6 +309,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>aws-s3-connector</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
@@ -381,6 +387,7 @@
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-client</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-openwire-legacy</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:amqp-connector</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:aws-s3-connector</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
