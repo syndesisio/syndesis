@@ -86,7 +86,7 @@ generator:
   secretMaskingEnabled: true
 
 controllers:
-  logs:
+  dblogging:
     enabled: true
 
 maven:
