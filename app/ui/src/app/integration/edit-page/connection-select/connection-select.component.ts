@@ -1,17 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { log, getCategory } from '@syndesis/ui/logging';
+import { Connections, Connection, UserService } from '@syndesis/ui/platform';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
 import { ConnectionStore } from '@syndesis/ui/store';
-import { Connections, Connection } from '@syndesis/ui/model';
 
 const category = getCategory('Integrations');
-import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-connection-select',

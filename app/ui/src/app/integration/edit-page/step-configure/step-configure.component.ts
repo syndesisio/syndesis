@@ -1,29 +1,16 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
-import { FormFactoryService } from '@syndesis/ui/platform';
-import { CurrentFlow,
-         FlowEvent,
-         FlowPage } from '@syndesis/ui/integration/edit-page';
-import { Step } from '@syndesis/ui/integration';
-import { IntegrationSupportService } from '../../integration-support.service';
-import { Action, DataShape } from '@syndesis/ui/model';
-import {
-  StepStore,
-  DATA_MAPPER,
-  BASIC_FILTER
-} from '@syndesis/ui/store';
+import { Action, DataShape, FormFactoryService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
+import { Step } from '@syndesis/ui/integration';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { IntegrationSupportService } from '../../integration-support.service';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -56,8 +43,7 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public stepStore: StepStore,
-    public integrationSupport: IntegrationSupportService,
-    public changeDetectorRef: ChangeDetectorRef
+    public integrationSupport: IntegrationSupportService
   ) {
     super(currentFlow, route, router);
   }

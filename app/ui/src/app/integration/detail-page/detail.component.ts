@@ -1,9 +1,4 @@
-import {
-  ApplicationRef,
-  Component,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { ApplicationRef, Component, OnInit, OnDestroy } from '@angular/core';
 
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -12,8 +7,7 @@ import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from '
 
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { IntegrationSupportService } from '../integration-support.service';
-import { Connection, Action } from '@syndesis/ui/model';
-import { ACTIVE, INACTIVE, DRAFT, Integration, Step, IntegrationDeployment } from '@syndesis/ui/integration';
+import { Integration, Step, ACTIVE, INACTIVE, DRAFT, IntegrationDeployment } from '@syndesis/ui/integration/integration.model';
 import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';

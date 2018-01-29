@@ -1,14 +1,13 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Component, Input, ViewChild, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
-import { log, getCategory } from '../logging';
-
-import { Connection, Connections } from '../model';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { Connection, Connections } from '@syndesis/ui/platform';
 import { Integration, Integrations } from '@syndesis/ui/integration';
+
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
-import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 const category = getCategory('Dashboard');
 

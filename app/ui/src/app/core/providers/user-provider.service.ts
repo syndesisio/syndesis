@@ -1,8 +1,7 @@
 import { Injectable, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { UserService, ApiHttpService } from '@syndesis/ui/platform';
-import { User } from '@syndesis/ui/model';
+import { UserService, ApiHttpService, User } from '@syndesis/ui/platform';
 
 @Injectable()
 export class UserProviderService extends UserService {

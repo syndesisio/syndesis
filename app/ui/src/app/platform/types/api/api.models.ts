@@ -1,9 +1,8 @@
-import { HttpHeaders } from '@angular/common/http';
 import { InjectionToken } from '@angular/core';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { StringMap, FileMap } from '@syndesis/ui/platform';
-import { HttpParams } from '@angular/common/http/src/params';
 
 export declare type Endpoints = StringMap<string>;
 

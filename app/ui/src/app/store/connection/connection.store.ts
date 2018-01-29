@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Connections, Connection } from '@syndesis/ui/platform';
 import { ConnectionService } from './connection.service';
-import { Connections, Connection } from '../../model';
 
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';

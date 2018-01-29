@@ -1,14 +1,10 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
+import { Action, Connection, key } from '@syndesis/ui/platform';
+import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { createIntegration, createStep, Integration, Step } from '@syndesis/ui/integration';
-import {
-  Action,
-  Connection
-} from '@syndesis/ui/model';
-import { log, getCategory } from '@syndesis/ui/logging';
-import { key } from '@syndesis/ui/core/key';
 
 const category = getCategory('CurrentFlow');
 
@@ -525,14 +521,14 @@ export class CurrentFlow {
     }
     // let's clone this to be on the safe side
     const props = JSON.parse(JSON.stringify(_props));
-    for (const key of Object.keys(props)) {
-      const value = props[key];
+    for (const prop of Object.keys(props)) {
+      const value = props[prop];
       switch (typeof value) {
         case 'string':
         case 'number':
           continue;
         default:
-          props[key] = JSON.stringify(value);
+          props[prop] = JSON.stringify(value);
       }
     }
     return props;

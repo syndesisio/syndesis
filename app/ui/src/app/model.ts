@@ -1,9 +1,11 @@
-
-export interface BaseEntity {
-  readonly id?: string;
-  // TODO we'll make this optional for now
-  kind?: string;
-}
+import {
+  BaseEntity,
+  User, Action,
+  ActionDefinition, ListResultAction, ActionDefinitionStep,
+  Connector, Connection,
+  Organization,
+  DataShape
+} from '@syndesis/ui/platform';
 
 export interface Exchange extends BaseEntity {
   logts?: string;
@@ -25,13 +27,10 @@ export interface ExchangeStep extends BaseEntity {
 }
 
 // TODO local hack to avoid deleting all the related code
-/* tslint:disable */
-export interface IntegrationTemplate extends BaseEntity {}
-/* tslint:enable */
+export type IntegrationTemplate = BaseEntity;
 export type IntegrationTemplates = Array<IntegrationTemplate>;
 
 export interface Extension extends BaseEntity {
-  name: string;
   description: string;
   icon: string;
   extensionId: string;
@@ -40,7 +39,6 @@ export interface Extension extends BaseEntity {
   actions: Array<Action>;
   dependencies: Array<string>;
   status: 'Draft' | 'Installed' | 'Deleted';
-  id: string;
   schemaVersion: string;
   properties: {};
   configuredProperties: {};
@@ -48,59 +46,11 @@ export interface Extension extends BaseEntity {
 }
 export type Extensions = Array<Extension>;
 
-export interface Action extends BaseEntity {
-  actionType: string;
-  pattern: 'From' | 'To';
-  // TODO migrate this to ActionDescriptor
-  descriptor: ActionDefinition;
-  connectorId: string;
-  description: string;
-  id: string;
-  name: string;
-  tags: Array<string>;
-}
-export type Actions = Array<Action>;
-
-export interface ActionDescriptor extends BaseEntity {
-  propertyDefinitionSteps: Array<ActionDescriptorStep>;
-  inputDataShape: DataShape;
-  outputDataShape: DataShape;
-}
-export type ActionDescriptors = Array<ActionDescriptor>;
-
-export interface ActionDescriptorStep extends BaseEntity {
-  description: string;
-  name: string;
-  configuredProperties: {};
-  properties: {};
-}
-export type ActionDescriptorSteps = Array<ActionDescriptorStep>;
-
-// TODO deprecate should be ActionDescriptor
-export interface ActionDefinition extends BaseEntity {
-  camelConnectorGAV: string;
-  camelConnectorPrefix: string;
-  outputDataShape: DataShape;
-  inputDataShape: DataShape;
-  propertyDefinitionSteps: Array<ActionDefinitionStep>;
-}
-export type ActionDefinitions = Array<ActionDefinition>;
-
-// TODO deprecate should be ActionDescriptorStep
-export interface ActionDefinitionStep extends BaseEntity {
-  description: string;
-  name: string;
-  properties: {};
-  configuredProperties: {};
-}
-export type ActionDefinitionSteps = Array<ActionDefinitionStep>;
-
 export interface ConfigurationProperty extends BaseEntity {
   javaType: string;
   type: string;
   defaultValue: string;
   displayName: string;
-  kind: string;
   description: string;
   group: string;
   required: boolean;
@@ -113,118 +63,37 @@ export interface ConfigurationProperty extends BaseEntity {
 }
 export type ConfigurationProperties = Array<ConfigurationProperty>;
 
-export interface Connection extends BaseEntity {
-  icon: string;
-  organization: Organization;
-  configuredProperties: {};
-  organizationId: string;
-  connectorId: string;
-  options: {};
-  description: string;
-  connector: Connector;
-  derived: boolean;
-  userId: string;
-  lastUpdated: string;
-  createdDate: string;
-  id: string;
-  tags: Array<string>;
-  name: string;
-}
-export type Connections = Array<Connection>;
-
-export interface Connector extends BaseEntity {
-  icon: string;
-  properties: {};
-  actions: Array<Action>;
-  connectorGroupId: string;
-  configuredProperties: {};
-  description: string;
-  connectorGroup: ConnectorGroup;
-  id: string;
-  name: string;
-}
-export type Connectors = Array<Connector>;
-
-export interface ConnectorGroup extends BaseEntity {
-  id: string;
-  name: string;
-}
-export type ConnectorGroups = Array<ConnectorGroup>;
-
-export interface DataShape extends BaseEntity {
-  specification: string;
-  exemplar: Array<string>;
-  type: string;
-  kind: string;
-}
-export type DataShapes = Array<DataShape>;
-
-export interface Environment extends BaseEntity {
-  id: string;
-  name: string;
-}
-export type Environments = Array<Environment>;
-
-export interface Organization extends BaseEntity {
-  environments: Array<Environment>;
-  users: Array<User>;
-  id: string;
-  name: string;
-}
-export type Organizations = Array<Organization>;
-
 export interface PropertyValue extends BaseEntity {
   value: string;
   label: string;
 }
-export type PropertyValues = Array<PropertyValue>;
 
-export interface User extends BaseEntity {
-  fullName: string;
-  name: string;
-  organizationId: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  // TODO
-  //integrations: Array<Integration>;
-  roleId: string;
-  id: string;
-}
-export type Users = Array<User>;
+export type PropertyValues = Array<PropertyValue>;
 
 export interface ListResult extends BaseEntity {
   items: Array<{}>;
   totalCount: number;
 }
+
 export type ListResults = Array<ListResult>;
 
 export interface ListResultWithIdObject extends BaseEntity {
   items: Array<WithIdObject>;
   totalCount: number;
 }
+
 export type ListResultWithIdObjects = Array<ListResultWithIdObject>;
 
-export interface WithId extends BaseEntity {
-  id: string;
-}
+export type WithId = BaseEntity;
+
 export type WithIds = Array<WithId>;
 
-export interface WithIdObject extends BaseEntity {
-  id: string;
-}
+export type WithIdObject = BaseEntity;
+
 export type WithIdObjects = Array<WithIdObject>;
 
-/* tslint:disable */
-export interface Violation extends BaseEntity {}
-/* tslint:enable */
+export type Violation = BaseEntity;
 export type Violations = Array<Violation>;
-
-export interface ListResultAction extends BaseEntity {
-  items: Array<Action>;
-  totalCount: number;
-}
-export type ListResultActions = Array<ListResultAction>;
 
 export interface AcquisitionMethod extends BaseEntity {
   icon: string;
@@ -232,11 +101,13 @@ export interface AcquisitionMethod extends BaseEntity {
   description: string;
   label: string;
 }
+
 export type AcquisitionMethods = Array<AcquisitionMethod>;
 
 export interface AcquisitionRequest extends BaseEntity {
   returnUrl: string;
 }
+
 export type AcquisitionRequests = Array<AcquisitionRequest>;
 
 export interface Error extends BaseEntity {
@@ -245,6 +116,7 @@ export interface Error extends BaseEntity {
   description: string;
   code: string;
 }
+
 export type Errors = Array<Error>;
 
 export interface Result extends BaseEntity {
@@ -252,43 +124,51 @@ export interface Result extends BaseEntity {
   errors: Array<Error>;
   status: 'OK' | 'ERROR' | 'UNSUPPORTED';
 }
+
 export type Results = Array<Result>;
 
 export interface FilterOptions extends BaseEntity {
   paths: Array<string>;
   ops: Array<Op>;
 }
+
 export type FilterOptionss = Array<FilterOptions>;
 
 export interface Op extends BaseEntity {
   label: string;
   operator: string;
 }
+
 export type Ops = Array<Op>;
 
 export interface EventMessage extends BaseEntity {
   data: {};
   event: string;
 }
+
 export type EventMessages = Array<EventMessage>;
 
 export interface OAuthApp extends BaseEntity {
-  id: string;
-  name: string;
   icon: string;
   clientId: string;
   clientSecret: string;
 }
+
 export type OAuthApps = Array<OAuthApp>;
 
 export interface ListResultString extends BaseEntity {
   items: Array<string>;
   totalCount: number;
 }
+
 export type ListResultStrings = Array<ListResultString>;
 
-class TypeFactoryClass {
-  createAction() {
+export class TypeFactory {
+  static create<T>(): T {
+    return {} as T;
+  }
+
+  static createAction() {
     return <Action>{
       descriptor: undefined,
       connectorId: undefined,
@@ -299,7 +179,7 @@ class TypeFactoryClass {
     };
   }
 
-  createActionDefinition() {
+  static createActionDefinition() {
     return <ActionDefinition>{
       outputDataShape: undefined,
       propertyDefinitionSteps: undefined,
@@ -307,7 +187,7 @@ class TypeFactoryClass {
     };
   }
 
-  createActionDefinitionStep() {
+  static createActionDefinitionStep() {
     return <ActionDefinitionStep>{
       description: undefined,
       name: undefined,
@@ -316,7 +196,7 @@ class TypeFactoryClass {
     };
   }
 
-  createConfigurationProperty() {
+  static createConfigurationProperty() {
     return <ConfigurationProperty>{
       javaType: undefined,
       type: undefined,
@@ -335,7 +215,7 @@ class TypeFactoryClass {
     };
   }
 
-  createConnection() {
+  static createConnection() {
     return <Connection>{
       icon: undefined,
       organization: undefined,
@@ -355,7 +235,7 @@ class TypeFactoryClass {
     };
   }
 
-  createConnector() {
+  static createConnector() {
     return <Connector>{
       icon: undefined,
       properties: undefined,
@@ -369,14 +249,14 @@ class TypeFactoryClass {
     };
   }
 
-  createConnectorGroup() {
-    return <ConnectorGroup>{
+  static createConnectorGroup() {
+    return <BaseEntity>{
       id: undefined,
       name: undefined
     };
   }
 
-  createDataShape() {
+  static createDataShape() {
     return <DataShape>{
       specification: undefined,
       exemplar: undefined,
@@ -385,14 +265,14 @@ class TypeFactoryClass {
     };
   }
 
-  createEnvironment() {
-    return <Environment>{
+  static createEnvironment() {
+    return <BaseEntity>{
       id: undefined,
       name: undefined
     };
   }
 
-  createExtension() {
+  static createExtension() {
     return <Extension>{
       name: undefined,
       description: undefined,
@@ -408,7 +288,7 @@ class TypeFactoryClass {
     };
   }
 
-  createOrganization() {
+  static createOrganization() {
     return <Organization>{
       environments: undefined,
       users: undefined,
@@ -417,14 +297,14 @@ class TypeFactoryClass {
     };
   }
 
-  createPropertyValue() {
+  static createPropertyValue() {
     return <PropertyValue>{
       value: undefined,
       label: undefined
     };
   }
 
-  createUser() {
+  static createUser() {
     return <User>{
       fullName: undefined,
       name: undefined,
@@ -438,44 +318,44 @@ class TypeFactoryClass {
     };
   }
 
-  createListResult() {
+  static createListResult() {
     return <ListResult>{
       items: undefined,
       totalCount: undefined
     };
   }
 
-  createListResultWithIdObject() {
+  static createListResultWithIdObject() {
     return <ListResultWithIdObject>{
       items: undefined,
       totalCount: undefined
     };
   }
 
-  createWithId() {
+  static createWithId() {
     return <WithId>{
       id: undefined
     };
   }
 
-  createWithIdObject() {
+  static createWithIdObject() {
     return <WithIdObject>{
       id: undefined
     };
   }
 
-  createViolation() {
+  static createViolation() {
     return <Violation>{};
   }
 
-  createListResultAction() {
+  static createListResultAction() {
     return <ListResultAction>{
       items: undefined,
       totalCount: undefined
     };
   }
 
-  createAcquisitionMethod() {
+  static createAcquisitionMethod() {
     return <AcquisitionMethod>{
       icon: undefined,
       type: undefined,
@@ -484,13 +364,13 @@ class TypeFactoryClass {
     };
   }
 
-  createAcquisitionRequest() {
+  static createAcquisitionRequest() {
     return <AcquisitionRequest>{
       returnUrl: undefined
     };
   }
 
-  createError() {
+  static createError() {
     return <Error>{
       parameters: undefined,
       attributes: undefined,
@@ -499,7 +379,7 @@ class TypeFactoryClass {
     };
   }
 
-  createResult() {
+  static createResult() {
     return <Result>{
       scope: undefined,
       errors: undefined,
@@ -507,28 +387,28 @@ class TypeFactoryClass {
     };
   }
 
-  createFilterOptions() {
+  static createFilterOptions() {
     return <FilterOptions>{
       paths: undefined,
       ops: undefined
     };
   }
 
-  createOp() {
+  static createOp() {
     return <Op>{
       label: undefined,
       operator: undefined
     };
   }
 
-  createEventMessage() {
+  static createEventMessage() {
     return <EventMessage>{
       data: undefined,
       event: undefined
     };
   }
 
-  createOAuthApp() {
+  static createOAuthApp() {
     return <OAuthApp>{
       id: undefined,
       name: undefined,
@@ -538,14 +418,10 @@ class TypeFactoryClass {
     };
   }
 
-  createListResultString() {
+  static createListResultString() {
     return <ListResultString>{
       items: undefined,
       totalCount: undefined
     };
   }
 }
-
-/* tslint:disable */
-// TODO change this to suit lint
-export const TypeFactory = new TypeFactoryClass();

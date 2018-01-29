@@ -6,8 +6,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { plural } from 'pluralize';
 
+import { BaseEntity } from '@syndesis/ui/platform';
 import { RESTService } from './rest.service';
-import { BaseEntity } from '../../model';
 
 import { log, getCategory } from '../../logging';
 import { EventsService, ChangeEvent } from './events.service';

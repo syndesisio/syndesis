@@ -1,9 +1,4 @@
-import {
-  Component,
-  ViewChild,
-  OnInit,
-  Input
-} from '@angular/core';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -21,11 +16,12 @@ import {
 } from '@atlasmap/atlasmap.data.mapper';
 
 import { ConfigService } from '@syndesis/ui/config.service';
-import { Step } from '@syndesis/ui/integration';
-import { IntegrationSupportService } from '../../../integration-support.service';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
-import { DataShape, TypeFactory } from '@syndesis/ui/model';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { TypeFactory } from '@syndesis/ui/model';
+import { DataShape } from '@syndesis/ui/platform';
+import { Step } from '@syndesis/ui/integration';
+import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { IntegrationSupportService } from '../../../integration-support.service';
 
 /*
  * Example host component:

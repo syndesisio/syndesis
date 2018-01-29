@@ -3,8 +3,8 @@ import { Restangular } from 'ngx-restangular';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
+import { Connector, Connectors } from '@syndesis/ui/platform';
 import { RESTService } from '../entity/rest.service';
-import { Connector, Connectors } from '../../model';
 
 interface AcquisitionResponseState {
   persist: string;

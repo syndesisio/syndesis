@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ApiHttpService } from '@syndesis/ui/platform';
+import { Action, Connection, ApiHttpService } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
-import { Action, Connection, Exchange } from '@syndesis/ui/model';
+import { Exchange } from '@syndesis/ui/model';
 import { Integration } from './integration.model';
 import { integrationSupportEndpoints } from './integration-support.api';
 
 @Injectable()
 export class IntegrationSupportService {
 
-  constructor(
-    private apiHttpService: ApiHttpService,
-    private eventsService: EventsService
-  ) {
-    // nothing to do
-  }
+  constructor(private apiHttpService: ApiHttpService, private eventsService: EventsService) {}
 
   getFilterOptions(dataShape: any): Observable<any> {
     return this.apiHttpService.post(integrationSupportEndpoints.filterOptions, dataShape);

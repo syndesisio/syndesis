@@ -25,6 +25,7 @@ import {
 
 import { ObjectPropertyFilterPipe } from '../../object-property-filter.pipe';
 import { ObjectPropertySortPipe } from '../../object-property-sort.pipe';
+import 'rxjs/add/observable/empty';
 
 @Component({
   selector: 'syndesis-list-toolbar',

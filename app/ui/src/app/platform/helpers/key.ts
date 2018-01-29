@@ -15,7 +15,7 @@ let lastTimestamp = 0;
 export function key() {
 
   // first time setup.. initialize the randomness...
-  if ( RANDOMNESS.length == 0 ) {
+  if (RANDOMNESS.length == 0) {
     for (let i = 0; i < 12; i++) {
       RANDOMNESS[i] = Math.floor(Math.random() * 64);
     }

@@ -1,4 +1,4 @@
-import { Action, BaseEntity, Connection, User } from '@syndesis/ui/model';
+import { Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
 
 export interface Step extends BaseEntity {
   action: Action;

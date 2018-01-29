@@ -4,9 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { log, getCategory } from '../../logging';
+import { Connections, Connection } from '@syndesis/ui/platform';
+import { log, getCategory } from '@syndesis/ui/logging';
 import { ConnectionStore } from '../../store/connection/connection.store';
-import { Connections, Connection } from '../../model';
 
 const category = getCategory('Connections');
 
