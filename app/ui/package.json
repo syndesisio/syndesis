@@ -37,7 +37,7 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
-    "@atlasmap/atlasmap.data.mapper": "^1.32.0-SNAPSHOT.20180110153059",
+    "@atlasmap/atlasmap.data.mapper": "^1.32.0-SNAPSHOT.20180129121405",
     "@ng-dynamic-forms/core": "^5.4.1",
     "@ng-dynamic-forms/ui-bootstrap": "^5.4.1",
     "@ngrx/effects": "^4.1.1",

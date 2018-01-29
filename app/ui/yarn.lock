@@ -27,12 +27,6 @@
     "@ngtools/json-schema" "^1.1.0"
     rxjs "^5.5.6"
 
-"@angular/animations@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-4.4.6.tgz#fa661899a8a4e38cb7c583c7a5c97ce65d592a35"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/animations@^5.0.0", "@angular/animations@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-5.2.1.tgz#cc325c23db98c13539cbedf9405bc068bd3041cd"
@@ -103,25 +97,11 @@
   optionalDependencies:
     node-sass "^4.7.2"
 
-"@angular/common@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.4.6.tgz#4b81420724e0828a0e839b95a55eb1a7e83918f2"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/common@^5.0.0", "@angular/common@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-5.2.1.tgz#a6f2d349f6102e6be7cc488899578a0dc327b755"
   dependencies:
     tslib "^1.7.1"
-
-"@angular/compiler-cli@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.4.6.tgz#bafd3d1e260e99087eb9a8cf7532dbd603abb9b1"
-  dependencies:
-    "@angular/tsc-wrapped" "4.4.6"
-    minimist "^1.2.0"
-    reflect-metadata "^0.1.2"
 
 "@angular/compiler-cli@^5.2.0":
   version "5.2.1"
@@ -132,21 +112,9 @@
     reflect-metadata "^0.1.2"
     tsickle "^0.26.0"
 
-"@angular/compiler@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.4.6.tgz#2ee1faf25b757e1d128979074be7fae529b3bc20"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/compiler@^5.0.0", "@angular/compiler@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-5.2.1.tgz#758ed236c361cff018699e041fabbc4bcb7cdc72"
-  dependencies:
-    tslib "^1.7.1"
-
-"@angular/core@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.4.6.tgz#13031fd10dcfe438875419b38f21120958bc2354"
   dependencies:
     tslib "^1.7.1"
 
@@ -156,21 +124,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/forms@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.4.6.tgz#fe64ace42435c1b80f49034b7c41ce8caf14a44a"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/forms@^5.0.0", "@angular/forms@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.2.1.tgz#530f1249bc71d9560297be642d55a5a6c439d920"
-  dependencies:
-    tslib "^1.7.1"
-
-"@angular/http@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/http/-/http-4.4.6.tgz#0af680c6710bdc026d940e225cfd0f6a5c005d0c"
   dependencies:
     tslib "^1.7.1"
 
@@ -184,21 +140,9 @@
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-5.2.1.tgz#438bc1f61bab5ba2e0eeb687ae6be9e6ab0edb18"
 
-"@angular/platform-browser-dynamic@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.4.6.tgz#4d3d9a6a7bf2cf3de4058a615ae059eff641fa36"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/platform-browser-dynamic@^5.0.0", "@angular/platform-browser-dynamic@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-5.2.1.tgz#df073c48f5b90e8c5d5b0774aa2bef49f288989c"
-  dependencies:
-    tslib "^1.7.1"
-
-"@angular/platform-browser@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.4.6.tgz#a9839c547e1b654fa1d24a89780c8ba6ab8dcce0"
   dependencies:
     tslib "^1.7.1"
 
@@ -208,35 +152,15 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-server@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-4.4.6.tgz#431248f4891a635c76ad15a17d03e9c87e1a3837"
-  dependencies:
-    parse5 "^3.0.1"
-    tslib "^1.7.1"
-    xhr2 "^0.1.4"
-
-"@angular/router@^4.0.1":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-4.4.6.tgz#0f6ad29ae0ff8d2c9ea379bd320447217b7ec866"
-  dependencies:
-    tslib "^1.7.1"
-
 "@angular/router@^5.0.0", "@angular/router@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-5.2.1.tgz#fbb3a2d644e854bca25d075e506d25f3c670f8d2"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/tsc-wrapped@4.4.6":
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/@angular/tsc-wrapped/-/tsc-wrapped-4.4.6.tgz#16787cbbf50bdc7e738123b19c32527f244e178d"
-  dependencies:
-    tsickle "^0.21.0"
-
-"@atlasmap/atlasmap.data.mapper@^1.32.0-SNAPSHOT.20180110153059":
-  version "1.32.0-SNAPSHOT.20180115133813"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.32.0-SNAPSHOT.20180115133813.tgz#772cdd82365fcda7d7c33b0d4887b1d61d9c33f3"
+"@atlasmap/atlasmap.data.mapper@^1.32.0-SNAPSHOT.20180129121405":
+  version "1.32.0-SNAPSHOT.20180129121405"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.32.0-SNAPSHOT.20180129121405.tgz#8015edf97d5b1cc4f819e43821fdd3058206a198"
   dependencies:
     "@angular/animations" "^5.0.0"
     "@angular/common" "^5.0.0"
@@ -257,10 +181,10 @@
     mkdirp "^0.5.1"
     moment "^2.18.1"
     ncp "^2.0.0"
-    ngx-bootstrap "^2.0.0-beta.6"
+    ngx-bootstrap "2.0.0-rc.0"
     opn-cli "^3.1.0"
     patternfly "3.26.1"
-    patternfly-ng "^0.9.2"
+    patternfly-ng "^2.1.2"
     rxjs "^5.5.2"
     zone.js "^0.8.14"
 
@@ -365,10 +289,6 @@
 "@types/lodash@^4.14.62":
   version "4.14.92"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.92.tgz#6e3cb0b71a1e12180a47a42a744e856c3ae99a57"
-
-"@types/node@*":
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.3.0.tgz#3a129cda7c4e5df2409702626892cb4b96546dd5"
 
 "@types/node@7.0.5":
   version "7.0.5"
@@ -481,14 +401,6 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
-
-angular-tree-component@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-4.1.0.tgz#6cf4218382919c96e645a71b50d7df5c93b24a3b"
-  dependencies:
-    lodash "4.17.4"
-    mobx "3.1.11"
-    mobx-angular "1.5.0"
 
 angular-tree-component@^6.0.0:
   version "6.1.0"
@@ -4928,17 +4840,9 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
-mobx-angular@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-1.5.0.tgz#6c806483ebf7d161e5b5f5048edc300f8521c80c"
-
 mobx-angular@>=1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-2.0.1.tgz#2638d091618080693bbed02c5df8cd714b52c167"
-
-mobx@3.1.11:
-  version "3.1.11"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.1.11.tgz#400b1e3c00a4249dfe36e9bca28ef36f057d4a28"
 
 mobx@>=3:
   version "3.4.1"
@@ -4950,14 +4854,6 @@ moment-timezone@^0.4.0, moment-timezone@^0.4.1:
   dependencies:
     moment ">= 2.6.0"
 
-moment@2.17.1:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
-
-moment@2.18.1, moment@~2.18.0:
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
-
 "moment@>= 2.6.0", moment@^2.10, moment@^2.18.1, moment@^2.19.1:
   version "2.20.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
@@ -4965,6 +4861,10 @@ moment@2.18.1, moment@~2.18.0:
 moment@~2.14.1:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.14.1.tgz#b35b27c47e57ed2ddc70053d6b07becdb291741c"
+
+moment@~2.18.0:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
 moment@~2.8:
   version "2.8.4"
@@ -5070,13 +4970,7 @@ ng2-material-dropdown@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.8.2.tgz#2acd3f781030ef92bf31f05543d91148e68528ef"
 
-ngx-bootstrap@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-1.8.0.tgz#7482365e9a2cb04dc93296592771a9e4591c9fad"
-  dependencies:
-    moment "2.18.1"
-
-ngx-bootstrap@2.0.0-rc.0, ngx-bootstrap@^2.0.0-beta.6:
+ngx-bootstrap@2.0.0-rc.0:
   version "2.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.0-rc.0.tgz#c423117f9a3b36a19514c531b7fd9a56217f060e"
 
@@ -5540,12 +5434,6 @@ parse-passwd@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/parse-passwd/-/parse-passwd-1.0.0.tgz#6d5b934a456993b23d37f40a382d6f1666a8e5c6"
 
-parse5@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/parse5/-/parse5-3.0.3.tgz#042f792ffdd36851551cf4e9e066b3874ab45b5c"
-  dependencies:
-    "@types/node" "*"
-
 parsejson@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/parsejson/-/parsejson-0.0.3.tgz#ab7e3759f209ece99437973f7d0f1f64ae0e64ab"
@@ -5647,30 +5535,6 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly-ng@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-0.9.2.tgz#441dbdf0f082bb38b785b61a2c005a846eccfb7f"
-  dependencies:
-    "@angular/animations" "^4.0.1"
-    "@angular/common" "^4.0.1"
-    "@angular/compiler" "^4.0.1"
-    "@angular/compiler-cli" "^4.0.1"
-    "@angular/core" "^4.0.1"
-    "@angular/forms" "^4.0.1"
-    "@angular/http" "^4.0.1"
-    "@angular/platform-browser" "^4.0.1"
-    "@angular/platform-browser-dynamic" "^4.0.1"
-    "@angular/platform-server" "^4.0.1"
-    "@angular/router" "^4.0.1"
-    angular-tree-component "4.1.0"
-    c3 "^0.4.15"
-    core-js "2.4.1"
-    moment "2.17.1"
-    ngx-bootstrap "1.8.0"
-    patternfly "^3.26.1"
-    rxjs "5.0.1"
-    zone.js "0.8.4"
-
 patternfly-ng@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-2.1.2.tgz#9ce515007463563076974910460501d79e7956fb"
@@ -5737,7 +5601,7 @@ patternfly@3.26.1:
     patternfly-bootstrap-combobox "~1.1.7"
     patternfly-bootstrap-treeview "~2.1.0"
 
-patternfly@^3.26.1, patternfly@^3.28.0:
+patternfly@^3.28.0:
   version "3.37.1"
   resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.37.1.tgz#b988af3d6732cb3d0edba3f7e3b11bf10158ed4a"
   dependencies:
@@ -6718,12 +6582,6 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-rxjs@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.1.tgz#3a69bdf9f0ca0a986303370d4708f72bdfac8356"
-  dependencies:
-    symbol-observable "^1.0.1"
-
 rxjs@^5.0.0, rxjs@^5.5.2, rxjs@^5.5.6:
   version "5.5.6"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.5.6.tgz#e31fb96d6fd2ff1fd84bcea8ae9c02d007179c02"
@@ -7471,10 +7329,6 @@ symbol-observable@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.1.tgz#8340fc4702c3122df5d22288f88283f513d3fdd4"
 
-symbol-observable@^1.0.1:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.1.0.tgz#5c68fd8d54115d9dfb72a84720549222e8db9b32"
-
 table@^3.7.8:
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/table/-/table-3.8.3.tgz#2bbc542f0fda9861a755d3947fefd8b3f513855f"
@@ -7669,15 +7523,6 @@ tsconfig@^6.0.0:
   dependencies:
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
-
-tsickle@^0.21.0:
-  version "0.21.6"
-  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.21.6.tgz#53b01b979c5c13fdb13afb3fb958177e5991588d"
-  dependencies:
-    minimist "^1.2.0"
-    mkdirp "^0.5.1"
-    source-map "^0.5.6"
-    source-map-support "^0.4.2"
 
 tsickle@^0.26.0:
   version "0.26.0"
@@ -8289,10 +8134,6 @@ xdg-basedir@^2.0.0:
   dependencies:
     os-homedir "^1.0.0"
 
-xhr2@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
-
 xml-char-classes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
@@ -8428,10 +8269,6 @@ yeast@0.1.2:
 yn@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
-
-zone.js@0.8.4:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.8.4.tgz#cc40ae5a1c879601c5ebba2096b5c80f0c4c3602"
 
 zone.js@^0.8.14:
   version "0.8.20"
