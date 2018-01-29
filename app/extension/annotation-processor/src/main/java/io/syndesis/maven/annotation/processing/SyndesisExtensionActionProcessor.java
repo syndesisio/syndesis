@@ -129,13 +129,21 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         if (extensionTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), extensionTypeElement.asType())) {
             props.put("kind", "STEP");
             props.put("entrypoint", element.getQualifiedName().toString());
+
+            // Let's search for fields annotated with SyndesisActionProperty
+            for (Element field: element.getEnclosedElements()) {
+                if (field.getKind() == ElementKind.FIELD) {
+                    addActionProperties(field, props);
+                }
+            }
+
+            return true;
         } else {
             props.put("kind", "BEAN");
             props.put("entrypoint", element.getQualifiedName().toString());
 
             for (Element method: element.getEnclosedElements()) {
                 if (method.getAnnotation(handlerAnnotationClass) != null) {
-
                     // Process method
                     augmentProperties((ExecutableElement)method, props);
                     addActionProperties(method, props);
@@ -148,6 +156,8 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                         }
                     }
 
+                    // No need to go ahead as this is the method that implements
+                    // the action
                     return true;
                 }
             }
