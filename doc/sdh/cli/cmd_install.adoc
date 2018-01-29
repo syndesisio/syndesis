@@ -1,17 +1,18 @@
 
-[[syndesis-deploy]]
-## syndesis deploy
+[[syndesis-install]]
+## syndesis install
 
-With `syndesis deploy` you can deploy Syndesis to an arbitrary OpenShift cluster.
-If you want to deploy to https://www.openshift.org/minishift/[Minishift] the <<syndesis-minishift,syndesis minishift>> command is recommended as it supports some additional features specific to Minishift.
+With `syndesis install` you can install Syndesis to an arbitrary OpenShift cluster.
+If you want to install to https://www.openshift.org/minishift/[Minishift] the <<syndesis-minishift,syndesis minishift>> command is recommended as it supports some additional features specific to Minishift.
 
-[[syndesis-deploy-usage]]
+[[syndesis-install-usage]]
 ### Usage
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
 -p  --project                 Install into this project. Delete this project
-                              if it already exists. By default, install into the current project (without deleting)
+                              if it already exists. By default, install into the current project
+                              (without recreating)
     --route                   Route to use (mandatory host name)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
@@ -59,7 +60,7 @@ By default, the template as it exists currently in your checked out branch is us
 .Example
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis deploy --route syndesis.192.168.64.12.nip.io --tag 1.2
+syndesis install --route syndesis.192.168.64.12.nip.io --tag 1.2
 ----
 
 This example will install the latest Syndesis version of the 1.2 branch to the local cluster.
@@ -78,21 +79,21 @@ cd /tmp
 git clone --depth=1 https://github.com/syndesisio/syndesis.git    <1>
 cd syndesis
 
-# List tags
+# List tags (optional)
 git --depth=1 --tags fetch                                        <2>
 git tag
 
 # Connect to the fuse-ignite cluster
 oc login https://api.fuse-ignite.openshift.com --token=...        <3>
 
-# Check the project you want to deploy to
+# Check the project you want to install to
 oc project                                                        <4>
 
 # Find out the route domain
 oc route                                                          <5>
 
-# Deploy into the existing project
-tools/bin/syndesis deploy \                                       <6>
+# Install into the existing project (but recreate it before)
+tools/bin/syndesis install \                                      <6>
     --project $(oc project -q) \                                  <7>
     --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com \ <8>
     --tag 1.2 \                                                   <9>
@@ -109,3 +110,26 @@ tools/bin/syndesis deploy \                                       <6>
 <9> Specify the head tag 1.2 which means the latest 1.2 version (== latest upstream TP3 version)
 
 When the last command is finished you will be able to access `https://$(oc project -q).6a63.fuse-ignite.openshiftapps.com` to access Syndesis version 1.2
+
+### Quick installation
+
+If you only want to install Syndesis without developing for, there is even an easier without checking out Syndesis into a local Git repository.
+
+You can directly use the standalone installation script https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis[syndesis-install] for installing Syndesis.
+Just download this https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis[script], save it as "syndesis-install" and then call it with
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com
+----
+
+Or, if you feel fancy (and trust us), then you can directly install the latest version of Syndesis by deleting and recreating the current project with a single line:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+bash <(curl -s https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com
+----
+
+All you need is to have `bash`, `curl` and `oc` installed and you need to be connected to an OpenShift cluster.
+
+Use `install-syndesis --help` for a list of options (which is a subset of `syndesis install` described above)

@@ -1,0 +1,218 @@
+#!/bin/bash
+
+# ====================================================
+# Standalone script for deploying syndesis
+
+set -o pipefail
+set -eu
+ARGS="$@"
+
+display_usage() {
+  cat <<EOT
+Syndesis Installation Tool (standalone)
+
+Usage: syndesis-install --route <hostname> [options]
+
+with options:
+
+-r --route <host>            The route to install (mandatory)
+-t --tag <tag>               Optional version to use for the installaton ("latest" by default)
+-p --project <project>       Install into this project. Delete this project
+                             if it already exists. By default, install into the current project (without deleting)
+-w --watch                   Wait until the installation has completed
+-o --open                    Open Syndesis after installation (implies --watch)
+   --help                    This help message
+
+This tool is for a standalone installation and can be by downloading it from
+https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis
+(short: https://bit.ly/syndesis-install)
+EOT
+}
+
+# ============================================================
+# Helper functions taken over from "syndesis" CLI:
+
+recreate_project() {
+    local project=$1
+    if [ -z "$project" ]; then
+        echo "No project given"
+        exit 1
+    fi
+
+    # Delete project if existing
+    if oc get project "${project}" >/dev/null 2>&1 ; then
+        echo "Deleting project ${project}"
+        oc delete project "${project}"
+    fi
+
+    # Create project afresh
+    echo "Creating project ${project}"
+    for i in {1..10}; do
+        if oc new-project "${project}" >/dev/null 2>&1 ; then
+            break
+        fi
+        echo "Project still exists. Sleeping 10s ..."
+        sleep 10
+    done
+    oc project "${project}"
+}
+
+create_oauthclient() {
+    local tag=${1:-master}
+    local use_local_resource=${2:-}
+
+    create_openshift_resource \
+        "app/deploy/support/serviceaccount-as-oauthclient-restricted.yml" \
+        "$tag" \
+        "$use_local_resource"
+}
+
+create_and_apply_template() {
+    local route=$1
+    local template=${2:-syndesis-restricted}
+    local tag=${3:-}
+    local use_local_resource=${4:-}
+    if [ -z "$route" ]; then
+        echo "No route given"
+        exit 1
+    fi
+
+    create_openshift_resource \
+        "app/deploy/${template}.yml" \
+        "$tag" \
+        "$use_local_resource"
+
+    oc new-app $template \
+      -p ROUTE_HOSTNAME="${route}" \
+      -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
+      -p OPENSHIFT_PROJECT="$(oc project -q)" \
+      -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+}
+
+create_openshift_resource() {
+    local resource=${1:-}
+    local tag=${2:-}
+    local use_local_resource=${3:-}
+
+    if [ -n "$use_local_resource" ]; then
+        if [ -n "$tag" ]; then
+            pushd $(appdir) >/dev/null
+            git fetch --tags
+            git show $tag:${resource} | oc create -f -
+            popd >/dev/null
+        else
+            oc create -f $(appdir)/../$resource
+        fi
+    else
+        oc create -f https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}
+    fi
+}
+
+wait_for_syndesis_to_be_ready() {
+    # Wait a bit to start image fetching
+    # Patch imagestreams from "DockerImage" to "ImageStreamTag"
+    oc get pods -w &
+    watch_pid=$!
+    for dc in "syndesis-rest" "syndesis-ui" "syndesis-verifier"; do
+        echo "Waiting for $dc to be started"
+        local replicas="$(oc get dc $dc -o jsonpath='{.status.availableReplicas}')"
+        while [ "$replicas" -lt 1 ]; do
+            echo "Sleeping 10s ..."
+            sleep 10
+            replicas=$(oc get dc $dc -o jsonpath="{.status.availableReplicas}")
+        done
+    done
+    kill $watch_pid
+}
+
+open_url() {
+    local url=$1
+    local cmd="$(probe_commands open xdg-open chrome firefox)"
+    if [ -z "$cmd" ]; then
+        echo "Cannot find command for opening URL:"
+        echo $url
+        exit 1
+    fi
+    exec $cmd $url
+}
+
+# Checks if a flag is present in the arguments.
+hasflag() {
+    filters="$@"
+    for var in $ARGS; do
+        for filter in $filters; do
+          if [ "$var" = "$filter" ]; then
+              echo 'true'
+              return
+          fi
+        done
+    done
+}
+
+# Read the value of an option.
+readopt() {
+    filters="$@"
+    next=false
+    for var in $ARGS; do
+        if $next; then
+            echo $var
+            break;
+        fi
+        for filter in $filters; do
+            if [[ "$var" = ${filter}* ]]; then
+                local value="${var//${filter}=/}"
+                if [ "$value" != "$var" ]; then
+                    echo $value
+                    return
+                fi
+                next=true
+            fi
+        done
+    done
+}
+
+# ==============================================================
+
+tag=$(readopt --tag -t)
+route=$(readopt --route -r)
+
+# Main code
+if [ -z "$route" ] || [ $(hasflag --help -h) ]; then
+    display_usage
+    exit 0
+fi
+
+# If a project is given, create it new or recreate it
+project=$(readopt --project -p)
+if [ -n "${project}" ]; then
+    recreate_project $project
+fi
+
+# Required OAuthclient
+create_oauthclient "$tag"
+
+# Apply a template, based on the given arguments
+create_and_apply_template "$route" "" "$tag"
+
+if [ $(hasflag --watch -w) ] || [ $(hasflag --open -o) ]; then
+    wait_for_syndesis_to_be_ready
+fi
+
+if [ -n "$tag" ]; then
+    label="Syndesis $tag"
+else
+    label="latest Syndesis"
+fi
+cat <<EOT
+========================================================
+Congratulation, $label has been installed successfully !
+Open now your browser at the following URL:
+
+https://$route
+
+Enjoy !
+EOT
+
+if [ $(hasflag --open -o) ]; then
+    open_url "https://$route"
+fi

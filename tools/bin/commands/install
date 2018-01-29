@@ -1,10 +1,10 @@
 #!/bin/bash
 
-deploy::description() {
-    echo "Deploy Syndesis to a connected OpenShift cluster"
+install::description() {
+    echo "Install Syndesis to a connected OpenShift cluster"
 }
 
-deploy::usage() {
+install::usage() {
     cat <<EOT
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
@@ -17,11 +17,13 @@ deploy::usage() {
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images,
                               "openshift" for image streams (default: "openshift")
     --docker                  Shortcut for "--image-mode docker"
+    --local                   install from local Git repo when using. By default the resource descriptor is
+                              downloaded from GitHub remotely.
 EOT
 }
 
 
-deploy::run() {
+install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
     # A route is mandatory
@@ -38,10 +40,10 @@ deploy::run() {
     fi
 
     # Required OAuthclient
-    create_oauthclient
+    create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
     # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$(select_template)" $(readopt --tag)
+    create_and_apply_template "$route" "$(select_template)" "$(readopt --tag)" "$(hasflag --local)"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ]; then
         wait_for_syndesis_to_be_ready

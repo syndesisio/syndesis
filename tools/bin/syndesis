@@ -186,7 +186,7 @@ git_rebase_upstream() {
   fi
 }
 
-function run {
+run() {
     local first_arg=${1:-}
     local cmd_dir="$(basedir)/commands"
     local command
