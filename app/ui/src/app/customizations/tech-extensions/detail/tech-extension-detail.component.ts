@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Extension } from '@syndesis/ui/model';
 import { Integrations } from '@syndesis/ui/integration';
 import { ExtensionStore } from '@syndesis/ui/store';
-import { TechExtensionDeleteModalComponent } from 'app/customizations/tech-extensions';
+import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions';
 
 @Component({
   selector: 'syndesis-tech-extension-detail',

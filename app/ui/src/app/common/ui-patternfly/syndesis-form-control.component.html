@@ -1,12 +1,12 @@
-<div [class.form-group]="asBootstrapFormGroup || model.cls.element.container.includes('form-group')"
+<div [class.form-group]="asBootstrapFormGroup || getClass('element', 'container').includes('form-group')"
      [class.has-error]="showErrorMessages"
      [formGroup]="group"
-     [ngClass]="[model.cls.element.container, model.cls.grid.container]">
+     [ngClass]="[getClass('element', 'container'), getClass('grid', 'container')]">
 
   <label *ngIf="type !== 2 && model.label !== null"
          [attr.for]="fieldHash"
          [class.required-pf]="model.required"
-         [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+         [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
     {{ model.label }}
     <div *ngIf="model.hint !== null"
          [tooltip]="model.hint"
@@ -16,18 +16,20 @@
     </div>
   </label>
 
-  <ng-template *ngIf="type !== 1 && template?.align === 'START'"
-               [ngTemplateOutlet]="template.templateRef"
-               [ngTemplateOutletContext]="model"></ng-template>
+  <!-- <ng-template *ngIf="type !== 1 && templates[0]?.align === 'START'"
+                [ngTemplateOutlet]="templates[0]?.templateRef"
+                [ngTemplateOutletContext]="model"></ng-template> -->
+  <ng-container *ngTemplateOutlet="templates[0]?.templateRef; context: model"></ng-container>
 
-
+  <!-- CHECKBOX -->
   <div *ngIf="type === 2"
-       [ngClass]="model.cls.grid.control">
+       [ngClass]="getClass('grid', 'control')">
 
     <div [class.disabled]="model.disabled"
-         [ngClass]="model.cls.element.control || 'checkbox'">
+         [ngClass]="getClass('element', 'control') || 'checkbox'">
 
       <label>
+
 
         <input type="checkbox"
                [attr.tabindex]="model.tabIndex"
@@ -36,14 +38,14 @@
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
                [name]="model.name"
-               [ngClass]="model.cls.element.control"
+               [ngClass]="getClass('element', 'control')"
                [required]="model.required"
                [value]="model.value"
-               (blur)="onFocusChange($event)"
-               (change)="onValueChange($event)"
-               (focus)="onFocusChange($event)">
+               (dfBlur)="onBlur($event)"
+               (dfChange)="onValueChange($event)"
+               (dfFocus)="onFocus($event)">
         <span [innerHTML]="model.label"
-              [ngClass]="[model.cls.element.label, model.cls.grid.label]">
+              [ngClass]="[getClass('element', 'label'), getClass('grid', 'label')]">
         </span>
         <div *ngIf="model.hint !== null"
              [tooltip]="model.hint"
@@ -59,62 +61,70 @@
 
 
   <div *ngIf="type !== 2"
-       [ngClass]="model.cls.grid.control">
+       [ngClass]="getClass('grid', 'control')">
 
     <ng-container [ngSwitch]="type">
 
+      <!-- FORM ARRAY -->
       <div *ngSwitchCase="1"
            [dynamicId]="bindId && model.id"
            [formArrayName]="model.id"
-           [ngClass]="model.cls.element.control">
+           [ngClass]="getClass('element', 'control')">
 
         <div *ngFor="let groupModel of model.groups; let idx = index"
              role="group"
              [formGroupName]="idx"
-             [ngClass]="[model.cls.element.group, model.cls.grid.group]">
+             [ngClass]="[getClass('element', 'group'), getClass('grid', 'group')]">
 
-          <syndesis-form-control *ngFor="let item of groupModel.group"
+          <syndesis-form-control *ngFor="let _model of groupModel.group"
                                  [bindId]="false"
                                  [context]="groupModel"
                                  [group]="control.at(idx)"
-                                 [hasErrorMessaging]="item.hasErrorMessages"
-                                 [model]="item"
-                                 [templates]="templates"
-                                 [ngClass]="[item.cls.element.host, item.cls.grid.host]"
-                                 (blur)="onFocusChange($event)"
-                                 (change)="onValueChange($event)"
-                                 (focus)="onFocusChange($event)"></syndesis-form-control>
+                                 [hasErrorMessaging]="_model.hasErrorMessages"
+                                 [hidden]="_model.hidden"
+                                 [layout]="layout"
+                                 [model]="_model"
+                                 [templates]="templateList"
+                                 [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
+                                 (dfBlur)="onBlur($event)"
+                                 (dfChange)="onValueChange($event)"
+                                 (dfFocus)="onFocus($event)"></syndesis-form-control>
 
-          <ng-container *ngTemplateOutlet="template?.templateRef; context: { context: groupModel.context, index: idx }"></ng-container>
+            <ng-container *ngTemplateOutlet="templates[2]?.templateRef; context: groupModel"></ng-container>
         </div>
 
       </div>
 
+      <!-- DATEPICKER -->
+      <!-- BsDatepickerModule is under development, BREAKING CHANGES are possible -->
 
-      <fieldset *ngSwitchCase="3"
+      <!-- FORM GROUP -->
+      <fieldset *ngSwitchCase="4"
                 [dynamicId]="bindId && model.id"
                 [attr.id]="fieldHash"
                 [formGroupName]="model.id"
                 [name]="model.name"
-                [ngClass]="model.cls.element.control">
+                [ngClass]="getClass('element', 'control')">
 
         <legend *ngIf="model.legend"
                 [innerHTML]="model.legend"></legend>
 
-        <syndesis-form-control *ngFor="let controlModel of model.group"
+        <syndesis-form-control *ngFor="let _model of model.group"
                                [asBootstrapFormGroup]="false"
                                [group]="control"
-                               [hasErrorMessaging]="controlModel.hasErrorMessages"
-                               [model]="controlModel"
-                               [templates]="templates"
-                               [ngClass]="[controlModel.cls.element.host, controlModel.cls.grid.host]"
-                               (blur)="onFocusChange($event)"
-                               (change)="onValueChange($event)"
-                               (focus)="onFocusChange($event)"></syndesis-form-control>
+                               [hasErrorMessaging]="_model.hasErrorMessages"
+                               [hidden]="_model.hidden"
+                               [layout]="layout"
+                               [model]="_model"
+                               [templates]="templateList"
+                               [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
+                               (dfBlur)="onBlur($event)"
+                               (dfChange)="onValueChange($event)"
+                               (dfFocus)="onFocus($event)"></syndesis-form-control>
       </fieldset>
 
-
-      <div *ngSwitchCase="4"
+      <!-- INPUT -->
+      <div *ngSwitchCase="5"
            [class.input-group]="model.prefix || model.suffix">
 
         <div *ngIf="model.prefix"
@@ -123,7 +133,6 @@
 
         <input class="form-control"
                [attr.accept]="model.accept"
-               [attr.autoComplete]="model.autoComplete"
                [attr.list]="model.listId"
                [attr.max]="model.max"
                [attr.min]="model.min"
@@ -132,13 +141,14 @@
                [attr.tabindex]="model.tabIndex"
                [attr.id]="fieldHash"
                [autofocus]="model.autoFocus"
+               [autocomplete]="model.autoComplete"
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
                [maxlength]="model.maxLength"
                [minlength]="model.minLength"
                [name]="model.name"
                [tooltip]="model.hint"
-               [ngClass]="model.cls.element.control"
+               [ngClass]="getClass('element', 'control')"
                [pattern]="model.pattern"
                [placeholder]="model.placeholder"
                [readonly]="model.readOnly"
@@ -146,15 +156,15 @@
                [spellcheck]="model.spellCheck"
                [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
                [type]="model.inputType"
-               (blur)="onFocusChange($event)"
-               (change)="onValueChange($event)"
-               (focus)="onFocusChange($event)" />
+               (dfBlur)="onBlur($event)"
+               (dfChange)="onValueChange($event)"
+               (dfFocus)="onFocus($event)" />
 
         <div *ngIf="model.suffix"
              class="input-group-addon"
              [innerHTML]="model.suffix"></div>
 
-        <datalist *ngIf="model.list"
+        <datalist *ngIf="hasList"
                   [id]="model.listId">
 
           <option *ngFor="let option of model.list"
@@ -164,20 +174,21 @@
 
       </div>
 
-
-      <fieldset *ngSwitchCase="5"
+      <!-- RADIO GROUP -->
+      <fieldset *ngSwitchCase="6"
                 role="radiogroup"
                 [attr.tabindex]="model.tabIndex"
                 [attr.id]="fieldHash"
                 [dynamicId]="bindId && model.id"
                 [name]="model.name"
-                (change)="onValueChange($event)">
+                [ngClass]="getClass('element', 'control')"
+                (dfChange)="onValueChange($event)">
 
         <legend *ngIf="model.legend"
                 [innerHTML]="model.legend"></legend>
 
         <div *ngFor="let option of model.options$ | async"
-             [ngClass]="model.cls.element.control || 'radio'">
+             [ngClass]="getClass('element', 'option') || 'radio'">
 
           <label>
 
@@ -185,14 +196,15 @@
                    [formControlName]="model.id"
                    [name]="model.name"
                    [value]="option.value"
-                   (blur)="onFocusChange($event)"
-                   (focus)="onFocusChange($event)" />
+                   (dfBlur)="onBlur($event)"
+                   (dfFocus)="onFocus($event)" />
             <span [innerHTML]="option.label"></span>
           </label>
         </div>
       </fieldset>
 
-      <select *ngSwitchCase="6"
+      <!-- SELECT -->
+      <select *ngSwitchCase="7"
               class="form-control"
               [attr.tabindex]="model.tabIndex"
               [attr.id]="fieldHash"
@@ -200,20 +212,21 @@
               [formControlName]="model.id"
               [name]="model.name"
               [tooltip]="model.hint"
-              [ngClass]="model.cls.element.control"
+              [ngClass]="getClass('element', 'control')"
               [required]="model.required"
-              (blur)="onFocusChange($event)"
-              (change)="onValueChange($event)"
-              (focus)="onFocusChange($event)">
+              (dfBlur)="onBlur($event)"
+              (dfChange)="onValueChange($event)"
+              (dfFocus)="onFocus($event)">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
+                [disabled]="option.disabled"
                 [ngValue]="option.value">{{ option.label }}</option>
 
       </select>
 
 
-      <textarea *ngSwitchCase="7"
+      <textarea *ngSwitchCase="8"
                 class="form-control"
                 [attr.tabindex]="model.tabIndex"
                 [attr.id]="fieldHash"
@@ -223,21 +236,35 @@
                 [maxlength]="model.maxLength"
                 [minlength]="model.minLength"
                 [name]="model.name"
-                [ngClass]="model.cls.element.control"
+                [ngClass]="getClass('element', 'control')"
                 [placeholder]="model.placeholder"
                 [readonly]="model.readOnly"
                 [required]="model.required"
                 [rows]="model.rows"
                 [spellcheck]="model.spellCheck"
                 [wrap]="model.wrap"
-                (blur)="onFocusChange($event)"
-                (change)="onValueChange($event)"
-                (focus)="onFocusChange($event)"></textarea>
+                (dfBlur)="onBlur($event)"
+                (dfChange)="onValueChange($event)"
+                (dfFocus)="onFocus($event)"></textarea>
 
 
-      <!--<span *ngIf="model.hint" class="help-block"-->
-      <!--[innerHTML]="model.hint"-->
-      <!--[ngClass]="model.cls.element.hint"></span>-->
+      <!-- <span *ngIf="showHint" class="help-block" [innerHTML]="model.hint" [ngClass]="getClass('element', 'hint')"></span> -->
+
+      <!-- TIMEPICKER -->
+      <!-- <timepicker *ngSwitchCase="9"
+        [arrowkeys]="getAdditional('arrowkeys', true)"
+        [dynamicId]="bindId && model.id"
+        [formControlName]="model.id"
+        [hourStep]="getAdditional('hourStep', 1)"
+        [max]="model.max"
+        [min]="model.min"
+        [mousewheel]="getAdditional('mousewheel', true)"
+        [minuteStep]="getAdditional('minuteStep', 1)"
+        [ngClass]="getClass('element', 'control')"
+        [secondsStep]="getAdditional('secondsStep', 1)"
+        [showMeridian]="model.meridian"
+        [showSeconds]="model.showSeconds"
+        [showSpinners]="getAdditional('spinners', true)"></timepicker> -->
 
     </ng-container>
 
@@ -246,10 +273,11 @@
 
   </div>
 
-  <ng-template *ngIf="type !== 1 && template?.align === 'END'"
-               [ngTemplateOutlet]="template.templateRef"
-               [ngTemplateOutletContext]="model"></ng-template>
+  <!-- <ul *ngIf="showErrorMessages" class="has-error" [ngClass]="[getClass('element', 'errors'), getClass('grid', 'errors')]">
+      <li *ngFor="let message of errorMessages" class="help-block">{{ message }}</li>
+  </ul> -->
 
+  <ng-container *ngTemplateOutlet="templates[1]?.templateRef; context: model"></ng-container>
 
   <ng-content></ng-content>
 
