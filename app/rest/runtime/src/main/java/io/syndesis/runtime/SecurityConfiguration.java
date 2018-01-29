@@ -68,17 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter() throws Exception {
-        RequestHeaderAuthenticationFilter f = new RequestHeaderAuthenticationFilter() {
-            @Override
-            protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
-                final Object fromHeader = super.getPreAuthenticatedCredentials(request);
-                if (fromHeader == null) {
-                    return "<missing>";
-                }
-
-                return fromHeader;
-            }
-        };
+        RequestHeaderAuthenticationFilter f = new RequestHeaderAuthenticationFilter();
         f.setPrincipalRequestHeader("X-Forwarded-User");
         f.setCredentialsRequestHeader("X-Forwarded-Access-Token");
         f.setAuthenticationManager(authenticationManager());
