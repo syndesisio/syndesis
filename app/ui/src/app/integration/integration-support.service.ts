@@ -7,6 +7,9 @@ import { Exchange } from '@syndesis/ui/model';
 import { Integration } from './integration.model';
 import { integrationSupportEndpoints } from './integration-support.api';
 
+
+import { RequestMethod, ResponseContentType } from '@angular/http';
+
 @Injectable()
 export class IntegrationSupportService {
 
@@ -75,6 +78,12 @@ export class IntegrationSupportService {
       const transactions = res as Exchange[];
       return transactions;
     });
+  }
+
+  downloadSupportData(data: Array<any>): Observable<Blob>  {
+    const url = integrationSupportEndpoints.supportData;
+    debugger;
+    return this.apiHttpService.setEndpointUrl(url).post<Blob>(data,  {responseType : 'blob'} );
   }
 
 }
