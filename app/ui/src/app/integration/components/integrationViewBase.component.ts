@@ -1,6 +1,6 @@
 import { ApplicationRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Integration, DRAFT, PENDING, ACTIVE, INACTIVE, UNDEPLOYED } from '@syndesis/ui/integration';
+import { Integration, DRAFT, PENDING, ACTIVE, INACTIVE, UNDEPLOYED } from '@syndesis/ui/integration/integration.model';
 import { IntegrationSupportService } from '../integration-support.service';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
