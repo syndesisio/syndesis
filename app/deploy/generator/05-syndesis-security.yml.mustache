@@ -23,6 +23,17 @@
   subjects:
   - kind: ServiceAccount
     name: syndesis-rest
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis:viewers
+    labels:
+      app: syndesis
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-prometheus
 {{#Productized}}
 
 ---

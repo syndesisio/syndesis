@@ -10,6 +10,7 @@ metadata:
 # Without Probes: {{Probeless}}
 # Atlasmap Tag: {{Tags.Atlasmap}}
 # Syndesis Tag: {{Tags.Syndesis}}
+# Prometheus Tag: {{Tags.Prometheus}}
 # Restricted environment: {{Restricted}}
 #
   labels:
@@ -68,7 +69,7 @@ parameters:
   required: true
   value: syndesis
 - description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
-  displayName: Volume Capacity
+  displayName: PostgreSQL Volume Capacity
   name: POSTGRESQL_VOLUME_CAPACITY
   required: true
   value: 1Gi
@@ -110,6 +111,15 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
+- description: Maximum amount of memory the Prometheus container can use.
+  displayName: Memory Limit
+  name: PROMETHEUS_MEMORY_LIMIT
+  value: 255Mi
+- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
+  displayName: Prometheus Volume Capacity
+  name: PROMETHEUS_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:

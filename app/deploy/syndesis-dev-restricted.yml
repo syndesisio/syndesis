@@ -13,6 +13,7 @@ metadata:
 # Without Probes: false
 # Atlasmap Tag: latest
 # Syndesis Tag: latest
+# Prometheus Tag: v2.0.0
 # Restricted environment: true
 #
   labels:
@@ -60,7 +61,7 @@ parameters:
   required: true
   value: syndesis
 - description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
-  displayName: Volume Capacity
+  displayName: PostgreSQL Volume Capacity
   name: POSTGRESQL_VOLUME_CAPACITY
   required: true
   value: 1Gi
@@ -102,6 +103,15 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
+- description: Maximum amount of memory the Prometheus container can use.
+  displayName: Memory Limit
+  name: PROMETHEUS_MEMORY_LIMIT
+  value: 255Mi
+- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
+  displayName: Prometheus Volume Capacity
+  name: PROMETHEUS_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -1117,4 +1127,166 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: syndesis-rest
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis:viewers
+    labels:
+      app: syndesis
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-prometheus
 
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: syndesis-prometheus
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+    name: syndesis-prometheus-config
+  data:
+    prometheus.yml: |-
+      global:
+        scrape_interval:     5s
+        evaluation_interval: 5s
+
+      scrape_configs:
+        - job_name: prometheus
+          static_configs:
+            - targets:
+              - localhost:9090
+
+        - job_name: integration-pods
+
+          kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - ${OPENSHIFT_PROJECT}
+
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: syndesis-prometheus
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+  spec:
+    ports:
+    - name: prometheus
+      port: 80
+      protocol: TCP
+      targetPort: 9090
+    selector:
+      app: syndesis
+      component: syndesis-prometheus
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: syndesis-prometheus
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${PROMETHEUS_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: syndesis-prometheus
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+  spec:
+    replicas: 1
+    selector:
+      app: syndesis
+      component: syndesis-prometheus
+    strategy:
+      type: Recreate
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          component: syndesis-prometheus
+      spec:
+        serviceAccountName: syndesis-prometheus
+        containers:
+        - name: prometheus
+          image: ${SYNDESIS_REGISTRY}/prom/prometheus:v2.0.0
+
+          imagePullPolicy: IfNotPresent
+          args:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.retention=1h'
+          livenessProbe:
+            httpGet:
+              port: 9090
+          ports:
+          - containerPort: 9090
+          readinessProbe:
+            httpGet:
+              port: 9090
+          # DB QoS class is "Guaranteed" (requests == limits)
+          # Note: On OSO there is no Guaranteed class, its always burstable
+          resources:
+            limits:
+              memory: ${PROMETHEUS_MEMORY_LIMIT}
+            requests:
+              memory: ${PROMETHEUS_MEMORY_LIMIT}
+          volumeMounts:
+          - name: syndesis-prometheus-data
+            mountPath: /prometheus
+          - name: syndesis-prometheus-config
+            mountPath: /etc/prometheus
+        volumes:
+        - name: syndesis-prometheus-data
+          persistentVolumeClaim:
+            claimName: syndesis-prometheus
+        - name: syndesis-prometheus-config
+          configMap:
+            name: syndesis-prometheus-config
+    triggers:
+
+    - type: ConfigChange
