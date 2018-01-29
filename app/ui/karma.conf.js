@@ -1,4 +1,4 @@
-const process = require('process');
+var process = require('process');
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 module.exports = function (config) {
