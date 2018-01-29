@@ -29,8 +29,7 @@ The data mapper displays another line from the Twitter
 Blue lines indicates the current focus. 
 . Map the Twitter `screenName` field to the Salesforce
 `Title` field:
-.. In the Twitter source fields, 
-scroll down to click 
+.. In the *Sources* panel, scroll down to click 
 the *screenName* field. 
 .. On the right, at the top of the list of target fields in Salesforce,
 click the magnifying 

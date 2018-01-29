@@ -20,10 +20,11 @@ To create a Salesforce connection:
 
 . In the left pane, click *Connections* to display available connections. 
 . In the upper right, click *Create Connection* to display
-{prodname} connectors. A connector is a template for creating one 
+the available connectors. A connector is a template for creating one 
 or more connections. 
 . Click the *Salesforce* connection type. 
 . Click *Connect Salesforce* to display a Salesforce authorization page. 
+You might need to log in to Salesforce before you see the authorization page.
 +
 [NOTE]
 ====

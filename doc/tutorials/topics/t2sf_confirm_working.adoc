@@ -10,19 +10,20 @@ would see that *Twitter to Salesforce Sample Integration* is running.
 . Confirm that the integration does not create a contact record when a
 tweet does not contain the text you specified in the basic filter 
 step:
-.. In Twitter, send a tweet that 
+.. In Twitter, send a tweet that: 
 * Mentions your Twitter handle
 * Does not contain the text you specified in the basic filter step
 +
-For example: `*@Aslan #likesRedHat*`
+For example: `*@Aslan #likesRedHat.*`
 .. Wait for the polling interval to elapse, which can be 30 - 60 seconds. 
 .. In Salesforce, confirm that a contact record with your 
 name does not exist. 
 . Confirm that the integration creates a new contact record when it should:
-.. In Twitter, send a tweet that mentions your Twitter handle and
-the text
-you specified in the basic filter step. 
-For example, `*@Aslan thinks #RedHatIsGreat.*`
+.. In Twitter, send a tweet that:
+* Mentions your Twitter handle
+* Contains the text you specified in the basic filter step
++
+For example: `*@Aslan knows #RedHatIsGreat.*`
 .. Wait for the polling interval to elapse. 
 .. In Salesforce, locate a contact record that has 
 your name, the text of your tweet in the
