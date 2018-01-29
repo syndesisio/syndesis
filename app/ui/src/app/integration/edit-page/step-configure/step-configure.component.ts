@@ -41,7 +41,6 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public stepStore: StepStore,
-    public integrationSupport: IntegrationSupportService
   ) {
     super(currentFlow, route, router);
   }
@@ -124,46 +123,6 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     });
   }
 
-  fetchDataShapesFor(step: Step, output = true): Promise<any> {
-    if (step.stepKind === 'extension') {
-      if (output) {
-        this.outputDataShape = step.action.descriptor.outputDataShape;
-      } else {
-        this.inputDataShape = step.action.descriptor.inputDataShape;
-      }
-      return Observable.of({}).toPromise();
-    } else {
-      return this.integrationSupport
-        .fetchMetadata(
-        step.connection,
-        step.action,
-        step.configuredProperties || {}
-        )
-        .toPromise()
-        .then(definition => {
-          if (output) {
-            this.outputDataShape = definition.outputDataShape;
-          } else {
-            this.inputDataShape = definition.inputDataShape;
-          }
-        })
-        .catch(response => {
-          this.loading = false;
-          const error = JSON.parse(response['_body']);
-          this.error = {
-            class: 'alert alert-warning',
-            message: error.message || error.userMsg || error.developerMsg
-          };
-          log.info(
-            'Error fetching data shape for ' +
-            JSON.stringify(step) +
-            ' : ' +
-            JSON.stringify(response)
-          );
-        });
-    }
-  }
-
   loadForm() {
     if (!this.currentFlow.loaded || this.loading) {
       return;
@@ -179,9 +138,34 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     }
     const prevStep = this.currentFlow.getPreviousStepWithDataShape(this.position);
     const nextStep = this.currentFlow.getSubsequentStepWithDataShape(this.position);
-    this.fetchDataShapesFor(prevStep, true)
-      .then(() => this.fetchDataShapesFor(nextStep, false))
+    this.currentFlow.fetchDataShapeFor(prevStep, true)
+      .then((inDataShape) => {
+        this.inputDataShape = inDataShape;
+        this.currentFlow.fetchDataShapeFor(nextStep, false)
+          .then((outDataShape) => {
+            this.outputDataShape = outDataShape;
+          })
+          .catch(response => this.handleDataShapeError(nextStep, response))
+      })
+      .catch(response => this.handleDataShapeError(prevStep, response))
       .then(() => this.loadFormSetup(step));
+  }
+
+  private handleDataShapeError(step: Step, response: any) {
+    this.loading = false;
+    const error = JSON.parse(response['_body']);
+    const errorMessage =
+      error ? error.message || error.userMsg || error.developerMsg : response;
+    this.error = {
+      class: 'alert alert-warning',
+      message: errorMessage
+    };
+    log.info(
+      'Error fetching data shape for ' +
+      JSON.stringify(step) +
+      ' : ' +
+      JSON.stringify(response)
+    );
   }
 
   loadFormSetup(step: Step) {
