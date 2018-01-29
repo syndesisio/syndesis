@@ -25,7 +25,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 ----
 
 The deployment will always happen for the currently connected OpenShift cluster.
-So it's mandatory that have logged into the cluster with `oc login` before.
+So it's mandatory that you have logged into the cluster with `oc login` before.
 You can check the status with `oc status`.
 
 You have to provide the route name with `--route`.
@@ -127,7 +127,7 @@ Or, if you feel fancy (and trust us), then you can directly install the latest v
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-bash <(curl -s https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com
+bash <(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com
 ----
 
 All you need is to have `bash`, `curl` and `oc` installed and you need to be connected to an OpenShift cluster.

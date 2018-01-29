@@ -125,6 +125,16 @@ wait_for_syndesis_to_be_ready() {
     kill $watch_pid
 }
 
+probe_commands() {
+    for cmd in $@; do
+      local ret=$(which $cmd 2>/dev/null)
+      if [ $? -eq 0 ]; then
+          echo $ret
+          return
+      fi
+    done
+}
+
 open_url() {
     local url=$1
     local cmd="$(probe_commands open xdg-open chrome firefox)"
