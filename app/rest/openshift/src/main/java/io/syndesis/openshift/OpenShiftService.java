@@ -25,8 +25,8 @@ import io.fabric8.openshift.api.model.User;
 
 public interface OpenShiftService {
 
-    String DEPLOYMENT_ID_ANNOTATION = "syndesis.io/deployment-id";
-    String INTEGRATION_ID_ANNOTATION = "syndesis.io/integration-id";
+    String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
+    String DEPLOYMENT_ID_LABEL = "syndesis.io/deployment-id";
     String USERNAME_LABEL = "syndesis.io/username";
     String COMPONENT_LABEL = "component";
 

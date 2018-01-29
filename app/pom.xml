@@ -186,10 +186,26 @@
         <plugins>
 
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+
+					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
-						<extensions>true</extensions>
+						<version>1.6.8</version>
+						<executions>
+							<execution>
+								<id>default-deploy</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
 						<configuration>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
               <serverId>oss-sonatype-staging</serverId>
@@ -198,40 +214,58 @@
 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-release-plugin</artifactId>
-						<version>2.5.3</version>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
 						<configuration>
-							<preparationGoals>exec:exec@commit-connector-json</preparationGoals>
+							<skip>false</skip>
 						</configuration>
-					</plugin>
-
-					<!-- Check in all generated json schema files before checking
-					     in the new version -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.5.0</version>
 						<executions>
 							<execution>
-								<!-- Commit generated json files -->
-								<id>commit-connector-json</id>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
 								<goals>
-									<goal>exec</goal>
+									<goal>sign</goal>
 								</goals>
-								<configuration>
-									<executable>bash</executable>
-									<commandlineArgs>
-										-c 'if [ "${project.artifactId}" = "syndesis-connectors-project" ]; then mvn -Pflash clean install &amp;&amp; git status -s *-connector*.json | grep " M " | cut -d " " -f3 | xargs git commit -m "Update connector meta data for ${project.version}"; fi'
-                  </commandlineArgs>
-								</configuration>
-              </execution>
+							</execution>
 						</executions>
 					</plugin>
 
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<configuration>
+							<skipSource>false</skipSource>
+						</configuration>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<skip>false</skip>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
-
 		</profile>
+
 		<!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
 		<profile>
 			<id>flash</id>
@@ -452,32 +486,6 @@
 			</build>
 		</profile>
 
-		<profile>
-			<id>deploy-local-nexus</id>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>openshift-nexus</id>
-					<!-- replace with your cluster address -->
-					<!--<url>http://nexus-syndesis.192.168.64.12.nip.io/nexus/content/repositories/snapshots</url>-->
-				</snapshotRepository>
-			</distributionManagement>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>openshift-nexus</serverId>
-							<nexusUrl>http://nexus-syndesis.192.168.64.12.nip.io/nexus/</nexusUrl>
-							<skipStaging>true</skipStaging>
-							<skipLocalStaging>true</skipLocalStaging>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 	</profiles>
 
 	<build>
@@ -486,7 +494,7 @@
 				<plugin>
 					<groupId>com.mycila</groupId>
 					<artifactId>license-maven-plugin</artifactId>
-                    <inherited>false</inherited>
+					<inherited>false</inherited>
 					<configuration>
 						<header>license/syndesis-license.txt</header>
 						<skipExistingHeaders>false</skipExistingHeaders>

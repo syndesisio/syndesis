@@ -72,7 +72,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
     @Test
     public void shouldCreateSecurityConfigurationFromReverbSwagger() throws IOException {
-        final String specification = resource("/swagger/reverb.swagger.json");
+        final String specification = resource("/swagger/reverb.swagger.yaml");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Reverb API")//
@@ -91,7 +91,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
     @Test
     public void shouldIncorporateGivenConfiguredProperties() throws IOException {
-        final String specification = resource("/swagger/reverb.swagger.json");
+        final String specification = resource("/swagger/reverb.swagger.yaml");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Reverb API")//

@@ -33,6 +33,8 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
+import io.syndesis.connector.generator.swagger.util.DataShapeHelper;
+import io.syndesis.connector.generator.swagger.util.JsonSchemaHelper;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -46,7 +48,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import static io.syndesis.connector.generator.swagger.JsonSchemaHelper.determineSchemaReference;
+import static io.syndesis.connector.generator.swagger.util.JsonSchemaHelper.determineSchemaReference;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 

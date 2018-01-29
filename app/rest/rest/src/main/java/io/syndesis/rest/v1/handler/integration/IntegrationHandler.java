@@ -83,6 +83,8 @@ public class IntegrationHandler extends BaseHandler
 
     private final Validator validator;
 
+    private final UpdateCurrentState updateCurrentState = new UpdateCurrentState();
+
     public IntegrationHandler(final DataManager dataMgr, final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport) {
         super(dataMgr);
         this.validator = validator;
@@ -98,7 +100,6 @@ public class IntegrationHandler extends BaseHandler
     @Override
     public Integration get(String id) {
         Integration integration = Getter.super.get(id);
-
         if (IntegrationDeploymentState.Undeployed.equals(integration.getCurrentStatus().get()) ||
             IntegrationDeploymentState.Undeployed.equals(integration.getDesiredStatus().get())) {
             //Not sure if we need to do that for both current and desired status,
@@ -109,14 +110,14 @@ public class IntegrationHandler extends BaseHandler
 
         //fudging the timesUsed for now
         Optional<IntegrationDeploymentState> currentStatus = integration.getCurrentStatus();
+
         if (currentStatus.isPresent() && currentStatus.get() ==  IntegrationDeploymentState.Active) {
-            return new Integration.Builder()
+            integration = new  Integration.Builder()
                     .createFrom(integration)
                     .timesUsed(BigInteger.valueOf(new Date().getTime()/1000000))
                     .build();
         }
-
-        return integration;
+        return updateCurrentState.apply(integration);
     }
 
     public static void addEntry(ZipOutputStream os, String path, byte[] content) throws IOException {
@@ -130,12 +131,13 @@ public class IntegrationHandler extends BaseHandler
     @Override
     public ListResult<Integration> list(UriInfo uriInfo) {
         Class<Integration> clazz = resourceKind().getModelClass();
-        return getDataManager().fetchAll(
-            Integration.class,
+        List<Integration> integrations =  getDataManager().fetchAll(Integration.class,
             new DeletedFilter(),
             new ReflectiveSorter<>(clazz, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
-        );
+        ).getItems().stream().map(updateCurrentState).collect(Collectors.toList());
+
+        return new ListResult.Builder<Integration>().addAllItems(integrations).totalCount(integrations.size()).build();
     }
 
     @Override
@@ -157,14 +159,18 @@ public class IntegrationHandler extends BaseHandler
 
         updatedIntegration = Creator.super.create(sec, updatedIntegration);
 
-        if (integration.getDesiredStatus().orElse(IntegrationDeploymentState.Draft).equals(IntegrationDeploymentState.Active)) {
+        IntegrationDeploymentState desiredState = integration.getDesiredStatus().orElse(IntegrationDeploymentState.Draft);
+        IntegrationDeploymentState currentState = desiredState == IntegrationDeploymentState.Active ? IntegrationDeploymentState.Pending : IntegrationDeploymentState.Draft;
+
+        if (desiredState == IntegrationDeploymentState.Active || desiredState == IntegrationDeploymentState.Draft) {
             IntegrationDeployment integrationDeployment = IntegrationDeployment
                 .newDeployment(updatedIntegration)
-                .withCurrentState(IntegrationDeploymentState.Draft)
-                .withTargetState(IntegrationDeploymentState.Active);
+                .withCurrentState(currentState)
+                .withTargetState(desiredState);
 
             getDataManager().create(integrationDeployment);
         }
+
         return updatedIntegration;
     }
 
@@ -176,39 +182,47 @@ public class IntegrationHandler extends BaseHandler
         IntegrationDeploymentState targetState = integration.getDesiredStatus().orElse(IntegrationDeploymentState.Active);
 
         IntegrationDeployment latest = latestDeployment(integration).orElse(null);
-
+        String compositeId = IntegrationDeployment.compositeId(id, existing.getDeploymentId().orElse(1));
 
         switch (targetState) {
             case Active:
                 IntegrationDeployment newDeployment = new IntegrationDeployment.Builder()
-                    .createFrom(IntegrationDeployment.newDeployment(existing))
+                    .createFrom(IntegrationDeployment.newDeployment(integration))
                     .version(latest != null ? latest.getVersion().orElse(0) + 1 : 1)
                     .targetState(IntegrationDeploymentState.Active)
-                    .currentState(IntegrationDeploymentState.Draft)
+                    .currentState(IntegrationDeploymentState.Pending)
                     .build();
 
                 getDataManager().create(newDeployment);
+
+                Updater.super.update(id, new Integration.Builder()
+                    .createFrom(encryptionSupport.encrypt(integration))
+                    .deploymentId(newDeployment.getVersion())
+                    .lastUpdated(new Date())
+                    .currentStatus(currentState)
+                    .stepsDone(new ArrayList<>())
+                    .build());
                 break;
+            case Inactive:
             case Undeployed:
-                String compositeId = IntegrationDeployment.compositeId(id, existing.getDeploymentId().orElse(1));
                 IntegrationDeployment activeDeployment = getDataManager().fetch(IntegrationDeployment.class, compositeId);
-                if (activeDeployment != null && activeDeployment.getCurrentState() != IntegrationDeploymentState.Undeployed) {
-                    getDataManager().create(activeDeployment.withTargetState(IntegrationDeploymentState.Undeployed));
+                if (activeDeployment != null && activeDeployment.getCurrentState() != targetState) {
+                    getDataManager().update(activeDeployment.withTargetState(targetState));
                 }
+
+                //TODO: not sure if this needs to be updated.
+                Updater.super.update(id, new Integration.Builder()
+                    .createFrom(encryptionSupport.encrypt(integration))
+                    .lastUpdated(new Date())
+                    .currentStatus(currentState)
+                    .desiredStatus(targetState)
+                    .stepsDone(new ArrayList<>())
+                    .build());
+
                 break;
             default:
                //Just ignore and do nothing
         }
-
-        Integration updatedIntegration = new Integration.Builder()
-            .createFrom(encryptionSupport.encrypt(integration))
-            .deploymentId(existing.getDeploymentId())
-            .lastUpdated(new Date())
-            .currentStatus(currentState)
-            .stepsDone(new ArrayList<>())
-            .build();
-
-        Updater.super.update(id, updatedIntegration);
     }
 
 
@@ -350,6 +364,22 @@ public class IntegrationHandler extends BaseHandler
         return validator;
     }
 
+
+    private class UpdateCurrentState implements Function<Integration, Integration> {
+
+        @Override
+        public Integration apply(Integration integration) {
+            String compositeId = IntegrationDeployment
+                .compositeId(
+                    integration.getId().orElseThrow(() -> new IllegalStateException("Integration should have an id")),
+                    integration.getDeploymentId().orElse(1));
+            IntegrationDeployment current = getDataManager().fetch(IntegrationDeployment.class, compositeId);
+            if (current == null) {
+                return integration;
+            }
+            return new Integration.Builder().createFrom(integration).currentStatus(current.getCurrentState()).build();
+        }
+    }
 
     private static class DeletedFilter implements Function<ListResult<Integration>, ListResult<Integration>> {
         @Override

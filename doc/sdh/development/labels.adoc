@@ -1,0 +1,356 @@
+[[dev-labels]]
+## Issue Labels
+
+We use GitHub labels to categorize epics, issues and tasks.
+They are the foundation of our process, so please use labels for issues.
+
+CAUTION: Labels are living entities. This document describes the current status and might be slightly outdated. Please send a PR to adopt this section if the label structure changes. Also feel free to discuss the label structure anytime. It's essential that labels describe our process, not that we have to adapt our process for these labels.
+
+Labels are grouped.
+Each label consists of two part:
+A *Group* and a *Name* which are separated by a slash (`/`).
+For example, the label `module/ui` is used to mark issue which is relevant to the Syndesis UI module.
+
+The following label groups are available.
+There must be only at most one label from the "Exclusive" groups.
+
+[cols="3,15,^1",options="header"]
+|===
+| Group
+| Description
+| Excl.
+
+| **cat/**
+| Misc categories which are can be added freely
+|
+
+| **prio/**
+| Priority of the issue. Only one `prio/` label must be added per issue. `prio/p0` is of highest priority, `prio/p4` the lowest one.
+| ✔︎
+
+| **ext/**
+| Reference to external projects
+|
+
+| **d/**
+| Day labels for tagging an Epic to talk about at specific day in the daily meeting
+|
+
+| **module/**
+| Internal Syndesis modules
+|
+
+| **notif/**
+| Notification label which can be added and removed to ping certain subteams
+|
+
+| **size/**
+| Tee shirt size for issues. Sizing is a subjective assessment and should be done relative to other issues.
+| ✔︎
+
+
+| **status/**
+| Status of an issue or PR.
+|
+
+| **target/**
+| Target milestone for an Epic. These are the Technical Preview (TP) targets and GA.
+| ✔︎
+|===
+
+Each label group serves a particular purpose, and for each issue and PR, it should be considered whether a label from a group applies.
+
+### Modules
+
+Labels from this group reference our application components like "rest", "ui", "uxd" or "connectors".
+Each sub-team is responsible for one or more modules, and every module has an 'owning' team.
+That does not mean that members of other teams are allowed to work on such modules.
+Contrary, this is even encouraged.
+But its just there so that teams can filter on issues and PRs which are relevant to them.
+
+An issue can carry many module labels.
+Especially Epics will carry more than such label as they touch more than one module (otherwise it wouldn't be an epic).
+
+[cols="3,15",options="header"]
+|===
+|Module
+|Descriptions
+
+| **module/connectors**
+{set:cellbgcolor:#b39d9e}
+| Supported camel connectors
+{set:cellbgcolor!}
+
+| **module/deploy**
+{set:cellbgcolor:#ab947d}
+| OpenShift templates
+{set:cellbgcolor!}
+
+| [white]**module/rest**
+{set:cellbgcolor:#2e9288}
+| REST backend for managing integrations
+{set:cellbgcolor!}
+
+| [white]**module/runtime**
+{set:cellbgcolor:#657c9a}
+| Library used in the the integration runtimes
+{set:cellbgcolor!}
+
+| [white]**module/s2i**
+{set:cellbgcolor:#2b313c}
+| S2I base image for building integrations
+{set:cellbgcolor!}
+
+| **module/tests**
+{set:cellbgcolor:#91ac83}
+| System tests for testing the whole applications
+{set:cellbgcolor!}
+
+| **module/ui**
+{set:cellbgcolor:#dce6f0}
+| User interface SPA, talking to the REST backend
+{set:cellbgcolor!}
+
+| **module/uxd**
+{set:cellbgcolor:#fdc5d8}
+| User experience (UX) designs
+{set:cellbgcolor!}
+
+| **module/verifier**
+{set:cellbgcolor:#c6d74b}
+| Service for connector meta-data and verification of connections
+{set:cellbgcolor!}
+
+| **module/extension**
+{set:cellbgcolor:#03ba7a}
+| Tools for developing Syndesis extensions
+{set:cellbgcolor!}
+
+| **module/core**
+{set:cellbgcolor:#d63f0c}
+| Syndesis core module
+{set:cellbgcolor!}
+|===
+
+### Categories
+
+Labels from the `cat/` group are labels which can always be applied and which does not fit in another category.
+Currently we have these categories:
+
+[cols="3,15",options="header"]
+|===
+|Category
+|Description
+
+| **cat/bug**
+{set:cellbgcolor:#e08891}
+| A bug which needs fixing.
+{set:cellbgcolor!}
+
+| **cat/blocker**
+{set:cellbgcolor:#dd6977}
+| A blocker, which is a bug which needs to be fixed as soon as possible.
+{set:cellbgcolor!}
+
+| **cat/enhancement**
+{set:cellbgcolor:#93d273}
+| PR label for an enhancement of an existing feature.
+{set:cellbgcolor!}
+
+| **cat/feature**
+{set:cellbgcolor:#bdd9f4}
+| PR label for a new feature
+{set:cellbgcolor!}
+
+| [white]**cat/discussion**
+{set:cellbgcolor:#1d4367}
+| This issues requires a discussion.
+{set:cellbgcolor!}
+
+| **cat/question**
+{set:cellbgcolor:#8bd5e3}
+| For issues holding a question.
+{set:cellbgcolor!}
+
+| **cat/build**
+{set:cellbgcolor:#fef2c0}
+| For issues which have relevance for the build system.
+{set:cellbgcolor!}
+
+| **cat/design**
+{set:cellbgcolor:#cebdf8}
+| A concrete UX design. Use this for PRs containing UX designs.
+{set:cellbgcolor!}
+
+| **cat/process**
+{set:cellbgcolor:#999D99}
+| Development process related issues carry this label.
+{set:cellbgcolor!}
+
+| **cat/research**
+{set:cellbgcolor:#e9d355}
+| Label used for issues which describe some research work
+{set:cellbgcolor!}
+
+| **cat/retro**
+{set:cellbgcolor:#84c68f}
+| Label for action items which are the result of a retrospective.
+{set:cellbgcolor!}
+
+| **cat/starter**
+{set:cellbgcolor:#e2704f}
+| An issue which is easy to solve and can be used for ramping up new developers.
+{set:cellbgcolor!}
+
+| **cat/techdebt**
+{set:cellbgcolor:#e7aeb6}
+| Label for issues identifying technical debt.
+{set:cellbgcolor!}
+
+| **cat/techdoc**
+{set:cellbgcolor:#A69F36}
+| Technical developer information (likes this handbook ;-) related issues.
+{set:cellbgcolor!}
+
+| **cat/tooling**
+{set:cellbgcolor:#fcc7f5}
+| Issues used for tooling around the development process (note: could be merged with "build")
+{set:cellbgcolor!}
+|===
+
+### Notification
+
+Notification labels from the `notif/` group serve a particular purpose.
+They are used when one team wants to notify another group that a specific issue might have them relevance to them.
+
+Currently we have two notifcation labels:
+
+[cols="3,15",options="header"]
+|===
+|Notification
+|Description
+
+| **notif/doc**
+{set:cellbgcolor:#98cc38}
+| The issue needs some attention from the docs team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a documentation already exists.
+{set:cellbgcolor!}
+
+| **notif/uxd**
+{set:cellbgcolor:#f382d0}
+| This label should be used for issues which needs some attention from the UX team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a UX design already exists.
+{set:cellbgcolor!}
+|===
+
+It is important to note that these labels also be removed when the notification has been received.
+
+For example, when a UI feature like an input form changes.
+Then the UI team attaches a `notif/uxd` label to the PR which introduces this change.
+The UX team, detects with a filter search on this label, that there is a new notification.
+It then decides, whether UX design needs to be updated or not.
+In any case, they are removing the `notif/uxd` label and add a `module/uxd` label if this PR indeed requires a UX design update.
+If no update is required, then the label is removed without replacement.
+
+### External references
+
+This label group should be used if an external system is referenced, which is not part of the Syndesis mono repo.
+
+[cols="3,15",options="header"]
+|===
+|External Project
+|Description
+
+
+| **ext/atlasmap**
+{set:cellbgcolor:#edb080}
+| https://github.com/atlasmap/atlasmap[atlasmap] data mapper
+{set:cellbgcolor!}
+
+| [white]**ext/camel**
+{set:cellbgcolor:#c56b37}
+| https://camel.apache.org[Camel]
+{set:cellbgcolor!}
+
+| **ext/qe**
+{set:cellbgcolor:#91ac83}
+| https://github.com/syndesisio/syndesis-qe[syndesis-qe] suite
+{set:cellbgcolor!}
+
+| **ext/docs**
+{set:cellbgcolor:#f9d647}
+| https://github.com/syndesisio/syndesis-documentation[syndesis-documentation] End user documentation
+{set:cellbgcolor!}
+|===
+
+For the future, we plan to add more of these external repos into the Syndesis mono repo (like documentation or QE).
+If this happens, then labels should be converted to `module/` kind of labels.
+
+### Daily Meeting Labels
+
+This category holds five labels: [#f00]`d/mon`, `d/tue`, `d/wed`, `d/thu`, `d/fri`, one for each working day.
+They are used to mark an Epic so that it is talked about the daily meeting on that day.
+The reason for this selection is, that we want to keep the daily meetings still for 15 mins but don't yet want to split up.
+More than one of such label can and actually should be added to one Epic.
+At least two-day labels must be added to an epic.
+
+[cols="3,15",options="header"]
+|===
+|Status
+|Daily Meeting
+
+| [white]**d/mon**
+{set:cellbgcolor:#644288}
+| Monday
+{set:cellbgcolor!}
+
+| [white]**d/tue**
+{set:cellbgcolor:#644288}
+| Tuesday
+{set:cellbgcolor!}
+
+| [white]**d/wed**
+{set:cellbgcolor:#644288}
+| Wednesday
+{set:cellbgcolor!}
+
+| [white]**d/thu**
+{set:cellbgcolor:#644288}
+| Thursday
+{set:cellbgcolor!}
+
+| [white]**d/fri**
+{set:cellbgcolor:#644288}
+| Friday
+{set:cellbgcolor!}
+|===
+
+### Status
+
+Status labels are unique since they may trigger some automatic actions.
+
+The current status labels are:
+
+[cols="3,15",options="header"]
+|===
+|Status
+|Description
+
+| [white]**status/blocked**
+{set:cellbgcolor:#ad0009}
+| The current issue is blocked by another issue. Refer to the issue itself to see what is blocking this issued. This label is purely informal.
+{set:cellbgcolor!}
+
+| **approved**
+{set:cellbgcolor:#0ffa16}
+| This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for our PR bot to automatically merge the pull request if it passes all required tests. (Note: Should probably be renamed to `status/approved`)
+{set:cellbgcolor!}
+
+| **status/wip**
+{set:cellbgcolor:#f5c73f}
+| This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is "Approved"
+{set:cellbgcolor!}
+
+| **status/2s2f**
+{set:cellbgcolor:#fdfcb6}
+| Use this label to mark issues which should be self-merged without requiring a PR review, because of its "too small to fail". Be very careful with this label, and remember a review is a service to you to help in your code quality. It is alone your responsibility when you chose this label. It's useful for minor doc updates or one line where you are 100% sure that it doesn't break the system. Please use it sparingly and responsibly. (_Need still to be implemented_)
+{set:cellbgcolor!}
+|===

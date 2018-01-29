@@ -504,6 +504,7 @@ export class CurrentFlow {
   private insertStepAfter(position: number) {
     const target = position + 1;
     const step = createStepWithId();
+    step.stepKind = undefined;
     this.steps.splice(target, 0, step);
   }
 

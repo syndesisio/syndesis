@@ -44,16 +44,6 @@ public interface WithConfigurationProperties {
     }
 
     @JsonIgnore
-    default boolean isSecretEndpointProperty(Entry<String, String> e) {
-        return this.isEndpointProperty(e) && this.isSecret(e);
-    }
-
-    @JsonIgnore
-    default Predicate<Entry<String, String>> isSecretEndpointProperty() {
-        return e -> isSecretEndpointProperty(e);
-    }
-
-    @JsonIgnore
     default boolean isComponentProperty(Entry<String, String> e) {
         return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && this.getProperties().get(e.getKey()).isComponentProperty();
     }
@@ -63,15 +53,9 @@ public interface WithConfigurationProperties {
         return e -> this.isComponentProperty(e);
     }
 
-    @JsonIgnore
-    default boolean isSecretComponentProperty(Entry<String, String> e) {
-        return this.isComponentProperty(e) && this.isSecret(e);
-    }
-
-    @JsonIgnore
-    default Predicate<Entry<String, String>> isSecretComponentProperty() {
-        return e -> this.isSecretComponentProperty(e);
-    }
+    // ***************************
+    // Secret
+    // ***************************
 
     @JsonIgnore
     default boolean isSecret(String key) {
@@ -89,6 +73,26 @@ public interface WithConfigurationProperties {
     }
 
     @JsonIgnore
+    default boolean isSecretEndpointProperty(Entry<String, String> e) {
+        return this.isEndpointProperty(e) && this.isSecret(e);
+    }
+
+    @JsonIgnore
+    default Predicate<Entry<String, String>> isSecretEndpointProperty() {
+        return e -> isSecretEndpointProperty(e);
+    }
+
+    @JsonIgnore
+    default boolean isSecretComponentProperty(Entry<String, String> e) {
+        return this.isComponentProperty(e) && this.isSecret(e);
+    }
+
+    @JsonIgnore
+    default Predicate<Entry<String, String>> isSecretComponentProperty() {
+        return e -> this.isSecretComponentProperty(e);
+    }
+
+    @JsonIgnore
     default boolean isSecretOrComponentProperty(Entry<String, String> e) {
         return this.isComponentProperty(e) || this.isSecret(e);
     }
@@ -97,6 +101,46 @@ public interface WithConfigurationProperties {
     default Predicate<Entry<String, String>> isSecretOrComponentProperty() {
         return e -> isSecretOrComponentProperty(e);
     }
+
+    // ***************************
+    // Raw
+    // ***************************
+
+    @JsonIgnore
+    default boolean isRaw(String key) {
+        return this.getProperties() != null && this.getProperties().containsKey(key) && this.getProperties().get(key).isRaw();
+    }
+
+    @JsonIgnore
+    default boolean isRaw(Entry<String, String> e) {
+        return this.isRaw(e.getKey());
+    }
+
+    @JsonIgnore
+    default Predicate<Entry<String, String>> isRaw() {
+        return e -> this.isRaw(e.getKey());
+    }
+
+    @JsonIgnore
+    default boolean isRawEndpointProperty(Entry<String, String> e) {
+        return this.isEndpointProperty(e) && this.isRaw(e);
+    }
+
+    @JsonIgnore
+    default Predicate<Entry<String, String>> isRawEndpointProperty() {
+        return e -> isRawEndpointProperty(e);
+    }
+
+    @JsonIgnore
+    default boolean isRawComponentProperty(Entry<String, String> e) {
+        return this.isComponentProperty(e) && this.isRaw(e);
+    }
+
+    @JsonIgnore
+    default Predicate<Entry<String, String>> isRawComponentProperty() {
+        return e -> this.isRawComponentProperty(e);
+    }
+
 
     /**
      * Filters the specified properties, using the specified {@link Predicate} and value converter {@link Function}.

@@ -25,28 +25,71 @@ recreate_project() {
     oc project "${project}"
 }
 
+is_docker_mode() {
+    if [ "$(readopt --image-mode -i)" = "docker" ] || [ $(hasflag --docker) ]; then
+        echo "true";
+    else
+        echo "false";
+    fi
+}
+
+select_template() {
+    if [ $(is_docker_mode) == "true" ]; then
+        echo "syndesis-dev-restricted"
+    else
+        echo "syndesis-restricted"
+    fi
+}
+
 create_oauthclient() {
-    basedir=$(appdir)
-    check_error "$basedir"
-    oc create -f ${basedir}/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+    local tag=${1:-master}
+    local use_local_resource=${2:-}
+
+    create_openshift_resource \
+        "app/deploy/support/serviceaccount-as-oauthclient-restricted.yml" \
+        "$tag" \
+        "$use_local_resource"
 }
 
 create_and_apply_template() {
-    basedir=$(appdir)
-    check_error "$basedir"
     local route=$1
+    local template=${2:-syndesis-restricted}
+    local tag=${3:-}
+    local use_local_resource=${4:-}
     if [ -z "$route" ]; then
         echo "No route given"
         exit 1
     fi
-    local template=${2:-syndesis-restricted.yml}
 
-    oc create -f ${basedir}/deploy/$template.yml
+    create_openshift_resource \
+        "app/deploy/${template}.yml" \
+        "$tag" \
+        "$use_local_resource"
+
     oc new-app $template \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
       -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+}
+
+create_openshift_resource() {
+    local resource=${1:-}
+    local tag=${2:-}
+    local use_local_resource=${3:-}
+
+    if [ -n "$use_local_resource" ]; then
+        if [ -n "$tag" ]; then
+            pushd $(appdir) >/dev/null
+            git fetch --tags
+            git show $tag:${resource} | oc create -f -
+            popd >/dev/null
+        else
+            oc create -f $(appdir)/../$resource
+        fi
+    else
+        oc create -f https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}
+    fi
 }
 
 wait_for_syndesis_to_be_ready() {

@@ -45,19 +45,13 @@ type syndesisImages struct {
 	Rest     string
 	Ui       string
 	Verifier string
+	S2i      string
 	Atlasmap string
-}
-
-type s2iConfig struct {
-	ImageStream string
-	DockerImage string
-	Tag         string
 }
 
 type images struct {
 	Support               supportImages
 	Syndesis              syndesisImages
-	S2i                   s2iConfig
 	ImageStreamNamespace  string
 	SyndesisImagesPrefix  string
 	AtlasMapImagesPrefix  string
@@ -99,12 +93,8 @@ var syndesisContext = Context{
 			Rest:     "syndesis-rest",
 			Ui:       "syndesis-ui",
 			Verifier: "syndesis-verifier",
+			S2i:      "syndesis-s2i",
 			Atlasmap: "atlasmap",
-		},
-		S2i: s2iConfig{
-			ImageStream: "syndesis-s2i",
-			DockerImage: "syndesis/syndesis-s2i",
-			Tag:         "latest",
 		},
 	},
 	Tags: tags{
@@ -129,17 +119,11 @@ var productContext = Context{
 			Ui:       "fuse-ignite-ui",
 			Verifier: "fuse-ignite-verifier",
 			Atlasmap: "fuse-ignite-mapper",
-		},
-		S2i: s2iConfig{
-			ImageStream: "fuse-ignite-java-openshift",
-			DockerImage: "jboss-fuse7-tech-preview/fuse-ignite-java-openshift",
-			Tag:         "1.0",
+			S2i:      "fuse-ignite-helper",
 		},
 	},
 	Tags: tags{
 		Postgresql: "9.5",
-		Syndesis:   "1.2",
-		Atlasmap:   "1.2",
 		OAuthProxy: "v1.1.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",

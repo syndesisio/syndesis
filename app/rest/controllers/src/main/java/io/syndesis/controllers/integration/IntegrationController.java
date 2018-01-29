@@ -175,25 +175,26 @@ public class IntegrationController {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}", getLabel(integrationDeployment), update.getState(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
                     }
-
                     // handler.execute might block for while so refresh our copy of the integration
                     // data before we update the current status
+                    if (update.getState() == IntegrationDeploymentState.Undeployed) {
+                        dataManager.delete(IntegrationDeployment.class, integrationDeploymentId);
+                    } else {
+                        // TODO: do this in a single TX.
+                        Date now = new Date();
+                        IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
+                        IntegrationDeployment updated = new IntegrationDeployment.Builder()
+                            .createFrom(current)
+                            //.statusMessage(Optional.ofNullable(update.getStatusMessage()))
+                            .currentState(update.getState())
+                            .stepsDone(update.getStepsPerformed())
+                            .createdDate(IntegrationDeploymentState.Active.equals(update.getState()) ? now : integrationDeployment.getCreatedDate())
+                            .lastUpdated(new Date())
+                            .build();
 
-                    // TODO: do this in a single TX.
-                    Date now = new Date();
-                    IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
-                    IntegrationDeployment updated = new IntegrationDeployment.Builder()
-                        .createFrom(current)
-                        //.statusMessage(Optional.ofNullable(update.getStatusMessage()))
-                        .currentState(update.getState())
-                        .stepsDone(update.getStepsPerformed())
-                        .createdDate(IntegrationDeploymentState.Active.equals(update.getState()) ? now : integrationDeployment.getCreatedDate())
-                        .lastUpdated(new Date())
-                        .build();
-
-                    dataManager.update(updated);
+                        dataManager.update(updated);
+                    }
                 }
-
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 LOG.error("Error while processing integration status for integration {}", integrationDeploymentId, e);
                 // Something went wrong.. lets note it.

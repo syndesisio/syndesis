@@ -27,7 +27,7 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.JUnitTestContainsTooManyAsserts"})
+@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class ComponentProxyComponentTest extends CamelTestSupport {
 
     // ***************************

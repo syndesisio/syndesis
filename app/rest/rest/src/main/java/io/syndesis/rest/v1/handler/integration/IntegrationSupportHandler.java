@@ -244,7 +244,6 @@ public class IntegrationSupportHandler {
         for (ModelData<?> model : export.models()) {
             switch (model.getKind()) {
                 case Integration: {
-
                     Integration integration = (Integration) model.getData();
                     integration = new Integration.Builder()
                         .createFrom(integration)
@@ -261,6 +260,20 @@ public class IntegrationSupportHandler {
                         LOG.info("Updating integration: " + integration.getName());
                         integrationHandler.update(id, integration);
                         result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
+                    }
+                    break;
+                }
+                case IntegrationDeployment: {
+                    IntegrationDeployment integrationDeployment = (IntegrationDeployment) model.getData();
+                    String id = integrationDeployment.getId().get();
+                    if (dataManager.fetch(IntegrationDeployment.class, id) == null) {
+                        LOG.info("Creating integration deployment: {} version: {} ", integrationDeployment.getName(), integrationDeployment.getVersion().orElse(1));
+                        dataManager.create(integrationDeployment);
+                        result.add(ChangeEvent.of("created", integrationDeployment.getKind().getModelName(), id));
+                    } else {
+                        LOG.info("Updating integration deployment: {} version: {} ", integrationDeployment.getName(), integrationDeployment.getVersion().orElse(1));
+                        dataManager.update(integrationDeployment);
+                        result.add(ChangeEvent.of("updated", integrationDeployment.getKind().getModelName(), id));
                     }
                     break;
                 }
@@ -318,6 +331,7 @@ public class IntegrationSupportHandler {
         for (ModelData<?> model : export.models()) {
             switch (model.getKind()) {
                 case Integration:
+                case IntegrationDeployment:
                 case Connection:
                 case Connector:
                 case Extension:

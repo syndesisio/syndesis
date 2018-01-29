@@ -1,0 +1,9 @@
+[[development]]
+# Development Process
+
+include::labels.adoc[]
+include::local.adoc[]
+include::ui.adoc[]
+
+// include::rest.adoc[]
+include::troubleshooting.adoc[]

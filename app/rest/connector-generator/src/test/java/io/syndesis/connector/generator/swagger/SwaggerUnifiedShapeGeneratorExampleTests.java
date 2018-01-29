@@ -45,7 +45,7 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
 
     @Parameters(name = "{0}")
     public static Iterable<String> parameters() {
-        return Arrays.asList("petstore", "basic_auth", "todo");
+        return Arrays.asList("reverb", "petstore", "basic_auth", "todo");
     }
 
 }

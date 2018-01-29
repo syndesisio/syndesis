@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { Action, Connection, ApiHttpService } from '@syndesis/ui/platform';
+import { EventsService } from '@syndesis/ui/store';
 import { Exchange } from '@syndesis/ui/model';
 import { Integration } from './integration.model';
 import { integrationSupportEndpoints } from './integration-support.api';
@@ -9,7 +10,7 @@ import { integrationSupportEndpoints } from './integration-support.api';
 @Injectable()
 export class IntegrationSupportService {
 
-  constructor(private apiHttpService: ApiHttpService) {}
+  constructor(private apiHttpService: ApiHttpService, private eventsService: EventsService) {}
 
   getFilterOptions(dataShape: any): Observable<any> {
     return this.apiHttpService.post(integrationSupportEndpoints.filterOptions, dataShape);
@@ -21,6 +22,15 @@ export class IntegrationSupportService {
 
   getDeployments(id: string): Observable<any> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployments, { id }).get();
+  }
+
+  watchDeployments(id: string): Observable<any> {
+    return Observable.merge(
+      this.getDeployments(id),
+      this.eventsService.changeEvents
+        .filter(event => event.kind === 'integration-deployment')
+        // TODO it would obviously be better to just fetch one, not all of 'em
+        .flatMap(event => this.getDeployments(id)));
   }
 
   getDeployment(id: string, version: string): Observable<any> {

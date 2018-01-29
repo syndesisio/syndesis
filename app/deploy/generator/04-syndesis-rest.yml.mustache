@@ -204,7 +204,7 @@
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: {{ Images.S2i.ImageStream }}:{{ Images.S2i.Tag }}
+        builderImageStreamTag: {{ Images.Syndesis.S2i }}:{{ Tags.Syndesis }}
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"

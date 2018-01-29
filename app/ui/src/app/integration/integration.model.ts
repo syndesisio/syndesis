@@ -10,116 +10,64 @@ export interface Step extends BaseEntity {
 }
 export type Steps = Array<Step>;
 
+export const DRAFT = 'Draft';
+export const PENDING = 'Pending';
+export const ACTIVE = 'Active';
+export const INACTIVE = 'Inactive';
+export const UNDEPLOYED = 'Undeployed';
+
+export type IntegrationState = 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
+
 export interface Integration extends BaseEntity {
-  configuration: string;
-  description: string;
-  deployedRevisionId: number;
-  revisions: Array<IntegrationRevision>;
+  description?: string;
   statusMessage: string;
   token: string;
   steps: Array<Step>;
-  draftRevision: IntegrationRevision;
   gitRepo: string;
   users: Array<User>;
   connections: Array<Connection>;
   userId: string;
-  desiredStatus: 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
-  currentStatus: 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
+  desiredStatus: IntegrationState;
+  currentStatus: IntegrationState;
   stepsDone: Array<string>;
   lastUpdated: string;
   createdDate: string;
   timesUsed: number;
-  integrationTemplateId: string;
   id: string;
   tags: Array<string>;
   name: string;
+  deploymentId?: number;
+  version?: number;
 }
 export type Integrations = Array<Integration>;
 
-export interface IntegrationRevision extends BaseEntity {
-  currentMessage: string;
-  parentVersion: number;
-  targetState:
-    | 'Draft'
-    | 'Active'
-    | 'Inactive'
-    | 'Undeployed'
-    | 'Error'
-    | 'Pending';
-  targetMessage: string;
-  version: number;
-  spec: IntegrationRevisionSpec;
-  currentState:
-    | 'Draft'
-    | 'Active'
-    | 'Inactive'
-    | 'Undeployed'
-    | 'Error'
-    | 'Pending';
-}
-export type IntegrationRevisions = Array<IntegrationRevision>;
-
-export interface IntegrationRevisionSpec extends BaseEntity {
-  configuration: string;
-  steps: Array<Step>;
+export interface IntegrationDeploymentSpec {
   connections: Array<Connection>;
+  name: string;
+  resources: Array<any>;
+  steps: Array<Step>;
+  tags: Array<any>;
 }
-export type IntegrationRevisionSpecs = Array<IntegrationRevisionSpec>;
+
+export interface IntegrationDeployment extends BaseEntity {
+  createdDate: number;
+  name: string;
+  lastUpdated: number;
+  integrationId: string;
+  version: number;
+  currentState: IntegrationState;
+  targetState: IntegrationState;
+  currentMessage?: string;
+  targetMessage?: string;
+  spec: IntegrationDeploymentSpec;
+  timesUsed: number;
+  [attr: string]: any;
+}
 
 export function createStep() {
-    return <Step>{
-      action: undefined,
-      connection: undefined,
-      name: undefined,
-      configuredProperties: undefined,
-      stepKind: undefined,
-      id: undefined
-    };
-  }
+  return {} as Step;
+}
 
 export function createIntegration() {
-  return <Integration>{
-    configuration: undefined,
-    description: undefined,
-    deployedRevisionId: undefined,
-    revisions: undefined,
-    statusMessage: undefined,
-    token: undefined,
-    steps: undefined,
-    draftRevision: undefined,
-    gitRepo: undefined,
-    users: undefined,
-    connections: undefined,
-    userId: undefined,
-    desiredStatus: undefined,
-    currentStatus: undefined,
-    stepsDone: undefined,
-    lastUpdated: undefined,
-    createdDate: undefined,
-    timesUsed: undefined,
-    integrationTemplateId: undefined,
-    id: undefined,
-    tags: undefined,
-    name: undefined
-  };
-}
-
-export function createIntegrationRevision() {
-  return <IntegrationRevision>{
-    currentMessage: undefined,
-    parentVersion: undefined,
-    targetState: undefined,
-    targetMessage: undefined,
-    version: undefined,
-    spec: undefined,
-    currentState: undefined
-  };
-}
-
-export function createIntegrationRevisionSpec() {
-  return <IntegrationRevisionSpec>{
-    configuration: undefined,
-    steps: undefined,
-    connections: undefined
-  };
+  return {} as Integration;
 }
