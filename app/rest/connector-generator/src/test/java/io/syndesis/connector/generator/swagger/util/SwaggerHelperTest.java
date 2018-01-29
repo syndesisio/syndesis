@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.generator.swagger;
+package io.syndesis.connector.generator.swagger.util;
 
 import java.io.IOException;
+
+import io.syndesis.connector.generator.swagger.AbstractSwaggerConnectorTest;
+import io.syndesis.connector.generator.swagger.SwaggerModelInfo;
 
 import org.junit.Test;
 

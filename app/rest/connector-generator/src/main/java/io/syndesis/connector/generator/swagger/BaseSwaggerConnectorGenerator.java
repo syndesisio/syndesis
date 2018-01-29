@@ -38,6 +38,8 @@ import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
 import io.syndesis.connector.generator.ConnectorGenerator;
+import io.syndesis.connector.generator.swagger.util.JsonSchemaHelper;
+import io.syndesis.connector.generator.swagger.util.SwaggerHelper;
 import io.syndesis.connector.generator.util.ActionComparator;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.model.DataShape;

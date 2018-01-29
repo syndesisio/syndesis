@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.generator.swagger;
+package io.syndesis.connector.generator.swagger.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,13 +33,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
 
-final class JsonSchemaHelper {
+public final class JsonSchemaHelper {
 
     private JsonSchemaHelper() {
         // utility class
     }
 
-    /* default */ static String determineSchemaReference(final Property schema) {
+    public static String determineSchemaReference(final Property schema) {
         if (schema instanceof RefProperty) {
             return ((RefProperty) schema).get$ref();
         } else if (schema instanceof ArrayProperty) {
@@ -51,11 +51,7 @@ final class JsonSchemaHelper {
         throw new IllegalArgumentException("Only references to schemas are supported");
     }
 
-    /* default */ static URL inMemory(final String specification) throws MalformedURLException {
-        return new URL("mem", null, 0, "specification", new InMemoryUrlStreamHandler(specification));
-    }
-
-    /* default */ static String javaTypeFor(final SerializableParameter parameter) {
+    public static String javaTypeFor(final SerializableParameter parameter) {
         final String type = parameter.getType();
 
         if ("array".equals(type)) {
@@ -68,6 +64,37 @@ final class JsonSchemaHelper {
 
         final String format = parameter.getFormat();
         return javaTypeFor(type, format);
+    }
+
+    public static String resolveSchemaForReference(final String specification, final String title, final String reference) {
+        final JsonNode resolved;
+        try {
+            final URL inMemoryUrl = inMemory(specification);
+
+            resolved = new JsonReferenceProcessor().process(inMemoryUrl);
+        } catch (JsonReferenceException | IOException e) {
+            throw new IllegalStateException("Unable to process JSON references", e);
+        }
+
+        final JsonNode node = resolved.at(reference.substring(1));
+        final ObjectNode schemaNode = (ObjectNode) node;
+        schemaNode.put("$schema", "http://json-schema.org/schema#");
+        schemaNode.put("type", "object");
+        schemaNode.put("title", title);
+
+        return serializeJson(schemaNode);
+    }
+
+    public static String serializeJson(final ObjectNode schemaNode) {
+        try {
+            return Json.mapper().writeValueAsString(schemaNode);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalStateException("Unable to serialize JSON schema", e);
+        }
+    }
+
+    /* default */ static URL inMemory(final String specification) throws MalformedURLException {
+        return new URL("mem", null, 0, "specification", new InMemoryUrlStreamHandler(specification));
     }
 
     /* default */ static String javaTypeFor(final String type, final String format) {
@@ -92,33 +119,6 @@ final class JsonSchemaHelper {
             return File.class.getName();
         default:
             throw new IllegalArgumentException("Given parameter is of unknown type/format: " + type + "/" + format);
-        }
-    }
-
-    /* default */ static String resolveSchemaForReference(final String specification, final String title, final String reference) {
-        final JsonNode resolved;
-        try {
-            final URL inMemoryUrl = inMemory(specification);
-
-            resolved = new JsonReferenceProcessor().process(inMemoryUrl);
-        } catch (JsonReferenceException | IOException e) {
-            throw new IllegalStateException("Unable to process JSON references", e);
-        }
-
-        final JsonNode node = resolved.at(reference.substring(1));
-        final ObjectNode schemaNode = (ObjectNode) node;
-        schemaNode.put("$schema", "http://json-schema.org/schema#");
-        schemaNode.put("type", "object");
-        schemaNode.put("title", title);
-
-        return serializeJson(schemaNode);
-    }
-
-    /* default */ static String serializeJson(final ObjectNode schemaNode) {
-        try {
-            return Json.mapper().writeValueAsString(schemaNode);
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize JSON schema", e);
         }
     }
 }

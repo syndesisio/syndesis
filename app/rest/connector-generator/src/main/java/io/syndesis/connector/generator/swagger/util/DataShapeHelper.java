@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.generator.swagger;
+package io.syndesis.connector.generator.swagger.util;
 
 import java.util.Optional;
 
-import io.swagger.models.ArrayModel;
-import io.swagger.models.Model;
-import io.swagger.models.ModelImpl;
 import io.swagger.models.Response;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
@@ -29,9 +26,9 @@ import io.syndesis.model.DataShape;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import static io.syndesis.connector.generator.swagger.JsonSchemaHelper.determineSchemaReference;
+import static io.syndesis.connector.generator.swagger.util.JsonSchemaHelper.determineSchemaReference;
 
-final class DataShapeHelper {
+public final class DataShapeHelper {
 
     /* default */ static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
@@ -39,34 +36,10 @@ final class DataShapeHelper {
         // utility class
     }
 
-    /* default */ static DataShape createShapeFromModel(final String specification, final Model schema) {
-        if (schema instanceof ArrayModel) {
-            final Property items = ((ArrayModel) schema).getItems();
-
-            return createShapeFromProperty(specification, items);
-        } else if (schema instanceof ModelImpl) {
-            return createShapeFromModelImpl(schema);
-        }
-
-        final String title = Optional.ofNullable(schema.getTitle()).orElse(schema.getReference().replaceAll("^.*/", ""));
-
-        return createShapeFromReference(specification, title, schema.getReference());
-    }
-
-    /* default */ static DataShape createShapeFromResponse(final String specification, final Response response) {
+    public static DataShape createShapeFromResponse(final String specification, final Response response) {
         final Property schema = response.getSchema();
 
         return createShapeFromProperty(specification, schema);
-    }
-
-    private static DataShape createShapeFromModelImpl(final Model schema) {
-        try {
-            final String schemaString = Json.mapper().writeValueAsString(schema);
-
-            return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
-        }
     }
 
     private static DataShape createShapeFromProperty(final String specification, final Property schema) {
