@@ -16,10 +16,10 @@ If you cannot definte the filter you need in a basic filter step,
 see <<add-advanced-filter-step>>. 
 
 You can add a step when you are creating an integration or editing
-an integration. The flow of the integration appears in the left pane. To
+an integration. The flow of the integration appears in the left panel. To
 add a filter step:
 
-. In the left pane, where you want to add a filter step to
+. In the left panel, where you want to add a filter step to
 the integration, hover over the 
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign']
 and in the popup that appears, click *Add a Step*. 

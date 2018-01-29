@@ -16,7 +16,7 @@ To add a step that specifies a data schema, start to create your
 integration. Add the connections to the applications you want to 
 integrate, then:
 
-. In the left pane, between the connections that require specification
+. In the left panel, between the connections that require specification
 of a data schema, hover over the plus sign and in the popup, click
 *Add a Step*. 
 . On the *Add a Step* page, click *Describe Data*. 

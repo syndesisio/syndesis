@@ -7,4 +7,4 @@ To add a basic data mapping using all the defaults:
 . Select a field from the *Target* table.
 
 A line will appear, linking the two fields that you selected. 
-The details of the mapping you have just created are shown in the *Mapping Details* pane.
+The details of the mapping you have just created are shown in the *Mapping Details* panel.

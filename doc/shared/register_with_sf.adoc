@@ -23,10 +23,10 @@ endif::[]
 Perform these steps to register {prodname} as a Salesforce client:
 
 . In {prodname}: 
-.. In the left pane, click *Home*.
+.. In the left panel, click *Home*.
 .. Copy the {prodname} URL from the browser address bar so it is in the
 clipboard.
-.. In the left pane, click *Settings*.
+.. In the left panel, click *Settings*.
 .. In the *OAuth Application Management* page, to the right of *Salesforce*,
 click *Register* to display the *Client ID* and *Client Secret* fields.
 . In another browser tab, log in to your Salesforce account and 

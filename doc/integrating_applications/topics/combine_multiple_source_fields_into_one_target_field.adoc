@@ -9,7 +9,7 @@ To add a *Combine* mapping :
 
 . Click on the field you want to combine the source fields into from the Target list. 
 
-. In the *Data Mapping* pane, place the cursor in the *Source* box. Start overtyping *[none]* with the name of the source field. As you type the field name will be offered up in a dropdown. Select the field name.
+. In the *Data Mapping* panel, place the cursor in the *Source* box. Start overtyping *[none]* with the name of the source field. As you type the field name will be offered up in a dropdown. Select the field name.
 
 . Select *Combine* and a *Separator* 
 

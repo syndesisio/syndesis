@@ -15,7 +15,7 @@ want the integration to run.
 To create a stored procedure 
 connection:
 
-. In the left pane, click *Connections* to display available connections. 
+. In the left panel, click *Connections* to display available connections. 
 . In the upper right, click *Create Connection* to display
 {prodname} connection types. 
 . Click the *SQL Stored Procedure* connection type. 

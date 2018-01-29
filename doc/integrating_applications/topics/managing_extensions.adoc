@@ -25,7 +25,7 @@ You cannot delete an extension if an integration is using a custom step
 provided by that extension. To determine whether any integrations use 
 custom steps provided by an extension you want to delete:                
                             
-. In the left {prodname} pane, click *Customizations*.                         
+. In the left {prodname} panel, click *Customizations*.                         
                             
 . At the top, click the *Extensions* tab.                         
                             
@@ -41,7 +41,7 @@ See <<updating-integrations>>, which provides information about deleting steps.
 When no integrations use custom steps provided by an extension, 
 you can delete the extension as follows:
 
-. In the left {prodname} pane, click *Customizations*.                         
+. In the left {prodname} panel, click *Customizations*.                         
                             
 . At the top, click the *Extensions* tab.                         
                             

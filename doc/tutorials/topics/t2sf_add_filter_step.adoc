@@ -7,7 +7,7 @@ continues only if that content is present.
 
 To add a basic filter step:
 
-. In the main pane, click *Add a step*. 
+. In the main panel, click *Add a step*. 
 . Click *Basic Filter*. 
 . In the first field, start to enter `*text*` and when `text`
 appears below the field, click it. This indicates that the content to

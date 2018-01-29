@@ -18,7 +18,7 @@ in multiple integrations.
 
 To create a Salesforce connection:
 
-. In the left pane, click *Connections* to display available connections. 
+. In the left panel, click *Connections* to display available connections. 
 . In the upper right, click *Create Connection* to display
 the available connectors. A connector is a template for creating one 
 or more connections. 
@@ -39,7 +39,7 @@ callback URL is specified according to the instructions in
 ====
 . Click *Allow* to return to {prodname}.
 . In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connection. 
+helps you distinguish this connection from any other connections. 
 For example, enter `*SF Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,

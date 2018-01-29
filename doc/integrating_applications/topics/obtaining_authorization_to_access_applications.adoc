@@ -25,7 +25,7 @@ a consumer secret.
 
 To register {prodname} with an application, the main steps are: 
 
-. In {prodname}, in the left pane, click *Settings*.
+. In {prodname}, in the left panel, click *Settings*.
 . In the *OAuth Application Management* page, in the entry for the
 application with which you want to register {prodname}, 
 click *Register* to display the *Client ID* and *Client Secret* fields.

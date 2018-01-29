@@ -6,7 +6,7 @@ Transformations often require a parameter to specify a format or other detail re
 
 To add a transformation to your data mapping:
 
-. Click *Transformation* on the Target pane.
+. Click *Transformation* on the Target panel.
 
 . Select the type of transformation you want from the dropdown menu.
 

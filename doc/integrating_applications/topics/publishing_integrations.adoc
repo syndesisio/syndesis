@@ -13,7 +13,7 @@ button that appears in the upper right corner.
 * If there are no currently running versions of an integration that you
 want to publish:
 +
-. In the left {prodname} pane, click *Integrations*. 
+. In the left {prodname} panel, click *Integrations*. 
 . In the list of integrations, click the entry for an integration
 whose status is *Draft* or *Inactive*. 
 . On the integration's summary page , click *Start Integration*. 

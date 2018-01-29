@@ -3,7 +3,7 @@
 
 In an integration, to add an Amazon S3 connection as the start connection: 
 
-. In the {prodname} pane on the left, click *Integrations*. 
+. In the {prodname} panel on the left, click *Integrations*. 
 . Click *Create Integration*. 
 . On the *Choose a Start Connection* page, click the Amazon S3 connection that
 you want to use as the integration's start connection. 

@@ -14,14 +14,14 @@ section and see <<create-rest-api-connection>>.
 To register {prodname} as an authorized API client:
 
 . Prepare the {prodname} callback URL that the API will use:
-.. In {prodname}, in the left pane, click *Home*.
+.. In {prodname}, in the left panel, click *Home*.
 .. Copy the {prodname} URL from the browser address bar and paste it in 
 a text file. 
 .. In the text file, remove `dashboard` from the end of the URL.
 .. Append `api/v1/credentials/callback`. For example, your callback URL
 might look like this:
 `\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
-. In {prodname}, in the left pane, click *Settings*. 
+. In {prodname}, in the left panel, click *Settings*. 
 . Look for the name of the API you want to connect to and click its 
 *Register* button to display its client ID and client secret fields. 
 

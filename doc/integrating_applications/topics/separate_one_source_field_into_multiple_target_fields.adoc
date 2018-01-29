@@ -9,6 +9,6 @@ To add a *Separate* mapping
 
 . Select the Source field that you want to separate into multiple fields in the target.
 
-.  In the *Data Mapping* pane, select *Separate* and a separator. Place the cursor in the *Target* box. Start overtyping *[none]* with the name of the target field. As you type the field name will be offered up in a dropdown. Select the field name.
+.  In the *Data Mapping* panel, select *Separate* and a separator. Place the cursor in the *Target* box. Start overtyping *[none]* with the name of the target field. As you type the field name will be offered up in a dropdown. Select the field name.
 
 .  To add another field click *Add Target*. 
