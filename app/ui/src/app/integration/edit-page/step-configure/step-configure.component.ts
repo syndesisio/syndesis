@@ -5,12 +5,10 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
 
-import { Action, DataShape, FormFactoryService } from '@syndesis/ui/platform';
+import { Action, DataShape, FormFactoryService, IntegrationSupportService, Step } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
-import { Step } from '@syndesis/ui/integration';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
-import { IntegrationSupportService } from '../../integration-support.service';
 
 const category = getCategory('IntegrationsCreatePage');
 

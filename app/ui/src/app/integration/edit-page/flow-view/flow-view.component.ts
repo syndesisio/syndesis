@@ -13,10 +13,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { Integration, Step } from '@syndesis/ui/integration';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { ModalService } from '@syndesis/ui/common';
-import { UserService } from '@syndesis/ui/platform';
+import { Integration, Step, UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('IntegrationsCreatePage');
 

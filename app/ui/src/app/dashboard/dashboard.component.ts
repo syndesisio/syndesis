@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Connections, UserService } from '@syndesis/ui/platform';
-import { Integrations } from '@syndesis/ui/integration';
+import { Connections, Integrations, UserService } from '@syndesis/ui/platform';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
 import { TourService } from 'ngx-tour-ngx-bootstrap';

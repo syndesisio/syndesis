@@ -1,7 +1,7 @@
 import { Component, Pipe, PipeTransform } from '@angular/core';
 import { StepStore, StepKind, StepKinds } from '@syndesis/ui/store';
 import { CurrentFlow } from '@syndesis/ui/integration/edit-page';
-import { Step, Steps } from '@syndesis/ui/integration';
+import { Step, Steps } from '@syndesis/ui/platform';
 
 export class StepVisibleConfig {
   position: number;

@@ -6,9 +6,14 @@ import { Subscription } from 'rxjs/Subscription';
 import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from 'patternfly-ng';
 
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
-import { IntegrationSupportService } from '../integration-support.service';
-import { Integration, Step, ACTIVE, INACTIVE, DRAFT, IntegrationDeployment } from '@syndesis/ui/integration/integration.model';
-import { IntegrationViewBase } from '../components';
+import { Integration,
+  Step,
+  ACTIVE,
+  INACTIVE,
+  DRAFT,
+  IntegrationActionsService,
+  IntegrationSupportService,
+  IntegrationDeployment } from '@syndesis/ui/platform';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
 
@@ -43,8 +48,7 @@ const publish = {
   templateUrl: 'detail.component.html',
   styleUrls: ['detail.component.scss']
 })
-export class IntegrationDetailComponent extends IntegrationViewBase
-  implements OnInit, OnDestroy {
+export class IntegrationDetailComponent implements OnInit, OnDestroy {
   integration$: Observable<Integration>;
   integrationDeployments$: Observable<Array<IntegrationDeployment>>;
   integrationSubscription: Subscription;
@@ -71,12 +75,21 @@ export class IntegrationDetailComponent extends IntegrationViewBase
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
+    public integrationActionsService: IntegrationActionsService,
     private config: ConfigService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+
   ) {
-    super(store, route, router, notificationService, modalService, application, integrationSupportService);
     this.integration$ = this.store.resource;
     this.loading$ = this.store.loading;
+  }
+
+  get modalTitle() {
+    return this.integrationActionsService.getModalTitle();
+  }
+
+  get modalMessage() {
+    return this.integrationActionsService.getModalMessage();
   }
 
   viewDetails(step: Step) {
@@ -96,8 +109,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   deleteAction(integration: Integration) {
-    return super
-      .deleteAction(integration)
+    return this.integrationActionsService.requestAction('delete', integration)
       .then(_ => this.router.navigate(['/integrations']));
   }
 
@@ -129,14 +141,14 @@ export class IntegrationDetailComponent extends IntegrationViewBase
           const integration = { ...this.integration };
           integration.steps = deployment.spec.steps;
           integration.desiredStatus = DRAFT;
-          this.requestAction('replaceDraft', integration);
+          this.integrationActionsService.requestAction('replaceDraft', integration);
         }
         break;
       case CREATE_DRAFT:
         // TODO doesn't this just mean edit?
         break;
       case STOP_INTEGRATION:
-        this.requestAction('deactivate', this.integration);
+        this.integrationActionsService.requestAction('deactivate', this.integration);
         break;
       case PUBLISH:
         {
@@ -144,7 +156,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
           delete integration.deploymentId;
           integration.steps = deployment.spec.steps;
           this.integration.desiredStatus = ACTIVE;
-          this.requestAction('publish', integration);
+          this.integrationActionsService.requestAction('publish', integration);
           break;
         }
       default:
@@ -156,7 +168,7 @@ export class IntegrationDetailComponent extends IntegrationViewBase
   }
 
   exportIntegration() {
-    super.requestAction('export', this.integration);
+    this.integrationActionsService.requestAction('export', this.integration);
   }
 
   ngOnInit() {

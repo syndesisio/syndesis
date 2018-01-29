@@ -5,12 +5,9 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/c
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
-import { FormFactoryService, UserService, Action } from '@syndesis/ui/platform';
+import { FormFactoryService, UserService, Action, Step, IntegrationSupportService } from '@syndesis/ui/platform';
 import { log } from '@syndesis/ui/logging';
-import { Step } from '@syndesis/ui/integration';
 import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
-
-import { IntegrationSupportService } from '../../integration-support.service';
 
 @Component({
   selector: 'syndesis-integration-action-configure',

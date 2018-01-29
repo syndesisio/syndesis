@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { integrationSupportEndpoints } from './integration-support.api';
-import { IntegrationSupportService } from './integration-support.service';
+import * as SYNDESIS_ABSTRACT_PROVIDERS from '@syndesis/ui/platform';
+
+import { IntegrationSupportProviderService } from './integration-support-provider.service';
+import { IntegrationActionsProviderService } from './integration-actions-provider.service';
 import { ApiModule } from '@syndesis/ui/api';
 
 @NgModule({
@@ -8,7 +11,16 @@ import { ApiModule } from '@syndesis/ui/api';
     ApiModule.forChild(integrationSupportEndpoints)
   ],
   providers: [
-    IntegrationSupportService
+    IntegrationActionsProviderService,
+    {
+      provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationActionsService,
+      useClass: IntegrationActionsProviderService
+    },
+    IntegrationSupportProviderService,
+    {
+      provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationSupportService,
+      useClass: IntegrationSupportProviderService
+    }
   ]
 })
 export class IntegrationSupportModule {}

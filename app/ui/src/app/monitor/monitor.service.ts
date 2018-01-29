@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ApiHttpService } from '@syndesis/ui/platform';
-import { Integration } from '@syndesis/ui/integration';
+import { ApiHttpService, Integration } from '@syndesis/ui/platform';
 
 import { monitorEndpoints } from './monitor.api';
 

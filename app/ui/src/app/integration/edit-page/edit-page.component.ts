@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { NavigationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
-import { Integration } from '@syndesis/ui/integration';
+import { Integration } from '@syndesis/ui/platform';
 import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
 

@@ -5,12 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IntegrationStore } from '@syndesis/ui/store';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
-import { Integration, Step } from '@syndesis/ui/integration';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsCreatePage');
 import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/platform';
+import { Integration, Step, UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',

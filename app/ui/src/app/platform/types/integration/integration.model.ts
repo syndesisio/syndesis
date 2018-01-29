@@ -48,6 +48,7 @@ export interface IntegrationDeploymentSpec {
   steps: Array<Step>;
   tags: Array<any>;
 }
+export type IntegrationDeploymentSpecs = Array<IntegrationDeploymentSpec>;
 
 export interface IntegrationDeployment extends BaseEntity {
   createdDate: number;
@@ -63,6 +64,7 @@ export interface IntegrationDeployment extends BaseEntity {
   timesUsed: number;
   [attr: string]: any;
 }
+export type IntegrationDeployments = Array<IntegrationDeployment>;
 
 export function createStep() {
   return {} as Step;

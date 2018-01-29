@@ -4,8 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { TypeFactory } from '@syndesis/ui/model';
 import { IntegrationService } from './integration.service';
 
-// pointing this at the integration barrel caused runtime issues
-import { createIntegration, createStep, Integration, Integrations } from '@syndesis/ui/integration/integration.model';
+import { createIntegration, createStep, Integration, Integrations } from '@syndesis/ui/platform';
 
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';

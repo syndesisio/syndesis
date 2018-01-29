@@ -4,11 +4,10 @@ import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RestangularModule } from 'ngx-restangular';
 
-import {  Connection, Action } from '@syndesis/ui/platform';
+import { Connection, Action, createIntegration, createStep, Integration, Step, Steps } from '@syndesis/ui/platform';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { TypeFactory } from '@syndesis/ui/model';
 import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
-import { createIntegration, createStep, Integration, Step, Steps } from '@syndesis/ui/integration';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
 
 describe('CurrentFlow', () => {

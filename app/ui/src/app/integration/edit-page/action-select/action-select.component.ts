@@ -6,8 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 
-import { Step } from '@syndesis/ui/integration';
-import { Actions, Action, Connector, UserService } from '@syndesis/ui/platform';
+import { Actions, Action, Connector, UserService, Step } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
