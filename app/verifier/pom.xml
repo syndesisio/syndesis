@@ -34,7 +34,6 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
   </properties>
 
@@ -177,7 +176,7 @@
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxrs</artifactId>
-      <version>3.1.4.Final</version>
+      <version>${resteasy.version}</version>
     </dependency>
 
     <dependency>

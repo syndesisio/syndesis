@@ -98,6 +98,8 @@
 		<json-schema-core.version>1.2.8</json-schema-core.version>
 		<json-schema-validator.version>2.2.8</json-schema-validator.version>
 
+		<resteasy.version>3.1.4.Final</resteasy.version>
+	    <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
 	</properties>
 
 	<modules>
