@@ -115,8 +115,8 @@ The following commands are available:
 | <<syndesis-minishift,**minishift**>>
 | Start and install Syndesis on Minishift
 
-| <<syndesis-deploy,**deploy**>>
-| Deploy Syndesis to a running cluster (other than Minishift) _(not implemented yet)_
+| <<syndesis-install,**install**>>
+| Install Syndesis in a running cluster (other than Minishift)
 
 | <<syndesis-system-test,**system-test**>>
 | Run System test against an OpenShift cluster
@@ -147,4 +147,4 @@ include::cmd_system_test.adoc[]
 include::cmd_dev.adoc[]
 include::cmd_doc.adoc[]
 include::cmd_release.adoc[]
-include::cmd_deploy.adoc[]
+include::cmd_install.adoc[]
