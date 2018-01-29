@@ -5,7 +5,7 @@ Syndesis uses a single tool for controlling various aspects of the build and dev
 This script can be found in `$SYNDESIS_DIR/tools/bin` and is called `syndesis`.
 It requires bash and can be used on any Unix or macOS.
 
-To have this script handy all the time it is recommended to either but this `bin/` directory into the path or add a symlink from `syndesis` into a directory which is already on your execution path.
+To have this script handy all the time it is recommended to either put this `bin/` directory into the path or add a symlink from `syndesis` into a directory which is already on your execution path.
 
 The script can be used for various tasks which are selected by a so-called command_ which is the first argument to the script.
 
