@@ -15,12 +15,23 @@
  */
 package io.syndesis.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 
 import io.syndesis.core.Json;
 import io.syndesis.core.cache.CacheManager;
@@ -35,16 +46,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeploymentState;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 public class DataManagerTest {
     private CacheManager cacheManager;
@@ -206,6 +208,12 @@ public class DataManagerTest {
 
         dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1","prop2");
         fail("Should fail before getting here");
+    }
+
+    @Test
+    public void metricsTest() {
+        ListResult<IntegrationMetricsSummary> list = dataManager.fetchAll(IntegrationMetricsSummary.class);
+        assertThat(list.getTotalCount()).isEqualTo(2);
     }
 
 }
