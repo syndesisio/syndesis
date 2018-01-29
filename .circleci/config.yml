@@ -341,7 +341,7 @@ jobs:
           name: License check
           command: |
             cd app
-            ./mvnw -N license:check
+            ./mvnw -N install license:check
       - save_cache:
           key: syndesis-license-check-{{ checksum "all-poms" }}
           paths:
