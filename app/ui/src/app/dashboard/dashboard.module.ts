@@ -34,9 +34,9 @@ const routes: Routes = [
     ChartsModule,
     ModalModule,
     TooltipModule,
-    BsDropdownModule,
     TourNgxBootstrapModule,
-    IntegrationListModule
+    IntegrationListModule,
+    BsDropdownModule.forRoot()
   ],
   declarations: [
     DashboardComponent,

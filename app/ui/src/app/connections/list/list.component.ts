@@ -13,7 +13,7 @@ import { ModalService } from '../../common/modal/modal.service';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { log, getCategory } from '../../logging';
 import { Connections, Connection } from '../../model';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 const category = getCategory('Connections');
 
