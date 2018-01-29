@@ -114,7 +114,10 @@ export class SupportComponent implements OnInit {
       .subscribe(response => {
         fileSaver.saveAs(response, "syndesis.zip");
       },
-      error => console.log("Error downloading the file.")
+      error => {
+        console.log("Error downloading the file.");
+        console.log(error);
+      }
     );
     return {  };
   }
@@ -138,7 +141,6 @@ export class SupportComponent implements OnInit {
   }
 
   onSubmit() {
-    debugger;
     let chosen = [];
     if(this.allLogsSelected) {
       chosen = this.items;

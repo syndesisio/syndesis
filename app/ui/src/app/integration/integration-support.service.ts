@@ -82,7 +82,8 @@ export class IntegrationSupportService {
 
   downloadSupportData(data: Array<any>): Observable<Blob>  {
     const url = integrationSupportEndpoints.supportData;
-    return this.apiHttpService.post<Blob>(url, data, { responseType: ResponseContentType.Blob, method: RequestMethod.Post  });
+    debugger;
+    return this.apiHttpService.setEndpointUrl(url).post<Blob>(data,  {responseType : 'blob'} );
   }
 
 }
