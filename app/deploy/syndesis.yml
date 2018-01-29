@@ -725,6 +725,7 @@ objects:
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - --pass-user-bearer-token
 
           env:
           - name: OAUTH_COOKIE_SECRET
