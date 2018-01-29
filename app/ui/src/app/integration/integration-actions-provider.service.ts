@@ -1,7 +1,13 @@
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Integration, DRAFT, PENDING, ACTIVE, INACTIVE, UNDEPLOYED } from '@syndesis/ui/integration/integration.model';
-import { IntegrationSupportService } from '../integration-support.service';
+import { Integration,
+  IntegrationActionsService,
+  IntegrationSupportService,
+  DRAFT,
+  PENDING,
+  ACTIVE,
+  INACTIVE,
+  UNDEPLOYED } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { log } from '@syndesis/ui/logging';
@@ -9,7 +15,8 @@ import { log } from '@syndesis/ui/logging';
 import { NotificationType } from 'patternfly-ng';
 import { saveAs } from 'file-saver';
 
-export class IntegrationViewBase {
+@Injectable()
+export class IntegrationActionsProviderService extends IntegrationActionsService {
   currentAction: string = undefined;
   selectedIntegration: Integration = undefined;
   modalTitle: string;
@@ -23,15 +30,25 @@ export class IntegrationViewBase {
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
-  ) {}
+  ) {
+    super();
+  }
 
-  canEdit = int => int.currentStatus !== UNDEPLOYED;
-  /* tslint:disable semicolon */
-  canActivate = int =>
-    int.currentStatus === INACTIVE || int.currentStatus === DRAFT;
-  /* tslint:enable semicolon */
-  canDeactivate = int => int.currentStatus === ACTIVE || int.currentStatus === PENDING;
-  canDelete = int => int.currentStatus !== UNDEPLOYED;
+  canEdit(integration: Integration) {
+    return integration.currentStatus !== UNDEPLOYED;
+  }
+
+  canActivate(integration: Integration) {
+    return integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
+  }
+
+  canDeactivate(integration: Integration) {
+    return integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
+  }
+
+  canDelete(integration: Integration) {
+    return integration.currentStatus !== UNDEPLOYED;
+  }
 
   //----- Actions ------------------->>
 
@@ -110,6 +127,14 @@ export class IntegrationViewBase {
               .then(_ => this.application.tick())
           : false
     );
+  }
+
+  getModalTitle() {
+    return this.modalTitle || '';
+  }
+
+  getModalMessage() {
+    return this.modalMessage || '';
   }
 
   doAction(action: string, integration: Integration) {

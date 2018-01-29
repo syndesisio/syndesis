@@ -4,8 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FilterField, NotificationType } from 'patternfly-ng';
 import { IntegrationStore, ChangeEvent } from '@syndesis/ui/store';
-import { Integrations } from '../integration.model';
-import { IntegrationSupportService } from '../integration-support.service';
+import { Integrations, IntegrationSupportService } from '@syndesis/ui/platform';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import {
   FileUploader,

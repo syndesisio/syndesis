@@ -15,11 +15,11 @@
                  let-integration="item"
                  let-index="index">
       <div class="list-pf-left integration-icons">
-        <span *ngIf="getStart(integration).connection; let connection">
+        <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
           <img class="syn-icon-small" [src]="connection | synIconPath">
         </span>
         <span class="fa fa-angle-right"></span>
-        <span *ngIf="getFinish(integration).connection; let connection">
+        <span *ngIf="integrationActionsService.getFinish(integration).connection; let connection">
           <img  class="syn-icon-small" [src]="connection | synIconPath">
         </span>
       </div>
@@ -53,7 +53,7 @@
                  let-index="index">
       <pfng-action class="list-pf-actions"
                    [config]="actionConfigs[integration.id]"
-                   (onActionSelect)="requestAction($event.id, integration)">
+                   (onActionSelect)="integrationActionsService.requestAction($event.id, integration)">
       </pfng-action>
     </ng-template>
   </pfng-list>

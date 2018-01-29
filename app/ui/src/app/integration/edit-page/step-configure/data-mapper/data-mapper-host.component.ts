@@ -18,10 +18,8 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
-import { DataShape } from '@syndesis/ui/platform';
-import { Step } from '@syndesis/ui/integration';
+import { DataShape, IntegrationSupportService, Step } from '@syndesis/ui/platform';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
-import { IntegrationSupportService } from '../../../integration-support.service';
 
 /*
  * Example host component:

@@ -16,9 +16,7 @@ import {
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
-import { IntegrationSupportService } from './../integration-support.service';
-import { Integrations, Integration } from './../integration.model';
-import { IntegrationViewBase } from '../components';
+import { Integrations, Integration, IntegrationActionsService, IntegrationSupportService } from '@syndesis/ui/platform';
 
 interface ActionConfigs {
   [id: string]: ActionConfig;
@@ -29,7 +27,7 @@ interface ActionConfigs {
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class IntegrationListComponent extends IntegrationViewBase implements OnInit, OnChanges {
+export class IntegrationListComponent implements OnInit, OnChanges {
   @Input() complete: boolean;
   @Input() integrations: Integrations = [];
   listConfig: ListConfig;
@@ -43,8 +41,17 @@ export class IntegrationListComponent extends IntegrationViewBase implements OnI
     public modalService: ModalService,
     public application: ApplicationRef,
     public integrationSupportService: IntegrationSupportService,
+    public integrationActionsService: IntegrationActionsService
   ) {
-    super(store, route, router, notificationService, modalService, application, integrationSupportService);
+
+  }
+
+  get modalTitle() {
+    return this.integrationActionsService.getModalTitle();
+  }
+
+  get modalMessage() {
+    return this.integrationActionsService.getModalMessage();
   }
 
   handleAction($event: Action, item: any) {
@@ -114,25 +121,25 @@ export class IntegrationListComponent extends IntegrationViewBase implements OnI
           id: 'edit',
           title: 'Edit',
           tooltip: `Edit ${integration.name}`,
-          visible: this.canEdit(integration)
+          visible: this.integrationActionsService.canEdit(integration)
         },
         {
           id: 'activate',
           title: 'Activate',
           tooltip: `Activate ${integration.name}`,
-          visible: this.canActivate(integration)
+          visible: this.integrationActionsService.canActivate(integration)
         },
         {
           id: 'deactivate',
           title: 'Deactivate',
           tooltip: `Deactivate ${integration.name}`,
-          visible: this.canDeactivate(integration)
+          visible: this.integrationActionsService.canDeactivate(integration)
         },
         {
           id: 'delete',
           title: 'Delete',
           tooltip: `Delete ${integration.name}`,
-          visible: this.canDelete(integration)
+          visible: this.integrationActionsService.canDelete(integration)
         },
         {
           id: 'export',

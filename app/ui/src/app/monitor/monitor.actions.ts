@@ -1,7 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { ActionReducerError } from '@syndesis/ui/platform';
-import { Integration } from '@syndesis/ui/integration';
+import { ActionReducerError, Integration } from '@syndesis/ui/platform';
 
 export const FETCH_METRICS              = '[Monitor] Fetch metrics request';
 export const FETCH_METRICS_COMPLETE     = '[Monitor] Fetch metrics complete';

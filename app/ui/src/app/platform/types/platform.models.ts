@@ -61,6 +61,7 @@ export interface DataShape extends BaseEntity {
   type: string;
 }
 export type DataShapes = Array<DataShape>;
+
 export interface Action extends BaseEntity {
   actionType: string;
   pattern: 'From' | 'To';

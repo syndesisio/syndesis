@@ -1,16 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Action, Connection, ApiHttpService } from '@syndesis/ui/platform';
+import { Action,
+         Connection,
+         Integration,
+         IntegrationDeployment,
+         IntegrationDeployments,
+         IntegrationSupportService,
+         ApiHttpService } from '@syndesis/ui/platform';
+
 import { EventsService } from '@syndesis/ui/store';
 import { Exchange } from '@syndesis/ui/model';
-import { Integration } from './integration.model';
 import { integrationSupportEndpoints } from './integration-support.api';
 
 @Injectable()
-export class IntegrationSupportService {
+export class IntegrationSupportProviderService extends IntegrationSupportService {
 
-  constructor(private apiHttpService: ApiHttpService, private eventsService: EventsService) {}
+  constructor(private apiHttpService: ApiHttpService, private eventsService: EventsService) {
+    super();
+  }
 
   getFilterOptions(dataShape: any): Observable<any> {
     return this.apiHttpService.post(integrationSupportEndpoints.filterOptions, dataShape);
@@ -20,7 +28,7 @@ export class IntegrationSupportService {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.history, { id }).get();
   }
 
-  getDeployments(id: string): Observable<any> {
+  getDeployments(id: string): Observable<IntegrationDeployments> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployments, { id }).get();
   }
 
@@ -33,7 +41,7 @@ export class IntegrationSupportService {
         .flatMap(event => this.getDeployments(id)));
   }
 
-  getDeployment(id: string, version: string): Observable<any> {
+  getDeployment(id: string, version: string): Observable<IntegrationDeployment> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployment, { id, version }).get();
   }
 

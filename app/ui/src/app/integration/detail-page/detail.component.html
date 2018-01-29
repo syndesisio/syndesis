@@ -103,12 +103,12 @@
             <syndesis-integration-status [integration]="integration"></syndesis-integration-status>
           </p>
           <p>
-            <button *ngIf="canDeactivate(integration)"
+            <button *ngIf="integrationActionsService.canDeactivate(integration)"
                     class="btn btn-default"
-                    (click)="requestAction('deactivate', integration)">Stop Integration</button>
-            <button *ngIf="canActivate(integration)"
+                    (click)="integrationActionsService.requestAction('deactivate', integration)">Stop Integration</button>
+            <button *ngIf="integrationActionsService.canActivate(integration)"
                     class="btn btn-default"
-                    (click)="requestAction('activate', integration)">Start Integration</button>
+                    (click)="integrationActionsService.requestAction('activate', integration)">Start Integration</button>
           </p>
         </dd>
       </dl>
@@ -175,9 +175,9 @@
         <dt>
         </dt>
         <dd>
-          <button *ngIf="canDelete(integration)"
+          <button *ngIf="integrationActionsService.canDelete(integration)"
                   class="btn btn-danger"
-                  (click)="requestAction('delete', integration)">Delete Integration</button>
+                  (click)="integrationActionsService.requestAction('delete', integration)">Delete Integration</button>
         </dd>
       </dl>
       <dl class="dl-horizontal" *ngIf="loggingEnabled">

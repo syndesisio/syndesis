@@ -2,11 +2,10 @@ import { Component, EventEmitter, Input, Output, ViewEncapsulation, OnChanges } 
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { DynamicFormService, DynamicFormControlModel, DynamicFormArrayModel, DynamicInputModel } from '@ng-dynamic-forms/core';
 
-import { DataShape } from '@syndesis/ui/platform';
+import { DataShape, IntegrationSupportService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { DATA_MAPPER } from '@syndesis/ui/store';
 import { CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { IntegrationSupportService } from '../../../integration-support.service';
 import { createBasicFilterModel, findById } from './basic-filter.model';
 import { BasicFilter } from './filter.interface';
 
