@@ -4,11 +4,12 @@
 Add a data mapping step that correlates Twitter mention fields to 
 Salesforce contact fields:
 
-. In the left pane, hover over the plus sign between the filter
+. In the left panel, hover over the plus sign between the filter
 step and the finish connection to display a pop-up in which
 you click *Add a Step*.
-. Click *Data Mapper* and wait a few moments for the data fields
-to appear.
+. Click *Data Mapper* and wait a few moments. When the data fields
+appear, the *Sources* panel on the left displays the Twitter fields
+and the *Target* panel on the right displays the Salesforce fields.
 . Map the Twitter `name` field to the Salesforce
 `FirstName` and `LastName` fields:
 .. In the *Sources* panel, click the magnifying 
@@ -31,7 +32,7 @@ Blue lines indicates the current focus.
 `Title` field:
 .. In the *Sources* panel, scroll down to click 
 the *screenName* field. 
-.. On the right, at the top of the list of target fields in Salesforce,
+.. On the right, at the top of the *Target* panel,
 click the magnifying 
 glass image:images/magnifying-glass.png[title="Magnifying Glass"]
 to display the search field and enter `*Title*`. 

@@ -3,7 +3,7 @@
 
 To create an Oracle EBS connection:
 
-. In the left pane, click *Connections* to display available connections. 
+. In the left panel, click *Connections* to display available connections. 
 . In the upper right, click *Create Connection* to display
 {prodname} connection types. 
 . Click the *SQL stored procedure* connection type. 

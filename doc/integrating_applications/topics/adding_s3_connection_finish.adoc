@@ -16,7 +16,7 @@ previous step or connection.
 To add an Amazon S3 connection as a middle connection:
 
 . Add the start and finish connections. 
-. In the left pane, hover over the plus sign that is in the location 
+. In the left panel, hover over the plus sign that is in the location 
 where you want to add the Amazon S3 connection.
 . In the popup, click *Add a Connection*. 
 . Click the Amazon S3 connection that you want to use as a middle

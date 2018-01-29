@@ -3,7 +3,7 @@
 
 To export an integration:
 
-. In the left pane of {prodname}, click *Integrations*. 
+. In the left panel of {prodname}, click *Integrations*. 
 . In the list of integrations, click the entry for the integration 
 that you want to export.
 . In the integration's summary page, in the upper right, click *Export*. 

@@ -3,7 +3,7 @@
 
 To create an integration:
 
-. In the left pane in {prodname}, click *Integrations*.
+. In the left panel in {prodname}, click *Integrations*.
 
 . In the upper right, click *Create Integration*.
 

@@ -3,7 +3,7 @@
 
 To create an AMQ connection:
 
-. In {prodname}, in the left pane, click *Connections* to 
+. In {prodname}, in the left panel, click *Connections* to 
 display any available connections. 
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.  
@@ -32,7 +32,7 @@ validation is successful. If validation fails, revise the configuration
 details as needed and try again. 
 . If validation is successful, click *Next*. 
 . In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connection. 
+helps you distinguish this connection from any other connections. 
 For example, enter `AMQ 1`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,

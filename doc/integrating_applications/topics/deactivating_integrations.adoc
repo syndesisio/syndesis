@@ -7,7 +7,7 @@ running an integration, you deactivate it.
 
 To deactivate a running integration: 
 
-. In the left {prodname} pane, click *Integrations*. 
+. In the left {prodname} panel, click *Integrations*. 
 . In the list of integrations, click the entry for the integration you
 want to stop running. The status of this integration must be *Active*. 
 . On the integration's summary page , click *Stop Integration*. 

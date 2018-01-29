@@ -9,7 +9,7 @@ When you add a step, {prodname} operates on the data it receives from
 the previous connection or the previous step.
 
 When you add a step you might be creating a new integration or editing 
-an integration. The flow of the integration appears in the left pane. 
+an integration. The flow of the integration appears in the left panel. 
 See the following topics for details:
 
 * <<mapping-data>>

@@ -3,7 +3,7 @@
 
 To upload an extension to {prodname}: 
 
-. In the left {prodname} pane, click *Customizations*. 
+. In the left {prodname} panel, click *Customizations*. 
 . At the top, click the *Extensions* tab. 
 . Click *Import Extension*. 
 . Choose the `.jar` file that contains the extension that you want to upload.

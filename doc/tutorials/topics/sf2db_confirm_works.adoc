@@ -3,7 +3,7 @@
 
 To confirm that the Salesforce to database integration is working:
 
-. In the left pane, click *Integrations*.
+. In the left panel, click *Integrations*.
 . If necessary, wait until your sample integration is an *Active* integration,
 which means that it is running. If you used the example name, you would 
 see that 

@@ -4,7 +4,7 @@
 To import an integration:
 
 . Open the {prodname} environment that you want to import the integration into. 
-. In the left pane, click *Integrations*. 
+. In the left panel, click *Integrations*. 
 . In the upper right, click *Import*. 
 . Drag and drop one or more exported integration zip files, 
 or navigate to a zip file that contains an exported integration and select it. 

@@ -3,7 +3,7 @@
 
 To create a connection to a REST API: 
 
-. In {prodname}, in the left pane, click *Connections* to 
+. In {prodname}, in the left panel, click *Connections* to 
 display any available connections. 
 . In the upper right, click *Create Connection* to display 
 available connectors.   
@@ -16,7 +16,7 @@ password to use to access the API. For an API that uses OAuth,
 {prodname} displays a button for you to click so that {prodname}
 can verify its registration credentials for connecting to the API. 
 . In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connection. 
+helps you distinguish this connection from any other connections. 
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. 
 . In the upper right, click *Create* to see that the connection you 

@@ -13,7 +13,7 @@ information if there is invalid or missing content.
 
 To create an API client connector:
 
-. In the {prodname} navigation pane, click *Customizations* to display
+. In the {prodname} navigation panel, click *Customizations* to display
 the *API Client Connectors* tab. Any API client connectors that are
 already available are listed here. 
 . Click *Create API Connector*. 

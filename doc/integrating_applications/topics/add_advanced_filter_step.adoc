@@ -12,11 +12,11 @@ add a step, {prodname} operates on the data it receives from the
 previous connection or the previous step. 
 
 When you add a step you might be creating a new integration or editing
-an integration. The flow of the integration appears in the left pane. 
+an integration. The flow of the integration appears in the left panel. 
 
 To add an advanced filter step:
 
-. In the left pane, where you want to add an advanced filter step to
+. In the left panel, where you want to add an advanced filter step to
 the integration, hover over the 
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign']
 and in the popup that appears, click *Add a Step*. 
