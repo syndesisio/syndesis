@@ -6,7 +6,6 @@
   "homepage": "https://github.com/syndesisio/syndesis",
   "bugs": "https://github.com/syndesisio/syndesis/issues",
   "scripts": {
-    "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.json -s",
     "copy:assets": "yarn ncp node_modules/@atlasmap/atlasmap.data.mapper/src/assets/dm src/assets/dm",
     "format": "yarn prettier --no-color --single-quote --trailing-comma all --write \"./src/**/*.{ts,css,scss,js,json}\"",
     "generate": "node ./scripts/generate-ts.js",
@@ -69,7 +68,6 @@
   "devDependencies": {
     "@angular/compiler-cli": "^5.2.0",
     "@angular/language-service": "^5.2.0",
-    "@compodoc/compodoc": "~1.0.0",
     "@types/bootstrap": "^3.3.37",
     "@types/chai-as-promised": "^0.0.29",
     "@types/chart.js": "^2.7.5",
