@@ -1,11 +1,7 @@
 import { Action } from '@ngrx/store';
-
 import { ActionReducerError } from '@syndesis/ui/platform';
-import {
-  IntegrationImportRequest,
-  IntegrationUploadRequest,
-} from './integration-import.models';
-import { Integrations } from '@syndesis/ui/model';
+import { IntegrationImportRequest, IntegrationUploadRequest } from './integration-import.models';
+import { Integrations } from '@syndesis/ui/integration';
 
 export class IntegrationImportActions {
   static IMPORT = '[Import Integration] Import integration(s) request';
