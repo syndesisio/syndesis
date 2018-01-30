@@ -488,6 +488,40 @@
 			</build>
 		</profile>
 
+        <profile>
+            <id>ci</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>codacy-coverage</id>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>com.codacy.CodacyCoverageReporter</mainClass>
+                                    <includePluginDependencies>true</includePluginDependencies>
+                                    <commandlineArgs>-l Java -r target/site/jacoco/jacoco.xml -t 7d7b8461da1b4bd6bca59cac1d335f6c</commandlineArgs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.codacy</groupId>
+                                <artifactId>codacy-coverage-reporter</artifactId>
+                                <classifier>assembly</classifier>
+                                <version>LATEST</version>
+                            </dependency>
+                        </dependencies>  
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
 	</profiles>
 
 	<build>
@@ -585,6 +619,61 @@
 						</execution>
 					</executions>
 				</plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>timestamp</id>
+                            <goals>
+                                <goal>timestamp-property</goal>
+                            </goals>
+                            <configuration>
+                                <name>syn.timestamp</name>
+                                <pattern>yyyyMMddHHmmssSSS</pattern>
+                                <timeZone>UTC</timeZone>
+                                <locale>en_US</locale>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+                    <inherited>false</inherited>
+                    <executions>
+                        <execution>
+                            <id>collect</id>
+                            <configuration>
+                                <destFile>${project.build.directory}/jacoco.${syn.timestamp}.exec</destFile>
+                                <fileSets>
+                                    <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
+                                        <directory>${basedir}</directory>
+                                        <includes>
+                                            <include>**/jacoco.exec</include>
+                                        </includes>
+                                    </fileSet>
+                                </fileSets>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>combine</id>
+                            <configuration>
+                                <destFile>${project.build.directory}/jacoco.exec</destFile>
+                                <fileSets>
+                                    <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
+                                        <directory>${basedir}/target</directory>
+                                        <includes>
+                                            <include>jacoco.*.exec</include>
+                                        </includes>
+                                    </fileSet>
+                                </fileSets>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
 
 			</plugins>
 		</pluginManagement>
