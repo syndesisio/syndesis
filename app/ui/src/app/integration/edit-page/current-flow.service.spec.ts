@@ -39,16 +39,16 @@ describe('CurrentFlow', () => {
     const step1 = createStep();
     step1.id = 'foobar';
     step1.stepKind = 'endpoint';
-    step1.connection = TypeFactory.createConnection();
+    step1.connection = TypeFactory.create<Connection>();
     step1.connection.connectorId = 'timer';
-    step1.action = TypeFactory.createAction();
+    step1.action = TypeFactory.create<Action>();
     rc.steps.push(step1);
 
     const step2 = createStep();
     step2.id = '3';
     step2.stepKind = 'endpoint';
-    step2.connection = TypeFactory.createConnection();
-    step2.action = TypeFactory.createAction();
+    step2.connection = TypeFactory.create<Connection>();
+    step2.action = TypeFactory.create<Action>();
     rc.steps.push(step2);
 
     const step3 = createStep();
@@ -58,9 +58,9 @@ describe('CurrentFlow', () => {
     const step4 = createStep();
     step4.id = '4';
     step4.stepKind = 'endpoint';
-    step4.connection = TypeFactory.createConnection();
+    step4.connection = TypeFactory.create<Connection>();
     step4.connection.connectorId = 'http';
-    step4.action = TypeFactory.createAction();
+    step4.action = TypeFactory.create<Action>();
     rc.steps.push(step4);
     return rc;
   }

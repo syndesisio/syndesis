@@ -1,5 +1,29 @@
 import { BaseEntity, User, Action } from '@syndesis/ui/platform';
 
+// these are related to oauth enabled connections
+export interface AcquisitionMethod extends BaseEntity {
+  icon: string;
+  type: 'OAUTH1' | 'OAUTH2';
+  description: string;
+  label: string;
+}
+
+export type AcquisitionMethods = Array<AcquisitionMethod>;
+
+export interface AcquisitionRequest extends BaseEntity {
+  returnUrl: string;
+}
+
+export type AcquisitionRequests = Array<AcquisitionRequest>;
+
+export interface Result extends BaseEntity {
+  scope: 'PARAMETERS' | 'CONNECTIVITY';
+  errors: Array<Error>;
+  status: 'OK' | 'ERROR' | 'UNSUPPORTED';
+}
+
+export type Results = Array<Result>;
+
 export interface Connector extends BaseEntity {
   icon: string;
   properties: {};

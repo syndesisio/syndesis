@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Extension } from '@syndesis/ui/model';
-import { Integrations } from '@syndesis/ui/platform';
+import { Extension, Integrations } from '@syndesis/ui/platform';
 import { ExtensionStore } from '@syndesis/ui/store';
 import { TechExtensionDeleteModalComponent } from 'app/customizations/tech-extensions';
 

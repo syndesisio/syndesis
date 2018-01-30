@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Connection, Action, Step, Steps } from '@syndesis/ui/platform';
-import { Extension, Extensions } from '@syndesis/ui/model';
+import { Connection, Action, Extension, Extensions, Step, Steps } from '@syndesis/ui/platform';
 
 export interface StepKind extends Step {
   name: string;

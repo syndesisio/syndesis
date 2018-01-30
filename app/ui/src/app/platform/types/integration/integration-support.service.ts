@@ -2,8 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Action, Connection, Integration, IntegrationDeployment, IntegrationDeployments, ApiHttpService } from '@syndesis/ui/platform';
-import { Exchange } from '@syndesis/ui/model';
+import { Action, Connection, Exchange, Integration, IntegrationDeployment, IntegrationDeployments, ApiHttpService } from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class IntegrationSupportService {

@@ -13,9 +13,6 @@ import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 
-import { PopularTemplatesComponent } from './populartemplates.component';
-import { TemplatesModule } from '../templates/templates.module';
-
 import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
 
@@ -29,7 +26,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    TemplatesModule,
     SyndesisCommonModule,
     ChartsModule,
     ModalModule,
@@ -42,8 +38,7 @@ const routes: Routes = [
     DashboardComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
-    EmptyStateComponent,
-    PopularTemplatesComponent
+    EmptyStateComponent
   ]
 })
 export class DashboardModule {}

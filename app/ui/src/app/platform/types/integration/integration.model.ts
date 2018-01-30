@@ -66,6 +66,41 @@ export interface IntegrationDeployment extends BaseEntity {
 }
 export type IntegrationDeployments = Array<IntegrationDeployment>;
 
+// this is for the basic filter operation
+export interface Op extends BaseEntity {
+  label: string;
+  operator: string;
+}
+
+export type Ops = Array<Op>;
+
+export interface FilterOptions extends BaseEntity {
+  paths: Array<string>;
+  ops: Array<Op>;
+}
+
+export type FilterOptionss = Array<FilterOptions>;
+
+// this is for the logging backend
+export interface Exchange extends BaseEntity {
+  logts?: string;
+  at: number;
+  pod: string;
+  ver: string;
+  status: string;
+  failed: boolean;
+  steps?: ExchangeStep[];
+  metadata?: any;
+}
+
+export interface ExchangeStep extends BaseEntity {
+  at: number;
+  duration?: number;
+  failure?: string;
+  message?: string[];
+  events?: any;
+}
+
 export function createStep() {
   return {} as Step;
 }

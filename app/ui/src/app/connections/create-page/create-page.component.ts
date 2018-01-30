@@ -189,7 +189,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       if (this.current.connection && this.current.connection.connectorId) {
         return;
       }
-      const connection = TypeFactory.createConnection();
+      const connection = TypeFactory.create<Connection>();
       if (fragment) {
         const status = JSON.parse(decodeURIComponent(fragment));
         this.current.oauthStatus = status;

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Action,
          Connection,
+         Exchange,
          Integration,
          IntegrationDeployment,
          IntegrationDeployments,
@@ -10,7 +11,6 @@ import { Action,
          ApiHttpService } from '@syndesis/ui/platform';
 
 import { EventsService } from '@syndesis/ui/store';
-import { Exchange } from '@syndesis/ui/model';
 import { integrationSupportEndpoints } from './integration-support.api';
 
 @Injectable()

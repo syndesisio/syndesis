@@ -48,7 +48,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
   }
 
   onSelected(connector: Connector) {
-    const connection = TypeFactory.createConnection();
+    const connection = TypeFactory.create<Connection>();
     const plain = connector['plain'];
     if (plain && typeof plain === 'function') {
       connection.connector = plain();

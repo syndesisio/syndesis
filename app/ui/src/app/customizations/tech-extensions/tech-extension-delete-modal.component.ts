@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/c
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationType } from 'patternfly-ng';
 import { ExtensionStore } from 'app/store/extension/extension.store';
-import { Extension } from 'app/model';
-import { Integrations } from '@syndesis/ui/platform';
+import { Extension, Integrations } from '@syndesis/ui/platform';
 import { ModalService } from 'app/common/modal/modal.service';
 import { NotificationService } from 'app/common/ui-patternfly/notification-service';
 

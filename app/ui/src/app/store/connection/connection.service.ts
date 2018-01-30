@@ -16,7 +16,7 @@ export class ConnectionService extends RESTService<Connection, Connections> {
   }
 
   validateName(name: string): Promise<ValidationErrors | null> {
-    const connection = TypeFactory.createConnection();
+    const connection = TypeFactory.create<Connection>();
     connection.name = name;
     return this.validationService
       .post(connection)

@@ -15,8 +15,6 @@ import { IntegrationStore } from './integration/integration.store';
 import { OAuthAppService } from './oauthApp/oauth-app.service';
 import { OAuthAppStore } from './oauthApp/oauth-app.store';
 import { StepStore } from './step/step.store';
-import { TemplateService } from './template/template.service';
-import { TemplateStore } from './template/template.store';
 import { TestSupportService } from './test-support.service';
 
 @NgModule({
@@ -26,7 +24,6 @@ import { TestSupportService } from './test-support.service';
     ConnectionService,
     ConnectorService,
     IntegrationService,
-    TemplateService,
     EventsService,
     ExtensionService,
     ExtensionStore,
@@ -34,7 +31,6 @@ import { TestSupportService } from './test-support.service';
     ConnectionStore,
     ConnectorStore,
     IntegrationStore,
-    TemplateStore,
     TestSupportService,
     StepStore,
     OAuthAppService,
