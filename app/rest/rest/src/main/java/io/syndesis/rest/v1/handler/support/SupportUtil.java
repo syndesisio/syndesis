@@ -15,12 +15,16 @@
  */
 package io.syndesis.rest.v1.handler.support;
 
+import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
 import io.fabric8.kubernetes.client.utils.HttpClientUtils;
+import io.fabric8.openshift.api.model.BuildConfig;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.ImageStreamTag;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 import io.syndesis.rest.v1.handler.integration.IntegrationSupportHandler;
 import okhttp3.OkHttpClient;
@@ -32,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
@@ -40,6 +46,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -58,16 +66,22 @@ import java.util.zip.ZipOutputStream;
 public class SupportUtil {
     public static final Logger LOG = LoggerFactory.getLogger(SupportUtil.class);
     public static final String[] PLATFORM_PODS = {"syndesis-atlasmap", "syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier"};
+    protected static Yaml yaml;
 
     private final NamespacedOpenShiftClient client;
-    private final OpenShiftConfigurationProperties config;
     private final IntegrationHandler integrationHandler;
     private final IntegrationSupportHandler integrationSupportHandler;
     private final OkHttpClient okHttpClient;
 
-    public SupportUtil(NamespacedOpenShiftClient client, OpenShiftConfigurationProperties config, IntegrationHandler integrationHandler, IntegrationSupportHandler integrationSupportHandler) {
+    static {
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setPrettyFlow(true);
+        yaml = new Yaml(options);
+    }
+
+    public SupportUtil(NamespacedOpenShiftClient client, IntegrationHandler integrationHandler, IntegrationSupportHandler integrationSupportHandler) {
         this.client = client;
-        this.config = config;
         this.integrationHandler = integrationHandler;
         this.integrationSupportHandler = integrationSupportHandler;
         this.okHttpClient = this.client == null ? null : HttpClientUtils.createHttpClient(this.client.getConfiguration());
@@ -109,28 +123,60 @@ public class SupportUtil {
 
     protected void addIntegrationsFiles(Map<String, Boolean> configurationMap, UriInfo uriInfo, ZipOutputStream os) {
         configurationMap.keySet().stream().forEach(integrationName -> {
-            getIntegrationLogs(integrationName).ifPresent(( fileContent) -> {
-                try {
-                    addEntryToZip(integrationName, fileContent, os);
-                } catch (IOException e) {
-                    LOG.error("Error preparing logs for integration: " + integrationName, e);
-                }
-            });
+            addIntegrationLogs(os, integrationName);
+            addResourceDescriptors(os);
+            addSourceFiles(uriInfo, os, integrationName);
+        });
+    }
 
-            ListResult<Integration> list = integrationHandler.list(uriInfo);
-            list.getItems().stream()
-                .filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-')))
-                .map(integration -> integration.getId())
-                .forEach(
-                    integrationId -> {
-                        integrationId.ifPresent(id -> {
-                            try {
-                                addSourceEntryToZip(integrationName, id, os);
-                            } catch (Exception e) {
-                                LOG.error("Error preparing logs for integration: {}", integrationName, e);
-                            }
-                        });
+    protected void addSourceFiles(UriInfo uriInfo, ZipOutputStream os, String integrationName) {
+        ListResult<Integration> list = integrationHandler.list(uriInfo);
+        list.getItems().stream()
+            .filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-')))
+            .map(integration -> integration.getId())
+            .forEach(
+                integrationId -> {
+                    integrationId.ifPresent(id -> {
+                        try {
+                            addSource(integrationName, id, os);
+                        } catch (Exception e) {
+                            LOG.error("Error preparing logs for integration: {}", integrationName, e);
+                        }
                     });
+                });
+    }
+
+    protected void addResourceDescriptors(ZipOutputStream os) {
+
+        Stream<BuildConfig> bcStream = client.buildConfigs().list().getItems().stream();
+        Stream<DeploymentConfig> dcStream = client.deploymentConfigs().list().getItems().stream();
+        Stream<ConfigMap> cmStream = client.configMaps().list().getItems().stream();
+        Stream<ImageStreamTag> istStream = client.imageStreamTags().list().getItems().stream();
+
+        Stream<? extends HasMetadata    > stream = Stream.concat(bcStream, dcStream);
+        stream = Stream.concat(stream, cmStream);
+        stream = Stream.concat(stream, istStream);
+
+        stream.forEach( res -> {
+            HasMetadata resWithMetadata = (HasMetadata) res;
+            try {
+                ZipEntry ze = new ZipEntry("descriptors/"+ resWithMetadata.getKind() + '/' + resWithMetadata.getMetadata().getName() + ".yaml");
+                os.putNextEntry(ze);
+                dumpAsYaml(resWithMetadata, os);
+                os.closeEntry();
+            } catch (Exception e){
+                LOG.error("Error adding resource {} {}", resWithMetadata.getKind(), resWithMetadata.getMetadata().getName(), e);
+            }
+        });
+    }
+
+    protected void addIntegrationLogs(ZipOutputStream os, String integrationName) {
+        getIntegrationLogs(integrationName).ifPresent(( fileContent) -> {
+            try {
+                addEntryToZip(integrationName, fileContent, os);
+            } catch (IOException e) {
+                LOG.error("Error preparing logs for integration: " + integrationName, e);
+            }
         });
     }
 
@@ -138,7 +184,7 @@ public class SupportUtil {
         Stream.of(PLATFORM_PODS).forEach(componentName -> {
             getComponentLogs(componentName).ifPresent((Reader reader) -> {
                 try {
-                    addEntryToZip(componentName, reader, os);
+                    addEntryToZip("platform_logs/" + componentName, reader, os);
                 } catch (Exception e) {
                     LOG.error("Error preparing logs for component: {}", componentName, e);
                 }
@@ -146,7 +192,7 @@ public class SupportUtil {
         });
     }
 
-    protected void addSourceEntryToZip(String integrationName, String integrationId, ZipOutputStream os) throws IOException {
+    protected void addSource(String integrationName, String integrationId, ZipOutputStream os) throws IOException {
         StreamingOutput export = integrationSupportHandler.export(Arrays.asList(integrationId));
         ZipEntry ze = new ZipEntry(integrationName + ".src.zip");
         os.putNextEntry(ze);
@@ -227,4 +273,7 @@ public class SupportUtil {
         return getLogs("component", componentName);
     }
 
+    public static void dumpAsYaml(HasMetadata obj, OutputStream outputStream) {
+        yaml.dump(obj, new OutputStreamWriter(outputStream, Charset.defaultCharset()));;
+    }
 }
