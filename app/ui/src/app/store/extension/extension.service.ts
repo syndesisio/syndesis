@@ -4,7 +4,7 @@ import { Http, Response, ResponseContentType } from '@angular/http';
 import { Restangular } from 'ngx-restangular';
 
 import { RESTService } from '../entity/rest.service';
-import { Extension, Extensions } from '../../model';
+import { Extension, Extensions } from '@syndesis/ui/platform';
 
 @Injectable()
 export class ExtensionService extends RESTService<Extension, Extensions> {

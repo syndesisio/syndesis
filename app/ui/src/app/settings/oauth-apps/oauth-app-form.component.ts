@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { OAuthApp, OAuthApps } from '@syndesis/ui/model';
+import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { FormFactoryService } from '@syndesis/ui/platform';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { FormGroup } from '@angular/forms';

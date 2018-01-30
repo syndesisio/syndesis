@@ -12,10 +12,6 @@ const routes: Routes = [
     loadChildren: './integration/integration.module#IntegrationModule'
   },
   {
-    path: 'templates',
-    loadChildren: './templates/templates-routes.module#TemplateRoutesModule'
-  },
-  {
     path: 'connections',
     loadChildren:
       './connections/connections-routes.module#ConnectionsRoutesModule'

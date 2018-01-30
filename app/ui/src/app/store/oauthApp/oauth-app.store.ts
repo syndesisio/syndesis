@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OAuthAppService } from './oauth-app.service';
-import { OAuthApps, OAuthApp, TypeFactory } from '../../model';
+import { OAuthApps, OAuthApp } from '@syndesis/ui/settings';
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';
 
@@ -11,7 +11,7 @@ export class OAuthAppStore extends AbstractStore<
   OAuthAppService
 > {
   constructor(oauthAppService: OAuthAppService, eventService: EventsService) {
-    super(oauthAppService, eventService, [], TypeFactory.createOAuthApp());
+    super(oauthAppService, eventService, [], {} as OAuthApp);
   }
 
   protected get kind() {

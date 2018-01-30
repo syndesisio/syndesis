@@ -19,12 +19,8 @@ import {
   StepKinds
 } from '@syndesis/ui/store';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
-import {
-  Extension,
-  Extensions,
-  TypeFactory
-} from '@syndesis/ui/model';
-import { Step, Steps } from '@syndesis/ui/platform';
+import { TypeFactory } from '@syndesis/ui/model';
+import { Extension, Extensions, Step, Steps } from '@syndesis/ui/platform';
 import { ObjectPropertyFilterPipe } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
 

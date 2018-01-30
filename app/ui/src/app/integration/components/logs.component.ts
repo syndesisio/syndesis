@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Exchange } from '@syndesis/ui/model';
-import { Integration, IntegrationSupportService } from '@syndesis/ui/platform';
+import { Exchange, Integration, IntegrationSupportService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-logs',

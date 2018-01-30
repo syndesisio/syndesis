@@ -11,7 +11,7 @@ import {
 } from 'ng2-file-upload';
 import { NotificationType } from 'patternfly-ng';
 
-import { Extension } from '@syndesis/ui/model';
+import { Extension } from '@syndesis/ui/platform';
 import { NotificationService } from '@syndesis/ui/common';
 import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
 

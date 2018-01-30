@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
-import { OAuthApp, OAuthApps } from '../../model';
+import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../../config.service';
 import { TourService } from 'ngx-tour-ngx-bootstrap';

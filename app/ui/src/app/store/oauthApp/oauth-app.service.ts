@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Restangular } from 'ngx-restangular';
 
 import { RESTService } from '../entity/rest.service';
-import { OAuthApp, OAuthApps } from '../../model';
+import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 
 @Injectable()
 export class OAuthAppService extends RESTService<OAuthApp, OAuthApps> {

@@ -1,7 +1,30 @@
 import { Injectable } from '@angular/core';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
+import { BaseEntity } from '@syndesis/ui/platform';
 
-import { ConfigurationProperty } from '@syndesis/ui/model';
+export interface ConfigurationProperty extends BaseEntity {
+  javaType: string;
+  type: string;
+  defaultValue: string;
+  displayName: string;
+  description: string;
+  group: string;
+  required: boolean;
+  secret: boolean;
+  label: string;
+  enum: Array<PropertyValue>;
+  componentProperty: boolean;
+  deprecated: boolean;
+  tags: Array<string>;
+}
+export type ConfigurationProperties = Array<ConfigurationProperty>;
+
+export interface PropertyValue extends BaseEntity {
+  value: string;
+  label: string;
+}
+
+export type PropertyValues = Array<PropertyValue>;
 
 export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
   value: any;

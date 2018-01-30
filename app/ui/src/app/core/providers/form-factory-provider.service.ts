@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfigurationProperty } from '@syndesis/ui/model';
-import { FormFactoryService, ConfiguredConfigurationProperty } from '@syndesis/ui/platform';
+import { FormFactoryService, ConfigurationProperty, ConfiguredConfigurationProperty } from '@syndesis/ui/platform';
 import {
   DynamicFormControlModel,
   DynamicCheckboxModel,

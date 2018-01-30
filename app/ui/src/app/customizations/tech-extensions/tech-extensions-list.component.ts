@@ -13,7 +13,7 @@ import {
 } from 'patternfly-ng';
 import { ConfigService } from '../../config.service';
 import { TechExtensionDeleteModalComponent } from './tech-extension-delete-modal.component';
-import { Extensions, Extension } from '../../model';
+import { Extensions, Extension } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-tech-extensions-list',

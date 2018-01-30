@@ -1,5 +1,6 @@
 export * from './api';
 export * from './connection';
+export * from './extension';
 export * from './form-factory';
 export * from './integration';
 export * from './metadata';
