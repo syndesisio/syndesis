@@ -126,6 +126,10 @@ my $EXTRA_IMAGES =
       target =>  "oauth-proxy:v1.0.0"
      },
      {
+      source => "docker.io/openshift/oauth-proxy:v1.1.0",
+      target =>  "oauth-proxy:v1.1.0"
+     },
+     {
       source => "registry.access.redhat.com/jboss-fuse-6/fis-java-openshift:2.0-9",
       target => "fuse-ignite-java-openshift:1.0"
      }
