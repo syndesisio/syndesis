@@ -144,7 +144,8 @@
           "descriptor": {
             "componentScheme": "aws-s3",
             "inputDataShape": {
-              "kind": "java:File"
+              "kind": "java",
+              "type": "java.io.File"
             },
             "outputDataShape": {
               "kind": "none"
@@ -167,7 +168,8 @@
               "kind": "none"
             },
             "outputDataShape": {
-              "kind": "java:com.amazonaws.services.s3.model.S3Object"
+              "kind": "java",
+              "type": "com.amazonaws.services.s3.model.S3Object"
             },
             "propertyDefinitionSteps": [
               {
@@ -216,7 +218,8 @@
               "kind": "none"
             },
             "outputDataShape": {
-              "kind": "java:List"
+              "kind": "java",
+              "type": "java.util.List"
             },
             "propertyDefinitionSteps": [
               {

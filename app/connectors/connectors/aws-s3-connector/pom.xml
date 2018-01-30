@@ -41,6 +41,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>connector-verifier</artifactId>
       <version>${project.version}</version>

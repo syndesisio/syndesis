@@ -16,6 +16,7 @@ export class ConnectionConfigurationService {
       case 'sql':
       case 'activemq':
       case 'amqp':
+      case 'aws-s3':
         return true;
       default:
         return false;
