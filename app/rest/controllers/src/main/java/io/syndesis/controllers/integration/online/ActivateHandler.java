@@ -29,12 +29,12 @@ import java.util.Set;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
-import io.syndesis.core.Labels;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.controllers.integration.IntegrationSupport;
+import io.syndesis.core.Labels;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.integration.project.generator.ProjectGenerator;
+import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
@@ -44,7 +44,7 @@ import io.syndesis.openshift.OpenShiftService;
 public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
     private final DataManager dataManager;
-    private final ProjectGenerator projectGenerator;
+    private final IntegrationProjectGenerator projectGenerator;
     private final ControllersConfigurationProperties properties;
     private final EncryptionComponent encryptionComponent;
 
@@ -52,7 +52,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     ActivateHandler(
         DataManager dataManager,
         OpenShiftService openShiftService,
-        ProjectGenerator projectGenerator,
+        IntegrationProjectGenerator projectGenerator,
         ControllersConfigurationProperties properties,
         EncryptionComponent encryptionComponent) {
 

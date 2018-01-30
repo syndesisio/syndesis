@@ -48,9 +48,8 @@ import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.integration.project.generator.ProjectGenerator;
-import io.syndesis.integration.project.generator.ProjectGeneratorHelper;
-import io.syndesis.integration.runtime.IntegrationResourceManager;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
@@ -79,20 +78,20 @@ public class IntegrationSupportHandler {
     public static final String EXPORT_MODEL_FILE_NAME = "model.json";
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationSupportHandler.class);
 
-    private final ProjectGenerator projectConverter;
+    private final IntegrationProjectGenerator projectGenerator;
     private final DataManager dataManager;
     private final IntegrationResourceManager resourceManager;
     private final IntegrationHandler integrationHandler;
     private final ExtensionDataManager extensionDataManager;
 
     public IntegrationSupportHandler(
-        final ProjectGenerator projectConverter,
+        final IntegrationProjectGenerator projectGenerator,
         final DataManager dataManager,
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
         final ExtensionDataManager extensionDataManager) {
 
-        this.projectConverter = projectConverter;
+        this.projectGenerator = projectGenerator;
         this.dataManager = dataManager;
         this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
@@ -104,7 +103,7 @@ public class IntegrationSupportHandler {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public byte[] projectPom(IntegrationDeployment integrationDeployment) throws IOException {
-        return projectConverter.generatePom(integrationDeployment);
+        return projectGenerator.generatePom(integrationDeployment);
     }
 
     @GET
@@ -129,7 +128,7 @@ public class IntegrationSupportHandler {
         for (String id : ids) {
             Integration integration = integrationHandler.get(id);
             addToExport(export, integration);
-            ProjectGeneratorHelper.collectDependencies(resourceManager, integration.getSteps()).stream()
+            resourceManager.collectDependencies(integration.getSteps()).stream()
                 .filter(Dependency::isExtension)
                 .map(Dependency::getId)
                 .forEach(extensions::add);

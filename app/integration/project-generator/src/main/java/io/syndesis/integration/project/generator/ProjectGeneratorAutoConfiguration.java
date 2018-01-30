@@ -17,7 +17,8 @@ package io.syndesis.integration.project.generator;
 
 import java.io.IOException;
 
-import io.syndesis.integration.runtime.IntegrationResourceManager;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,7 @@ public class ProjectGeneratorAutoConfiguration {
     private IntegrationResourceManager resourceManager;
 
     @Bean
-    public ProjectGenerator projectConverter() throws IOException {
+    public IntegrationProjectGenerator integrationProjectGenerator() throws IOException {
         return new ProjectGenerator(properties, resourceManager);
     }
 }

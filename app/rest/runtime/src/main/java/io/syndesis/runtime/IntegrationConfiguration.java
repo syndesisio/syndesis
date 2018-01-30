@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.integration.runtime.IntegrationResourceManager;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import org.springframework.beans.factory.annotation.Autowired;

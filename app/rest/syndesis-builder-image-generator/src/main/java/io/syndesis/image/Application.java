@@ -29,10 +29,11 @@ import io.syndesis.core.Json;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.init.ReadApiClientData;
 import io.syndesis.dao.manager.DaoConfiguration;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorAutoConfiguration;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
-import io.syndesis.integration.runtime.IntegrationResourceManager;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.action.Action;
@@ -179,7 +180,7 @@ public class Application implements ApplicationRunner {
     @SuppressWarnings("PMD.UseProperClassLoader")
     private static void generate(IntegrationDeployment integrationDeployment, File targetDir) throws IOException {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        ProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager());
+        IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager());
 
         Path dir =targetDir.toPath();
         Files.createDirectories(dir);

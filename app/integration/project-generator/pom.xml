@@ -48,7 +48,7 @@
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>integration-runtime</artifactId>
+      <artifactId>integration-api</artifactId>
     </dependency>
 
     <!-- spring -->

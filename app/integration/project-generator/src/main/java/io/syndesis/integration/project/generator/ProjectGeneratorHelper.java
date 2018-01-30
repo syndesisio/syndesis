@@ -19,23 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import com.github.mustachejava.Mustache;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
-import io.syndesis.integration.runtime.IntegrationResourceManager;
-import io.syndesis.model.Dependency;
-import io.syndesis.model.WithDependencies;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.Step;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.slf4j.Logger;
@@ -60,62 +46,6 @@ public final class ProjectGeneratorHelper {
         template.execute(new OutputStreamWriter(bos, StandardCharsets.UTF_8), scope).flush();
         return bos.toByteArray();
     }
-
-    public static Collection<Dependency> collectDependencies(IntegrationResourceManager resourceManager, IntegrationDeployment deployment) {
-        return collectDependencies(resourceManager, deployment.getSpec().getSteps());
-    }
-
-    public static Collection<Dependency> collectDependencies(IntegrationResourceManager resourceManager, Collection<? extends Step> steps) {
-        final List<Dependency> dependencies = new ArrayList<>();
-
-        for (Step step : steps) {
-            step.getAction()
-                    .filter(WithDependencies.class::isInstance)
-                    .map(WithDependencies.class::cast)
-                    .map(WithDependencies::getDependencies)
-                    .ifPresent(dependencies::addAll);
-
-            List<Dependency> connectorDependecies = step.getConnection()
-                    .flatMap(Connection::getConnector)
-                    .map(WithDependencies::getDependencies)
-                    .orElse(Collections.emptyList());
-            dependencies.addAll(connectorDependecies);
-
-            List<Dependency> lookedUpConnectorDependecies = step.getConnection()
-                    .filter(c -> Objects.nonNull(resourceManager))
-                    .filter(c -> !c.getConnector().isPresent())
-                    .flatMap(Connection::getConnectorId)
-                    .flatMap(resourceManager::loadConnector)
-                    .map(WithDependencies::getDependencies)
-                    .orElse(Collections.emptyList());
-            dependencies.addAll(lookedUpConnectorDependecies);
-
-            // Connector extension
-            Stream.concat(connectorDependecies.stream(), lookedUpConnectorDependecies.stream())
-                    .filter(c -> Objects.nonNull(resourceManager))
-                    .filter(Dependency::isExtension)
-                    .map(Dependency::getId)
-                    .map(resourceManager::loadExtension)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(Extension::getDependencies)
-                    .forEach(dependencies::addAll);
-
-            // Step extension
-            step.getExtension()
-                    .map(WithDependencies::getDependencies)
-                    .ifPresent(dependencies::addAll);
-
-            step.getExtension()
-                    .map(Extension::getExtensionId)
-                    .map(Dependency::extension)
-                    .ifPresent(dependencies::add);
-        }
-
-        return dependencies;
-    }
-
-
 
     public static boolean filterDefaultDependencies(MavenGav gav) {
         boolean answer = true;

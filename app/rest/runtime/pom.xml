@@ -400,6 +400,7 @@
             <ignoredUnusedDeclaredDependency>org.springframework.social:spring-social-twitter</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:connectors-catalog</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:integration-project-generator</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
@@ -541,11 +542,6 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>integration-runtime</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis</groupId>
       <artifactId>connector-generator</artifactId>
     </dependency>
 
@@ -557,6 +553,16 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>extension-converter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>integration-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>integration-project-generator</artifactId>
     </dependency>
 
     <!-- Credentials to support -->
