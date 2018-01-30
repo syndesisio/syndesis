@@ -96,23 +96,23 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             final Connector connector = basicConnector(connectorTemplate, connectorSettings);
             final Map<String, Path> paths = swaggerInfo.getModel().getPaths();
 
-            AtomicInteger total = new AtomicInteger(0);
+            final AtomicInteger total = new AtomicInteger(0);
 
-            final Map<String, Integer> tagCounts = paths.entrySet().stream()
-                .flatMap(p -> p.getValue().getOperations().stream())
-                .peek(o -> total.incrementAndGet())
-                .flatMap(o -> o.getTags().stream().distinct())
-                .collect(
-                    Collectors.groupingBy(
-                        Function.identity(),
-                        Collectors.reducing(0, (e) -> 1, Integer::sum)
-                    )
-                );
+            final Map<String, Integer> tagCounts = paths.entrySet().stream()//
+                .flatMap(p -> p.getValue().getOperations().stream())//
+                .peek(o -> total.incrementAndGet())//
+                .flatMap(o -> o.getTags().stream().distinct())//
+                .collect(//
+                    Collectors.groupingBy(//
+                        Function.identity(), //
+                        Collectors.reducing(0, (e) -> 1, Integer::sum)//
+                    ));
 
             final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
                 .totalActions(total.intValue())//
-                .actionCountByTags(tagCounts)
+                .actionCountByTags(tagCounts)//
                 .build();
+
             return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
                 .warnings(swaggerInfo.getWarnings()).build();
         } catch (final Exception ex) {

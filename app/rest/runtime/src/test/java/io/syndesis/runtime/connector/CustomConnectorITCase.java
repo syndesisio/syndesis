@@ -189,7 +189,8 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldOfferCustomConnectorInfo() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).icon("test-icon")
+            .build();
 
         final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info", connectorSettings, ConnectorSummary.class);
 

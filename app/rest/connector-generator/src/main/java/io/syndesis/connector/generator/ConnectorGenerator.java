@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.syndesis.connector.generator.util.IconGenerator;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
@@ -50,11 +51,18 @@ public abstract class ConnectorGenerator {
 
         final Optional<ConnectorGroup> connectorGroup = connectorTemplate.getConnectorGroup();
 
+        final String icon;
+        if (connectorSettings.getIcon() != null) {
+            icon = connectorSettings.getIcon();
+        } else {
+            icon = IconGenerator.generate(connectorTemplate.getId().get(), name);
+        }
+
         return new Connector.Builder()//
             .id(KeyGenerator.createKey())//
             .name(name)//
             .description(description)//
-            .icon(connectorSettings.getIcon())//
+            .icon(icon)//
             .configuredProperties(configuredProperties)//
             .connectorGroup(connectorGroup)//
             .connectorGroupId(connectorGroup.map(ConnectorGroup::getId).orElse(Optional.empty()))//

@@ -15,17 +15,21 @@
  */
 package io.syndesis.runtime.connector;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 import io.syndesis.model.Violation;
 import io.syndesis.model.action.ActionsSummary;
-import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
 import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.runtime.BaseITCase;
+
 import okio.Okio;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
@@ -37,9 +41,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,14 +54,8 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
     @Configuration
     public static class TestConfiguration {
         private static final ActionsSummary ACTIONS_SUMMARY = new ActionsSummary.Builder().totalActions(5)
-            .putActionCountByTag("updating", 1)
-            .putActionCountByTag("creating", 1)
-            .putActionCountByTag("fetching", 2)
-            .putActionCountByTag("destruction", 1)
-            .putActionCountByTag("tasks", 5)
-            .build();
-
-        private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
+            .putActionCountByTag("updating", 1).putActionCountByTag("creating", 1).putActionCountByTag("fetching", 2)
+            .putActionCountByTag("destruction", 1).putActionCountByTag("tasks", 5).build();
 
         @Bean(TEMPLATE_ID)
         public ConnectorGenerator swaggerConnectorGenerator() {
@@ -71,13 +66,6 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
     @Before
     public void createConnectorTemplates() {
         dataManager.create(template);
-    }
-
-    private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {
-        return new ConnectorTemplate.Builder()//
-            .id(id)//
-            .name(name)//
-            .build();
     }
 
     @Test
@@ -98,37 +86,41 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
         final ResponseEntity<ConnectorSummary> response = post("/api/v1/connectors/custom/info",
-            multipartBodyForInfo(
-                connectorSettings,
-                getClass().getResourceAsStream("/io/syndesis/runtime/test-swagger.json")
-            ),
-            ConnectorSummary.class,
-            tokenRule.validToken(),
-            HttpStatus.OK,
-            multipartHeaders());
+            multipartBodyForInfo(connectorSettings, getClass().getResourceAsStream("/io/syndesis/runtime/test-swagger.json")),
+            ConnectorSummary.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
         final ConnectorSummary expected = new ConnectorSummary.Builder()// \
             .name("Todo App API")//
             .description("unspecified")//
             .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)//
-            .addWarning(new Violation.Builder().error("missing-response-schema").message("Operation DELETE /api/{id} does not provide a response schema for code 204").build())
+            .addWarning(new Violation.Builder().error("missing-response-schema")
+                .message("Operation DELETE /api/{id} does not provide a response schema for code 204").build())
             .build();
 
-        ConnectorSummary got = response.getBody();
+        final ConnectorSummary got = response.getBody();
 
-        assertThat(got).isEqualTo(expected);
+        assertThat(got).isEqualToIgnoringGivenFields(expected, "icon");
+        assertThat(got.getIcon()).startsWith("data:image");
+    }
+
+    private MultiValueMap<String, Object> multipartBodyForInfo(final ConnectorSettings connectorSettings, final InputStream is)
+        throws IOException {
+        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+        multipartData.add("connectorSettings", connectorSettings);
+        multipartData.add("specification", Okio.buffer(Okio.source(is)).readUtf8());
+        return multipartData;
     }
 
     private HttpHeaders multipartHeaders() {
-        HttpHeaders headers = new HttpHeaders();
+        final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return headers;
     }
 
-    private MultiValueMap<String, Object> multipartBodyForInfo(ConnectorSettings connectorSettings, InputStream is) throws IOException {
-        LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
-        multipartData.add("connectorSettings", connectorSettings);
-        multipartData.add("specification", Okio.buffer(Okio.source(is)).readUtf8());
-        return multipartData;
+    private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {
+        return new ConnectorTemplate.Builder()//
+            .id(id)//
+            .name(name)//
+            .build();
     }
 }
