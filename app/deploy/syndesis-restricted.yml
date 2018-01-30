@@ -4,15 +4,15 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: syndesis-restricted-1.2
+  name: syndesis-restricted
 #
 # Template flavor:
 #
 # Allow localhost refs: false
 # Use docker images: false
 # Without Probes: false
-# Atlasmap Tag: 1.32
-# Syndesis Tag: 1.2
+# Atlasmap Tag: latest
+# Syndesis Tag: latest
 # Restricted environment: true
 #
   labels:
@@ -83,7 +83,7 @@ parameters:
 - description: Registry from where to fetch Syndesis images
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
-  value: 'registry.fuse-ignite.openshift.com'
+  value: 'docker.io'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -91,7 +91,7 @@ parameters:
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
-  value: 'fuse-ignite'
+  value: ''
 - description: Secret to use to encrypt oauth cookies
   displayName: OAuth Cookie Secret
   name: OAUTH_COOKIE_SECRET
@@ -105,6 +105,97 @@ parameters:
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-rest
+    labels:
+      app: syndesis
+      component: syndesis-rest
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-ui
+    labels:
+      app: syndesis
+      component: syndesis-ui
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: atlasmap
+    labels:
+      app: syndesis
+      component: syndesis-atlasmap
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-verifier
+    labels:
+      app: syndesis
+      component: syndesis-verifier
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: oauth-proxy
+    labels:
+      app: syndesis
+      component: syndesis-oauthproxy
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
+      importPolicy:
+        scheduled: true
+      name: "v1.1.0"
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-s2i
+    labels:
+      app: syndesis
+      component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
 
 - apiVersion: v1
   kind: Secret
@@ -199,7 +290,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-ui:1.2
+          name: syndesis-ui:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -224,11 +315,11 @@ objects:
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
         },
         "branding": {
-          "logoWhiteBg": "",
-          "logoDarkBg": "",
-          "iconWhiteBg": "assets/images/FuseIgniteLogo_Black.svg",
-          "iconDarkBg": "assets/images/FuseIgniteLogo_White.svg",
-          "appName": "Ignite",
+          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
+          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+          "iconWhiteBg": "assets/images/glasses_logo_square.png",
+          "iconDarkBg": "assets/images/glasses_logo_square.png",
+          "appName": "Syndesis",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png"
@@ -341,7 +432,7 @@ objects:
         - atlasmap
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-mapper:1.32
+          name: atlasmap:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -801,7 +892,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-rest:1.2
+          name: syndesis-rest:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -848,16 +939,11 @@ objects:
           sensitive: false
         jsondb:
           enabled: true
-      maven:
-        repositories:
-          01_maven_central: https://repo1.maven.org/maven2
-          02_redhat_ea_repository: https://maven.repository.redhat.com/earlyaccess/all
-          03_jboss_ea: https://repository.jboss.org/nexus/content/groups/ea
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: fuse-ignite-s2i:1.2
+        builderImageStreamTag: syndesis-s2i:latest
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -959,7 +1045,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-verifier:1.2
+          name: syndesis-verifier:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1147,24 +1233,4 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: syndesis-rest
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app: syndesis
-  name: syndesis-oauthclient-1.2
-data:
-  oauthclient: |-
-    apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-      name: syndesis-oauth-client
-      labels:
-        app: syndesis
-      annotations:
-        serviceaccounts.openshift.io/oauth-redirecturi.local: https://localhost:4200
-        serviceaccounts.openshift.io/oauth-redirecturi.route: https://
-        serviceaccounts.openshift.io/oauth-redirectreference.route: '{"kind": "OAuthRedirectReference", "apiVersion": "v1", "reference": {"kind": "Route","name": "syndesis"}}'
 
