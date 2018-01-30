@@ -7,6 +7,9 @@
       "description": "Cloud-based Customer Relationship Management",
       "icon": "fa-puzzle-piece",
       "configuredProperties": {},
+      "tags": [
+        "verifier"
+      ],
       "properties": {
         "loginUrl": {
           "kind": "property",
@@ -597,6 +600,9 @@
       "description": "AMQ Message Broker",
       "icon": "fa-puzzle-piece",
       "configuredProperties": {},
+      "tags": [
+        "verifier"
+      ],
       "properties": {
         "brokerUrl": {
           "kind": "property",
@@ -993,6 +999,9 @@
       "description": "Invoke SQL or Stored Procedures",
       "icon": "fa-database",
       "configuredProperties": {},
+      "tags": [
+        "verifier"
+      ],
       "properties": {
         "url": {
           "kind": "property",

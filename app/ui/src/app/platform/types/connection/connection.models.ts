@@ -8,6 +8,7 @@ export interface Connector extends BaseEntity {
   configuredProperties: {};
   description: string;
   connectorGroup: BaseEntity;
+  tags: Array<string>;
 }
 
 export interface Organization extends BaseEntity {

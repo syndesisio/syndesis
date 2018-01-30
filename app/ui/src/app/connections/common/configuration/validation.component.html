@@ -1,6 +1,6 @@
 <div [ngClass]="{'text-right': placement === 'right'}">
   <!-- validate button -->
-  <button *ngIf="showValidateButton(connection?.connector?.id)"
+  <button *ngIf="showValidateButton(connection?.connector)"
           [disabled]="!formGroup.valid || validating"
           (click)="doValidate(connection.connector, formGroup)"
           class="btn"
