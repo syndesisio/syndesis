@@ -74,8 +74,9 @@ minishift::run() {
         check_error "$basedir"
 
         create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
+        add_auth_delegator_role
 
-        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template)" $(readopt --tag) "$(hasflag --local)"
+        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template)" "$(readopt --tag)" "$(hasflag --local)"
 
         if [ $(is_docker_mode) = "false" ]; then
           wait_for_syndesis_to_be_ready
