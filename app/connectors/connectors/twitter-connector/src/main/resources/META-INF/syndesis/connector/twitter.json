@@ -85,6 +85,8 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "Status",
+          "description": "Represent one single status of a user",
           "kind": "java",
           "type": "twitter4j.Status"
         },
@@ -107,6 +109,8 @@
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "Status",
+          "description": "Represent one single status of a user",
           "kind": "java",
           "type": "twitter4j.Status"
         },

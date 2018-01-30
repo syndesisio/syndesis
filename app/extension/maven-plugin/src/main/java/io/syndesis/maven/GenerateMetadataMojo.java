@@ -15,7 +15,6 @@
  */
 package io.syndesis.maven;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -38,6 +37,7 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -241,8 +241,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
                     new StepDescriptor.Builder()
                         .kind(StepAction.Kind.valueOf(actionKind))
                         .entrypoint(actionEntry)
-                        .inputDataShape(buildDataShape(p.getProperty("inputDataShape")))
-                        .outputDataShape(buildDataShape(p.getProperty("outputDataShape")))
+                        .inputDataShape(buildDataShape(p, "input"))
+                        .outputDataShape(buildDataShape(p, "output"))
                         .propertyDefinitionSteps(propertyDefinitionSteps)
                         .build())
                 .build()
@@ -250,8 +250,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected DataShape buildDataShape(String dataShape) throws Exception {
-        DataShape.Builder builder = new DataShape.Builder();
+    protected DataShape buildDataShape(Properties properties, String dataShapePrefix) throws Exception {
+        final String dataShape = properties.getProperty(dataShapePrefix + "DataShape");
+        final String dataShapeName = properties.getProperty(dataShapePrefix + "DataShapeName");
+        final String dataShapeDesc = properties.getProperty(dataShapePrefix + "DataShapeDescription");
+
+        final DataShape.Builder builder = new DataShape.Builder();
+
         if (StringUtils.isNotEmpty(dataShape)) {
             int separator = dataShape.indexOf(':');
             String kind;
@@ -273,6 +278,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
             }
         } else {
             builder.kind("any");
+        }
+
+        if (StringUtils.isNotEmpty(dataShapeName)) {
+            builder.name(dataShapeName);
+        }
+        if (StringUtils.isNotEmpty(dataShapeDesc)) {
+            builder.description(dataShapeDesc);
         }
 
         return builder.build();

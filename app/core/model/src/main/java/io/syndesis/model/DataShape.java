@@ -25,13 +25,19 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = DataShape.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
-public interface DataShape extends Serializable {
+public interface DataShape extends Serializable, WithName {
+
+    @Override
+    String getName();
+
+    String getDescription();
 
     String getKind();
 
     String getType();
 
     String getSpecification();
+
     Optional<byte[]> getExemplar();
 
     class Builder extends ImmutableDataShape.Builder {
