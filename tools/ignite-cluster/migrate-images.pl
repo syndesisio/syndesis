@@ -111,7 +111,7 @@ my $RELEASE_MAP =
           "fuse-ignite-rest" => "1.1-3",
           "fuse-ignite-ui" => "1.1-4",
           "fuse-ignite-verifier" => "1.1-2",
-          "fuse-ignite-s2i" => "1.0-1"
+          "fuse-ignite-s2i" => "1.0-1",
           "fuse-ignite-mapper" => "1.1-3"
          }
       }
