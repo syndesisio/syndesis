@@ -11,6 +11,9 @@
   ],
   "componentScheme": "amqp",
   "configuredProperties": {},
+  "tags": [
+    "verifier"
+  ],
   "properties": {
     "connectionUri": {
       "kind": "property",

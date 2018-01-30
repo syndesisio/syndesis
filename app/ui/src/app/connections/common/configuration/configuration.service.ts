@@ -3,24 +3,15 @@ import {
   DynamicFormControlModel,
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
-import { Connection, FormFactoryService } from '@syndesis/ui/platform';
+import {Connection, Connector, FormFactoryService} from '@syndesis/ui/platform';
 
 @Injectable()
 export class ConnectionConfigurationService {
   constructor(private formFactory: FormFactoryService) {}
 
-  shouldValidate(id: string) {
-    switch (id) {
-      case 'salesforce':
-      case 'twitter':
-      case 'sql':
-      case 'activemq':
-      case 'amqp':
-      case 'aws-s3':
-        return true;
-      default:
-        return false;
-    }
+  shouldValidate(connector: Connector) {
+    const tags = connector.tags || [];
+    return tags.indexOf('verifier') != -1;
   }
 
   sanitize(data: {}) {

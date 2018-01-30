@@ -10,6 +10,9 @@
           }
       ],
       "configuredProperties": {},
+      "tags": [
+        "verifier"
+      ],
       "properties": {
         "accessKey": {
           "kind": "parameter",

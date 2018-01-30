@@ -26,8 +26,8 @@ export class ConnectionConfigurationValidationComponent {
     private connectorStore: ConnectorStore
   ) {}
 
-  showValidateButton(id: string) {
-    return this.configurationService.shouldValidate(id);
+  showValidateButton(connector: Connector) {
+    return this.configurationService.shouldValidate(connector);
   }
 
   doValidate(connector: Connector, formGroup: FormGroup) {

@@ -21,24 +21,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.model.Kind;
 import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithMetadata;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithProperties;
+import io.syndesis.model.WithTags;
 import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.WithActions;
-
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
 @SuppressWarnings("immutables")
-public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithName, WithProperties, WithDependencies, WithMetadata, Serializable {
+public interface Connector extends WithId<Connector>, WithActions<ConnectorAction>, WithTags, WithName, WithProperties, WithDependencies, WithMetadata, Serializable {
 
     class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {
         public Builder putOrRemoveConfiguredPropertyTaggedWith(final String tag, final String value) {

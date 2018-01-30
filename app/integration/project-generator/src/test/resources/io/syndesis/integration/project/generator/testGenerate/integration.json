@@ -45,6 +45,7 @@
               "id" : "io.syndesis:timer-connector:1.2-SNAPSHOT"
             } ]
           } ],
+          "tags" : [ ],
           "properties" : {
             "period" : {
               "componentProperty" : false,
@@ -245,6 +246,7 @@
               "id" : "io.syndesis:http-post-connector:1.2-SNAPSHOT"
             } ]
           } ],
+          "tags" : [ ],
           "properties" : {
             "httpUri" : {
               "componentProperty" : false,
