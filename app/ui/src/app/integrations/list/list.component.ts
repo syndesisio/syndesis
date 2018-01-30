@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, Input, ViewChild } from '@angular/core';
+import { ApplicationRef, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/Subscription';
@@ -19,15 +19,20 @@ import { IntegrationViewBase } from '../components';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
 
+interface ActionConfigs {
+  [id: string]: ActionConfig;
+}
+
 @Component({
   selector: 'syndesis-integrations-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class IntegrationsListComponent extends IntegrationViewBase {
+export class IntegrationsListComponent extends IntegrationViewBase implements OnInit, OnChanges {
   @Input() complete: boolean;
   @Input() integrations: Integrations = [];
   listConfig: ListConfig;
+  actionConfigs: ActionConfigs;
 
   constructor(
     public store: IntegrationStore,
@@ -39,6 +44,27 @@ export class IntegrationsListComponent extends IntegrationViewBase {
     integrationSupportService: IntegrationSupportService,
   ) {
     super(store, route, router, notificationService, modalService, application, integrationSupportService);
+  }
+
+  handleAction($event: Action, item: any) {
+    if ($event.id === 'createIntegration') {
+      this.router.navigate(['/integrations/create']);
+    }
+  }
+
+  handleClick($event: ListEvent) {
+    this.router.navigate(['/integrations', $event.item.id], {
+      relativeTo: this.route
+    });
+  }
+
+  ngOnChanges(changes: any) {
+    if (changes.integrations) {
+      this.actionConfigs = this.generateActionConfigMap(changes.integrations.currentValue);
+    }
+  }
+
+  ngOnInit() {
     this.listConfig = {
       dblClick: false,
       multiSelect: false,
@@ -61,21 +87,19 @@ export class IntegrationsListComponent extends IntegrationViewBase {
         } as ActionConfig
       } as EmptyStateConfig
     };
+    this.actionConfigs = this.generateActionConfigMap(this.integrations);
   }
 
-  handleAction($event: Action, item: any) {
-    if ($event.id === 'createIntegration') {
-      this.router.navigate(['/integrations/create']);
+  private generateActionConfigMap(integrations: Integrations) {
+    const answer: ActionConfigs = {};
+    for (const integration of integrations) {
+      const actionConfig = this.getActionConfig(integration);
+      answer[integration.id] = actionConfig;
     }
+    return answer;
   }
 
-  handleClick($event: ListEvent) {
-    this.router.navigate(['/integrations', $event.item.id], {
-      relativeTo: this.route
-    });
-  }
-
-  getActionConfig(integration: Integration): ActionConfig {
+  private getActionConfig(integration: Integration): ActionConfig {
     const actionConfig = {
       primaryActions: [],
       moreActions: [

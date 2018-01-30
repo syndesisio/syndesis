@@ -78,6 +78,7 @@ export class IntegrationBasicsComponent extends FlowPage implements OnInit {
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
+    /*
     if (this.userService.getTourState() === true) {
       this.tourService.initialize([{
           anchorId: 'integrations.publish',
@@ -90,5 +91,6 @@ export class IntegrationBasicsComponent extends FlowPage implements OnInit {
       );
       setTimeout(() => this.tourService.start());
     }
+    */
   }
 }

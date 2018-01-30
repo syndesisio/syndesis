@@ -160,6 +160,7 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
+    /*
     if (this.userService.getTourState() === true) {
       this.tourService.initialize([ {
         anchorId: 'integrations.step',
@@ -171,5 +172,6 @@ export class IntegrationsSaveOrAddStepComponent extends FlowPage implements OnIn
       );
       setTimeout(() => this.tourService.start());
     }
+    */
   }
 }

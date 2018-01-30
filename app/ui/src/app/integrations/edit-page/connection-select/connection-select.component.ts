@@ -122,6 +122,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
+    /*
     if (this.userService.getTourState() === true) {
       this.tourService.initialize([{
         anchorId: 'integrations.panel',
@@ -139,6 +140,7 @@ export class IntegrationsSelectConnectionComponent extends FlowPage implements O
       );
       setTimeout(() => this.tourService.start());
     }
+    */
   }
 
   ngOnDestroy() {
