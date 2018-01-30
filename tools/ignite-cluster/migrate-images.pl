@@ -134,7 +134,7 @@ my $EXTRA_IMAGES =
 # Target system
 my $target_key = "ignite";
 my $source_key = "brew";
-my $release = "TP2";
+my $release = "TP3";
 GetOptions("source=s",\$source_key,
            "release=s",\$release);
 
