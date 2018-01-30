@@ -44,9 +44,29 @@ public @interface SyndesisExtensionAction {
     String[] tags() default {};
 
     /**
+     * The action input data shape name;
+     */
+    String inputDataShapeName() default "";
+
+    /**
+     * The action input data shape description;
+     */
+    String inputDataShapeDescription() default "";
+
+    /**
      * The action input data shape;
      */
     String inputDataShape() default "any";
+
+    /**
+     * The action output data shape name;
+     */
+    String outputDataShapeName() default "";
+
+    /**
+     * The action output data shape description;
+     */
+    String outputDataShapeDescription() default "";
 
     /**
      * The action output data shape;
