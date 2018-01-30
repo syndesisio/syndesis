@@ -15,6 +15,10 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -23,10 +27,7 @@ import org.apache.camel.model.FromDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spi.InterceptStrategy;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.camel.util.AsyncProcessorConverterHelper;
 
 /**
  * Used to capture the out messages of processors with configured ids.  The messages are placed into
@@ -46,7 +47,7 @@ public class OutMessageCaptureInterceptStrategy implements InterceptStrategy {
         boolean captureOut = definition.hasCustomIdAssigned();
 
         if (captureIn || captureOut) {
-            return exchange -> {
+            return AsyncProcessorConverterHelper.convert(exchange -> {
                 if( captureIn ) {
                     addToMap(exchange, from.getId(), exchange.getIn());
                 }
@@ -55,7 +56,7 @@ public class OutMessageCaptureInterceptStrategy implements InterceptStrategy {
                     Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
                     addToMap(exchange, definition.getId(), message);
                 }
-            };
+            });
         } else {
             // skip over processors with a generated id
             return target;

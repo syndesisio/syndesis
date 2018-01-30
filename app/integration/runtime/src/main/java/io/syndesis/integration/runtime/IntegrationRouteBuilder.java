@@ -79,8 +79,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        SyndesisLoggingSupport.install(getContext());
-
         final IntegrationDeployment deployment = loadDeployment();
         final List<? extends Step> steps = deployment.getSpec().getSteps();
 

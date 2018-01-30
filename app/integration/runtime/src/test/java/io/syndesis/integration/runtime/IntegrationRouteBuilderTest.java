@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         IntegrationRouteBuilderTest.TestConfiguration.class
     },
     properties = {
+        "debug = true",
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG"
     }
