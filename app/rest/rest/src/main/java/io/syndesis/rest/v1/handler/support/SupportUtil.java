@@ -15,7 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.support;
 
-import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
 import io.fabric8.kubernetes.client.utils.HttpClientUtils;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
@@ -24,8 +23,6 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 import io.syndesis.rest.v1.handler.integration.IntegrationSupportHandler;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,28 +38,15 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -77,10 +61,7 @@ public class SupportUtil {
     private final OpenShiftConfigurationProperties config;
     private final IntegrationHandler integrationHandler;
     private final IntegrationSupportHandler integrationSupportHandler;
-
     private final OkHttpClient okHttpClient;
-
-    protected ExecutorService executor;
 
     public SupportUtil(NamespacedOpenShiftClient client, OpenShiftConfigurationProperties config, IntegrationHandler integrationHandler, IntegrationSupportHandler integrationSupportHandler) {
         this.client = client;
@@ -88,7 +69,6 @@ public class SupportUtil {
         this.integrationHandler = integrationHandler;
         this.integrationSupportHandler = integrationSupportHandler;
         this.okHttpClient = this.client == null ? null : HttpClientUtils.createHttpClient(this.client.getConfiguration());
-        this.executor =  Executors.newCachedThreadPool(threadFactory("Logs Controller"));
     }
 
 //    public OutputStream streamLogs(String container) throws IOException, InterruptedException {
@@ -204,66 +184,56 @@ public class SupportUtil {
         return collect;
     }
 
+//    public Optional<String> getLogs(String label, String integrationName) {
+//       Optional<String> result =  client.pods().list().getItems().stream()
+//                .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
+//                        flatMap(p ->
+//                        {
+//                            InputStream is = client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).sinceTime("0").watchLog(System.out).getOutput();
+//                            StringWriter writer = new StringWriter();
+//                            try {
+//                                IOUtils.copy(is, writer, Charset.defaultCharset());
+//                                String theString = writer.toString();
+//                                LOG.info(theString);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            return Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLog());
+//    });
+//        return result;
+//    }
+
     public Optional<String> getLogs(String label, String integrationName) {
-       Optional<String> result =  client.pods().list().getItems().stream()
+               Optional<String> result =  client.pods().list().getItems().stream()
                 .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
                         flatMap(p ->
                         {
-                            InputStream is = client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).sinceTime("0").watchLog(System.out).getOutput();
-                            StringWriter writer = new StringWriter();
+                            PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(p.getMetadata().getName());
+                            StringBuilder url = null;
                             try {
-                                IOUtils.copy(is, writer, Charset.defaultCharset());
-                                String theString = writer.toString();
-                                LOG.info(theString);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                url = new StringBuilder()
+                                    .append(pod.getResourceUrl().toString())
+                                    .append("/log?pretty=false&timestamps=true");
+                                Request request = new Request.Builder()
+                                    .url(url.toString())
+                                    .build();
+
+                                try (Response response = okHttpClient.newCall(request).execute()) {
+                                    if (!response.isSuccessful())
+                                        throw new IOException("Unexpected response from /log endpoint: " + response);
+                                    String log = response.body().string();
+                                    LOG.info(log);
+                                    return Optional.of(log);
+                                } catch (IOException e) {
+                                    LOG.error("Error downloading log file for integration {}" , integrationName, e );
+                                }
+                            } catch (MalformedURLException e) {
+                                LOG.error("Error downloading log file for integration {}" , integrationName, e );
                             }
-                            return Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLog());
-    });
-        return result;
+                            return Optional.empty();
+                        });
+               return result;
     }
-
-
-
-//    public InputStream getLogsBadHackedWorkaround(String label, String integrationName) throws MalformedURLException {
-//        InputStream result = null;
-//
-//        Consumer<InputStream> handler = (InputStream input ) -> {
-//
-//        };
-//
-//        PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(integrationName);
-//        StringBuilder url = new StringBuilder()
-//            .append(pod.getResourceUrl().toString())
-//            .append("/log?pretty=false&follow=true&timestamps=true&sinceTime=0");
-//
-//        Request request = new Request.Builder().url(new URL(url.toString())).get().build();
-//        OkHttpClient clone = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
-//        clone.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                LOG.info("Failure occurred getting  controller for pod: {},", integrationName, e);
-//                handler.accept(null);
-//            }
-//
-//            @Override
-//            public void onResponse(final Call call, final Response response) throws IOException {
-//                executor.execute(() -> {
-//                    try {
-//                        if( response.code() == 200 ) {
-//                            handler.accept(response.body().byteStream());
-//                        } else {
-//                            LOG.info("Failure occurred while processing controller for pod: {}, http status: {}, details: {}", integrationName, response.code(), response.body().string());
-//                            handler.accept(null);
-//                        }
-//                    } catch (IOException e) {
-//                        LOG.error("Unexpected Error", e);
-//                    }
-//                });
-//            }
-//        });
-//        return result;
-//    }
 
     public Optional<String> getIntegrationLogs(String integrationName){
         return getLogs("integration", integrationName);
@@ -273,18 +243,5 @@ public class SupportUtil {
     public Optional<Reader> getComponentLogs(String componentName){
         return streamLogs("component", componentName);
     }
-
-    /**
-     * This controller can potentially spin up lots of threads, at last one for each
-     * pod that's being processed.  Lets reduce thread stack size since we don't need
-     * a very large stack to do log processing.
-     *
-     * @param name
-     * @return
-     */
-    private static ThreadFactory threadFactory(String name) {
-        return r -> new Thread(null, r, name, 1024);
-    }
-
 
 }
