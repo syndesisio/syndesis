@@ -499,6 +499,20 @@
               <groupId>com.github.tomakehurst</groupId>
               <artifactId>wiremock-standalone</artifactId>
             </dependency>
+
+            <!-- Ignore the dup resources/catalog.cat -->
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-java-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-json-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-xml-model</artifactId>
+            </dependency>
           </ignoredDependencies>
         </configuration>
       </plugin>
@@ -507,6 +521,29 @@
   </build>
 
   <dependencies>
+    <!-- ===================================================================================== -->
+
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-java-module</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-json-module</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-xml-module</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-model</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
 
     <!-- Top most layer, entrypoint. It contains the deps to other modules -->

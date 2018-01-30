@@ -33,21 +33,6 @@
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: {{ Images.Syndesis.Atlasmap }}
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{Images.AtlasMapImagesPrefix}}/{{ Images.Syndesis.Atlasmap }}:{{ Tags.Atlasmap }}
-      importPolicy:
-        scheduled: true
-      name: "{{ Tags.Atlasmap }}"
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
     name: {{ Images.Syndesis.Verifier }}
     labels:
       app: syndesis
