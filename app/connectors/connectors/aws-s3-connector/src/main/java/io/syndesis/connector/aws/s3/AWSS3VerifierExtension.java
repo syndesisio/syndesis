@@ -23,8 +23,6 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
@@ -36,8 +34,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 public class AWSS3VerifierExtension extends DefaultComponentVerifierExtension {
-	
-    private static final Logger LOG = LoggerFactory.getLogger(AWSS3VerifierExtension.class);
 
     protected AWSS3VerifierExtension(String defaultScheme, CamelContext context) {
         super(defaultScheme, context);
@@ -66,6 +62,7 @@ public class AWSS3VerifierExtension extends DefaultComponentVerifierExtension {
     // *********************************
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException") 
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY);
 
@@ -81,7 +78,7 @@ public class AWSS3VerifierExtension extends DefaultComponentVerifierExtension {
                 .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e);
 
             builder.error(errorBuilder.build());
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             builder.error(ResultErrorBuilder.withException(e).build());
         }
         return builder.build();
