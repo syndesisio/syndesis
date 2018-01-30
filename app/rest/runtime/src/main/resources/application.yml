@@ -23,6 +23,20 @@ features:
 
 server:
   useForwardHeaders: true
+  undertow:
+    ioThreads: 2
+    workerThreads: 10
+
+management:
+  port: 8181
+  undertow:
+    ioThreads: 1
+    workerThreads: 1
+  health:
+    db:
+      enabled: false
+  security:
+    enabled: true
 
 cors:
   allowedOrigins: "*"
@@ -45,14 +59,6 @@ spring:
 security:
   basic:
     enabled: false
-
-management:
-  port: 8181
-  health:
-    db:
-      enabled: false
-  security:
-    enabled: true
 
 endpoints:
   health:
