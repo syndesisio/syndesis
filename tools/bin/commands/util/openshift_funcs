@@ -75,11 +75,26 @@ create_and_apply_template() {
         "$tag" \
         "$use_local_resource"
 
-    oc new-app $template \
+    oc new-app $(get_template_name $template $tag) \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
       -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+}
+
+# Try first a template with the tag as combination
+get_template_name() {
+    local template=$1
+    local tag=${2:-}
+    if [ -n "$tag" ]; then
+        local candidate="$template-$tag"
+        $(oc get template $candidate >/dev/null 2>&1)
+        if [ $? -eq 0 ]; then
+          echo $candidate
+          return
+        fi
+    fi
+    echo $template
 }
 
 create_openshift_resource() {
