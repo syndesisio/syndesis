@@ -26,16 +26,6 @@
 
   <artifactId>syndesis-verifier</artifactId>
   <name>Verifier</name>
-  <version>1.2-SNAPSHOT</version>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-
-    <license-maven-plugin.version>3.0</license-maven-plugin.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -46,14 +36,6 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
-
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-spring-boot-dependencies</artifactId>
-        <version>${camel.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -62,28 +44,26 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-tomcat</artifactId>
-        </exclusion>
-      </exclusions>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-undertow</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>com.paypal.springboot</groupId>
       <artifactId>resteasy-spring-boot-starter</artifactId>
       <version>${resteasy-spring-boot-starter.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- =========================================================== -->
@@ -126,6 +106,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -201,6 +182,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>http-get-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -213,11 +195,13 @@
       <groupId>io.syndesis</groupId>
       <artifactId>twitter-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
      <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-salesforce</artifactId>
+      <version>${camel.version}</version>
     </dependency>
 
     <dependency>
@@ -230,6 +214,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -242,6 +227,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-start-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -254,6 +240,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -266,6 +253,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>sql-stored-start-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -278,11 +266,13 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-openwire-legacy</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -295,6 +285,7 @@
       <groupId>io.syndesis</groupId>
       <artifactId>activemq-publish-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -307,12 +298,20 @@
       <groupId>io.syndesis</groupId>
       <artifactId>amqp-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>aws-s3-connector</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -340,16 +339,6 @@
     <plugins>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
@@ -367,52 +356,10 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>com.paypal.springboot:resteasy-spring-boot-starter</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-web:</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-undertow</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.apache.camel:camel-salesforce</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:http-get-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:twitter-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:sql-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:sql-start-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:sql-stored-start-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:activemq-publish-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-broker</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-client</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.apache.activemq:activemq-openwire-legacy</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:amqp-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:aws-s3-connector</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-core</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.hubspot.maven.plugins</groupId>
-        <artifactId>dependency-management-maven-plugin</artifactId>
-        <configuration>
-          <requireManagement>
-            <allowExclusions>true</allowExclusions>
-          </requireManagement>
-        </configuration>
-      </plugin>
-
-
-      <plugin>
         <groupId>org.basepom.maven</groupId>
         <artifactId>duplicate-finder-maven-plugin</artifactId>
         <configuration>
-          <quiet>true</quiet>
           <printEqualFiles>false</printEqualFiles>
-          <failBuildInCaseOfEqualContentConflict>false</failBuildInCaseOfEqualContentConflict>
-          <checkRuntimeClasspath>false</checkRuntimeClasspath>
-          <checkTestClasspath>false</checkTestClasspath>
           <ignoredResourcePatterns>
             <ignore>camel-component-schema.json</ignore>
             <ignore>camel-connector-schema.json</ignore>
@@ -431,10 +378,6 @@
             <ignoredDependency>
               <groupId>xpp3</groupId>
               <artifactId>xpp3_min</artifactId>
-            </ignoredDependency>
-            <ignoredDependency>
-              <groupId>commons-logging</groupId>
-              <artifactId>commons-logging</artifactId>
             </ignoredDependency>
           </ignoredDependencies>
           <ignoredClassPatterns>
@@ -474,17 +417,6 @@
         </plugins>
       </build>
     </profile>
-
-
-    <!-- Profile for Jenkins CI build on OpenShift -->
-    <profile>
-      <id>ci</id>
-      <properties>
-        <user.home>/home/jenkins</user.home>
-        <fabric8.namespace>syndesis-ci</fabric8.namespace>
-        <java-image>fabric8/s2i-java:2.0</java-image>
-        <fabric8.mode>openshift</fabric8.mode>
-      </properties>
-    </profile>
   </profiles>
+
 </project>

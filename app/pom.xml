@@ -15,901 +15,933 @@
    limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.basepom</groupId>
-		<artifactId>basepom-oss</artifactId>
-		<version>23</version>
-		<relativePath></relativePath>
-	</parent>
+  <parent>
+    <groupId>org.basepom</groupId>
+    <artifactId>basepom-oss</artifactId>
+    <version>23</version>
+    <relativePath></relativePath>
+  </parent>
 
-	<groupId>io.syndesis</groupId>
-	<artifactId>syndesis-parent</artifactId>
-	<version>1.2-SNAPSHOT</version>
-	<packaging>pom</packaging>
+  <groupId>io.syndesis</groupId>
+  <artifactId>syndesis-parent</artifactId>
+  <version>1.2-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-	<name>Syndesis :: Parent</name>
-	<description>syndesis :: ${project.artifactId}</description>
+  <name>Syndesis :: Parent</name>
+  <description>syndesis :: ${project.artifactId}</description>
 
-	<properties>
-		<!-- Global Syndesis version -->
-		<syndesis.version>${project.version}</syndesis.version>
-		<syndesis.policy.version>2</syndesis.policy.version>
+  <properties>
+    <!-- Global Syndesis version -->
+    <syndesis.version>${project.version}</syndesis.version>
+    <syndesis.policy.version>2</syndesis.policy.version>
 
-		<!-- Atlasmap version -->
-		<atlasmap.version>1.32.2</atlasmap.version>
-		<camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
+    <!-- Atlasmap version -->
+    <atlasmap.version>1.32.2</atlasmap.version>
+    <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
-		<!-- Image names -->
-		<image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
-		<image.rest>syndesis/syndesis-rest:%l</image.rest>
-		<image.verifier>syndesis/syndesis-verifier:%l</image.verifier>
-		<image.ui>syndesis/syndesis-ui:%l</image.ui>
+    <!-- Image names -->
+    <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
+    <image.rest>syndesis/syndesis-rest:%l</image.rest>
+    <image.verifier>syndesis/syndesis-verifier:%l</image.verifier>
+    <image.ui>syndesis/syndesis-ui:%l</image.ui>
 
 
-		<fabric8.maven.plugin.version>3.5.33</fabric8.maven.plugin.version>
-		<maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
-		<clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
-		<frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
-		<node.version>v8.9.1</node.version>
-		<yarn.version>v1.2.1</yarn.version>
+    <fabric8.maven.plugin.version>3.5.33</fabric8.maven.plugin.version>
+    <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
+    <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
+    <frontend-maven-plugin-version>1.6</frontend-maven-plugin-version>
+    <node.version>v8.9.1</node.version>
+    <yarn.version>v1.2.1</yarn.version>
 
-		<hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
+    <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
 
-		<jackson.version>2.8.10</jackson.version>
+    <jackson.version>2.8.10</jackson.version>
 
-		<kubernetes.client.version>2.4.1</kubernetes.client.version>
+    <kubernetes.client.version>2.4.1</kubernetes.client.version>
 
-		<spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
 
-		<swagger.version>1.5.16</swagger.version>
+    <swagger.version>1.5.16</swagger.version>
 
-		<activemq.version>5.15.2</activemq.version>
+    <activemq.version>5.15.2</activemq.version>
 
-		<!-- Global camel version used everywhere -->
-		<camel.version>2.20.1</camel.version>
+    <!-- Global camel version used everywhere -->
+    <camel.version>2.20.1</camel.version>
 
-		<!-- Don't fork based on cores, doesn't work nicely in the cloud -->
-		<basepom.test.fork-count>1</basepom.test.fork-count>
-		<basepom.failsafe.fork-count>1</basepom.failsafe.fork-count>
-		<basepom.failsafe.reuse-vm>true</basepom.failsafe.reuse-vm>
+    <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
+
+    <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
+    <basepom.test.fork-count>1</basepom.test.fork-count>
+    <basepom.failsafe.fork-count>1</basepom.failsafe.fork-count>
+    <basepom.failsafe.reuse-vm>true</basepom.failsafe.reuse-vm>
         <!-- takes a really long time -->
-        <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
+    <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
 
-		<!-- Plugin versions -->
-		<exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    <!-- Plugin versions -->
+    <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
 
-		<!-- Maven versions -->
-		<maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
-		<archetype-packaging.version>2.2</archetype-packaging.version>
-		<maven-archetype-plugin.version>2.2</maven-archetype-plugin.version>
-		<maven-resolver-api.version>1.0.3</maven-resolver-api.version>
+    <!-- Maven versions -->
+    <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
+    <archetype-packaging.version>2.2</archetype-packaging.version>
+    <maven-archetype-plugin.version>2.2</maven-archetype-plugin.version>
+    <maven-resolver-api.version>1.0.3</maven-resolver-api.version>
 
-		<maven-common-artifact-filters.version>1.4</maven-common-artifact-filters.version>
-		<maven-shared-utils.version>3.1.0</maven-shared-utils.version>
+    <maven-common-artifact-filters.version>1.4</maven-common-artifact-filters.version>
+    <maven-shared-utils.version>3.1.0</maven-shared-utils.version>
 
-		<!-- Common dependencies -->
-		<assertj-core.version>3.6.2</assertj-core.version>
-		<shrinkwrap.version>2.2.6</shrinkwrap.version>
+    <!-- Common dependencies -->
+    <assertj-core.version>3.6.2</assertj-core.version>
+    <shrinkwrap.version>2.2.6</shrinkwrap.version>
 
-		<mailapi.version>1.4.3</mailapi.version>
-		<json-schema-core.version>1.2.8</json-schema-core.version>
-		<json-schema-validator.version>2.2.8</json-schema-validator.version>
+    <mailapi.version>1.4.3</mailapi.version>
+    <json-schema-core.version>1.2.8</json-schema-core.version>
+    <json-schema-validator.version>2.2.8</json-schema-validator.version>
 
-		<resteasy.version>3.1.4.Final</resteasy.version>
-	    <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
-	</properties>
+    <resteasy.version>3.1.4.Final</resteasy.version>
+    <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
+  </properties>
 
-	<modules>
-		<module>core</module>
-		<module>extension</module>
-		<module>integration</module>
-		<module>connectors</module>
-		<module>rest</module>
-		<module>s2i</module>
-		<module>verifier</module>
-		<module>ui</module>
-	</modules>
+  <modules>
+    <module>core</module>
+    <module>extension</module>
+    <module>integration</module>
+    <module>connectors</module>
+    <module>rest</module>
+    <module>s2i</module>
+    <module>verifier</module>
+    <module>ui</module>
+  </modules>
 
-	<profiles>
+  <profiles>
 
-		<!--
-		=========================================================================
-		Profiles (which can and should be combined)
-		=========================================================================
-		-->
+    <!--
+    =========================================================================
+    Profiles (which can and should be combined)
+    =========================================================================
+    -->
 
-		<!-- Profile for building Docker images -->
-		<profile>
-			<id>image</id>
-			<activation>
-				<property>
-					<name>::image</name>
-				</property>
-			</activation>
+    <!-- Profile for building Docker images -->
+    <profile>
+      <id>image</id>
+      <activation>
+        <property>
+          <name>::image</name>
+        </property>
+      </activation>
 
-			<modules>
-				<module>rest</module>
-				<module>verifier</module>
-				<module>ui</module>
-			</modules>
+      <modules>
+        <module>rest</module>
+        <module>verifier</module>
+        <module>ui</module>
+      </modules>
 
-			<build>
-				<defaultGoal>install</defaultGoal>
-			</build>
-		</profile>
+      <build>
+        <defaultGoal>install</defaultGoal>
+      </build>
+    </profile>
 
-		<!-- No checks enabled -->
-		<profile>
-			<id>skip-checks</id>
-			<properties>
-				<basepom.check.skip-all>true</basepom.check.skip-all>
-			</properties>
-		</profile>
+    <!-- No checks enabled -->
+    <profile>
+      <id>skip-checks</id>
+      <properties>
+        <basepom.check.skip-all>true</basepom.check.skip-all>
+      </properties>
+    </profile>
 
-		<!-- All checks enabled -->
-		<profile>
-			<id>checks</id>
-			<properties>
-				<basepom.check.skip-all>false</basepom.check.skip-all>
-			</properties>
-		</profile>
+    <!-- All checks enabled -->
+    <profile>
+      <id>checks</id>
+      <properties>
+        <basepom.check.skip-all>false</basepom.check.skip-all>
+      </properties>
+    </profile>
 
-		<!-- System tests enabled -->
-		<profile>
-			<id>system-tests</id>
-			<modules>
-				<module>tests</module>
-			</modules>
-		</profile>
+    <!-- System tests enabled -->
+    <profile>
+      <id>system-tests</id>
+      <modules>
+        <module>tests</module>
+      </modules>
+    </profile>
 
-		<!-- Build Docker images directly -->
-		<profile>
-			<id>docker</id>
-			<properties>
-				<fabric8.mode>kubernetes</fabric8.mode>
-			</properties>
-		</profile>
+    <!-- Build Docker images directly -->
+    <profile>
+      <id>docker</id>
+      <properties>
+        <fabric8.mode>kubernetes</fabric8.mode>
+      </properties>
+    </profile>
 
-		<!-- Build with OpenShift S2I -->
-		<profile>
-			<id>s2i</id>
-			<properties>
-				<fabric8.mode>openshift</fabric8.mode>
-			</properties>
-		</profile>
+    <!-- Build with OpenShift S2I -->
+    <profile>
+      <id>s2i</id>
+      <properties>
+        <fabric8.mode>openshift</fabric8.mode>
+      </properties>
+    </profile>
 
     <!-- Release profile -->
     <profile>
-			<id>release</id>
-			<build>
+      <id>release</id>
+      <build>
         <plugins>
 
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-deploy-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
 
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
-						<executions>
-							<execution>
-								<id>default-deploy</id>
-								<phase>deploy</phase>
-								<goals>
-									<goal>deploy</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
               <serverId>oss-sonatype-staging</serverId>
-						</configuration>
-					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
-						<configuration>
-							<skip>false</skip>
-						</configuration>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<configuration>
-							<skipSource>false</skipSource>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<skip>false</skip>
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
-		<profile>
-			<id>flash</id>
-			<activation>
-				<property>
-					<name>deploy</name>
-				</property>
-			</activation>
-			<properties>
-				<basepom.check.skip-all>true</basepom.check.skip-all>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default-testResources</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default-testCompile</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.basepom.maven</groupId>
-						<artifactId>property-helper-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>get-build-id</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>pl.project13.maven</groupId>
-						<artifactId>git-commit-id-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-							<execution>
-								<id>default-it</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-jar-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-tests</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.ning.maven.plugins</groupId>
-						<artifactId>maven-dependency-versions-check-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.hubspot.maven.plugins</groupId>
-						<artifactId>dependency-management-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.basepom.maven</groupId>
-						<artifactId>duplicate-finder-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>findbugs-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-pmd-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-checkstyle-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.mycila</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default-test</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<version>${exec-maven-plugin.version}</version>
-						<executions>
-							<execution>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-failsafe-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase/>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-	</profiles>
-
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>com.mycila</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<inherited>false</inherited>
-					<configuration>
-						<header>license/syndesis-license.txt</header>
-						<skipExistingHeaders>false</skipExistingHeaders>
-						<!-- Reduce this even further. Vote for https://github.com/mycila/license-maven-plugin/pull/133
-								 to make this a fixed thread number value -->
-						<concurrencyFactor>1</concurrencyFactor>
-						<mapping combine.children="append">
-							<provides>SCRIPT_STYLE</provides>
-							<assemble>SCRIPT_STYLE</assemble>
-						</mapping>
-						<includes>
-							<include>**/src/**</include>
-							<include>**/pom.xml</include>
-						</includes>
-						<excludes>
-							<exclude>**/node_modules/**</exclude>
-							<exclude>.editorconfig</exclude>
-							<exclude>license.txt</exclude>
-							<exclude>.mention-bot</exclude>
-							<exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
-							<exclude>mvnw*</exclude>
-							<exclude>**/resources/**/test-*</exclude>
-							<exclude>**/*.mustache</exclude>
-							<exclude>**/test/resources/**</exclude>
-							<exclude>**/spring.factories</exclude>
-							<exclude>**/*.adoc</exclude>
-							<exclude>**/archetypes/**/src/main/resources/archetype-resources/**</exclude>
-							<exclude>**/s2i/src/main/docker/project/**</exclude>
-							<exclude>**/Dockerfile</exclude>
-							<exclude>**/*.ts</exclude>
-							<exclude>**/*.scss</exclude>
-							<exclude>**/*.html</exclude>
-							<exclude>**/config.json*</exclude>
-							<exclude>**/.gitkeep</exclude>
-							<exclude>**/*.webapp</exclude>
-							<exclude>**/browserconfig.xml</exclude>
-							<exclude>connectors/connectors/**/META-INF/syndesis/connector/verifier/*</exclude>
-							<exclude>connectors/connectors/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
-							<exclude>connectors/connectors/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
-							<exclude>rest/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
-						</excludes>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>io.syndesis</groupId>
-							<artifactId>syndesis-policy</artifactId>
-							<version>${syndesis.policy.version}</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<configuration>
-						<configLocation>/checkstyle/checkstyle-syndesis.xml</configLocation>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>io.syndesis</groupId>
-							<artifactId>syndesis-policy</artifactId>
-							<version>${syndesis.policy.version}</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-
-				<plugin>
-					<groupId>io.fabric8</groupId>
-					<artifactId>fabric8-maven-plugin</artifactId>
-					<version>${fabric8.maven.plugin.version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
-					<executions>
-						<execution>
-							<id>attach-javadocs</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-							<configuration>
-								<additionalparam>-Xdoclint:none</additionalparam>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-
-			</plugins>
-		</pluginManagement>
-	</build>
-
-	<!-- Common dependencies -->
-	<dependencyManagement>
-
-		<dependencies>
-
-			<!-- BOMs -->
-
-			<dependency>
-				<groupId>org.jboss.shrinkwrap.resolver</groupId>
-				<artifactId>shrinkwrap-resolver-bom</artifactId>
-				<version>${shrinkwrap.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-
-			<!-- TODO: Maybe import BOM ? -->
-			<dependency>
-				<groupId>org.apache.camel</groupId>
-				<artifactId>camel-core</artifactId>
-				<version>${camel.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-jdk8</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.module</groupId>
-				<artifactId>jackson-module-jsonSchema</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-
-			<!-- ActiveMQ deps to override Spring Boot imported pom -->
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-client</artifactId>
-				<version>${activemq.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-openwire-legacy</artifactId>
-				<version>${activemq.version}</version>
-			</dependency>
-
-			<!-- Maven Stuff -->
-			<dependency>
-				<groupId>org.apache.maven.shared</groupId>
-				<artifactId>maven-common-artifact-filters</artifactId>
-				<version>${maven-common-artifact-filters.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.maven.shared</groupId>
-				<artifactId>maven-shared-utils</artifactId>
-				<version>${maven-shared-utils.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.maven.resolver</groupId>
-				<artifactId>maven-resolver-api</artifactId>
-				<version>${maven-resolver-api.version}</version>
-			</dependency>
-
-			<!-- Misc -->
-
-			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>${dep.findbugs.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
-				<artifactId>findbugs-annotations</artifactId>
-				<version>${dep.findbugs.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.github.java-json-tools</groupId>
-				<artifactId>json-schema-validator</artifactId>
-				<version>${json-schema-validator.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>javax.mail</groupId>
-						<artifactId>mailapi</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>mailapi</artifactId>
-				<version>${mailapi.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.github.java-json-tools</groupId>
-				<artifactId>json-schema-core</artifactId>
-				<version>${json-schema-core.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.ws.rs</groupId>
-				<artifactId>javax.ws.rs-api</artifactId>
-				<version>2.0.1</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.jboss.spec.javax.ws.rs</groupId>
-				<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-				<version>1.0.1.Beta1</version>
-			</dependency>
-
-			<!-- Internal Dependencies -->
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>model</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>dao</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>filestore</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>jsondb</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>rest</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>db-logging</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>integration-project-generator</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>integration-component-proxy</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>integration-runtime</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>sydnesis-annotation-processor</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>verifier</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>project-generator</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>openshift</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>controllers</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>inspector</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>credential</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>connector-generator</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>connectors-catalog</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>extension-annotation-processor</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>extension-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>extension-bom</artifactId>
-				<type>pom</type>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.syndesis</groupId>
-				<artifactId>extension-converter</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-		</dependencies>
-
-	</dependencyManagement>
-
-
-	<!-- Metadata need to publish to central -->
-	<url>https://syndesis.io/</url>
-	<inceptionYear>2016</inceptionYear>
-
-	<organization>
-		<name>JBoss by Red Hat</name>
-		<url>http://jboss.org</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<developers>
-		<developer>
-			<name>Syndesis committers</name>
-		</developer>
-	</developers>
-
-	<scm>
-		<connection>scm:git:https://github.com/syndesisio/syndesis.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
-		<url>http://github.com/syndesisio/syndesis</url>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <configuration>
+              <skipSource>false</skipSource>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <skip>false</skip>
+              <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
+    <profile>
+      <id>flash</id>
+      <activation>
+        <property>
+          <name>deploy</name>
+        </property>
+      </activation>
+      <properties>
+        <basepom.check.skip-all>true</basepom.check.skip-all>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-testResources</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-testCompile</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>property-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>get-build-id</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>default-it</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-tests</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.ning.maven.plugins</groupId>
+            <artifactId>maven-dependency-versions-check-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-management-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>duplicate-finder-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-test</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${exec-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <inherited>false</inherited>
+          <configuration>
+            <header>license/syndesis-license.txt</header>
+            <skipExistingHeaders>false</skipExistingHeaders>
+            <!-- Reduce this even further. Vote for https://github.com/mycila/license-maven-plugin/pull/133
+                 to make this a fixed thread number value -->
+            <concurrencyFactor>1</concurrencyFactor>
+            <mapping combine.children="append">
+              <provides>SCRIPT_STYLE</provides>
+              <assemble>SCRIPT_STYLE</assemble>
+            </mapping>
+            <includes>
+              <include>**/src/**</include>
+              <include>**/pom.xml</include>
+            </includes>
+            <excludes>
+              <exclude>**/node_modules/**</exclude>
+              <exclude>.editorconfig</exclude>
+              <exclude>license.txt</exclude>
+              <exclude>.mention-bot</exclude>
+              <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
+              <exclude>mvnw*</exclude>
+              <exclude>**/resources/**/test-*</exclude>
+              <exclude>**/*.mustache</exclude>
+              <exclude>**/test/resources/**</exclude>
+              <exclude>**/spring.factories</exclude>
+              <exclude>**/*.adoc</exclude>
+              <exclude>**/archetypes/**/src/main/resources/archetype-resources/**</exclude>
+              <exclude>**/s2i/src/main/docker/project/**</exclude>
+              <exclude>**/Dockerfile</exclude>
+              <exclude>**/*.ts</exclude>
+              <exclude>**/*.scss</exclude>
+              <exclude>**/*.html</exclude>
+              <exclude>**/config.json*</exclude>
+              <exclude>**/.gitkeep</exclude>
+              <exclude>**/*.webapp</exclude>
+              <exclude>**/browserconfig.xml</exclude>
+              <exclude>connectors/connectors/**/META-INF/syndesis/connector/verifier/*</exclude>
+              <exclude>connectors/connectors/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
+              <exclude>connectors/connectors/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
+              <exclude>rest/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
+            </excludes>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-policy</artifactId>
+              <version>${syndesis.policy.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <configLocation>/checkstyle/checkstyle-syndesis.xml</configLocation>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-policy</artifactId>
+              <version>${syndesis.policy.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>fabric8-maven-plugin</artifactId>
+          <version>${fabric8.maven.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.10.4</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <additionalparam>-Xdoclint:none</additionalparam>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <!-- Common dependencies -->
+  <dependencyManagement>
+
+    <dependencies>
+
+      <!-- BOMs -->
+
+      <dependency>
+        <groupId>org.jboss.shrinkwrap.resolver</groupId>
+        <artifactId>shrinkwrap-resolver-bom</artifactId>
+        <version>${shrinkwrap.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+
+      <!-- TODO: Maybe import BOM ? -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-core</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jdk8</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.module</groupId>
+        <artifactId>jackson-module-jsonSchema</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <!-- ActiveMQ deps to override Spring Boot imported pom -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+        <version>${activemq.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-openwire-legacy</artifactId>
+        <version>${activemq.version}</version>
+      </dependency>
+
+      <!-- Maven Stuff -->
+      <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-common-artifact-filters</artifactId>
+        <version>${maven-common-artifact-filters.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-shared-utils</artifactId>
+        <version>${maven-shared-utils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven.resolver</groupId>
+        <artifactId>maven-resolver-api</artifactId>
+        <version>${maven-resolver-api.version}</version>
+      </dependency>
+
+      <!-- Misc -->
+
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>${dep.findbugs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>findbugs-annotations</artifactId>
+        <version>${dep.findbugs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>json-schema-validator</artifactId>
+        <version>${json-schema-validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>mailapi</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mailapi</artifactId>
+        <version>${mailapi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>json-schema-core</artifactId>
+        <version>${json-schema-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>2.0.1</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.spec.javax.ws.rs</groupId>
+        <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+        <version>1.0.1.Beta1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.5</version>
+      </dependency>
+
+      <!-- Internal Dependencies -->
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>filestore</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>rest</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>db-logging</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>integration-project-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>integration-component-proxy</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>integration-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>sydnesis-annotation-processor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>verifier</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>project-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>openshift</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>controllers</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>inspector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>credential</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>connector-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>connectors-catalog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>extension-annotation-processor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>extension-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>extension-bom</artifactId>
+        <type>pom</type>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis</groupId>
+        <artifactId>extension-converter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
+
+
+  <!-- Metadata need to publish to central -->
+  <url>https://syndesis.io/</url>
+  <inceptionYear>2016</inceptionYear>
+
+  <organization>
+    <name>JBoss by Red Hat</name>
+    <url>http://jboss.org</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Syndesis committers</name>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/syndesisio/syndesis.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
+    <url>http://github.com/syndesisio/syndesis</url>
   </scm>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>oss-sonatype-staging</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>oss-sonatype-staging</id>
-			<name>Sonatype Staging Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-		</repository>
-	</distributionManagement>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>oss-sonatype-staging</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>oss-sonatype-staging</id>
+      <name>Sonatype Staging Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+  </distributionManagement>
 
-	<issueManagement>
-		<system>github</system>
-		<url>https://github.com/syndesisio/syndesis.io/issues</url>
-	</issueManagement>
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/syndesisio/syndesis.io/issues</url>
+  </issueManagement>
 
 </project>
