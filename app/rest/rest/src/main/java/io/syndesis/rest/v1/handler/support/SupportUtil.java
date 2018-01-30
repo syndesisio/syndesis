@@ -39,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -56,6 +57,7 @@ import java.util.zip.ZipOutputStream;
 @ConditionalOnProperty(value = "openshift.enabled", matchIfMissing = true, havingValue = "true")
 public class SupportUtil {
     public static final Logger LOG = LoggerFactory.getLogger(SupportUtil.class);
+    public static final String[] PLATFORM_PODS = {"syndesis-atlasmap", "syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier"};
 
     private final NamespacedOpenShiftClient client;
     private final OpenShiftConfigurationProperties config;
@@ -70,17 +72,6 @@ public class SupportUtil {
         this.integrationSupportHandler = integrationSupportHandler;
         this.okHttpClient = this.client == null ? null : HttpClientUtils.createHttpClient(this.client.getConfiguration());
     }
-
-//    public OutputStream streamLogs(String container) throws IOException, InterruptedException {
-//        ProcessBuilder pb = new ProcessBuilder("oc logs ", container);
-//        LOG.info("Running `oc logs {}`", container);
-//        Process process = pb.start();
-//        int errCode = process.waitFor();
-//        if(errCode != 0){
-//            LOG.warn("Error running previous command");
-//        }
-//        return process.getOutputStream();
-//    }
 
     public Optional<Reader> streamLogs(String label, String integrationName) {
         Optional<Reader> result =  client.pods().list().getItems().stream()
@@ -102,43 +93,8 @@ public class SupportUtil {
         }
 
         try ( ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));) {
-            configurationMap.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).forEach(integrationName -> {
-                switch(integrationName){
-                    case "platformLogs":
-                        Stream.of("syndesis-atlasmap","syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier").forEach(componentName -> {
-                            getComponentLogs(componentName).ifPresent((Reader reader) -> {
-                                try {
-                                    addEntryToZip(componentName, reader, os);
-                                } catch (IOException e) {
-                                    LOG.error("Error preparing logs for: " + componentName, e);
-                                }
-                            });
-                        });
-                        break;
-                    default:
-                        getIntegrationLogs(integrationName).ifPresent((String fileContent) -> {
-                            try {
-                                addEntryToZip(integrationName, fileContent, os);
-                            } catch (IOException e) {
-                                LOG.error("Error preparing logs for: " + integrationName, e);
-                            }
-
-                            ListResult<Integration> list = integrationHandler.list(uriInfo);
-                            list.getItems().stream().filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-'))).forEach(
-                                integration -> {
-                                    integration.getId().ifPresent(id -> {
-                                        try {
-                                            addSourceEntryToZip(integrationName, id, os);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
-                                }
-                            );
-                        });
-
-                }
-            });
+            addPlatformPodsLogs(os);
+            addIntegrationsFiles(configurationMap, uriInfo, os);
             LOG.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             LOG.error("Error producing Support zip file", e);
@@ -146,6 +102,48 @@ public class SupportUtil {
         }
 
         return zipFile;
+    }
+
+    protected void addResourcesDump(Map<String, Boolean> configurationMap, UriInfo uriInfo, ZipOutputStream os) {
+    }
+
+    protected void addIntegrationsFiles(Map<String, Boolean> configurationMap, UriInfo uriInfo, ZipOutputStream os) {
+        configurationMap.keySet().stream().forEach(integrationName -> {
+            getIntegrationLogs(integrationName).ifPresent(( fileContent) -> {
+                try {
+                    addEntryToZip(integrationName, fileContent, os);
+                } catch (IOException e) {
+                    LOG.error("Error preparing logs for integration: " + integrationName, e);
+                }
+            });
+
+            ListResult<Integration> list = integrationHandler.list(uriInfo);
+            list.getItems().stream()
+                .filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-')))
+                .map(integration -> integration.getId())
+                .forEach(
+                    integrationId -> {
+                        integrationId.ifPresent(id -> {
+                            try {
+                                addSourceEntryToZip(integrationName, id, os);
+                            } catch (Exception e) {
+                                LOG.error("Error preparing logs for integration: {}", integrationName, e);
+                            }
+                        });
+                    });
+        });
+    }
+
+    protected void addPlatformPodsLogs(ZipOutputStream os) {
+        Stream.of(PLATFORM_PODS).forEach(componentName -> {
+            getComponentLogs(componentName).ifPresent((Reader reader) -> {
+                try {
+                    addEntryToZip(componentName, reader, os);
+                } catch (Exception e) {
+                    LOG.error("Error preparing logs for component: {}", componentName, e);
+                }
+            });
+        });
     }
 
     protected void addSourceEntryToZip(String integrationName, String integrationId, ZipOutputStream os) throws IOException {
@@ -175,6 +173,12 @@ public class SupportUtil {
         os.closeEntry();
     }
 
+    protected void addEntryToZip(String integrationName, InputStream fileContent, ZipOutputStream os) throws IOException {
+        ZipEntry ze = new ZipEntry(integrationName + ".log");
+        os.putNextEntry(ze);
+        IOUtils.copy(fileContent, os);
+        os.closeEntry();
+    }
 
     public Collection<String> getIntegrationPods() {
         Collection<String> collect = client.pods().list().getItems().stream()
@@ -184,64 +188,43 @@ public class SupportUtil {
         return collect;
     }
 
-//    public Optional<String> getLogs(String label, String integrationName) {
-//       Optional<String> result =  client.pods().list().getItems().stream()
-//                .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
-//                        flatMap(p ->
-//                        {
-//                            InputStream is = client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).sinceTime("0").watchLog(System.out).getOutput();
-//                            StringWriter writer = new StringWriter();
-//                            try {
-//                                IOUtils.copy(is, writer, Charset.defaultCharset());
-//                                String theString = writer.toString();
-//                                LOG.info(theString);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                            return Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLog());
-//    });
-//        return result;
-//    }
-
-    public Optional<String> getLogs(String label, String integrationName) {
-               Optional<String> result =  client.pods().list().getItems().stream()
-                .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
-                        flatMap(p ->
-                        {
-                            PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(p.getMetadata().getName());
-                            StringBuilder url = null;
-                            try {
-                                url = new StringBuilder()
-                                    .append(pod.getResourceUrl().toString())
-                                    .append("/log?pretty=false&timestamps=true");
-                                Request request = new Request.Builder()
-                                    .url(url.toString())
-                                    .build();
-
-                                try (Response response = okHttpClient.newCall(request).execute()) {
-                                    if (!response.isSuccessful())
-                                        throw new IOException("Unexpected response from /log endpoint: " + response);
-                                    String log = response.body().string();
-                                    LOG.info(log);
-                                    return Optional.of(log);
-                                } catch (IOException e) {
-                                    LOG.error("Error downloading log file for integration {}" , integrationName, e );
-                                }
-                            } catch (MalformedURLException e) {
-                                LOG.error("Error downloading log file for integration {}" , integrationName, e );
-                            }
-                            return Optional.empty();
-                        });
-               return result;
+    public Optional<Reader> getLogs(String label, String integrationName) {
+        Optional<Reader> result =  client.pods().list().getItems().stream()
+            .filter(pod -> integrationName.equals(pod.getMetadata().getLabels().get(label)))
+            .findAny()
+            .map(pod -> pod.getMetadata().getName())
+            .flatMap(podName -> {
+                PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(podName);
+                try {
+                    Request request = new Request.Builder()
+                        .url(pod.getResourceUrl().toString() + "/log?pretty=false&timestamps=true")
+                        .build();
+                    Response response = null;
+                    try {
+                        response = okHttpClient.newCall(request).execute();
+                        if (!response.isSuccessful())
+                            throw new IOException("Unexpected response from /log endpoint: " + response);
+                        return Optional.of(response.body().charStream());
+                    } catch (IOException e) {
+                        LOG.error("Error downloading log file for integration {}" , integrationName, e );
+                        if (response != null){
+                            response.close();
+                        }
+                    }
+                } catch (MalformedURLException e) {
+                    LOG.error("Error downloading log file for integration {}" , integrationName, e );
+                }
+                return Optional.empty();
+            });
+        return result;
     }
 
-    public Optional<String> getIntegrationLogs(String integrationName){
+    public Optional<Reader> getIntegrationLogs(String integrationName){
         return getLogs("integration", integrationName);
     }
 
-
     public Optional<Reader> getComponentLogs(String componentName){
-        return streamLogs("component", componentName);
+        return getLogs("component", componentName);
     }
 
 }
