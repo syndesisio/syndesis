@@ -237,6 +237,7 @@ export class FlowViewComponent extends ChildAwarePage
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
+    /*
     if (this.userService.getTourState() === true) {
       this.tourService.initialize([{
         anchorId: 'integrations.step',
@@ -247,6 +248,7 @@ export class FlowViewComponent extends ChildAwarePage
       );
       setTimeout(() => this.tourService.start());
     }
+    */
   }
 
   ngOnDestroy() {

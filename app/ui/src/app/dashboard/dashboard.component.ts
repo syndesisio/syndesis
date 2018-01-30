@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
     /**
      * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
      */
+    /*
     if (this.userService.getTourState() === true) {
       this.tourService.initialize([ {
         route: 'dashboard',
@@ -58,5 +59,6 @@ export class DashboardComponent implements OnInit {
       );
       setTimeout(() => this.tourService.start());
     }
+    */
   }
 }
