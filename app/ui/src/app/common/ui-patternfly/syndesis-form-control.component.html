@@ -117,50 +117,67 @@
       <div *ngSwitchCase="4"
            [class.input-group]="model.prefix || model.suffix">
 
-        <div *ngIf="model.prefix"
-             class="input-group-addon"
-             [innerHTML]="model.prefix"></div>
+        <ng-container [ngSwitch]="model.inputType">
+          <ng-container *ngSwitchCase="'duration'">
+            <syndesis-duration-control [group]="group"
+                                       [model]="model"
+                                       [fieldId]="fieldHash"
+                                       [bindId]="bindId"
+                                       (blur)="onFocusChange($event)"
+                                       (change)="onValueChange($event)"
+                                       (focus)="onFocusChange($event)">
+            </syndesis-duration-control>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
 
-        <input class="form-control"
-               [attr.accept]="model.accept"
-               [attr.autoComplete]="model.autoComplete"
-               [attr.list]="model.listId"
-               [attr.max]="model.max"
-               [attr.min]="model.min"
-               [attr.multiple]="model.multiple"
-               [attr.step]="model.step"
-               [attr.tabindex]="model.tabIndex"
-               [attr.id]="fieldHash"
-               [autofocus]="model.autoFocus"
-               [dynamicId]="bindId && model.id"
-               [formControlName]="model.id"
-               [maxlength]="model.maxLength"
-               [minlength]="model.minLength"
-               [name]="model.name"
-               [tooltip]="model.hint"
-               [ngClass]="model.cls.element.control"
-               [pattern]="model.pattern"
-               [placeholder]="model.placeholder"
-               [readonly]="model.readOnly"
-               [required]="model.required"
-               [spellcheck]="model.spellCheck"
-               [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
-               [type]="model.inputType"
-               (blur)="onFocusChange($event)"
-               (change)="onValueChange($event)"
-               (focus)="onFocusChange($event)" />
+            <div *ngIf="model.prefix"
+                class="input-group-addon"
+                [innerHTML]="model.prefix"></div>
 
-        <div *ngIf="model.suffix"
-             class="input-group-addon"
-             [innerHTML]="model.suffix"></div>
+            <input class="form-control"
+                  [attr.accept]="model.accept"
+                  [attr.autoComplete]="model.autoComplete"
+                  [attr.list]="model.listId"
+                  [attr.max]="model.max"
+                  [attr.min]="model.min"
+                  [attr.multiple]="model.multiple"
+                  [attr.step]="model.step"
+                  [attr.tabindex]="model.tabIndex"
+                  [attr.id]="fieldHash"
+                  [autofocus]="model.autoFocus"
+                  [dynamicId]="bindId && model.id"
+                  [formControlName]="model.id"
+                  [maxlength]="model.maxLength"
+                  [minlength]="model.minLength"
+                  [name]="model.name"
+                  [tooltip]="model.hint"
+                  [ngClass]="model.cls.element.control"
+                  [pattern]="model.pattern"
+                  [placeholder]="model.placeholder"
+                  [readonly]="model.readOnly"
+                  [required]="model.required"
+                  [spellcheck]="model.spellCheck"
+                  [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
+                  [type]="model.inputType"
+                  (blur)="onFocusChange($event)"
+                  (change)="onValueChange($event)"
+                  (focus)="onFocusChange($event)" />
 
-        <datalist *ngIf="model.list"
-                  [id]="model.listId">
+            <div *ngIf="model.suffix"
+                class="input-group-addon"
+                [innerHTML]="model.suffix"></div>
 
-          <option *ngFor="let option of model.list"
-                  [value]="option">
+            <datalist *ngIf="model.list"
+                      [id]="model.listId">
 
-        </datalist>
+              <option *ngFor="let option of model.list"
+                      [value]="option">
+
+            </datalist>
+
+          </ng-container>
+
+        </ng-container>
 
       </div>
 
