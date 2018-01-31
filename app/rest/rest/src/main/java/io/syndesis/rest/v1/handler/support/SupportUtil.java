@@ -66,8 +66,8 @@ import java.util.zip.ZipOutputStream;
 @ConditionalOnProperty(value = "openshift.enabled", matchIfMissing = true, havingValue = "true")
 public class SupportUtil {
     public static final Logger LOG = LoggerFactory.getLogger(SupportUtil.class);
-    public static final String[] PLATFORM_PODS = {"syndesis-atlasmap", "syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier"};
-    protected static Yaml yaml;
+    static final String[] PLATFORM_PODS = {"syndesis-atlasmap", "syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier"};
+    protected static final Yaml yaml;
     public static final String MASKING_REGEXP="(?<=password)[:=](\\w+)";
 
     private final NamespacedOpenShiftClient client;
@@ -247,8 +247,9 @@ public class SupportUtil {
                     Response response = null;
                     try {
                         response = okHttpClient.newCall(request).execute();
-                        if (!response.isSuccessful())
+                        if (!response.isSuccessful()) {
                             throw new IOException("Unexpected response from /log endpoint: " + response);
+                        }
                         return Optional.of(new RegexBasedMasqueradeReader(new BufferedReader(response.body().charStream()), MASKING_REGEXP));
                     } catch (IOException e) {
                         LOG.error("Error downloading log file for integration {}" , integrationName, e );
