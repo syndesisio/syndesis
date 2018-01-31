@@ -140,7 +140,7 @@
       "actions": [
         {
           "name": "Copy Object",
-          "description": "Create a copy of an object in an Amazon S3 bucket",
+          "description": "Create a copy of an object in an a bucket.",
           "id": "io.syndesis:aws-s3-copy-object-connector",
           "pattern": "To",
           "actionType": "connector",
@@ -161,7 +161,7 @@
         },
         {
           "name": "Get Object",
-          "description": "Retrieve one object from a bucket",
+          "description": "Retrieve one object from a bucket.",
           "id": "io.syndesis:aws-s3-get-object-connector",
           "pattern": "From",
           "actionType": "connector",
@@ -211,7 +211,7 @@
         },
         {
           "name": "Poll an Amazon S3 Bucket",
-          "description": "Retrieve multiple objects from a bucket",
+          "description": "Retrieve multiple objects from a bucket.",
           "id": "io.syndesis:aws-s3-polling-bucket-connector",
           "pattern": "From",
           "actionType": "connector",
