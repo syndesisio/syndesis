@@ -222,8 +222,9 @@
             },
             "outputDataShape": {
               "kind": "java",
-              "type": "java.util.List"
+              "type": "com.amazonaws.services.s3.model.S3Object"
             },
+            "split": { },
             "propertyDefinitionSteps": [
               {
                 "name": "Poll an Amazon S3 Bucket",
