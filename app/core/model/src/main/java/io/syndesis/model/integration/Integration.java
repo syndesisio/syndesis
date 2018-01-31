@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import io.syndesis.core.json.OptionalStringTrimmingConverter;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.WithId;
@@ -70,6 +71,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
         return Collections.emptyList();
     }
 
+    @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 
     Optional<IntegrationDeploymentState> getDesiredStatus();

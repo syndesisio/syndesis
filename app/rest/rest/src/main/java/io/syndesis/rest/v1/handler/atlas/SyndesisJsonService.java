@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.core.json;
+package io.syndesis.rest.v1.handler.atlas;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.atlasmap.json.service.JsonService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
-public final class SyndesisModule extends SimpleModule {
+import javax.ws.rs.Path;
 
-    private static final long serialVersionUID = 1L;
-
-    public SyndesisModule() {
-        final StringTrimmingJsonDeserializer stringDeserializer = new StringTrimmingJsonDeserializer();
-        addDeserializer(String.class, stringDeserializer);
-    }
+@Component
+@ConditionalOnProperty(name="atlas.enabled", havingValue = "true", matchIfMissing = true)
+@Path("/atlas/json")
+public class SyndesisJsonService extends JsonService {
 }

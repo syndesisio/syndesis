@@ -16,8 +16,12 @@
 package io.syndesis.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.core.json.StringTrimmingConverter;
 
 public interface WithKind {
+    @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
     @JsonIgnore
     Kind getKind();
 }

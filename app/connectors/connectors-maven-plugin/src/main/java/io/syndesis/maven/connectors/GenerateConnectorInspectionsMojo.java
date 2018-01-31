@@ -15,17 +15,9 @@
  */
 package io.syndesis.maven.connectors;
 
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
-import io.atlasmap.java.service.AtlasJsonProvider;
 import io.atlasmap.java.v2.JavaClass;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
@@ -47,6 +39,13 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
+
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Mojo(
     name = "generate-connector-inspections",
@@ -184,7 +183,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
 
                 final Class<?> clazz = loader.loadClass(type);
                 final JavaClass c = classInspectionService.inspectClass(loader, clazz);
-                final ObjectMapper mapper = AtlasJsonProvider.createObjectMapper();
+                final ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
 
                 if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
                     shape = Optional.of(

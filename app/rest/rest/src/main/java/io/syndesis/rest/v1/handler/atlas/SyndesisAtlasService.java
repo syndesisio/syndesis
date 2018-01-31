@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.rest.v1.handler.atlas;
 
-import java.util.SortedSet;
+import io.atlasmap.service.AtlasService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
-import io.syndesis.core.immutable.SkipNulls;
-import io.syndesis.core.json.StringTrimmingConverter;
+import javax.ws.rs.Path;
 
-import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-@Value.Style(jdkOnly = true)
-public interface WithTags {
-
-    @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
-    @Value.NaturalOrder
-    @SkipNulls
-    SortedSet<String> getTags();
-
+@Component
+@ConditionalOnProperty(name="atlas.enabled", havingValue = "true", matchIfMissing = true)
+@Path("/atlas")
+public class SyndesisAtlasService extends AtlasService {
 }

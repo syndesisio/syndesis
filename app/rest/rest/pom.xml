@@ -246,6 +246,30 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
     </dependency>
+    
+    <!-- ===================================================================================== -->
+
+    <!-- Atlasmap Data Mapper Services -->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-java-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-java-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-json-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-xml-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-service</artifactId>
+    </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
 
@@ -335,6 +359,28 @@
               <resolvedVersion>2.8.8</resolvedVersion>
             </exception>
           </exceptions>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredDependencies>
+            <!-- Ignore the dup resources/catalog.cat -->
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-java-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-json-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-xml-model</artifactId>
+            </dependency>
+          </ignoredDependencies>
         </configuration>
       </plugin>
 

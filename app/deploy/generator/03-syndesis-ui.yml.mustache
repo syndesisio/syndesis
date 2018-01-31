@@ -107,10 +107,13 @@
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
         "datamapper": {
-          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/json/",
-          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
+          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/json/"
+        },
+        "features" : {
+          "logging": false
         },
 {{#Productized}}
         "branding": {
@@ -121,7 +124,8 @@
           "appName": "Ignite",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
-          "touchIcon": "/apple-touch-icon.png"
+          "touchIcon": "/apple-touch-icon.png",
+          "productBuild": true
        }{{/Productized}}{{^Productized}}
         "branding": {
           "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
@@ -131,6 +135,7 @@
           "appName": "Syndesis",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
-          "touchIcon": "/apple-touch-icon.png"
+          "touchIcon": "/apple-touch-icon.png",
+          "productBuild": false
        }{{/Productized}}
       }

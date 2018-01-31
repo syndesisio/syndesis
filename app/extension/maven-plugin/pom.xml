@@ -73,25 +73,21 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>atlas-java-model</artifactId>
-      <version>${atlasmap.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.atlasmap</groupId>
-      <artifactId>atlas-java-service</artifactId>
-      <version>${atlasmap.version}</version>
+      <artifactId>atlas-model</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>atlas-core</artifactId>
-      <version>${atlasmap.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>atlas-java-core</artifactId>
-      <version>${atlasmap.version}</version>
     </dependency>
 
     <!-- needed by atlasmap/jackson -->

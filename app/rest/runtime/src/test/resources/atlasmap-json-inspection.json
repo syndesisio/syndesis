@@ -1,0 +1,7 @@
+{
+  "JsonInspectionRequest": {
+    "jsonType": "io.atlasmap.json.v2.JsonInspectionRequest",
+    "type": "SCHEMA",
+    "jsonData": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"count\":{\"type\":\"integer\",\"required\":true}}}"
+  }
+}

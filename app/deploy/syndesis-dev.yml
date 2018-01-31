@@ -11,7 +11,7 @@ metadata:
 # Allow localhost refs: true
 # Use docker images: true
 # Without Probes: false
-# Atlasmap Tag: latest
+# Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.0.0
 # Restricted environment: false
@@ -239,10 +239,13 @@ objects:
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
         "datamapper": {
-          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/json/",
-          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/v2/atlas/"
+          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/json/"
+        },
+        "features" : {
+          "logging": false
         },
         "branding": {
           "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
@@ -255,134 +258,6 @@ objects:
           "touchIcon": "/apple-touch-icon.png"
        }
       }
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: syndesis-atlasmap
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-    name: syndesis-atlasmap
-  spec:
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: syndesis
-      component: syndesis-atlasmap
-
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-    name: syndesis-atlasmap
-  spec:
-    replicas: 1
-    selector:
-      app: syndesis
-      component: syndesis-atlasmap
-      deploymentconfig: syndesis-atlasmap
-    strategy:
-      resources:
-        limits:
-          memory: "256Mi"
-        requests:
-          memory: "20Mi"
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          app: syndesis
-          component: syndesis-atlasmap
-          deploymentconfig: syndesis-atlasmap
-      spec:
-        serviceAccountName: syndesis-atlasmap
-        containers:
-        - name: atlasmap
-          env:
-          - name: HOME
-            value: /deployments
-          - name: JAVA_TOOL_OPTIONS
-            value: '-Duser.home=/deployments -Duser.name=jboss'
-          - name: AB_JOLOKIA_OFF
-            value: "true"
-          - name: JAVA_APP_DIR
-            value: /deployments
-          - name: AB_OFF
-            value: "true"
-          - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          image: ${SYNDESIS_REGISTRY}/atlasmap/atlasmap:latest
-
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
-            initialDelaySeconds: 10
-          livenessProbe:
-            httpGet:
-              path: "/health"
-              port: 8181
-            initialDelaySeconds: 180
-          ports:
-          - containerPort: 8080
-            name: http
-          - containerPort: 9779
-            name: prometheus
-          - containerPort: 8778
-            name: jolokia
-          volumeMounts:
-          - name: config-volume
-            mountPath: /deployments/config
-          resources:
-            limits:
-              memory: 612Mi
-            requests:
-              memory: 255Mi
-        volumes:
-        - name: config-volume
-          configMap:
-            name: syndesis-atlasmap-config
-    triggers:
-    - type: ConfigChange
-
-
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-atlasmap
-    name: syndesis-atlasmap-config
-  data:
-    application.yml: |-
-      cors:
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
-
-      spring:
-        zipkin:
-          enabled: false
-      security:
-        basic:
-          enabled: false
-      management:
-        port: 8181
-        security:
-          enabled: true
-      endpoints:
-        health:
-          sensitive: false
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -629,7 +504,6 @@ objects:
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
             - --upstream=http://syndesis-rest/api/
             - --upstream=http://syndesis-rest/mapper/
-            - --upstream=http://syndesis-atlasmap/v2/atlas/
             - --upstream=http://syndesis-ui/
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key

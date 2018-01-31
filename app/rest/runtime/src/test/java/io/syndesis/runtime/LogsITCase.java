@@ -46,19 +46,4 @@ public class LogsITCase extends BaseITCase {
 
     }
 
-    private static String resource(String file) throws IOException {
-        try (InputStream is = LogsITCase.class.getClassLoader().getResourceAsStream(file)) {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            copy(is, os);
-            return new String(os.toByteArray(), StandardCharsets.UTF_8);
-        }
-    }
-
-    private static void copy(InputStream is, ByteArrayOutputStream os) throws IOException {
-        int c;
-        while( (c=is.read())>=0 ) {
-            os.write(c);
-        }
-    }
-
 }

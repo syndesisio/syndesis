@@ -171,6 +171,8 @@
               "kind": "none"
             },
             "outputDataShape": {
+              "name": "S3Object",
+              "description": "Represent one Amazon S3 Object",
               "kind": "java",
               "type": "com.amazonaws.services.s3.model.S3Object"
             },
@@ -221,6 +223,8 @@
               "kind": "none"
             },
             "outputDataShape": {
+              "name": "S3Object",
+              "description": "Represent one Amazon S3 Object",
               "kind": "java",
               "type": "com.amazonaws.services.s3.model.S3Object"
             },

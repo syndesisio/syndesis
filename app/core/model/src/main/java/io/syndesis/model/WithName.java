@@ -17,10 +17,14 @@ package io.syndesis.model;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.core.json.StringTrimmingConverter;
 import io.syndesis.model.validation.AllValidations;
 
 public interface WithName {
 
+    @JsonDeserialize(converter = StringTrimmingConverter.class)
     @NotNull(groups = AllValidations.class)
     String getName();
 

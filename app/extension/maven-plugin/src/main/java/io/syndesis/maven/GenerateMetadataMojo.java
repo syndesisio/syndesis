@@ -37,27 +37,9 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.annotation.Nullable;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.atlasmap.core.DefaultAtlasConversionService;
-import io.atlasmap.java.inspect.ClassInspectionService;
-import io.atlasmap.java.service.AtlasJsonProvider;
-import io.atlasmap.java.v2.JavaClass;
-import io.syndesis.core.Json;
-import io.syndesis.core.Names;
-import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
-import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.extension.Extension;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -74,6 +56,26 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.v2.JavaClass;
+import io.syndesis.core.Json;
+import io.syndesis.core.Names;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
+import io.syndesis.extension.converter.ExtensionConverter;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ActionDescriptor;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.extension.Extension;
 
 
 /**
@@ -564,7 +566,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
                 final Class<?> clazz = loader.loadClass(type);
                 final JavaClass c = classInspectionService.inspectClass(loader, clazz);
-                final ObjectMapper mapper = AtlasJsonProvider.createObjectMapper();
+                final ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
 
                 if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
                     specification = Optional.of(mapper.writeValueAsString(c));
