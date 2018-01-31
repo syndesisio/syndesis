@@ -28,15 +28,20 @@
 
           <div *ngIf="!allLogsSelected" class="integrations indent">
             <!-- Toolbar -->
-            <div class="row">
-              <div class="col-md-8">
+            <div class="toolbar_row">
+              <div class="toolbar">
                 <pfng-toolbar [config]="toolbarConfig"
                               (onFilterChange)="filterChanged($event)"
                               (onSortChange)="sortChanged($event)">
                 </pfng-toolbar>
               </div>
-              <div class="col-md-4 filter_labels text-right">
-                <strong>{{ selectedItems() }} of {{ totalItems() }} Items</strong>
+              <div class="toolbar_helpers">
+                <div class="selected_items">
+                    <strong>{{ selectedItems() }} of {{ totalItems() }} Items</strong>
+                </div>
+                <div class="select_all">
+                    <a role="button">Select All</a>
+                </div>
               </div>
             </div>
             <!-- List displayed here -->

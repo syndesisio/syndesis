@@ -1,27 +1,42 @@
 ::ng-deep .toolbar-pf {
-  border: none;
   box-shadow: none;
+  border: none;
+}
+
+.indent {
+  margin-left: 20px;
 }
 
 .mainform {
   background-color: white;
   padding: 20px;
-}
 
-.indent {
-  padding-left: 20px;
-}
+  .integrations {
+    border-top: 1px solid #ededed;
+    margin-bottom: 10px;
+  
+    .toolbar_row {
+      display: flex;
+      justify-content: space-between;
+    
+      .toolbar_helpers {
+        display: flex;
+        align-items: center;
+  
+        .selected_items {
+          border-right: 1px solid #d1d1d1;
+          margin-right: 20px;
+          padding-right: 20px;
+        }
+  
+      }
+      @media only screen and (max-width : 992px) {
+        display: block;
+        padding-bottom: 10px;
+      }
+  
+    }
+  
+  }
 
-.removepasswords {
-  padding-top: 1em;
-}
-
-.filter_labels {
-  padding-top: 13px;
-  // border-bottom: 1px solid #d1d1d1;
-  // box-shadow: 0 1px 0px rgba(3, 3, 3, 0.045);
-}
-
-.integrations {
-  margin-bottom: 10px;
 }
