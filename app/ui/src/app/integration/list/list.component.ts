@@ -152,10 +152,10 @@ export class IntegrationListComponent implements OnInit, OnChanges {
       moreActionsVisible: true
     } as ActionConfig;
 
-    // Hide kebab
-    if (integration.currentStatus === 'Undeployed') {
-      actionConfig.moreActionsVisible = false;
-    }
+    // // Hide kebab
+    // if (integration.currentStatus === 'Undeployed') {
+    //   actionConfig.moreActionsVisible = false;
+    // }
 
     return actionConfig;
   }

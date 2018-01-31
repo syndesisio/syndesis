@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
+package io.syndesis.core.util;
 
-public enum IntegrationDeploymentState {
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
-    /**
-     * {@link IntegrationDeployment} is deployed and running.
-     */
-    Active,
-    /**
-     * {@link IntegrationDeployment} is deployed but is not running.
-     */
-    Inactive,
-    /**
-     * IntegrationDeployment has been un-deployed.
-     */
-    Undeployed,
+/**
+ * Helper utility methods for working with Exceptions.
+ */
+public class Exceptions {
 
-    /**
-     * The {@link IntegrationDeployment} is deployed but in an error state.
-     */
-    Error,
+    private Exceptions(){
+    }
 
-    /**
-     * The {@link IntegrationDeployment} is in pending state. (Desired != Actual).
-     */
-    Pending;
+    public static String toString(Throwable exception) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        pw.close();
+        return sw.toString();
+    }
 }

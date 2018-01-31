@@ -85,8 +85,6 @@ public class EventsITCase extends BaseITCase {
             Integration integration = new Integration.Builder()
                 .id("1001")
                 .name("test")
-                .desiredStatus(IntegrationDeploymentState.Draft)
-                .currentStatus(IntegrationDeploymentState.Draft)
                 .build();
             post("/api/v1/integrations", integration, Integration.class);
 
@@ -180,8 +178,6 @@ public class EventsITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("1002")
             .name("test")
-            .desiredStatus(IntegrationDeploymentState.Draft)
-            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 

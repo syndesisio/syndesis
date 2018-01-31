@@ -36,8 +36,8 @@ public class DeleteHandler extends BaseHandler implements StateChangeHandler {
 
     @Override
     public StateUpdate execute(IntegrationDeployment integrationDeployment) {
-        IntegrationDeploymentState currentState = !openShiftService().exists(integrationDeployment.getName())
-            || openShiftService().delete(integrationDeployment.getName())
+        IntegrationDeploymentState currentState = !openShiftService().exists(integrationDeployment.getSpec().getName())
+            || openShiftService().delete(integrationDeployment.getSpec().getName())
             ? IntegrationDeploymentState.Undeployed
             : IntegrationDeploymentState.Pending;
         logInfo(integrationDeployment,"Deleted");

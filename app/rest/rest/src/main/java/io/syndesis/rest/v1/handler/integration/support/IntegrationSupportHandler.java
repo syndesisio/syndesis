@@ -15,7 +15,8 @@
  */
 package io.syndesis.rest.v1.handler.integration.support;
 
-import java.io.FilterInputStream;
+import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntry;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,9 +26,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -41,6 +45,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -53,6 +63,7 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ListResult;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.ModelExport;
 import io.syndesis.model.Schema;
@@ -61,16 +72,13 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
+import io.syndesis.rest.util.PaginationFilter;
+import io.syndesis.rest.util.ReflectiveSorter;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntry;
+import io.syndesis.rest.v1.handler.integration.model.IntegrationOverview;
+import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 
 @Path("/integration-support")
 @Api(value = "integration-support")
@@ -99,6 +107,30 @@ public class IntegrationSupportHandler {
         this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
         this.extensionDataManager = extensionDataManager;
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/overviews")
+    public ListResult<IntegrationOverview> getOverviews(@Context  UriInfo uriInfo) {
+
+        Stream<Integration> stream = getDataManager().fetchAll(Integration.class,
+            new DeletedFilter(),
+            new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+        ).getItems().stream();
+
+        return ListResult.of(stream.map(integration -> {
+            Optional<IntegrationDeployment> deployment = integration.getDeploymentVersion().map(ver -> {
+                String deploymentId = IntegrationDeployment.compositeId(integration.getId().get(), ver);
+                return getDataManager().fetch(IntegrationDeployment.class, deploymentId);
+            });
+            return new IntegrationOverview(integration, deployment);
+        }).collect(Collectors.toList()));
     }
 
     @POST
@@ -246,35 +278,22 @@ public class IntegrationSupportHandler {
             switch (model.getKind()) {
                 case Integration: {
                     Integration integration = (Integration) model.getData();
-                    integration = new Integration.Builder()
+                    Integration.Builder builder = new Integration.Builder()
                         .createFrom(integration)
-                        .desiredStatus(IntegrationDeploymentState.Draft)
-                        .build();
+                        .deleted(false)
+                        .updatedAt(System.currentTimeMillis());
 
                     // Do we need to create it?
                     String id = integration.getId().get();
-                    if (dataManager.fetch(Integration.class, id) == null) {
+                    Integration previous = dataManager.fetch(Integration.class, id);
+                    if (previous == null) {
                         LOG.info("Creating integration: {}", integration.getName());
-                        integrationHandler.create(sec, integration);
+                        integrationHandler.create(sec, builder.build());
                         result.add(ChangeEvent.of("created", integration.getKind().getModelName(), id));
                     } else {
                         LOG.info("Updating integration: {}", integration.getName());
-                        integrationHandler.update(id, integration);
+                        integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
                         result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
-                    }
-                    break;
-                }
-                case IntegrationDeployment: {
-                    IntegrationDeployment integrationDeployment = (IntegrationDeployment) model.getData();
-                    String id = integrationDeployment.getId().get();
-                    if (dataManager.fetch(IntegrationDeployment.class, id) == null) {
-                        LOG.info("Creating integration deployment: {} version: {} ", integrationDeployment.getName(), integrationDeployment.getVersion().orElse(1));
-                        dataManager.create(integrationDeployment);
-                        result.add(ChangeEvent.of("created", integrationDeployment.getKind().getModelName(), id));
-                    } else {
-                        LOG.info("Updating integration deployment: {} version: {} ", integrationDeployment.getName(), integrationDeployment.getVersion().orElse(1));
-                        dataManager.update(integrationDeployment);
-                        result.add(ChangeEvent.of("updated", integrationDeployment.getKind().getModelName(), id));
                     }
                     break;
                 }
@@ -332,7 +351,6 @@ public class IntegrationSupportHandler {
         for (ModelData<?> model : export.models()) {
             switch (model.getKind()) {
                 case Integration:
-                case IntegrationDeployment:
                 case Connection:
                 case Connector:
                 case Extension:

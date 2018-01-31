@@ -22,8 +22,8 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.Step;
 
 public final class IntegrationSupport {
@@ -33,7 +33,7 @@ public final class IntegrationSupport {
     public static IntegrationDeployment sanitize(IntegrationDeployment integrationDeployment, DataManager dataManager, EncryptionComponent encryptionSupport) {
         final int stepCount = integrationDeployment.getSpec().getSteps().size();
         final List<Step> steps = new ArrayList<>(stepCount);
-        final IntegrationDeploymentSpec.Builder builder = new IntegrationDeploymentSpec.Builder().createFrom(integrationDeployment.getSpec());
+        final Integration.Builder builder = new Integration.Builder().createFrom(integrationDeployment.getSpec());
 
         for (int i = 1; i <= stepCount; i++) {
             final Step source = integrationDeployment.getSpec().getSteps().get(i - 1);

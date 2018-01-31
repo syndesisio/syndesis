@@ -201,7 +201,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         return ProjectGeneratorHelper.generate(
             new PomContext(
                 deployment.getId().orElse(""),
-                deployment.getName(),
+                    deployment.getSpec().getName(),
                 deployment.getSpec().getDescription().orElse(null),
                 dependencies,
                 configuration.getMavenProperties()),
@@ -250,6 +250,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(deployment, applicationPropertiesMustache));
                 addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(deployment));
                 addTarEntry(tos, "pom.xml", generatePom(deployment));
+
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, deployment);
                 addAdditionalResources(tos);
@@ -268,11 +269,11 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     }
                 }
 
-                LOGGER.info("IntegrationDeployment [{}]: Project files written to output stream", Names.sanitize(deployment.getName()));
+                LOGGER.info("IntegrationDeployment [{}]: Project files written to output stream", Names.sanitize(deployment.getSpec().getName()));
             } catch (IOException e) {
                 if (LOGGER.isErrorEnabled()) {
                     LOGGER.error(String.format("Exception while creating runtime build tar for deployment %s : %s",
-                        deployment.getName(), e.toString()), e);
+                            deployment.getSpec().getName(), e.toString()), e);
                 }
             }
         };

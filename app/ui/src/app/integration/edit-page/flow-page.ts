@@ -84,12 +84,6 @@ export abstract class FlowPage implements OnDestroy {
   }
 
   save(status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = undefined) {
-    if (status) {
-      this.currentFlow.integration.desiredStatus = status;
-    }
-    if (!this.currentFlow.integration.desiredStatus) {
-      this.currentFlow.integration.desiredStatus = 'Draft';
-    }
     this.saveInProgress = true;
     this.doSave();
   }
@@ -97,7 +91,6 @@ export abstract class FlowPage implements OnDestroy {
   publish(
     status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = 'Active'
   ) {
-    this.currentFlow.integration.desiredStatus = status;
     this.publishInProgress = true;
     this.doSave();
   }

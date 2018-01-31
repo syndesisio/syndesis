@@ -69,8 +69,6 @@ public class IntegrationsITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("2001")
             .name("test")
-            .desiredStatus(IntegrationDeploymentState.Draft)
-            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
@@ -82,8 +80,6 @@ public class IntegrationsITCase extends BaseITCase {
         integration = new Integration.Builder()
             .id("2002")
             .name("test2")
-            .desiredStatus(IntegrationDeploymentState.Draft)
-            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
@@ -127,7 +123,7 @@ public class IntegrationsITCase extends BaseITCase {
 
     @Test
     public void shouldDetermineValidityForValidIntegrations() {
-        final Integration integration = new Integration.Builder().name("Test integration").desiredStatus(IntegrationDeploymentState.Draft).build();
+        final Integration integration = new Integration.Builder().name("Test integration").build();
 
         final ResponseEntity<List<Violation>> got = post("/api/v1/integrations/validation", integration, RESPONSE_TYPE,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);

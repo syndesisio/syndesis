@@ -8,6 +8,7 @@ import { createIntegration, createStep, Integration, Integrations } from '@synde
 
 import { AbstractStore } from '../entity/entity.store';
 import { EventsService } from '../entity/events.service';
+import { Response } from '@angular/http';
 
 @Injectable()
 export class IntegrationStore extends AbstractStore<
@@ -27,13 +28,14 @@ export class IntegrationStore extends AbstractStore<
   }
 
   public activate(integration: Integration): Observable<Integration> {
-    integration.desiredStatus = 'Active';
-    return this.update(integration);
+    return this.update(integration).map(result => {
+      this.service.deploy(result);
+      return result;
+     });
   }
 
-  public deactivate(integration: Integration): Observable<Integration> {
-    integration.desiredStatus = 'Inactive';
-    return this.update(integration);
+  public deactivate(integration: Integration): Observable<Response> {
+    return this.service.undeploy(integration);
   }
 
   newInstance(): Integration {

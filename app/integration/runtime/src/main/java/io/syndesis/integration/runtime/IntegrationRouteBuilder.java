@@ -31,7 +31,7 @@ import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
-import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
@@ -64,25 +64,25 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.addAll(handlers);
     }
 
-    protected IntegrationDeployment loadDeployment() throws IOException {
-        final IntegrationDeployment deployment;
+    protected Integration loadIntegration() throws IOException {
+        final Integration integration;
 
         try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
             if (is != null) {
                 LOGGER.info("Loading integration from: {}", configurationUri);
-                deployment = Json.reader().forType(IntegrationDeployment.class).readValue(is);
+                integration = Json.reader().forType(Integration.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
             }
         }
 
-        return deployment;
+        return integration;
     }
 
     @Override
     public void configure() throws Exception {
-        final IntegrationDeployment deployment = loadDeployment();
-        final List<? extends Step> steps = deployment.getSpec().getSteps();
+        final Integration integration = loadIntegration();
+        final List<? extends Step> steps = integration.getSteps();
 
         ProcessorDefinition route = null;
 
@@ -105,7 +105,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     });
 
                 route = definition.get();
-                deployment.getIntegrationId().ifPresent(route::setId);
+                integration.getId().ifPresent(route::setId);
             } else {
                 route = definition.map(rd -> {
                     step.getId().ifPresent(rd::id);

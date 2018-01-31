@@ -25,7 +25,6 @@ import org.junit.Test;
 
 import io.syndesis.core.Json;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 
 /**
  * Tests the StringTrimmingConverters
@@ -44,7 +43,6 @@ public class StringTrimmingConverterTest {
                 .id("test")
                 .name("  some-name\t").description("")
                 .tags(tags)
-                .desiredStatus(IntegrationDeploymentState.Draft)
                 .build();
 
         final Integration created = Json.reader().forType(Integration.class).readValue(Json.writer().writeValueAsBytes(original));

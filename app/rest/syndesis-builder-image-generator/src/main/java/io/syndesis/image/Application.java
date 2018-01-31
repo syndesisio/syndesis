@@ -25,6 +25,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
+
 import io.syndesis.core.Json;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.init.ReadApiClientData;
@@ -43,21 +56,9 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.Step;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternUtils;
 
 @SpringBootApplication(
     exclude = {
@@ -164,9 +165,8 @@ public class Application implements ApplicationRunner {
         }
 
         IntegrationDeployment integrationDeployment = new IntegrationDeployment.Builder()
-            .integrationId("integration")
-            .name("Integration")
-            .spec(new IntegrationDeploymentSpec.Builder()
+            .spec(new Integration.Builder()
+                .id("Integration")
                 .name("Integration")
                 .description("This integration is used to prime the .m2 repo")
                 .steps(steps)

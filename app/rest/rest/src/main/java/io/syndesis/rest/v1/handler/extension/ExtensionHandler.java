@@ -334,7 +334,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return new ResourceIdentifier.Builder()
             .id(integrationDeployment.getIntegrationId())
             .kind(Kind.Integration)
-            .name(Optional.ofNullable(integrationDeployment.getName()))
+            .name(Optional.ofNullable(integrationDeployment.getSpec().getName()))
             .build();
     }
 

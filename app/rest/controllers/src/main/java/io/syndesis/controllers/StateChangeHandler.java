@@ -19,11 +19,20 @@ import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public interface StateChangeHandler {
 
     Set<IntegrationDeploymentState> getTriggerStates();
 
-    StateUpdate execute(IntegrationDeployment integrationDeployment);
+    default StateUpdate execute(IntegrationDeployment integrationDeployment) {
+        return null;
+    }
 
+    default void execute(IntegrationDeployment integrationDeployment, Consumer<StateUpdate>updates) {
+        StateUpdate update = execute(integrationDeployment);
+        if( update!=null ) {
+            updates.accept(update);
+        }
+    }
 }

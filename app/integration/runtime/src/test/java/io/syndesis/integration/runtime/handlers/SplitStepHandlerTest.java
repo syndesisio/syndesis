@@ -146,7 +146,7 @@ public class SplitStepHandlerTest extends StepHandlerTestSupport {
             final String body = "a|b|c";
 
             result.expectedMessageCount(3);
-            result.expectedBodiesReceived(body.split("|"));
+            result.expectedBodiesReceived((Object[])body.split("|"));
 
             template.sendBody("direct:expression", body);
 

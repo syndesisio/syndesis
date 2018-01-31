@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { Connection, Connections, Integration, Integrations } from '@syndesis/ui/platform';
+import { Connection, Connections, IntegrationOverview, IntegrationOverviews } from '@syndesis/ui/platform';
 
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
@@ -17,7 +17,7 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnChanges {
   chartData: number[];
-  @Input() integrations: Integrations;
+  @Input() integrations: IntegrationOverviews;
   @Input() connections: Connections;
   @Input() integrationsLoading: boolean;
   @Input() connectionsLoading: boolean;
@@ -62,28 +62,21 @@ export class DashboardIntegrationsComponent implements OnChanges {
     const draft = [];
     const inactive = [];
     let total = 0;
-    (this.integrations || []).forEach(function(a) {
-      /* TODO - too noisy
-      log.debugc(() => 'Integration: ' + JSON.stringify(a));
-      log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
-      log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
-      */
-
-      switch (a.currentStatus) {
+    (this.integrations || []).forEach(integration => {
+      switch (integration.currentState) {
         case 'Active':
           total = total + 1;
-          active.push(a);
-          break;
-        case 'Draft':
-          total = total + 1;
-          draft.push(a);
+          active.push(integration);
           break;
         case 'Inactive':
           total = total + 1;
-          inactive.push(a);
+          inactive.push(integration);
           break;
         default:
           break;
+      }
+      if (integration.draft) {
+        draft.push(integration);
       }
     });
     return {
@@ -136,42 +129,16 @@ export class DashboardIntegrationsComponent implements OnChanges {
     }
   }
 
-  getStatusText(integration: Integration): string {
-    switch (integration.currentStatus) {
-      case 'Active':
-        return 'Active';
-      case 'Inactive':
-        return 'Inactive';
-      default:
-        return integration.currentStatus;
-    }
-  }
-
   //-----  Selecting a Connection or Integration ------------------->>
-
   selectedConnection(connection: Connection) {
     this.router.navigate(['/connections', connection.id]);
   }
 
-  goto(integration: Integration) {
+  goto(integration: IntegrationOverview) {
     this.router.navigate(
       ['/integration/edit', integration.id, 'save-or-add-step'],
       { relativeTo: this.route }
     );
   }
 
-  //-----  Times Used ------------------->>
-
-  randomizeTimesUsed(integration: Integration) {
-    // For testing purposes only
-    /*
-    if (!integration.timesUsed) {
-      log.debugc(() => 'No times used available, auto-generating one..');
-      return Math.floor(Math.random() * 25) + 1;
-    } else {
-      log.debugc(() => 'Times used: ' + JSON.stringify(integration['timesUsed']));
-      return integration.timesUsed;
-    }
-    */
-  }
 }

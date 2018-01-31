@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Integration,
   IntegrationActionsService,
   IntegrationSupportService,
+  Step,
   DRAFT,
   PENDING,
   ACTIVE,
@@ -35,19 +36,23 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   canEdit(integration: Integration) {
-    return integration.currentStatus !== UNDEPLOYED;
+    // I dont see when you wouldn't be able to edit.
+    return true; // integration.currentStatus !== UNDEPLOYED;
   }
 
   canActivate(integration: Integration) {
-    return integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
+    // TODO: false if integration.version == lastDeloyed.version && is active.
+    return true; // integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
   }
 
   canDeactivate(integration: Integration) {
-    return integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
+    // TODO: true if lastDeloyed is active.
+    return true; //integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
   }
 
   canDelete(integration: Integration) {
-    return integration.currentStatus !== UNDEPLOYED;
+    // TODO: true always I think.
+    return true; // integration.currentStatus !== UNDEPLOYED;
   }
 
   //----- Actions ------------------->>
@@ -243,11 +248,11 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.steps[0];
+    return integration.steps ? integration.steps[0] : {} as Step;
   }
 
   getFinish(integration: Integration) {
-    return integration.steps.slice(-1)[0];
+    return integration.steps ? integration.steps.slice(-1)[0] : {} as Step;
   }
 
   //-----  Modal ------------------->>

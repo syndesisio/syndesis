@@ -15,6 +15,12 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,14 +28,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.extension.ExtensionDataManager;
@@ -41,8 +48,8 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.v1.state.ClientSideState;
@@ -53,12 +60,6 @@ import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ConnectorHandlerTest {
 
@@ -165,6 +166,11 @@ public class ConnectorHandlerTest {
     }
 
     private static IntegrationDeployment newDeployment(List<Step> steps) {
-      return new IntegrationDeployment.Builder().spec(new IntegrationDeploymentSpec.Builder().steps(steps).build()).currentState(IntegrationDeploymentState.Active).build();
+      return new IntegrationDeployment.Builder().spec(new Integration.Builder()
+          .id("test")
+          .name("test")
+          .steps(steps)
+          .build())
+          .currentState(IntegrationDeploymentState.Active).build();
     }
 }

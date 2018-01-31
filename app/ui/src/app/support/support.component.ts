@@ -3,7 +3,6 @@ import { Component,  Input,  ViewChild, ElementRef, OnInit } from '@angular/core
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
-import { Restangular } from 'ngx-restangular';
 import { Http } from '@angular/http';
 
 import { Integrations, Integration } from '../platform/types/integration/integration.model';
@@ -82,7 +81,6 @@ export class SupportComponent implements OnInit {
         description: 'Description about the integration goes here'
     }
   ];
-  private restangularService: Restangular;
 
   constructor(
     public store: IntegrationStore,

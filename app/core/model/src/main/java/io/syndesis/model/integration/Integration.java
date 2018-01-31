@@ -17,30 +17,31 @@ package io.syndesis.model.integration;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.core.json.OptionalStringTrimmingConverter;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.WithId;
+import io.syndesis.model.WithModificationTimestamps;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
+import io.syndesis.model.WithVersion;
 import io.syndesis.model.connection.Connection;
-import io.syndesis.model.user.User;
 import io.syndesis.model.validation.UniqueProperty;
 import io.syndesis.model.validation.UniquenessRequired;
-
-import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface Integration extends WithId<Integration>, WithTags, WithName, Serializable {
+public interface Integration extends WithId<Integration>, WithVersion, WithModificationTimestamps, WithTags, WithName, Serializable {
 
     @Override
     default Kind getKind() {
@@ -48,13 +49,13 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     }
 
     //TODO: This is actually the deployment version and not the deployment. At some point we need to rename it.
-    Optional<Integer> getDeploymentId();
+    Optional<Integer> getDeploymentVersion();
 
-    Optional<String> getUserId();
-
-    List<User> getUsers();
-
-    Optional<String> getConfiguration();
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @Value.Default
+    default boolean getDeleted() {
+        return false;
+    }
 
     @Value.Default
     default List<Connection> getConnections() {
@@ -62,7 +63,7 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
     }
 
     @Value.Default
-    default List<? extends Step> getSteps() {
+    default List<Step> getSteps() {
         return Collections.emptyList();
     }
 
@@ -73,21 +74,6 @@ public interface Integration extends WithId<Integration>, WithTags, WithName, Se
 
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
-
-    Optional<IntegrationDeploymentState> getDesiredStatus();
-
-    Optional<IntegrationDeploymentState> getCurrentStatus();
-
-    @Value.Default
-    default List<String> getStepsDone() {
-        return Collections.emptyList();
-    }
-
-    Optional<String> getStatusMessage();
-
-    Optional<Date> getLastUpdated();
-
-    Optional<Date> getCreatedDate();
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder

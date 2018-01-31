@@ -1,7 +1,7 @@
 <syndesis-modal [title]="modalTitle"
                 [message]="modalMessage">
 </syndesis-modal>
-<syndesis-loading [loading]="loading$ | async">
+<syndesis-loading [loading]="loading">
   <div *ngIf="integration"
        class="row integration-detail">
     <div class=" toolbar-pf toolbar">
@@ -41,7 +41,7 @@
           Description:
         </dt>
         <dd>
-          <p>
+          <p *ngIf="integration.steps">
             <!--<pre>{{ currentDeployment | json }}</pre>-->
             <ng-template ngFor
                          let-step

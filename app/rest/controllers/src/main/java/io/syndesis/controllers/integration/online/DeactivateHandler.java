@@ -34,14 +34,13 @@ public class DeactivateHandler extends BaseHandler implements StateChangeHandler
 
     @Override
     public Set<IntegrationDeploymentState> getTriggerStates() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            IntegrationDeploymentState.Inactive, IntegrationDeploymentState.Draft)));
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(IntegrationDeploymentState.Inactive)));
     }
 
     @Override
     public StateUpdate execute(IntegrationDeployment integrationDeployment) {
         try {
-            openShiftService().scale(integrationDeployment.getName(), 0);
+            openShiftService().scale(integrationDeployment.getSpec().getName(), 0);
             logInfo(integrationDeployment,"Deactivated");
         } catch (KubernetesClientException e) {
             // Ignore 404 errors, means the deployment does not exist for us
@@ -51,7 +50,7 @@ public class DeactivateHandler extends BaseHandler implements StateChangeHandler
             }
         }
 
-        IntegrationDeploymentState currentState = openShiftService().isScaled(integrationDeployment.getName(), 0)
+        IntegrationDeploymentState currentState = openShiftService().isScaled(integrationDeployment.getSpec().getName(), 0)
             ? IntegrationDeploymentState.Inactive
                 : IntegrationDeploymentState.Pending;
 

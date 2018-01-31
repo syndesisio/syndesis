@@ -13,30 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
+package io.syndesis.rest.v1.handler.integration.model;
 
-public enum IntegrationDeploymentState {
+import io.syndesis.model.WithName;
 
-    /**
-     * {@link IntegrationDeployment} is deployed and running.
-     */
-    Active,
-    /**
-     * {@link IntegrationDeployment} is deployed but is not running.
-     */
-    Inactive,
-    /**
-     * IntegrationDeployment has been un-deployed.
-     */
-    Undeployed,
+public class WithNameOverview {
+    private final WithName value;
 
-    /**
-     * The {@link IntegrationDeployment} is deployed but in an error state.
-     */
-    Error,
+    public WithNameOverview(WithName value) {
+        this.value = value;
+    }
 
-    /**
-     * The {@link IntegrationDeployment} is in pending state. (Desired != Actual).
-     */
-    Pending;
+    public String getName() {
+        return value.getName();
+    }
 }

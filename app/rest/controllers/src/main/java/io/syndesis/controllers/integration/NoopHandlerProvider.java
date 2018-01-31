@@ -21,14 +21,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.syndesis.controllers.StateChangeHandler;
-import io.syndesis.controllers.StateChangeHandlerProvider;
-import io.syndesis.controllers.StateUpdate;
-
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import io.syndesis.controllers.StateChangeHandler;
+import io.syndesis.controllers.StateChangeHandlerProvider;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 
 @Component
 @ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "noop")
@@ -40,11 +38,6 @@ public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandl
             IntegrationDeploymentState.Active,
             IntegrationDeploymentState.Inactive,
             IntegrationDeploymentState.Undeployed)));
-    }
-
-    @Override
-    public StateUpdate execute(IntegrationDeployment integrationDeployment) {
-        return null;
     }
 
     @Override

@@ -13,30 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
+package io.syndesis.model;
 
-public enum IntegrationDeploymentState {
+import org.immutables.value.Value;
 
-    /**
-     * {@link IntegrationDeployment} is deployed and running.
-     */
-    Active,
-    /**
-     * {@link IntegrationDeployment} is deployed but is not running.
-     */
-    Inactive,
-    /**
-     * IntegrationDeployment has been un-deployed.
-     */
-    Undeployed,
+public interface WithModificationTimestamps {
 
-    /**
-     * The {@link IntegrationDeployment} is deployed but in an error state.
-     */
-    Error,
+    @Value.Default
+    default long getCreatedAt() { return 0; }
 
-    /**
-     * The {@link IntegrationDeployment} is in pending state. (Desired != Actual).
-     */
-    Pending;
+    @Value.Default
+    default long getUpdatedAt() {
+        return getCreatedAt();
+    }
+
 }
