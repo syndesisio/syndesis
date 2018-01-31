@@ -31,7 +31,7 @@ public final class Json {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
         .registerModules(new Jdk8Module(), new SyndesisModule())
-        .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
+        .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
         .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
