@@ -67,7 +67,7 @@ minishift::run() {
 
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
-            recreate_project $project
+            recreate_project $project "$(hasflag --yes -y)"
         fi
 
         basedir=$(appdir)

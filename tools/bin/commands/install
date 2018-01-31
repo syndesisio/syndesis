@@ -36,7 +36,7 @@ install::run() {
     # If a project is given, create it new or recreate it
     local project=$(readopt --project -p)
     if [ -n "${project}" ]; then
-        recreate_project $project
+        recreate_project $project "$(hasflag --yes -y)"
     fi
 
     # Required OAuthclient

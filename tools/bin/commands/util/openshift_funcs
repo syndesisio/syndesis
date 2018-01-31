@@ -2,6 +2,8 @@
 
 recreate_project() {
     local project=$1
+    local dont_ask=${2:-false}
+
     if [ -z "$project" ]; then
         echo "No project given"
         exit 1
@@ -9,6 +11,17 @@ recreate_project() {
 
     # Delete project if existing
     if oc get project "${project}" >/dev/null 2>&1 ; then
+        if [ $dont_ask != "true" ]; then
+            echo =============== WARNING -- Going to delete project ${project}
+            oc get all -n $project
+            echo ============================================================
+            read -p "Do you really want to delete the existing project $project ? yes/[no] : " choice
+            echo
+            if [ "$choice" != "yes" ] && [ "$choice" != "y" ]; then
+                echo "Aborting on user's request"
+                exit 1
+            fi
+        fi
         echo "Deleting project ${project}"
         oc delete project "${project}"
     fi
