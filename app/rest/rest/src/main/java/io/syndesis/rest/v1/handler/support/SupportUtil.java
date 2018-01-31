@@ -67,7 +67,7 @@ import java.util.zip.ZipOutputStream;
 public class SupportUtil {
     public static final Logger LOG = LoggerFactory.getLogger(SupportUtil.class);
     static final String[] PLATFORM_PODS = {"syndesis-atlasmap", "syndesis-db", "syndesis-oauthproxy", "syndesis-rest", "syndesis-ui", "syndesis-verifier"};
-    protected static final Yaml yaml;
+    protected static final Yaml YAML;
     public static final String MASKING_REGEXP="(?<=password)[:=](\\w+)";
 
     private final NamespacedOpenShiftClient client;
@@ -79,7 +79,7 @@ public class SupportUtil {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
-        yaml = new Yaml(options);
+        YAML = new Yaml(options);
     }
 
     public SupportUtil(NamespacedOpenShiftClient client, IntegrationHandler integrationHandler, IntegrationSupportHandler integrationSupportHandler) {
@@ -90,13 +90,12 @@ public class SupportUtil {
     }
 
     public Optional<Reader> streamLogs(String label, String integrationName) {
-        Optional<Reader> result =  client.pods().list().getItems().stream()
-        .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
-            flatMap(p ->
-                //Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLogReader())
-                Optional.of(new StringReader("REQUIRES_LIBRARY_UPDATE!!!!"))
-            );
-        return result;
+        return client.pods().list().getItems().stream()
+            .filter(p -> integrationName.equals(p.getMetadata().getLabels().get(label))).findAny().
+                flatMap(p ->
+                    //Optional.of(client.pods().inNamespace(config.getNamespace()).withName(p.getMetadata().getName()).getLogReader())
+                    Optional.of(new StringReader("REQUIRES_LIBRARY_UPDATE!!!!"))
+                );
     }
 
     public File createSupportZipFile(Map<String, Boolean> configurationMap, UriInfo uriInfo) {
@@ -105,7 +104,7 @@ public class SupportUtil {
             zipFile = File.createTempFile("syndesis.", ".zip");
         } catch (IOException e) {
             LOG.error("Error creating Support zip file", e);
-            throw new WebApplicationException(500);
+            throw new WebApplicationException(e, 500);
         }
 
         try ( ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));) {
@@ -114,7 +113,7 @@ public class SupportUtil {
             LOG.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             LOG.error("Error producing Support zip file", e);
-            throw new WebApplicationException(500);
+            throw new WebApplicationException(e, 500);
         }
 
         return zipFile;
@@ -128,6 +127,7 @@ public class SupportUtil {
         });
     }
 
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl","PMD.CyclomaticComplexity"})
     protected void addSourceFiles(UriInfo uriInfo, ZipOutputStream os, String integrationName) {
         ListResult<Integration> list = integrationHandler.list(uriInfo);
         list.getItems().stream()
@@ -159,7 +159,7 @@ public class SupportUtil {
         stream.forEach( res -> {
             HasMetadata resWithMetadata = (HasMetadata) res;
             try {
-                ZipEntry ze = new ZipEntry("descriptors/"+ resWithMetadata.getKind() + '/' + resWithMetadata.getMetadata().getName() + ".yaml");
+                ZipEntry ze = new ZipEntry("descriptors/"+ resWithMetadata.getKind() + '/' + resWithMetadata.getMetadata().getName() + ".YAML");
                 os.putNextEntry(ze);
                 dumpAsYaml(resWithMetadata, os);
                 os.closeEntry();
@@ -226,11 +226,10 @@ public class SupportUtil {
     }
 
     public Collection<String> getIntegrationPods() {
-        Collection<String> collect = client.pods().list().getItems().stream()
+        return client.pods().list().getItems().stream()
                 .filter(pod -> pod.getMetadata().getLabels().containsKey("integration"))
                 .map(pod -> pod.getMetadata().getLabels().get("integration"))
                 .collect(Collectors.toList());
-        return collect;
     }
 
     public Optional<Reader> getLogs(String label, String integrationName) {
@@ -274,6 +273,6 @@ public class SupportUtil {
     }
 
     public static void dumpAsYaml(HasMetadata obj, OutputStream outputStream) {
-        yaml.dump(obj, new OutputStreamWriter(outputStream, Charset.defaultCharset()));;
+        YAML.dump(obj, new OutputStreamWriter(outputStream, Charset.defaultCharset()));;
     }
 }

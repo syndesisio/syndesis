@@ -53,7 +53,8 @@ public class RegexBasedMasqueradeReader extends FilterReader {
 
     // This overridden method fills sharedBuf with characters read from in.
     @Override
-    public int read(char sharedBuf[], int off, int len) throws IOException {
+    public int read(char sharedBuf[], int offset, int len) throws IOException {
+        int off = offset;
         // Fetch new line if necessary
         if (curLine == null) {
             curLine = ((BufferedReader) in).readLine();
@@ -69,14 +70,13 @@ public class RegexBasedMasqueradeReader extends FilterReader {
             List<Integer> matches = new ArrayList<>();
             while (matcher.find()) {
                 String group = matcher.group(1);
-                System.out.println(group);
                 MatchResult matchResult = matcher.toMatchResult();
                 matches.add(matchResult.start());
                 matches.add(matchResult.end());
             }
 
             int matchesIdx = 0;
-            if (matches.size() > 0) {
+            if (!matches.isEmpty()) {
                 start = matches.get(matchesIdx++);
                 end = matches.get(matchesIdx++);
             }
@@ -89,7 +89,6 @@ public class RegexBasedMasqueradeReader extends FilterReader {
                     sharedBuf[off++] = curLine.charAt(curLineIx);
                 } else {
                     if (curLineIx == end - 1) {
-                        System.out.println("finished");
                         if (matchesIdx == matches.size()) {
                             start = Integer.MAX_VALUE;
                             end = Integer.MAX_VALUE;

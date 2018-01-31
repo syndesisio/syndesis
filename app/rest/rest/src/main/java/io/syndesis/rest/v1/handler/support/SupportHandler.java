@@ -15,10 +15,8 @@
  */
 package io.syndesis.rest.v1.handler.support;
 
-import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.swagger.annotations.Api;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -45,16 +42,12 @@ import java.util.Map;
 @ConditionalOnBean(SupportUtil.class)
 public class SupportHandler extends BaseHandler {
 
-    private final NamespacedOpenShiftClient client;
-    private final OpenShiftConfigurationProperties config;
     private final SupportUtil util;
 
-    private Logger LOG = LoggerFactory.getLogger(SupportHandler.class);
+    private final Logger LOG = LoggerFactory.getLogger(SupportHandler.class);
 
-    public SupportHandler(final DataManager dataMgr, NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties config, SupportUtil util) {
+    public SupportHandler(final DataManager dataMgr, SupportUtil util) {
         super(dataMgr);
-        this.client = openShiftClient;
-        this.config = config;
         this.util = util;
     }
 
