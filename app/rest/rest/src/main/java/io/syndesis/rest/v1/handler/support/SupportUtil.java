@@ -127,7 +127,7 @@ public class SupportUtil {
         });
     }
 
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl","PMD.CyclomaticComplexity"})
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
     protected void addSourceFiles(UriInfo uriInfo, ZipOutputStream os, String integrationName) {
         ListResult<Integration> list = integrationHandler.list(uriInfo);
         list.getItems().stream()
@@ -145,6 +145,7 @@ public class SupportUtil {
                 });
     }
 
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
     protected void addResourceDescriptors(ZipOutputStream os) {
 
         Stream<BuildConfig> bcStream = client.buildConfigs().list().getItems().stream();
@@ -169,6 +170,7 @@ public class SupportUtil {
         });
     }
 
+    @SuppressWarnings({ "PMD.ExceptionAsFlowControl"})
     protected void addIntegrationLogs(ZipOutputStream os, String integrationName) {
         getIntegrationLogs(integrationName).ifPresent(( fileContent) -> {
             try {
@@ -233,7 +235,7 @@ public class SupportUtil {
     }
 
     public Optional<Reader> getLogs(String label, String integrationName) {
-        Optional<Reader> result =  client.pods().list().getItems().stream()
+        return client.pods().list().getItems().stream()
             .filter(pod -> integrationName.equals(pod.getMetadata().getLabels().get(label)))
             .findAny()
             .map(pod -> pod.getMetadata().getName())
@@ -261,7 +263,6 @@ public class SupportUtil {
                 }
                 return Optional.empty();
             });
-        return result;
     }
 
     public Optional<Reader> getIntegrationLogs(String integrationName){

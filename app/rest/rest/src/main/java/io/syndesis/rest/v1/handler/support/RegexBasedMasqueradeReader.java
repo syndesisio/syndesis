@@ -53,6 +53,7 @@ public class RegexBasedMasqueradeReader extends FilterReader {
 
     // This overridden method fills sharedBuf with characters read from in.
     @Override
+    @SuppressWarnings({"PMD.CyclomaticComplexity"})
     public int read(char sharedBuf[], int offset, int len) throws IOException {
         int off = offset;
         // Fetch new line if necessary
@@ -69,7 +70,6 @@ public class RegexBasedMasqueradeReader extends FilterReader {
             matcher.reset(curLine);
             List<Integer> matches = new ArrayList<>();
             while (matcher.find()) {
-                String group = matcher.group(1);
                 MatchResult matchResult = matcher.toMatchResult();
                 matches.add(matchResult.start());
                 matches.add(matchResult.end());
