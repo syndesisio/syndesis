@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.http.HttpPostComponent",
     "groupId":"io.syndesis",
     "artifactId":"http-post-connector",
-    "version":"1.2.6"
+    "version":"1.2.7"
   },
   "componentProperties":{
     "scheme":{

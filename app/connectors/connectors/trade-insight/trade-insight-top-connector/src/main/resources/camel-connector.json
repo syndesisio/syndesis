@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.tradeinsight.TradeInsightTopComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "trade-insight-top-connector",
-  "version" : "1.2.6",
+  "version" : "1.2.7",
   "description" : "Fetches top recommendation from Trade Insight API server",
   "labels" : [ "daytrade" ],
   "pattern" : "From",
