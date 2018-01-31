@@ -82,18 +82,18 @@ export interface FilterOptions extends BaseEntity {
 export type FilterOptionss = Array<FilterOptions>;
 
 // this is for the logging backend
-export interface Exchange extends BaseEntity {
+export interface Activity extends BaseEntity {
   logts?: string;
   at: number;
   pod: string;
   ver: string;
   status: string;
   failed: boolean;
-  steps?: ExchangeStep[];
+  steps?: ActivityStep[];
   metadata?: any;
 }
 
-export interface ExchangeStep extends BaseEntity {
+export interface ActivityStep extends BaseEntity {
   at: number;
   duration?: number;
   failure?: string;

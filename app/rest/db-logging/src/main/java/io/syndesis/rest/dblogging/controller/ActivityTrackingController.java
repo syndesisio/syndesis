@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.syndesis.core.Json;
 import io.syndesis.core.KeyGenerator;
+import io.syndesis.core.util.DurationConverter;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDB;
 import io.syndesis.openshift.OpenShiftService;
@@ -53,14 +54,14 @@ import java.util.function.Consumer;
  * This class tracks pod controller and ingests them into our DB.
  */
 @Service
-@ConditionalOnProperty(value = "controller.dblogging.enabled", havingValue = "true")
-public class LogsController implements Closeable {
+@ConditionalOnProperty(value = "controllers.dblogging.enabled", havingValue = "true", matchIfMissing = true)
+public class ActivityTrackingController implements Closeable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogsController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
 
     private final DBI dbi;
     private final KubernetesClient client;
-    private final Map<String, PodLogHandler> podHandlers = new HashMap<>();
+    private final Map<String, PodLogMonitor> podHandlers = new HashMap<>();
     private final JsonDB jsonDB;
     private final KubernetesSupport kubernetesSupport;
     private ScheduledExecutorService scheduler;
@@ -74,7 +75,7 @@ public class LogsController implements Closeable {
     private Duration startupDelay = Duration.ofSeconds(15);
 
     @Autowired
-    public LogsController(JsonDB jsonDB, DBI dbi, KubernetesClient client) {
+    public ActivityTrackingController(JsonDB jsonDB, DBI dbi, KubernetesClient client) {
         this.jsonDB = jsonDB;
         this.dbi = dbi;
         this.client = client;
@@ -98,10 +99,10 @@ public class LogsController implements Closeable {
             String untilKey = KeyGenerator.recreateKey(until, 0, 0);
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> hashMap = dbGet(HashMap.class, "/logs/integrations");
+            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations");
             if( hashMap!=null ) {
                 for (String integrationId : hashMap.keySet()) {
-                    String integrationPath = "/logs/exchanges/" + integrationId + "/";
+                    String integrationPath = "/activity/exchanges/" + integrationId + "/";
                     int count = deleteFieldsLT(integrationPath, untilKey);
                     LOG.info("deleted {} transactions for integration: {}", count, integrationId);
                 }
@@ -149,7 +150,7 @@ public class LogsController implements Closeable {
 
         try {
             // clear the marks
-            for (PodLogHandler handler : podHandlers.values()) {
+            for (PodLogMonitor handler : podHandlers.values()) {
                 handler.markInOpenshift.set(false);
             }
 
@@ -163,12 +164,12 @@ public class LogsController implements Closeable {
                 }
 
                 String name = pod.getMetadata().getName();
-                PodLogHandler handler = podHandlers.get(name);
+                PodLogMonitor handler = podHandlers.get(name);
 
                 if (handler == null) {
                     // create a new handler.
                     try {
-                        handler = new PodLogHandler(this, pod);
+                        handler = new PodLogMonitor(this, pod);
                         handler.start();
 
                         LOG.info("Created handler for pod: {}", handler.podName);
@@ -183,9 +184,9 @@ public class LogsController implements Closeable {
             }
 
             // Remove items from the map which are no longer in openshift
-            Iterator<Map.Entry<String, PodLogHandler>> iterator = podHandlers.entrySet().iterator();
+            Iterator<Map.Entry<String, PodLogMonitor>> iterator = podHandlers.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, PodLogHandler> next = iterator.next();
+                Map.Entry<String, PodLogMonitor> next = iterator.next();
                 if (!next.getValue().markInOpenshift.get()) {
                     LOG.info("Pod not tracked by openshift anymore: {}", next.getValue().podName);
                     next.getValue().keepTrying.set(false);
@@ -194,11 +195,11 @@ public class LogsController implements Closeable {
             }
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> pods = dbGet(HashMap.class, "/logs/pods");
+            Map<String, Object> pods = dbGet(HashMap.class, "/activity/pods");
             if (pods != null) {
                 pods.keySet().removeAll(podHandlers.keySet());
                 for (String o : pods.keySet()) {
-                    jsonDB.delete("/logs/pods/" + o);
+                    jsonDB.delete("/activity/pods/" + o);
                     LOG.info("Pod state removed from db: {}", o);
                 }
             }
@@ -225,15 +226,15 @@ public class LogsController implements Closeable {
     }
 
     public void deletePodLogState(String podName) throws IOException {
-        jsonDB.delete("/logs/pods/" + podName);
+        jsonDB.delete("/activity/pods/" + podName);
     }
 
     public void setPodLogState(String podName, PodLogState state) throws IOException {
-        jsonDB.set("/logs/pods/" + podName, Json.mapper().writeValueAsBytes(state));
+        jsonDB.set("/activity/pods/" + podName, Json.mapper().writeValueAsBytes(state));
     }
 
     public PodLogState getPodLogState(String podName) throws IOException {
-        return dbGet(PodLogState.class, "/logs/pods/" + podName);
+        return dbGet(PodLogState.class, "/activity/pods/" + podName);
     }
 
     private <T> T dbGet(Class<T> type, String path) throws IOException {
@@ -282,7 +283,7 @@ public class LogsController implements Closeable {
                     }
 
                     // Write the batch..
-                    jsonDB.update("/logs", Json.mapper().writeValueAsBytes(batch));
+                    jsonDB.update("/activity", Json.mapper().writeValueAsBytes(batch));
                     LOG.info("Batch ingested {} log events", eventCounter);
 
                 } catch (IOException e) {

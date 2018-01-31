@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Action,
          Connection,
-         Exchange,
+         Activity,
          Integration,
          IntegrationDeployment,
          IntegrationDeployments,
@@ -12,8 +12,6 @@ import { Action,
 
 import { EventsService } from '@syndesis/ui/store';
 import { integrationSupportEndpoints } from './integration-support.api';
-
-
 import { RequestMethod, ResponseContentType } from '@angular/http';
 
 @Injectable()
@@ -79,11 +77,17 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService.getEndpointUrl(integrationSupportEndpoints.import);
   }
 
-  requestIntegrationLogs(id: string): Observable<Exchange[]> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.logs, {
+  requestIntegrationActivityFeatureEnabled(): Observable<boolean> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.activityFeature).get().map(res => {
+      return res['enabled'];
+    });
+  }
+
+  requestIntegrationActivity(id: string): Observable<Activity[]> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.activity, {
       integrationId: id,
     }).get().map(res => {
-      const transactions = res as Exchange[];
+      const transactions = res as Activity[];
       return transactions;
     });
   }

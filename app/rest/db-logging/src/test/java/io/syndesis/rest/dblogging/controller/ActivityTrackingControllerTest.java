@@ -40,7 +40,7 @@ import static org.awaitility.Awaitility.given;
 /**
  * Used to unit test the LogsController implementation.
  */
-public class LogsControllerTest {
+public class ActivityTrackingControllerTest {
 
     private SqlJsonDB jsondb;
     private DBI dbi;
@@ -64,7 +64,7 @@ public class LogsControllerTest {
         final String expectedDBState = resource("logs-controller-db.json").trim();
         final String podLogs = resource("test-pod-x23x.txt");
 
-        try (LogsController controller = new LogsController(jsondb, dbi,null) {
+        try (ActivityTrackingController controller = new ActivityTrackingController(jsondb, dbi,null) {
 
             @Override
             protected PodList listPods() {
@@ -73,8 +73,8 @@ public class LogsControllerTest {
                     .withNewMetadata()
                     .withName("test-pod-x23x")
                     .addToLabels(OpenShiftService.COMPONENT_LABEL, "integration")
-                    .addToLabels(OpenShiftService.DEPLOYMENT_ID_LABEL, "3")
-                    .addToAnnotations(OpenShiftService.INTEGRATION_ID_LABEL, "my-integration")
+                    .addToAnnotations(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, "3")
+                    .addToAnnotations(OpenShiftService.INTEGRATION_ID_ANNOTATION, "my-integration")
                     .endMetadata()
                     .withNewStatus()
                     .withPhase("Running")
@@ -113,7 +113,7 @@ public class LogsControllerTest {
     }
 
     private static String resource(String file) throws IOException {
-        try (InputStream is = requireNonNull(LogsControllerTest.class.getClassLoader().getResourceAsStream(file)) ) {
+        try (InputStream is = requireNonNull(ActivityTrackingControllerTest.class.getClassLoader().getResourceAsStream(file)) ) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             copy(is, os);
             return new String(os.toByteArray(), StandardCharsets.UTF_8);

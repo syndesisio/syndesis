@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.dblogging.jaxrs.model;
-
-import com.fasterxml.jackson.databind.JsonNode;
+package io.syndesis.rest.v1.handler.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  */
-public class ExchangeStep {
+public class ActivityStep {
     private String id;
     private Long at;
     private Long duration;

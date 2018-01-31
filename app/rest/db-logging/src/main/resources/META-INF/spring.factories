@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.syndesis.rest.dblogging.DBLoggingConfiguration
+    io.syndesis.rest.dblogging.DBActivityTrackingConfiguration

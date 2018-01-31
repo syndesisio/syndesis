@@ -13,27 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.dblogging.jaxrs;
+package io.syndesis.rest.dblogging.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.syndesis.core.Json;
-import io.syndesis.core.KeyGenerator;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDB;
-import io.syndesis.rest.dblogging.controller.LogsController;
-import io.syndesis.rest.dblogging.jaxrs.model.Exchange;
-import io.syndesis.rest.dblogging.jaxrs.model.ExchangeStep;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import static io.syndesis.rest.dblogging.service.JsonNodeSupport.fieldNames;
+import static io.syndesis.rest.dblogging.service.JsonNodeSupport.getLong;
+import static io.syndesis.rest.dblogging.service.JsonNodeSupport.getString;
+import static io.syndesis.rest.dblogging.service.JsonNodeSupport.removeBoolean;
+import static io.syndesis.rest.dblogging.service.JsonNodeSupport.removeLong;
+import static io.syndesis.rest.dblogging.service.JsonNodeSupport.removeString;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,39 +33,44 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.fieldNames;
-import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.getLong;
-import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.getString;
-import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.removeBoolean;
-import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.removeLong;
-import static io.syndesis.rest.dblogging.jaxrs.JsonNodeSupport.removeString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import io.syndesis.core.Json;
+import io.syndesis.core.KeyGenerator;
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDB;
+import io.syndesis.rest.dblogging.controller.ActivityTrackingController;
+import io.syndesis.rest.v1.handler.activity.Activity;
+import io.syndesis.rest.v1.handler.activity.ActivityStep;
+import io.syndesis.rest.v1.handler.activity.ActivityTrackingService;
 
 /**
- * Provides a JAXR interface to query stored integration logging from the DB.
+ * Implements a dblogging service for the Activity JAXRS service.
  */
 @Component
-public class LogResource {
+@ConditionalOnProperty(value = "endpoints.dblogging.enabled", havingValue = "true", matchIfMissing = true)
+public class DBActivityTrackingService implements ActivityTrackingService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogsController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
     private static final Set<String> EVENT_FIELDS_SKIP_LIST = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "at", "logts")));
 
     private final JsonDB jsondb;
 
 
-    public LogResource(final JsonDB jsondb) {
+    public DBActivityTrackingService(final JsonDB jsondb) {
         this.jsondb = jsondb;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{integrationId}")
-    public List<Exchange> getLogs(
-        @PathParam("integrationId") String integrationId,
-        @QueryParam("from") String from,
-        @QueryParam("limit") Integer requestedLimit
-    ) throws IOException {
+    @Override
+    public List<Activity> getActivities(String integrationId, String from, Integer requestedLimit) throws IOException {
 
-        String path = "/logs/exchanges/" + integrationId;
+        String path = "/activity/exchanges/" + integrationId;
 
         int limit = 10;
         if( requestedLimit != null ) {
@@ -99,10 +92,10 @@ public class LogResource {
         return toAPIAPITxLogEntryList(Json.mapper().readTree(data));
     }
 
-    private List<Exchange> toAPIAPITxLogEntryList(JsonNode from) {
+    private List<Activity> toAPIAPITxLogEntryList(JsonNode from) {
         return toList(from, j-> {
 
-            Exchange rc = new Exchange();
+            Activity rc = new Activity();
 
             rc.setId(removeString(j, "id"));
             rc.setAt(removeLong(j, "at"));
@@ -113,9 +106,9 @@ public class LogResource {
             rc.setLogts(removeString(j, "logts"));
 
             ObjectNode fromSteps = (ObjectNode) j.remove("steps");
-            List<ExchangeStep> steps = toList(fromSteps, fromStepEvents -> {
+            List<ActivityStep> steps = toList(fromSteps, fromStepEvents -> {
 
-                ExchangeStep toStep = new ExchangeStep();
+                ActivityStep toStep = new ActivityStep();
                 toStep.setId(removeString(fromStepEvents, "id"));
                 fromStepEvents.remove("at");
 

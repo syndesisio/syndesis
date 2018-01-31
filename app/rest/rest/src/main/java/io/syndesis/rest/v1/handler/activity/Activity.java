@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.dblogging.jaxrs.model;
-
-import com.fasterxml.jackson.databind.JsonNode;
+package io.syndesis.rest.v1.handler.activity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  */
-public class Exchange {
+public class Activity {
 
     private String id;
     private String logts;
@@ -30,7 +30,7 @@ public class Exchange {
     private String ver;
     private String status;
     private Boolean failed;
-    private List<ExchangeStep> steps;
+    private List<ActivityStep> steps;
     private JsonNode metadata;
 
     public String getId() {
@@ -81,11 +81,11 @@ public class Exchange {
         this.failed = failed;
     }
 
-    public List<ExchangeStep> getSteps() {
+    public List<ActivityStep> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<ExchangeStep> steps) {
+    public void setSteps(List<ActivityStep> steps) {
         this.steps = steps;
     }
 

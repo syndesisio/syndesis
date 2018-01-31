@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.dblogging.controller;
+package io.syndesis.core.util;
 
 import java.time.Duration;
 import java.util.Arrays;

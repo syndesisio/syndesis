@@ -15,9 +15,7 @@
  */
 package io.syndesis.runtime;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.http.ResponseEntity;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,9 +23,15 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
-public class LogsITCase extends BaseITCase {
+import io.syndesis.rest.v1.handler.activity.Feature;
+
+@ActiveProfiles("activity-test")
+public class ActivityITCase extends BaseITCase {
 
     @Override
     @Before
@@ -35,12 +39,20 @@ public class LogsITCase extends BaseITCase {
         super.clearDB();
     }
 
+
+    @Test
+    public void requestFeature() throws IOException {
+        ResponseEntity<Feature> re = get("/api/v1/activity/feature", Feature.class);
+        Feature response = re.getBody();
+        assertThat(response.isEnabled()).isTrue();
+    }
+
     @Test
     @SuppressWarnings({"unchecked","rawtypes"})
     public void requestIntegrationLogs() throws IOException {
         jsondb.update("/", resource("logs-controller-db.json"));
 
-        ResponseEntity<List> re = get("/api/v1/logs/my-integration", List.class);
+        ResponseEntity<List> re = get("/api/v1/activity/integrations/my-integration", List.class);
         List<Object> response = re.getBody();
         assertThat(response.size()).isEqualTo(4);
 

@@ -631,6 +631,13 @@
       <artifactId>filestore</artifactId>
     </dependency>
 
+    <!-- ActivityTrackingService implementation -->
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>db-logging</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- ===================================================================================== -->
 
     <dependency>

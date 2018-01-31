@@ -91,10 +91,6 @@ verifier:
 generator:
   secretMaskingEnabled: true
 
-controllers:
-  dblogging:
-    enabled: true
-
 maven:
   repositories:
     01_maven_central: https://repo1.maven.org/maven2
