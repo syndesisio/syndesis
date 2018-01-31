@@ -1,77 +1,76 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Support</h1>
-    <p>To obtain support, download diagnostic information through this page. </p>
-    <p>If the downloaded zip file is less than 1/2 GB then attach it to an email message that requests help and send the message to <a href="mailto:fuse-online-tech-preview@redhat.com">fuse-online-tech-preview@redhat.com</a>. </p>
-      <p>If the downloaded zip file is larger then 1/2 GB, send an email message to request help, do not attach the file but indicate that the zip file is too large to attach. 
-        Technical support will provide instructions for sending the zip file.</p>
+    <p>
+      To obtain support, download diagnostic information through this page. If the downloaded zip file is less than 500 MB, attach it to an email message that requests help and send the message to <a href="mailto:fuse-online-tech-preview@redhat.com">fuse-online-tech-preview@redhat.com</a>. If the downloaded zip file is larger than 500 MB, send an email message to request help, but do not attach the file, and indicate that the zip file is too large to attach. Technical support will provide instructions for sending the zip file.
+    </p>
 
     <h1>Version</h1>
-    <p class="version"><strong>Syndesis</strong> v1.0</p>
+    <p class="indent">
+      <strong>Syndesis:</strong> <span class="indent">v1.0</span>
+    </p>
 
     <h1>Download Trobuleshooting Diagnostics</h1>
     <p>
-        System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames and passwords are not present in the downloaded zip file. 
+      System level and application level diagnostics will be captured since both are required to troubleshoot any issue. Usernames and passwords are not present in the downloaded zip file. 
     </p>
 
     <div class="mainform">
       <p>Select the integrations to capture diagnostics for:</p>
       <form novalidate>
-        <fieldset>
-            <p> 
-              <input type="radio" id="alllogs" name="logs" [value]="true" [(ngModel)]="allLogsSelected" (click)="deselectAll()">
-              <label for="alllogs">All integrations</label>
-            </p>
-            <p>
-              <input type="radio" id="specificlogs" name="logs" [value]="false" [(ngModel)]="allLogsSelected">
-              <label for="specificlogs">Specific integrations</label>
-            </p>
-          <!-- Toolbar -->
-          <div class="row">
-            <div class="col-md-4">
-              <pfng-toolbar [config]="toolbarConfig"
-                            (onFilterChange)="filterChanged($event)"
-                            (onSortChange)="sortChanged($event)">
-              </pfng-toolbar>
-            </div>
-            <div class="col-md-8 filter_labels">
-              <div>
-              <strong>{{ selectedItems() }} of {{ totalItems() }} Items</strong>
+        <fieldset class="formfields">
+          <div class="radio">
+              <label><input type="radio" id="alllogs" name="logs" [value]="true" [(ngModel)]="allLogsSelected" (click)="deselectAll();"> All integrations</label>
+          </div>
+          <div class="radio">
+              <label><input type="radio" id="specificlogs" name="logs" [value]="false" [(ngModel)]="allLogsSelected"> Specific integrations</label>
+          </div>
+
+          <div *ngIf="!allLogsSelected" class="integrations indent">
+            <!-- Toolbar -->
+            <div class="row">
+              <div class="col-md-8">
+                <pfng-toolbar [config]="toolbarConfig"
+                              (onFilterChange)="filterChanged($event)"
+                              (onSortChange)="sortChanged($event)">
+                </pfng-toolbar>
+              </div>
+              <div class="col-md-4 filter_labels text-right">
+                <strong>{{ selectedItems() }} of {{ totalItems() }} Items</strong>
               </div>
             </div>
-          </div>
-          <div class="row">
-          <!-- List displayed here -->
-          <syndesis-loading >
-            <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
-                      [config]="listConfig"
-                      [itemTemplate]="listItemMain"
-                      (onSelectionChange)="handleSelectionChange($event)">
-            </pfng-list>
-          </syndesis-loading>
-
-          <!-- One list item, main row -->
-          <ng-template #listItemMain
-                      let-item="item">
-            <div class="list-pf-content list-pf-content-flex">
-              <div class="list-pf-content-wrapper">
-                <div class="list-pf-main-content">
-                  <div class="list-pf-title">
-                    {{ item.name }}
-                  </div>
-                  <div class="list-pf-description">
-                    <i>{{ item.description }}</i>
+            <!-- List displayed here -->
+            <syndesis-loading>
+              <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+                        [config]="listConfig"
+                        [itemTemplate]="listItemMain"
+                        (onSelectionChange)="handleSelectionChange($event)">
+              </pfng-list>
+            </syndesis-loading>
+            <!-- One list item, main row -->
+            <ng-template #listItemMain
+                        let-item="item">
+              <div class="list-pf-content list-pf-content-flex">
+                <div class="list-pf-content-wrapper">
+                  <div class="list-pf-main-content">
+                    <div class="list-pf-title">
+                      {{ item.name }}
+                    </div>
+                    <div class="list-pf-description">
+                      <i>{{ item.description }}</i>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ng-template>
-        </div>
+            </ng-template>
+          </div>
+
         </fieldset>
-        <button (click)="onSubmit()" class="btn btn-primary">Download</button>
+        <div class="download">
+          <button (click)="onSubmit()" class="btn btn-primary">Download</button>
+        </div>
       </form>
     </div>
 
   </div>
 </div>
-

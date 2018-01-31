@@ -1,19 +1,27 @@
+::ng-deep .toolbar-pf {
+  border: none;
+  box-shadow: none;
+}
+
 .mainform {
-    background-color: white;
-    padding: 2em;
+  background-color: white;
+  padding: 20px;
+}
+
+.indent {
+  padding-left: 20px;
 }
 
 .removepasswords {
-    padding-top: 1em;
-}
-
-.version {
-    padding-left: 3em;
+  padding-top: 1em;
 }
 
 .filter_labels {
-    padding-top: 13px;
-    // border-bottom: 1px solid #d1d1d1;
-    // box-shadow: 0 1px 0px rgba(3, 3, 3, 0.045);
+  padding-top: 13px;
+  // border-bottom: 1px solid #d1d1d1;
+  // box-shadow: 0 1px 0px rgba(3, 3, 3, 0.045);
 }
 
+.integrations {
+  margin-bottom: 10px;
+}
