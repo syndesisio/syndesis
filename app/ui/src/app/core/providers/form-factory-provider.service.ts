@@ -144,6 +144,7 @@ export class FormFactoryProviderService extends FormFactoryService {
         })
         : undefined,
       required: type === 'hidden' ? undefined : field.required,
+      autoComplete: field.secret ? 'off' : undefined,
       validators: type === 'hidden' ? undefined : validators,
       errorMessages: errorMessages
     }, {
