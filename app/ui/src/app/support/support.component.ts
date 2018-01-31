@@ -23,10 +23,6 @@ const ARCHIVE_FILE_NAME : string = "syndesis.zip";
 })
 export class SupportComponent implements OnInit {
 
-  // Used to bind patternfly behavior with foreign form elements
-  @ViewChild('alllogs') allogs: ElementRef;
-  @ViewChild('specificlogs') specificlogs: ElementRef;
-
   allLogsSelected : boolean = true;
   loading : boolean= true;
 
