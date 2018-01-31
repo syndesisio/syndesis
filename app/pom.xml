@@ -102,6 +102,8 @@
 
     <resteasy.version>3.1.4.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
+
+    <immutables.version>2.5.6</immutables.version>
   </properties>
 
   <modules>
@@ -760,6 +762,13 @@
         <version>2.5</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>value</artifactId>
+        <version>${immutables.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
       <!-- Internal Dependencies -->
 
       <dependency>
@@ -960,6 +969,11 @@
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-model</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>camel-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
 

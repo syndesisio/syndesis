@@ -26,10 +26,8 @@ import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.filter.FilterPredicate;
-import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -72,7 +70,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
     @Test
     public void testGenerate() throws Exception {
         IntegrationDeployment deployment = newIntegration(
-            new SimpleStep.Builder()
+            new Step.Builder()
                 .stepKind("endpoint")
                 .connection(new Connection.Builder()
                     .id("timer-connection")
@@ -81,15 +79,16 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                 .putConfiguredProperty("period", "5000")
                 .action(PERIODIC_TIMER_ACTION)
                 .build(),
-            new SimpleStep.Builder()
+            new Step.Builder()
                 .stepKind("mapper")
                 .putConfiguredProperty("atlasmapping", "{}")
                 .build(),
-            new RuleFilterStep.Builder()
-                .putConfiguredProperty("predicate", FilterPredicate.AND.toString())
+            new Step.Builder()
+                .stepKind("rule-filter")
+                .putConfiguredProperty("predicate", "AND")
                 .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]")
                 .build(),
-            new SimpleStep.Builder()
+            new Step.Builder()
                 .stepKind("extension")
                 .extension(new Extension.Builder()
                     .id("my-extension-1")
@@ -108,7 +107,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                         .build()
                     ).build())
                 .build(),
-            new SimpleStep.Builder()
+            new Step.Builder()
                 .stepKind("extension")
                 .extension(new Extension.Builder()
                     .id("my-extension-2")
@@ -124,7 +123,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                         .build()
                     ).build())
                 .build(),
-            new SimpleStep.Builder()
+            new Step.Builder()
                 .stepKind("extension")
                 .extension(new Extension.Builder()
                     .id("my-extension-3")
@@ -140,7 +139,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                         .build()
                     ).build())
                 .build(),
-            new SimpleStep.Builder()
+            new Step.Builder()
                 .stepKind("endpoint")
                 .connection(new Connection.Builder()
                     .id("http-connection")

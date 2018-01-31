@@ -26,7 +26,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
@@ -88,7 +88,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -97,7 +97,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("extension")
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -108,7 +108,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("Property-1", "Val-1")
                     .putConfiguredProperty("Property-2", "Val-2")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -152,7 +152,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -161,7 +161,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("extension")
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -172,7 +172,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("param1", "Val-1")
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -213,7 +213,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -222,7 +222,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("extension")
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -233,7 +233,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("param1", "Val-1")
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()

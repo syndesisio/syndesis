@@ -34,10 +34,6 @@
   <description>Integration Component Proxy</description>
   <packaging>jar</packaging>
 
-  <properties>
-    <immutables.version>2.5.6</immutables.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -64,7 +60,6 @@
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
-      <version>${immutables.version}</version>
       <scope>provided</scope>
     </dependency>
 

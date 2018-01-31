@@ -15,6 +15,22 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.icon.IconDataAccessObject;
@@ -28,38 +44,17 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
-
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
-
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
-
-import java.awt.Dimension;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -136,13 +131,11 @@ public class ConnectorHandlerTest {
         final Connector connector2 = newConnector("2");
         final Connector connector3 = newConnector("3");
 
-        final Step step1a = new SimpleStep.Builder().action(newActionBy(connector1)).build();
-        final Step step1b = new SimpleStep.Builder().action(newActionBy(connector1)).build();
-
-        final Step step2 = new SimpleStep.Builder().action(newActionBy(connector2)).build();
+        final Step step1a = new Step.Builder().action(newActionBy(connector1)).build();
+        final Step step1b = new Step.Builder().action(newActionBy(connector1)).build();
+        final Step step2 = new Step.Builder().action(newActionBy(connector2)).build();
 
         final IntegrationDeployment deployment1 = newDeployment(Arrays.asList(step1a, step1b));
-
         final IntegrationDeployment deployment2 = newDeployment(Collections.singletonList(step2));
         final IntegrationDeployment deployment3 = newDeployment(Collections.singletonList(step2));
 

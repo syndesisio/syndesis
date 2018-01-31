@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.filter;
+package io.syndesis.integration.runtime.handlers;
 
 import io.syndesis.model.integration.Step;
 
-/**
- * @author roland
- * @since 01.08.17
- */
-public interface FilterStep extends Step {
+public class ExpressionFilterStepHandler extends AbstractFilterStepHandler {
+    @Override
+    public boolean canHandle(Step step) {
+        return "filter".equals(step.getStepKind());
+    }
 
-    String getFilterExpression();
-
+    @Override
+    protected String getFilterExpression(Step step) {
+        return step.getConfiguredProperties().get("filter");
+    }
 }

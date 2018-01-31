@@ -24,9 +24,8 @@ import java.util.Objects;
 import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.filter.ExpressionFilterStep;
-import io.syndesis.model.filter.RuleFilterStep;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.filter.FilterPredicate;
+import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -41,6 +40,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -64,7 +65,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -73,10 +74,11 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new ExpressionFilterStep.Builder()
+                new Step.Builder()
+                    .stepKind("filter")
                     .putConfiguredProperty("filter", "${body.name} == 'James'")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -116,12 +118,27 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
     }
 
     @Test
+    public void testRuleFilterExpression() {
+        String expression = new RuleFilterStepHandler().getFilterExpression(
+            new Step.Builder()
+                .stepKind("rule-filter")
+                .putConfiguredProperty("predicate", FilterPredicate.AND.toString())
+                .putConfiguredProperty("rules","[ { \"path\": \"person.name\", \"op\": \"==\", \"value\": \"Ioannis\"}, " +
+                    "  { \"path\": \"person.favoriteDrinks\", \"op\": \"contains\", \"value\": \"Gin\" } ]")
+                .build()
+        );
+
+        // Reading notes: Unit tests are like personal diaries. Feel honoured when you have the chance to be part of them ;-)
+        assertThat("${body.person.name} == 'Ioannis' && ${body.person.favoriteDrinks} contains 'Gin'").isEqualTo(expression);
+    }
+
+    @Test
     public void testRuleFilterStepWithJsonSimplePath() throws Exception {
         final CamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -130,12 +147,13 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new RuleFilterStep.Builder()
+                new Step.Builder()
+                    .stepKind("rule-filter")
                     .putConfiguredProperty("type", "rule")
                     .putConfiguredProperty("predicate", "OR")
                     .putConfiguredProperty("rules", "[{\"path\":\"name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"name\",\"op\":\"==\",\"value\":\"Roland\"}]")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -180,7 +198,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -189,12 +207,13 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new RuleFilterStep.Builder()
+                new Step.Builder()
+                    .stepKind("rule-filter")
                     .putConfiguredProperty("type", "rule")
                     .putConfiguredProperty("predicate", "OR")
                     .putConfiguredProperty("rules", "[{\"path\":\"user.name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"user.name\",\"op\":\"==\",\"value\":\"Roland\"}]")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -239,7 +258,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -248,12 +267,13 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new RuleFilterStep.Builder()
+                new Step.Builder()
+                    .stepKind("rule-filter")
                     .putConfiguredProperty("type", "rule")
                     .putConfiguredProperty("predicate", "OR")
                     .putConfiguredProperty("rules", "[{\"path\":\"name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"name\",\"op\":\"==\",\"value\":\"Roland\"}]")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()

@@ -45,7 +45,6 @@ import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +104,7 @@ public class Application implements ApplicationRunner {
                 final Connector connector = (Connector) model.getData();
                 for (final Action action : connector.getActions()) {
                     steps.add(
-                        new SimpleStep.Builder()
+                        new Step.Builder()
                             .stepKind("endpoint")
                             .connection(new Connection.Builder()
                                 .connector(connector)
@@ -120,7 +119,7 @@ public class Application implements ApplicationRunner {
             if (model.getKind() == Kind.ConnectorTemplate) {
                 final ConnectorTemplate template = (ConnectorTemplate) model.getData();
                 steps.add(
-                    new SimpleStep.Builder()
+                    new Step.Builder()
                         .stepKind("endpoint")
                         .connection(new Connection.Builder()
                             .connectorId("connector-" + template.getId())
@@ -147,7 +146,7 @@ public class Application implements ApplicationRunner {
                     if (connector != null) {
                         for (final Action action : connector.getActions()) {
                             steps.add(
-                                new SimpleStep.Builder()
+                                new Step.Builder()
                                     .stepKind("endpoint")
                                     .connection(new Connection.Builder()
                                         .connector(connector)

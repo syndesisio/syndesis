@@ -39,12 +39,8 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>extension-api</artifactId>
-    </dependency>
 
-    <!-- syndesis -->    
+    <!-- syndesis -->
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>model</artifactId>
@@ -52,6 +48,10 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>extension-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.syndesis</groupId>
@@ -118,7 +118,6 @@
     <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
-      <version>${atlasmap.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -176,6 +175,7 @@
             <ignoredUsedUndeclaredDependency>org.springframework:spring-beans</ignoredUsedUndeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.apache.camel:camel-spring</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>javax.xml.bind:jaxb-api</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUnusedDeclaredDependency>
           </ignoredUsedUndeclaredDependencies>
           <ignoredUnusedDeclaredDependencies>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-configuration-processor</ignoredUnusedDeclaredDependency>

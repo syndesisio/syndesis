@@ -27,8 +27,11 @@ import io.syndesis.model.WithMetadata;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.extension.Extension;
+import org.immutables.value.Value;
 
-@JsonDeserialize(using = StepDeserializer.class)
+@Value.Immutable
+@JsonDeserialize(builder = Step.Builder.class)
+@SuppressWarnings("immutables")
 public interface Step extends WithId<Step>, WithConfiguredProperties, WithDependencies, WithMetadata, Serializable {
     String METADATA_STEP_INDEX = "step.index";
 
@@ -46,4 +49,8 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     String getStepKind();
 
     String getName();
+
+    class Builder extends ImmutableStep.Builder {
+        // allow access to ImmutableStep.Builder
+    }
 }

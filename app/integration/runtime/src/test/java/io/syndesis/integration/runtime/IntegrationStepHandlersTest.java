@@ -24,7 +24,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +37,7 @@ public class IntegrationStepHandlersTest {
 
         assertThat(
             builder.findHandler(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -53,7 +53,7 @@ public class IntegrationStepHandlersTest {
 
         assertThat(
             builder.findHandler(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -68,7 +68,7 @@ public class IntegrationStepHandlersTest {
 
         assertThat(
             builder.findHandler(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -80,7 +80,7 @@ public class IntegrationStepHandlersTest {
 
         assertThat(
             builder.findHandler(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
