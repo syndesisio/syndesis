@@ -309,7 +309,7 @@ do_product_templates() {
   git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag and AtlasMap $atlasmap_tag"
 
   echo "=== Tagging"
-  git tag "${tag_prefix}-${syndesis_tag}"
+  git tag -f "${tag_prefix}-${syndesis_tag}"
 
   echo "=== Reverting template versions back to 'latest'"
   cd $appdir/deploy/generator

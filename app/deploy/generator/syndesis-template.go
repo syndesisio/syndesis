@@ -127,7 +127,7 @@ var productContext = Context{
 			Ui:       "fuse-ignite-ui",
 			Verifier: "fuse-ignite-verifier",
 			Atlasmap: "fuse-ignite-mapper",
-			S2i:      "fuse-ignite-helper",
+			S2i:      "fuse-ignite-s2i",
 		},
 	},
 	Tags: tags{
