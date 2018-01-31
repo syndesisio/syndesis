@@ -23,6 +23,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.core.immutable.ImmutablesStyle;
+import io.syndesis.core.json.StringTrimmingConverter;
 
 import org.immutables.value.Value;
 
@@ -46,9 +47,12 @@ public interface Violation {
         }
     }
 
+    @JsonDeserialize(converter = StringTrimmingConverter.class)
     String error();
 
+    @JsonDeserialize(converter = StringTrimmingConverter.class)
     String message();
 
+    @JsonDeserialize(converter = StringTrimmingConverter.class)
     String property();
 }

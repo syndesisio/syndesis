@@ -18,11 +18,16 @@ package io.syndesis.model;
 import java.util.SortedSet;
 
 import io.syndesis.core.immutable.SkipNulls;
+import io.syndesis.core.json.StringTrimmingConverter;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@Value.Style(jdkOnly = true)
 public interface WithTags {
 
+    @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
     @Value.NaturalOrder
     @SkipNulls
     SortedSet<String> getTags();
