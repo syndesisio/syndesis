@@ -270,7 +270,7 @@ public abstract class BaseITCase {
 
     public static void copy(InputStream is, ByteArrayOutputStream os) throws IOException {
         int c;
-        while( (c=is.read())>=0 ) {
+        while( (c=is.read())>=0 ) { // PMD
             os.write(c);
         }
     }

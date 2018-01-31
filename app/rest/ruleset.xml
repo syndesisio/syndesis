@@ -191,9 +191,6 @@
   <rule ref="rulesets/java/codesize.xml/NcssTypeCount">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/j2ee.xml/UseProperClassLoader">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/empty.xml/EmptyWhileStmt">
     <priority>4</priority>
   </rule>
