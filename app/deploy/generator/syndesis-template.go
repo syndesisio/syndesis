@@ -47,7 +47,6 @@ type syndesisImages struct {
 	Ui       string
 	Verifier string
 	S2i      string
-	Atlasmap string
 }
 
 type images struct {
@@ -55,14 +54,12 @@ type images struct {
 	Syndesis              syndesisImages
 	ImageStreamNamespace  string
 	SyndesisImagesPrefix  string
-	AtlasMapImagesPrefix  string
 	OAuthProxyImagePrefix string
 	PrometheusImagePrefix string
 }
 
 type tags struct {
 	Syndesis   string
-	Atlasmap   string
 	Postgresql string
 	OAuthProxy string
 	Prometheus string
@@ -86,7 +83,6 @@ type Context struct {
 var syndesisContext = Context{
 	Images: images{
 		SyndesisImagesPrefix:  "syndesis",
-		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
 		PrometheusImagePrefix: "prom",
 		Support: supportImages{
@@ -99,7 +95,6 @@ var syndesisContext = Context{
 			Ui:       "syndesis-ui",
 			Verifier: "syndesis-verifier",
 			S2i:      "syndesis-s2i",
-			Atlasmap: "atlasmap",
 		},
 	},
 	Tags: tags{
@@ -114,7 +109,6 @@ var productContext = Context{
 	Images: images{
 		ImageStreamNamespace:  "fuse-ignite",
 		SyndesisImagesPrefix:  "syndesis",
-		AtlasMapImagesPrefix:  "atlasmap",
 		OAuthProxyImagePrefix: "openshift",
 		PrometheusImagePrefix: "prom",
 		Support: supportImages{
@@ -126,7 +120,6 @@ var productContext = Context{
 			Rest:     "fuse-ignite-rest",
 			Ui:       "fuse-ignite-ui",
 			Verifier: "fuse-ignite-verifier",
-			Atlasmap: "fuse-ignite-mapper",
 			S2i:      "fuse-ignite-s2i",
 		},
 	},
@@ -149,7 +142,6 @@ func init() {
 	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
 	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
-	flags.StringVar(&context.Tags.Atlasmap, "atlasmap-tag", "latest", "Atlasmap image to use")
 	flags.BoolVar(&context.Productized, "product", false, "Generate product templates?")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")

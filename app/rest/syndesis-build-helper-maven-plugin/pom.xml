@@ -331,6 +331,21 @@
             <ignoredClassPattern>org.objectweb.asm.*</ignoredClassPattern>
             <ignoredClassPattern>org.apache.camel.json.simple.*</ignoredClassPattern>
           </ignoredClassPatterns>
+          <ignoredDependencies>
+            <!-- Ignore the dup resources/catalog.cat -->
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-java-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-json-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-xml-model</artifactId>
+            </dependency>
+          </ignoredDependencies>
         </configuration>
       </plugin>
 

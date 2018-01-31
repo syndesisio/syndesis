@@ -15,10 +15,10 @@
     "touchIcon": "/apple-touch-icon.png"
   },
   "datamapper": {
-    "baseJavaInspectionServiceUrl": "/v2/atlas/java/",
-    "baseXMLInspectionServiceUrl": "/v2/atlas/xml/",
-    "baseJSONInspectionServiceUrl": "/v2/atlas/json/",
-    "baseMappingServiceUrl": "/v2/atlas/",
+    "baseMappingServiceUrl": "/api/v1/atlas/",
+    "baseJavaInspectionServiceUrl": "/api/v1/atlas/java/",
+    "baseXMLInspectionServiceUrl": "/api/v1/atlas/xml/",
+    "baseJSONInspectionServiceUrl": "/api/v1/atlas/json/",
     "discardNonMockSources": false,
     "addMockJSONMappings": false,
     "addMockJavaSingleSource": false,

@@ -48,6 +48,10 @@ import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -255,5 +259,21 @@ public abstract class BaseITCase {
             super(Json.mapper(), MediaType.parseMediaType("application/json"));
         }
     }
+
+    public static String resource(String file) throws IOException {
+        try (InputStream is = LogsITCase.class.getClassLoader().getResourceAsStream(file)) {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            copy(is, os);
+            return new String(os.toByteArray(), StandardCharsets.UTF_8);
+        }
+    }
+
+    public static void copy(InputStream is, ByteArrayOutputStream os) throws IOException {
+        int c;
+        while( (c=is.read())>=0 ) { // PMD
+            os.write(c);
+        }
+    }
+
 
 }

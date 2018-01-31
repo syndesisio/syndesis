@@ -39,7 +39,7 @@
     <syndesis.policy.version>2</syndesis.policy.version>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.32.2</atlasmap.version>
+    <atlasmap.version>1.33.0</atlasmap.version>
     <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
     <!-- Image names -->
@@ -897,6 +897,62 @@
         <groupId>io.syndesis</groupId>
         <artifactId>extension-converter</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-core</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-java-model</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-java-core</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-java-module</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-java-service</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-json-module</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-json-service</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-xml-module</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-xml-service</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-service</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-model</artifactId>
+        <version>${atlasmap.version}</version>
       </dependency>
 
     </dependencies>
