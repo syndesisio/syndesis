@@ -588,6 +588,14 @@
           </executions>
         </plugin>
 
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+             <!-- Fix "There was a timeout or other error in the fork" errors -->
+             <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
