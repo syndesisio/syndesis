@@ -22,15 +22,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
-import io.syndesis.core.json.SyndesisModule;
-
 /**
  * JSON helper class.
  */
 public final class Json {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-        .registerModules(new Jdk8Module(), new SyndesisModule())
+        .registerModules(new Jdk8Module())
         .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
