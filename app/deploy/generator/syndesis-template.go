@@ -162,7 +162,7 @@ func install(cmd *cobra.Command, args []string) {
 		if err := mergo.MergeWithOverwrite(&context, productContext); err != nil {
 			log.Fatal("Cannot merge in product image names")
 		}
-		context.Name = context.Name + "-" + context.Tags.Syndesis
+		context.Name = context.Name + "-fuse-ignite-" + context.Tags.Syndesis
 	}
 
 	files, err := ioutil.ReadDir("./")
