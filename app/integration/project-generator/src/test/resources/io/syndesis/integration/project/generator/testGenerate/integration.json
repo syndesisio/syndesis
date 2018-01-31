@@ -5,14 +5,19 @@
   "name" : "Test Integration",
   "spec" : {
     "description" : "This is a test integration!",
+    "connections" : [ ],
     "steps" : [ {
       "action" : {
         "id" : "periodic-timer-action",
         "descriptor" : {
           "connectorId" : "timer",
           "camelConnectorGAV" : "io.syndesis:timer-connector:${project.version}",
-          "camelConnectorPrefix" : "periodic-timer-connector"
+          "camelConnectorPrefix" : "periodic-timer-connector",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : { }
         },
+        "tags" : [ ],
         "actionType" : "connector",
         "dependencies" : [ {
           "type" : "MAVEN",
@@ -21,35 +26,50 @@
       },
       "connection" : {
         "connector" : {
+          "connectorCustomizers" : [ ],
           "id" : "timer",
           "actions" : [ {
             "id" : "periodic-timer-action",
             "descriptor" : {
               "connectorId" : "timer",
               "camelConnectorGAV" : "io.syndesis:timer-connector:${project.version}",
-              "camelConnectorPrefix" : "periodic-timer-connector"
+              "camelConnectorPrefix" : "periodic-timer-connector",
+              "connectorCustomizers" : [ ],
+              "propertyDefinitionSteps" : [ ],
+              "configuredProperties" : { }
             },
+            "tags" : [ ],
             "actionType" : "connector",
             "dependencies" : [ {
               "type" : "MAVEN",
               "id" : "io.syndesis:timer-connector:${project.version}"
             } ]
           } ],
+          "tags" : [ ],
           "properties" : {
             "period" : {
               "componentProperty" : false,
               "kind" : "property",
-              "secret" : false
+              "secret" : false,
+              "tags" : [ ],
+              "enum" : [ ]
             }
-          }
+          },
+          "configuredProperties" : { },
+          "dependencies" : [ ],
+          "metadata" : { }
         },
+        "options" : { },
         "id" : "timer-connection",
+        "tags" : [ ],
+        "configuredProperties" : { },
         "isDerived" : false
       },
       "stepKind" : "endpoint",
       "configuredProperties" : {
         "period" : "5000"
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "1"
       }
@@ -58,6 +78,7 @@
       "configuredProperties" : {
         "atlasmapping" : "{}"
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "2"
       }
@@ -67,6 +88,7 @@
         "predicate" : "AND",
         "rules" : "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]"
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "3"
       }
@@ -75,8 +97,10 @@
         "id" : "my-extension-1-action-1",
         "descriptor" : {
           "kind" : "ENDPOINT",
-          "entrypoint" : "direct:extension"
+          "entrypoint" : "direct:extension",
+          "propertyDefinitionSteps" : [ ]
         },
+        "tags" : [ ],
         "actionType" : "step"
       },
       "stepKind" : "extension",
@@ -86,6 +110,8 @@
       },
       "extension" : {
         "extensionId" : "my-extension-1",
+        "tags" : [ ],
+        "actions" : [ ],
         "dependencies" : [ {
           "type" : "MAVEN",
           "id" : "org.slf4j:slf4j-api:1.7.11"
@@ -96,8 +122,12 @@
           "type" : "MAVEN",
           "id" : "org.apache.camel:camel-spring-boot-starter:2.10.0"
         } ],
-        "id" : "my-extension-1"
+        "id" : "my-extension-1",
+        "properties" : { },
+        "configuredProperties" : { },
+        "metadata" : { }
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "4"
       }
@@ -106,8 +136,10 @@
         "id" : "my-extension-1-action-1",
         "descriptor" : {
           "kind" : "BEAN",
-          "entrypoint" : "com.example.MyExtension::action"
+          "entrypoint" : "com.example.MyExtension::action",
+          "propertyDefinitionSteps" : [ ]
         },
+        "tags" : [ ],
         "actionType" : "step"
       },
       "stepKind" : "extension",
@@ -117,8 +149,15 @@
       },
       "extension" : {
         "extensionId" : "my-extension-2",
-        "id" : "my-extension-2"
+        "tags" : [ ],
+        "actions" : [ ],
+        "dependencies" : [ ],
+        "id" : "my-extension-2",
+        "properties" : { },
+        "configuredProperties" : { },
+        "metadata" : { }
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "5"
       }
@@ -127,8 +166,10 @@
         "id" : "my-extension-2-action-1",
         "descriptor" : {
           "kind" : "STEP",
-          "entrypoint" : "com.example.MyStep"
+          "entrypoint" : "com.example.MyStep",
+          "propertyDefinitionSteps" : [ ]
         },
+        "tags" : [ ],
         "actionType" : "step"
       },
       "stepKind" : "extension",
@@ -138,8 +179,15 @@
       },
       "extension" : {
         "extensionId" : "my-extension-3",
-        "id" : "my-extension-3"
+        "tags" : [ ],
+        "actions" : [ ],
+        "dependencies" : [ ],
+        "id" : "my-extension-3",
+        "properties" : { },
+        "configuredProperties" : { },
+        "metadata" : { }
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "6"
       }
@@ -149,8 +197,12 @@
         "descriptor" : {
           "connectorId" : "http",
           "camelConnectorGAV" : "io.syndesis:http-get-connector:${project.version}",
-          "camelConnectorPrefix" : "http-get-connector"
+          "camelConnectorPrefix" : "http-get-connector",
+          "connectorCustomizers" : [ ],
+          "propertyDefinitionSteps" : [ ],
+          "configuredProperties" : { }
         },
+        "tags" : [ ],
         "actionType" : "connector",
         "dependencies" : [ {
           "type" : "MAVEN",
@@ -159,14 +211,19 @@
       },
       "connection" : {
         "connector" : {
+          "connectorCustomizers" : [ ],
           "id" : "http",
           "actions" : [ {
             "id" : "http-get-action",
             "descriptor" : {
               "connectorId" : "http",
               "camelConnectorGAV" : "io.syndesis:http-get-connector:${project.version}",
-              "camelConnectorPrefix" : "http-get-connector"
+              "camelConnectorPrefix" : "http-get-connector",
+              "connectorCustomizers" : [ ],
+              "propertyDefinitionSteps" : [ ],
+              "configuredProperties" : { }
             },
+            "tags" : [ ],
             "actionType" : "connector",
             "dependencies" : [ {
               "type" : "MAVEN",
@@ -177,37 +234,56 @@
             "descriptor" : {
               "connectorId" : "http",
               "camelConnectorGAV" : "io.syndesis:http-post-connector:${project.version}",
-              "camelConnectorPrefix" : "http-post-connector"
+              "camelConnectorPrefix" : "http-post-connector",
+              "connectorCustomizers" : [ ],
+              "propertyDefinitionSteps" : [ ],
+              "configuredProperties" : { }
             },
+            "tags" : [ ],
             "actionType" : "connector",
             "dependencies" : [ {
               "type" : "MAVEN",
               "id" : "io.syndesis:http-post-connector:${project.version}"
             } ]
           } ],
+          "tags" : [ ],
           "properties" : {
             "httpUri" : {
               "componentProperty" : false,
               "kind" : "property",
-              "secret" : false
+              "secret" : false,
+              "tags" : [ ],
+              "enum" : [ ]
             },
             "username" : {
               "componentProperty" : false,
               "kind" : "property",
-              "secret" : true
+              "secret" : true,
+              "tags" : [ ],
+              "enum" : [ ]
             },
             "password" : {
               "kind" : "property",
-              "secret" : true
+              "secret" : true,
+              "tags" : [ ],
+              "enum" : [ ]
             },
             "token" : {
               "componentProperty" : false,
               "kind" : "property",
-              "secret" : true
+              "secret" : true,
+              "tags" : [ ],
+              "enum" : [ ]
             }
-          }
+          },
+          "configuredProperties" : { },
+          "dependencies" : [ ],
+          "metadata" : { }
         },
+        "options" : { },
         "id" : "http-connection",
+        "tags" : [ ],
+        "configuredProperties" : { },
         "isDerived" : false
       },
       "stepKind" : "endpoint",
@@ -217,10 +293,16 @@
         "password" : "admin",
         "token" : "mytoken"
       },
+      "dependencies" : [ ],
       "metadata" : {
         "step.index" : "7"
       }
-    } ]
+    } ],
+    "resources" : [ ],
+    "tags" : [ ]
   },
-  "timesUsed" : 0
+  "stepsDone" : [ ],
+  "timesUsed" : 0,
+  "lastUpdated" : 0,
+  "createdDate" : 0
 }
