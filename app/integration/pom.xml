@@ -111,6 +111,7 @@
   </profiles>
 
   <modules>
+    <module>api</module>
     <module>component-proxy</module>
     <module>runtime</module>
     <module>project-generator</module>

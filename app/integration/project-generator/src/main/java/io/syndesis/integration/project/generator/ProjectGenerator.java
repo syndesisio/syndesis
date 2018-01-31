@@ -38,9 +38,10 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.integration.project.generator.mvn.PomContext;
-import io.syndesis.integration.runtime.IntegrationResourceManager;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
@@ -51,7 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("PMD.ExcessiveImports")
-public class ProjectGenerator {
+public class ProjectGenerator implements IntegrationProjectGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGenerator.class);
 
     private final MustacheFactory mf = new DefaultMustacheFactory();
@@ -69,15 +70,7 @@ public class ProjectGenerator {
         this.pomMustache = compile(generatorProperties, "pom.xml.mustache", "pom.xml");
     }
 
-
-    /**
-     * Generate the project files in form of tar input stream
-     * @param deployment the deployment
-     * @return an {@link InputStream} which holds a tar archive and which can be directly used for
-     * an S2I build
-     *
-     * @throws IOException if generating fails
-     */
+    @Override
     @SuppressWarnings("resource")
     public InputStream generate(IntegrationDeployment deployment) throws IOException {
         final PipedInputStream is = new PipedInputStream();
@@ -89,8 +82,9 @@ public class ProjectGenerator {
         return is;
     }
 
+    @Override
     public byte[] generatePom(IntegrationDeployment deployment) throws IOException {
-        final Set<MavenGav> dependencies = ProjectGeneratorHelper.collectDependencies(resourceManager, deployment).stream()
+        final Set<MavenGav> dependencies = resourceManager.collectDependencies(deployment).stream()
             .filter(Dependency::isMaven)
             .map(Dependency::getId)
             .map(MavenGav::new)
@@ -207,7 +201,7 @@ public class ProjectGenerator {
     }
 
     private void addExtensions(TarArchiveOutputStream tos, IntegrationDeployment deployment) throws IOException {
-        final Set<String> extensions = ProjectGeneratorHelper.collectDependencies(resourceManager, deployment).stream()
+        final Set<String> extensions = resourceManager.collectDependencies(deployment).stream()
             .filter(Dependency::isExtension)
             .map(Dependency::getId)
             .collect(Collectors.toCollection(TreeSet::new));

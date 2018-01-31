@@ -33,7 +33,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import io.syndesis.integration.runtime.IntegrationResourceManager;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -243,7 +244,7 @@ public class ProjectGeneratorTestSupport {
 
     protected Path generate(IntegrationDeployment deployment, ProjectGeneratorConfiguration generatorConfiguration) throws IOException {
         final IntegrationResourceManager resourceManager = new TestResourceManager();
-        final ProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
+        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
 
         try (InputStream is = generator.generate(deployment)) {
             Path ret = testFolder.newFolder("integration-project").toPath();

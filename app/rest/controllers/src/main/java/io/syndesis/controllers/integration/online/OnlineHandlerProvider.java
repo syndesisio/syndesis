@@ -23,7 +23,7 @@ import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
-import io.syndesis.integration.project.generator.ProjectGenerator;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.openshift.OpenShiftService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -33,14 +33,14 @@ import org.springframework.stereotype.Component;
 public class OnlineHandlerProvider extends BaseHandler implements StateChangeHandlerProvider {
 
     private final DataManager dataManager;
-    private final ProjectGenerator projectGenerator;
+    private final IntegrationProjectGenerator projectGenerator;
     private final ControllersConfigurationProperties properties;
     private final EncryptionComponent encryptionComponent;
 
     public OnlineHandlerProvider(
             DataManager dataManager,
             OpenShiftService openShiftService,
-            ProjectGenerator projectGenerator,
+            IntegrationProjectGenerator projectGenerator,
             ControllersConfigurationProperties properties,
             EncryptionComponent encryptionComponent) {
 

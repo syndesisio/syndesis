@@ -49,7 +49,7 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
-      <artifactId>integration-project-generator</artifactId>
+      <artifactId>integration-api</artifactId>
     </dependency>
 
     <dependency>

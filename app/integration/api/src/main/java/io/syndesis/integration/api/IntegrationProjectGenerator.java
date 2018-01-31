@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime;
+package io.syndesis.integration.api;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.IntegrationDeployment;
 
-public interface IntegrationResourceManager {
+public interface IntegrationProjectGenerator {
 
-    Optional<Connector> loadConnector(String id);
+    /**
+     * Generate the project files in form of tar input stream
+     *
+     * @param deployment the deployment
+     * @return an {@link InputStream} which holds a tar archive and which can be directly used for
+     * an S2I build
+     * @throws IOException if generating fails
+     */
+    InputStream generate(IntegrationDeployment deployment) throws IOException;
 
-    Optional<Extension> loadExtension(String id);
 
-    Optional<InputStream> loadExtensionBLOB(String id);
+    byte[] generatePom(IntegrationDeployment deployment) throws IOException;
 }
