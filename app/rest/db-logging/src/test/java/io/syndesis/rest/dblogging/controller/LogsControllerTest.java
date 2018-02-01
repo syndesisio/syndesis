@@ -100,9 +100,6 @@ public class LogsControllerTest {
             controller.setRetention("1000000000 days");
             controller.open();
 
-            Thread.sleep(5000);
-            assertThat(jsondb.getAsString("/", new GetOptions().prettyPrint(true))).isEqualTo(expectedDBState);
-
             // Eventually all the log data should make it into the jsondb
             given().await()
                 .atMost(20, SECONDS)
