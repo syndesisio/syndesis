@@ -86,7 +86,8 @@ export class SupportComponent implements OnInit {
           sortType: 'alpha'
         }
       ],
-      isAscending: true
+      isAscending: true,
+      visible: false
     }
   };
 
