@@ -23,12 +23,60 @@
     <artifactId>extension-bom</artifactId>
     <version>1.2-SNAPSHOT</version>
     <name>Extension :: Bill of Materials (BOM)</name>
+    <description>syndesis :: ${project.artifactId}</description>
+
     <packaging>pom</packaging>
 
     <properties>
         <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
         <camel.version>2.20.1</camel.version>
     </properties>
+
+    <!-- Metadata need to publish to central -->
+    <url>https://syndesis.io/</url>
+    <inceptionYear>2016</inceptionYear>
+
+    <organization>
+        <name>Red Hat</name>
+        <url>https://redhat.com</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Syndesis committers</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/syndesisio/syndesis.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
+        <url>http://github.com/syndesisio/syndesis</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>oss-sonatype-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>oss-sonatype-staging</id>
+            <name>Sonatype Staging Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/syndesisio/syndesis.io/issues</url>
+    </issueManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -90,5 +138,60 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+      <profile>
+        <id>release</id>
+        <build>
+          <plugins>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-deploy-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <groupId>org.sonatype.plugins</groupId>
+              <artifactId>nexus-staging-maven-plugin</artifactId>
+              <version>1.6.8</version>
+              <executions>
+                <execution>
+                  <id>default-deploy</id>
+                  <phase>deploy</phase>
+                  <goals>
+                    <goal>deploy</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                <serverId>oss-sonatype-staging</serverId>
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-gpg-plugin</artifactId>
+              <version>1.6</version>
+              <configuration>
+                <skip>false</skip>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>sign-artifacts</id>
+                  <phase>verify</phase>
+                  <goals>
+                    <goal>sign</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
 
 </project>

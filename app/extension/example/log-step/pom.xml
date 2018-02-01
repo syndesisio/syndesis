@@ -24,6 +24,53 @@
     <version>1.2-SNAPSHOT</version>
 
     <name>Extension :: Examples :: Log Step</name>
+    <description>syndesis :: ${project.artifactId}</description>
+
+    <!-- Metadata need to publish to central -->
+    <url>https://syndesis.io/</url>
+    <inceptionYear>2016</inceptionYear>
+
+    <organization>
+        <name>Red Hat</name>
+        <url>https://redhat.com</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Syndesis committers</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/syndesisio/syndesis.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
+        <url>http://github.com/syndesisio/syndesis</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>oss-sonatype-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>oss-sonatype-staging</id>
+            <name>Sonatype Staging Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/syndesisio/syndesis.io/issues</url>
+    </issueManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
