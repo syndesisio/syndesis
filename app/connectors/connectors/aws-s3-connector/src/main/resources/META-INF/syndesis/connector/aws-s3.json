@@ -140,7 +140,7 @@
       "actions": [
         {
           "name": "Copy Object",
-          "description": "Create a copy of an object in an a bucket.",
+          "description": "Copy one or more objects into a bucket.",
           "id": "io.syndesis:aws-s3-copy-object-connector",
           "pattern": "To",
           "actionType": "connector",
