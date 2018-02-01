@@ -13,6 +13,8 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project
                               (without recreating)
+-y  --yes                     Automatically answer with "yes" when
+                              asked for deleting the project with -p
     --route                   Route to use (mandatory host name)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
@@ -33,7 +35,12 @@ This value depends on your OpenShift installation but typically is the name of y
 E.g. a route `--route app-proj186023.6a63.fuse-ignite.openshiftapps.com` is specific to the Fuse Ignite test cluster `6a63.fuse-ignite.openshiftapps.com` and for the project `app-proj186023`.
 
 By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with `--project <project>`.
-If this project already exists, it gets deleted unconditionally before the deployment, so be careful when specifying this option.
+If this project already exists, it gets deleted unconditionally before the deployment, so be careful when using this option.
+By default you are asked whether you really want to delete the project for recreation.
+You can switch off the security question with the option `--yes` (short: `-y`).
+
+WARNING: Don't use `syndesis install --project $(oc project -q) --yes`. You will shoot yourself into the foot. Ask the author if you want to know more details.
+
 
 If you want to wait until everything is running (including fetching of the Docker images), you can specify `--watch` (short: `-w`) which blocks the script until everything is set up.
 
