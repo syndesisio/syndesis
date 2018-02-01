@@ -32,7 +32,7 @@ Options for release:
     --dev-version <version>   Next development version. If not given, set to
                               "<major>.<minor>-SNAPSHOT" as calculated from
                               --release-version (e.g. "1.2-SNAPSHOT")
-    --settings-xml <file>     Path to a custom settings.xml to use for the release.
+    --settings <file>         Path to a custom settings.xml to use for the release.
                               This file must contain all the credentials to be used for Sonatype.
                               By default ~/.m2/settings.xml is used.
     --local-maven-repo <dir>  Local dir for holding the local Maven repo cache.

@@ -20,7 +20,7 @@ release::usage() {
     --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
     --dev-version <version>   Next development version. If not given, set to "<major>.<minor>-SNAPSHOT"
                               as calculated from --release-version (e.g. "1.2-SNAPSHOT")
-    --settings-xml <file>     Path to a custom settings.xml to use for the release.
+    --settings <file>         Path to a custom settings.xml to use for the release.
                               This file must contain all the credentials to be used for Sonatype.
                               By default ~/.m2/settings.xml is used.
     --local-maven-repo <dir>  Local dir for holding the local Maven repo cache. If not given, then a new
@@ -282,7 +282,7 @@ git_push() {
     if [ ! $(hasflag --no-git-push) ] && [ ! $(hasflag --dry-run -n) ]; then
         echo "==== Pushing to GitHub"
         if [ -n "$release_version" ]; then
-            echo "* Pusing $release_version"
+            echo "* Pushing $release_version"
             git push $release_version
         fi
         if [ -n "$syndesis_tag" ]; then
@@ -343,7 +343,7 @@ extract_maven_opts() {
     fi
     local maven_opts="-Dmaven.repo.local=$local_maven_repo --batch-mode"
 
-    local settings_xml=$(readopt --settings-xml)
+    local settings_xml=$(readopt --settings-xml --settings)
     if [ -n "${settings_xml}" ]; then
         maven_opts="$maven_opts -s $settings_xml"
     fi
@@ -370,7 +370,7 @@ calc_dev_version() {
 
 extract_minor_version() {
     local version=$1
-    local minor_version=$(echo $version | sed 's/^\([0-9]*\.[0-9]*\)\.[0-9]*$/\1/')
+    local minor_version=$(echo $version | sed 's/^\([0-9]*\.[0-9]*\)\.[0-9]*\(-.*\)*$/\1/')
     if [ "$minor_version" = "$version" ]; then
         echo "ERROR: Cannot extract minor version from $version"
         return
