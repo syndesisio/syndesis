@@ -28,7 +28,7 @@ release::usage() {
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
-    --git-push                Automatically push
+    --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
     --log <log-file>          Write full log to <log-file>, only print progress to screen
 EOT
 }
@@ -69,30 +69,30 @@ release::run() {
     fi
 
     # Verify that there are no modified file in git repo
-    check_git_clean $appdir
+    check_git_clean "$appdir"
 
     # Calculate common maven options
-    local maven_opts=$(extract_maven_opts)
+    local maven_opts="$(extract_maven_opts)"
 
     # Set pom.xml version to the given release_version
-    update_pom_versions $appdir $release_version "$maven_opts"
+    update_pom_versions "$appdir" "$release_version" "$maven_opts"
 
     # Make a clean install
-    mvn_clean_install $appdir "$maven_opts"
+    mvn_clean_install "$appdir" "$maven_opts"
 
     # Create templates for the full syndesis version
-    generate_templates $appdir $release_version
+    generate_templates "$appdir" "$release_version"
 
     # Stage artefacts to Sonatype
-    stage_artefacts $appdir "$maven_opts"
+    stage_artefacts "$appdir" "$maven_opts"
 
     # Build all Docker Images
     docker_login
-    create_docker_images $appdir "$maven_opts"
+    create_docker_images "$appdir" "$maven_opts"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
-        drop_staging_repo $appdir
+        drop_staging_repo "$appdir"
 
         echo "==== Dry run finished, nothing has been committed"
         echo "==== Use 'git reset --hard' to cleanup"
@@ -104,26 +104,26 @@ release::run() {
     # --------------------------
 
     # Pushing to Docker Hub
-    docker_push $release_version $syndesis_tag
+    docker_push "$release_version" "$syndesis_tag"
 
     # Release staging repo
-    release_staging_repo $appdir "$maven_opts"
+    release_staging_repo "$appdir" "$maven_opts"
 
     # Git Commit all changed files
-    git_commit_files $appdir $release_version
+    git_commit_files "$appdir" "$release_version"
 
     # Tag the release version
     echo "==== Tagging version $release_version"
-    git tag -f $release_version
+    git tag -f "$release_version"
 
     # Create template versions for the minor tags (without patchlevels)
-    create_templates_for_minor_version $appdir $syndesis_tag
+    create_templates_for_minor_version "$appdir" "$syndesis_tag"
 
     # Update files for SNAPSHOT and 'latest version'
-    change_to_dev_version $appdir "$maven_opts"
+    change_to_dev_version "$appdir" "$maven_opts"
 
     # Push everything (if configured)
-    git_push
+    git_push "$release_version" "$syndesis_tag"
 }
 
 create_templates_for_minor_version() {
@@ -277,10 +277,18 @@ change_to_dev_version() {
 }
 
 git_push() {
-    if [ $(hasflag --git-push) ]; then
+    local $release_version=${1:-}
+    local $syndesis_tag=${2:-}
+    if [ ! $(hasflag --no-git-push) ] && [ ! $(hasflag --dry-run -n) ]; then
         echo "==== Pushing to GitHub"
-        git push
-        git push -f --tags
+        if [ -n "$release_version" ]; then
+            echo "* Pusing $release_version"
+            git push $release_version
+        fi
+        if [ -n "$syndesis_tag" ]; then
+            echo "* Pushing symbolic tag $syndesis_tag"
+            git push -f $syndesis_tag
+        fi
     fi
 }
 
