@@ -3,8 +3,16 @@
   border: solid #ededed;
   border-width: 1px 0 0;
 
+  .toolbar-pf-actions {
+    margin-left: -20px;
+  }
+
   .toolbar-pf-results {
     border-top: 1px solid #ededed;
+
+    > .col-sm-12 {
+      padding: 0;
+    }
 
     .list-inline {
       margin: 0;
@@ -40,12 +48,13 @@
         display: flex;
         align-items: center;
         position: absolute;
-        right: 20px;
+        right: 0;
         top: 13px;
 
         @media only screen and (max-width : 992px) {
           position: static;
           padding-top: 10px;
+          margin-left: -20px;
         }
   
         .selected_items {
