@@ -23,6 +23,8 @@
     <artifactId>extension-bom</artifactId>
     <version>1.2-SNAPSHOT</version>
     <name>Extension :: Bill of Materials (BOM)</name>
+    <description>syndesis :: ${project.artifactId}</description>
+
     <packaging>pom</packaging>
 
     <properties>

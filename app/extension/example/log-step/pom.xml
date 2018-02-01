@@ -24,6 +24,7 @@
     <version>1.2-SNAPSHOT</version>
 
     <name>Extension :: Examples :: Log Step</name>
+    <description>syndesis :: ${project.artifactId}</description>
 
     <!-- Metadata need to publish to central -->
     <url>https://syndesis.io/</url>
