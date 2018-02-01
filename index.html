@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-4897-geeec69cf1,</span>
+<span id="revnumber">version 1.1.3-4899-g1c9fd63d2,</span>
 <span id="revdate">2018-02-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -1785,6 +1785,8 @@ If you want to install to <a href="https://www.openshift.org/minishift/">Minishi
 <pre class="CodeRay highlight"><code>-p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project
                               (without recreating)
+-y  --yes                     Automatically answer with "yes" when
+                              asked for deleting the project with -p
     --route                   Route to use (mandatory host name)
     --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
@@ -1808,7 +1810,21 @@ E.g. a route <code>--route app-proj186023.6a63.fuse-ignite.openshiftapps.com</co
 </div>
 <div class="paragraph">
 <p>By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
-If this project already exists, it gets deleted unconditionally before the deployment, so be careful when specifying this option.</p>
+If this project already exists, it gets deleted unconditionally before the deployment, so be careful when using this option.
+By default you are asked whether you really want to delete the project for recreation.
+You can switch off the security question with the option <code>--yes</code> (short: <code>-y</code>).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Don&#8217;t use <code>syndesis install --project $(oc project -q) --yes</code>. You will shoot yourself into the foot. Ask the author if you want to know more details.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>If you want to wait until everything is running (including fetching of the Docker images), you can specify <code>--watch</code> (short: <code>-w</code>) which blocks the script until everything is set up.</p>
@@ -2807,8 +2823,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-4897-geeec69cf1<br>
-Last updated 2018-02-01 08:44:51 UTC
+Version 1.1.3-4899-g1c9fd63d2<br>
+Last updated 2018-02-01 12:05:24 UTC
 </div>
 </div>
 </body>
