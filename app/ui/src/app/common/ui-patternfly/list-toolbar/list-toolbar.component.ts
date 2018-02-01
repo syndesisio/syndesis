@@ -127,7 +127,7 @@ export class ListToolbarComponent<T> implements OnInit, OnDestroy {
               exact: filter.field.type !== 'text'
             }),
       this.allItems
-    );
+    ) || [];
     this.toolbarConfig.filterConfig.resultsCount = result.length;
     this.itemsFiltered = result;
     this.sort();
