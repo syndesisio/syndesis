@@ -30,9 +30,12 @@ public class GetOptions implements ToJson, Cloneable {
     private boolean prettyPrint;
     private Integer depth;
     private String callback;
-    private String startingAt;
-    private Integer limit;
-    private Order order;
+    private String startAfter;
+    private String startAt;
+    private String endAt;
+    private String endBefore;
+    private Integer limitToFirst;
+    private Order order = Order.ASC;
 
     public boolean prettyPrint() {
         return prettyPrint;
@@ -66,21 +69,49 @@ public class GetOptions implements ToJson, Cloneable {
         return (GetOptions) super.clone();
     }
 
-    public String after() {
-        return startingAt;
+    public String startAfter() {
+        return startAfter;
     }
 
-    public GetOptions after(String startingAt) {
-        this.startingAt = startingAt;
+    public GetOptions startAfter(String startAfter) {
+        this.startAfter = startAfter;
         return this;
     }
 
-    public Integer limit() {
-        return limit;
+    public String startAt() {
+        return startAt;
     }
 
-    public GetOptions limit(Integer limit) {
-        this.limit = limit;
+    public GetOptions startAt(String startAt) {
+        this.startAt = startAt;
+        return this;
+    }
+
+    public String endBefore() {
+        return endBefore;
+    }
+
+    public GetOptions endBefore(String endBefore) {
+        this.endBefore = endBefore;
+        return this;
+    }
+
+    public String endAt() {
+        return endAt;
+    }
+
+    public GetOptions endAt(String endAt) {
+        this.endAt = endAt;
+        return this;
+    }
+
+
+    public Integer limitToFirst() {
+        return limitToFirst;
+    }
+
+    public GetOptions limitToFirst(Integer limitToFirst) {
+        this.limitToFirst = limitToFirst;
         return this;
     }
 

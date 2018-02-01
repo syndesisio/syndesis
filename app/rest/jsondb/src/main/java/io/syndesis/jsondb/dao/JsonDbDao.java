@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataAccessObject;
+import io.syndesis.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDB;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
@@ -62,10 +65,34 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     }
 
     @Override
+    @SuppressWarnings({"rawtypes","unchecked"})
     public ListResult<T> fetchAll() {
+        return fetchAll(new Function[]{});
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public ListResult<T> fetchAll(Function<ListResult<T>, ListResult<T>>... operators) {
         try {
+
+            GetOptions options = new GetOptions();
+
+            // Try to convert operators to equivalent DB queries.
+            if( operators!=null ) {
+                for (int i = 0; i < operators.length; i++) {
+                    Function<ListResult<T>, ListResult<T>> operator = operators[i];
+                    if( operator.getClass() == IdPrefixFilter.class ) {
+                        IdPrefixFilter<T> filter = (IdPrefixFilter<T>) operator;
+                        options.startAt(filter.getPrefix());
+                        options.endAt(filter.getPrefix());
+                        operators[i] = null; // Take it out of the list.
+                    }
+                }
+            }
+
             // get the data out..
-            byte[] json = jsondb.getAsByteArray(getCollectionPath());
+            byte[] json = jsondb.getAsByteArray(getCollectionPath(), options);
+            ListResult<T> result;
             if( json!=null && json.length > 0 ) {
 
                 // Lets use jackson to parse the map of keys to our model instances
@@ -74,10 +101,20 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 MapType mapType = typeFactory.constructMapType(LinkedHashMap.class, String.class, getType());
                 LinkedHashMap<String, T> map = mapper.readValue(json, mapType);
 
-                return ListResult.of(map.values());
+                result = ListResult.of(map.values());
+            } else {
+                result = ListResult.of(Collections.<T>emptyList());
             }
 
-            return ListResult.of(Collections.<T>emptyList());
+            if (operators == null) {
+                return result;
+            }
+            for (Function<ListResult<T>, ListResult<T>> operator : operators) {
+                if( operator!=null ) {
+                    result = operator.apply(result);
+                }
+            }
+            return result;
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }

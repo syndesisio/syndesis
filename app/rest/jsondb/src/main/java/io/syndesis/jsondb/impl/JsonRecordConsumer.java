@@ -83,12 +83,12 @@ import java.util.function.Consumer;
             }
 
             // Handle limit options.
-            if( this.options.limit() !=null ) {
+            if( this.options.limitToFirst() !=null ) {
                 if( !newPath.get(0).equals(currentRootField) ) {
                     this.entriesAdded++;
                     currentRootField = newPath.get(0);
                 }
-                if( this.entriesAdded > this.options.limit() ) {
+                if( this.entriesAdded > this.options.limitToFirst() ) {
                     close();
                     return;
                 }

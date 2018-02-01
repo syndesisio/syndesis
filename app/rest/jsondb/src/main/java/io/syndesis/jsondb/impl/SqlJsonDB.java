@@ -27,6 +27,7 @@ import io.syndesis.jsondb.JsonDBException;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.PreparedBatch;
+import org.skife.jdbi.v2.Query;
 import org.skife.jdbi.v2.ResultIterator;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -47,6 +48,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -137,6 +139,24 @@ public class SqlJsonDB implements JsonDB {
         return KeyGenerator.createKey();
     }
 
+    private static String incrementKey(String value) {
+        if( value == null || value.isEmpty()) {
+            return value;
+        }
+        char[] chars = value.toCharArray();
+        chars[chars.length-1]++;
+        return new String(chars);
+    }
+
+    private static String decrementKey(String value) {
+        if( value == null || value.isEmpty()) {
+            return value;
+        }
+        char[] chars = value.toCharArray();
+        chars[chars.length-1]--;
+        return new String(chars);
+    }
+
     @Override
     public Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options) {
 
@@ -159,38 +179,95 @@ public class SqlJsonDB implements JsonDB {
         final Handle h = dbi.open();
         try {
 
+            String sql = "select path,value,kind from jsondb where path LIKE :like";
+
             // Creating the iterator could fail with a runtime exception,
-            ResultIterator<JsonRecord> iterator;
-            if( o.after()!=null ) {
+            ArrayList<Consumer<Query<Map<String, Object>>>> binds = new ArrayList<>();
 
-                // yes terminate with | instead of / so that we skip that entire tree of values.
-                String after;
-
-                String operator;
-                if ( o.order() == GetOptions.Order.DESC ) {
-                    operator = "<=";
-                    after = baseDBPath + validateKey(o.after());
-                } else {
-                    operator = ">=";
-                    after = baseDBPath + validateKey(o.after()) + "|";
+            if (o.startAfter() != null) {
+                String startAfter = validateKey(o.startAfter());
+                switch (o.order()) {
+                    case ASC:
+                        sql += " and path >= :startAfter";
+                        binds.add(query -> {
+                            String bindPath = baseDBPath + incrementKey(startAfter);
+                            query.bind("startAfter", bindPath);
+                        });
+                        break;
+                    case DESC:
+                        sql += " and path <= :startAfter";
+                        binds.add(query -> {
+                            String bindPath = baseDBPath + startAfter;
+                            query.bind("startAfter", bindPath);
+                        });
+                        break;
                 }
-
-                String sql = "select path,value,kind from jsondb where path LIKE :like and path "+operator+" :after order by path "+order;
-                iterator = h.createQuery(sql)
-                    .bind("like", like)
-                    .bind("after", after)
-                    .map(JsonRecordMapper.INSTANCE)
-                    .iterator();
-
-            } else {
-
-                String sql = "select path,value,kind from jsondb where path LIKE :like order by path "+order;
-                iterator = h.createQuery(sql)
-                    .bind("like", like)
-                    .map(JsonRecordMapper.INSTANCE)
-                    .iterator();
-
             }
+            if (o.startAt() != null) {
+                String startAt = validateKey(o.startAt());
+                switch (o.order()) {
+                    case ASC:
+                        sql += " and path >= :startAt";
+                        binds.add(query -> {
+                            String bindPath = baseDBPath + startAt;
+                            query.bind("startAt", bindPath);
+                        });
+                        break;
+                    case DESC:
+                        sql += " and path < :startAt";
+                        binds.add(query -> {
+                            String bindPath = baseDBPath + incrementKey(startAt);
+                            query.bind("startAt", bindPath);
+                        });
+                        break;
+                }
+            }
+            if (o.endAt() != null) {
+                String endAt = validateKey(o.endAt());
+                switch (o.order()) {
+                    case ASC:
+                        sql += " and path < :endAt";
+                        binds.add(query -> {
+                            String bindPath = baseDBPath + incrementKey(endAt);
+                            query.bind("endAt", bindPath);
+                        });
+                        break;
+                    case DESC:
+                        sql += " and path > :endAt";
+                        binds.add(query -> {
+                            String value = baseDBPath + endAt;
+                            query.bind("endAt", value);
+                        });
+                        break;
+                }
+            }
+            if (o.endBefore() != null) {
+                String endBefore = validateKey(o.endBefore());
+                switch (o.order()) {
+                    case ASC:
+                        sql += " and path < :endBefore";
+                        binds.add(query -> {
+                            String value = baseDBPath + endBefore;
+                            query.bind("endBefore", value);
+                        });
+                        break;
+                    case DESC:
+                        sql += " and path >= :endBefore";
+                        binds.add(query -> {
+                            String value = baseDBPath + incrementKey(endBefore);
+                            query.bind("endBefore", value);
+                        });
+                        break;
+                }
+            }
+
+
+            sql += " order by path "+order;
+            Query<Map<String, Object>> query = h.createQuery(sql).bind("like", like);
+            for (Consumer<Query<Map<String, Object>>> bind : binds) {
+                bind.accept(query);
+            }
+            ResultIterator<JsonRecord> iterator = query.map(JsonRecordMapper.INSTANCE).iterator();
 
             try {
                 // At this point we know if we can produce results..
