@@ -197,30 +197,11 @@ syndesis-ui/scripts/syndesis-install --clean --form .
 Current configuration doesn't allow that, but the template can be easily modified, at Syndesis deploy time, to enable it:
  
 ```bash
-oc login -u system:admin
-# add some permission to a system user
-oc adm policy add-cluster-role-to-user system:auth-delegator -z default
+# get a valid oauth token if you haven't done yet
 oc login -u developer
-
-# this just add this line to the pod configuration
-#    --openshift-delegate-urls={"/api":{"resource":"projects","verb":"get","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}
-#
-oc create -f <( sed -E -e  's#((\s+)- --pass-access-token)#\1\n\2- --openshift-delegate-urls={"/api":{"resource":"projects","verb":"get","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}#' <(curl https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-dev-restricted.yml 2>/dev/null) )
-
-```
-
-Now you can use curl or this helper bash function:
-
-```bash
-curlsyn() {
-	OS_TOKEN=$(oc whoami -t);
-    curl -L --insecure -N -H "Authorization: Bearer $OS_TOKEN" -H "X-Forwarded-Access-Token: $OS_TOKEN"  2> /dev/null "$@"
-}
-
-# sample invocation
-curlsyn https://syndesis.$(minishift ip).nip.io/api/v1/connections  
-
-{"items":[{"connectorId":"sql-stored-connector","configuredProperties":{"password":"»ENC:7b47cd269b1514981440966f0d3d99f545758ec6e18c88e6864f7e86210457ac2497dca5ac72f672db4bd55a7d54d1aa","schema":"sampledb","url":"jdbc:postgresql://syndesis-db:5432/sampledb","user":"sampledb"},"options":{},"icon":"fa-database","description":"Sample Database Connection for Stored Procedure Invocation","id":"5","tags":["sampledb"],"name":"PostgresDB","isDerived":false}],"totalCount":1}
+# invoke rest api from the command line
+curl -k -H "Authorization: Bearer $(oc whoami -t)" https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections  
+{"items":[{"connectorId":"sql","options":{},"icon":"fa-database","description":"Connection to SampleDB","id":"5","tags":["sampledb"],"name":"PostgresDB","configuredProperties":{"password":"»ENC:f57d3db06c71964e8298d084ee47d0a806a5d62c3152fd23fbea77aaabf5f1aedc0f2043c3e7324879b00d17d6c92cb2","schema":"sampledb","url":"jdbc:postgresql://syndesis-db:5432/sampledb","user":"sampledb"},"isDerived":false}],"totalCount":1}
 ```
 
 see comment here: https://github.com/syndesisio/syndesis/issues/99#issuecomment-348017381
