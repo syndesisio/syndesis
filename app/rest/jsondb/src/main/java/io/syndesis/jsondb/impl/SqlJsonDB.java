@@ -170,7 +170,8 @@ public class SqlJsonDB implements JsonDB {
         final Handle h = dbi.open();
         try {
 
-            StringBuilder sql = new StringBuilder("select path,value,kind from jsondb where path LIKE :like");
+            StringBuilder sql = new StringBuilder(250);
+            sql.append("select path,value,kind from jsondb where path LIKE :like");
 
             // Creating the iterator could fail with a runtime exception,
             ArrayList<Consumer<Query<Map<String, Object>>>> binds = new ArrayList<>();
@@ -241,7 +242,8 @@ public class SqlJsonDB implements JsonDB {
             }
 
 
-            sql.append(" order by path "+order);
+            sql.append(" order by path ");
+            sql.append(order);
             Query<Map<String, Object>> query = h.createQuery(sql.toString()).bind("like", like);
             for (Consumer<Query<Map<String, Object>>> bind : binds) {
                 bind.accept(query);
