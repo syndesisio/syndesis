@@ -241,9 +241,7 @@ public class SqlJsonDB implements JsonDB {
                 }
             }
 
-
-            sql.append(" order by path ");
-            sql.append(order);
+            sql.append(" order by path ").append(order);
             Query<Map<String, Object>> query = h.createQuery(sql.toString()).bind("like", like);
             for (Consumer<Query<Map<String, Object>>> bind : binds) {
                 bind.accept(query);
