@@ -63,7 +63,11 @@ public class JSONBeanUtil {
         final JSONObject obj = new JSONObject();
         for (String key : map.keySet()) {
             if (! key.startsWith("#")) {  //don't include Camel stats
-                obj.put(key, map.get(key));
+                try {
+                    obj.put(key, map.get(key));
+                } catch (JSONException e) {
+                    throw new IllegalStateException(e);
+                }
             }
         }
         return obj.toString();
