@@ -18,41 +18,48 @@ package io.syndesis.integration.runtime.handlers;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.integration.Step;
-import io.syndesis.model.log.LogStep;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.ProcessorDefinition;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LogStepHandler implements IntegrationStepHandler {
 
+    String STEP_KIND = "log";
+
     @Override
     public boolean canHandle(Step step) {
-        return LogStep.STEP_KIND.equals(step.getStepKind());
+        return STEP_KIND.equals(step.getStepKind());
     }
 
     @Override
     public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
-        return Optional.of(route.log(LoggingLevel.INFO, createMessage((LogStep)step)));
+        return Optional.of(route.log(LoggingLevel.INFO, createMessage(step)));
     }
 
 
-    private static String createMessage(LogStep l) {
+    private static String createMessage(Step l) {
         StringBuilder sb = new StringBuilder(128);
-        if (l.getExpression() != null && !l.getExpression().isEmpty()) {
-            sb.append(l.getExpression());
+        String expression = getExpression(l.getConfiguredProperties());
+        Boolean isBodyLoggingEnabled = isBodyLoggingEnabled(l.getConfiguredProperties());
+        List<String> inHeaderNames =  asList("inHeaderNames", l.getConfiguredProperties());
+        List<String> outHeaderNames =  asList("outHeaderNames", l.getConfiguredProperties());
+        List<String> propertyNames =  asList("propertyNames", l.getConfiguredProperties());
+
+        if (expression != null &&
+                !expression.isEmpty() &&
+                !expression.equals("null")) { //TODO: the null thing should be handled by the ui.
+            sb.append(expression);
         }
 
-        if (l.isBodyLoggingEnabled()) {
+        if (isBodyLoggingEnabled) {
             sb.append("Body: [${body}] ");
         }
 
-        configureHeaders(sb, HeaderKind.in, l.getInHeaderNames());
-        configureHeaders(sb, HeaderKind.out, l.getOutHeaderNames());
-        configureProperties(sb, l.getPropertyNames());
+        configureHeaders(sb, HeaderKind.in, inHeaderNames);
+        configureHeaders(sb, HeaderKind.out, outHeaderNames);
+        configureProperties(sb, propertyNames);
         return sb.toString();
     }
 
@@ -74,6 +81,16 @@ public class LogStepHandler implements IntegrationStepHandler {
                 .collect(Collectors.joining(" ", "Properties[", "] ")));
     }
 
+    private static List<String> asList(String propertyName, Map<String, String> props) {
+        if (props == null || props.isEmpty()) {
+            return null;
+        }
+        String names = props.get(propertyName);
+        if (names == null || names.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(names.split("[ \\n,]+"));
+    }
 
     private static void configureHeaders(StringBuilder sb, HeaderKind kind, Collection<String> names) {
         if (kind == null) {
@@ -97,6 +114,19 @@ public class LogStepHandler implements IntegrationStepHandler {
                 .collect(Collectors.joining(" ", kind.getLabel()+ " Headers[", "] ")));
     }
 
+    private static Boolean isBodyLoggingEnabled(Map<String, String> props) {
+        if (props == null || props.isEmpty()) {
+            return null;
+        }
+        return Boolean.parseBoolean(props.getOrDefault("bodyLoggingEnabled", "false"));
+    }
+
+    private static String getExpression(Map<String, String> props) {
+        if (props == null || props.isEmpty()) {
+            return null;
+        }
+        return props.get("expression");
+    }
     private enum HeaderKind {
         in("Input"),
         out("Output");
