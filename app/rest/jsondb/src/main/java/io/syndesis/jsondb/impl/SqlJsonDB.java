@@ -148,15 +148,6 @@ public class SqlJsonDB implements JsonDB {
         return new String(chars);
     }
 
-    private static String decrementKey(String value) {
-        if( value == null || value.isEmpty()) {
-            return value;
-        }
-        char[] chars = value.toCharArray();
-        chars[chars.length-1]--;
-        return new String(chars);
-    }
-
     @Override
     public Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options) {
 
@@ -179,91 +170,79 @@ public class SqlJsonDB implements JsonDB {
         final Handle h = dbi.open();
         try {
 
-            String sql = "select path,value,kind from jsondb where path LIKE :like";
+            StringBuilder sql = new StringBuilder("select path,value,kind from jsondb where path LIKE :like");
 
             // Creating the iterator could fail with a runtime exception,
             ArrayList<Consumer<Query<Map<String, Object>>>> binds = new ArrayList<>();
 
             if (o.startAfter() != null) {
                 String startAfter = validateKey(o.startAfter());
-                switch (o.order()) {
-                    case ASC:
-                        sql += " and path >= :startAfter";
-                        binds.add(query -> {
-                            String bindPath = baseDBPath + incrementKey(startAfter);
-                            query.bind("startAfter", bindPath);
-                        });
-                        break;
-                    case DESC:
-                        sql += " and path <= :startAfter";
-                        binds.add(query -> {
-                            String bindPath = baseDBPath + startAfter;
-                            query.bind("startAfter", bindPath);
-                        });
-                        break;
+                if (o.order() == GetOptions.Order.DESC) {
+                    sql.append(" and path <= :startAfter");
+                    binds.add(query -> {
+                        String bindPath = baseDBPath + startAfter;
+                        query.bind("startAfter", bindPath);
+                    });
+                } else {
+                    sql.append(" and path >= :startAfter");
+                    binds.add(query -> {
+                        String bindPath = baseDBPath + incrementKey(startAfter);
+                        query.bind("startAfter", bindPath);
+                    });
                 }
             }
             if (o.startAt() != null) {
                 String startAt = validateKey(o.startAt());
-                switch (o.order()) {
-                    case ASC:
-                        sql += " and path >= :startAt";
-                        binds.add(query -> {
-                            String bindPath = baseDBPath + startAt;
-                            query.bind("startAt", bindPath);
-                        });
-                        break;
-                    case DESC:
-                        sql += " and path < :startAt";
-                        binds.add(query -> {
-                            String bindPath = baseDBPath + incrementKey(startAt);
-                            query.bind("startAt", bindPath);
-                        });
-                        break;
+                if (o.order() == GetOptions.Order.DESC) {
+                    sql.append(" and path < :startAt");
+                    binds.add(query -> {
+                        String bindPath = baseDBPath + incrementKey(startAt);
+                        query.bind("startAt", bindPath);
+                    });
+                } else {
+                    sql.append(" and path >= :startAt");
+                    binds.add(query -> {
+                        String bindPath = baseDBPath + startAt;
+                        query.bind("startAt", bindPath);
+                    });
                 }
             }
             if (o.endAt() != null) {
                 String endAt = validateKey(o.endAt());
-                switch (o.order()) {
-                    case ASC:
-                        sql += " and path < :endAt";
-                        binds.add(query -> {
-                            String bindPath = baseDBPath + incrementKey(endAt);
-                            query.bind("endAt", bindPath);
-                        });
-                        break;
-                    case DESC:
-                        sql += " and path > :endAt";
-                        binds.add(query -> {
-                            String value = baseDBPath + endAt;
-                            query.bind("endAt", value);
-                        });
-                        break;
+                if (o.order() == GetOptions.Order.DESC) {
+                    sql.append(" and path > :endAt");
+                    binds.add(query -> {
+                        String value = baseDBPath + endAt;
+                        query.bind("endAt", value);
+                    });
+                } else {
+                    sql.append(" and path < :endAt");
+                    binds.add(query -> {
+                        String bindPath = baseDBPath + incrementKey(endAt);
+                        query.bind("endAt", bindPath);
+                    });
                 }
             }
             if (o.endBefore() != null) {
                 String endBefore = validateKey(o.endBefore());
-                switch (o.order()) {
-                    case ASC:
-                        sql += " and path < :endBefore";
-                        binds.add(query -> {
-                            String value = baseDBPath + endBefore;
-                            query.bind("endBefore", value);
-                        });
-                        break;
-                    case DESC:
-                        sql += " and path >= :endBefore";
-                        binds.add(query -> {
-                            String value = baseDBPath + incrementKey(endBefore);
-                            query.bind("endBefore", value);
-                        });
-                        break;
+                if (o.order() == GetOptions.Order.DESC) {
+                    sql.append(" and path >= :endBefore");
+                    binds.add(query -> {
+                        String value = baseDBPath + incrementKey(endBefore);
+                        query.bind("endBefore", value);
+                    });
+                } else {
+                    sql.append(" and path < :endBefore");
+                    binds.add(query -> {
+                        String value = baseDBPath + endBefore;
+                        query.bind("endBefore", value);
+                    });
                 }
             }
 
 
-            sql += " order by path "+order;
-            Query<Map<String, Object>> query = h.createQuery(sql).bind("like", like);
+            sql.append(" order by path "+order);
+            Query<Map<String, Object>> query = h.createQuery(sql.toString()).bind("like", like);
             for (Consumer<Query<Map<String, Object>>> bind : binds) {
                 bind.accept(query);
             }

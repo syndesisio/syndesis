@@ -23,7 +23,7 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.WithResourceId;
 
 /**
- * Filters the list with the provided pagination options.
+ * Filters the by id prefix.
  *
  * @param <T> The type of the elements in the filtered list.
  */
@@ -35,7 +35,6 @@ public final class IdPrefixFilter<T extends WithResourceId> implements Function<
      * Creates the filter with the specified prefix filter.
      *
      * @param prefix the prefix to match
-     * @throws IllegalArgumentException If page or perPage are less than 1.
      */
     public IdPrefixFilter(String prefix) {
         this.prefix = prefix;
@@ -45,7 +44,7 @@ public final class IdPrefixFilter<T extends WithResourceId> implements Function<
      * Applies the filter to the provided list.
      *
      * @param result The result to filter.
-     * @return The relevant page of the provided list. Returns an empty list if the requested page would be outside of the provided list range.
+     * @return  all entries with ids that start with specified prefix
      */
     @Override
     public ListResult<T> apply(ListResult<T> result) {
