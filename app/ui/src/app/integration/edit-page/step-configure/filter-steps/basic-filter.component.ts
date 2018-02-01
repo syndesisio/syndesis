@@ -103,8 +103,7 @@ export class BasicFilterComponent implements OnChanges {
     this.integrationSupport
       .getFilterOptions(dataShape)
       .toPromise()
-      .then((resp: any) => {
-        const body = JSON.parse(resp['_body']);
+      .then((body: any) => {
         const ops = body.ops;
         const paths = body.paths;
         initializeForm(ops, paths);
