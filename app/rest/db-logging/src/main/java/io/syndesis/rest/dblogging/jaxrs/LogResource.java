@@ -89,7 +89,7 @@ public class LogResource {
 
         GetOptions options = new GetOptions()
             .order(GetOptions.Order.DESC) // reverse the order since we want most recent exchanges first.
-            .after(from).limit(limit); // allow paging
+            .startAfter(from).limitToFirst(limit); // allow paging
 
         byte[] data = jsondb.getAsByteArray(path, options);
         if( data == null )  {

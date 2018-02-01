@@ -202,25 +202,28 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     @SafeVarargs
+    @SuppressWarnings({"unchecked", "varargs"})
     public final <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
 
         ListResult<T> result;
         if (getDataAccessObject(model) != null) {
-            result = doWithDataAccessObject(model, d -> d.fetchAll());
+            return doWithDataAccessObject(model, d -> d.fetchAll(operators));
         } else {
             Kind kind = Kind.from(model);
             Map<String, T> cache = caches.getCache(kind.getModelName());
             result = ListResult.of(cache.values());
-        }
 
-        if (operators == null) {
+            if (operators == null) {
+                return result;
+            }
+
+            for (Function<ListResult<T>, ListResult<T>> operator : operators) {
+                result = operator.apply(result);
+            }
             return result;
         }
 
-        for (Function<ListResult<T>, ListResult<T>> operator : operators) {
-            result = operator.apply(result);
-        }
-        return result;
+
     }
 
     public <T extends WithId<T>> T fetch(Class<T> model, String id) {

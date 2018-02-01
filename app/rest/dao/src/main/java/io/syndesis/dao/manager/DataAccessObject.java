@@ -16,6 +16,7 @@
 package io.syndesis.dao.manager;
 
 import java.util.Set;
+import java.util.function.Function;
 
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
@@ -55,6 +56,18 @@ public interface DataAccessObject<T extends WithId<T>> {
      * @return  The {@link ListResult}.
      */
     ListResult<T> fetchAll();
+
+    @SuppressWarnings("unchecked")
+    default ListResult<T> fetchAll(Function<ListResult<T>, ListResult<T>>... operators) {
+        ListResult<T> result = fetchAll();
+        if (operators == null) {
+            return result;
+        }
+        for (Function<ListResult<T>, ListResult<T>> operator : operators) {
+            result = operator.apply(result);
+        }
+        return result;
+    }
 
     /**
      * Creates a new entity.

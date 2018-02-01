@@ -152,7 +152,7 @@ public class JsonDBTest {
             "user6", "test 6"
         )));
 
-        String json = jsondb.getAsString("/test", new GetOptions().limit(3));
+        String json = jsondb.getAsString("/test", new GetOptions().limitToFirst(3));
         assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\"}");
     }
 
@@ -168,7 +168,7 @@ public class JsonDBTest {
             "user6/value", "test 6"
         )));
 
-        String json = jsondb.getAsString("/test", new GetOptions().limit(3));
+        String json = jsondb.getAsString("/test", new GetOptions().limitToFirst(3));
         assertThat(json).isEqualTo("{\"user1\":{\"value\":\"test 1\"},\"user2\":{\"value\":\"test 2\"},\"user3\":{\"value\":\"test 3\"}}");
     }
 
@@ -196,7 +196,7 @@ public class JsonDBTest {
 
 
     @Test
-    public void testGetAfter() throws IOException {
+    public void testGetStartAfter() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(
             "user1", "test 1",
@@ -207,12 +207,12 @@ public class JsonDBTest {
             "user6", "test 6"
         )));
 
-        String json = jsondb.getAsString("/test", new GetOptions().after("user3"));
+        String json = jsondb.getAsString("/test", new GetOptions().startAfter("user3"));
         assertThat(json).isEqualTo("{\"user4\":\"test 4\",\"user5\":\"test 5\",\"user6\":\"test 6\"}");
     }
 
     @Test
-    public void testGetAfterWithDESC() throws IOException {
+    public void testGetStartAfterWithDESC() throws IOException {
 
         jsondb.set("/test", mapper.writeValueAsString(map(
             "user1", "test 1",
@@ -223,9 +223,122 @@ public class JsonDBTest {
             "user6", "test 6"
         )));
 
-        String json = jsondb.getAsString("/test", new GetOptions().after("user3").order(GetOptions.Order.DESC));
+        String json = jsondb.getAsString("/test", new GetOptions().startAfter("user3").order(GetOptions.Order.DESC));
         assertThat(json).isEqualTo("{\"user2\":\"test 2\",\"user1\":\"test 1\"}");
     }
+
+
+    @Test
+    public void testGetStartAt() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().startAt("user4"));
+        assertThat(json).isEqualTo("{\"user4\":\"test 4\",\"user5\":\"test 5\",\"user6\":\"test 6\"}");
+    }
+
+    @Test
+    public void testGetStartAtWithDESC() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().startAt("user2").order(GetOptions.Order.DESC));
+        assertThat(json).isEqualTo("{\"user2\":\"test 2\",\"user1\":\"test 1\"}");
+    }
+
+    @Test
+    public void testGetEndBefore() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().endBefore("user5"));
+        assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\",\"user4\":\"test 4\"}");
+    }
+
+    @Test
+    public void testGetEndBeforeWithDESC() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().endBefore("user2").order(GetOptions.Order.DESC));
+        assertThat(json).isEqualTo("{\"user6\":\"test 6\",\"user5\":\"test 5\",\"user4\":\"test 4\",\"user3\":\"test 3\"}");
+    }
+
+
+    @Test
+    public void testGetEndAt() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().endAt("user4"));
+        assertThat(json).isEqualTo("{\"user1\":\"test 1\",\"user2\":\"test 2\",\"user3\":\"test 3\",\"user4\":\"test 4\"}");
+    }
+
+    @Test
+    public void testGetEndAtWithDESC() throws IOException {
+
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "test 1",
+            "user2", "test 2",
+            "user3", "test 3",
+            "user4", "test 4",
+            "user5", "test 5",
+            "user6", "test 6"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().endAt("user3").order(GetOptions.Order.DESC));
+        assertThat(json).isEqualTo("{\"user6\":\"test 6\",\"user5\":\"test 5\",\"user4\":\"test 4\",\"user3\":\"test 3\"}");
+    }
+
+    @Test
+    public void testGetStartAtEndAt() throws IOException {
+        jsondb.set("/test", mapper.writeValueAsString(map(
+            "user1", "1",
+            "user2:1", "2",
+            "user2:2", "3",
+            "user2:3", "4",
+            "user4", "5"
+        )));
+
+        String json = jsondb.getAsString("/test", new GetOptions().startAt("user2:").endAt("user2:"));
+        assertThat(json).isEqualTo("{\"user2:1\":\"2\",\"user2:2\":\"3\",\"user2:3\":\"4\"}");
+    }
+
 
     @Test
     public void testGetDepth1() throws IOException {
