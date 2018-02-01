@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-4908-gd21b71775,</span>
+<span id="revnumber">version 1.1.3-4910-gc0339caaf,</span>
 <span id="revdate">2018-02-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -1442,7 +1442,7 @@ Options for release:
     --docker-user &lt;user&gt;      Docker user for Docker Hub
     --docker-password &lt;pwd&gt;   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
-    --git-push                Automatically push
+    --no-git-push             Don't push the release tag (and symbolic major.minor tag)
     --log &lt;log-file&gt;          Write full log to &lt;log-file&gt;, only print progress to screen
     --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
@@ -1536,9 +1536,10 @@ git checkout 1.2.x
 # Call Syndesis from the checked out clone
 ./tools/bin/syndesis release --release-version 1.2.8 .....
 
-# Push to origin after a successful release (or add --git-push)
-git push
-git push -f --tags
+# Push to origin after a successful release.
+# This automatically done if --no-git-push is given
+git push 1.2.8
+git push -f 1.2
 
 # Remove the temporary clone again
 cd ..
@@ -1653,22 +1654,27 @@ This version can be given with <code>--dev-version</code>, but by default, it is
 This new version is then committed to the local git repository.</p>
 </div>
 <div class="paragraph">
-<p>Finally, if the option <code>--git-push</code> is given the local Git repo is pushed to the remote repository.
-This last step can also be performed manually afterwards with:</p>
+<p>Finally, the tags just created on the local Git repo is pushed to the remote repository.
+You can omit this with the option <code>--no-git-push</code>.
+If to so, the last step can also be performed manually afterwards with:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">git push
-git push -f --tags <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">git push 1.2.8
+git push -f 1.2 <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Using <code>-f</code> as the minor tag needs to be moved. Alternatively first remove the minor tag and the use push without <code>--tags</code></td>
+<td>Using <code>-f</code> as the minor tag needs to be moved.</td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Please be careful to <strong>not</strong> push the master branch upstream (i.e. do <strong>not</strong> a plain <code>git push</code>).
+We only want to have the tag with all the release preparation steps, not on the branch so that pull requests can be still be easily rebased with out conflict because of the temporary version changes.</p>
 </div>
 </div>
 </div>
@@ -2823,8 +2829,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-4908-gd21b71775<br>
-Last updated 2018-02-01 14:29:49 UTC
+Version 1.1.3-4910-gc0339caaf<br>
+Last updated 2018-02-01 15:05:42 UTC
 </div>
 </div>
 </body>
