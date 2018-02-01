@@ -23,13 +23,14 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
     </encoder>
-    <file>target/dao.log</file>
+    <file>target/connector-generator.log</file>
   </appender>
 
   <logger name="io.swagger.parser" level="WARN" />
 
   <root level="INFO">
-    <appender-ref ref="STDOUT" />
+    <!--<appender-ref ref="STDOUT"/>-->
+    <appender-ref ref="FILE"/>
   </root>
 
 </configuration>

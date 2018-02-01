@@ -177,7 +177,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
         } catch (err) {
           /* Bailout at this point... */
           this.initForm(position, page, undefined, {
-            message: response['_body']
+            message: err
           });
         }
       });
@@ -191,7 +191,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       this.loading = false;
       return;
     }
-    if (!descriptor || descriptor === undefined) {
+    if (!descriptor || descriptor === undefined || !descriptor.propertyDefinitionSteps) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {

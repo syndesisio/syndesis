@@ -40,17 +40,13 @@ export function restangularProviderConfigurer(
   restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
 
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
-    if (operation === 'getList' && data && Array.isArray(data.items)) {
-      const pagingData = data.items;
-      if (!!pagingData.totalCount) {
-        pagingData.totalCount = data.totalCount;
-      } else {
-        pagingData.totalCount = pagingData.length;
-      }
-      return pagingData;
-    }
-    if (!data) {
-      return [];
+    switch (operation) {
+      case 'getList':
+        if (!Array.isArray(data)) {
+          data = data.items || [];
+        }
+        break;
+      default:
     }
     return data;
   });
