@@ -46,17 +46,13 @@ release::run() {
         exit 1
     fi
 
-    # Get the atlasmap version
-    local atlasmap_version=$(extract_atlasmap_version)
-    check_error $atlasmap_version
-    local atlasmap_tag=$(extract_minor_version $atlasmap_version)
-    check_error $atlasmap_tag
+    # Get the Syndesis minor version
     local syndesis_tag=$(extract_minor_version $release_version)
     check_error $syndesis_tag
 
     # Generate product templates only if desired
     if [ $(hasflag --product-templates) ]; then
-        do_product_templates $appdir $syndesis_tag $atlasmap_tag "fuse-ignite"
+        do_product_templates $appdir $syndesis_tag "fuse-ignite"
         exit 0
     fi
 
@@ -84,8 +80,8 @@ release::run() {
     # Make a clean install
     mvn_clean_install $appdir "$maven_opts"
 
-    # Create templates for the full syndesis and atlasmap versions
-    generate_templates $appdir $release_version $atlasmap_version
+    # Create templates for the full syndesis version
+    generate_templates $appdir $release_version
 
     # Stage artefacts to Sonatype
     stage_artefacts $appdir "$maven_opts"
@@ -121,7 +117,7 @@ release::run() {
     git tag -f $release_version
 
     # Create template versions for the minor tags (without patchlevels)
-    create_templates_for_minor_version $appdir $syndesis_tag $atlasmap_tag
+    create_templates_for_minor_version $appdir $syndesis_tag
 
     # Update files for SNAPSHOT and 'latest version'
     change_to_dev_version $appdir "$maven_opts"
@@ -133,13 +129,12 @@ release::run() {
 create_templates_for_minor_version() {
     local appdir=$1
     local syndesis_tag=$2
-    local atlasmap_tag=$3
 
-    generate_templates $appdir $syndesis_tag $atlasmap_tag
+    generate_templates $appdir $syndesis_tag
 
     echo "==== Git commit for templates $syndesis_tag"
     cd $appdir
-    git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag (atlasmap: $atlasmap_tag)"
+    git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag"
 
     echo "==== Git tag $syndesis_tag"
     git tag -f $syndesis_tag
@@ -186,11 +181,10 @@ mvn_clean_install() {
 generate_templates() {
     local appdir="$1"
     local syndesis_tag="$2"
-    local atlasmap_tag="$3"
 
     echo "==== Creating templates for $syndesis_tag"
     cd $appdir/deploy/generator
-    sh run.sh --syndesis-tag="$syndesis_tag" --atlasmap-tag="$atlasmap_tag"
+    sh run.sh --syndesis-tag="$syndesis_tag"
 }
 
 stage_artefacts() {
@@ -274,7 +268,7 @@ change_to_dev_version() {
 
     echo "==== Updating OpenShift templates back to 'latest'"
     cd $appdir/deploy/generator
-    sh run.sh --syndesis-tag="latest" --atlasmap-tag="latest"
+    sh run.sh --syndesis-tag="latest"
 
     echo "==== Committing files for current snapshot"
     cd $appdir
@@ -296,24 +290,23 @@ git_push() {
 do_product_templates() {
   local appdir=$1
   local syndesis_tag=$2
-  local atlasmap_tag=$3
   local tag_prefix=${4:-fuse-ignite}
 
   cd $appdir/deploy/generator
 
   echo "==== Creating product templates for $syndesis_tag"
-  sh run.sh --product --syndesis-tag="$syndesis_tag" --atlasmap-tag="$atlasmap_tag"
+  sh run.sh --product --syndesis-tag="$syndesis_tag"
 
   echo "==== Committing"
   cd $appdir
-  git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag and AtlasMap $atlasmap_tag"
+  git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag"
 
   echo "=== Tagging"
   git tag -f "${tag_prefix}-${syndesis_tag}"
 
   echo "=== Reverting template versions back to 'latest'"
   cd $appdir/deploy/generator
-  sh run.sh --syndesis-tag="latest" --atlasmap-tag="latest"
+  sh run.sh --syndesis-tag="latest"
 
   echo "==== Committing"
   cd $appdir
@@ -375,14 +368,4 @@ extract_minor_version() {
         return
     fi
     echo $minor_version
-}
-
-extract_atlasmap_version() {
-    cd $(appdir)
-    local version=$(cat pom.xml | grep atlasmap.version | head -1 | sed 's/^[^0-9]*\([0-9]*\.[0-9]*\(\.[0-9]*\)*\).*$/\1/')
-    if [ -n "${version//[0-9.]/}" ]; then
-       echo "ERROR: Cannot extract property atlasmap.version from parent pom.xml (found: $version)"
-       return
-    fi
-    echo $version
 }
