@@ -117,7 +117,7 @@ describe('SyndesisFormComponent test suite', () => {
     expect(component.focus).toBeDefined();
 
     expect(component.onValueChange).toBeDefined();
-    expect(component.onFocusChange).toBeDefined();
+    expect(component.onFocus).toBeDefined();
 
     expect(component.isValid).toBe(true);
     expect(component.isInvalid).toBe(false);
@@ -131,12 +131,12 @@ describe('SyndesisFormComponent test suite', () => {
   });
 
   it('should listen to native focus and blur events', () => {
-    spyOn(component, 'onFocusChange');
+    spyOn(component, 'onFocus');
 
     testElement.triggerEventHandler('focus', null);
     testElement.triggerEventHandler('blur', null);
 
-    expect(component.onFocusChange).toHaveBeenCalledTimes(2);
+    expect(component.onFocus).toHaveBeenCalledTimes(2);
   });
 
   it('should listen to native change event', () => {

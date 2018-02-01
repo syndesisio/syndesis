@@ -2,7 +2,8 @@ import { async, TestBed } from '@angular/core/testing';
 import { BaseRequestOptions, Http, RequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BsDropdownModule, CollapseModule, ModalModule } from 'ngx-bootstrap';
+import { CollapseModule, ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RestangularModule } from 'ngx-restangular';
 import { NotificationModule } from 'patternfly-ng';
 

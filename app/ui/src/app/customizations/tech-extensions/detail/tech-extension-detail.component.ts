@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Extension, Integrations } from '@syndesis/ui/platform';
 import { ExtensionStore } from '@syndesis/ui/store';
-import { TechExtensionDeleteModalComponent } from 'app/customizations/tech-extensions';
+import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/tech-extensions';
 
 @Component({
   selector: 'syndesis-tech-extension-detail',
