@@ -166,7 +166,7 @@
           "pattern": "From",
           "actionType": "connector",
           "descriptor": {
-            "component-scheme": "aws-s3",
+            "componentScheme": "aws-s3",
             "inputDataShape": {
               "kind": "none"
             },
