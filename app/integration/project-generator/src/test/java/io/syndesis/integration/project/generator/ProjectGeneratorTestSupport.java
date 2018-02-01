@@ -294,8 +294,8 @@ public class ProjectGeneratorTestSupport {
             throw new IllegalArgumentException("Unable to find te required resource (" + expectedFileName + ")");
         }
 
-        final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8);
-        final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8);
+        final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8).trim();
+        final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
 
         assertThat(actual).isEqualTo(expected);
     }
