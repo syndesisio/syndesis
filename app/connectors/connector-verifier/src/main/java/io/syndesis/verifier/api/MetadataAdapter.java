@@ -26,7 +26,7 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
  * adapter bridges Camel {@link MetaDataExtension} Component specific
  * implementations to common Syndesis data model.
  */
-public interface MetadataAdapter<T> {
+public interface MetadataAdapter {
 
     /**
      * Converts Camel {@link MetaData} to
@@ -38,6 +38,6 @@ public interface MetadataAdapter<T> {
      * @param metadata the retrieved metadata
      * @return Syndesis styled metadata
      */
-    SyndesisMetadata<T> adapt(String actionId, Map<String, Object> properties, MetaData metadata);
+    SyndesisMetadata adapt(String actionId, Map<String, Object> properties, MetaData metadata);
 
 }

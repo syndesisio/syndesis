@@ -36,7 +36,7 @@ public class ConnectorEndpoint {
 
     @Path("/{connectorId}/actions")
     public ActionDefinitionEndpoint actions(@PathParam("connectorId") final String connectorId) throws Exception {
-        MetadataAdapter<?> adapter;
+        MetadataAdapter adapter;
 
         try {
             adapter = applicationContext.getBean(connectorId + "-adapter", MetadataAdapter.class);

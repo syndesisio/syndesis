@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
@@ -32,6 +33,8 @@ import io.syndesis.connector.sql.SqlStatementMetaData;
 import io.syndesis.connector.sql.stored.ColumnMode;
 import io.syndesis.connector.sql.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.stored.StoredProcedureMetadata;
+import io.syndesis.core.Json;
+import io.syndesis.model.DataShape;
 import io.syndesis.verifier.api.MetadataAdapter;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
@@ -39,7 +42,7 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.springframework.stereotype.Component;
 
 @Component("sql-adapter")
-public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
+public final class SqlMetadataAdapter implements MetadataAdapter {
 
     static final String PROCEDURE_NAME = "procedureName";
     static final String PROCEDURE_TEMPLATE = "template";
@@ -49,7 +52,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
     static final String QUERY = "query";
 
     @Override
-    public SyndesisMetadata<JsonSchema> adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         if (actionId.startsWith("sql-stored")) {
             return adaptForStoredSql(actionId, properties, metadata);
@@ -58,13 +61,13 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
         }
     }
 
-    public SyndesisMetadata<JsonSchema> adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-
         final List<PropertyPair> ppList = new ArrayList<>();
         @SuppressWarnings("unchecked")
         final SqlStatementMetaData sqlStatementMetaData = (SqlStatementMetaData) metadata.getPayload();
+
         if (sqlStatementMetaData!=null) {
             ppList.add(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY));
             enrichedProperties.put(QUERY, ppList);
@@ -84,12 +87,27 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
                 builderOut.putProperty(outParam.getName(), schemaFor(outParam.getJdbcType()));
             }
 
-            return new SyndesisMetadata<>(enrichedProperties, builderIn, builderOut);
+            try {
+                return new SyndesisMetadata(
+                    enrichedProperties,
+                    new DataShape.Builder()
+                        .kind("json-schema")
+                        .type(builderIn.getTitle())
+                        .specification(Json.mapper().writeValueAsString(builderIn))
+                        .build(),
+                    new DataShape.Builder()
+                        .kind("json-schema")
+                        .type(builderOut.getTitle())
+                        .specification(Json.mapper().writeValueAsString(builderOut))
+                        .build());
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException(e);
+            }
         } else {
-            return new SyndesisMetadata<>(enrichedProperties, null, null);
+            return new SyndesisMetadata(enrichedProperties, null, null);
         }
     }
-    public SyndesisMetadata<JsonSchema> adaptForStoredSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata adaptForStoredSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
 
@@ -123,19 +141,34 @@ public final class SqlMetadataAdapter implements MetadataAdapter<JsonSchema> {
                     }
                 }
             }
-            return new SyndesisMetadata<>(enrichedProperties, builderIn, builderOut);
+
+            try {
+                return new SyndesisMetadata(
+                    enrichedProperties,
+                    new DataShape.Builder()
+                        .kind("json-schema")
+                        .type(builderIn.getTitle())
+                        .specification(Json.mapper().writeValueAsString(builderIn))
+                        .build(),
+                    new DataShape.Builder()
+                        .kind("json-schema")
+                        .type(builderOut.getTitle())
+                        .specification(Json.mapper().writeValueAsString(builderOut))
+                        .build());
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         // return list of stored procedures in the database
         @SuppressWarnings("unchecked")
-        final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata
-            .getPayload();
+        final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
         if (isPresentAndNonNull(properties, PATTERN) && FROM_PATTERN.equalsIgnoreCase(String.valueOf(properties.get(PATTERN)))) {
             enrichedProperties.put(PROCEDURE_NAME, obtainFromProcedureList(procedureMap));
         } else {
             enrichedProperties.put(PROCEDURE_NAME, obtainToProcedureList(procedureMap));
         }
-        return new SyndesisMetadata<>(enrichedProperties, null, null);
+        return new SyndesisMetadata(enrichedProperties, null, null);
     }
     /**
      * Puts all stored procedures in the list, as all queries adhere to the `To` pattern.

@@ -28,6 +28,7 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.NumberSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
+import io.syndesis.core.Json;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
@@ -78,7 +79,7 @@ public class SalesforceMetadataAdapterTest {
         properties.put("sObjectName", "SimpleObject");
         properties.put("sObjectIdName", null);
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, properties,
+        final SyndesisMetadata metadata = adapter.adapt(null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
         assertThat(metadata.properties).containsKey("sObjectIdName");
@@ -90,17 +91,19 @@ public class SalesforceMetadataAdapterTest {
     }
 
     @Test
-    public void shouldAdaptObjectMetadataForSchema() {
+    public void shouldAdaptObjectMetadataForSchema() throws IOException {
         final Map<String, Object> properties = new HashMap<>();
         properties.put("sObjectName", "SimpleObject");
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, properties,
+        final SyndesisMetadata metadata = adapter.adapt(null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
-        assertThat(metadata.inputSchema).isSameAs(metadata.outputSchema);
+        assertThat(metadata.inputShape).isSameAs(metadata.inputShape);
         final Object oneOf = payload.getOneOf().iterator().next();
-        assertThat(metadata.inputSchema).isSameAs(oneOf);
-        assertThat(metadata.inputSchema.get$schema()).isEqualTo(JsonUtils.SCHEMA4);
+        final ObjectSchema inSchema = Json.mapper().readValue(metadata.inputShape.getSpecification(), ObjectSchema.class);
+
+        assertThat(inSchema).isEqualTo(oneOf);
+        assertThat(inSchema.get$schema()).isEqualTo(JsonUtils.SCHEMA4);
     }
 
     @Test
@@ -111,7 +114,7 @@ public class SalesforceMetadataAdapterTest {
         oneOf.add(simpleObjectSchema("Object2", "Object2 Label"));
         globalObjectsPayload.setOneOf(oneOf);
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, NOT_USED,
+        final SyndesisMetadata metadata = adapter.adapt(null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withPayload(globalObjectsPayload).build());
 
         assertThat(metadata.properties).containsKey("sObjectName");
@@ -127,7 +130,7 @@ public class SalesforceMetadataAdapterTest {
         final JsonNode payload = new ObjectMapper().readTree(
             "[{\"name\":\"Object1\",\"label\":\"Object1 Label\"},{\"name\":\"Object2\",\"label\":\"Object2 Label\"}]");
 
-        final SyndesisMetadata<ObjectSchema> metadata = adapter.adapt(null, NOT_USED,
+        final SyndesisMetadata metadata = adapter.adapt(null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object_types").withPayload(payload).build());
 
         assertThat(metadata.properties).containsKey("sObjectName");

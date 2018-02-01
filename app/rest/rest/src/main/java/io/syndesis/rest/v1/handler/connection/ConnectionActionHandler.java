@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -32,9 +33,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -53,9 +51,6 @@ import io.syndesis.verifier.VerificationConfigurationProperties;
 
 @Api(value = "actions")
 public class ConnectionActionHandler {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     private final List<ConnectorAction> actions;
 
     private final VerificationConfigurationProperties config;
@@ -138,48 +133,32 @@ public class ConnectionActionHandler {
             }
         }
 
-        final Object input = dynamicActionMetadata.inputSchema();
+        final DataShape input = dynamicActionMetadata.inputShape();
         if (shouldEnrichDataShape(defaultDescriptor.getInputDataShape(), input)) {
-            enriched.inputDataShape(new DataShape.Builder().type(typeFrom(input)).kind("json-schema")
-                .specification(specificationFrom(input)).build());
+            enriched.inputDataShape(input);
         }
 
-        final Object output = dynamicActionMetadata.outputSchema();
+        final DataShape output = dynamicActionMetadata.outputShape();
         if (shouldEnrichDataShape(defaultDescriptor.getOutputDataShape(), output)) {
-            enriched.outputDataShape(new DataShape.Builder().type(typeFrom(output)).kind("json-schema")
-                .specification(specificationFrom(output)).build());
+            enriched.outputDataShape(output);
         }
 
         return enriched.build();
     }
 
-    /* default */ Client createClient() {
+    protected Client createClient() {
         return ClientBuilder.newClient();
     }
 
-    /* default */ static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape,
-        final Object received) {
+    private static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape, final DataShape received) {
         if (maybeExistingDataShape.isPresent() && received != null) {
             final DataShape existingDataShape = maybeExistingDataShape.get();
 
-            return "json-schema".equals(existingDataShape.getKind()) && existingDataShape.getSpecification() == null;
+            // We should enrich the datashape if the existing connector data shape has the same kind of the
+            // computed one and if the existing one does not carry its own specification
+            return Objects.equals(existingDataShape.getKind(), received.getKind()) && Objects.isNull(existingDataShape.getSpecification());
         }
 
         return false;
     }
-
-    /* default */ static String specificationFrom(final Object obj) {
-        try {
-            return MAPPER.writeValueAsString(obj);
-        } catch (final JsonProcessingException e) {
-            throw new IllegalArgumentException("Unable to serialize JSON", e);
-        }
-    }
-
-    /* default */ static String typeFrom(final Object obj) {
-        final JsonNode node = (JsonNode) obj;
-
-        return node.get("title").asText();
-    }
-
 }

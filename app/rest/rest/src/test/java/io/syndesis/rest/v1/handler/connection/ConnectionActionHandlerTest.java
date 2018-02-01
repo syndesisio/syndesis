@@ -104,7 +104,7 @@ public class ConnectionActionHandlerTest {
 
         handler = new ConnectionActionHandler(connection, new VerificationConfigurationProperties(), new EncryptionComponent(null)) {
             @Override
-            /* default */ Client createClient() {
+            protected Client createClient() {
                 return client;
             }
         };

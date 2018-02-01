@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import io.syndesis.model.DataShape;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
@@ -30,9 +30,9 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActionDefinitionEndpointTest {
-    private static final ObjectSchema INPUT = new ObjectSchema();
+    private static final DataShape INPUT = new DataShape.Builder().build();
 
-    private static final ObjectSchema OUTPUT = new ObjectSchema();
+    private static final DataShape OUTPUT = new DataShape.Builder().build();;
 
     private static final Map<String, String> PAYLOAD = Collections.singletonMap("this", "is playload");
 
@@ -50,11 +50,11 @@ public class ActionDefinitionEndpointTest {
 
             final PetstoreAdapter adapter = new PetstoreAdapter(PAYLOAD, PROPERTIES, INPUT, OUTPUT);
             final ActionDefinitionEndpoint endpoint = new ActionDefinitionEndpoint(context, "petstore", adapter);
-            final SyndesisMetadata<?> metadata = endpoint.definition("dog-food", Collections.emptyMap());
+            final SyndesisMetadata metadata = endpoint.definition("dog-food", Collections.emptyMap());
 
             assertThat(metadata.properties).isSameAs(PROPERTIES);
-            assertThat(metadata.inputSchema).isSameAs(INPUT);
-            assertThat(metadata.outputSchema).isSameAs(OUTPUT);
+            assertThat(metadata.inputShape).isSameAs(INPUT);
+            assertThat(metadata.outputShape).isSameAs(OUTPUT);
         } finally {
             context.stop();
         }

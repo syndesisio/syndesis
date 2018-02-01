@@ -51,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(initializers = BaseITCase.TestConfigurationInitializer.class)
 @SuppressWarnings({"PMD.TooManyStaticImports", "PMD.ExcessiveImports"})
-public class DynamicActionDefinitionITCase extends BaseITCase {
+public class DynamicActionSalesforceITCase extends BaseITCase {
     private static final String CREATE_OR_UPDATE_ACTION_ID = "io.syndesis:salesforce-create-or-update-connector:latest";
 
     private static final ConfigurationProperty _DEFAULT_SALESFORCE_IDENTIFIER = new ConfigurationProperty.Builder()//
@@ -77,7 +77,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
         .build();
 
     private static final ConnectorAction DEFAULT_CREATE_OR_UPDATE_ACTION = new ConnectorAction.Builder()//
-        .id(DynamicActionDefinitionITCase.CREATE_OR_UPDATE_ACTION_ID)//
+        .id(DynamicActionSalesforceITCase.CREATE_OR_UPDATE_ACTION_ID)//
         .addTag("dynamic")//
         .descriptor(new ConnectorDescriptor.Builder()//
             .inputDataShape(new DataShape.Builder().kind("json-schema").build())//
@@ -198,6 +198,8 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
         assertThat(secondResponseBody.getInputDataShape()).hasValueSatisfying(input -> {
             assertThat(input.getKind()).isEqualTo("json-schema");
             assertThat(input.getType()).isEqualTo("Contact");
+            assertThat(input.getName()).isEqualTo("Contact");
+            assertThat(input.getDescription()).isEqualTo("Salesforce Contact");
             assertThat(input.getSpecification()).isNotEmpty();
         });
     }
@@ -205,7 +207,7 @@ public class DynamicActionDefinitionITCase extends BaseITCase {
     private static String read(final String path) {
         try {
             return String.join("",
-                Files.readAllLines(Paths.get(DynamicActionDefinitionITCase.class.getResource(path).toURI())));
+                Files.readAllLines(Paths.get(DynamicActionSalesforceITCase.class.getResource(path).toURI())));
         } catch (IOException | URISyntaxException e) {
             throw new IllegalArgumentException("Unable to read from path: " + path, e);
         }

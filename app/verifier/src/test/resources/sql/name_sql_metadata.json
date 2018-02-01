@@ -1,31 +1,13 @@
 {
-  "inputSchema" : {
-    "$schema" : "http://json-schema.org/schema#",
-    "title" : "SQL_PARAM_IN",
-    "properties" : {
-      "id" : {
-        "type" : "integer",
-        "required" : true
-      }
-    }
+  "inputShape" : {
+    "kind" : "json-schema",
+    "type" : "SQL_PARAM_IN",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"id\":{\"type\":\"integer\",\"required\":true}}}"
   },
-  "outputSchema" : {
-    "$schema" : "http://json-schema.org/schema#",
-    "title" : "SQL_PARAM_OUT",
-    "properties" : {
-      "ID" : {
-        "type" : "integer",
-        "required" : true
-      },
-      "FIRSTNAME" : {
-        "type" : "string",
-        "required" : true
-      },
-      "LASTNAME" : {
-        "type" : "string",
-        "required" : true
-      }
-    }
+  "outputShape" : {
+    "kind" : "json-schema",
+    "type" : "SQL_PARAM_OUT",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"ID\":{\"type\":\"integer\",\"required\":true},\"FIRSTNAME\":{\"type\":\"string\",\"required\":true},\"LASTNAME\":{\"type\":\"string\",\"required\":true}}}"
   },
   "properties" : {
     "query" : [ {

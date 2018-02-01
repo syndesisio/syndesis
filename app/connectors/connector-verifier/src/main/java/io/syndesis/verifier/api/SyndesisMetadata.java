@@ -15,17 +15,18 @@
  */
 package io.syndesis.verifier.api;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public final class SyndesisMetadata<T> {
+import io.syndesis.model.DataShape;
 
-    public final T inputSchema;
+public final class SyndesisMetadata {
 
-    public final T outputSchema;
+    public final DataShape inputShape;
+
+    public final DataShape outputShape;
 
     /**
      * A Map keyed by action property name with a list of {@link PropertyPair}
@@ -33,18 +34,15 @@ public final class SyndesisMetadata<T> {
      */
     public final Map<String, List<PropertyPair>> properties;
 
-    public SyndesisMetadata(final Map<String, List<PropertyPair>> properties, final T inputSchema,
-                            final T outputSchema) {
+    public SyndesisMetadata(final Map<String, List<PropertyPair>> properties, final DataShape inputShape, final DataShape outputShape) {
         this.properties = properties;
-        this.inputSchema = inputSchema;
-        this.outputSchema = outputSchema;
+        this.inputShape = inputShape;
+        this.outputShape = outputShape;
 
         if (properties != null) {
-            final Collection<List<PropertyPair>> propertyValues = properties.values();
-            for (final List<PropertyPair> propertyPairs : propertyValues) {
+            for (final List<PropertyPair> propertyPairs : properties.values()) {
                 Collections.sort(propertyPairs, Comparator.comparing(PropertyPair::getDisplayValue));
             }
         }
     }
-
 }
