@@ -42,7 +42,7 @@ Options for release:
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
-    --git-push                Automatically push
+    --no-git-push             Don't push the release tag (and symbolic major.minor tag)
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
@@ -103,9 +103,10 @@ git checkout 1.2.x
 # Call Syndesis from the checked out clone
 ./tools/bin/syndesis release --release-version 1.2.8 .....
 
-# Push to origin after a successful release (or add --git-push)
-git push
-git push -f --tags
+# Push to origin after a successful release.
+# This automatically done if --no-git-push is given
+git push 1.2.8
+git push -f 1.2
 
 # Remove the temporary clone again
 cd ..
@@ -168,15 +169,19 @@ Next, we are switching back to the next development version of the pom.xml files
 This version can be given with `--dev-version`, but by default, it is calculated automatically as `<minor.version>-SNAPSHOT` (e.g. `1.2-SNAPSHOT`).
 This new version is then committed to the local git repository.
 
-Finally, if the option `--git-push` is given the local Git repo is pushed to the remote repository.
-This last step can also be performed manually afterwards with:
+Finally, the tags just created on the local Git repo is pushed to the remote repository.
+You can omit this with the option `--no-git-push`.
+If to so, the last step can also be performed manually afterwards with:
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-git push
-git push -f --tags <1>
+git push 1.2.8
+git push -f 1.2 <1>
 ----
-<1> Using `-f` as the minor tag needs to be moved. Alternatively first remove the minor tag and the use push without `--tags`
+<1> Using `-f` as the minor tag needs to be moved.
+
+Please be careful to *not* push the master branch upstream (i.e. do *not* a plain `git push`).
+We only want to have the tag with all the release preparation steps, not on the branch so that pull requests can be still be easily rebased with out conflict because of the temporary version changes.
 
 ### Minor Version Templates
 
