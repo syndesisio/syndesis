@@ -161,6 +161,14 @@
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-multipart-provider</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -246,7 +254,7 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
     </dependency>
-    
+
     <!-- ===================================================================================== -->
 
     <!-- Atlasmap Data Mapper Services -->
@@ -338,6 +346,8 @@
             <ignoredUnusedDeclaredDependency>io.syndesis:controllers</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:openshift</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis.integration:integration-project-generator</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.sun.xml.bind:jaxb-impl</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.sun.xml.bind:jaxb-core</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
           <ignoredUsedUndeclaredDependencies>
             <!-- if declared complains about being unused -->
