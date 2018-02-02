@@ -22,6 +22,6 @@ import java.util.List;
  *
  */
 public interface ActivityTrackingService {
-    public List<Activity> getActivities(String integrationId, String from, Integer limit) throws IOException;
+    List<Activity> getActivities(String integrationId, String from, Integer limit) throws IOException;
 
 }

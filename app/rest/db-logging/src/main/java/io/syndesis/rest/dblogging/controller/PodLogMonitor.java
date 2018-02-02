@@ -168,7 +168,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         String time = new String(line, 0, 30, StandardCharsets.US_ASCII);
         try {
             @SuppressWarnings("unchecked")
-            Map<String, Object> json = Json.mapper().readValue(line, 31, line.length - 31, HashMap.class);
+            Map<String, Object> json = Json.mapper().readValue(line, 31, line.length - 31, HashMap.class); //NOPMD
 
             // are the required fields set?
             String exchange = validate((String) json.get("exchange"));

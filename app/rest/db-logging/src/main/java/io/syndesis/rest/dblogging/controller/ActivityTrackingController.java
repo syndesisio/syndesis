@@ -99,7 +99,7 @@ public class ActivityTrackingController implements Closeable {
             String untilKey = KeyGenerator.recreateKey(until, 0, 0);
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations");
+            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations"); //NOPMD
             if( hashMap!=null ) {
                 for (String integrationId : hashMap.keySet()) {
                     String integrationPath = "/activity/exchanges/" + integrationId + "/";
@@ -195,7 +195,7 @@ public class ActivityTrackingController implements Closeable {
             }
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> pods = dbGet(HashMap.class, "/activity/pods");
+            Map<String, Object> pods = dbGet(HashMap.class, "/activity/pods"); //NOPMD
             if (pods != null) {
                 pods.keySet().removeAll(podHandlers.keySet());
                 for (String o : pods.keySet()) {

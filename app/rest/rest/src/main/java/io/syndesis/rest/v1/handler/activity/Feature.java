@@ -20,7 +20,9 @@ package io.syndesis.rest.v1.handler.activity;
 public class Feature {
     private boolean enabled;
 
-    public Feature() {}
+    public Feature() {
+        // To allow json deserialization
+    }
     public Feature(boolean enabled) {
         this.enabled = enabled;
     }

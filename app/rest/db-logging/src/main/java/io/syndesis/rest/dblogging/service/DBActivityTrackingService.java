@@ -62,7 +62,6 @@ public class DBActivityTrackingService implements ActivityTrackingService {
 
     private final JsonDB jsondb;
 
-
     public DBActivityTrackingService(final JsonDB jsondb) {
         this.jsondb = jsondb;
     }
@@ -89,10 +88,10 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             return new ArrayList<>();
         }
 
-        return toAPIAPITxLogEntryList(Json.mapper().readTree(data));
+        return toActivityList(Json.mapper().readTree(data));
     }
 
-    private List<Activity> toAPIAPITxLogEntryList(JsonNode from) {
+    private List<Activity> toActivityList(JsonNode from) {
         return toList(from, j-> {
 
             Activity rc = new Activity();
@@ -105,46 +104,7 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             rc.setVer(removeString(j, "ver"));
             rc.setLogts(removeString(j, "logts"));
 
-            ObjectNode fromSteps = (ObjectNode) j.remove("steps");
-            List<ActivityStep> steps = toList(fromSteps, fromStepEvents -> {
-
-                ActivityStep toStep = new ActivityStep();
-                toStep.setId(removeString(fromStepEvents, "id"));
-                fromStepEvents.remove("at");
-
-                toStep.setEvents(toList(fromStepEvents, fromStepEvent -> {
-
-                    Long at = getLong(fromStepEvent, "at");
-                    if (at != null && toStep.getAt() == null) {
-                        toStep.setAt(at);
-                    }
-                    Long duration = removeLong(fromStepEvent, "duration");
-                    if (duration != null) {
-                        toStep.setDuration(duration);
-                    }
-                    String failure = removeString(fromStepEvent, "failure");
-                    if (failure != null) {
-                        toStep.setFailure(failure);
-                    }
-
-                    String message = getString(fromStepEvent, "message");
-                    if (message != null) {
-                        toStep.addMessage(message);
-                    }
-
-                    // Should we skip adding this event?
-                    if (EVENT_FIELDS_SKIP_LIST.equals(fieldNames(fromStepEvent))) {
-                        return null;
-                    }
-                    return fromStepEvent;
-
-                }));
-
-                if( toStep.getMessages()!=null ) {
-                    Collections.reverse(toStep.getMessages());
-                }
-                return toStep;
-            });
+            List<ActivityStep> steps = toActivitySteps(j);
 
             if( steps!=null ) {
                 Collections.reverse(steps);
@@ -155,6 +115,49 @@ public class DBActivityTrackingService implements ActivityTrackingService {
                 rc.setMetadata(j);
             }
             return rc;
+        });
+    }
+
+    private List<ActivityStep> toActivitySteps(ObjectNode j) {
+        ObjectNode fromSteps = (ObjectNode) j.remove("steps");
+        return toList(fromSteps, fromStepEvents -> {
+
+            ActivityStep toStep = new ActivityStep();
+            toStep.setId(removeString(fromStepEvents, "id"));
+            fromStepEvents.remove("at");
+
+            toStep.setEvents(toList(fromStepEvents, fromStepEvent -> {
+
+                Long at = getLong(fromStepEvent, "at");
+                if (at != null && toStep.getAt() == null) {
+                    toStep.setAt(at);
+                }
+                Long duration = removeLong(fromStepEvent, "duration");
+                if (duration != null) {
+                    toStep.setDuration(duration);
+                }
+                String failure = removeString(fromStepEvent, "failure");
+                if (failure != null) {
+                    toStep.setFailure(failure);
+                }
+
+                String message = getString(fromStepEvent, "message");
+                if (message != null) {
+                    toStep.addMessage(message);
+                }
+
+                // Should we skip adding this event?
+                if (EVENT_FIELDS_SKIP_LIST.equals(fieldNames(fromStepEvent))) {
+                    return null;
+                }
+                return fromStepEvent;
+
+            }));
+
+            if( toStep.getMessages()!=null ) {
+                Collections.reverse(toStep.getMessages());
+            }
+            return toStep;
         });
     }
 
