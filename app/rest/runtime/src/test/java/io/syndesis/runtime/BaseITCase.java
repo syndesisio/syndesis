@@ -69,7 +69,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         ExtensionConfiguration.class,
         IntegrationConfiguration.class,
         SyndesisCorsConfiguration.class
-})
+    }
+)
 public abstract class BaseITCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseITCase.class);

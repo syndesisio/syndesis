@@ -63,6 +63,11 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-boot</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- spring -->
     <dependency>
@@ -150,6 +155,10 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spring-boot</artifactId>
     </dependency>
 
   </dependencies>
