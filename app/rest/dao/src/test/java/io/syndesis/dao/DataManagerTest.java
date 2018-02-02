@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -214,6 +215,13 @@ public class DataManagerTest {
     public void metricsTest() {
         ListResult<IntegrationMetricsSummary> list = dataManager.fetchAll(IntegrationMetricsSummary.class);
         assertThat(list.getTotalCount()).isEqualTo(2);
+    }
+
+    @Test
+    public void getMetricsIdsTest() {
+        Set<String> metricsIds = dataManager.fetchIds(IntegrationMetricsSummary.class);
+        assertThat(metricsIds.size()).isEqualTo(2);
+        assertThat(metricsIds).contains("1");
     }
 
 }

@@ -18,10 +18,12 @@ package io.syndesis.jsondb.dao;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -115,6 +117,18 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 }
             }
             return result;
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
+            throw SyndesisServerException.launderThrowable(e);
+        }
+    }
+
+    @Override
+    public Set<String> fetchIds() {
+        try {
+            String json = jsondb.getAsString(getCollectionPath(), new GetOptions().depth(1));
+            Map<String,Boolean> map = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
+            return map.keySet()
+                 .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }

@@ -46,7 +46,7 @@ import java.util.Optional;
 
 public class PodMetricsReader implements Runnable {
 
-    private static final Logger LOOGER = LoggerFactory.getLogger(PodMetricsReader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PodMetricsReader.class);
 
     private static final String JOLOKIA_URL_FORMAT = "%sapi/v1/namespaces/%s/pods/https:%s:8778/proxy/jolokia/";
 
@@ -59,6 +59,7 @@ public class PodMetricsReader implements Runnable {
     private static final String RESET_TIMESTAMP = "ResetTimestamp";
 
     private final J4pClient jolokia;
+    private final String integration;
     private final String integrationId;
     private final String version;
     private final String pod;
@@ -67,9 +68,10 @@ public class PodMetricsReader implements Runnable {
     private final Map<String, ObjectName> cache = new HashMap<>();
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    public PodMetricsReader(KubernetesClient kubernetes, String pod, String integrationId, String version,
+    public PodMetricsReader(KubernetesClient kubernetes, String pod, String integration, String integrationId, String version,
             RawMetricsHandler handler) {
         this.pod = pod;
+        this.integration = integration;
         this.integrationId = integrationId;
         this.version = version;
         this.handler = handler;
@@ -79,8 +81,8 @@ public class PodMetricsReader implements Runnable {
     @Override
     public void run() {
         try {
-            LOOGER.debug("Collecting stats from integrationId: {}", integrationId);
-            List<Map<String, String>> routeStats = getRoutes(integrationId, "[a-zA-z0-9_-]+");
+            LOGGER.debug("Collecting stats from integrationId: {}", integrationId);
+            List<Map<String, String>> routeStats = getRoutes(integration, "[a-zA-z0-9_-]+");
 
             routeStats.forEach(
                 m -> {
@@ -111,7 +113,7 @@ public class PodMetricsReader implements Runnable {
             );
 
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            LOOGER.error("Collecting stats from integrationId: {}", integrationId);
+            LOGGER.error("Collecting stats from integrationId: {}", integrationId);
         }
     }
 
