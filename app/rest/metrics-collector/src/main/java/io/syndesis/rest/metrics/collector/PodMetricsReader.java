@@ -19,6 +19,8 @@ import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.internal.SSLUtils;
 import io.syndesis.core.SyndesisServerException;
+
+import org.apache.camel.util.ObjectHelper;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.jolokia.client.J4pClient;
 import org.jolokia.client.J4pClientBuilder;
@@ -42,8 +44,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static org.apache.camel.util.StringHelper.removeLeadingAndEndingQuotes;
 
 public class PodMetricsReader implements Runnable {
 
@@ -269,6 +269,29 @@ public class PodMetricsReader implements Runnable {
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             throw SyndesisServerException.launderThrowable(e);
         }
+    }
+
+    /**
+     * Removes all leading and ending quotes (single and double) from the string
+     *
+     * @param s  the string
+     * @return the string without leading and ending quotes (single and double)
+     */
+    public static String removeLeadingAndEndingQuotes(String s) {
+        if (ObjectHelper.isEmpty(s)) {
+            return s;
+        }
+
+        String copy = s.trim();
+        if (copy.startsWith("'") && copy.endsWith("'")) {
+            return copy.substring(1, copy.length() - 1);
+        }
+        if (copy.startsWith("\"") && copy.endsWith("\"")) {
+            return copy.substring(1, copy.length() - 1);
+        }
+
+        // no quotes, so return as-is
+        return s;
     }
 
 }
