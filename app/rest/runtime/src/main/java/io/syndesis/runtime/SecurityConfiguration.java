@@ -58,6 +58,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/api/v1/swagger.*").permitAll()
             .antMatchers("/api/v1/index.html").permitAll()
+            .antMatchers("/api/v1/internal/swagger.*").permitAll()
+            .antMatchers("/api/v1/internal/index.html").permitAll()
             .antMatchers("/api/v1/version").permitAll()
             .antMatchers(HttpMethod.GET, "/api/v1/credentials/callback").permitAll()
             .antMatchers("/api/v1/**").hasRole("AUTHENTICATED")

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1.handler.integration;
+package io.syndesis.rest.v1.handler.integration.support;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -63,6 +63,8 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
+import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

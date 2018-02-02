@@ -26,7 +26,7 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
-import io.syndesis.rest.v1.handler.integration.IntegrationSupportHandler;
+import io.syndesis.rest.v1.handler.integration.support.IntegrationSupportHandler;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

@@ -15,63 +15,80 @@
  */
 package io.syndesis.runtime;
 
+import java.util.Arrays;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(Parameterized.class)
 public class APIDocsITCase extends BaseITCase {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static final Class<Map<String, Map<?, ?>>> TYPE = (Class) Map.class;
 
+    @Parameter(0)
+    public String path;
+
+    @Parameter(1)
+    public String text;
+
+    @Test
+    public void testSwaggerDocsIndex() {
+        final ResponseEntity<String> response = restTemplate().getForEntity("/api/v1" + path + "index.html", String.class);
+        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
+        assertThat(response.getBody()).as("swagger index.html example path").contains(text);
+    }
+
+    @Test
+    public void testSwaggerDocsIndexWithToken() {
+        final ResponseEntity<String> response = get("/api/v1" + path + "index.html", String.class);
+        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
+        assertThat(response.getBody()).as("swagger index.html example path").contains(text);
+    }
+
     @Test
     public void testSwaggerJson() {
-        ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1/swagger.json", JsonNode.class);
+        final ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1" + path + "swagger.json", JsonNode.class);
         assertThat(response.getStatusCode()).as("swagger json response code").isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
     }
 
     @Test
     public void testSwaggerJsonWithToken() {
-        ResponseEntity<JsonNode> response = get("/api/v1/swagger.json", JsonNode.class);
+        final ResponseEntity<JsonNode> response = get("/api/v1" + path + "swagger.json", JsonNode.class);
         assertThat(response.getStatusCode()).as("swagger json response code").isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
     }
 
     @Test
     public void testSwaggerYaml() {
-        ResponseEntity<Map<String, Map<?, ?>>> response = restTemplate().getForEntity("/api/v1/swagger.yaml", TYPE);
+        final ResponseEntity<Map<String, Map<?, ?>>> response = restTemplate().getForEntity("/api/v1" + path + "swagger.json", TYPE);
         assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
-        assertThat((response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
+        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
     }
 
     @Test
     public void testSwaggerYamlWithToken() {
-        ResponseEntity<Map<String, Map<?, ?>>> response = get("/api/v1/swagger.yaml", TYPE);
+        final ResponseEntity<Map<String, Map<?, ?>>> response = get("/api/v1" + path + "swagger.yaml", TYPE);
         assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
-        assertThat((response.getBody().get("paths")).size()).as("swagger json number of paths").isPositive();
+        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
     }
 
-    @Test
-    public void testSwaggerDocsIndex() {
-        ResponseEntity<String> response = restTemplate().getForEntity("/api/v1/index.html", String.class);
-        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
-        assertThat(response.getBody()).as("swagger index.html example path").contains("/connectors/{id}");
-    }
-
-    @Test
-    public void testSwaggerDocsIndexWithToken() {
-        ResponseEntity<String> response = get("/api/v1/index.html", String.class);
-        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
-        assertThat(response.getBody()).as("swagger index.html example path").contains("/connectors/{id}");
+    @Parameters(name = "{index}: {0}")
+    public static Iterable<Object[]> data() {
+        return Arrays.asList(new Object[][] {{"/internal/", "Syndesis API"}, {"/", "Syndesis Supported API"}});
     }
 
 }
