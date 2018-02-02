@@ -123,7 +123,7 @@ release::run() {
     change_to_dev_version "$appdir" "$maven_opts"
 
     # Push everything (if configured)
-    git_push "$release_version" "$syndesis_tag"
+    git_push "$appdir" "$release_version" "$syndesis_tag"
 }
 
 create_templates_for_minor_version() {
@@ -277,17 +277,28 @@ change_to_dev_version() {
 }
 
 git_push() {
-    local $release_version=${1:-}
-    local $syndesis_tag=${2:-}
+    local appdir=${1:-}
+    local release_version=${2:-}
+    local syndesis_tag=${3:-}
+
+    cd $appdir
+
     if [ ! $(hasflag --no-git-push) ] && [ ! $(hasflag --dry-run -n) ]; then
+        # Push to the remote attached to the local checkout branch
+        local remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed -e 's/\([^\/]*\)\/.*/\1/')
+        if [ -z "${remote}" ]; then
+          echo "ERROR: Cannot find remote repository to git push to"
+          exit 1
+        fi
+
         echo "==== Pushing to GitHub"
         if [ -n "$release_version" ]; then
             echo "* Pushing $release_version"
-            git push $release_version
+            git push -u $remote $release_version
         fi
         if [ -n "$syndesis_tag" ]; then
             echo "* Pushing symbolic tag $syndesis_tag"
-            git push -f $syndesis_tag
+            git push -f -u $remote $syndesis_tag
         fi
     fi
 }
