@@ -177,9 +177,13 @@ export class StepStore {
       return _step.properties;
     }
     // flatten arrays of properties into one object until step configuration supports pages
-    return action.descriptor.propertyDefinitionSteps.reduce( (acc, current) => {
-      return { ...acc, ...current.properties };
-    }, {});
+    if (Array.isArray(action.descriptor.propertyDefinitionSteps)) {
+      return action.descriptor.propertyDefinitionSteps.reduce( (acc, current) => {
+        return { ...acc, ...current.properties };
+      }, {});
+    } else {
+      return {};
+    }
   }
 
   getSteps(extensions: Extensions = []) {
@@ -187,9 +191,14 @@ export class StepStore {
     for ( const extension of extensions ) {
       for ( const action of extension.actions) {
         if (action.actionType == 'step') {
-          const properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
+          let properties;
+          if (Array.isArray(action.descriptor.propertyDefinitionSteps)) {
+            properties = action.descriptor.propertyDefinitionSteps.reduce((acc, current) => {
             return {...acc, ...current.properties};
           }, {});
+        } else {
+            properties = {};
+        }
           allSteps.push({
             name: action.name,
             description: action.description,
