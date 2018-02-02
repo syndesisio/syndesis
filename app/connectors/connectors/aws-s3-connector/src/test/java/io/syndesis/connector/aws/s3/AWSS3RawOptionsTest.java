@@ -28,7 +28,6 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -66,7 +65,7 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
                     .name("asw-integration")
                     .spec(new IntegrationDeploymentSpec.Builder()
                         .name("asw-integration")
-                        .addStep(new SimpleStep.Builder()
+                        .addStep(new Step.Builder()
                             .putMetadata(Step.METADATA_STEP_INDEX, "1")
                             .stepKind("endpoint")
                             .connection(new Connection.Builder()
@@ -113,7 +112,7 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
                                     .build())
                                 .build())
                             .build())
-                        .addStep(new SimpleStep.Builder()
+                        .addStep(new Step.Builder()
                             .putMetadata(Step.METADATA_STEP_INDEX, "2")
                             .stepKind("endpoint")
                             .action(new ConnectorAction.Builder()

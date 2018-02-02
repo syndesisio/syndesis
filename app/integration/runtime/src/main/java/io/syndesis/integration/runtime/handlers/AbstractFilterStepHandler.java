@@ -20,9 +20,6 @@ import java.util.Optional;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.util.JsonSimplePredicate;
-import io.syndesis.model.filter.ExpressionFilterStep;
-import io.syndesis.model.filter.FilterStep;
-import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Predicate;
@@ -30,26 +27,19 @@ import org.apache.camel.model.FilterDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 
-public class FilterStepHandler implements IntegrationStepHandler {
-    @Override
-    public boolean canHandle(Step step) {
-        if (!ExpressionFilterStep.STEP_KIND.equals(step.getStepKind()) && !RuleFilterStep.STEP_KIND.equals(step.getStepKind())) {
-            return false;
-        }
-
-        return step instanceof FilterStep;
-    }
+abstract class AbstractFilterStepHandler implements IntegrationStepHandler {
 
     @Override
     public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
         ObjectHelper.notNull(route, "route");
 
-        final FilterStep filterStep = (FilterStep)step;
-        final String expression = ObjectHelper.notNull(filterStep.getFilterExpression(), "expression");
+        final String expression = ObjectHelper.notNull(getFilterExpression(step), "expression");
         final CamelContext context = builder.getContext();
         final Predicate predicate = new JsonSimplePredicate(expression, context);
         final FilterDefinition filter = route.filter(predicate);
 
         return Optional.of(filter);
     }
+
+    protected abstract String getFilterExpression(Step step);
 }

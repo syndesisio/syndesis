@@ -19,7 +19,6 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Component;
@@ -86,17 +85,16 @@ public class EncryptionComponent {
     }
 
     public List<? extends Step> encrypt(List<? extends Step> steps) {
-        return steps.stream().map(x->{
-            if( x instanceof SimpleStep && x.getAction().isPresent() ) {
+        return steps.stream().map(step -> {
+            if(step.getAction().isPresent() ) {
 
-                Map<String, String> configuredProperties = encryptPropertyValues(x.getConfiguredProperties(), x.getAction().get().getProperties());
-                return new SimpleStep.Builder()
-                    .createFrom(x)
+                Map<String, String> configuredProperties = encryptPropertyValues(step.getConfiguredProperties(), step.getAction().get().getProperties());
+                return new Step.Builder()
+                    .createFrom(step)
                     .configuredProperties(configuredProperties)
                     .build();
-
             } else {
-                return x;
+                return step;
             }
         }).collect(Collectors.toList());
     }

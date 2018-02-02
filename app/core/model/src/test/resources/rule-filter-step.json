@@ -1,9 +1,0 @@
-{
-  "id": "1",
-  "kind": "Step",
-  "stepKind": "rule-filter",
-  "configuredProperties": {
-    "predicate": "and",
-    "rules": "[{\"path\": \"text\",\"op\": \"==\",\"value\": \"antman\"},{\"path\": \"kind\",\"op\": \"=~\",\"value\": \"DC Comics\"}]"
-  }
-}

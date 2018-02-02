@@ -29,12 +29,9 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.filter.ExpressionFilterStep;
-import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.junit.Test;
 
@@ -100,7 +97,7 @@ public class IntegrationSupportTest {
     @Test
     public void testBuildApplicationPropertiesForEndpoints() {
 
-        Step s1 = new SimpleStep.Builder()
+        Step s1 = new Step.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
                 .id(KeyGenerator.createKey())
@@ -110,7 +107,7 @@ public class IntegrationSupportTest {
             .putConfiguredProperty("accessToken", "myAccessToken")
             .action(TWITTER_ACTION)
             .build();
-        Step s2 = new SimpleStep.Builder()
+        Step s2 = new Step.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
                 .id(KeyGenerator.createKey())
@@ -122,7 +119,7 @@ public class IntegrationSupportTest {
             .putConfiguredProperty("token", "mytoken1")
             .action(HTTP_ACTION)
             .build();
-        Step s3 = new SimpleStep.Builder()
+        Step s3 = new Step.Builder()
             .stepKind("endpoint")
             .connection(new Connection.Builder()
                 .id(KeyGenerator.createKey())
@@ -192,13 +189,7 @@ public class IntegrationSupportTest {
                 resource -> resources.put(resource.getId().get(), resource)
             );
 
-            if (steps[i] instanceof SimpleStep) {
-                steps[i] = new SimpleStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            } else if (steps[i] instanceof ExpressionFilterStep) {
-                steps[i] = new ExpressionFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            } else if (steps[i] instanceof RuleFilterStep) {
-                steps[i] = new RuleFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            }
+            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
         }
 
         return new IntegrationDeployment.Builder()

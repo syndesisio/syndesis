@@ -19,7 +19,7 @@ import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.Split;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -67,7 +67,7 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -76,7 +76,7 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -86,7 +86,7 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -123,7 +123,7 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -132,7 +132,7 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -146,7 +146,7 @@ public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()

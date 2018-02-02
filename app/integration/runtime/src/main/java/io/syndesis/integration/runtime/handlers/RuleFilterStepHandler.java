@@ -13,38 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.filter;
+package io.syndesis.integration.runtime.handlers;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.core.Json;
-import io.syndesis.model.Kind;
-import org.immutables.value.Value;
+import io.syndesis.model.filter.FilterPredicate;
+import io.syndesis.model.filter.FilterRule;
+import io.syndesis.model.integration.Step;
 
-/**
- * Specific rule filter step
- * @since 31.07.17
- */
-@Value.Immutable
-@JsonDeserialize(builder = RuleFilterStep.Builder.class)
-@JsonIgnoreProperties("filterExpression")
-@SuppressWarnings("immutables")
-public interface RuleFilterStep extends FilterStep {
-
-    String STEP_KIND = "rule-filter";
-
-    /**
-     * Filter in the simple expression language.
-     */
+public class RuleFilterStepHandler extends AbstractFilterStepHandler {
     @Override
-    default String getFilterExpression() {
-        final Map<String, String> props = getConfiguredProperties();
+    public boolean canHandle(Step step) {
+        return "rule-filter".equals(step.getStepKind());
+    }
+
+    @Override
+    protected String getFilterExpression(Step step) {
+        final Map<String, String> props = step.getConfiguredProperties();
 
         if (!props.isEmpty()) {
             FilterPredicate predicate = getPredicate(props.get("predicate"));
@@ -60,7 +50,11 @@ public interface RuleFilterStep extends FilterStep {
         throw new IllegalStateException("No step properties defined for rule filter step");
     }
 
-    default List<FilterRule> extractRules(String rulesString) {
+    // *******************************
+    // Helpers
+    // *******************************
+
+    private List<FilterRule> extractRules(String rulesString) {
         try {
             if (rulesString == null || rulesString.isEmpty()) {
                 return null;
@@ -72,23 +66,10 @@ public interface RuleFilterStep extends FilterStep {
     }
 
     @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
-    default FilterPredicate getPredicate(String predicate) {
+    private FilterPredicate getPredicate(String predicate) {
         if (predicate != null) {
             return FilterPredicate.valueOf(predicate.toUpperCase());
         }
         return FilterPredicate.OR;
     }
-
-    class Builder extends ImmutableRuleFilterStep.Builder { }
-
-    @Override
-    @Value.Default default String getStepKind() {
-        return STEP_KIND;
-    }
-
-    @Override
-    @Value.Default default Kind getKind() {
-        return Kind.Step;
-    }
-
 }

@@ -21,11 +21,8 @@ import java.util.Collections;
 import javax.xml.bind.JAXBException;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.model.filter.ExpressionFilterStep;
-import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ModelHelper;
@@ -57,14 +54,9 @@ public class StepHandlerTestSupport {
 
     protected static IntegrationDeployment newIntegrationDeployment(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
-            if (steps[i] instanceof SimpleStep) {
-                steps[i] = new SimpleStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            } else if (steps[i] instanceof ExpressionFilterStep) {
-                steps[i] = new ExpressionFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            } else if (steps[i] instanceof RuleFilterStep) {
-                steps[i] = new RuleFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            }
+            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
         }
+
         return new IntegrationDeployment.Builder()
             .integrationId("test-integration")
             .name("Test Integration")

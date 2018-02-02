@@ -41,11 +41,8 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.filter.ExpressionFilterStep;
-import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -221,13 +218,7 @@ public class ProjectGeneratorTestSupport {
                 resource -> resourceManager.put(resource.getId().get(), resource)
             );
 
-            if (steps[i] instanceof SimpleStep) {
-                steps[i] = new SimpleStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            } else if (steps[i] instanceof ExpressionFilterStep) {
-                steps[i] = new ExpressionFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            } else if (steps[i] instanceof RuleFilterStep) {
-                steps[i] = new RuleFilterStep.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
-            }
+            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
         }
 
         return new IntegrationDeployment.Builder()

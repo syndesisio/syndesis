@@ -22,7 +22,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -66,9 +66,8 @@ public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSuppo
         final CamelContext context = new SpringCamelContext(applicationContext);
         context.addInterceptStrategy(new OutMessageCaptureInterceptStrategy());
         try {
-
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("s1")
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
@@ -78,7 +77,7 @@ public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSuppo
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("s2")
                     .stepKind("extension")
                     .action(new StepAction.Builder()
@@ -88,7 +87,7 @@ public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSuppo
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("s3")
                     .stepKind("extension")
                     .action(new StepAction.Builder()
@@ -98,7 +97,7 @@ public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSuppo
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("s4")
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()

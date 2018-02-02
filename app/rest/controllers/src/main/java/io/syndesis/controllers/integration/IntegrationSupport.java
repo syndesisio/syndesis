@@ -29,11 +29,8 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.filter.ExpressionFilterStep;
-import io.syndesis.model.filter.RuleFilterStep;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.SimpleStep;
 import io.syndesis.model.integration.Step;
 
 public final class IntegrationSupport {
@@ -47,45 +44,30 @@ public final class IntegrationSupport {
 
         for (int i = 1; i <= stepCount; i++) {
             final Step source = integrationDeployment.getSpec().getSteps().get(i - 1);
-            final Step target;
 
-            if (ExpressionFilterStep.STEP_KIND.equals(source.getStepKind())) {
-                target = new ExpressionFilterStep.Builder()
-                    .createFrom(source)
-                    .putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i))
-                    .build();
-            } else if (RuleFilterStep.STEP_KIND.equals(source.getStepKind())) {
-                target = new RuleFilterStep.Builder()
-                    .createFrom(source)
-                    .putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i))
-                    .build();
-            } else {
-                SimpleStep.Builder stepBuilder = new SimpleStep.Builder();
-                stepBuilder.createFrom(source);
-                stepBuilder.putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i));
+            Step.Builder stepBuilder = new Step.Builder();
+            stepBuilder.createFrom(source);
+            stepBuilder.putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i));
 
-                source.getConnection().ifPresent(connection -> {
-                    // If connector is not set, fetch it from data source and update connection
-                    if (connection.getConnectorId().isPresent() && !connection.getConnector().isPresent()) {
-                        Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId().get());
+            source.getConnection().ifPresent(connection -> {
+                // If connector is not set, fetch it from data source and update connection
+                if (connection.getConnectorId().isPresent() && !connection.getConnector().isPresent()) {
+                    Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId().get());
 
-                        if (connector != null) {
-                            stepBuilder.connection(
-                                new Connection.Builder()
-                                    .createFrom(connection)
-                                    .connector(connector)
-                                    .build()
-                            );
-                        } else {
-                            throw new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId().get());
-                        }
+                    if (connector != null) {
+                        stepBuilder.connection(
+                            new Connection.Builder()
+                                .createFrom(connection)
+                                .connector(connector)
+                                .build()
+                        );
+                    } else {
+                        throw new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId().get());
                     }
-                });
+                }
+            });
 
-                target = stepBuilder.build();
-            }
-
-            steps.add(target);
+            steps.add(stepBuilder.build());
         }
 
         return new IntegrationDeployment.Builder()

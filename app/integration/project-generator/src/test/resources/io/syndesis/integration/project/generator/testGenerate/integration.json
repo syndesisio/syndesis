@@ -79,11 +79,6 @@
         },
         "actionType" : "step"
       },
-      "stepKind" : "extension",
-      "configuredProperties" : {
-        "key-1" : "val-1",
-        "key-2" : "val-2"
-      },
       "extension" : {
         "extensionId" : "my-extension-1",
         "dependencies" : [ {
@@ -98,6 +93,11 @@
         } ],
         "id" : "my-extension-1"
       },
+      "stepKind" : "extension",
+      "configuredProperties" : {
+        "key-1" : "val-1",
+        "key-2" : "val-2"
+      },
       "metadata" : {
         "step.index" : "4"
       }
@@ -110,14 +110,14 @@
         },
         "actionType" : "step"
       },
+      "extension" : {
+        "extensionId" : "my-extension-2",
+        "id" : "my-extension-2"
+      },
       "stepKind" : "extension",
       "configuredProperties" : {
         "key-1" : "val-1",
         "key-2" : "val-2"
-      },
-      "extension" : {
-        "extensionId" : "my-extension-2",
-        "id" : "my-extension-2"
       },
       "metadata" : {
         "step.index" : "5"
@@ -131,14 +131,14 @@
         },
         "actionType" : "step"
       },
+      "extension" : {
+        "extensionId" : "my-extension-3",
+        "id" : "my-extension-3"
+      },
       "stepKind" : "extension",
       "configuredProperties" : {
         "key-1" : "val-1",
         "key-2" : "val-2"
-      },
-      "extension" : {
-        "extensionId" : "my-extension-3",
-        "id" : "my-extension-3"
       },
       "metadata" : {
         "step.index" : "6"

@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.handlers;
 import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.integration.SimpleStep;
+import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
@@ -56,7 +56,7 @@ public class StepWithIdTest extends StepHandlerTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("endpoint-1")
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
@@ -66,11 +66,11 @@ public class StepWithIdTest extends StepHandlerTestSupport {
                             .build())
                         .build())
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("split-1")
                     .stepKind("split")
                     .build(),
-                new SimpleStep.Builder()
+                new Step.Builder()
                     .id("endpoint-2")
                     .stepKind("endpoint")
                     .action(new ConnectorAction.Builder()
