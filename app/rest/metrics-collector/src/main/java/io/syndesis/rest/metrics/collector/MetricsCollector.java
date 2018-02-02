@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -110,33 +109,32 @@ public class MetricsCollector implements Runnable, Closeable {
                     executor.execute(new PodMetricsReader(
                             kubernetes,
                             p.getMetadata().getName(),
-                            p.getMetadata().getLabels().get("integration"),
                             p.getMetadata().getLabels().get("syndesis.io/integration-id"),
                             p.getMetadata().getLabels().get("syndesis.io/deployment-id"),
                             rawMetricsHandler))
             );
 
+            //TODO Kurt Will update after #1384 goes in to only fetch the IDs
             ListResult<Integration> integrationList = dataManager.fetchAll(Integration.class);
             Set<String> activeIntegrationIds = new HashSet<>();
             for (Integration integration : integrationList.getItems()) {
-                String name = integration.getName();
                 String integrationId = integration.getId().get();
-                LOGGER.info("IntegrationId=" + integrationId);
-                activeIntegrationIds.add(name);
+                LOGGER.debug("Computing metrics for IntegrationId: {}",integrationId);
+                activeIntegrationIds.add(integrationId);
 
-                Map<String,RawMetrics> rawMetrics = getRawMetrics(name);
+                Map<String,RawMetrics> rawMetrics = getRawMetrics(integrationId);
                 IntegrationMetricsSummary currentSummary =
                         computeIntegrationSummary(integrationId, rawMetrics, livePods);
                 IntegrationMetricsSummary existingSummary =
                         dataManager.fetch(IntegrationMetricsSummary.class, integrationId);
                 if (existingSummary == null) {
                     dataManager.create(currentSummary);
-                } else if (existingSummary.hashCode() != currentSummary.hashCode()) {
+                } else if (! existingSummary.equals(currentSummary)) {
                     //only write to the DB when the new metrics differs to unnecessary
                     //and expensive writes to the DB
                     dataManager.update(currentSummary);
                 }
-                curateDeadPodMetrics(integrationId, name, rawMetrics, livePods);
+                curateDeadPodMetrics(integrationId, rawMetrics, livePods);
             }
             curateDeletedIntegrationMetrics(activeIntegrationIds);
 
@@ -154,11 +152,10 @@ public class MetricsCollector implements Runnable, Closeable {
      * the key is either HISTORY or the podName.
      * @throws IOException
      */
-    /*default*/ Map<String,RawMetrics> getRawMetrics(String integrationId) throws IOException {
+    /* default */ Map<String,RawMetrics> getRawMetrics(String integrationId) throws IOException {
         //try to obtain metrics in this integration
         Map<String,RawMetrics> metrics = new HashMap<>();
         String json = jsonDB.getAsString(path(integrationId));
-        LOGGER.debug("JSON: " + json);
         if (json != null) {
             metrics = Json.mapper().readValue(json, new TypeReference<Map<String,RawMetrics>>() {});
         }
@@ -174,7 +171,7 @@ public class MetricsCollector implements Runnable, Closeable {
      * @param livePodIds
      * @return
      */
-    /*default*/ IntegrationMetricsSummary computeIntegrationSummary(
+    /* default */ IntegrationMetricsSummary computeIntegrationSummary(
             String integrationId,
             Map<String,RawMetrics> metrics,
             Set<String> livePodIds) {
@@ -225,9 +222,8 @@ public class MetricsCollector implements Runnable, Closeable {
      * @param livePodIds
      * @throws IOException
      */
-    /*default*/ void curateDeadPodMetrics(
+    /* default */ void curateDeadPodMetrics(
             String integrationId,
-            String integration,
             Map<String,RawMetrics> metrics,
             Set<String> livePodIds) throws IOException {
 
@@ -241,7 +237,6 @@ public class MetricsCollector implements Runnable, Closeable {
                             ? history.getLastProcessed().orElse(null) : dead.getLastProcessed().orElse(null);
                     RawMetrics updatedHistoryMetrics = new RawMetrics.Builder()
                             .integrationId(integrationId)
-                            .integration(integration)
                             .pod(history.getIntegrationId() + ":" + dead.getPod())
                             .messages(history.getMessages() + dead.getMessages())
                             .errors(history.getErrors() + dead.getErrors())
@@ -269,7 +264,7 @@ public class MetricsCollector implements Runnable, Closeable {
      * @throws IOException
      * @throws JsonMappingException
      */
-    /*default*/ void curateDeletedIntegrationMetrics(Set<String> activeIntegrationIds) throws IOException, JsonMappingException {
+    /* default */ void curateDeletedIntegrationMetrics(Set<String> activeIntegrationIds) throws IOException, JsonMappingException {
 
         //1. Loop over all RawMetrics
         String json = jsonDB.getAsString(path(), new GetOptions().depth(1));
@@ -281,6 +276,7 @@ public class MetricsCollector implements Runnable, Closeable {
             }
         }
         //2. Loop over all IntegrationMetricsSummary
+        //Will update after #1384 goes in to only fetch the IDs
         ListResult<IntegrationMetricsSummary> intSummaries= dataManager.fetchAll(IntegrationMetricsSummary.class);
         Iterator<IntegrationMetricsSummary> iterator = intSummaries.getItems().iterator();
         while (iterator.hasNext()) {
@@ -291,15 +287,15 @@ public class MetricsCollector implements Runnable, Closeable {
         }
     }
 
-    /*default*/ static String path(String integrationId, String podName) {
+    /* default */ static String path(String integrationId, String podName) {
         return String.format("%s/integrations/%s/pods/%s", RawMetrics.class.getSimpleName(), integrationId, podName);
     }
 
-    /*default*/ static String path(String integrationId) {
+    /* default */ static String path(String integrationId) {
         return String.format("%s/integrations/%s/pods", RawMetrics.class.getSimpleName(), integrationId);
     }
 
-    /*default*/ static String path() {
+    /* default */ static String path() {
         return String.format("%s/integrations", RawMetrics.class.getSimpleName());
     }
 

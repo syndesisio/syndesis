@@ -15,29 +15,28 @@
  */
 package io.syndesis.rest.metrics.collector;
 
-import java.util.Date;
-import java.util.Optional;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import org.immutables.value.Value;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+/**
+ * Unit Tests to check the podMetricsReader
+ */
+public class PodMetricsReaderTest {
 
-@Value.Immutable
-@JsonDeserialize(builder = RawMetrics.Builder.class)
-@SuppressWarnings("immutables")
-public interface RawMetrics {
-
-    String getIntegrationId();
-    Optional<String> getVersion();
-    String getPod();
-
-    Long getMessages();
-    Long getErrors();
-    Optional<Date> getStartDate();
-    Optional<Date> getResetDate();
-    Optional<Date> getLastProcessed();
-
-    class Builder extends ImmutableRawMetrics.Builder {
-        // allow access to ImmutableRawMetrics.Builder
+    @Test @Ignore
+    public void readTest() {
+        String podName = "metrics-test-2-90qwf";
+        String integrationId = "id1";
+        String version = "1";
+        PodMetricsReader reader = new PodMetricsReader(
+                new DefaultKubernetesClient(), 
+                podName, 
+                integrationId,
+                version,
+                new LogRawMetrics());
+        reader.run();
+       
     }
 }

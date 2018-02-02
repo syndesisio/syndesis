@@ -41,7 +41,7 @@ public class PersistRawMetrics implements RawMetricsHandler {
         try {
             //persist the latest rawMetrics
             String path = String.format("%s/integrations/%s/pods/%s",
-                RawMetrics.class.getSimpleName(),rawMetrics.getIntegration(), rawMetrics.getPod());
+                RawMetrics.class.getSimpleName(),rawMetrics.getIntegrationId(), rawMetrics.getPod());
             String json = Json.mapper().writeValueAsString(rawMetrics);
             if (jsonDB.exists(path)) {
                 //only update if not the same (don't cause unnecessary and expensive writes)

@@ -20,7 +20,6 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.internal.SSLUtils;
 import io.syndesis.core.SyndesisServerException;
 
-import org.apache.camel.util.ObjectHelper;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.jolokia.client.J4pClient;
 import org.jolokia.client.J4pClientBuilder;
@@ -36,6 +35,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -60,7 +60,6 @@ public class PodMetricsReader implements Runnable {
     private static final String RESET_TIMESTAMP = "ResetTimestamp";
 
     private final J4pClient jolokia;
-    private final String integration;
     private final String integrationId;
     private final String version;
     private final String pod;
@@ -69,10 +68,9 @@ public class PodMetricsReader implements Runnable {
     private final Map<String, ObjectName> cache = new HashMap<>();
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    public PodMetricsReader(KubernetesClient kubernetes, String pod, String integration, String integrationId, String version,
+    public PodMetricsReader(KubernetesClient kubernetes, String pod, String integrationId, String version,
             RawMetricsHandler handler) {
         this.pod = pod;
-        this.integration = integration;
         this.integrationId = integrationId;
         this.version = version;
         this.handler = handler;
@@ -82,7 +80,7 @@ public class PodMetricsReader implements Runnable {
     @Override
     public void run() {
         try {
-            LOOGER.info("Collecting stats from integration: {}", integration);
+            LOOGER.debug("Collecting stats from integrationId: {}", integrationId);
             List<Map<String, String>> routeStats = getRoutes(integrationId, "[a-zA-z0-9_-]+");
 
             routeStats.forEach(
@@ -102,7 +100,6 @@ public class PodMetricsReader implements Runnable {
 
                     handler.handle(new RawMetrics.Builder()
                         .pod(pod)
-                        .integration(integration)
                         .integrationId(integrationId)
                         .version(version)
                         .messages(messages)
@@ -115,7 +112,7 @@ public class PodMetricsReader implements Runnable {
             );
 
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            LOOGER.error("Collecting stats from integration: {}", integration);
+            LOOGER.error("Collecting stats from integrationId: {}", integrationId);
         }
     }
 
@@ -140,11 +137,6 @@ public class PodMetricsReader implements Runnable {
         } catch (ParseException e) {
             return null;
         }
-    }
-
-    public static void main(String args[]) {
-        PodMetricsReader reader = new PodMetricsReader(new DefaultKubernetesClient(), "test-2-bnnh0", "test", "id1", "1", new LogRawMetrics());
-        reader.run();
     }
 
 
@@ -228,26 +220,9 @@ public class PodMetricsReader implements Runnable {
         return answer;
     }
 
-    /**
+    /*
      * End of Camel Controller Code.
      */
-
-
-    private enum TimeUnits {
-        hours(3600),
-        minutes(60),
-        seconds(1);
-
-        private final long duration;
-
-        TimeUnits(long duration) {
-            this.duration = duration;
-        }
-
-        public long getDuration() {
-            return duration;
-        }
-    }
 
     /**
      * Creates a {@link J4pClient} for the specified pod.
@@ -278,7 +253,7 @@ public class PodMetricsReader implements Runnable {
      * @return the string without leading and ending quotes (single and double)
      */
     public static String removeLeadingAndEndingQuotes(String s) {
-        if (ObjectHelper.isEmpty(s)) {
+        if (isEmpty(s)) {
             return s;
         }
 
@@ -294,4 +269,35 @@ public class PodMetricsReader implements Runnable {
         return s;
     }
 
+    /**
+     * Tests whether the value is <tt>null</tt> or an empty string.
+     *
+     * @param value  the value, if its a String it will be tested for text length as well
+     * @return true if empty
+     */
+    public static boolean isEmpty(Object value) {
+        return !isNotEmpty(value);
+    }
+
+    /**
+     * Tests whether the value is <b>not</b> <tt>null</tt>, an empty string or an empty collection/map.
+     *
+     * @param value  the value, if its a String it will be tested for text length as well
+     * @return true if <b>not</b> empty
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean isNotEmpty(Object value) {
+        if (value == null) {
+            return false;
+        } else if (value instanceof String) {
+            String text = (String) value;
+            return text.trim().length() > 0;
+        } else if (value instanceof Collection) {
+            return !((Collection<?>)value).isEmpty();
+        } else if (value instanceof Map) {
+            return !((Map<?, ?>)value).isEmpty();
+        } else {
+            return true;
+        }
+    }
 }

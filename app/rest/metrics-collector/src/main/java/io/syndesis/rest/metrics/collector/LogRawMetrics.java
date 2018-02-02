@@ -24,8 +24,8 @@ public class LogRawMetrics implements RawMetricsHandler {
 
     @Override
     public void handle(RawMetrics rawMetrics) {
-        LOGGER.info("Received metrics for integration: {}. Version: {}. Pod: {}. Messages: {}. Errors {}. ResetDate:{}",
-                rawMetrics.getIntegration(), "1", rawMetrics.getPod(),
+        LOGGER.info("Received metrics for integrationId: {}. Version: {}. Pod: {}. Messages: {}. Errors {}. ResetDate:{}",
+                rawMetrics.getIntegrationId(), "1", rawMetrics.getPod(),
                 rawMetrics.getMessages(), rawMetrics.getErrors(), rawMetrics.getResetDate());
     }
 }

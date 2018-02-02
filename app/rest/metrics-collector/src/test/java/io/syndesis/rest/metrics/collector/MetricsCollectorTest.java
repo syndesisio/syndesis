@@ -50,7 +50,7 @@ import io.syndesis.jsondb.impl.SqlJsonDB;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 /**
- * Unit Tests for the JsonDB implementation.
+ * Unit Tests for Metrics Collector.
  */
 public class MetricsCollectorTest {
 
@@ -58,7 +58,7 @@ public class MetricsCollectorTest {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     @Before
-    public void before() throws Exception {
+    public void before() throws IOException, ParseException {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         DBI dbi = new DBI(ds);
@@ -89,7 +89,6 @@ public class MetricsCollectorTest {
         Date startDate = sdf.parse(startDateString);
         return new RawMetrics.Builder()
                 .integrationId(integrationId)
-                .integration("test-" + integrationId)
                 .version("1")
                 .pod(podName)
                 .messages(messages)
@@ -117,7 +116,7 @@ public class MetricsCollectorTest {
 
         //let's kill pod2, this so add pod2's metrics to the history
         Set<String> livePodIds = new HashSet<>(Arrays.asList("pod1"));
-        collector.curateDeadPodMetrics("intId1", "test", metrics, livePodIds);
+        collector.curateDeadPodMetrics("intId1", metrics, livePodIds);
         Map<String,RawMetrics> metrics2 = collector.getRawMetrics("intId1");
         assertThat(metrics2.size()).isEqualTo(2);
         assertThat(metrics2.keySet()).contains("HISTORY");
