@@ -22,12 +22,13 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public class SyndesisMetadataTest {
 
@@ -48,7 +49,7 @@ public class SyndesisMetadataTest {
 
         final String json = mapper.writeValueAsString(syndesisMetadata);
 
-        JSONAssert.assertEquals(
+        assertEquals(
             "{\"outputSchema\":{\"type\":\"object\",\"title\":\"output\"},\"inputSchema\":{\"type\":\"object\",\"title\":\"input\"},\"properties\":{\"aProperty\":[{\"displayValue\":\"label\",\"value\":\"value\"}]}}",
             json, JSONCompareMode.STRICT);
     }
