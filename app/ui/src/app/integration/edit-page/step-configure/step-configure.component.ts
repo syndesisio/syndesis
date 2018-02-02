@@ -138,10 +138,10 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     }
     const prevStep = this.currentFlow.getPreviousStepWithDataShape(this.position);
     const nextStep = this.currentFlow.getSubsequentStepWithDataShape(this.position);
-    this.currentFlow.fetchDataShapeFor(prevStep, true)
+    this.currentFlow.fetchOutputDataShapeFor(prevStep)
       .then(inDataShape => {
         this.inputDataShape = inDataShape;
-        this.currentFlow.fetchDataShapeFor(nextStep, false)
+        this.currentFlow.fetchInputDataShapeFor(nextStep)
           .then(outDataShape => {
             this.outputDataShape = outDataShape;
           })
