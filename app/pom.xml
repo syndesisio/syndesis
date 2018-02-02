@@ -62,6 +62,7 @@
 
     <kubernetes.client.version>2.4.1</kubernetes.client.version>
 
+    <spring.version>4.3.12.RELEASE</spring.version>
     <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
 
     <swagger.version>1.5.16</swagger.version>
@@ -568,6 +569,16 @@
         </plugin>
 
         <plugin>
+          <groupId>org.basepom.maven</groupId>
+          <artifactId>duplicate-finder-maven-plugin</artifactId>
+          <configuration>
+            <ignoredResourcePatterns combine.children="append">
+              <ignoredResourcePattern>resources/catalog.cat</ignoredResourcePattern>
+            </ignoredResourcePatterns>
+          </configuration>
+        </plugin>
+
+        <plugin>
           <groupId>io.fabric8</groupId>
           <artifactId>fabric8-maven-plugin</artifactId>
           <version>${fabric8.maven.plugin.version}</version>
@@ -628,6 +639,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
@@ -741,6 +753,12 @@
         <groupId>com.github.java-json-tools</groupId>
         <artifactId>json-schema-core</artifactId>
         <version>${json-schema-core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.2.12</version>
       </dependency>
 
       <dependency>
