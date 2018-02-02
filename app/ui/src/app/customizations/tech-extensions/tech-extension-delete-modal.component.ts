@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationType } from 'patternfly-ng';
-import { ExtensionStore } from 'app/store/extension/extension.store';
 import { Extension, Integrations } from '@syndesis/ui/platform';
-import { ModalService } from 'app/common/modal/modal.service';
-import { NotificationService } from 'app/common/ui-patternfly/notification-service';
+import { ExtensionStore } from '@syndesis/ui/store/extension/extension.store';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
+import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({
   selector: 'syndesis-tech-extension-delete-modal',

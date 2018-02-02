@@ -59,6 +59,8 @@ export interface DataShape extends BaseEntity {
   specification: string;
   exemplar: Array<string>;
   type: string;
+  name: string;
+  description: string;
 }
 export type DataShapes = Array<DataShape>;
 

@@ -1,13 +1,16 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Action,
   Connection,
   createIntegration,
   createStep,
+  DataShape,
   Integration,
   Step,
-  key } from '@syndesis/ui/platform';
+  key,
+  IntegrationSupportService} from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
 
@@ -32,7 +35,10 @@ export class CurrentFlow {
   private _integration: Integration;
   private _loaded = false;
 
-  constructor(private store: IntegrationStore) {
+  constructor(
+    private integrationStore: IntegrationStore,
+    private integrationSupportService: IntegrationSupportService
+  ) {
     this.subscription = this.events.subscribe((event: FlowEvent) =>
       this.handleEvent(event)
     );
@@ -137,9 +143,16 @@ export class CurrentFlow {
     return null;
   }
 
-  getSubsequentStepsWithDataShape(position): Array<Step> {
+  getSubsequentStepsWithDataShape(position): Array<{step: Step, index: number}> {
+    const answer: {step: Step, index: number}[] = [];
     const steps = this.getSubsequentSteps(position);
-    const answer = steps.filter(s => this.hasDataShape(s, false));
+    if (steps) {
+      steps.forEach((step, index) => {
+        if (this.hasDataShape(step, true)) {
+          answer.push({'step': step, 'index': position + index});
+        }
+      });
+    }
     return answer;
   }
 
@@ -161,9 +174,13 @@ export class CurrentFlow {
     }
   }
 
-  getPreviousStepsWithDataShape(position): Array<Step> {
-    const steps = this.getPreviousSteps(position);
-    const answer = steps.filter(s => this.hasDataShape(s, true));
+  getPreviousStepsWithDataShape(position): Array<{step: Step, index: number}> {
+    const answer: {step: Step, index: number}[] = [];
+    this.getPreviousSteps(position).forEach((step, index) => {
+      if (this.hasDataShape(step, false)) {
+        answer.push({step, index});
+      }
+    });
     return answer;
   }
 
@@ -208,12 +225,12 @@ export class CurrentFlow {
 
   getPreviousStepWithDataShape(position): Step {
     const steps = this.getPreviousStepsWithDataShape(position).reverse();
-    return steps[0];
+    return steps[0].step;
   }
 
   getSubsequentStepWithDataShape(position): Step {
     const steps = this.getSubsequentStepsWithDataShape(position);
-    return steps[0];
+    return steps[0].step;
   }
 
   /**
@@ -412,7 +429,7 @@ export class CurrentFlow {
           }
         });
         integration.tags = tags;
-        const sub = this.store.updateOrCreate(integration).subscribe(
+        const sub = this.integrationStore.updateOrCreate(integration).subscribe(
           (i: Integration) => {
             log.debugc(
               () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
@@ -448,6 +465,34 @@ export class CurrentFlow {
 
   getIntegrationClone(): Integration {
     return JSON.parse(JSON.stringify(this.integration));
+  }
+
+  fetchDataShapeFor(step: Step, output = true): Promise<any> {
+    return new Promise((resolve) => {
+      // extension step must be always carrying full data shape
+      if (step.stepKind === 'extension') {
+        if (output) {
+          resolve(step.action.descriptor.outputDataShape);
+        } else {
+          resolve(step.action.descriptor.inputDataShape);
+        }
+      } else {
+        this.integrationSupportService
+        .fetchMetadata(
+          step.connection,
+          step.action,
+          step.configuredProperties || {}
+        )
+        .toPromise()
+        .then(definition => {
+          if (output) {
+            resolve(definition.outputDataShape);
+          } else {
+            resolve(definition.inputDataShape);
+          }
+        });
+      }
+    });
   }
 
   get loaded(): boolean {

@@ -35,7 +35,7 @@ import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
     RouterModule,
     SyndesisCommonModule,
     ModalModule,
-    BsDropdownModule,
+    BsDropdownModule.forRoot(),
     TagInputModule,
     TourNgxBootstrapModule
   ],
