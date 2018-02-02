@@ -158,7 +158,7 @@
                   [minlength]="model.minLength"
                   [name]="model.name"
                   [tooltip]="model.hint"
-                  [ngClass]="model.cls.element.control"
+                  [ngClass]="getClass('element', 'control')"
                   [pattern]="model.pattern"
                   [placeholder]="model.placeholder"
                   [readonly]="model.readOnly"

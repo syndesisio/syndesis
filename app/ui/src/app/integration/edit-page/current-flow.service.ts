@@ -10,7 +10,7 @@ import { Action,
   Integration,
   Step,
   key,
-  IntegrationSupportService} from '@syndesis/ui/platform';
+  IntegrationSupportService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
 
@@ -468,7 +468,7 @@ export class CurrentFlow {
   }
 
   fetchDataShapeFor(step: Step, output = true): Promise<any> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // extension step must be always carrying full data shape
       if (step.stepKind === 'extension') {
         if (output) {

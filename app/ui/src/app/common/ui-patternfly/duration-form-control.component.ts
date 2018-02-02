@@ -4,7 +4,10 @@ import { Component,
   OnInit,
   EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DynamicFormControlModel, DynamicFormControlEvent } from '@ng-dynamic-forms/core';
+import { DynamicFormLayoutService,
+  DynamicFormControlLayout,
+  DynamicFormControlModel,
+  DynamicFormControlEvent } from '@ng-dynamic-forms/core';
 
 @Component({
   selector: 'syndesis-duration-control',
@@ -46,6 +49,15 @@ export class DurationFormControlComponent implements OnInit {
       label: 'Days'
     }
   ];
+
+  constructor(private dynamicFormLayoutService: DynamicFormLayoutService) {
+    // nothing to do
+  }
+
+  getClass(context: string, place: string, model: DynamicFormControlModel = this.model) {
+    const controlLayout = model.layout as DynamicFormControlLayout;
+    return this.dynamicFormLayoutService.getClass(controlLayout, context, place);
+  }
 
   calculateDuration() {
     return this.baseValue * (this.duration ? this.duration.value : 1);

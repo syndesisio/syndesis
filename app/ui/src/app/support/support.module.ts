@@ -8,7 +8,6 @@ import { IntegrationSupportModule } from '../integration/integration-support.mod
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { SyndesisCommonModule } from '../common/common.module';
 
-
 const routes: Routes = [
   { path: '', component: SupportComponent, pathMatch: 'full' }
 ];
