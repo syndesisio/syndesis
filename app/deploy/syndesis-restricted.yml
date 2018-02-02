@@ -12,7 +12,7 @@ metadata:
 # Use docker images: false
 # Without Probes: false
 # Atlasmap Tag: 
-# Syndesis Tag: latest
+# Syndesis Tag: 1.3.0-20180202
 # Prometheus Tag: v2.0.0
 # Restricted environment: true
 #
@@ -126,10 +126,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.3.0-20180202
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180202"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -141,10 +141,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.3.0-20180202
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180202"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -156,10 +156,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.3.0-20180202
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180202"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -202,10 +202,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.3.0-20180202
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180202"
 
 - apiVersion: v1
   kind: Secret
@@ -300,7 +300,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: syndesis-ui:1.3.0-20180202
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -335,7 +335,8 @@ objects:
           "appName": "Syndesis",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
-          "touchIcon": "/apple-touch-icon.png"
+          "touchIcon": "/apple-touch-icon.png",
+          "productBuild": false
        }
       }
 - apiVersion: v1
@@ -772,7 +773,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:latest
+          name: syndesis-rest:1.3.0-20180202
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -823,7 +824,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:latest
+        builderImageStreamTag: syndesis-s2i:1.3.0-20180202
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -925,7 +926,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:latest
+          name: syndesis-verifier:1.3.0-20180202
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
