@@ -97,6 +97,24 @@
             </configuration>
           </execution>
           <execution>
+            <id>yarn ng lint</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>lint</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>yarn ng test</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>test:ci</arguments>
+            </configuration>
+          </execution>
+          <execution>
             <id>yarn ng build</id>
             <goals>
               <goal>yarn</goal>

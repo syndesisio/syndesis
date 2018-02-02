@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { RestangularModule } from 'ngx-restangular';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -22,6 +24,8 @@ describe('ConnectionsListComponent', () => {
       TestBed.configureTestingModule({
         imports: [
           CommonModule,
+          HttpClientModule,
+          RestangularModule.forRoot(),
           SyndesisCommonModule.forRoot(),
           RouterTestingModule.withRoutes([]),
           ModalModule.forRoot(),
