@@ -112,6 +112,7 @@
             </goals>
             <configuration>
               <arguments>test:ci</arguments>
+              <skip>${skipTests}</skip>
             </configuration>
           </execution>
           <execution>
