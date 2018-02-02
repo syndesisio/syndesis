@@ -2,6 +2,7 @@
   "inputSchema" : {
     "$schema" : "http://json-schema.org/schema#",
     "title" : "DEMO_ADD_IN",
+    "type": "object",
     "properties" : {
       "A" : {
         "type" : "integer",
@@ -16,6 +17,7 @@
   "outputSchema" : {
     "$schema" : "http://json-schema.org/schema#",
     "title" : "DEMO_ADD_OUT",
+    "type": "object",
     "properties" : {
       "C" : {
         "type" : "integer",

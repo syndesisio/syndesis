@@ -120,12 +120,16 @@ public class ConnectionActionHandler {
         final WebTarget target = client
             .target(String.format("http://%s/api/v1/connectors/%s/actions/%s", config.getService(), connectorId, id));
 
-        final ConnectorDescriptor.Builder enriched = new ConnectorDescriptor.Builder().createFrom(defaultDescriptor);
         final DynamicActionMetadata dynamicActionMetadata = target.request(MediaType.APPLICATION_JSON)
             .post(Entity.entity(parameters, MediaType.APPLICATION_JSON), DynamicActionMetadata.class);
+        if (dynamicActionMetadata == null) {
+            return defaultDescriptor;
+        }
 
         final Map<String, List<DynamicActionMetadata.ActionPropertySuggestion>> actionPropertySuggestions = dynamicActionMetadata
             .properties();
+
+        final ConnectorDescriptor.Builder enriched = new ConnectorDescriptor.Builder().createFrom(defaultDescriptor);
         actionPropertySuggestions.forEach((k, vals) -> enriched.replaceConfigurationProperty(k,
             b -> b.addAllEnum(vals.stream().map(s -> ConfigurationProperty.PropertyValue.Builder.from(s))::iterator)));
 
@@ -159,7 +163,7 @@ public class ConnectionActionHandler {
 
     /* default */ static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape,
         final Object received) {
-        if (maybeExistingDataShape.isPresent() && received != null) {
+        if (maybeExistingDataShape.isPresent() && !isNull(received)) {
             final DataShape existingDataShape = maybeExistingDataShape.get();
 
             return "json-schema".equals(existingDataShape.getKind()) && existingDataShape.getSpecification() == null;
@@ -180,6 +184,18 @@ public class ConnectionActionHandler {
         final JsonNode node = (JsonNode) obj;
 
         return node.get("title").asText();
+    }
+
+    private static boolean isNull(final Object obj) {
+        if (obj == null) {
+            return true;
+        }
+
+        if (obj instanceof JsonNode) {
+            return ((JsonNode) obj).isNull();
+        }
+
+        return false;
     }
 
 }

@@ -2,6 +2,7 @@
   "inputSchema" : {
     "$schema" : "http://json-schema.org/schema#",
     "title" : "SQL_PARAM_IN",
+    "type": "object",
     "properties" : {
       "id" : {
         "type" : "integer",
@@ -12,6 +13,7 @@
   "outputSchema" : {
     "$schema" : "http://json-schema.org/schema#",
     "title" : "SQL_PARAM_OUT",
+    "type": "object",
     "properties" : {
       "ID" : {
         "type" : "integer",
