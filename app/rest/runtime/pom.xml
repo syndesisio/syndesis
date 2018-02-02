@@ -386,7 +386,6 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>io.fabric8:spring-cloud-kubernetes-core</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-jdbc</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-security</ignoredUnusedDeclaredDependency>
@@ -402,6 +401,7 @@
             <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:connectors-catalog</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:integration-project-generator</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis:metrics-collector</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
@@ -500,7 +500,6 @@
               <groupId>com.github.tomakehurst</groupId>
               <artifactId>wiremock-standalone</artifactId>
             </dependency>
-
             <!-- Ignore the dup resources/catalog.cat -->
             <dependency>
               <groupId>io.atlasmap</groupId>
@@ -513,6 +512,10 @@
             <dependency>
               <groupId>io.atlasmap</groupId>
               <artifactId>atlas-xml-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>commons-logging</groupId>
+              <artifactId>commons-logging</artifactId>
             </dependency>
           </ignoredDependencies>
         </configuration>
@@ -601,6 +604,11 @@
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>integration-project-generator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>metrics-collector</artifactId>
     </dependency>
 
     <!-- Credentials to support -->
@@ -827,11 +835,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>spring-cloud-kubernetes-core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
     </dependency>
@@ -882,7 +885,15 @@
         <groupId>com.squareup.okio</groupId>
         <artifactId>okio</artifactId>
     </dependency>
-
+    
+    <!--  ==== Test Scope === -->
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>spring-cloud-kubernetes-core</artifactId>
+      <version>${spring-cloud-kubernetes-core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 
   <profiles>

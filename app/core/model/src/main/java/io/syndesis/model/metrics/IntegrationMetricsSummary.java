@@ -35,16 +35,25 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     default Kind getKind() {
         return Kind.IntegrationMetricsSummary;
     }
-
-    Optional<Long> getMessages();
-
-    Optional<Long> getErrors();
-
+    /**
+     * @return Number of successful messages
+     */
+    Long getMessages();
+    /**
+     * @return Number of messages that resulted in error
+     */
+    Long getErrors();
+    /**
+     * @return most recent (re-) start Date of the integration, empty if no live pods
+     * are found for this integration, which would mean that the integration is currently down.
+     */
+    Optional<Date> getStart();
+    /**
+     * @return the TimeStamp of when the last message for processed
+     */
     Optional<Date> getLastProcessed();
 
-    Optional<Long> getUptime();
-
     class Builder extends ImmutableIntegrationMetricsSummary.Builder {
-        // allow access to ImmutablIntegrationeMetricsSummary.Builder
+        // allow access to ImmutablIntegrationMetricsSummary.Builder
     }
 }
