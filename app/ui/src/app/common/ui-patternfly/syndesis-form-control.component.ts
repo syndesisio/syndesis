@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   QueryList,
   SimpleChanges,
@@ -50,7 +51,17 @@ export const enum SyndesisFormControlType {
   styleUrls: ['./syndesis-form-control.scss']
 })
 export class SyndesisFormComponent extends DynamicFormControlComponent
-  implements OnChanges {
+  implements OnChanges, OnInit {
+  elementOptionClass: string;
+  gridGroupClass: string;
+  elementGroupClass: string;
+  gridControlClass: string;
+  elementControlClass: string;
+  gridLabelClass: string;
+  elementLabelClass: string;
+  gridContainerClass: string;
+  elementContainerClass: string;
+  formGroupClass: boolean;
   @ContentChildren(DynamicTemplateDirective) contentTemplateList: QueryList<DynamicTemplateDirective>;
   // TODO disabling this for now as the base class is in a dependency
   /* tslint:disable */
@@ -117,6 +128,24 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
       default:
         return null;
     }
+  }
+
+  ngOnInit() {
+    this.formGroupClass = this.asBootstrapFormGroup || this.getClass('element', 'container').includes('formGroup');
+
+    this.elementContainerClass = this.getClass('element', 'container');
+    this.gridContainerClass = this.getClass('grid', 'container');
+
+    this.elementLabelClass = this.getClass('element', 'label');
+    this.gridLabelClass = this.getClass('grid', 'label');
+
+    this.elementControlClass = this.getClass('element', 'control');
+    this.gridControlClass = this.getClass('grid', 'control');
+
+    this.elementGroupClass = this.getClass('element', 'group');
+    this.gridGroupClass = this.getClass('grid', 'group');
+
+    this.elementOptionClass = this.getClass('element', 'option');
   }
 
   ngOnChanges(changes: SimpleChanges) {

@@ -15,7 +15,7 @@
            [(ngModel)]="baseValue"
            [ngModelOptions]="{standalone: true}"
            [tooltip]="model.hint"
-           [ngClass]="getClass('element', 'control')"
+           [ngClass]="elementControlClass"
            [pattern]="model.pattern"
            [placeholder]="model.placeholder"
            [readonly]="model.readOnly"

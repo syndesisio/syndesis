@@ -14,6 +14,7 @@ import { DynamicFormLayoutService,
   templateUrl: './duration-form-control.component.html'
 })
 export class DurationFormControlComponent implements OnInit {
+  elementControlClass: string;
   @Input() group: FormGroup;
   @Input() model: any;
   @Input() fieldId: string;
@@ -52,11 +53,6 @@ export class DurationFormControlComponent implements OnInit {
 
   constructor(private dynamicFormLayoutService: DynamicFormLayoutService) {
     // nothing to do
-  }
-
-  getClass(context: string, place: string, model: DynamicFormControlModel = this.model) {
-    const controlLayout = model.layout as DynamicFormControlLayout;
-    return this.dynamicFormLayoutService.getClass(controlLayout, context, place);
   }
 
   calculateDuration() {
@@ -111,6 +107,7 @@ export class DurationFormControlComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.elementControlClass = this.getClass('element', 'control');
     this.modelId = this.model.id;
     const value = +this.model.value || 0;
     if (!value) {
@@ -126,5 +123,12 @@ export class DurationFormControlComponent implements OnInit {
     }
     this.baseValue = value / duration.value;
     this.duration = duration;
+
   }
+
+  private getClass(context: string, place: string, model: DynamicFormControlModel = this.model) {
+    const controlLayout = model.layout as DynamicFormControlLayout;
+    return this.dynamicFormLayoutService.getClass(controlLayout, context, place);
+  }
+
 }
