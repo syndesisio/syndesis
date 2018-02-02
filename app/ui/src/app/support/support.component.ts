@@ -4,7 +4,7 @@ import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pip
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
 import { Restangular } from 'ngx-restangular';
-import { Http } from '@angular/http'
+import { Http } from '@angular/http';
 
 import { Integrations, Integration } from '../platform/types/integration/integration.model';
 import { IntegrationStore } from '../store/integration/integration.store';
@@ -12,9 +12,9 @@ import { IntegrationSupportProviderService } from '../integration/integration-su
 import { log, getCategory } from '../logging';
 import { Observable } from 'rxjs/Observable';
 
-import fileSaver = require("file-saver");
+import fileSaver = require('file-saver');
 
-const ARCHIVE_FILE_NAME : string = "syndesis.zip";
+const ARCHIVE_FILE_NAME = 'syndesis.zip';
 
 @Component({
   selector: 'syndesis-support',
@@ -23,10 +23,8 @@ const ARCHIVE_FILE_NAME : string = "syndesis.zip";
 })
 export class SupportComponent implements OnInit {
 
-  allLogsSelected : boolean = true;
-  loading : boolean= true;
-
-  private restangularService: Restangular;
+  allLogsSelected = true;
+  loading = true;
 
   filter: ObjectPropertyFilterConfig = {
     filter: '',
@@ -76,21 +74,22 @@ export class SupportComponent implements OnInit {
 
   items: Array<any> = [
     {
-        name: "Integration Name 1",
-        description: "Description about the integration goes here"
+        name: 'Integration Name 1',
+        description: 'Description about the integration goes here'
     },
     {
-        name: "Integration Name 2",
-        description: "Description about the integration goes here"
+        name: 'Integration Name 2',
+        description: 'Description about the integration goes here'
     }
   ];
+  private restangularService: Restangular;
 
   constructor(
     public store: IntegrationStore,
     public integrationSupportService: IntegrationSupportProviderService,
   ) {
   }
-  
+
   buildData(data: any = {}) {
     this.integrationSupportService
       .downloadSupportData(data)
@@ -98,8 +97,11 @@ export class SupportComponent implements OnInit {
         fileSaver.saveAs(response, ARCHIVE_FILE_NAME);
       },
       error => {
-        console.log("Error downloading the file.");
+        /*
+        console.log('Error downloading the file.');
         console.log(error);
+        */
+        // TODO properly report this
       }
     );
     return {  };
@@ -125,12 +127,12 @@ export class SupportComponent implements OnInit {
 
   onSubmit() {
     let chosen = [];
-    if(this.allLogsSelected) {
+    if (this.allLogsSelected) {
       chosen = this.items;
     } else {
       chosen = this.items.filter(x => x.selected === true);
     }
-    let input = {};
+    const input = {};
     chosen.forEach(el => input[el.name] = true);
     this.buildData(input);
   }
@@ -143,11 +145,11 @@ export class SupportComponent implements OnInit {
     this.allLogsSelected = false;
   }
 
-  totalItems() : number {
+  totalItems(): number {
     return this.items.length;
   }
 
-  selectedItems() : number {
+  selectedItems(): number {
     return this.items.filter(x => x.selected === true).length;
   }
 
