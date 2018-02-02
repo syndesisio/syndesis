@@ -191,7 +191,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       this.loading = false;
       return;
     }
-    if (!descriptor || descriptor === undefined || !descriptor.propertyDefinitionSteps) {
+    if (!descriptor || descriptor === undefined || Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {
