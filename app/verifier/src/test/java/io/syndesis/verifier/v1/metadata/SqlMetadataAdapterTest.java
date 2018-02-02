@@ -27,11 +27,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import io.syndesis.connector.sql.DatabaseProduct;
 import io.syndesis.connector.sql.SqlConnectorMetaDataExtension;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
+import io.syndesis.core.Json;
 import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.commons.io.IOUtils;
@@ -114,11 +113,9 @@ public class SqlMetadataAdapterTest {
         Optional<MetaData> metadata = ext.meta(parameters);
         SqlMetadataAdapter adapter = new SqlMetadataAdapter();
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8);
-        String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
+        SyndesisMetadata syndesisMetaData2 = adapter.adapt("sql-connector", parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8).trim();
+        String actualMetadata = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata);
 
     }
@@ -134,22 +131,21 @@ public class SqlMetadataAdapterTest {
         Optional<MetaData> metadata = ext.meta(parameters);
 
         SqlMetadataAdapter adapter = new SqlMetadataAdapter();
-        SyndesisMetadata<JsonSchema> syndesisMetaData = adapter.adapt("sql-stored-connector", parameters, metadata.get());
+        SyndesisMetadata syndesisMetaData = adapter.adapt("sql-stored-connector", parameters, metadata.get());
 
-        ObjectMapper mapper = new ObjectMapper();
-        String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
-        String actualListOfProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
+        String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
+        String actualListOfProcedures = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData);
         assertEquals(expectedListOfProcedures, actualListOfProcedures);
 
         parameters.put(SqlMetadataAdapter.PATTERN, SqlMetadataAdapter.FROM_PATTERN);
-        String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
-        String actualListOfStartProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
+        String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
+        String actualListOfStartProcedures = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData);
         assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures);
 
         parameters.put("procedureName", "DEMO_ADD");
-        SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-stored-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8);
-        String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
+        SyndesisMetadata syndesisMetaData2 = adapter.adapt("sql-stored-connector", parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8).trim();
+        String actualMetadata = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata);
 
     }

@@ -30,7 +30,7 @@ import org.apache.camel.CamelContext;
 
 public class ActionDefinitionEndpoint extends MetadataEndpoint {
 
-    public ActionDefinitionEndpoint(final CamelContext camelContext, final String connectorId, final MetadataAdapter<?> adapter) {
+    public ActionDefinitionEndpoint(final CamelContext camelContext, final String connectorId, final MetadataAdapter adapter) {
         super(camelContext, connectorId, adapter);
     }
 
@@ -38,8 +38,7 @@ public class ActionDefinitionEndpoint extends MetadataEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{actionId}")
-    public SyndesisMetadata<?> definition(@PathParam("actionId") final String actionId,
-                                          final Map<String, Object> properties) throws Exception {
+    public SyndesisMetadata definition(@PathParam("actionId") final String actionId, final Map<String, Object> properties) {
         return fetchMetadata(actionId, properties);
     }
 }

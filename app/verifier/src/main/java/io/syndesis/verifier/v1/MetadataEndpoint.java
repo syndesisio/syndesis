@@ -31,19 +31,19 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 class MetadataEndpoint {
 
     private final CamelContext camelContext;
-    private final MetadataAdapter<?> adapter;
+    private final MetadataAdapter adapter;
     private final String connectorId;
 
     private static final Set<String> CONNECTORS_WITH_DIFFERENT_METADATA_PER_ACTION =
             new HashSet<>(Arrays.asList("sql"));
 
-    MetadataEndpoint(final CamelContext camelContext, final String connectorId, final MetadataAdapter<?> adapter) {
+    MetadataEndpoint(final CamelContext camelContext, final String connectorId, final MetadataAdapter adapter) {
         this.camelContext = camelContext;
         this.connectorId = connectorId;
         this.adapter = adapter;
     }
 
-    protected final SyndesisMetadata<?> fetchMetadata(final String actionId, final Map<String, Object> properties) {
+    protected final SyndesisMetadata fetchMetadata(final String actionId, final Map<String, Object> properties) {
         try {
             //TODO Kurt
             String componentId = connectorId;

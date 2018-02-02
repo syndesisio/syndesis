@@ -111,6 +111,11 @@
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
 
@@ -170,6 +175,16 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
+      <artifactId>model</artifactId>
     </dependency>
 
     <dependency>
@@ -314,6 +329,11 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
@@ -325,12 +345,6 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -385,6 +399,23 @@
           </ignoredClassPatterns>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <!--
+                This is shipped alongside spring-boot-starter-undertow but such artifact has
+                scope 'runtime' so javax.el is not used for testing purpose, setting javax.el
+                to have scope 'test' would make the javax.el not available at runtime.
+            -->
+            <ignoredUnusedDeclaredDependency>org.glassfish:javax.el</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
+
+
     </plugins>
   </build>
 

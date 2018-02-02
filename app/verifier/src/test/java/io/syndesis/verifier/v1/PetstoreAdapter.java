@@ -18,7 +18,7 @@ package io.syndesis.verifier.v1;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import io.syndesis.model.DataShape;
 import io.syndesis.verifier.api.MetadataAdapter;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
@@ -26,33 +26,34 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PetstoreAdapter implements MetadataAdapter<ObjectSchema> {
+public class PetstoreAdapter implements MetadataAdapter {
 
     private final Map<String, List<PropertyPair>> adaptedProperties;
 
     private final Map<String, String> expectedPayload;
 
-    private final ObjectSchema inputSchema;
+    private final DataShape inputShape;
 
-    private final ObjectSchema outputSchema;
+    private final DataShape outputShape;
 
     public PetstoreAdapter(final Map<String, String> expectedPayload,
-        final Map<String, List<PropertyPair>> adaptedProperties, final ObjectSchema inputSchema,
-        final ObjectSchema outputSchema) {
+            final Map<String, List<PropertyPair>> adaptedProperties,
+            final DataShape inputShape,
+            final DataShape outputShape) {
         this.adaptedProperties = adaptedProperties;
         this.expectedPayload = expectedPayload;
-        this.inputSchema = inputSchema;
-        this.outputSchema = outputSchema;
+        this.inputShape = inputShape;
+        this.outputShape = outputShape;
     }
 
     @Override
-    public SyndesisMetadata<ObjectSchema> adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata adapt(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
         @SuppressWarnings("unchecked")
         final Map<String, String> payload = metadata.getPayload(Map.class);
 
         assertThat(payload).isSameAs(expectedPayload);
 
-        return new SyndesisMetadata<>(adaptedProperties, inputSchema, outputSchema);
+        return new SyndesisMetadata(adaptedProperties, inputShape, outputShape);
     }
 
 }

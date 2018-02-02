@@ -1,6 +1,4 @@
 {
-  "inputSchema" : null,
-  "outputSchema" : null,
   "properties" : {
     "procedureName" : [ {
       "displayValue" : "DEMO_ADD",

@@ -18,9 +18,8 @@ package io.syndesis.model.connection;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
+import io.syndesis.model.DataShape;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -33,17 +32,14 @@ public interface DynamicActionMetadata {
 
         @SuppressWarnings("PMD.UseUtilityClass")
         final class Builder extends ImmutableActionPropertySuggestion.Builder {
-
             public static ActionPropertySuggestion of(final String value, final String displayValue) {
                 return new ActionPropertySuggestion.Builder().value(value).displayValue(displayValue).build();
             }
-
         }
 
         String displayValue();
 
         String value();
-
     }
 
     final class Builder extends ImmutableDynamicActionMetadata.Builder {
@@ -52,9 +48,7 @@ public interface DynamicActionMetadata {
 
     Map<String, List<ActionPropertySuggestion>> properties();
 
-    @JsonDeserialize(as = JsonNode.class)
-    Object inputSchema();
+    DataShape inputShape();
 
-    @JsonDeserialize(as = JsonNode.class)
-    Object outputSchema();
+    DataShape outputShape();
 }

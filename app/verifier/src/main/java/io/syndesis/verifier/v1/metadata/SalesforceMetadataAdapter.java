@@ -24,10 +24,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.SimpleTypeSchema;
+import io.syndesis.core.Json;
+import io.syndesis.model.DataShape;
 import io.syndesis.verifier.api.MetadataAdapter;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
@@ -37,10 +40,10 @@ import org.apache.camel.component.salesforce.api.utils.JsonUtils;
 import org.springframework.stereotype.Component;
 
 @Component("salesforce-adapter")
-public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSchema> {
+public final class SalesforceMetadataAdapter implements MetadataAdapter {
 
     @Override
-    public SyndesisMetadata<ObjectSchema> adapt(String actionId, final Map<String, Object> properties, final MetaData metadata) {
+    public SyndesisMetadata adapt(String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final ObjectSchema schema = schemaPayload(metadata);
 
@@ -63,13 +66,21 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter<ObjectSc
         }
 
         if (isPresentAndNonNull(properties, SalesforceEndpointConfig.SOBJECT_NAME)) {
-            final String objectName = (String) properties.get(SalesforceEndpointConfig.SOBJECT_NAME);
-            final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
+            try {
+                final String objectName = (String) properties.get(SalesforceEndpointConfig.SOBJECT_NAME);
+                final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
+                final String specification = Json.mapper().writeValueAsString(inputOutputSchema);
 
-            return new SyndesisMetadata<>(enrichedProperties, inputOutputSchema, inputOutputSchema);
+                return new SyndesisMetadata(
+                    enrichedProperties,
+                    new DataShape.Builder().kind("json-schema").type(inputOutputSchema.getTitle()).specification(specification).build(),
+                    new DataShape.Builder().kind("json-schema").type(inputOutputSchema.getTitle()).specification(specification).build());
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
-        return new SyndesisMetadata<>(enrichedProperties, null, null);
+        return new SyndesisMetadata(enrichedProperties, null, null);
     }
 
     static ObjectSchema adaptSchema(final ObjectSchema schema) {
