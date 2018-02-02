@@ -16,9 +16,6 @@
     </div>
   </label>
 
-  <!-- <ng-template *ngIf="type !== 1 && templates[0]?.align === 'START'"
-                [ngTemplateOutlet]="templates[0]?.templateRef"
-                [ngTemplateOutletContext]="model"></ng-template> -->
   <ng-container *ngTemplateOutlet="templates[0]?.templateRef; context: model"></ng-container>
 
   <!-- CHECKBOX -->
@@ -188,53 +185,6 @@
           </ng-container>
 
         </ng-container>
-<!--
-        <div *ngIf="model.prefix"
-             class="input-group-addon"
-             [innerHTML]="model.prefix"></div>
-
-        <input class="form-control"
-               [attr.accept]="model.accept"
-               [attr.list]="model.listId"
-               [attr.max]="model.max"
-               [attr.min]="model.min"
-               [attr.multiple]="model.multiple"
-               [attr.step]="model.step"
-               [attr.tabindex]="model.tabIndex"
-               [attr.id]="fieldHash"
-               [autofocus]="model.autoFocus"
-               [autocomplete]="model.autoComplete"
-               [dynamicId]="bindId && model.id"
-               [formControlName]="model.id"
-               [maxlength]="model.maxLength"
-               [minlength]="model.minLength"
-               [name]="model.name"
-               [tooltip]="model.hint"
-               [ngClass]="getClass('element', 'control')"
-               [pattern]="model.pattern"
-               [placeholder]="model.placeholder"
-               [readonly]="model.readOnly"
-               [required]="model.required"
-               [spellcheck]="model.spellCheck"
-               [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
-               [type]="model.inputType"
-               (dfBlur)="onBlur($event)"
-               (dfChange)="onValueChange($event)"
-               (dfFocus)="onFocus($event)" />
-
-        <div *ngIf="model.suffix"
-             class="input-group-addon"
-             [innerHTML]="model.suffix"></div>
-
-        <datalist *ngIf="hasList"
-                  [id]="model.listId">
-
-          <option *ngFor="let option of model.list"
-                  [value]="option">
-
-        </datalist>
-      -->
-
       </div>
 
       <!-- RADIO GROUP -->
