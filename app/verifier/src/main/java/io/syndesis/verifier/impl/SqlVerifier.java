@@ -17,6 +17,8 @@ package io.syndesis.verifier.impl;
 
 import io.syndesis.connector.sql.SqlConnectorVerifierExtension;
 import io.syndesis.verifier.api.ComponentVerifier;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +28,14 @@ import org.springframework.stereotype.Component;
 @Component("sql")
 public class SqlVerifier extends ComponentVerifier {
     public SqlVerifier() {
-        super("sql", SqlConnectorVerifierExtension.class);
+        super("sql");
+    }
+
+    @Override
+    protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
+        SqlConnectorVerifierExtension extension = new SqlConnectorVerifierExtension();
+        extension.setCamelContext(context);
+
+        return extension;
     }
 }
