@@ -92,9 +92,9 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     });
   }
 
-  downloadSupportData(data: Array<any>): Observable<Blob>  {
-    const url = integrationSupportEndpoints.supportData;
-    return this.apiHttpService.setEndpointUrl(url).post<Blob>(data,  {responseType : 'blob'} );
+  downloadSupportData(data: any[]): Observable<Blob>  {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.supportData)
+      .post<Blob>(data, { responseType: 'blob' });
   }
 
 }

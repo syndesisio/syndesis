@@ -3,7 +3,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IntegrationStore } from '@syndesis/ui/store';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
 
@@ -22,7 +21,6 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
 
   constructor(
     public currentFlow: CurrentFlow,
-    public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
     public tourService: TourService,

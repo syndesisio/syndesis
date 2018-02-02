@@ -5,9 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connection, Connections, Integration, Integrations } from '@syndesis/ui/platform';
 
-import { ConnectionStore } from '../store/connection/connection.store';
-import { IntegrationStore } from '../store/integration/integration.store';
-
 const category = getCategory('Dashboard');
 
 @Component({
@@ -158,20 +155,5 @@ export class DashboardIntegrationsComponent implements OnChanges {
       ['/integration/edit', integration.id, 'save-or-add-step'],
       { relativeTo: this.route }
     );
-  }
-
-  //-----  Times Used ------------------->>
-
-  randomizeTimesUsed(integration: Integration) {
-    // For testing purposes only
-    /*
-    if (!integration.timesUsed) {
-      log.debugc(() => 'No times used available, auto-generating one..');
-      return Math.floor(Math.random() * 25) + 1;
-    } else {
-      log.debugc(() => 'Times used: ' + JSON.stringify(integration['timesUsed']));
-      return integration.timesUsed;
-    }
-    */
   }
 }

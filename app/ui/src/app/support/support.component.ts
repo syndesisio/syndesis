@@ -1,20 +1,15 @@
 import { Component,  Input,  ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import * as fileSaver from 'file-saver';
 
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
-import { Restangular } from 'ngx-restangular';
-import { Http } from '@angular/http'
+import { Integrations, Integration, IntegrationSupportService } from '@syndesis/ui/platform';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { IntegrationStore } from '@syndesis/ui/store';
 
-import { Integrations, Integration } from '../platform/types/integration/integration.model';
-import { IntegrationStore } from '../store/integration/integration.store';
-import { IntegrationSupportProviderService } from '../integration/integration-support-provider.service';
-import { log, getCategory } from '../logging';
-import { Observable } from 'rxjs/Observable';
-
-import fileSaver = require("file-saver");
-
-const ARCHIVE_FILE_NAME : string = "syndesis.zip";
+const ARCHIVE_FILE_NAME = 'syndesis.zip';
 
 @Component({
   selector: 'syndesis-support',
@@ -23,16 +18,14 @@ const ARCHIVE_FILE_NAME : string = "syndesis.zip";
 })
 export class SupportComponent implements OnInit {
 
-  allLogsSelected : boolean = true;
-  loading : boolean= true;
+  allLogsSelected = true;
+  loading = true;
 
-  private restangularService: Restangular;
-
-  filter: ObjectPropertyFilterConfig = {
+  filter = {
     filter: '',
     propertyName: 'name'
   };
-  sort: ObjectPropertySortConfig = {
+  sort = {
     sortField: 'name',
     descending: false
   };
@@ -76,21 +69,21 @@ export class SupportComponent implements OnInit {
 
   items: Array<any> = [
     {
-        name: "Integration Name 1",
-        description: "Description about the integration goes here"
+        name: 'Integration Name 1',
+        description: 'Description about the integration goes here'
     },
     {
-        name: "Integration Name 2",
-        description: "Description about the integration goes here"
+        name: 'Integration Name 2',
+        description: 'Description about the integration goes here'
     }
   ];
 
   constructor(
     public store: IntegrationStore,
-    public integrationSupportService: IntegrationSupportProviderService,
+    public integrationSupportService: IntegrationSupportService,
   ) {
   }
-  
+
   buildData(data: any = {}) {
     this.integrationSupportService
       .downloadSupportData(data)
@@ -98,15 +91,14 @@ export class SupportComponent implements OnInit {
         fileSaver.saveAs(response, ARCHIVE_FILE_NAME);
       },
       error => {
-        console.log("Error downloading the file.");
-        console.log(error);
+        log.error('Error downloading file', error);
       }
     );
     return {  };
   }
 
   // Handles events when the user interacts with the toolbar filter
-  filterChanged($event) {
+  filterChanged($event): void {
     // TODO update our pipe to handle multiple filters
     if ($event.appliedFilters.length === 0) {
       this.filter.filter = '';
@@ -118,43 +110,42 @@ export class SupportComponent implements OnInit {
   }
 
   // Handles events when the user interacts with the toolbar sort
-  sortChanged($event) {
+  sortChanged($event): void {
     this.sort.sortField = $event.field.id;
     this.sort.descending = !$event.isAscending;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     let chosen = [];
-    if(this.allLogsSelected) {
+    if (this.allLogsSelected) {
       chosen = this.items;
     } else {
       chosen = this.items.filter(x => x.selected === true);
     }
-    let input = {};
+
+    const input = {};
     chosen.forEach(el => input[el.name] = true);
     this.buildData(input);
   }
 
-  deselectAll() {
+  deselectAll(): void {
     this.items.forEach(item => item.selected = false);
   }
 
-  handleSelectionChange(event) {
+  handleSelectionChange(event): void {
     this.allLogsSelected = false;
   }
 
-  totalItems() : number {
+  totalItems(): number {
     return this.items.length;
   }
 
-  selectedItems() : number {
+  selectedItems(): number {
     return this.items.filter(x => x.selected === true).length;
   }
 
   public ngOnInit() {
-    this.store.list.subscribe(integration  => {
-      this.items = integration as Integration[];
-    });
+    this.store.list.subscribe(integrations => this.items = integrations);
     this.store.loadAll();
   }
 

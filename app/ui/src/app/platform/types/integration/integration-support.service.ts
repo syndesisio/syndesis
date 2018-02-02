@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Action, Connection, Activity, Integration, IntegrationDeployment, IntegrationDeployments, ApiHttpService } from '@syndesis/ui/platform';
+import { Action, Connection, Activity, Integration, IntegrationDeployment, IntegrationDeployments } from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class IntegrationSupportService {
@@ -19,4 +19,5 @@ export abstract class IntegrationSupportService {
   abstract importIntegrationURL(): string;
   abstract requestIntegrationActivityFeatureEnabled(): Observable<boolean>;
   abstract requestIntegrationActivity(id: string): Observable<Activity[]>;
+  abstract downloadSupportData(data: any[]): Observable<Blob>;
 }

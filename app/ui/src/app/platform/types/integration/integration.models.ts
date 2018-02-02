@@ -1,4 +1,4 @@
-import { Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
+import { BaseReducerModel, Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
 
 export interface Step extends BaseEntity {
   action: Action;
@@ -107,4 +107,9 @@ export function createStep() {
 
 export function createIntegration() {
   return {} as Integration;
+}
+
+export interface IntegrationRxState extends BaseReducerModel {
+  integrations: Integrations;
+  deleted?: Integration;
 }
