@@ -164,26 +164,25 @@ public class Application implements ApplicationRunner {
             // ignore
         }
 
-        IntegrationDeployment integrationDeployment = new IntegrationDeployment.Builder()
-            .spec(new Integration.Builder()
-                .id("Integration")
-                .name("Integration")
-                .description("This integration is used to prime the .m2 repo")
-                .steps(steps)
-                .build())
+
+        Integration integration = new Integration.Builder()
+            .id("Integration")
+            .name("Integration")
+            .description("This integration is used to prime the .m2 repo")
+            .steps(steps)
             .build();
 
-        generate(integrationDeployment, project);
+        generate(integration, project);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(IntegrationDeployment integrationDeployment, File targetDir) throws IOException {
+    private static void generate(Integration integration, File targetDir) throws IOException {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager());
 
         Path dir =targetDir.toPath();
         Files.createDirectories(dir);
-        Files.write(dir.resolve("pom.xml"), generator.generatePom(integrationDeployment));
+        Files.write(dir.resolve("pom.xml"), generator.generatePom(integration));
 
         dir = dir.resolve("src/main/java/io/syndesis/example");
         Files.createDirectories(dir);

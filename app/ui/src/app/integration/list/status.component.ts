@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { Integration } from '@syndesis/ui/platform';
+import { IntegrationOverview } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-status',
@@ -23,7 +23,7 @@ import { Integration } from '@syndesis/ui/platform';
   styleUrls: ['./status.component.scss']
 })
 export class IntegrationStatusComponent {
-  @Input() integration: Integration;
+  @Input() integration: IntegrationOverview;
 
   //-----  Get Status Icon Class ------------------->>
   getLabelClass(currentStatus): string | any {

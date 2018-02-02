@@ -15,9 +15,13 @@
  */
 package io.syndesis.integration.project.generator;
 
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -36,10 +40,17 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.core.Optionals;
@@ -54,18 +65,8 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ProjectGenerator implements IntegrationProjectGenerator {
@@ -90,20 +91,20 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
     @Override
     @SuppressWarnings("resource")
-    public InputStream generate(IntegrationDeployment deployment) throws IOException {
+    public InputStream generate(Integration integration) throws IOException {
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
 
-        executor.execute(generateAddProjectTarEntries(deployment, os));
+        executor.execute(generateAddProjectTarEntries(integration, os));
 
         return is;
     }
 
     @Override
-    public Properties generateApplicationProperties(IntegrationDeployment deployment) {
+    public Properties generateApplicationProperties(Integration integration) {
         final Properties properties = new Properties();
-        final List<? extends Step> steps = deployment.getSpec().getSteps();
+        final List<? extends Step> steps = integration.getSteps();
 
         // ****************************************
         //
@@ -190,8 +191,8 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     }
 
     @Override
-    public byte[] generatePom(IntegrationDeployment deployment) throws IOException {
-        final Set<MavenGav> dependencies = resourceManager.collectDependencies(deployment).stream()
+    public byte[] generatePom(Integration integration) throws IOException {
+        final Set<MavenGav> dependencies = resourceManager.collectDependencies(integration).stream()
             .filter(Dependency::isMaven)
             .map(Dependency::getId)
             .map(MavenGav::new)
@@ -200,9 +201,9 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         return ProjectGeneratorHelper.generate(
             new PomContext(
-                deployment.getId().orElse(""),
-                    deployment.getSpec().getName(),
-                deployment.getSpec().getDescription().orElse(null),
+                integration.getId().orElse(""),
+                    integration.getName(),
+                integration.getDescription().orElse(null),
                 dependencies,
                 configuration.getMavenProperties()),
             pomMustache
@@ -238,7 +239,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     }
 
     @SuppressWarnings("PMD.DoNotUseThreads")
-    private Runnable generateAddProjectTarEntries(IntegrationDeployment deployment, OutputStream os) {
+    private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os) {
         return () -> {
             try (
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
@@ -246,16 +247,16 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                 ObjectWriter writer = Json.writer();
 
-                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(deployment, applicationJavaMustache));
-                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(deployment, applicationPropertiesMustache));
-                addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(deployment));
-                addTarEntry(tos, "pom.xml", generatePom(deployment));
+                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(integration, applicationJavaMustache));
+                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(integration, applicationPropertiesMustache));
+                addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration));
+                addTarEntry(tos, "pom.xml", generatePom(integration));
 
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
-                addExtensions(tos, deployment);
+                addExtensions(tos, integration);
                 addAdditionalResources(tos);
 
-                for (Step step : deployment.getSpec().getSteps()) {
+                for (Step step : integration.getSteps()) {
                     if ("mapper".equals(step.getStepKind())) {
                         final Map<String, String> properties = step.getConfiguredProperties();
                         final String mapping = properties.get("atlasmapping");
@@ -269,18 +270,18 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     }
                 }
 
-                LOGGER.info("IntegrationDeployment [{}]: Project files written to output stream", Names.sanitize(deployment.getSpec().getName()));
+                LOGGER.info("IntegrationDeployment [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
             } catch (IOException e) {
                 if (LOGGER.isErrorEnabled()) {
                     LOGGER.error(String.format("Exception while creating runtime build tar for deployment %s : %s",
-                            deployment.getSpec().getName(), e.toString()), e);
+                            integration.getName(), e.toString()), e);
                 }
             }
         };
     }
 
-    private void addExtensions(TarArchiveOutputStream tos, IntegrationDeployment deployment) throws IOException {
-        final Set<String> extensions = resourceManager.collectDependencies(deployment).stream()
+    private void addExtensions(TarArchiveOutputStream tos, Integration integration) throws IOException {
+        final Set<String> extensions = resourceManager.collectDependencies(integration).stream()
             .filter(Dependency::isExtension)
             .map(Dependency::getId)
             .collect(Collectors.toCollection(TreeSet::new));

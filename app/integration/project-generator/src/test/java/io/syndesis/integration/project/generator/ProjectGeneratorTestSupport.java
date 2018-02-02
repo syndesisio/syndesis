@@ -51,7 +51,6 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 
 @SuppressWarnings("PMD.ExcessiveImports")
@@ -200,7 +199,7 @@ public class ProjectGeneratorTestSupport {
     // Helpers
     // *****************************
 
-    protected IntegrationDeployment newIntegration(TestResourceManager resourceManager, Step... steps) {
+    protected Integration newIntegration(TestResourceManager resourceManager, Step... steps) {
         for (int i = 0; i < steps.length; i++) {
             steps[i].getConnection().filter(r -> r.getId().isPresent()).ifPresent(
                 resource -> resourceManager.put(resource.getId().get(), resource)
@@ -215,20 +214,18 @@ public class ProjectGeneratorTestSupport {
             steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
         }
 
-        return new IntegrationDeployment.Builder()
-            .spec(new Integration.Builder()
+        return new Integration.Builder()
                 .id("test-integration")
                 .name("Test Integration")
                 .description("This is a test integration!")
                 .steps(Arrays.asList(steps))
-                .build())
-            .build();
+                .build();
     }
 
-    protected Path generate(IntegrationDeployment deployment, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
+    protected Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
 
-        try (InputStream is = generator.generate(deployment)) {
+        try (InputStream is = generator.generate(integration)) {
             Path ret = testFolder.newFolder("integration-project").toPath();
 
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {

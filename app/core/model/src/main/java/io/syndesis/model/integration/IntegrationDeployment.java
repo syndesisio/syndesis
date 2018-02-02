@@ -17,10 +17,7 @@ package io.syndesis.model.integration;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
@@ -33,7 +30,6 @@ import io.syndesis.model.WithId;
 import io.syndesis.model.WithKind;
 import io.syndesis.model.WithModificationTimestamps;
 import io.syndesis.model.WithVersion;
-import io.syndesis.model.action.ConnectorAction;
 
 @IndexedProperty.Multiple({
         @IndexedProperty("integrationId"),
@@ -100,29 +96,6 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
     default boolean isInactive() {
         return getCurrentState() == IntegrationDeploymentState.Undeployed
                 || getCurrentState() == IntegrationDeploymentState.Inactive;
-    }
-
-    @JsonIgnore
-    default Set<String> getUsedConnectorIds() {
-        return getSpec().getSteps().stream()//
-                .map(s -> s.getAction())//
-                .filter(Optional::isPresent)//
-                .map(Optional::get)//
-                .filter(ConnectorAction.class::isInstance)//
-                .map(ConnectorAction.class::cast)//
-                .map(a -> a.getDescriptor().getConnectorId())//
-                .filter(Objects::nonNull)//
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Used by the ProjectGenerator mustache files.
-     *
-     * @return
-     */
-    @JsonIgnore
-    default String getName() {
-        return getSpec().getName();
     }
 
 }

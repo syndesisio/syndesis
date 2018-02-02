@@ -75,6 +75,7 @@ import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
+import io.syndesis.rest.v1.handler.integration.DeletedFilter;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 import io.syndesis.rest.v1.handler.integration.model.IntegrationOverview;
 import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
@@ -137,8 +138,8 @@ public class IntegrationSupportHandler {
     @Path("/generate/pom.xml")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] projectPom(IntegrationDeployment integrationDeployment) throws IOException {
-        return projectGenerator.generatePom(integrationDeployment);
+    public byte[] projectPom(Integration integration) throws IOException {
+        return projectGenerator.generatePom(integration);
     }
 
     @GET

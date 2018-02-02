@@ -18,10 +18,14 @@ package io.syndesis.model.integration;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -33,6 +37,7 @@ import io.syndesis.model.WithModificationTimestamps;
 import io.syndesis.model.WithName;
 import io.syndesis.model.WithTags;
 import io.syndesis.model.WithVersion;
+import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.validation.UniqueProperty;
 import io.syndesis.model.validation.UniquenessRequired;
@@ -77,6 +82,19 @@ public interface Integration extends WithId<Integration>, WithVersion, WithModif
 
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder
+    }
+
+    @JsonIgnore
+    default Set<String> getUsedConnectorIds() {
+        return getSteps().stream()//
+                .map(s -> s.getAction())//
+                .filter(Optional::isPresent)//
+                .map(Optional::get)//
+                .filter(ConnectorAction.class::isInstance)//
+                .map(ConnectorAction.class::cast)//
+                .map(a -> a.getDescriptor().getConnectorId())//
+                .filter(Objects::nonNull)//
+                .collect(Collectors.toSet());
     }
 
 }
