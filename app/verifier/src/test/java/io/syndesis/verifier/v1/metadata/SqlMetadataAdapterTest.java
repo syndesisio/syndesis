@@ -35,12 +35,14 @@ import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.verifier.api.SyndesisMetadata;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.Assert.assertEquals;
 
 public class SqlMetadataAdapterTest {
 
@@ -103,7 +105,7 @@ public class SqlMetadataAdapterTest {
     }
 
     @Test
-    public void adaptForSqlTest() throws IOException {
+    public void adaptForSqlTest() throws IOException, JSONException {
 
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension();
         Map<String,Object> parameters = new HashMap<>();
@@ -119,12 +121,12 @@ public class SqlMetadataAdapterTest {
         SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8);
         String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata);
+        JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
 
     }
 
     @Test
-    public void adaptForSqlStoredTest() throws IOException {
+    public void adaptForSqlStoredTest() throws IOException, JSONException {
 
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension();
         Map<String,Object> parameters = new HashMap<>();
@@ -139,18 +141,18 @@ public class SqlMetadataAdapterTest {
         ObjectMapper mapper = new ObjectMapper();
         String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
         String actualListOfProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
-        assertEquals(expectedListOfProcedures, actualListOfProcedures);
+        JSONAssert.assertEquals(expectedListOfProcedures, actualListOfProcedures, JSONCompareMode.STRICT);
 
         parameters.put(SqlMetadataAdapter.PATTERN, SqlMetadataAdapter.FROM_PATTERN);
         String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8);
         String actualListOfStartProcedures = (mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData));
-        assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures);
+        JSONAssert.assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures, JSONCompareMode.STRICT);
 
         parameters.put("procedureName", "DEMO_ADD");
         SyndesisMetadata<JsonSchema> syndesisMetaData2 = adapter.adapt("sql-stored-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8);
         String actualMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata);
+        JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
 
     }
 }

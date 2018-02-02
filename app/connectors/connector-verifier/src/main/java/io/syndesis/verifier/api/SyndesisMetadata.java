@@ -21,6 +21,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import io.syndesis.verifier.api.support.SyndesisMetadataConverter;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize(converter = SyndesisMetadataConverter.class)
 public final class SyndesisMetadata<T> {
 
     public final T inputSchema;
@@ -33,8 +38,7 @@ public final class SyndesisMetadata<T> {
      */
     public final Map<String, List<PropertyPair>> properties;
 
-    public SyndesisMetadata(final Map<String, List<PropertyPair>> properties, final T inputSchema,
-                            final T outputSchema) {
+    public SyndesisMetadata(final Map<String, List<PropertyPair>> properties, final T inputSchema, final T outputSchema) {
         this.properties = properties;
         this.inputSchema = inputSchema;
         this.outputSchema = outputSchema;
@@ -45,6 +49,10 @@ public final class SyndesisMetadata<T> {
                 Collections.sort(propertyPairs, Comparator.comparing(PropertyPair::getDisplayValue));
             }
         }
+    }
+
+    public boolean isNull() {
+        return inputSchema == null && outputSchema == null && (properties == null || properties.isEmpty());
     }
 
 }
