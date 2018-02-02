@@ -81,13 +81,9 @@ jobs:
       - restore_cache:
           key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
       - run:
-          name: Install OS Dependencies
-          command: |
-            apt-get install libxss1
-      - run:
           name: Build UI
           command: |
-            ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
+            apt-get install libxss1 && ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
