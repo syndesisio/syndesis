@@ -250,9 +250,9 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@atlasmap/atlasmap.data.mapper@^1.32.0-SNAPSHOT.20180110153059":
-  version "1.32.0-SNAPSHOT.20180110153059"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.32.0-SNAPSHOT.20180110153059.tgz#77a591aca61a2279a4f560ad27adc68062b0aa0d"
+"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180131184819":
+  version "1.33.0-SNAPSHOT.20180131184819"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180131184819.tgz#67e580e233d3df156c965531097f5c2c6296ecfc"
   dependencies:
     "@angular/animations" "^5.0.0"
     "@angular/common" "^5.0.0"
@@ -273,10 +273,10 @@
     mkdirp "^0.5.1"
     moment "^2.18.1"
     ncp "^2.0.0"
-    ngx-bootstrap "^2.0.0-beta.6"
+    ngx-bootstrap "2.0.0-rc.0"
     opn-cli "^3.1.0"
     patternfly "3.26.1"
-    patternfly-ng "^0.9.2"
+    patternfly-ng "^2.1.2"
     rxjs "^5.5.2"
     zone.js "^0.8.14"
 
@@ -350,6 +350,10 @@
     loader-utils "^1.0.2"
     magic-string "^0.22.3"
     source-map "^0.5.6"
+
+"@swimlane/ngx-datatable@^11.1.7":
+  version "11.1.7"
+  resolved "https://registry.yarnpkg.com/@swimlane/ngx-datatable/-/ngx-datatable-11.1.7.tgz#d4ca01a3c0ee67071da214b739da198179a4d756"
 
 "@types/chai-as-promised@^0.0.29":
   version "0.0.29"
@@ -499,6 +503,14 @@ angular-tree-component@4.1.0:
     lodash "4.17.4"
     mobx "3.1.11"
     mobx-angular "1.5.0"
+
+angular-tree-component@^6.0.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-6.1.0.tgz#9d9a6b28a6881c2072cd6306b55229579e894071"
+  dependencies:
+    lodash "4.17.4"
+    mobx ">=3"
+    mobx-angular ">=1"
 
 angular2-text-mask@^8.0.1:
   version "8.0.4"
@@ -701,6 +713,10 @@ async@~0.2.6:
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+
+atoa@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/atoa/-/atoa-1.0.0.tgz#0cc0e91a480e738f923ebc103676471779b34a49"
 
 autoprefixer@^6.3.1, autoprefixer@^6.5.3:
   version "6.7.7"
@@ -957,7 +973,7 @@ bootstrap-datepicker@~1.6.4:
   dependencies:
     jquery ">=1.7.1"
 
-bootstrap-sass@^3.3.7, bootstrap-sass@~3.3.7:
+bootstrap-sass@~3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.3.7.tgz#6596c7ab40f6637393323ab0bc80d064fc630498"
 
@@ -972,10 +988,6 @@ bootstrap-select@~1.10.0:
   resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.10.0.tgz#9499679e70004dbc00872522322d3b93a0f132e4"
   dependencies:
     jquery ">=1.8"
-
-bootstrap-slider@^9.9.0:
-  version "9.10.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-slider/-/bootstrap-slider-9.10.0.tgz#1103d6bc00cfbfa8cfc9a2599ab518c55643da3f"
 
 bootstrap-switch@~3.3.2, bootstrap-switch@~3.3.4:
   version "3.3.4"
@@ -1576,6 +1588,13 @@ content-type@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
+contra@1.9.4:
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/contra/-/contra-1.9.4.tgz#f53bde42d7e5b5985cae4d99a8d610526de8f28d"
+  dependencies:
+    atoa "1.0.0"
+    ticky "1.0.1"
+
 convert-source-map@^1.3.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.5.0.tgz#9acd70851c6d5dfdd93d9282e5edf94a03ff46b5"
@@ -1668,6 +1687,12 @@ cross-spawn@^3.0.0:
   dependencies:
     lru-cache "^4.0.1"
     which "^1.2.9"
+
+crossvent@1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/crossvent/-/crossvent-1.5.4.tgz#da2c4f8f40c94782517bf2beec1044148194ab92"
+  dependencies:
+    custom-event "1.0.0"
 
 cryptiles@2.x.x:
   version "2.0.5"
@@ -1840,6 +1865,10 @@ currently-unhandled@^0.4.1:
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
   dependencies:
     array-find-index "^1.0.1"
+
+custom-event@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.0.tgz#2e4628be19dc4b214b5c02630c5971e811618062"
 
 custom-event@~1.0.0:
   version "1.0.1"
@@ -2126,6 +2155,13 @@ dot@^1.1.1:
 dotenv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-2.0.0.tgz#bd759c357aaa70365e01c96b7b0bec08a6e0d949"
+
+dragula@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/dragula/-/dragula-3.7.2.tgz#4a35c9d3981ffac1a949c29ca7285058e87393ce"
+  dependencies:
+    contra "1.9.4"
+    crossvent "1.5.4"
 
 drmonty-datatables-colvis@~1.1.2:
   version "1.1.2"
@@ -2772,10 +2808,6 @@ flat-cache@^1.2.1:
 flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
-
-font-awesome-sass@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/font-awesome-sass/-/font-awesome-sass-4.7.0.tgz#4eda693e915009ce00b228e0964dc5eca9bc34e1"
 
 font-awesome@4.7.0, font-awesome@^4.7.0:
   version "4.7.0"
@@ -4567,9 +4599,17 @@ mobx-angular@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-1.5.0.tgz#6c806483ebf7d161e5b5f5048edc300f8521c80c"
 
+mobx-angular@>=1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-2.1.1.tgz#d5e36539acb200186dd5a1170806b4776b9a8b88"
+
 mobx@3.1.11:
   version "3.1.11"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.1.11.tgz#400b1e3c00a4249dfe36e9bca28ef36f057d4a28"
+
+mobx@>=3:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
 
 moment-timezone@^0.4.0, moment-timezone@^0.4.1:
   version "0.4.1"
@@ -4669,6 +4709,12 @@ ng2-charts@1.6.0:
   dependencies:
     chart.js "^2.6.0"
 
+ng2-dragula@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/ng2-dragula/-/ng2-dragula-1.5.0.tgz#12a221d7a34fc629cc74dc98efb26448290eb6e5"
+  dependencies:
+    dragula "^3.7.2"
+
 ng2-file-upload@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/ng2-file-upload/-/ng2-file-upload-1.3.0.tgz#d90f8f568f62383462175f8bdfa0096b131f277a"
@@ -4683,11 +4729,11 @@ ngx-bootstrap@1.8.0:
   dependencies:
     moment "2.18.1"
 
-ngx-bootstrap@1.9.3:
+ngx-bootstrap@1.9.3, ngx-bootstrap@^1.8.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-1.9.3.tgz#28e75d14fb1beaee609383d7694de4eb3ba03b26"
 
-ngx-bootstrap@^2.0.0-beta.6:
+ngx-bootstrap@2.0.0-rc.0:
   version "2.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.0-rc.0.tgz#c423117f9a3b36a19514c531b7fd9a56217f060e"
 
@@ -5189,29 +5235,18 @@ patternfly-ng@^0.13.3:
     rxjs "^5.0.1"
     zone.js "0.8.4"
 
-patternfly-ng@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-0.9.2.tgz#441dbdf0f082bb38b785b61a2c005a846eccfb7f"
+patternfly-ng@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-2.1.2.tgz#9ce515007463563076974910460501d79e7956fb"
   dependencies:
-    "@angular/animations" "^4.0.1"
-    "@angular/common" "^4.0.1"
-    "@angular/compiler" "^4.0.1"
-    "@angular/compiler-cli" "^4.0.1"
-    "@angular/core" "^4.0.1"
-    "@angular/forms" "^4.0.1"
-    "@angular/http" "^4.0.1"
-    "@angular/platform-browser" "^4.0.1"
-    "@angular/platform-browser-dynamic" "^4.0.1"
-    "@angular/platform-server" "^4.0.1"
-    "@angular/router" "^4.0.1"
-    angular-tree-component "4.1.0"
+    lodash "^4.17.4"
+    ngx-bootstrap "^1.8.0"
+    patternfly "^3.28.0"
+  optionalDependencies:
+    "@swimlane/ngx-datatable" "^11.1.7"
+    angular-tree-component "^6.0.0"
     c3 "^0.4.15"
-    core-js "2.4.1"
-    moment "2.17.1"
-    ngx-bootstrap "1.8.0"
-    patternfly "^3.26.1"
-    rxjs "5.0.1"
-    zone.js "0.8.4"
+    ng2-dragula "^1.5.0"
 
 patternfly-sass@3.23.2:
   version "3.23.2"
@@ -5259,36 +5294,6 @@ patternfly@3.26.1:
     datatables.net-select "~1.2.0"
     drmonty-datatables-colvis "~1.1.2"
     eonasdan-bootstrap-datetimepicker "^4.17.47"
-    google-code-prettify "~1.0.5"
-    jquery-match-height "^0.7.2"
-    moment "~2.14.1"
-    moment-timezone "^0.4.1"
-    patternfly-bootstrap-combobox "~1.1.7"
-    patternfly-bootstrap-treeview "~2.1.0"
-
-patternfly@^3.26.1:
-  version "3.35.1"
-  resolved "https://registry.yarnpkg.com/patternfly/-/patternfly-3.35.1.tgz#753d1d5bf4b6a24a7e6a4c71455c4b969f313539"
-  dependencies:
-    bootstrap "~3.3.7"
-    font-awesome "^4.7.0"
-    jquery "~3.2.1"
-  optionalDependencies:
-    bootstrap-datepicker "~1.6.4"
-    bootstrap-sass "^3.3.7"
-    bootstrap-select "^1.12.2"
-    bootstrap-slider "^9.9.0"
-    bootstrap-switch "~3.3.4"
-    bootstrap-touchspin "~3.1.1"
-    c3 "~0.4.11"
-    d3 "~3.5.17"
-    datatables.net "^1.10.15"
-    datatables.net-colreorder "~1.3.2"
-    datatables.net-colreorder-bs "~1.3.2"
-    datatables.net-select "~1.2.0"
-    drmonty-datatables-colvis "~1.1.2"
-    eonasdan-bootstrap-datetimepicker "^4.17.47"
-    font-awesome-sass "^4.7.0"
     google-code-prettify "~1.0.5"
     jquery-match-height "^0.7.2"
     moment "~2.14.1"
@@ -6209,12 +6214,6 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-rxjs@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.0.1.tgz#3a69bdf9f0ca0a986303370d4708f72bdfac8356"
-  dependencies:
-    symbol-observable "^1.0.1"
-
 rxjs@5.4.2, rxjs@^5.0.0:
   version "5.4.2"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.2.tgz#2a3236fcbf03df57bae06fd6972fd99e5c08fcf7"
@@ -6944,6 +6943,10 @@ through2@^2.0.0:
 through@2, through@X.X.X, through@^2.3.6, through@~2.3, through@~2.3.1:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+
+ticky@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ticky/-/ticky-1.0.1.tgz#b7cfa71e768f1c9000c497b9151b30947c50e46d"
 
 time-stamp@^1.0.0:
   version "1.1.0"

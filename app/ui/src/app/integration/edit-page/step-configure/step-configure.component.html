@@ -63,12 +63,8 @@
         <div [ngSwitch]="step.stepKind">
           <div *ngSwitchCase="'mapper'">
             <div class="row">
-              <div class="col-md-12"
-                   *ngIf="step && inputDataShape && outputDataShape">
-                <syndesis-data-mapper-host [inputDataShape]="inputDataShape"
-                                           [outputDataShape]="outputDataShape"
-                                           [step]="step"
-                                           [position]="position"></syndesis-data-mapper-host>
+              <div class="col-md-12" *ngIf="step">
+                <syndesis-data-mapper-host [position]="position"></syndesis-data-mapper-host>
               </div>
             </div>
           </div>

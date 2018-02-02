@@ -3,7 +3,9 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
-  DocumentDefinition,
+  DocumentInitializationModel,
+  DocumentType,
+  InspectionType,
   MappingDefinition,
   ConfigModel,
   MappingModel,
@@ -63,14 +65,11 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
   targetDocTypes = [];
 
   @Input() position: number;
-  @Input() step: Step;
-  @Input() inputDataShape: DataShape;
-  @Input() outputDataShape: DataShape;
 
   @ViewChild('dataMapperComponent')
-  public dataMapperComponent: DataMapperAppComponent;
+  dataMapperComponent: DataMapperAppComponent;
 
-  public cfg: ConfigModel = new ConfigModel();
+  cfg: ConfigModel = new ConfigModel();
 
   constructor(
     public currentFlow: CurrentFlow,
@@ -84,84 +83,44 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     this.resetConfig();
   }
 
-  createDocumentDefinition(
-    connectorId: string,
-    dataShape: DataShape,
-    isSource = false
-  ) {
-    if (!dataShape || !dataShape.kind) {
-      // skip
-      return;
-    }
-    const type = dataShape.type;
-    const kind = dataShape.kind;
-    const specification = dataShape.specification || '';
-    // TODO not sure what to do for `none` or `any` here
-    switch (kind) {
-      case 'java':
-        const docDef = this.cfg.addJavaDocument(type, isSource);
-        if (specification != '') {
-          docDef.initCfg.inspectionResultContents = specification;
-        } else {
-          this.addInitializationTask();
-          this.support.requestJavaInspection(connectorId, type).toPromise().then(
-            data => {
-              const inspection: string = data['_body'] || data;
-              log.infoc( () => `Precomputed java document found for ${type}`, category);
-              log.debugc(() => inspection, category);
-              docDef.initCfg.inspectionResultContents = inspection;
-              this.removeInitializationTask();
-            },
-            err => {
-              log.warnc(() => `No precomputed java document found for ${type}: ${err}`, category);
-              this.removeInitializationTask();
-            }
-          );
-        }
-        break;
-      case 'json':
-      case 'json-instance':
-        this.cfg.addJSONInstanceDocument(type, specification, isSource);
-        break;
-      case 'json-schema':
-        this.cfg.addJSONSchemaDocument(type, specification, isSource);
-        break;
-      case 'xml-instance':
-        this.cfg.addXMLInstanceDocument(type, specification, isSource);
-        break;
-      case 'xml-schema':
-        this.cfg.addXMLSchemaDocument(type, specification, isSource);
-        break;
-      default:
-        break;
-    }
-  }
-
   initialize() {
     this.resetConfig();
-    const step = this.step;
+    const step = this.currentFlow.getStep(this.position);
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
       mappings = <string>step.configuredProperties[MAPPING_KEY];
     }
     this.cfg.mappings = new MappingDefinition();
 
-    const previousConnectorId: string = this.currentFlow.getPreviousConnection(
-      this.position
-    ).connection.connectorId;
-    const subsequentConnectorId: string = this.currentFlow.getSubsequentConnection(
-      this.position
-    ).connection.connectorId;
-    this.createDocumentDefinition(
-      previousConnectorId,
-      this.outputDataShape,
-      true
-    );
-    this.createDocumentDefinition(
-      subsequentConnectorId,
-      this.inputDataShape,
-      false
-    );
+    for (let pair of this.currentFlow.getPreviousStepsWithDataShape(this.position)) {
+      if (this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape)) {
+        this.addInitializationTask();
+        this.currentFlow.fetchDataShapeFor(pair.step, false).then(dataShape => {
+          this.addDocument(pair.step.id, pair.index, dataShape, true);
+          this.removeInitializationTask();
+        })
+        .catch(response => this.cfg.errorService.error(
+          'Failed to load source document: ' + pair.step.id, response));
+      }
+    }
+
+    // Single target document for now
+    let targetPair;
+    for (let pair of this.currentFlow.getSubsequentStepsWithDataShape(this.position)) {
+      if (this.isSupportedDataShape(pair.step.action.descriptor.inputDataShape)) {
+        targetPair = pair;
+        break;
+      }
+    }
+    if (targetPair) {
+      this.addInitializationTask();
+      this.currentFlow.fetchDataShapeFor(targetPair.step, true).then(dataShape => {
+        this.addDocument(targetPair.step.id, targetPair.index, dataShape, false);
+        this.removeInitializationTask();
+      })
+      .catch(response => this.cfg.errorService.error(
+        'Failed to load target document: ' + targetPair.step.id, response));
+    }
 
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
@@ -249,6 +208,66 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
       }
     });
     this.removeInitializationTask();
+  }
+
+  private isSupportedDataShape(dataShape: DataShape): boolean {
+    if (!dataShape || !dataShape.kind) {
+      return false;
+    }
+    return ['java', 'json-instance', 'json-schema', 'xml-instance', 'xml-schema']
+            .indexOf(dataShape.kind) > -1
+  }
+
+  private addDocument(
+    documentId: string,
+    index: number,
+    dataShape: DataShape,
+    isSource = false
+  ): boolean {
+    if (!dataShape || !dataShape.kind || !dataShape.specification) {
+      // skip
+      return false;
+    }
+
+    const initModel: DocumentInitializationModel = new DocumentInitializationModel();
+    switch (dataShape.kind) {
+      case 'java':
+        initModel.type = DocumentType.JAVA;
+        initModel.inspectionType = InspectionType.JAVA_CLASS;
+        initModel.inspectionSource = dataShape.type;
+        initModel.inspectionResult = dataShape.specification;
+        break;
+      case 'json-instance':
+        initModel.type = DocumentType.JSON;
+        initModel.inspectionType = InspectionType.INSTANCE;
+        initModel.inspectionSource = dataShape.specification;
+        break;
+      case 'json-schema':
+        initModel.type = DocumentType.JSON;
+        initModel.inspectionType = InspectionType.SCHEMA;
+        initModel.inspectionSource = dataShape.specification;
+        break;
+      case 'xml-instance':
+        initModel.type = DocumentType.XML;
+        initModel.inspectionType = InspectionType.INSTANCE;
+        initModel.inspectionSource = dataShape.specification;
+        break;
+      case 'xml-schema':
+        initModel.type = DocumentType.XML;
+        initModel.inspectionType = InspectionType.SCHEMA;
+        initModel.inspectionSource = dataShape.specification;
+        break;
+      default:
+        return false; // unsupported 'kind' of document
+    }
+
+    initModel.id = documentId;
+    initModel.name = "Step " + index + " - "
+        + (dataShape.name ? dataShape.name : dataShape.type);
+    initModel.description = dataShape.description;
+    initModel.isSource = isSource;
+    this.cfg.addDocument(initModel);
+    return true;
   }
 
   initializeMapper() {
