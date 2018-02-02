@@ -656,9 +656,6 @@
   <rule ref="rulesets/java/j2ee.xml/DoNotCallSystemExit">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/coupling.xml/ExcessiveImports">
-    <priority>5</priority>
-  </rule>
   <rule ref="rulesets/java/logging-java.xml/GuardLogStatementJavaUtil">
     <priority>5</priority>
   </rule>
@@ -761,7 +758,7 @@
   <rule ref="rulesets/java/imports.xml/TooManyStaticImports">
     <priority>5</priority>
     <properties>
-      <property name="maximumStaticImports" value="7" />
+      <property name="maximumStaticImports" value="20" />
     </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/UncommentedEmptyMethodBody">

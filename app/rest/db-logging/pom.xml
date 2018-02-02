@@ -43,6 +43,11 @@
 
     <dependency>
       <groupId>io.syndesis</groupId>
+      <artifactId>rest</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis</groupId>
       <artifactId>jsondb</artifactId>
     </dependency>
 
@@ -85,11 +90,6 @@
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.spec.javax.ws.rs</groupId>
-      <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
     </dependency>
 
     <dependency>
@@ -218,6 +218,30 @@
           </exceptions>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredDependencies>
+
+            <!-- Ignore the dup resources/catalog.cat -->
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-java-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-json-model</artifactId>
+            </dependency>
+            <dependency>
+              <groupId>io.atlasmap</groupId>
+              <artifactId>atlas-xml-model</artifactId>
+            </dependency>
+          </ignoredDependencies>
+        </configuration>
+      </plugin>
+
 
     </plugins>
 

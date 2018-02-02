@@ -19,6 +19,7 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.syndesis.core.Json;
 import io.syndesis.jsondb.JsonDBException;
 import io.syndesis.openshift.OpenShiftService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,25 +40,35 @@ import static java.lang.String.format;
 /**
  *
  */
-class PodLogHandler implements Consumer<InputStream> {
+class PodLogMonitor implements Consumer<InputStream> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogsController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
 
-    private final LogsController logsController;
+    private final ActivityTrackingController logsController;
     protected final AtomicBoolean markInOpenshift = new AtomicBoolean(true);
     protected final AtomicBoolean keepTrying = new AtomicBoolean(true);
     protected final String podName;
     protected final String integrationId;
-    protected final String deploymentId;
+    protected final String deploymentVersion;
     protected PodLogState state;
 
-    public PodLogHandler(LogsController logsController, Pod pod) {
+    public PodLogMonitor(ActivityTrackingController logsController, Pod pod) throws IOException {
         this.logsController = logsController;
         this.podName = pod.getMetadata().getName();
-        Map<String, String> annotations = pod.getMetadata().getAnnotations();
-        this.integrationId = annotations.get(OpenShiftService.INTEGRATION_ID_LABEL);
-        Map<String, String> labels = pod.getMetadata().getLabels();
-        this.deploymentId = labels.get(OpenShiftService.DEPLOYMENT_ID_LABEL);
+        if (this.podName == null) {
+            throw new IOException("Could not determine the pod name");
+        }
+
+        Map<String, String> labels = pod.getMetadata().getAnnotations();
+        this.integrationId = labels.get(OpenShiftService.INTEGRATION_ID_ANNOTATION);
+        if (this.integrationId == null) {
+            throw new IOException("Could not determine the integration id that is being run on the pod: " + this.podName);
+        }
+
+        this.deploymentVersion = labels.get(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION);
+        if (this.deploymentVersion == null) {
+            throw new IOException("Could not determine the deployment version that is being run on the pod: " + this.podName);
+        }
     }
 
     public void start() throws IOException {
@@ -75,7 +86,7 @@ class PodLogHandler implements Consumer<InputStream> {
 
     public void run() {
 
-        if( logsController.stopped.get() || !keepTrying.get() || !logsController.isPodRunning(podName) ) {
+        if (logsController.stopped.get() || !keepTrying.get() || !logsController.isPodRunning(podName)) {
             // Seems we don't need to keep trying, lets bail.
             return;
         }
@@ -91,7 +102,7 @@ class PodLogHandler implements Consumer<InputStream> {
 
     @Override
     public void accept(InputStream is) {
-        if( is !=null ) {
+        if (is != null) {
             try {
                 try {
                     processLogStream(is);
@@ -129,8 +140,8 @@ class PodLogHandler implements Consumer<InputStream> {
             }
         }
 
-        if( !logsController.stopped.get() ) {
-            if ( logsController.isPodRunning(podName) ) {
+        if (!logsController.stopped.get()) {
+            if (logsController.isPodRunning(podName)) {
                 // odd, why did our stream end??  try to resume processing..
                 LOG.info("End of Log stream for running pod: {}", podName);
                 logsController.schedule(this::run, 5, TimeUnit.SECONDS);
@@ -148,8 +159,8 @@ class PodLogHandler implements Consumer<InputStream> {
         // 2018-01-12T21:22:02.068338027Z { ..... }
         if (
             line.length < 32 // not long enough
-            || line[30] != ' ' // expecting space
-            || line[31] != '{' // expecting the json data starting here.
+                || line[30] != ' ' // expecting space
+                || line[31] != '{' // expecting the json data starting here.
             ) {
             return;
         }
@@ -157,7 +168,7 @@ class PodLogHandler implements Consumer<InputStream> {
         String time = new String(line, 0, 30, StandardCharsets.US_ASCII);
         try {
             @SuppressWarnings("unchecked")
-            Map<String, Object> json = Json.mapper().readValue(line, 31, line.length-31, HashMap.class);
+            Map<String, Object> json = Json.mapper().readValue(line, 31, line.length - 31, HashMap.class); //NOPMD
 
             // are the required fields set?
             String exchange = validate((String) json.get("exchange"));
@@ -182,14 +193,14 @@ class PodLogHandler implements Consumer<InputStream> {
                     trackState(time, batch);
                 });
 
-            } else if (exchange != null && status!=null) {
+            } else if (exchange != null && status != null) {
 
                 // Looks like a exchange level logging event.
 
                 String transactionPath = format("/exchanges/%s/%s", integrationId, exchange);
                 json.put("pod", podName);
-                json.put("ver", deploymentId);
-                if( "begin".equals(status) ) {
+                json.put("ver", deploymentVersion);
+                if ("begin".equals(status)) {
                     json.put("logts", time);
                 }
 
@@ -203,7 +214,7 @@ class PodLogHandler implements Consumer<InputStream> {
                     // Do as little as possible in here, single thread processes the event queue.
 
                     for (Map.Entry<String, Object> entry : json.entrySet()) {
-                        batch.put(transactionPath + "/" +entry.getKey(), entry.getValue());
+                        batch.put(transactionPath + "/" + entry.getKey(), entry.getValue());
                     }
                     trackState(time, batch);
                 });
@@ -225,7 +236,7 @@ class PodLogHandler implements Consumer<InputStream> {
     }
 
     private String validate(String value) {
-        if( value == null ) {
+        if (value == null) {
             return null;
         }
         return validateKey(value);

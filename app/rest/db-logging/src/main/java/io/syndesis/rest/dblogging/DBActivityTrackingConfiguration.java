@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
-@ConditionalOnProperty(value = "features.dblogging.enabled", havingValue = "true", matchIfMissing = false)
-public class DBLoggingConfiguration {
+@ConditionalOnProperty(value = "features.dblogging.enabled", havingValue = "true")
+public class DBActivityTrackingConfiguration {
 
 }

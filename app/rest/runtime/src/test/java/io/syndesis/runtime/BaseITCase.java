@@ -262,7 +262,7 @@ public abstract class BaseITCase {
     }
 
     public static String resource(String file) throws IOException {
-        try (InputStream is = LogsITCase.class.getClassLoader().getResourceAsStream(file)) {
+        try (InputStream is = BaseITCase.class.getClassLoader().getResourceAsStream(file)) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             copy(is, os);
             return new String(os.toByteArray(), StandardCharsets.UTF_8);

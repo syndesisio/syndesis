@@ -132,6 +132,8 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"))))
             .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL, integrationDeployment.getVersion().orElse(0).toString())
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
+            .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationDeployment.getIntegrationId().get())
+            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion().get()))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
