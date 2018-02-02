@@ -3,22 +3,38 @@ import { TestBed, async, inject } from '@angular/core/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RestangularModule } from 'ngx-restangular';
+import { HttpClientModule } from '@angular/common/http';
 
-import { Connection, Action, createIntegration, createStep, Integration, Step, Steps } from '@syndesis/ui/platform';
+import { Connection,
+  Action,
+  createIntegration,
+  createStep,
+  Integration,
+  Step,
+  Steps } from '@syndesis/ui/platform';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { ApiModule } from '@syndesis/ui/api';
+import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { TypeFactory } from '@syndesis/ui/model';
 import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
 import { CurrentFlow, FlowEvent } from './current-flow.service';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 describe('CurrentFlow', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RestangularModule.forRoot(), SyndesisCommonModule.forRoot()],
+      imports: [
+        ApiModule.forRoot(),
+        HttpClientModule,
+        RestangularModule.forRoot(),
+        IntegrationSupportModule,
+      ],
       providers: [
         CurrentFlow,
         IntegrationStore,
         IntegrationService,
         EventsService,
+        ConfigService,
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {

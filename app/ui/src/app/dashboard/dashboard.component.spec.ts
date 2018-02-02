@@ -4,23 +4,30 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
+import { HttpClientModule } from '@angular/common/http';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { NotificationModule } from 'patternfly-ng';
+import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 
-import { SyndesisCommonModule } from '../common/common.module';
-import { IntegrationListModule } from '../integration/list/list.module';
+import { ApiModule } from '@syndesis/ui/api';
+import { CoreModule } from '@syndesis/ui/core';
+import { StoreModule } from '@syndesis/ui/store';
+import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
-//import { PopularTemplatesComponent } from './populartemplates.component';
-//import { TemplatesListComponent } from '../templates/list/list.component';
 import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
-import { StoreModule } from '../store/store.module';
+import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
+import { IntegrationStatusComponent } from '@syndesis/ui/integration/list/status.component';
+import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component';
+import { IconPathPipe } from '@syndesis/ui/common/icon-path.pipe.ts';
+import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.pipe';
+import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -28,26 +35,37 @@ describe('DashboardComponent', () => {
 
   beforeEach(
     async(() => {
-      TestBed.configureTestingModule({
+      const moduleConfig = {
         imports: [
-          SyndesisCommonModule.forRoot(),
+          CoreModule.forRoot(),
+          ApiModule.forRoot(),
+          HttpClientModule,
+          ListModule,
+          ActionModule,
           ChartsModule,
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
           BsDropdownModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
-          RestangularModule.forRoot(),
-          NotificationModule,
-          IntegrationListModule
+          RestangularModule,
+          NotificationModule
         ],
         declarations: [
           DashboardComponent,
           EmptyStateComponent,
           DashboardConnectionsComponent,
-          DashboardIntegrationsComponent
+          DashboardIntegrationsComponent,
+          IntegrationStatusComponent,
+          IntegrationListComponent,
+          LoadingComponent,
+          IconPathPipe,
+          TruncateCharactersPipe,
+          ModalComponent
         ],
         providers: [
+          ConfigService,
+          ModalService,
           MockBackend,
           { provide: RequestOptions, useClass: BaseRequestOptions },
           {
@@ -59,7 +77,8 @@ describe('DashboardComponent', () => {
           },
           TourService
         ]
-      }).compileComponents();
+      };
+      TestBed.configureTestingModule(moduleConfig).compileComponents();
     })
   );
 
