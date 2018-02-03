@@ -1,6 +1,6 @@
 ## Syndesis
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis-parent/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis/)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis/tree/master.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis/tree/master)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis/tree/1.2.x.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis/tree/1.2.x)
 
