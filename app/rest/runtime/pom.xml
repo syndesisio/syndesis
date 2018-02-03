@@ -231,108 +231,188 @@
       </plugin>
 
       <plugin>
-        <groupId>dk.nykredit.swagger</groupId>
+        <groupId>com.github.kongchen</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
         <configuration>
-          <outputDirectory>${apidocs.output.dir}</outputDirectory>
-          <outputFormats>
-            <outputFormat>JSON</outputFormat>
-            <outputFormat>YAML</outputFormat>
-          </outputFormats>
-          <attachSwaggerArtifact>true</attachSwaggerArtifact>
-          <resourcePackages>
-            <resourcePackage>io.syndesis.rest.v1.handler.connection</resourcePackage>
-            <resourcePackage>io.syndesis.rest.v1.handler.environment</resourcePackage>
-            <resourcePackage>io.syndesis.rest.v1.handler.integration</resourcePackage>
-            <resourcePackage>io.syndesis.rest.v1.handler.metrics</resourcePackage>
-            <resourcePackage>io.syndesis.rest.v1.handler.user</resourcePackage>
-            <resourcePackage>io.syndesis.rest.v1.handler.support</resourcePackage>
-          </resourcePackages>
-          <swaggerConfig>
-            <info>
-              <title>Syndesis API</title>
-              <version>v1</version>
-              <description>
-                The Syndesis REST API connects to back-end services on the Syndesis and provides a single
-                entry
-                point for the Syndesis UI. For console developement it can run in off-line mode where it only
-                serves
-                responses from the response cache.
-              </description>
-              <license>
-                <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-                <name>Apache 2.0</name>
-              </license>
-              <contact>
-                <email>syndesis@googlegroups.com</email>
-                <name>The Syndesis Community</name>
-                <url>https://syndesis.io/</url>
-              </contact>
-            </info>
-            <schemes>http,https</schemes>
-            <host>localhost:8080</host>
-            <basePath>/api/v1</basePath>
-          </swaggerConfig>
+          <encoding>UTF-8</encoding>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>rest</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <id>ui-api-swagger</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>generate</goal>
             </goals>
+            <configuration>
+              <apiSources>
+                <apiSource>
+                  <attachSwaggerArtifact>true</attachSwaggerArtifact>
+                  <outputFormats>json,yaml</outputFormats>
+                  <swaggerDirectory>${apidocs.output.dir}/internal</swaggerDirectory>
+                  <schemes>http,https</schemes>
+                  <host>localhost:8080</host>
+                  <basePath>/api/v1</basePath>
+                  <locations>
+                    <location>io.syndesis.rest.v1.handler.connection</location>
+                    <location>io.syndesis.rest.v1.handler.credential</location>
+                    <location>io.syndesis.rest.v1.handler.environment</location>
+                    <location>io.syndesis.rest.v1.handler.events</location>
+                    <location>io.syndesis.rest.v1.handler.exception</location>
+                    <location>io.syndesis.rest.v1.handler.extension</location>
+                    <location>io.syndesis.rest.v1.handler.integration</location>
+                    <location>io.syndesis.rest.v1.handler.integration.support</location>
+                    <location>io.syndesis.rest.v1.handler.logs</location>
+                    <location>io.syndesis.rest.v1.handler.metrics</location>
+                    <location>io.syndesis.rest.v1.handler.setup</location>
+                    <location>io.syndesis.rest.v1.handler.tags</location>
+                    <location>io.syndesis.rest.v1.handler.tests</location>
+                    <location>io.syndesis.rest.v1.handler.user</location>
+                  </locations>
+                  <info>
+                    <title>Syndesis API</title>
+                    <version>v1</version>
+                    <description>
+                      The Syndesis REST API connects to back-end services on the Syndesis and provides a
+                      single entry point for the Syndesis UI. For console developement it can run in
+                      off-line mode where it only serves responses from the response cache.
+                    </description>
+                    <license>
+                      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                      <name>Apache 2.0</name>
+                    </license>
+                    <contact>
+                      <email>syndesis@googlegroups.com</email>
+                      <name>The Syndesis Community</name>
+                      <url>https://syndesis.io/</url>
+                    </contact>
+                  </info>
+                </apiSource>
+              </apiSources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>public-api-swagger</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <apiSources>
+                <apiSource>
+                  <attachSwaggerArtifact>true</attachSwaggerArtifact>
+                  <outputFormats>json,yaml</outputFormats>
+                  <swaggerDirectory>${apidocs.output.dir}</swaggerDirectory>
+                  <swaggerFileName>swagger</swaggerFileName>
+                  <schemes>https</schemes>
+                  <basePath>/api/v1</basePath>
+                  <locations>
+                    <location>io.syndesis.rest.v1.handler.extension</location>
+                    <location>io.syndesis.rest.v1.handler.integration.support</location>
+                  </locations>
+                  <info>
+                    <title>Syndesis Supported API</title>
+                    <version>v1</version>
+                    <description>
+                      The Syndesis Supported REST API connects to back-end services on the Syndesis and
+                      provides a single entry point for the 3rd party clients.
+                    </description>
+                    <license>
+                      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+                      <name>Apache 2.0</name>
+                    </license>
+                    <contact>
+                      <email>syndesis@googlegroups.com</email>
+                      <name>The Syndesis Community</name>
+                      <url>https://syndesis.io/</url>
+                    </contact>
+                  </info>
+                </apiSource>
+              </apiSources>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>io.github.swagger2markup</groupId>
         <artifactId>swagger2markup-maven-plugin</artifactId>
-        <configuration>
-          <swaggerInput>${apidocs.output.dir}/swagger.json</swaggerInput>
-          <outputDir>${apidocs.dir}/asciidoc</outputDir>
-          <config>
-            <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-          </config>
-        </configuration>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <id>internal-api-asciidoc</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>convertSwagger2markup</goal>
             </goals>
+            <configuration>
+              <swaggerInput>${apidocs.output.dir}/internal/swagger.json</swaggerInput>
+              <outputDir>${apidocs.dir}/asciidoc/internal</outputDir>
+              <config>
+                <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+              </config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>public-api-asciidoc</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>convertSwagger2markup</goal>
+            </goals>
+            <configuration>
+              <swaggerInput>${apidocs.output.dir}/swagger.json</swaggerInput>
+              <outputDir>${apidocs.dir}/asciidoc</outputDir>
+              <config>
+                <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+              </config>
+            </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
-        <configuration>
-          <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
-          <sourceDocumentName>index.adoc</sourceDocumentName>
-          <outputDirectory>${apidocs.output.dir}</outputDirectory>
-          <backend>html5</backend>
-          <sourceHighlighter>coderay</sourceHighlighter>
-          <attributes>
-            <generated>${apidocs.dir}/asciidoc</generated>
-            <toc>left</toc>
-            <sectnums>true</sectnums>
-            <revnumber>${project.version}</revnumber>
-            <revdate>${maven.build.timestamp}</revdate>
-            <organization>${project.organization.name}</organization>
-          </attributes>
-        </configuration>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <id>internal-api-html</id>
+            <phase>prepare-package</phase>
             <goals>
               <goal>process-asciidoc</goal>
             </goals>
+            <configuration>
+              <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
+              <sourceDocumentName>index.adoc</sourceDocumentName>
+              <outputDirectory>${apidocs.output.dir}/internal</outputDirectory>
+              <backend>html5</backend>
+              <sourceHighlighter>coderay</sourceHighlighter>
+              <attributes>
+                <generated>${apidocs.dir}/asciidoc/internal</generated>
+                <toc>left</toc>
+                <sectnums>true</sectnums>
+                <revnumber>${project.version}</revnumber>
+                <revdate>${maven.build.timestamp}</revdate>
+                <organization>${project.organization.name}</organization>
+              </attributes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>public-api-html</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
+              <sourceDocumentName>index.adoc</sourceDocumentName>
+              <outputDirectory>${apidocs.output.dir}</outputDirectory>
+              <backend>html5</backend>
+              <sourceHighlighter>coderay</sourceHighlighter>
+              <attributes>
+                <generated>${apidocs.dir}/asciidoc</generated>
+                <toc>left</toc>
+                <sectnums>true</sectnums>
+                <revnumber>${project.version}</revnumber>
+                <revdate>${maven.build.timestamp}</revdate>
+                <organization>${project.organization.name}</organization>
+              </attributes>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -871,19 +951,19 @@
     </dependency>
 
     <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <scope>test</scope>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
-        <groupId>com.github.tomakehurst</groupId>
-        <artifactId>wiremock-standalone</artifactId>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-standalone</artifactId>
     </dependency>
 
     <dependency>
-        <groupId>com.squareup.okio</groupId>
-        <artifactId>okio</artifactId>
+      <groupId>com.squareup.okio</groupId>
+      <artifactId>okio</artifactId>
     </dependency>
     
     <!--  ==== Test Scope === -->
