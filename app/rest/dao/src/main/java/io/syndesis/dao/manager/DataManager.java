@@ -222,8 +222,6 @@ public class DataManager implements DataAccessObjectRegistry {
             }
             return result;
         }
-
-
     }
 
     public <T extends WithId<T>> T fetch(Class<T> model, String id) {
@@ -238,6 +236,18 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         }
         return value;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends WithId<T>> Set<String> fetchIds(Class<T> model) {
+
+        if (getDataAccessObject(model) != null) {
+            return doWithDataAccessObject(model, d -> d.fetchIds());
+        } else {
+            Kind kind = Kind.from(model);
+            Map<String, T> cache = caches.getCache(kind.getModelName());
+            return cache.keySet();
+        }
     }
 
     public <T extends WithId<T>> Set<String> fetchIdsByPropertyValue(Class<T> model, String property, String value, String... additionalPropValues) {

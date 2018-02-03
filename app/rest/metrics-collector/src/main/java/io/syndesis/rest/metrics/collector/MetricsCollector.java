@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,7 +48,6 @@ import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDB;
-import io.syndesis.model.ListResult;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
@@ -94,7 +92,7 @@ public class MetricsCollector implements Runnable, Closeable {
 
     @Override
     public void run() {
-        LOGGER.info("Collecting metrics for active integration pods.");
+        LOGGER.debug("Collecting metrics for active integration pods.");
         try {
             List<Pod> integrationPodList = kubernetes.pods().withLabel("integration").list().getItems();
             Set<String> livePods = new HashSet<>();
@@ -109,18 +107,15 @@ public class MetricsCollector implements Runnable, Closeable {
                     executor.execute(new PodMetricsReader(
                             kubernetes,
                             p.getMetadata().getName(),
-                            p.getMetadata().getLabels().get("syndesis.io/integration-id"),
-                            p.getMetadata().getLabels().get("syndesis.io/deployment-id"),
+                            p.getMetadata().getLabels().get("integration"),
+                            p.getMetadata().getAnnotations().get("syndesis.io/integration-id"),
+                            p.getMetadata().getAnnotations().get("syndesis.io/deployment-version"),
                             rawMetricsHandler))
             );
 
-            //TODO Kurt Will update after #1384 goes in to only fetch the IDs
-            ListResult<Integration> integrationList = dataManager.fetchAll(Integration.class);
-            Set<String> activeIntegrationIds = new HashSet<>();
-            for (Integration integration : integrationList.getItems()) {
-                String integrationId = integration.getId().get();
+            Set<String> activeIntegrationIds = dataManager.fetchIds(Integration.class);
+            for (String integrationId : activeIntegrationIds) {
                 LOGGER.debug("Computing metrics for IntegrationId: {}",integrationId);
-                activeIntegrationIds.add(integrationId);
 
                 Map<String,RawMetrics> rawMetrics = getRawMetrics(integrationId);
                 IntegrationMetricsSummary currentSummary =
@@ -138,7 +133,7 @@ public class MetricsCollector implements Runnable, Closeable {
             }
             curateDeletedIntegrationMetrics(activeIntegrationIds);
 
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") IOException ex) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
             LOGGER.error("Error while iterating integration pods.", ex);
         }
 
@@ -268,21 +263,20 @@ public class MetricsCollector implements Runnable, Closeable {
 
         //1. Loop over all RawMetrics
         String json = jsonDB.getAsString(path(), new GetOptions().depth(1));
-        Map<String,Boolean> metricsMap = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
-        Set<String> rawIntegrationIds = metricsMap.keySet();
-        for (String rawIntId : rawIntegrationIds) {
-            if (! activeIntegrationIds.contains(rawIntId)) {
-                jsonDB.delete(path(rawIntId));
+        if (json != null) {
+            Map<String,Boolean> metricsMap = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
+            Set<String> rawIntegrationIds = metricsMap.keySet();
+            for (String rawIntId : rawIntegrationIds) {
+                if (! activeIntegrationIds.contains(rawIntId)) {
+                    jsonDB.delete(path(rawIntId));
+                }
             }
         }
         //2. Loop over all IntegrationMetricsSummary
-        //Will update after #1384 goes in to only fetch the IDs
-        ListResult<IntegrationMetricsSummary> intSummaries= dataManager.fetchAll(IntegrationMetricsSummary.class);
-        Iterator<IntegrationMetricsSummary> iterator = intSummaries.getItems().iterator();
-        while (iterator.hasNext()) {
-            IntegrationMetricsSummary summary = iterator.next();
-            if (! activeIntegrationIds.contains(summary.getId().get())) {
-                dataManager.delete(IntegrationMetricsSummary.class, summary.getId().get());
+        Set<String> summaryIds = dataManager.fetchIds(IntegrationMetricsSummary.class);
+        for (String summaryId : summaryIds) {
+            if (! activeIntegrationIds.contains(summaryId)) {
+                dataManager.delete(IntegrationMetricsSummary.class, summaryId);
             }
         }
     }
