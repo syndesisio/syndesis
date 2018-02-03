@@ -19,7 +19,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-rest-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -97,96 +97,96 @@
         <dependencies>
           <!-- ==== Salesforce ==== -->
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-on-create-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-on-create</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-on-update-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-on-update</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-on-delete-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-on-delete</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-update-sobject-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-update</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-upsert-sobject-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-upsert</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-create-sobject-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-create</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-get-sobject-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-get</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-get-sobject-with-id-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-get-with-id</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-delete-sobject-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-delete</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>salesforce-delete-sobject-with-id-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-salesforce-delete-with-id</artifactId>
             <version>${project.version}</version>
           </dependency>
           <!-- ==== JMS ==== -->
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>activemq-publish-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-activemq-publish</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>activemq-subscribe-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-activemq-subscribe</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>activemq-request-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-activemq-request</artifactId>
             <version>${project.version}</version>
           </dependency>
           <!-- ==== SQL ==== -->
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>sql-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-sql-component</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>sql-start-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-sql-start</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>sql-stored-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-sql-stored</artifactId>
             <version>${project.version}</version>
           </dependency>
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>sql-stored-start-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-sql-stored-start</artifactId>
             <version>${project.version}</version>
           </dependency>
           <!-- ==== REST Swagger ==== -->
           <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>rest-swagger-connector</artifactId>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-rest-swagger</artifactId>
             <version>${project.version}</version>
           </dependency>
         </dependencies>
@@ -479,7 +479,7 @@
             <ignoredUnusedDeclaredDependency>com.github.mikegirard:spring-social-salesforce</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.social:spring-social-twitter</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:connectors-catalog</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis.connector:connector-catalog</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:integration-project-generator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>io.syndesis:metrics-collector</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
@@ -667,8 +667,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>connectors-catalog</artifactId>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-catalog</artifactId>
     </dependency>
 
     <dependency>
@@ -965,7 +965,7 @@
       <groupId>com.squareup.okio</groupId>
       <artifactId>okio</artifactId>
     </dependency>
-    
+
     <!--  ==== Test Scope === -->
     <dependency>
       <groupId>io.fabric8</groupId>
@@ -973,7 +973,7 @@
       <version>${spring-cloud-kubernetes-core.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
   </dependencies>
 
   <profiles>

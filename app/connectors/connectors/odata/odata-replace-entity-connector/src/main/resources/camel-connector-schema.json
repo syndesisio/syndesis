@@ -12,9 +12,9 @@
     "producerOnly":true,
     "lenientProperties":false,
     "javaType":"io.syndesis.connector.odata.ODataReplaceEntityComponent",
-    "groupId":"io.syndesis",
-    "artifactId":"odata-replace-entity-connector",
-    "version":"1.2-SNAPSHOT"
+    "groupId":"io.syndesis.connector",
+    "artifactId":"connector-odata-replace",
+    "version":"1.3-SNAPSHOT"
   },
   "componentProperties":{
     

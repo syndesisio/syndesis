@@ -19,14 +19,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>odata-connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-odata-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>odata-model</artifactId>
-  <name>Connectors :: OData :: Model</name>
-  <description>OData Model used by OData connectors</description>
+  <artifactId>connector-odata-model</artifactId>
+  <name>Connector :: OData :: Model</name>
+  <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

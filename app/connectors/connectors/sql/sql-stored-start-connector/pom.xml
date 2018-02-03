@@ -19,14 +19,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>sql-connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-sql-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>sql-stored-start-connector</artifactId>
+  <artifactId>connector-sql-stored-start</artifactId>
   <packaging>jar</packaging>
-  <name>Connectors :: SQL :: Stored Proc Start Connector</name>
+  <name>Connector :: SQL :: Stored Procedure Start</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -63,9 +64,10 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-connector</artifactId>
     </dependency>
+
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>sql-common</artifactId>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql-common</artifactId>
       <version>${project.version}</version>
     </dependency>
 
