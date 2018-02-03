@@ -33,7 +33,11 @@ EOT
 }
 
 build::run() {
+    # Maven helper funcs
     source "$(basedir)/commands/util/maven_funcs"
+    # For killing pods:
+    source "$(basedir)/commands/util/openshift_funcs"
+
     call_maven "$(maven_args)"
 }
 
