@@ -102,6 +102,8 @@ order_modules() {
 }
 
 kill_pods() {
+    setup_oc
+
     for pod in $@; do
         if [ "${POD_MODULES/$pod/}" != "${POD_MODULES}" ]; then
             echo "Killing pods "$(oc get pod -o name | grep "syndesis-$pod")
