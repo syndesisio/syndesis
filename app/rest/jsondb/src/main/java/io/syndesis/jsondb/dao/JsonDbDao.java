@@ -17,6 +17,7 @@ package io.syndesis.jsondb.dao;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -125,10 +126,16 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     @Override
     public Set<String> fetchIds() {
         try {
+
             String json = jsondb.getAsString(getCollectionPath(), new GetOptions().depth(1));
-            Map<String,Boolean> map = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
-            return map.keySet()
-                 .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
+            if (json != null) {
+                Map<String,Boolean> map = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
+                return map.keySet()
+                     .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
+            } else {
+                return Collections.<String>emptySet();
+            }
+
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
