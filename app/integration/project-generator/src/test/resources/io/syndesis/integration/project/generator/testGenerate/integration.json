@@ -10,7 +10,7 @@
         "id" : "periodic-timer-action",
         "descriptor" : {
           "connectorId" : "timer",
-          "camelConnectorGAV" : "io.syndesis:timer-connector:${project.version}",
+          "camelConnectorGAV" : "io.syndesis.connector:connector-timer:${project.version}",
           "camelConnectorPrefix" : "periodic-timer-connector"
         },
         "actionType" : "connector",
@@ -26,13 +26,13 @@
             "id" : "periodic-timer-action",
             "descriptor" : {
               "connectorId" : "timer",
-              "camelConnectorGAV" : "io.syndesis:timer-connector:${project.version}",
+              "camelConnectorGAV" : "io.syndesis.connector:connector-timer:${project.version}",
               "camelConnectorPrefix" : "periodic-timer-connector"
             },
             "actionType" : "connector",
             "dependencies" : [ {
               "type" : "MAVEN",
-              "id" : "io.syndesis:timer-connector:${project.version}"
+              "id" : "io.syndesis.connector:connector-timer:${project.version}"
             } ]
           } ],
           "properties" : {
@@ -148,13 +148,13 @@
         "id" : "http-get-action",
         "descriptor" : {
           "connectorId" : "http",
-          "camelConnectorGAV" : "io.syndesis:http-get-connector:${project.version}",
+          "camelConnectorGAV" : "io.syndesis.connector:connector-http-get:${project.version}",
           "camelConnectorPrefix" : "http-get-connector"
         },
         "actionType" : "connector",
         "dependencies" : [ {
           "type" : "MAVEN",
-          "id" : "io.syndesis:http-get-connector:${project.version}"
+          "id" : "io.syndesis.connector:connector-http-get:${project.version}"
         } ]
       },
       "connection" : {
@@ -164,25 +164,25 @@
             "id" : "http-get-action",
             "descriptor" : {
               "connectorId" : "http",
-              "camelConnectorGAV" : "io.syndesis:http-get-connector:${project.version}",
+              "camelConnectorGAV" : "io.syndesis.connector:connector-http-get:${project.version}",
               "camelConnectorPrefix" : "http-get-connector"
             },
             "actionType" : "connector",
             "dependencies" : [ {
               "type" : "MAVEN",
-              "id" : "io.syndesis:http-get-connector:${project.version}"
+              "id" : "io.syndesis.connector:connector-http-get:${project.version}"
             } ]
           }, {
             "id" : "http-post-action",
             "descriptor" : {
               "connectorId" : "http",
-              "camelConnectorGAV" : "io.syndesis:http-post-connector:${project.version}",
+              "camelConnectorGAV" : "io.syndesis.connector:connector-http-post:${project.version}",
               "camelConnectorPrefix" : "http-post-connector"
             },
             "actionType" : "connector",
             "dependencies" : [ {
               "type" : "MAVEN",
-              "id" : "io.syndesis:http-post-connector:${project.version}"
+              "id" : "io.syndesis.connector:connector-http-post:${project.version}"
             } ]
           } ],
           "properties" : {
