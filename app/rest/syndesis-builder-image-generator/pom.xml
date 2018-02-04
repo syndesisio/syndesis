@@ -98,12 +98,12 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-project-generator</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-api</artifactId>
     </dependency>
 

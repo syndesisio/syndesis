@@ -843,25 +843,25 @@
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
+        <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-api</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
+        <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-project-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
+        <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-component-proxy</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
+        <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-runtime</artifactId>
         <version>${project.version}</version>
       </dependency>

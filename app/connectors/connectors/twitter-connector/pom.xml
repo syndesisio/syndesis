@@ -53,9 +53,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>

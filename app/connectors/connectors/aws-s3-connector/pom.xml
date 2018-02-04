@@ -53,7 +53,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
     <dependency>
@@ -84,7 +84,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
       <scope>test</scope>
     </dependency>
