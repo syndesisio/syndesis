@@ -15,7 +15,21 @@
  */
 package io.syndesis.rest.metrics.collector;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 public interface RawMetricsHandler {
-    void handle(RawMetrics rawMetrics);
+
+    void persist(RawMetrics rawMetrics);
+
+    Map<String,RawMetrics> getRawMetrics(String integrationId) throws IOException;
+
+    void curate(String integrationId, Map<String,RawMetrics> metrics,
+            Set<String> livePodIds) throws IOException;
+
+    void curate(Set<String> activeIntegrationIds)
+            throws IOException, JsonMappingException;
 }
