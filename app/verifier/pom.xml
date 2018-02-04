@@ -42,6 +42,96 @@
 
   <dependencies>
 
+    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
+
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-verifier</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-http-get</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-http4-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-twitter</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql-component</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql-start</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql-stored</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql-stored-start</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-sql-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- ===================================================================================== -->
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -178,105 +268,7 @@
       <artifactId>camel-core</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>io.syndesis.common</groupId>
-      <artifactId>common-model</artifactId>
-    </dependency>
 
-    <dependency>
-      <groupId>io.syndesis.common</groupId>
-      <artifactId>common-util</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-verifier</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-http-get</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-http4-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-twitter</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-     <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-salesforce</artifactId>
-      <version>${camel.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-component</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-start</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-stored</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-stored-start</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
 
     <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
     <dependency>
@@ -416,6 +408,15 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-management-maven-plugin</artifactId>
+        <configuration>
+          <requireManagement>
+            <allowExclusions>true</allowExclusions>
+          </requireManagement>
+        </configuration>
+      </plugin>
 
     </plugins>
   </build>

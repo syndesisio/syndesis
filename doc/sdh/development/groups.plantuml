@@ -1,35 +1,29 @@
 @startuml
 ' tag::uml[]
-package "fabric8-build" {
 
-  package "Config" {
-    [K8s Resource]
-    [Docker Image]
-  }
-
-  package "Generator" {
-    [Generator Maven] --> [Generator API]
-    [Generator API] --> [Docker Image]
-  }
-
-  package "Enricher" {
-    [Enricher Maven] --> [Enricher API]
-    [Enricher API] --> [K8s Resource]
-    [Enricher API] --> [Docker Image]
-  }
-
-  [Profile] --> [Generator API]
-  [Profile] --> [Enricher API]
+package "Design" {
+  [Rest]
+  [Meta]
 }
 
-cloud {
-  [docker-maven-plugin] --> [Generator Maven]
+package "Runtime" {
+  [Integration]
 }
 
-cloud {
-  [fabric8-maven-plugin] --> [Generator Maven]
-  [fabric8-maven-plugin] --> [Enricher Maven]
-  [fabric8-maven-plugin] --> [Profile]
-}
+[Common]
+[Connector] --> [Common]
+[Extension] --> [Common]
+
+[Integration] --> [Common]
+[Integration] --> [Extension]
+[Integration] --> [Connector]
+
+[Rest] --> [Common]
+[Rest] --> [Extension]
+[Rest] --> [Integration]
+
+[Meta] --> [Common]
+[Meta] --> [Connector]
+
 ' end::uml[]
 @enduml
