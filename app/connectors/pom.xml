@@ -19,16 +19,16 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>syndesis-connectors-project</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <groupId>io.syndesis.connector</groupId>
+  <artifactId>connector-parent</artifactId>
+  <version>1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Connectors</name>
-  <description>Connectors for Syndesis</description>
+  <name>Connector</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,10 +62,22 @@
     <module>connector-verifier</module>
     <module>components</module>
     <module>connectors-maven-plugin</module>
-    <module>connectors</module>
     <module>connectors-catalog</module>
     <module>connector-verify</module>
     <module>catalog</module>
+
+    <module>connectors/aws-s3-connector</module>
+    <module>connectors/http</module>
+    <module>connectors/timer/timer-connector</module>
+    <module>connectors/twitter-connector</module>
+    <module>connectors/salesforce</module>
+    <module>connectors/sql</module>
+    <module>connectors/rest/rest-swagger-connector</module>
+    <module>connectors/day-trade</module>
+    <module>connectors/trade-insight</module>
+    <module>connectors/jms/activemq-connectors</module>
+    <module>connectors/jms/amqp-connector</module>
+    <module>connectors/odata</module>
   </modules>
 
   <dependencyManagement>

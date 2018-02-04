@@ -16,55 +16,46 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>syndesis-rest-parent</artifactId>
-    <groupId>io.syndesis</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.rest</groupId>
+    <artifactId>rest-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  
-  <artifactId>metrics-collector</artifactId>
-  <name>REST :: Metrics Collector</name>
+
+  <artifactId>rest-metrics-jsondb</artifactId>
+  <name>REST :: Metrics :: JsonDB</name>
 
   <dependencies>
 
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>core</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>model</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>controllers</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-jsondb</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>jsondb</artifactId>
-    </dependency>
-
-
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>dao</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>openshift</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-dao</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-model</artifactId>
     </dependency>
+
+    <!-- ==================================================================================== -->
 
     <dependency>
       <groupId>io.fabric8</groupId>
@@ -102,17 +93,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-
-
-    <dependency>
       <groupId>org.jolokia</groupId>
       <artifactId>jolokia-client-java</artifactId>
     </dependency>
@@ -123,15 +103,15 @@
     </dependency>
 
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
@@ -141,10 +121,15 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>findbugs-annotations</artifactId>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -162,65 +147,22 @@
     </dependency>
 
     <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.jdbi</groupId>
       <artifactId>jdbi</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
-
   </dependencies>
-
-  <build>
-
-    <plugins>
-
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>io.syndesis:github</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:controllers</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:openshift</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:jsondb</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.hibernate:hibernate-validator</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.glassfish:javax.el</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>commons-logging:commons-logging</ignoredUnusedDeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.apache.httpcomponents:httpclient</ignoredUsedUndeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-          <ignoredUsedUndeclaredDependencies>
-            <ignoredUsedUndeclaredDependency>org.apache.camel:camel-core</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.apache.httpcomponents:httpcore</ignoredUsedUndeclaredDependency>
-
-            <ignoredUsedUndeclaredDependency>org.apache.httpcomponents:httpclient-osgi</ignoredUsedUndeclaredDependency>
-            <ignoredUsedUndeclaredDependency>org.hibernate.javax.persistence:hibernate-jpa-2.1-api</ignoredUsedUndeclaredDependency>
-
-            <!-- if declared complains about being unused -->
-            <ignoredUnusedDeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.springframework:spring-web</ignoredUnusedDeclaredDependency>
-          </ignoredUsedUndeclaredDependencies>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.ning.maven.plugins</groupId>
-        <artifactId>maven-dependency-versions-check-plugin</artifactId>
-        <configuration>
-          <exceptions>
-            <exception>
-              <groupId>com.fasterxml.jackson.core</groupId>
-              <artifactId>jackson-annotations</artifactId>
-              <expectedVersion>2.8.4</expectedVersion>
-              <resolvedVersion>2.8.8</resolvedVersion>
-            </exception>
-          </exceptions>
-        </configuration>
-      </plugin>
-
-    </plugins>
-
-  </build>
 </project>

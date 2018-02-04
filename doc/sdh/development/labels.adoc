@@ -36,7 +36,7 @@ There must be only at most one label from the "Exclusive" groups.
 | Day labels for tagging an Epic to talk about at specific day in the daily meeting
 |
 
-| **module/**
+| **group/**
 | Internal Syndesis modules
 |
 
@@ -60,75 +60,75 @@ There must be only at most one label from the "Exclusive" groups.
 
 Each label group serves a particular purpose, and for each issue and PR, it should be considered whether a label from a group applies.
 
-### Modules
+### Groups
 
-Labels from this group reference our application components like "rest", "ui", "uxd" or "connectors".
-Each sub-team is responsible for one or more modules, and every module has an 'owning' team.
-That does not mean that members of other teams are allowed to work on such modules.
+Labels from this group reference our application groups like "rest", "ui" or "connector".
+Each sub-team is responsible for one or more group, and every group has an 'owning' team.
+That does not mean that members of other teams are not allowed to work on such groups.
 Contrary, this is even encouraged.
 But its just there so that teams can filter on issues and PRs which are relevant to them.
 
-An issue can carry many module labels.
-Especially Epics will carry more than such label as they touch more than one module (otherwise it wouldn't be an epic).
+An issue can carry many group labels.
+Especially Epics will carry more than such label as they touch more than one group (otherwise it wouldn't be an epic).
 
 [cols="3,15",options="header"]
 |===
-|Module
-|Descriptions
+|Group
+|Description
 
-| **module/connectors**
+| **group/connector**
 {set:cellbgcolor:#b39d9e}
 | Supported camel connectors
 {set:cellbgcolor!}
 
-| **module/deploy**
+| **group/deploy**
 {set:cellbgcolor:#ab947d}
 | OpenShift templates
 {set:cellbgcolor!}
 
-| [white]**module/rest**
+| [white]**group/rest**
 {set:cellbgcolor:#2e9288}
 | REST backend for managing integrations
 {set:cellbgcolor!}
 
-| [white]**module/runtime**
+| [white]**group/integration**
 {set:cellbgcolor:#657c9a}
 | Library used in the the integration runtimes
 {set:cellbgcolor!}
 
-| [white]**module/s2i**
+| [white]**group/s2i**
 {set:cellbgcolor:#2b313c}
 | S2I base image for building integrations
 {set:cellbgcolor!}
 
-| **module/tests**
+| **group/test**
 {set:cellbgcolor:#91ac83}
 | System tests for testing the whole applications
 {set:cellbgcolor!}
 
-| **module/ui**
+| **group/ui**
 {set:cellbgcolor:#dce6f0}
 | User interface SPA, talking to the REST backend
 {set:cellbgcolor!}
 
-| **module/uxd**
+| **group/uxd**
 {set:cellbgcolor:#fdc5d8}
 | User experience (UX) designs
 {set:cellbgcolor!}
 
-| **module/verifier**
+| **group/meta**
 {set:cellbgcolor:#c6d74b}
 | Service for connector meta-data and verification of connections
 {set:cellbgcolor!}
 
-| **module/extension**
+| **group/extension**
 {set:cellbgcolor:#03ba7a}
 | Tools for developing Syndesis extensions
 {set:cellbgcolor!}
 
-| **module/core**
+| **group/common**
 {set:cellbgcolor:#d63f0c}
-| Syndesis core module
+| Syndesis shared common module
 {set:cellbgcolor!}
 |===
 

@@ -109,11 +109,11 @@
   },
   "actions": [
     {
-      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-0",
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-0",
       "name": "List all tasks",
       "description": "Fetches all tasks from the database",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -134,11 +134,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-1",
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-1",
       "name": "Create new task",
       "description": "Stores new task in the database",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -160,11 +160,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-2",
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-2",
       "name": "Fetch task",
       "description": "Fetches task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -186,11 +186,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-3",
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-3",
       "name": "Update task",
       "description": "Updates task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",
@@ -212,11 +212,11 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-4",
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-4",
       "name": "Delete task",
       "description": "Deletes task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "json-schema",

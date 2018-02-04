@@ -84,7 +84,7 @@ public class ProjectGeneratorTestSupport {
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis:timer-connector:" + SYNDESIS_CONNECTORS_VERSION)
+                .camelConnectorGAV("io.syndesis.connector:connector-timer:" + SYNDESIS_CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -106,7 +106,7 @@ public class ProjectGeneratorTestSupport {
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis:http-get-connector:" + SYNDESIS_CONNECTORS_VERSION)
+                .camelConnectorGAV("io.syndesis.connector:connector-http-get:" + SYNDESIS_CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -116,7 +116,7 @@ public class ProjectGeneratorTestSupport {
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis:http-post-connector:" + SYNDESIS_CONNECTORS_VERSION)
+                .camelConnectorGAV("io.syndesis.connector:connector-http-post:" + SYNDESIS_CONNECTORS_VERSION)
                 .build())
             .build();
 
@@ -190,7 +190,7 @@ public class ProjectGeneratorTestSupport {
                     .secret(true)
                     .build())
             .componentScheme("twitter")
-            .addDependency(Dependency.maven("io.syndesis:integration-component-proxy:" + SYNDESIS_CONNECTORS_VERSION))
+            .addDependency(Dependency.maven("io.syndesis.integration:integration-component-proxy:" + SYNDESIS_CONNECTORS_VERSION))
             .addDependency(Dependency.maven("org.apache.camel:camel-twitter:" + CAMEL_VERSION))
             .addAction(TWITTER_MENTION_ACTION)
             .build();

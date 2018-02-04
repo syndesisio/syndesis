@@ -99,7 +99,7 @@ jobs:
       - <<: *push_images
 
   # Connectors depends on integration, mount workspace .m2
-  connectors:
+  connector:
     <<: *job_defaults
     environment:
       <<: *common_env
@@ -125,7 +125,7 @@ jobs:
 
 
   # Verifier depends on connectors, mount workspace .m2
-  verifier:
+  meta:
     <<: *job_defaults
     environment:
       DOCKER_IMAGES: syndesis-verifier
@@ -153,7 +153,7 @@ jobs:
           - ~/.m2
 
   # Core has no dependencies, just load cache
-  core:
+  common:
     <<: *job_defaults
     environment:
       <<: *common_env
@@ -376,23 +376,23 @@ workflows:
               only: master
       - license-check
       - ui
-      - core
+      - common
       - extension:
           requires:
-           - core
+           - common
       - integration:
           requires:
             - extension
-      - connectors:
+      - connector:
           requires:
             - integration
-      - verifier:
+      - meta:
           requires:
-            - connectors
+            - connector
       - rest:
           requires:
             - integration
-            - connectors
+            - connector
       - s2i:
           requires:
             - rest

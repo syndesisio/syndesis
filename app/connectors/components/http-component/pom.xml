@@ -17,16 +17,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>components</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-component-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>http-component</artifactId>
-  <name>Syndesis Connectors :: Components :: HTTP Component</name>
-  <description>HTTP Component</description>
+  <artifactId>connector-component-http</artifactId>
+  <name>Connector :: Component :: HTTP</name>
   <packaging>jar</packaging>
 
   <dependencyManagement>

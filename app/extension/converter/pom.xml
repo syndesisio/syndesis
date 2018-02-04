@@ -18,9 +18,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-parent</artifactId>
-        <groupId>io.syndesis</groupId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,13 +31,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>model</artifactId>
+            <groupId>io.syndesis.common</groupId>
+            <artifactId>common-model</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>core</artifactId>
+            <groupId>io.syndesis.common</groupId>
+            <artifactId>common-util</artifactId>
         </dependency>
 
         <dependency>
@@ -49,7 +50,7 @@
         <!-- The extension-api module is needed only for tests -->
         <!-- Transitive dependency on camel-core must be removed if moving this in compile scope -->
         <dependency>
-            <groupId>io.syndesis</groupId>
+            <groupId>io.syndesis.extension</groupId>
             <artifactId>extension-api</artifactId>
             <scope>test</scope>
         </dependency>

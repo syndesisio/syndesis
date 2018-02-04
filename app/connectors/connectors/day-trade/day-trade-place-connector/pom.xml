@@ -17,16 +17,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>day-trade-connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-day-trade-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>day-trade-place-connector</artifactId>
-  <name>Connectors :: Day Trade :: Place Connector</name>
-  <description>Day Trade Place Connector</description>
+  <artifactId>connector-day-trade-place</artifactId>
+  <name>Connector :: Day Trade :: Place</name>
   <packaging>jar</packaging>
 
   <dependencyManagement>

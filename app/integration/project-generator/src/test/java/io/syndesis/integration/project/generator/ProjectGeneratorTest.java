@@ -164,10 +164,11 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
 
         Path runtimeDir = generate(deployment, configuration);
 
+        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+
         assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
         assertFileContents(configuration, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
         assertFileContents(configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
-        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
         assertFileContents(configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
 
         assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();

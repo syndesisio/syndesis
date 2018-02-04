@@ -14,42 +14,42 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project 
-  xmlns="http://maven.apache.org/POM/4.0.0" 
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-connectors-project</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>connectors-catalog</artifactId>
-  <name>Connectors :: Catalog</name>
+  <artifactId>connector-catalog</artifactId>
+  <name>Connector :: Catalog</name>
   <packaging>jar</packaging>
-  
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>twitter-connector</artifactId>
+      <artifactId>connector-twitter</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>aws-s3-connector</artifactId>
+      <artifactId>connector-aws-s3</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>amqp-connector</artifactId>
+      <artifactId>connector-amqp</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
