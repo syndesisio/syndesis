@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-5000-g1af6038c8,</span>
+<span id="revnumber">version 1.1.3-5001-g88bee9750,</span>
 <span id="revdate">2018-02-04</span>
 </div>
 <div id="toc" class="toc2">
@@ -2110,18 +2110,20 @@ E.g. its a <code>io.syndesis.connector</code>, <em>not</em> <code>io.syndesis.co
 </li>
 <li>
 <p>Each Maven module is prefixed with the last part of the group name.
-E.g. the directory <code>app/integration/api</code> holds a Maven module for the the Maven group <code>io.syndesis.integration</code>, and the module is called <code>integration-api</code>.</p>
+E.g. the directory <code>app/integration/api</code> holds a Maven module for the the Maven group <code>io.syndesis.integration</code>, and the module&#8217;s artefactId is <code>integration-api</code>.</p>
 </li>
 <li>
 <p>A module&#8217;s directory name is directly reflected as the last part of the Maven module name.
-If the Maven module name consists of multiple parts (e.g. like for <code>project-generator</code> in directory <code>app/integration</code>), then the corresponding directory is also a concatenated word <code>integration/project-generator</code>.</p>
+If the Maven module name consists of multiple parts (e.g. artifact <code>integration-project-generator</code>), then the corresponding directory is also a concatenated word (like in <code>integration/project-generator</code>).
+Multipart names should be the exception, though.</p>
 </li>
 <li>
-<p>There should be only one level deep modules, so each Maven group directory holds all Maven module directory flat.</p>
+<p>There should be only one level deep modules, so each Maven group directory holds all Maven modules flat.</p>
 </li>
 <li>
 <p>Each module has a <strong>single</strong> top-level package, reflecting the Maven module name.
-E.g. for the Maven module <code>common-util</code> in group <code>io.syndesis.common</code> has a single top-level package <code>io.syndesis.common.util</code></p>
+E.g. for the Maven module <code>common-util</code> in group <code>io.syndesis.common</code> has a single top-level package <code>io.syndesis.common.util</code>
+This top-level package should reflect the artefact name, with dashes replaced by dots.</p>
 </li>
 </ul>
 </div>
@@ -2982,8 +2984,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-5000-g1af6038c8<br>
-Last updated 2018-02-04 21:43:51 UTC
+Version 1.1.3-5001-g88bee9750<br>
+Last updated 2018-02-04 22:11:30 UTC
 </div>
 </div>
 </body>
