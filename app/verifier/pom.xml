@@ -24,8 +24,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>syndesis-verifier</artifactId>
-  <name>Verifier</name>
+  <groupId>io.syndesis.meta</groupId>
+  <artifactId>meta</artifactId>
+  <name>Meta</name>
 
   <dependencyManagement>
     <dependencies>

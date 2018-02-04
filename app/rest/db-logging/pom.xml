@@ -16,46 +16,41 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>syndesis-rest-parent</artifactId>
-    <groupId>io.syndesis</groupId>
+    <groupId>io.syndesis.rest</groupId>
+    <artifactId>rest-parent</artifactId>
     <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 
-  <artifactId>db-logging</artifactId>
-  <name>REST :: Database Based Logging</name>
+  <artifactId>rest-logging-jsondb</artifactId>
+  <name>REST :: Logging :: JsonDb</name>
 
 
   <dependencies>
 
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
-
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-util</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>controllers</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-endpoint</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>rest</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-jsondb</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>jsondb</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-openshift</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>openshift</artifactId>
-    </dependency>
-
+    <!-- ================================================================================ -->
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-client</artifactId>
@@ -183,67 +178,4 @@
     </dependency>
 
   </dependencies>
-
-  <build>
-
-    <plugins>
-
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>io.syndesis:github</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:controllers</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>io.syndesis:openshift</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-          <ignoredUsedUndeclaredDependencies>
-            <!-- if declared complains about being unused -->
-            <ignoredUnusedDeclaredDependency>com.google.code.findbugs:findbugs-annotations</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>org.springframework:spring-web</ignoredUnusedDeclaredDependency>
-          </ignoredUsedUndeclaredDependencies>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>com.ning.maven.plugins</groupId>
-        <artifactId>maven-dependency-versions-check-plugin</artifactId>
-        <configuration>
-          <exceptions>
-            <exception>
-              <groupId>com.fasterxml.jackson.core</groupId>
-              <artifactId>jackson-annotations</artifactId>
-              <expectedVersion>2.8.4</expectedVersion>
-              <resolvedVersion>2.8.8</resolvedVersion>
-            </exception>
-          </exceptions>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <ignoredDependencies>
-
-            <!-- Ignore the dup resources/catalog.cat -->
-            <dependency>
-              <groupId>io.atlasmap</groupId>
-              <artifactId>atlas-java-model</artifactId>
-            </dependency>
-            <dependency>
-              <groupId>io.atlasmap</groupId>
-              <artifactId>atlas-json-model</artifactId>
-            </dependency>
-            <dependency>
-              <groupId>io.atlasmap</groupId>
-              <artifactId>atlas-xml-model</artifactId>
-            </dependency>
-          </ignoredDependencies>
-        </configuration>
-      </plugin>
-
-
-    </plugins>
-
-  </build>
 </project>

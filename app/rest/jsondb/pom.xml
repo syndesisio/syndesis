@@ -17,13 +17,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>syndesis-rest-parent</artifactId>
+    <groupId>io.syndesis.rest</groupId>
+    <artifactId>rest-parent</artifactId>
     <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>jsondb</artifactId>
+  <artifactId>rest-jsondb</artifactId>
   <name>REST :: JsonDB</name>
   <packaging>jar</packaging>
 
@@ -41,8 +41,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>dao</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-dao</artifactId>
     </dependency>
 
     <!-- ===================================================================================== -->

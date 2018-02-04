@@ -16,15 +16,15 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>syndesis-rest-parent</artifactId>
-    <groupId>io.syndesis</groupId>
+    <groupId>io.syndesis.rest</groupId>
+    <artifactId>rest-parent</artifactId>
     <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>rest</artifactId>
-  <name>REST :: REST</name>
+  <artifactId>rest-endpoint</artifactId>
+  <name>REST :: Endpoint</name>
 
 
   <dependencies>
@@ -42,37 +42,33 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>dao</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-dao</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>openshift</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-openshift</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>controllers</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-verifier</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>verifier</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>inspector</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-inspector</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>credential</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-credential</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>connector-generator</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-connector-generator</artifactId>
     </dependency>
 
     <dependency>

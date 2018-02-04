@@ -26,7 +26,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>system-tests-project</artifactId>
+  <groupId>io.syndesis.test</groupId>
+  <artifactId>test</artifactId>
   <name>Tests</name>
   <inceptionYear>2016</inceptionYear>
 

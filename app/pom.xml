@@ -627,6 +627,165 @@
         <scope>import</scope>
       </dependency>
 
+      <!-- ============================================================== -->
+      <!-- === Internal Dependencies -->
+
+      <!-- ::::::::::: common :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: rest :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-connector-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-controller</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-credential</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-logging-jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-filestore</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-inspector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-metrics-jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-openshift</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-endpoint</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-verifier</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: integration :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-project-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-component-proxy</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: extension :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-annotation-processor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-bom</artifactId>
+        <type>pom</type>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-converter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: connector :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-catalog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ============================================== -->
 
       <!-- TODO: Maybe import BOM ? -->
       <dependency>
@@ -798,73 +957,9 @@
         </exclusions>
       </dependency>
 
-      <!-- Internal Dependencies -->
+      <!-- ========================================== -->
 
-      <dependency>
-        <groupId>io.syndesis.common</groupId>
-        <artifactId>common-util</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.common</groupId>
-        <artifactId>common-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>dao</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>filestore</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>jsondb</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>rest</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>db-logging</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-project-generator</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-component-proxy</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-runtime</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+      <!-- === Atlasmap -->
 
       <dependency>
         <groupId>io.syndesis</groupId>
@@ -872,11 +967,6 @@
         <version>${project.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>verifier</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>io.syndesis</groupId>
@@ -885,130 +975,75 @@
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>openshift</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>controllers</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>inspector</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>credential</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>connector-generator</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-catalog</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.extension</groupId>
-        <artifactId>extension-annotation-processor</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.extension</groupId>
-        <artifactId>extension-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.extension</groupId>
-        <artifactId>extension-bom</artifactId>
-        <type>pom</type>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.extension</groupId>
-        <artifactId>extension-converter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-core</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-model</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-core</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-module</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-json-module</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-json-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-xml-module</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-xml-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-model</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>metrics-collector</artifactId>
-        <version>${project.version}</version>
       </dependency>
 
     </dependencies>

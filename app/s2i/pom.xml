@@ -25,15 +25,11 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
+  <groupId>io.syndesis.s2i</groupId>
   <artifactId>s2i</artifactId>
   <version>1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>S2I</name>
-
-  <properties>
-    <maven.repo.local></maven.repo.local>
-  </properties>
 
   <repositories>
     <repository>
@@ -48,8 +44,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>syndesis-builder-image-generator</artifactId>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-builder-image-generator</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -72,12 +68,12 @@
           <skip>false</skip>
           <artifactItems>
             <artifactItem>
-              <groupId>io.syndesis</groupId>
-              <artifactId>syndesis-builder-image-generator</artifactId>
+              <groupId>io.syndesis.rest</groupId>
+              <artifactId>rest-builder-image-generator</artifactId>
               <version>${project.version}</version>
               <type>jar</type>
               <outputDirectory>${project.build.directory}</outputDirectory>
-              <destFileName>syndesis-builder-image-generator.jar</destFileName>
+              <destFileName>rest-builder-image-generator.jar</destFileName>
             </artifactItem>
           </artifactItems>
         </configuration>
@@ -90,7 +86,6 @@
         <executions>
           <execution>
             <id>copy-resources</id>
-            <!-- here the phase you need -->
             <phase>validate</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -130,7 +125,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>syndesis-builder-image-generator</id>
+            <id>rest-builder-image-generator</id>
             <phase>package</phase>
             <goals>
               <goal>exec</goal>
@@ -139,7 +134,7 @@
               <executable>java</executable>
               <arguments>
                 <argument>-jar</argument>
-                <argument>${project.build.directory}/syndesis-builder-image-generator.jar</argument>
+                <argument>${project.build.directory}/rest-builder-image-generator.jar</argument>
                 <argument>--to=${basedir}/target/generated-sources/docker/m2/project</argument>
               </arguments>
             </configuration>

@@ -1,6 +1,7 @@
 [[development]]
-# Development Process
+# Syndesis Development
 
+include::groups.adoc[]
 include::labels.adoc[]
 include::local.adoc[]
 include::ui.adoc[]
