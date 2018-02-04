@@ -77,12 +77,14 @@ The directory name is reflected as the last name part.
 * All names (groups, modules, package) are using the *singular* form.
 E.g. its a `io.syndesis.connector`, _not_ `io.syndesis.connectors`.
 * Each Maven module is prefixed with the last part of the group name.
-E.g. the directory `app/integration/api` holds a Maven module for the the Maven group `io.syndesis.integration`, and the module is called `integration-api`.
+E.g. the directory `app/integration/api` holds a Maven module for the the Maven group `io.syndesis.integration`, and the module's artefactId is `integration-api`.
 * A module's directory name is directly reflected as the last part of the Maven module name.
-If the Maven module name consists of multiple parts (e.g. like for `project-generator` in directory `app/integration`), then the corresponding directory is also a concatenated word `integration/project-generator`.
-* There should be only one level deep modules, so each Maven group directory holds all Maven module directory flat.
+If the Maven module name consists of multiple parts (e.g. artifact `integration-project-generator`), then the corresponding directory is also a concatenated word (like in `integration/project-generator`). 
+Multipart names should be the exception, though.
+* There should be only one level deep modules, so each Maven group directory holds all Maven modules flat.
 * Each module has a *single* top-level package, reflecting the Maven module name.
 E.g. for the Maven module `common-util` in group `io.syndesis.common` has a single top-level package `io.syndesis.common.util`
+This top-level package should reflect the artefact name, with dashes replaced by dots.
 
 NOTE: Not every module has been already transformed to this scheme.
 This will happen step-by-step.
