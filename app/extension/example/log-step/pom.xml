@@ -19,12 +19,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.syndesis</groupId>
+    <groupId>io.syndesis.extension</groupId>
     <artifactId>extension-example-log-step</artifactId>
     <version>1.3-SNAPSHOT</version>
 
-    <name>Extension :: Examples :: Log Step</name>
-    <description>syndesis :: ${project.artifactId}</description>
+    <name>Extension :: Example :: Log Step</name>
+    <description>Syndesis :: ${project.name}</description>
 
     <!-- Metadata need to publish to central -->
     <url>https://syndesis.io/</url>
@@ -84,7 +84,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.syndesis</groupId>
+                <groupId>io.syndesis.extension</groupId>
                 <artifactId>extension-bom</artifactId>
                 <version>${syndesis.version}</version>
                 <type>pom</type>
@@ -97,16 +97,16 @@
 
         <!-- annotation processing -->
         <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>extension-annotation-processor</artifactId>
-            <optional>true</optional>
+          <groupId>io.syndesis.extension</groupId>
+          <artifactId>extension-annotation-processor</artifactId>
+          <optional>true</optional>
         </dependency>
 
         <!-- runtime -->
         <dependency>
-            <groupId>io.syndesis</groupId>
-            <artifactId>extension-api</artifactId>
-            <scope>provided</scope>
+          <groupId>io.syndesis.extension</groupId>
+          <artifactId>extension-api</artifactId>
+          <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -132,7 +132,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.syndesis</groupId>
+                <groupId>io.syndesis.extension</groupId>
                 <artifactId>extension-maven-plugin</artifactId>
                 <version>${syndesis.version}</version>
                 <executions>

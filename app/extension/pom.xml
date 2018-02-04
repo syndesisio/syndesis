@@ -23,11 +23,10 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
+  <groupId>io.syndesis.extension</groupId>
   <artifactId>extension-parent</artifactId>
   <packaging>pom</packaging>
-
-  <name>Extension :: Parent</name>
+  <name>Extension</name>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

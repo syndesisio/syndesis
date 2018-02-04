@@ -672,7 +672,7 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.extension</groupId>
       <artifactId>extension-converter</artifactId>
     </dependency>
 

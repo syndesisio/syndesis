@@ -56,9 +56,10 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.extension</groupId>
       <artifactId>extension-api</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>integration-component-proxy</artifactId>
