@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-4986-g4579b3638,</span>
+<span id="revnumber">version 1.1.3-5000-g1af6038c8,</span>
 <span id="revdate">2018-02-04</span>
 </div>
 <div id="toc" class="toc2">
@@ -585,41 +585,46 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 </ul>
 </li>
-<li><a href="#development">3. Development Process</a>
+<li><a href="#development">3. Syndesis Development</a>
 <ul class="sectlevel2">
-<li><a href="#dev-labels">3.1. Issue Labels</a>
+<li><a href="#dev-groups">3.1. Maven Groups</a>
 <ul class="sectlevel3">
-<li><a href="#_modules">3.1.1. Modules</a></li>
-<li><a href="#_categories">3.1.2. Categories</a></li>
-<li><a href="#_notification">3.1.3. Notification</a></li>
-<li><a href="#_external_references">3.1.4. External references</a></li>
-<li><a href="#_daily_meeting_labels">3.1.5. Daily Meeting Labels</a></li>
-<li><a href="#_status">3.1.6. Status</a></li>
+<li><a href="#_naming_conventions">3.1.1. Naming Conventions</a></li>
 </ul>
 </li>
-<li><a href="#dev-local">3.2. Local Development</a>
+<li><a href="#dev-labels">3.2. Issue Labels</a>
 <ul class="sectlevel3">
-<li><a href="#_requirements">3.2.1. Requirements</a></li>
-<li><a href="#_first_time_setup">3.2.2. First-Time Setup</a></li>
-<li><a href="#_day_to_day">3.2.3. Day-to-Day</a></li>
+<li><a href="#_groups">3.2.1. Groups</a></li>
+<li><a href="#_categories">3.2.2. Categories</a></li>
+<li><a href="#_notification">3.2.3. Notification</a></li>
+<li><a href="#_external_references">3.2.4. External references</a></li>
+<li><a href="#_daily_meeting_labels">3.2.5. Daily Meeting Labels</a></li>
+<li><a href="#_status">3.2.6. Status</a></li>
 </ul>
 </li>
-<li><a href="#dev-ui">3.3. UI</a>
+<li><a href="#dev-local">3.3. Local Development</a>
 <ul class="sectlevel3">
-<li><a href="#_install_dependencies">3.3.1. Install Dependencies</a></li>
-<li><a href="#_start_up_the_app">3.3.2. Start up the App</a></li>
-<li><a href="#_open_in_your_browser">3.3.3. Open in Your Browser</a></li>
-<li><a href="#_running_tests">3.3.4. Running Tests</a></li>
-<li><a href="#_running_linter">3.3.5. Running Linter</a></li>
-<li><a href="#_code_documentation">3.3.6. Code Documentation</a></li>
-<li><a href="#_technology_stack">3.3.7. Technology Stack</a></li>
+<li><a href="#_requirements">3.3.1. Requirements</a></li>
+<li><a href="#_first_time_setup">3.3.2. First-Time Setup</a></li>
+<li><a href="#_day_to_day">3.3.3. Day-to-Day</a></li>
 </ul>
 </li>
-<li><a href="#dev-troubleshooting">3.4. Troubleshooting</a>
+<li><a href="#dev-ui">3.4. UI</a>
 <ul class="sectlevel3">
-<li><a href="#_ui_dependency_issues">3.4.1. UI Dependency Issues</a></li>
-<li><a href="#_vm_trouble">3.4.2. VM Trouble</a></li>
-<li><a href="#_still_having_trouble">3.4.3. Still Having Trouble?</a></li>
+<li><a href="#_install_dependencies">3.4.1. Install Dependencies</a></li>
+<li><a href="#_start_up_the_app">3.4.2. Start up the App</a></li>
+<li><a href="#_open_in_your_browser">3.4.3. Open in Your Browser</a></li>
+<li><a href="#_running_tests">3.4.4. Running Tests</a></li>
+<li><a href="#_running_linter">3.4.5. Running Linter</a></li>
+<li><a href="#_code_documentation">3.4.6. Code Documentation</a></li>
+<li><a href="#_technology_stack">3.4.7. Technology Stack</a></li>
+</ul>
+</li>
+<li><a href="#dev-troubleshooting">3.5. Troubleshooting</a>
+<ul class="sectlevel3">
+<li><a href="#_ui_dependency_issues">3.5.1. UI Dependency Issues</a></li>
+<li><a href="#_vm_trouble">3.5.2. VM Trouble</a></li>
+<li><a href="#_still_having_trouble">3.5.3. Still Having Trouble?</a></li>
 </ul>
 </li>
 </ul>
@@ -1986,10 +1991,158 @@ Just download this <a href="https://raw.githubusercontent.com/syndesisio/syndesi
 </div>
 </div>
 <div class="sect1">
-<h2 id="development">3. Development Process</h2>
+<h2 id="development">3. Syndesis Development</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="dev-labels">3.1. Issue Labels</h3>
+<h3 id="dev-groups">3.1. Maven Groups</h3>
+<div class="paragraph">
+<p>Syndesis uses <a href="http://maven.apache.org/">Maven</a> as build tool.
+Maven groups are used to separate the various Syndesis parts.</p>
+</div>
+<div class="paragraph">
+<p>In details Syndesis consists of the following groups:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 11.5384%;">
+<col style="width: 19.2307%;">
+<col style="width: 30.7692%;">
+<col style="width: 38.4617%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Group</th>
+<th class="tableblock halign-left valign-top">Maven</th>
+<th class="tableblock halign-left valign-top">Docker Image</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.common</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Syndesis shared common module</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>connector</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.connector</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported camel connectors</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>rest</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.rest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-rest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REST backend for managing integrations. This is the main sever.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>integration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.integration</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Library used in the the integration runtimes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>s2i</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.s2i</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-s2i</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S2I base image for building integrations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>ui</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.ui</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-ui</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User interface SPA, talking to the REST backend</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>meta</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.meta</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-verifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service for connector meta-data and verification of connections</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>extension</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.extension</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Library and API for developing Syndesis extensions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>test</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.test</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System tests for testing the whole applications</p></td>
+</tr>
+</tbody>
+</table>
+<div class="imageblock">
+<div class="content">
+<img src="syndesis-groups.png" alt="syndesis groups" width="374" height="341">
+</div>
+<div class="title">Figure 1. Group dependencies</div>
+</div>
+<div class="sect3">
+<h4 id="_naming_conventions">3.1.1. Naming Conventions</h4>
+<div class="paragraph">
+<p>The following conventions are used for naming directories, modules and Java packages.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+These conventions are mandatory and should be also checked for when doing pull request reviews.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each directory directly below <code>app/</code> is specific for a certain Maven group.
+E.g. the directory <code>app/extension</code> is reserved for all Maven modules belonging to the Maven group <code>io.syndesis.extension</code>.
+The directory name is reflected as the last name part.</p>
+</li>
+<li>
+<p>All names (groups, modules, package) are using the <strong>singular</strong> form.
+E.g. its a <code>io.syndesis.connector</code>, <em>not</em> <code>io.syndesis.connectors</code>.</p>
+</li>
+<li>
+<p>Each Maven module is prefixed with the last part of the group name.
+E.g. the directory <code>app/integration/api</code> holds a Maven module for the the Maven group <code>io.syndesis.integration</code>, and the module is called <code>integration-api</code>.</p>
+</li>
+<li>
+<p>A module&#8217;s directory name is directly reflected as the last part of the Maven module name.
+If the Maven module name consists of multiple parts (e.g. like for <code>project-generator</code> in directory <code>app/integration</code>), then the corresponding directory is also a concatenated word <code>integration/project-generator</code>.</p>
+</li>
+<li>
+<p>There should be only one level deep modules, so each Maven group directory holds all Maven module directory flat.</p>
+</li>
+<li>
+<p>Each module has a <strong>single</strong> top-level package, reflecting the Maven module name.
+E.g. for the Maven module <code>common-util</code> in group <code>io.syndesis.common</code> has a single top-level package <code>io.syndesis.common.util</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Not every module has been already transformed to this scheme.
+This will happen step-by-step.
+But for new groups and modules this scheme has to be followed.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dev-labels">3.2. Issue Labels</h3>
 <div class="paragraph">
 <p>We use GitHub labels to categorize epics, issues and tasks.
 They are the foundation of our process, so please use labels for issues.</p>
@@ -2051,7 +2204,7 @@ There must be only at most one label from the "Exclusive" groups.</p>
 <td class="tableblock halign-center valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>module/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>group/</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Internal Syndesis modules</p></td>
 <td class="tableblock halign-center valign-top"></td>
 </tr>
@@ -2081,17 +2234,17 @@ There must be only at most one label from the "Exclusive" groups.</p>
 <p>Each label group serves a particular purpose, and for each issue and PR, it should be considered whether a label from a group applies.</p>
 </div>
 <div class="sect3">
-<h4 id="_modules">3.1.1. Modules</h4>
+<h4 id="_groups">3.2.1. Groups</h4>
 <div class="paragraph">
-<p>Labels from this group reference our application components like "rest", "ui", "uxd" or "connectors".
-Each sub-team is responsible for one or more modules, and every module has an 'owning' team.
-That does not mean that members of other teams are allowed to work on such modules.
+<p>Labels from this group reference our application groups like "rest", "ui" or "connector".
+Each sub-team is responsible for one or more group, and every group has an 'owning' team.
+That does not mean that members of other teams are not allowed to work on such groups.
 Contrary, this is even encouraged.
 But its just there so that teams can filter on issues and PRs which are relevant to them.</p>
 </div>
 <div class="paragraph">
-<p>An issue can carry many module labels.
-Especially Epics will carry more than such label as they touch more than one module (otherwise it wouldn&#8217;t be an epic).</p>
+<p>An issue can carry many group labels.
+Especially Epics will carry more than such label as they touch more than one group (otherwise it wouldn&#8217;t be an epic).</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -2100,60 +2253,60 @@ Especially Epics will carry more than such label as they touch more than one mod
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Module</th>
-<th class="tableblock halign-left valign-top">Descriptions</th>
+<th class="tableblock halign-left valign-top">Group</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #b39d9e;"><p class="tableblock"><strong>module/connectors</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #b39d9e;"><p class="tableblock"><strong>group/connector</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Supported camel connectors</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #ab947d;"><p class="tableblock"><strong>module/deploy</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #ab947d;"><p class="tableblock"><strong>group/deploy</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift templates</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #2e9288;"><p class="tableblock"><strong class="white">module/rest</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #2e9288;"><p class="tableblock"><strong class="white">group/rest</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">REST backend for managing integrations</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #657c9a;"><p class="tableblock"><strong class="white">module/runtime</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #657c9a;"><p class="tableblock"><strong class="white">group/integration</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Library used in the the integration runtimes</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #2b313c;"><p class="tableblock"><strong class="white">module/s2i</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #2b313c;"><p class="tableblock"><strong class="white">group/s2i</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">S2I base image for building integrations</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #91ac83;"><p class="tableblock"><strong>module/tests</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #91ac83;"><p class="tableblock"><strong>group/test</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">System tests for testing the whole applications</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #dce6f0;"><p class="tableblock"><strong>module/ui</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #dce6f0;"><p class="tableblock"><strong>group/ui</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User interface SPA, talking to the REST backend</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #fdc5d8;"><p class="tableblock"><strong>module/uxd</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #fdc5d8;"><p class="tableblock"><strong>group/uxd</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User experience (UX) designs</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #c6d74b;"><p class="tableblock"><strong>module/verifier</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #c6d74b;"><p class="tableblock"><strong>group/meta</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Service for connector meta-data and verification of connections</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #03ba7a;"><p class="tableblock"><strong>module/extension</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #03ba7a;"><p class="tableblock"><strong>group/extension</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Tools for developing Syndesis extensions</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #d63f0c;"><p class="tableblock"><strong>module/core</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Syndesis core module</p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #d63f0c;"><p class="tableblock"><strong>group/common</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Syndesis shared common module</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_categories">3.1.2. Categories</h4>
+<h4 id="_categories">3.2.2. Categories</h4>
 <div class="paragraph">
 <p>Labels from the <code>cat/</code> group are labels which can always be applied and which does not fit in another category.
 Currently we have these categories:</p>
@@ -2234,7 +2387,7 @@ Currently we have these categories:</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_notification">3.1.3. Notification</h4>
+<h4 id="_notification">3.2.3. Notification</h4>
 <div class="paragraph">
 <p>Notification labels from the <code>notif/</code> group serve a particular purpose.
 They are used when one team wants to notify another group that a specific issue might have them relevance to them.</p>
@@ -2277,7 +2430,7 @@ If no update is required, then the label is removed without replacement.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_external_references">3.1.4. External references</h4>
+<h4 id="_external_references">3.2.4. External references</h4>
 <div class="paragraph">
 <p>This label group should be used if an external system is referenced, which is not part of the Syndesis mono repo.</p>
 </div>
@@ -2317,7 +2470,7 @@ If this happens, then labels should be converted to <code>module/</code> kind of
 </div>
 </div>
 <div class="sect3">
-<h4 id="_daily_meeting_labels">3.1.5. Daily Meeting Labels</h4>
+<h4 id="_daily_meeting_labels">3.2.5. Daily Meeting Labels</h4>
 <div class="paragraph">
 <p>This category holds five labels: <a id="f00"></a><code>d/mon</code>, <code>d/tue</code>, <code>d/wed</code>, <code>d/thu</code>, <code>d/fri</code>, one for each working day.
 They are used to mark an Epic so that it is talked about the daily meeting on that day.
@@ -2361,7 +2514,7 @@ At least two-day labels must be added to an epic.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_status">3.1.6. Status</h4>
+<h4 id="_status">3.2.6. Status</h4>
 <div class="paragraph">
 <p>Status labels are unique since they may trigger some automatic actions.</p>
 </div>
@@ -2401,7 +2554,7 @@ At least two-day labels must be added to an epic.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="dev-local">3.2. Local Development</h3>
+<h3 id="dev-local">3.3. Local Development</h3>
 <div class="paragraph">
 <p>If you&#8217;d like to get a local development environment up and running, for both the UI and REST API, this is how you&#8217;d do it.</p>
 </div>
@@ -2420,7 +2573,7 @@ At least two-day labels must be added to an epic.</p>
 </div>
 <hr>
 <div class="sect3">
-<h4 id="_requirements">3.2.1. Requirements</h4>
+<h4 id="_requirements">3.3.1. Requirements</h4>
 <div class="paragraph">
 <p>You can follow these steps if it&#8217;s your first time setting up Syndesis, or if you want a fresh local installation to replace an existing one. Some environment-specific instructions may be available below as well.</p>
 </div>
@@ -2484,7 +2637,7 @@ $ brew cask install minishift</code></pre>
 <hr>
 </div>
 <div class="sect3">
-<h4 id="_first_time_setup">3.2.2. First-Time Setup</h4>
+<h4 id="_first_time_setup">3.3.2. First-Time Setup</h4>
 <div class="paragraph">
 <p>The goal here is to download the project to your laptop/PC, and to install Minishift, the VM that contains OpenShift.</p>
 </div>
@@ -2498,7 +2651,7 @@ $ syndesis minishift --full-reset</code></pre>
 <hr>
 </div>
 <div class="sect3">
-<h4 id="_day_to_day">3.2.3. Day-to-Day</h4>
+<h4 id="_day_to_day">3.3.3. Day-to-Day</h4>
 <div class="paragraph">
 <p>This uses an existing Minishift instance.</p>
 </div>
@@ -2614,12 +2767,12 @@ $ open https://$(oc get routes syndesis --template "{{.spec.host}}")</code></pre
 </div>
 </div>
 <div class="sect2">
-<h3 id="dev-ui">3.3. UI</h3>
+<h3 id="dev-ui">3.4. UI</h3>
 <div class="paragraph">
 <p>After you&#8217;ve set up your initial Local Development environment, you&#8217;re ready to contribute to the UI.</p>
 </div>
 <div class="sect3">
-<h4 id="_install_dependencies">3.3.1. Install Dependencies</h4>
+<h4 id="_install_dependencies">3.4.1. Install Dependencies</h4>
 <div class="paragraph">
 <p>From the project root directory:</p>
 </div>
@@ -2631,7 +2784,7 @@ $ yarn install</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_start_up_the_app">3.3.2. Start up the App</h4>
+<h4 id="_start_up_the_app">3.4.2. Start up the App</h4>
 <div class="paragraph">
 <p><strong>Using Minishift resources (recommended):</strong></p>
 </div>
@@ -2645,7 +2798,7 @@ $ yarn install</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_open_in_your_browser">3.3.3. Open in Your Browser</h4>
+<h4 id="_open_in_your_browser">3.4.3. Open in Your Browser</h4>
 <div class="paragraph">
 <p>Open the Syndesis UI in your browser from the command line by running:</p>
 </div>
@@ -2684,7 +2837,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_running_tests">3.3.4. Running Tests</h4>
+<h4 id="_running_tests">3.4.4. Running Tests</h4>
 <div class="paragraph">
 <p>To run tests or lint there are two more commands you can run in separate terminals.</p>
 </div>
@@ -2695,7 +2848,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_running_linter">3.3.5. Running Linter</h4>
+<h4 id="_running_linter">3.4.5. Running Linter</h4>
 <div class="paragraph">
 <p>If you don&#8217;t, the CI will, and your PR build will likely fail.</p>
 </div>
@@ -2709,7 +2862,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_code_documentation">3.3.6. Code Documentation</h4>
+<h4 id="_code_documentation">3.4.6. Code Documentation</h4>
 <div class="paragraph">
 <p>We use <a href="https://compodoc.github.io/website/">Compodoc</a> for documentation, or <a href="https://compodoc.github.io/website/guides/comments.html">here</a> to see how to format comments. Files get generated automatically in the <code>/documentation</code> directory. Read the documentation [here](<a href="https://compodoc.github.io/website/guides/getting-started.html" class="bare">https://compodoc.github.io/website/guides/getting-started.html</a>) to see how to properly document features. You can automatically generate and run docs using Yarn:</p>
 </div>
@@ -2723,7 +2876,7 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="_technology_stack">3.3.7. Technology Stack</h4>
+<h4 id="_technology_stack">3.4.7. Technology Stack</h4>
 <div class="paragraph">
 <p>Included in this stack are the following technologies:</p>
 </div>
@@ -2752,12 +2905,12 @@ In the event that you have issues with Minishift. Don&#8217;t be surprised if mo
 </div>
 </div>
 <div class="sect2">
-<h3 id="dev-troubleshooting">3.4. Troubleshooting</h3>
+<h3 id="dev-troubleshooting">3.5. Troubleshooting</h3>
 <div class="paragraph">
 <p>When things go wrong, you want to try to identify the area that is causing problems (UI, REST API, etc). If it&#8217;s the UI, look for errors in the browser console or the terminal to see if it&#8217;s a dependency issue.</p>
 </div>
 <div class="sect3">
-<h4 id="_ui_dependency_issues">3.4.1. UI Dependency Issues</h4>
+<h4 id="_ui_dependency_issues">3.5.1. UI Dependency Issues</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>$ rm -rf node_modules
@@ -2766,7 +2919,7 @@ $ yarn install</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_vm_trouble">3.4.2. VM Trouble</h4>
+<h4 id="_vm_trouble">3.5.2. VM Trouble</h4>
 <div class="paragraph">
 <p><strong>Not getting latest API changes</strong></p>
 </div>
@@ -2818,7 +2971,7 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 </div>
 <div class="sect3">
-<h4 id="_still_having_trouble">3.4.3. Still Having Trouble?</h4>
+<h4 id="_still_having_trouble">3.5.3. Still Having Trouble?</h4>
 <div class="paragraph">
 <p>Ask on IRC #syndesis</p>
 </div>
@@ -2829,8 +2982,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-4986-g4579b3638<br>
-Last updated 2018-02-04 16:58:19 UTC
+Version 1.1.3-5000-g1af6038c8<br>
+Last updated 2018-02-04 21:43:51 UTC
 </div>
 </div>
 </body>
