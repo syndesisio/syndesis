@@ -31,6 +31,11 @@
   <packaging>pom</packaging>
   <name>S2I</name>
 
+  <properties>
+    <!-- Must be set empty here so that it can be overridden from the outside-->
+    <!-- Don't delete this line -->
+    <maven.repo.local></maven.repo.local>
+  </properties>
   <repositories>
     <repository>
       <snapshots>

@@ -273,7 +273,7 @@
       <artifactId>camel-salesforce</artifactId>
       <version>${camel.version}</version>
     </dependency>
-    
+
     <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
     <dependency>
       <groupId>org.apache.activemq</groupId>
