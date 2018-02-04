@@ -1074,7 +1074,7 @@
           "pattern": "To",
           "actionType": "connector",
           "descriptor": {
-            "camelConnectorGAV": "io.syndesis.connector:connector-sql:@syndesis.version@",
+            "camelConnectorGAV": "io.syndesis.connector:connector-sql-component:@syndesis.version@",
             "camelConnectorPrefix": "sql-connector",
             "inputDataShape": {
               "kind": "json-schema"
