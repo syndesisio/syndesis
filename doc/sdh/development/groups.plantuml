@@ -1,29 +1,24 @@
 @startuml
 ' tag::uml[]
 
-package "Design" {
-  [Rest]
-  [Meta]
-}
+component [rest] #lightgreen
+component [meta] #lightgreen
+component [integration] #lightblue
 
-package "Runtime" {
-  [Integration]
-}
+[common]
+[connector] --> [common]
+[extension] --> [common]
 
-[Common]
-[Connector] --> [Common]
-[Extension] --> [Common]
+[integration] --> [common]
+[integration] --> [extension]
+[integration] --> [connector]
 
-[Integration] --> [Common]
-[Integration] --> [Extension]
-[Integration] --> [Connector]
+[rest] --> [common]
+[rest] --> [extension]
+[rest] --> [integration]
 
-[Rest] --> [Common]
-[Rest] --> [Extension]
-[Rest] --> [Integration]
-
-[Meta] --> [Common]
-[Meta] --> [Connector]
+[meta] --> [common]
+[meta] --> [connector]
 
 ' end::uml[]
 @enduml
