@@ -22,7 +22,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  
+
   <artifactId>metrics-collector</artifactId>
   <name>REST :: Metrics Collector</name>
 
@@ -31,13 +31,13 @@
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>core</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>model</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
     </dependency>
 
     <dependency>
@@ -131,7 +131,7 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
@@ -141,7 +141,7 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>

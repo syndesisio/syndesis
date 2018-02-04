@@ -35,8 +35,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>model</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.springframework</groupId>

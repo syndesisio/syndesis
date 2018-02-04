@@ -1,1 +1,1 @@
-# Syndesis CORE
+# Syndesis Common

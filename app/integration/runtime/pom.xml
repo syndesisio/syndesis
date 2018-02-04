@@ -46,13 +46,15 @@
 
     <!-- syndesis -->
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>model</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
     </dependency>
+
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>core</artifactId>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
     </dependency>
+
     <dependency>
       <groupId>io.syndesis</groupId>
       <artifactId>extension-api</artifactId>
@@ -62,7 +64,7 @@
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
 
-    <!-- camel --> 
+    <!-- camel -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>

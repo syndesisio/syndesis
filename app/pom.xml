@@ -801,14 +801,14 @@
       <!-- Internal Dependencies -->
 
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>core</artifactId>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-util</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>model</artifactId>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-model</artifactId>
         <version>${project.version}</version>
       </dependency>
 
