@@ -16,7 +16,7 @@
         "actionType" : "connector",
         "dependencies" : [ {
           "type" : "MAVEN",
-          "id" : "io.syndesis:timer-connector:${project.version}"
+          "id" : "io.syndesis.connector:connector-timer:${project.version}"
         } ]
       },
       "connection" : {
