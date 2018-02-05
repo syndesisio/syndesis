@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.sql.stored.SqlStoredStartConnectorComponent",
     "groupId":"io.syndesis",
     "artifactId":"sql-stored-start-connector",
-    "version":"1.2.7"
+    "version":"1.2.8"
   },
   "componentProperties":{
     "dataSource":{

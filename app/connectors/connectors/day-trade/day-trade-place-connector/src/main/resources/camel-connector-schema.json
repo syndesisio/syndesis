@@ -14,7 +14,7 @@
     "javaType":"io.syndesis.connector.daytrade.DayTradePlaceComponent",
     "groupId":"io.syndesis",
     "artifactId":"day-trade-place-connector",
-    "version":"1.2.7"
+    "version":"1.2.8"
   },
   "componentProperties":{
     "host":{
