@@ -18,17 +18,21 @@
               <div class="syn-form-input-list__option">
                 <label>
                   <input type="radio"
-                      id="alllogs"
-                      name="logs" 
-                      [value]="true" 
-                      [(ngModel)]="allLogsSelected" 
-                      (click)="deselectAll()">
+                        id="alllogs"
+                        name="logs" 
+                        [value]="true" 
+                        [(ngModel)]="allLogsSelected" 
+                        (click)="deselectAll()">
                   All integrations 
                 </label>
               </div>
               <div class="syn-form-input-list__option">
                 <label>
-                  <input type="radio" id="specificlogs" name="logs" [value]="false" [(ngModel)]="allLogsSelected"> 
+                  <input type="radio" 
+                        id="specificlogs" 
+                        name="logs" 
+                        [value]="false" 
+                        [(ngModel)]="allLogsSelected"> 
                   Specific integrations
                 </label>
               </div>
