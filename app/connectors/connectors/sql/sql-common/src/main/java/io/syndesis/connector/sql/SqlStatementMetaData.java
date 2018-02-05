@@ -42,8 +42,9 @@ public class SqlStatementMetaData {
     }
 
     public String addTable(String tableName) throws SQLException {
-        if (tablesInSchema.contains(tableName)) {
-            tableNames.add(tableName);
+        String upperCaseTableName = tableName.toUpperCase();
+        if (tablesInSchema.contains(upperCaseTableName)) {
+            tableNames.add(upperCaseTableName);
         } else {
             throw new SQLException("Table does not exist in schema " + schema);
         }
