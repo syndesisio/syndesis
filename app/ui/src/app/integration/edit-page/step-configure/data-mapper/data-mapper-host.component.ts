@@ -95,8 +95,8 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     for (const pair of this.currentFlow.getPreviousStepsWithDataShape(this.position)) {
       if (this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape)) {
         this.addInitializationTask();
-        this.currentFlow.fetchDataShapeFor(pair.step, false).then(dataShape => {
-          this.addDocument(pair.step.id, pair.index, dataShape, true);
+        this.currentFlow.fetchOutputDataShapeFor(pair.step).then(dataShape => {
+          this.addSourceDocument(pair.step.id, pair.index, dataShape);
           this.removeInitializationTask();
         })
         .catch(response => this.cfg.errorService.error(
@@ -114,8 +114,8 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     }
     if (targetPair) {
       this.addInitializationTask();
-      this.currentFlow.fetchDataShapeFor(targetPair.step, true).then(dataShape => {
-        this.addDocument(targetPair.step.id, targetPair.index, dataShape, false);
+      this.currentFlow.fetchInputDataShapeFor(targetPair.step).then(dataShape => {
+        this.addTargetDocument(targetPair.step.id, targetPair.index, dataShape);
         this.removeInitializationTask();
       })
       .catch(response => this.cfg.errorService.error(
@@ -237,6 +237,14 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
             .indexOf(dataShape.kind) > -1;
   }
 
+  private addSourceDocument(documentId: string, index: number, dataShape: DataShape): boolean {
+    return this.addDocument(documentId, index, dataShape, true);
+  }
+
+  private addTargetDocument(documentId: string, index: number, dataShape: DataShape): boolean {
+    return this.addDocument(documentId, index, dataShape, false);
+  }
+
   private addDocument(
     documentId: string,
     index: number,
@@ -281,7 +289,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     }
 
     initModel.id = documentId;
-    initModel.name = 'Step ' + index + ' - '
+    initModel.name = 'Step ' + (index + 1) + ' - '
         + (dataShape.name ? dataShape.name : dataShape.type);
     initModel.description = dataShape.description;
     initModel.isSource = isSource;

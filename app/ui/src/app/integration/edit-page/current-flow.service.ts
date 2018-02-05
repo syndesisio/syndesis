@@ -467,7 +467,15 @@ export class CurrentFlow {
     return JSON.parse(JSON.stringify(this.integration));
   }
 
-  fetchDataShapeFor(step: Step, output = true): Promise<any> {
+  fetchInputDataShapeFor(step: Step): Promise<any> {
+    return this.fetchDataShapeFor(step, false);
+  }
+
+  fetchOutputDataShapeFor(step: Step): Promise<any> {
+    return this.fetchDataShapeFor(step, true);
+  }
+
+  private fetchDataShapeFor(step: Step, output = true): Promise<any> {
     return new Promise(resolve => {
       // extension step must be always carrying full data shape
       if (step.stepKind === 'extension') {
