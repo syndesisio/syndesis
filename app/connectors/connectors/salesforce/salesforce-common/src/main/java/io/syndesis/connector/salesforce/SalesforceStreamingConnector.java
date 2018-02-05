@@ -25,6 +25,7 @@ import java.util.Map;
 
 public abstract class SalesforceStreamingConnector extends DefaultConnectorComponent {
     private final static String TOPIC_PREFIX = "syndesis_";
+    private final static int TOPIC_NAME_MAX_LENGTH = 25;
 
     public SalesforceStreamingConnector(final String componentName, final String componentSchema, final Class<?> componentClass) {
         super(componentName, componentSchema, componentClass);
@@ -55,20 +56,24 @@ public abstract class SalesforceStreamingConnector extends DefaultConnectorCompo
 
     private static String topicNameFor(final Map<String, String> options) {
         final String sObjectName = options.get(SalesforceEndpointConfig.SOBJECT_NAME);
-
         final String topicSuffix;
         if (Boolean.valueOf(options.get("notifyForOperationCreate"))) {
-            topicSuffix = "_create";
+            topicSuffix = "_c";
         } else if (Boolean.valueOf(options.get("notifyForOperationUpdate"))) {
-            topicSuffix = "_update";
+            topicSuffix = "_up";
         } else if (Boolean.valueOf(options.get("notifyForOperationDelete"))) {
-            topicSuffix = "_delete";
+            topicSuffix = "_d";
         } else if (Boolean.valueOf(options.get("notifyForOperationUndelete"))) {
-            topicSuffix = "_undelete";
+            topicSuffix = "_un";
         } else {
-            topicSuffix = "_all";
+            topicSuffix = "_a";
         }
 
-        return TOPIC_PREFIX + sObjectName + topicSuffix;
+        String topicName = TOPIC_PREFIX + sObjectName + topicSuffix;
+        if (topicName.length() > TOPIC_NAME_MAX_LENGTH) {
+        	int diffLength = topicName.length() - TOPIC_NAME_MAX_LENGTH;
+        	topicName = TOPIC_PREFIX + sObjectName.substring(0, Math.min(sObjectName.length(), sObjectName.length() - diffLength)) + topicSuffix;
+        }
+        return topicName;
     }
 }
