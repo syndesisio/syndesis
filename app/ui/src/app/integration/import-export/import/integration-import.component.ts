@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { NotificationType } from 'patternfly-ng';
 import { IntegrationStore } from '@syndesis/ui/store';
-import { IntegrationSupportService } from '../../integration-support.service';
-import { Integrations } from '@syndesis/ui/integration';
+import { Integrations, IntegrationSupportService } from '@syndesis/ui/platform';
 import { NotificationService } from '@syndesis/ui/common';
 import { FileUploader, FileItem } from 'ng2-file-upload';
 
