@@ -5,7 +5,13 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/c
 import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
-import { FormFactoryService, UserService, Action, Step, IntegrationSupportService } from '@syndesis/ui/platform';
+import {
+  ActionDefinition,
+  FormFactoryService,
+  UserService,
+  Action,
+  Step,
+  IntegrationSupportService } from '@syndesis/ui/platform';
 import { log } from '@syndesis/ui/logging';
 import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
 
@@ -183,7 +189,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       });
   }
 
-  initForm(position: number, page: number, descriptor: any, error?: any) {
+  initForm(position: number, page: number, descriptor: ActionDefinition, error?: any) {
     if (error) {
       this.error = error;
       this.error.message = error.message || error.userMsg || error.developerMsg;
@@ -191,7 +197,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       this.loading = false;
       return;
     }
-    if (!descriptor || descriptor === undefined || Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0) {
+    if (!descriptor || !descriptor.propertyDefinitionSteps || !descriptor.propertyDefinitionSteps.length) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {
