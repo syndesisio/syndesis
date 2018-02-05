@@ -3,7 +3,7 @@
 
 To add a basic data mapping using all the defaults:
 
-. Select a field from the *Sources* table on the *Configure Mapper* pane.
+. Select a field from the *Sources* table on the *Configure Mapper* panel.
 . Select a field from the *Target* table.
 
 A line will appear, linking the two fields that you selected. 
