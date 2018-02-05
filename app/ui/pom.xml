@@ -156,6 +156,12 @@
                 <include>**/*</include>
               </includes>
             </fileset>
+            <fileset>
+              <directory>dist</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </fileset>
           </filesets>
         </configuration>
       </plugin>
@@ -163,6 +169,54 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>flash</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>${clean-maven-plugin-version}</version>
+            <configuration combine.self="override">
+              <followSymLinks>false</followSymLinks>
+              <filesets>
+                <fileset>
+                  <directory>dist</directory>
+                  <includes>
+                    <include>**/*</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>${frontend-maven-plugin-version}</version>
+            <executions>
+              <execution>
+                <id>yarn ng lint</id>
+                <phase/>
+              </execution>
+              <execution>
+                <id>yarn ng test</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>yarn ng build</id>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>build:flash</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>image</id>
       <activation>
