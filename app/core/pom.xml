@@ -20,15 +20,16 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>syndesis-core-parent</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <groupId>io.syndesis.common</groupId>
+  <artifactId>common-parent</artifactId>
+  <version>1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Core :: Parent</name>
+  <name>Common</name>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -47,7 +48,6 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-cloud.version>Dalston.SR4</spring-cloud.version>
-    <spring-cloud-kubernetes.version>0.1.6</spring-cloud-kubernetes.version>
     <spring-cloud-sleuth.version>1.2.5.RELEASE</spring-cloud-sleuth.version>
     <spring-security.version>4.2.3.RELEASE</spring-security.version>
     <spring-social.version>1.1.4.RELEASE</spring-social.version>
@@ -108,14 +108,14 @@
       <!-- Internal Dependencies -->
 
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>core</artifactId>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-util</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>model</artifactId>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-model</artifactId>
         <version>${project.version}</version>
       </dependency>
 

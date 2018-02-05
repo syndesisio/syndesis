@@ -81,20 +81,15 @@ export class SupportComponent implements OnInit {
   constructor(
     public store: IntegrationStore,
     public integrationSupportService: IntegrationSupportService,
-  ) {
-  }
+  ) {}
 
-  buildData(data: any = {}) {
+  buildData(data: any = {}): void {
     this.integrationSupportService
       .downloadSupportData(data)
-      .subscribe(response => {
-        fileSaver.saveAs(response, ARCHIVE_FILE_NAME);
-      },
-      error => {
-        log.error('Error downloading file', error);
-      }
-    );
-    return {  };
+      .subscribe(
+        response => fileSaver.saveAs(response, ARCHIVE_FILE_NAME),
+        error => log.error('Error downloading file', error)
+      );
   }
 
   // Handles events when the user interacts with the toolbar filter

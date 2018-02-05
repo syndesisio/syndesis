@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1.handler.integration;
+package io.syndesis.rest.v1.handler.integration.support;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -63,6 +63,8 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
+import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,7 @@ import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntr
 @Path("/integration-support")
 @Api(value = "integration-support")
 @Component
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass" })
 public class IntegrationSupportHandler {
 
     public static final String EXPORT_MODEL_FILE_NAME = "model.json";
@@ -109,7 +112,7 @@ public class IntegrationSupportHandler {
     @GET
     @Path("/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> requestedIds) throws IOException {
+    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> requestedIds) {
 
         List<String> ids = requestedIds;
         if ( ids ==null || ids.isEmpty() ) {
@@ -134,7 +137,7 @@ public class IntegrationSupportHandler {
                 .forEach(extensions::add);
         }
 
-        System.out.println("Extensions: "+extensions);
+        LOG.debug("Extensions: {}", extensions);
 
         ArrayList<ModelData<?>> models = new ArrayList<>(export.values());
         return out -> {
@@ -170,7 +173,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    private void addToExport(Map<String, ModelData<?>> export, ModelData<?> model) {
+    private static void addToExport(Map<String, ModelData<?>> export, ModelData<?> model) {
         try {
             String key = model.getKind().getModelName()+":"+model.getData().getId();
             if ( !export.containsKey(key) )  {
@@ -178,7 +181,7 @@ public class IntegrationSupportHandler {
             }
         } catch (IOException e) {
             // This should not no occur since the model does not need to be deserialized
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -251,11 +254,11 @@ public class IntegrationSupportHandler {
                     // Do we need to create it?
                     String id = integration.getId().get();
                     if (dataManager.fetch(Integration.class, id) == null) {
-                        LOG.info("Creating integration: " + integration.getName());
+                        LOG.info("Creating integration: {}", integration.getName());
                         integrationHandler.create(sec, integration);
                         result.add(ChangeEvent.of("created", integration.getKind().getModelName(), id));
                     } else {
-                        LOG.info("Updating integration: " + integration.getName());
+                        LOG.info("Updating integration: {}", integration.getName());
                         integrationHandler.update(id, integration);
                         result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
                     }
@@ -339,10 +342,6 @@ public class IntegrationSupportHandler {
 
             }
         }
-    }
-
-    private Integration integrationOf(IntegrationDeployment integrationRevision) {
-        return  dataManager.fetch(Integration.class, integrationRevision.getIntegrationId().orElseThrow(() -> new IllegalStateException("Integration Revision doesn't have integration id.")));
     }
 
     private static class DontClose extends FilterInputStream {

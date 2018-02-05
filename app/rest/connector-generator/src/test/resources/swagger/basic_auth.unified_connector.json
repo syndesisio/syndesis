@@ -111,10 +111,10 @@
   },
   "actions": [
     {
-      "id": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@:_id_:operation-0",
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-0",
       "name": "GET /operation",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis:rest-swagger-connector:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesiss.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"

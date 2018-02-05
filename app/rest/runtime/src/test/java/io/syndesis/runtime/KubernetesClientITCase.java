@@ -25,7 +25,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-// The configuration for this beans comes from io.fabric8/spring-cloud-kubernetes-core
 @SpringBootTest(classes = { KubernetesClient.class })
 public class KubernetesClientITCase {
 

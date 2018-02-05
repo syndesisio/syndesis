@@ -22,21 +22,19 @@
     <groupId>org.basepom</groupId>
     <artifactId>basepom-oss</artifactId>
     <version>23</version>
-    <relativePath></relativePath>
   </parent>
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-parent</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Syndesis :: Parent</name>
-  <description>syndesis :: ${project.artifactId}</description>
+  <name>Syndesis</name>
+  <description>Syndesis :: ${project.name}</description>
 
   <properties>
     <!-- Global Syndesis version -->
     <syndesis.version>${project.version}</syndesis.version>
-    <syndesis.policy.version>2</syndesis.policy.version>
 
     <!-- Atlasmap version -->
     <atlasmap.version>1.33.0</atlasmap.version>
@@ -547,8 +545,9 @@
           <dependencies>
             <dependency>
               <groupId>io.syndesis</groupId>
-              <artifactId>syndesis-policy</artifactId>
-              <version>${syndesis.policy.version}</version>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -557,13 +556,14 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <configuration>
-            <configLocation>/checkstyle/checkstyle-syndesis.xml</configLocation>
+            <configLocation>/syndesis/checkstyle.xml</configLocation>
           </configuration>
           <dependencies>
             <dependency>
               <groupId>io.syndesis</groupId>
-              <artifactId>syndesis-policy</artifactId>
-              <version>${syndesis.policy.version}</version>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -611,6 +611,28 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-tool-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <inherited>false</inherited>
+            <configuration>
+              <descriptors>
+                <descriptor>tools.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
   </build>
 
   <!-- Common dependencies -->
@@ -628,6 +650,214 @@
         <scope>import</scope>
       </dependency>
 
+      <!-- ============================================================== -->
+      <!-- === Internal Dependencies -->
+
+      <!-- ::::::::::: common :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: rest :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-connector-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-controller</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-credential</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-logging-jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-filestore</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-inspector</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-metrics-jsondb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-openshift</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-endpoint</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-verifier</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: integration :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-project-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-component-proxy</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: extension :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-annotation-processor</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-bom</artifactId>
+        <type>pom</type>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-converter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ::::::::::: connector :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-catalog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-verifier</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-http-get</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-twitter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-sql-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-sql-component</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-sql-start</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-sql-stored</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-sql-stored-start</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- ============================================== -->
 
       <!-- TODO: Maybe import BOM ? -->
       <dependency>
@@ -787,73 +1017,21 @@
         <scope>provided</scope>
       </dependency>
 
-      <!-- Internal Dependencies -->
-
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>core</artifactId>
-        <version>${project.version}</version>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-client-java</artifactId>
+        <version>1.4.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+      <!-- ========================================== -->
 
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>dao</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>filestore</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>jsondb</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>rest</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>db-logging</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>integration-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>integration-project-generator</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>integration-component-proxy</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>integration-runtime</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+      <!-- === Atlasmap -->
 
       <dependency>
         <groupId>io.syndesis</groupId>
@@ -861,11 +1039,6 @@
         <version>${project.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>verifier</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>io.syndesis</groupId>
@@ -874,121 +1047,71 @@
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>openshift</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>controllers</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>inspector</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>credential</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>connector-generator</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>connectors-catalog</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>extension-annotation-processor</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>extension-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>extension-bom</artifactId>
-        <type>pom</type>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>extension-converter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-core</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-model</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-core</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-module</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-java-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-json-module</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-json-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-xml-module</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-xml-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-model</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
+
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
@@ -998,7 +1121,6 @@
     </dependencies>
 
   </dependencyManagement>
-
 
   <!-- Metadata need to publish to central -->
   <url>https://syndesis.io/</url>

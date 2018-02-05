@@ -16,17 +16,16 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+  <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>trade-insight-connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-trade-insight-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>trade-insight-top-connector</artifactId>
-  <name>Connectors :: Trade Insight :: Top Connector</name>
-  <description>Trade Insight Sell Connector</description>
+  <artifactId>connector-trade-insight-top</artifactId>
+  <name>Connector :: Trade Insight :: Top</name>
   <packaging>jar</packaging>
 
   <dependencyManagement>

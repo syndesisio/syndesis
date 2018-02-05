@@ -19,14 +19,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>sql-connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-sql-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>sql-connector</artifactId>
+  <artifactId>connector-sql-component</artifactId>
   <packaging>jar</packaging>
-  <name>Connectors :: SQL :: Connector</name>
+  <name>Connector :: SQL :: Component</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,8 +66,8 @@
       <artifactId>camel-connector</artifactId>
     </dependency>
     <dependency>
-        <groupId>io.syndesis</groupId>
-        <artifactId>sql-common</artifactId>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-sql-common</artifactId>
         <version>${project.version}</version>
     </dependency>
 

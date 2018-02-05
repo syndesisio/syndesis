@@ -19,15 +19,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>activemq-connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-activemq-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>activemq-model</artifactId>
-  <name>Connectors :: JMS :: ActiveMQ :: Model</name>
-  <description>ActiveMQ Model used by ActiveMQ connectors</description>
+  <artifactId>connector-activemq-model</artifactId>
+  <name>Connector :: ActiveMQ :: Model</name>
+  <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

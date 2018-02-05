@@ -3,7 +3,7 @@ import {
   DynamicFormControlModel,
   DynamicInputModel
 } from '@ng-dynamic-forms/core';
-import {Connection, Connector, FormFactoryService} from '@syndesis/ui/platform';
+import { Connection, Connector, FormFactoryService } from '@syndesis/ui/platform';
 
 @Injectable()
 export class ConnectionConfigurationService {
@@ -48,7 +48,7 @@ export class ConnectionConfigurationService {
     return formModel;
   }
 
-  cloneObject(obj: {}) {
+  cloneObject(obj: any) {
     return JSON.parse(JSON.stringify(obj));
   }
 

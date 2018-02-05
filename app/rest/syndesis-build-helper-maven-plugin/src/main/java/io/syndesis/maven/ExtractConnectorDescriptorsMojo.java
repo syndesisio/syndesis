@@ -95,7 +95,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
                 }
                 ObjectNode entry = new ObjectNode(JsonNodeFactory.instance);
                 addConnectorMeta(entry, classLoader);
-                    addComponentMeta(entry, classLoader);
+                addComponentMeta(entry, classLoader);
                 if (entry.size() > 0) {
                     addGav(entry, artifact);
                     root.add(entry);

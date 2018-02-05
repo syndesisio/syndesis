@@ -39,6 +39,9 @@ install::run() {
         recreate_project $project "$(hasflag --yes -y)"
     fi
 
+    # Setup oc
+    setup_oc
+
     # Required OAuthclient
     create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 

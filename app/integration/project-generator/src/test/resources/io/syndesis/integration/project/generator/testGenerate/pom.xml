@@ -71,13 +71,13 @@
 
     <!-- dependencies used in this integration -->
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>http-get-connector</artifactId>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-http-get</artifactId>
       <version>@syndesis.version@</version>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
-      <artifactId>timer-connector</artifactId>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-timer</artifactId>
       <version>@syndesis.version@</version>
     </dependency>
     <dependency>
@@ -111,7 +111,7 @@
 
     <!-- Integration runtime -->
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
       <version>\${syndesis.version}</version>
     </dependency>

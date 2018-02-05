@@ -19,15 +19,14 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
+  <groupId>io.syndesis.extension</groupId>
   <artifactId>extension-parent</artifactId>
   <packaging>pom</packaging>
-
-  <name>Extension :: Parent</name>
+  <name>Extension</name>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

@@ -14,21 +14,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project 
-  xmlns="http://maven.apache.org/POM/4.0.0" 
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <groupId>io.syndesis</groupId>
-    <artifactId>connectors</artifactId>
-    <version>1.2-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
+    <groupId>io.syndesis.connector</groupId>
+    <artifactId>connector-parent</artifactId>
+    <version>1.3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
-  
+
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>aws-s3-connector</artifactId>
-  <name>Connectors :: AWS S3</name>
+  <artifactId>connector-aws-s3</artifactId>
+  <name>Connector :: AWS S3</name>
   <packaging>jar</packaging>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -46,14 +46,14 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>connector-verifier</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
     <dependency>
@@ -84,7 +84,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
       <scope>test</scope>
     </dependency>
@@ -104,7 +104,7 @@
       <version>${camel.version}</version>
     </dependency>
   </dependencies>
-  
+
   <build>
     <resources>
       <resource>
@@ -125,7 +125,7 @@
 
       <plugin>
         <groupId>${project.groupId}</groupId>
-        <artifactId>connectors-maven-plugin</artifactId>
+        <artifactId>connector-maven-plugin</artifactId>
         <version>${project.version}</version>
         <executions>
           <execution>
@@ -136,7 +136,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>

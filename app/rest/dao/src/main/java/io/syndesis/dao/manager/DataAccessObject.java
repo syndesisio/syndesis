@@ -52,6 +52,12 @@ public interface DataAccessObject<T extends WithId<T>> {
     Set<String> fetchIdsByPropertyValue(String property, String propertyValue);
 
     /**
+     * Fetches all ids.
+     *
+     * @return All identifiers
+     */
+    Set<String> fetchIds();
+    /**
      * Fetches a {@link ListResult} containing all entities.
      * @return  The {@link ListResult}.
      */

@@ -56,6 +56,9 @@ export class FormFactoryProviderService extends FormFactoryService {
           type = field.enum && field.enum.length ? 'select' : 'text';
           break;
       }
+      if (field.displayName === 'Period') {
+        type = 'duration';
+      }
       // then use the appropriate ng2 dynamic forms constructor
       switch (type) {
         case 'duration':

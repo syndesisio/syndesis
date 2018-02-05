@@ -92,7 +92,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     }
     this.cfg.mappings = new MappingDefinition();
 
-    for (let pair of this.currentFlow.getPreviousStepsWithDataShape(this.position)) {
+    for (const pair of this.currentFlow.getPreviousStepsWithDataShape(this.position)) {
       if (this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape)) {
         this.addInitializationTask();
         this.currentFlow.fetchDataShapeFor(pair.step, false).then(dataShape => {
@@ -106,7 +106,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
 
     // Single target document for now
     let targetPair;
-    for (let pair of this.currentFlow.getSubsequentStepsWithDataShape(this.position)) {
+    for (const pair of this.currentFlow.getSubsequentStepsWithDataShape(this.position)) {
       if (this.isSupportedDataShape(pair.step.action.descriptor.inputDataShape)) {
         targetPair = pair;
         break;
@@ -210,12 +210,31 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     this.removeInitializationTask();
   }
 
+  initializeMapper() {
+    if ( this.outstandingTasks == 0 ) {
+      this.initializationService.initialize();
+    }
+  }
+
+  addInitializationTask() {
+    this.outstandingTasks += 1;
+  }
+
+  removeInitializationTask() {
+    this.outstandingTasks -= 1;
+    this.initializeMapper();
+  }
+
+  ngOnInit() {
+    this.initialize();
+  }
+
   private isSupportedDataShape(dataShape: DataShape): boolean {
     if (!dataShape || !dataShape.kind) {
       return false;
     }
     return ['java', 'json-instance', 'json-schema', 'xml-instance', 'xml-schema']
-            .indexOf(dataShape.kind) > -1
+            .indexOf(dataShape.kind) > -1;
   }
 
   private addDocument(
@@ -262,31 +281,12 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     }
 
     initModel.id = documentId;
-    initModel.name = "Step " + index + " - "
+    initModel.name = 'Step ' + index + ' - '
         + (dataShape.name ? dataShape.name : dataShape.type);
     initModel.description = dataShape.description;
     initModel.isSource = isSource;
     this.cfg.addDocument(initModel);
     return true;
-  }
-
-  initializeMapper() {
-    if ( this.outstandingTasks == 0 ) {
-      this.initializationService.initialize();
-    }
-  }
-
-  addInitializationTask() {
-    this.outstandingTasks += 1;
-  }
-
-  removeInitializationTask() {
-    this.outstandingTasks -= 1;
-    this.initializeMapper();
-  }
-
-  ngOnInit() {
-    this.initialize();
   }
 
   private resetConfig(): void {

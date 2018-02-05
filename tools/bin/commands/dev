@@ -17,6 +17,8 @@ dev::run() {
             name="rest"
         fi
 
+        setup_oc
+
         local pod=$(oc get -o name pod -l component=syndesis-${name})
         oc port-forward ${pod//*\//} 5005:5005
     fi

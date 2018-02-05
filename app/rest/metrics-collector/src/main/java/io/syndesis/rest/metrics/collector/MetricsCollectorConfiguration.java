@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.v1;
+package io.syndesis.rest.metrics.collector;
 
-import io.swagger.jaxrs.listing.ApiListingResource;
-import io.swagger.jaxrs.listing.SwaggerSerializers;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SwaggerConfiguration {
-
-    @Bean
-    public ApiListingResource apiListingResource() {
-        return new ApiListingResource();
-    }
-
-    @Bean
-    public SwaggerSerializers swaggerSerializers() {
-        return new SwaggerSerializers();
-    }
-
+@ComponentScan
+@ConditionalOnProperty(value = "features.metricscollector.enabled", havingValue = "true", matchIfMissing = false)
+public class MetricsCollectorConfiguration {
 }
