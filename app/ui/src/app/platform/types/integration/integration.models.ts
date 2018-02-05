@@ -1,13 +1,12 @@
-import { BaseReducerModel, Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
+import { BaseReducerCollectionModel, Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
 
 export interface Step extends BaseEntity {
   action: Action;
   connection: Connection;
-  name: string;
   configuredProperties: {};
   stepKind: string;
-  id: string;
 }
+
 export type Steps = Array<Step>;
 
 export const DRAFT = 'Draft';
@@ -16,7 +15,7 @@ export const ACTIVE = 'Active';
 export const INACTIVE = 'Inactive';
 export const UNDEPLOYED = 'Undeployed';
 
-export type IntegrationState = 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
+export type IntegrationStatus = 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
 
 export interface Integration extends BaseEntity {
   description?: string;
@@ -27,15 +26,13 @@ export interface Integration extends BaseEntity {
   users: Array<User>;
   connections: Array<Connection>;
   userId: string;
-  desiredStatus: IntegrationState;
-  currentStatus: IntegrationState;
+  desiredStatus: IntegrationStatus;
+  currentStatus: IntegrationStatus;
   stepsDone: Array<string>;
   lastUpdated: string;
   createdDate: string;
   timesUsed: number;
-  id: string;
   tags: Array<string>;
-  name: string;
   deploymentId?: number;
   version?: number;
 }
@@ -48,16 +45,16 @@ export interface IntegrationDeploymentSpec {
   steps: Array<Step>;
   tags: Array<any>;
 }
+
 export type IntegrationDeploymentSpecs = Array<IntegrationDeploymentSpec>;
 
 export interface IntegrationDeployment extends BaseEntity {
   createdDate: number;
-  name: string;
   lastUpdated: number;
   integrationId: string;
   version: number;
-  currentState: IntegrationState;
-  targetState: IntegrationState;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
   currentMessage?: string;
   targetMessage?: string;
   spec: IntegrationDeploymentSpec;
@@ -101,15 +98,15 @@ export interface ActivityStep extends BaseEntity {
   events?: any;
 }
 
+// TODO: Remove this TypeScript anti-pattern when the time is right
 export function createStep() {
   return {} as Step;
 }
 
+// TODO: Remove this TypeScript anti-pattern when the time is right
 export function createIntegration() {
   return {} as Integration;
 }
 
-export interface IntegrationRxState extends BaseReducerModel {
-  integrations: Integrations;
-  deleted?: Integration;
-}
+/* tslint:disable:no-empty-interface */
+export interface IntegrationState extends BaseReducerCollectionModel<Integration> {}

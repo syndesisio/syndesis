@@ -36,6 +36,17 @@ export interface BaseReducerModel {
 }
 
 /**
+ * BaseReducerCollectionModel is a specialized model that extends BaseReducerModel
+ * and adds specific properties for handling state stores that manage collections
+ * subject to be updated through CRUD actions.
+ */
+export interface BaseReducerCollectionModel<T> extends BaseReducerModel {
+  collection: Array<T>;
+  inserted?: T;
+  deleted?: T;
+}
+
+/**
  * Common interface for modelling requests requiring several steps for accomplishment
  * which require additional flags to track progress level and success
  */
