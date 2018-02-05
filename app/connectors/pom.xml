@@ -19,12 +19,12 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.8</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>syndesis-connectors-project</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2.8</version>
   <packaging>pom</packaging>
 
   <name>Connectors</name>
