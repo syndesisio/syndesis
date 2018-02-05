@@ -1,19 +1,25 @@
-.mainform {
-    background-color: white;
-    padding: 2em;
+@import 'patternfly-sass/assets/stylesheets/patternfly/variables';
+
+.support-panel {
+  & ::ng-deep .toolbar-pf {
+    border: none;
+    box-shadow: none;
+
+    .form-group {
+      border: none;
+    }
+  }
 }
 
-.removepasswords {
-    padding-top: 1em;
+.support-form {
+  // Add item count and select all to the toolbar
+  &__toolbar-extras {
+    justify-content: flex-end;
 }
 
-.version {
-    padding-left: 3em;
+  &__form-group:not(:first-child) {
+    border-left: 1px solid $sidebar-pf-border-color;
+    padding-left: ($grid-gutter-width/2);
+    margin-left: ($grid-gutter-width/2);
+  }
 }
-
-.filter_labels {
-    padding-top: 13px;
-    // border-bottom: 1px solid #d1d1d1;
-    // box-shadow: 0 1px 0px rgba(3, 3, 3, 0.045);
-}
-
