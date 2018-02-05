@@ -198,7 +198,7 @@ public class IntegrationSupportHandler {
                     break;
                 }
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    ModelExport models = Json.mapper().readValue(new DontClose(zis), ModelExport.class);
+                    ModelExport models = Json.mapperWithoutSourceAutoclose().readValue(zis, ModelExport.class);
                     changeEvents.addAll(importModels(sec, models));
                     for (ChangeEvent changeEvent : changeEvents) {
                         if( changeEvent.getKind().get().equals("extension") ) {
@@ -341,17 +341,6 @@ public class IntegrationSupportHandler {
                     throw new IOException("Cannot import unsupported model kind: " + model.getKind());
 
             }
-        }
-    }
-
-    private static class DontClose extends FilterInputStream {
-        public DontClose(ZipInputStream zis) {
-            super(zis);
-        }
-
-        @Override
-        public void close() throws IOException {
-            // We want to avoid closing zis
         }
     }
 }
