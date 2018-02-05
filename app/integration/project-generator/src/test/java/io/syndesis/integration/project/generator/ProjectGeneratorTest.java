@@ -15,16 +15,23 @@
  */
 package io.syndesis.integration.project.generator;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
+import io.syndesis.core.KeyGenerator;
 import io.syndesis.model.Dependency;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.StepDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
@@ -68,8 +75,11 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
 
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     @Test
-    public void testGenerate() throws Exception {
+    public void testGenerateProject() throws Exception {
+        TestResourceManager manager = new TestResourceManager();
+
         IntegrationDeployment deployment = newIntegration(
+            manager,
             new Step.Builder()
                 .stepKind("endpoint")
                 .connection(new Connection.Builder()
@@ -157,12 +167,11 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
         configuration.getMavenProperties().addRepository("maven.central", "https://repo1.maven.org/maven2");
         configuration.getMavenProperties().addRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
         configuration.getMavenProperties().addRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
-
         configuration.getTemplates().setOverridePath(this.basePath);
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(deployment, configuration);
+        Path runtimeDir = generate(deployment, configuration, manager);
 
         assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
 
@@ -175,5 +184,112 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
         assertThat(runtimeDir.resolve("src/main/resources/mapping-step-2.json")).exists();
+    }
+
+    @Test
+    public void testGenerateApplicationProperties() throws IOException {
+
+        // ******************
+        // OLD STYLE
+        // ******************
+
+        final ConnectorAction oldAction = new ConnectorAction.Builder()
+            .id(KeyGenerator.createKey())
+            .descriptor(new ConnectorDescriptor.Builder()
+                .connectorId("old")
+                .camelConnectorPrefix("old")
+                .build())
+            .build();
+        final Connector oldConnector = new Connector.Builder()
+            .id("old")
+            .addAction(oldAction)
+            .putProperty("username",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(false)
+                    .secret(true)
+                    .build())
+            .putProperty("password",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(false)
+                    .secret(true)
+                    .build())
+            .putProperty("token",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(true)
+                    .secret(true)
+                    .build())
+            .build();
+
+        // ******************
+        // NEW STYLE
+        // ******************
+
+        final ConnectorAction newAction = new ConnectorAction.Builder()
+            .id(KeyGenerator.createKey())
+            .descriptor(new ConnectorDescriptor.Builder()
+                .connectorId("new")
+                .componentScheme("http4")
+                .build())
+            .build();
+        final Connector newConnector = new Connector.Builder()
+            .id("new")
+            .addAction(oldAction)
+            .putProperty("username",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(false)
+                    .secret(true)
+                    .build())
+            .putProperty("password",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(false)
+                    .secret(true)
+                    .build())
+            .putProperty("token",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(true)
+                    .secret(true)
+                    .build())
+            .build();
+
+        // ******************
+        // Integration
+        // ******************
+
+        Step s1 = new Step.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(oldConnector)
+                .build())
+            .putConfiguredProperty("username", "my-username-1")
+            .putConfiguredProperty("password", "my-password-1")
+            .putConfiguredProperty("token", "my-token-1")
+            .action(oldAction)
+            .build();
+        Step s2 = new Step.Builder()
+            .stepKind("endpoint")
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(newConnector)
+                .build())
+            .putConfiguredProperty("username", "my-username-2")
+            .putConfiguredProperty("password", "my-password-2")
+            .putConfiguredProperty("token", "my-token-2")
+            .action(newAction)
+            .build();
+
+        TestResourceManager resourceManager = new TestResourceManager();
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager);
+        IntegrationDeployment deployment = newIntegration(resourceManager, s1, s2);
+        Properties properties = generator.generateApplicationProperties(deployment);
+
+        assertThat(properties.size()).isEqualTo(6);
+        assertThat(properties.getProperty("old.configurations.old-1.token")).isEqualTo("my-token-1");
+        assertThat(properties.getProperty("old-1.username")).isEqualTo("my-username-1");
+        assertThat(properties.getProperty("old-1.password")).isEqualTo("my-password-1");
+        assertThat(properties.getProperty("http4-2.token")).isEqualTo("my-token-2");
+        assertThat(properties.getProperty("http4-2.username")).isEqualTo("my-username-2");
+        assertThat(properties.getProperty("http4-2.password")).isEqualTo("my-password-2");
     }
 }

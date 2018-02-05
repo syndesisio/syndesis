@@ -209,6 +209,11 @@ public class Application implements ApplicationRunner {
         public Optional<InputStream> loadExtensionBLOB(String extensionId) {
             return Optional.empty();
         }
+
+        @Override
+        public String decrypt(String encrypted) {
+            return encrypted;
+        }
     }
 
 }
