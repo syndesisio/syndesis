@@ -39,6 +39,8 @@ public interface IntegrationResourceManager {
 
     Optional<InputStream> loadExtensionBLOB(String id);
 
+    String decrypt(String encrypted);
+
     default Collection<Dependency> collectDependencies(IntegrationDeployment deployment) {
         return collectDependencies(deployment.getSpec().getSteps());
     }
