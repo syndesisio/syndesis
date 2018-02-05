@@ -48,7 +48,7 @@ minishift::run() {
     fi
 
     # Start minishift if necessary
-    if [ -n "$(is_minishift_running)" ]; then
+    if [ -z "$(is_minishift_running)" ]; then
       start_minishift
     fi
 
