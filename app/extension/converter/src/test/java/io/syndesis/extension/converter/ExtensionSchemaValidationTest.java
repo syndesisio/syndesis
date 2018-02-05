@@ -15,11 +15,17 @@
  */
 package io.syndesis.extension.converter;
 
+import java.io.IOException;
 import java.util.OptionalInt;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
@@ -39,18 +45,20 @@ import static org.junit.Assert.assertNotEquals;
 
 public class ExtensionSchemaValidationTest {
 
+    final ObjectMapper OBJECT_MAPPER = Json.copyObjectMapperConfiguration();
+
     @Test
     @Ignore("Used to generate the initial extension definition")
     public void generateBaseExtensionDefinition() throws Exception {
-        ObjectMapper mapper = Json.mapper();
-        JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
+
+        JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(OBJECT_MAPPER);
         com.fasterxml.jackson.module.jsonSchema.JsonSchema schema = schemaGen.generateSchema(Extension.class);
 
-        System.out.println(mapper.writeValueAsString(schema));
+        System.out.println(OBJECT_MAPPER.writeValueAsString(schema));
     }
 
     @Test
-    public void validateStepExtensionTest() throws ProcessingException {
+    public void validateStepExtensionTest() throws ProcessingException, IOException {
         String syndesisExtensionSchema = "/syndesis/syndesis-extension-definition-schema.json";
         JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + syndesisExtensionSchema);
         ExtensionConverter converter = new DefaultExtensionConverter();
@@ -83,7 +91,7 @@ public class ExtensionSchemaValidationTest {
     }
 
     @Test
-    public void upgradePublicModelExtensionTest() throws ProcessingException {
+    public void upgradePublicModelExtensionTest() throws ProcessingException, IOException {
         String syndesisExtensionSchema = "/syndesis/syndesis-extension-definition-schema.json";
         JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + syndesisExtensionSchema);
         ExtensionConverter converter = new DefaultExtensionConverter();
@@ -107,12 +115,12 @@ public class ExtensionSchemaValidationTest {
     }
 
     @Test
-    public void addSchemaVersionInPublicModelExtensionTest() throws ProcessingException {
+    public void addSchemaVersionInPublicModelExtensionTest() throws ProcessingException, IOException {
         String syndesisExtensionSchema = "/syndesis/syndesis-extension-definition-schema.json";
         JsonSchema schema = JsonSchemaFactory.byDefault().getJsonSchema("resource:" + syndesisExtensionSchema);
         ExtensionConverter converter = new DefaultExtensionConverter();
 
-        ObjectNode tree = Json.mapper().createObjectNode()
+        ObjectNode tree = OBJECT_MAPPER.createObjectNode()
                 .put("extensionId", "my-extension")
                 .put("name", "Name")
                 .put("description", "Description")

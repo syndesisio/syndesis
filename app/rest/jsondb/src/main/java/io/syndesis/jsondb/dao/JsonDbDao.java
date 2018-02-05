@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.syndesis.core.SyndesisServerException;
@@ -61,7 +62,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             if( json==null || json.length == 0 ) {
                 return null;
             }
-            return Json.mapper().readValue(json, getType());
+            return Json.reader().forType(getType()).readValue(json);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -99,10 +100,10 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             if( json!=null && json.length > 0 ) {
 
                 // Lets use jackson to parse the map of keys to our model instances
-                ObjectMapper mapper = Json.mapper();
-                TypeFactory typeFactory = mapper.getTypeFactory();
+                ObjectReader reader = Json.reader();
+                TypeFactory typeFactory = reader.getTypeFactory();
                 MapType mapType = typeFactory.constructMapType(LinkedHashMap.class, String.class, getType());
-                LinkedHashMap<String, T> map = mapper.readValue(json, mapType);
+                LinkedHashMap<String, T> map = reader.forType(mapType).readValue(json);
 
                 result = ListResult.of(map.values());
             } else {
@@ -129,7 +130,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
 
             String json = jsondb.getAsString(getCollectionPath(), new GetOptions().depth(1));
             if (json != null) {
-                Map<String,Boolean> map = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
+                Map<String,Boolean> map = Json.reader().forType(new TypeReference<Map<String,Boolean>>() {}).readValue(json);
                 return map.keySet()
                      .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
             } else {
@@ -158,7 +159,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 return null;
             }
 
-            byte[] json = Json.mapper().writeValueAsBytes(entity);
+            byte[] json = Json.writer().writeValueAsBytes(entity);
             jsondb.set(dbPath, json);
 
             return entity;
@@ -176,7 +177,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             // Only update if the entity existed.
             if( previousValue !=null ) {
                 String dbPath = getCollectionPath()+"/:"+entity.getId().get();
-                byte[] json = Json.mapper().writeValueAsBytes(entity);
+                byte[] json = Json.writer().writeValueAsBytes(entity);
                 jsondb.set(dbPath, json);
             }
             return previousValue;

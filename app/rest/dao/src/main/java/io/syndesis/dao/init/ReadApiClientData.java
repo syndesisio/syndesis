@@ -61,12 +61,12 @@ public class ReadApiClientData {
                 throw new FileNotFoundException("Cannot find file " + fileName + " on classpath");
             }
             String jsonText = findAndReplaceTokens(from(is),System.getenv());
-            return Json.mapper().readValue(jsonText, MODEL_DATA_TYPE);
+            return Json.reader().forType(MODEL_DATA_TYPE).readValue(jsonText);
         }
     }
     public List<ModelData<?>> readDataFromString(String jsonText) throws JsonParseException, JsonMappingException, IOException {
         String json = findAndReplaceTokens(jsonText,System.getenv());
-        return Json.mapper().readValue(json, MODEL_DATA_TYPE);
+        return Json.reader().forType(MODEL_DATA_TYPE).readValue(json);
     }
     /**
      * Reads the InputStream and returns a String containing all content from the InputStream.

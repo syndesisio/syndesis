@@ -18,6 +18,8 @@ package io.syndesis.extension.converter;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.model.extension.Extension;
 
+import java.io.IOException;
+
 /**
  * User-facing (public) extensions must follow a schema that is subject to backward-compatible changes only.
  * In order to allow the core API to evolve while supporting old extensions, the two schemas must be separated and
@@ -41,11 +43,11 @@ public interface ExtensionConverter {
     /**
      * Converts a public extension schema into the internal definition.
      */
-    Extension toInternalExtension(JsonNode tree);
+    Extension toInternalExtension(JsonNode tree) throws IOException;
 
     /**
      * Converts a internal extension into the public format.
      */
-    JsonNode toPublicExtension(Extension extension);
+    JsonNode toPublicExtension(Extension extension) throws IOException;
 
 }

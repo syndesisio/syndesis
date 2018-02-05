@@ -56,7 +56,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     @JsonProperty("data")
     public String getDataAsJson() throws JsonProcessingException {
         if (json == null) {
-            json = Json.mapper().writeValueAsString(data);
+            json = Json.writer().writeValueAsString(data);
         }
         return json;
     }
@@ -65,7 +65,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     @JsonProperty("data")
     public void setDataFromJson(JsonNode json) throws JsonProcessingException {
         this.data = null;
-        this.json = Json.mapper().writeValueAsString(json);
+        this.json = Json.writer().writeValueAsString(json);
     }
 
     @JsonIgnore
@@ -73,7 +73,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
         if (data == null && kind != null && json != null) {
             @SuppressWarnings("unchecked")
             final Class<T> modelClass = (Class<T>) kind.getModelClass();
-            data = Json.mapper().readValue(json, modelClass);
+            data = Json.reader().forType(modelClass).readValue(json);
         }
         return data;
     }

@@ -39,7 +39,7 @@ public class RegexBasedMasqueradeReader extends FilterReader {
     // If true, the newline at the end of curLine has not been returned.
     // It would have been more convenient to append the newline
     // onto freshly fetched lines. However, that would incur another
-    // allocation and copy.
+    // allocation and copyObjectMapperConfiguration.
     boolean emitNewline;
 
     // Matcher used to test every line

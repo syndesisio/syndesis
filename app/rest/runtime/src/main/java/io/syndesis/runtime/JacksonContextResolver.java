@@ -32,7 +32,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private final ObjectMapper objectMapper;
 
     public JacksonContextResolver() {
-        this.objectMapper = Json.mapper();
+        this.objectMapper = Json.copyObjectMapperConfiguration();
     }
 
     @Override

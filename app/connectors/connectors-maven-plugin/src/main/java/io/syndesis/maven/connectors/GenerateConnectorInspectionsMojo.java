@@ -101,7 +101,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 }
 
                 for (File file: files) {
-                    final Connector connector = Json.mapper().readValue(file, Connector.class);
+                    final Connector connector = Json.reader().forType(Connector.class).readValue(file);
                     final List<ConnectorAction> actions = new ArrayList<>();
 
                     for (ConnectorAction action : connector.getActions()) {
@@ -128,7 +128,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                     }
 
                     if (!actions.isEmpty()) {
-                        Json.mapper().writeValue(
+                        Json.writer().writeValue(
                             file,
                             new Connector.Builder()
                                 .createFrom(connector)

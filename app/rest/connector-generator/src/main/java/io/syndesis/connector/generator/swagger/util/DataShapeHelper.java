@@ -45,7 +45,7 @@ public final class DataShapeHelper {
     private static DataShape createShapeFromProperty(final String specification, final Property schema) {
         if (schema instanceof MapProperty) {
             try {
-                final String schemaString = Json.mapper().writeValueAsString(schema);
+                final String schemaString = Json.writer().writeValueAsString(schema);
 
                 return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
             } catch (final JsonProcessingException e) {

@@ -16,10 +16,12 @@
 package io.syndesis.maven;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -40,6 +42,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -373,7 +376,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         if (template.exists()) {
             try {
-                JsonNode tree = Json.mapper().readTree(template);
+                JsonNode tree = Json.reader().readTree(Files.newBufferedReader(template.toPath(), Charset.defaultCharset()));
                 Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 
@@ -450,7 +453,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
         try {
             JsonNode tree = ExtensionConverter.getDefault().toPublicExtension(jsonObject);
-            Json.mapper().writerWithDefaultPrettyPrinter().writeValue(targetFile, tree);
+            ObjectWriter writer = Json.writer();
+            writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValue(targetFile, tree);
             getLog().info("Created file " + targetFile.getAbsolutePath());
         } catch (IOException e) {
             throw new MojoExecutionException("Cannot write to file: " + metadataDestination, e);

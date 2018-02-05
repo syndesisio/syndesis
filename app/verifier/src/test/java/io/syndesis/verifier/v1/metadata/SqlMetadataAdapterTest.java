@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.connector.sql.DatabaseProduct;
 import io.syndesis.connector.sql.SqlConnectorMetaDataExtension;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
@@ -115,7 +116,8 @@ public class SqlMetadataAdapterTest {
 
         SyndesisMetadata syndesisMetaData2 = adapter.adapt("sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8).trim();
-        String actualMetadata = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
+        ObjectWriter writer = Json.writer();
+        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata);
 
     }
@@ -134,18 +136,19 @@ public class SqlMetadataAdapterTest {
         SyndesisMetadata syndesisMetaData = adapter.adapt("sql-stored-connector", parameters, metadata.get());
 
         String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
-        String actualListOfProcedures = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData);
+        ObjectWriter writer = Json.writer();
+        String actualListOfProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
         assertEquals(expectedListOfProcedures, actualListOfProcedures);
 
         parameters.put(SqlMetadataAdapter.PATTERN, SqlMetadataAdapter.FROM_PATTERN);
         String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
-        String actualListOfStartProcedures = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData);
+                String actualListOfStartProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
         assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures);
 
         parameters.put("procedureName", "DEMO_ADD");
         SyndesisMetadata syndesisMetaData2 = adapter.adapt("sql-stored-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8).trim();
-        String actualMetadata = Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsString(syndesisMetaData2);
+        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata);
 
     }

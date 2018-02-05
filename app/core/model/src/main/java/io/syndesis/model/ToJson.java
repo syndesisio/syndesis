@@ -30,7 +30,7 @@ public interface ToJson {
     @JsonIgnore
     default String toJson() {
         try {
-            return Json.mapper().writeValueAsString(this);
+            return Json.writer().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new JsonProcessingRuntimeException(e);
         }

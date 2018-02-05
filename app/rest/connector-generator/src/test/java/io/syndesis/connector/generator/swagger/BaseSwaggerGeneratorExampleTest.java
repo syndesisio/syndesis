@@ -40,7 +40,7 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
 
     public BaseSwaggerGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
         specification = resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
-        expected = Json.mapper().readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"), Connector.class);
+        expected = Json.reader().forType(Connector.class).readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));
     }
 
     @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")

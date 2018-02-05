@@ -86,7 +86,7 @@ public class IntegrationController {
             // Never do anything that could block in this callback!
             if (event!=null && "change-event".equals(event)) {
                 try {
-                    ChangeEvent changeEvent = Json.mapper().readValue(data, ChangeEvent.class);
+                    ChangeEvent changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
                     if (changeEvent != null) {
                         changeEvent.getId().ifPresent(id -> {
                             changeEvent.getKind()
@@ -175,7 +175,7 @@ public class IntegrationController {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}", getLabel(integrationDeployment), update.getState(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
                     }
-                    // handler.execute might block for while so refresh our copy of the integration
+                    // handler.execute might block for while so refresh our copyObjectMapperConfiguration of the integration
                     // data before we update the current status
                     if (update.getState() == IntegrationDeploymentState.Undeployed) {
                         dataManager.delete(IntegrationDeployment.class, integrationDeploymentId);

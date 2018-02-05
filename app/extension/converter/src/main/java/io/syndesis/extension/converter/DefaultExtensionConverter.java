@@ -15,8 +15,10 @@
  */
 package io.syndesis.extension.converter;
 
+import java.io.IOException;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.core.Json;
@@ -58,14 +60,14 @@ class DefaultExtensionConverter implements ExtensionConverter {
     }
 
     @Override
-    public Extension toInternalExtension(JsonNode tree) {
+    public Extension toInternalExtension(JsonNode tree) throws IOException {
         ObjectNode upgradedTree = updateToLatestVersion(toObjectNode(tree));
         ObjectNode convertedTree = convertPublicToInternalModel(upgradedTree);
         return unmarshal(convertedTree);
     }
 
     @Override
-    public JsonNode toPublicExtension(Extension extension) {
+    public JsonNode toPublicExtension(Extension extension) throws IOException {
         ObjectNode internalTree = marshal(extension);
         ObjectNode publicTree = convertInternalToPublicModel(internalTree);
         return updateToLatestVersion(publicTree);
@@ -89,12 +91,14 @@ class DefaultExtensionConverter implements ExtensionConverter {
                 .flatMap(t -> Optional.ofNullable(t.textValue()));
     }
 
-    private Extension unmarshal(JsonNode node) {
-        return Json.mapper().convertValue(node, Extension.class);
+    private Extension unmarshal(JsonNode node) throws IOException {
+        byte[] bytes = Json.writer().writeValueAsBytes(node);
+        return Json.reader().forType(Extension.class).readValue(bytes);
     }
 
-    private ObjectNode marshal(Extension extension) {
-        return Json.mapper().convertValue(extension, ObjectNode.class);
+    private ObjectNode marshal(Extension extension) throws IOException {
+        byte[] bytes = Json.writer().writeValueAsBytes(extension);
+        return Json.reader().forType(ObjectNode.class).readValue(bytes);
     }
 
     private ObjectNode toObjectNode(JsonNode tree) {

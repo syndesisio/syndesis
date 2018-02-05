@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -161,9 +162,10 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
+                ObjectWriter writer = Json.writer();
                 ProjectGeneratorHelper.addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(deployment, applicationJavaMustache));
                 ProjectGeneratorHelper.addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(deployment, applicationPropertiesMustache));
-                ProjectGeneratorHelper.addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsBytes(deployment));
+                ProjectGeneratorHelper.addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(deployment));
                 ProjectGeneratorHelper.addTarEntry(tos, "pom.xml", generatePom(deployment));
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, deployment);

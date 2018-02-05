@@ -143,7 +143,7 @@ public class IntegrationSupportHandler {
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
                 ModelExport exportObject = ModelExport.of(Schema.VERSION, models);
-                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.mapper().writeValueAsBytes(exportObject));
+                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.writer().writeValueAsBytes(exportObject));
                 for (String extensionId : extensions) {
                     addEntry(tos, "extensions/" + Names.sanitize(extensionId) + ".jar", IOUtils.toByteArray(
                         extensionDataManager.getExtensionBinaryFile(extensionId)
@@ -198,7 +198,7 @@ public class IntegrationSupportHandler {
                     break;
                 }
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    ModelExport models = Json.mapperWithoutSourceAutoclose().readValue(zis, ModelExport.class);
+                    ModelExport models = Json.reader().forType(ModelExport.class).readValue(zis);
                     changeEvents.addAll(importModels(sec, models));
                     for (ChangeEvent changeEvent : changeEvents) {
                         if( changeEvent.getKind().get().equals("extension") ) {
