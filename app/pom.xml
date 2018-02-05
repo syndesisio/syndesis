@@ -35,7 +35,6 @@
   <properties>
     <!-- Global Syndesis version -->
     <syndesis.version>${project.version}</syndesis.version>
-    <syndesis.policy.version>2</syndesis.policy.version>
 
     <!-- Atlasmap version -->
     <atlasmap.version>1.33.0</atlasmap.version>
@@ -546,8 +545,9 @@
           <dependencies>
             <dependency>
               <groupId>io.syndesis</groupId>
-              <artifactId>syndesis-policy</artifactId>
-              <version>${syndesis.policy.version}</version>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -556,13 +556,14 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <configuration>
-            <configLocation>/checkstyle/checkstyle-syndesis.xml</configLocation>
+            <configLocation>/syndesis/checkstyle.xml</configLocation>
           </configuration>
           <dependencies>
             <dependency>
               <groupId>io.syndesis</groupId>
-              <artifactId>syndesis-policy</artifactId>
-              <version>${syndesis.policy.version}</version>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -610,6 +611,28 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-tool-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <inherited>false</inherited>
+            <configuration>
+              <descriptors>
+                <descriptor>tools.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
   </build>
 
   <!-- Common dependencies -->
@@ -1098,7 +1121,6 @@
     </dependencies>
 
   </dependencyManagement>
-
 
   <!-- Metadata need to publish to central -->
   <url>https://syndesis.io/</url>

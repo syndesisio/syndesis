@@ -23,7 +23,7 @@
   <module name="SuppressWarningsFilter" />
   <module name="SuppressWithNearbyCommentFilter"/>
   <module name="SuppressionFilter">
-    <property name="file" value="/checkstyle/checkstyle-syndesis-suppressions.xml"/>
+    <property name="file" value="/syndesis/checkstyle-suppressions.xml"/>
   </module>
 
   <!-- http://checkstyle.sourceforge.net/config_misc.html -->
