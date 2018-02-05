@@ -17,6 +17,7 @@ package io.syndesis.integration.project.generator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -35,6 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -242,9 +244,11 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
+                ObjectWriter writer = Json.writer();
+
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(deployment, applicationJavaMustache));
                 addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(deployment, applicationPropertiesMustache));
-                addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsBytes(deployment));
+                addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(deployment));
                 addTarEntry(tos, "pom.xml", generatePom(deployment));
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, deployment);

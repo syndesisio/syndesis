@@ -100,7 +100,7 @@ public class SalesforceMetadataAdapterTest {
 
         assertThat(metadata.inputShape).isSameAs(metadata.inputShape);
         final Object oneOf = payload.getOneOf().iterator().next();
-        final ObjectSchema inSchema = Json.mapper().readValue(metadata.inputShape.getSpecification(), ObjectSchema.class);
+        final ObjectSchema inSchema = Json.reader().forType(ObjectSchema.class).readValue(metadata.inputShape.getSpecification()    );
 
         assertThat(inSchema).isEqualTo(oneOf);
         assertThat(inSchema.get$schema()).isEqualTo(JsonUtils.SCHEMA4);

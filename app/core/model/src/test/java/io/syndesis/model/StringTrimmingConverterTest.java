@@ -47,7 +47,7 @@ public class StringTrimmingConverterTest {
                 .desiredStatus(IntegrationDeploymentState.Draft)
                 .build();
 
-        final Integration created = Json.mapper().readValue(Json.mapper().writeValueAsBytes(original), Integration.class);
+        final Integration created = Json.reader().forType(Integration.class).readValue(Json.writer().writeValueAsBytes(original));
 
         assertThat(created.getName()).isEqualTo("some-name");
         assertThat(created.getDescription()).isNotPresent();

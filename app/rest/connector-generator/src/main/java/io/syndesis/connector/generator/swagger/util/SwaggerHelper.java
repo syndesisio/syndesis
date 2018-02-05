@@ -102,7 +102,7 @@ public final class SwaggerHelper {
 
     public static String serialize(final Swagger swagger) {
         try {
-            return Json.mapper().writeValueAsString(swagger);
+            return Json.writer().writeValueAsString(swagger);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize Swagger specification", e);
         }
@@ -128,7 +128,7 @@ public final class SwaggerHelper {
 
         final JsonNode node = convertToJson(specificationToUse);
 
-        return Json.mapper().writeValueAsString(node);
+        return Json.writer().writeValueAsString(node);
     }
 
     private static boolean append(final List<Violation> violations, final ProcessingMessage message, final Optional<String> requiredLevel) {

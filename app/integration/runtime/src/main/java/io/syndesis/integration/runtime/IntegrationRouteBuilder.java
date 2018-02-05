@@ -70,7 +70,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
             if (is != null) {
                 LOGGER.info("Loading integration from: {}", configurationUri);
-                deployment = Json.mapper().readValue(is, IntegrationDeployment.class);
+                deployment = Json.reader().forType(IntegrationDeployment.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
             }

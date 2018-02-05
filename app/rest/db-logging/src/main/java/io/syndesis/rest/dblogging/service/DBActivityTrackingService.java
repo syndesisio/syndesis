@@ -22,6 +22,7 @@ import static io.syndesis.rest.dblogging.service.JsonNodeSupport.removeBoolean;
 import static io.syndesis.rest.dblogging.service.JsonNodeSupport.removeLong;
 import static io.syndesis.rest.dblogging.service.JsonNodeSupport.removeString;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,7 +89,7 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             return new ArrayList<>();
         }
 
-        return toActivityList(Json.mapper().readTree(data));
+        return toActivityList(Json.reader().readTree(new ByteArrayInputStream(data)));
     }
 
     private List<Activity> toActivityList(JsonNode from) {

@@ -38,6 +38,10 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
 
     private static final String HISTORY = "HISTORY";
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonDBRawMetrics.class);
+    public static final TypeReference<Map<String, Boolean>> TYPE_REFERENCE = new TypeReference<Map<String, Boolean>>() {
+    };
+    public static final TypeReference<Map<String, RawMetrics>> VALUE_TYPE_REF = new TypeReference<Map<String, RawMetrics>>() {
+    };
     private final JsonDB jsonDB;
 
     public JsonDBRawMetrics(JsonDB jsonDB) {
@@ -54,7 +58,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
             //persist the latest rawMetrics
             String path = String.format("%s/integrations/%s/pods/%s",
                 RawMetrics.class.getSimpleName(),rawMetrics.getIntegrationId(), rawMetrics.getPod());
-            String json = Json.mapper().writeValueAsString(rawMetrics);
+            String json = Json.writer().writeValueAsString(rawMetrics);
             if (jsonDB.exists(path)) {
                 //only update if not the same (don't cause unnecessary and expensive writes)
                 if (! jsonDB.getAsString(path).equals(json)) {
@@ -83,7 +87,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         Map<String,RawMetrics> metrics = new HashMap<>();
         String json = jsonDB.getAsString(path(integrationId));
         if (json != null) {
-            metrics = Json.mapper().readValue(json, new TypeReference<Map<String,RawMetrics>>() {});
+            metrics = Json.reader().forType(VALUE_TYPE_REF).readValue(json);
         }
         return metrics;
     }
@@ -121,11 +125,11 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
                             .resetDate(Optional.empty())
                             .lastProcessed(Optional.ofNullable(lastProcessed))
                             .build();
-                    String json = Json.mapper().writeValueAsString(updatedHistoryMetrics);
+                    String json = Json.writer().writeValueAsString(updatedHistoryMetrics);
                     jsonDB.update(path(integrationId,HISTORY), json);
                 } else {
                     //create history bucket, first time we find a dead pod for this integration
-                    String json = Json.mapper().writeValueAsString(metrics.get(entry.getKey()));
+                    String json = Json.writer().writeValueAsString(metrics.get(entry.getKey()));
                     jsonDB.set(path(integrationId,HISTORY), json);
                 }
                 //delete the dead pod metrics since it has been added to the history
@@ -147,7 +151,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         //1. Loop over all RawMetrics
         String json = jsonDB.getAsString(path(), new GetOptions().depth(1));
         if (json != null) {
-            Map<String,Boolean> metricsMap = Json.mapper().readValue(json, new TypeReference<Map<String,Boolean>>() {});
+            Map<String,Boolean> metricsMap = Json.reader().forType(TYPE_REFERENCE).readValue(json);
             Set<String> rawIntegrationIds = metricsMap.keySet();
             for (String rawIntId : rawIntegrationIds) {
                 if (! activeIntegrationIds.contains(rawIntId)) {

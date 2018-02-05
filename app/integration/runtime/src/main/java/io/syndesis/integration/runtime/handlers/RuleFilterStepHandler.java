@@ -59,7 +59,7 @@ public class RuleFilterStepHandler extends AbstractFilterStepHandler {
             if (rulesString == null || rulesString.isEmpty()) {
                 return null;
             }
-            return Json.mapper().readValue(rulesString,new TypeReference<List<FilterRule>>(){});
+            return Json.reader().forType(new TypeReference<List<FilterRule>>(){}).readValue(rulesString);
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Cannot deserialize %s: %s", rulesString, e.getMessage()),e);
         }

@@ -32,8 +32,8 @@ public abstract class AbstractSwaggerConnectorTest {
 
     private static ConnectorTemplate fetchSwaggerConnectorTemplateFromDeployment() {
         final Configuration configuration = Configuration.builder()//
-            .jsonProvider(new JacksonJsonProvider(Json.mapper()))//
-            .mappingProvider(new JacksonMappingProvider(Json.mapper()))//
+            .jsonProvider(new JacksonJsonProvider(Json.copyObjectMapperConfiguration()))//
+            .mappingProvider(new JacksonMappingProvider(Json.copyObjectMapperConfiguration()))//
             .build();
 
         final List<ConnectorTemplate> templates = JsonPath.using(configuration)

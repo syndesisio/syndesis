@@ -153,7 +153,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
         } else {
             String schema;
             try {
-                schema = Json.mapper().writer().writeValueAsString(unifiedSchema);
+                schema = Json.writer().writeValueAsString(unifiedSchema);
             } catch (final JsonProcessingException e) {
                 throw new IllegalStateException("Unable to serialize given JSON schema", e);
             }
@@ -190,7 +190,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
 
     private static JsonNode createSchemaFromModelImpl(final Model schema) {
         try {
-            final String schemaString = Json.mapper().writeValueAsString(schema);
+            final String schemaString = Json.writer().writeValueAsString(schema);
 
             return parseJsonSchema(schemaString);
         } catch (final JsonProcessingException e) {
@@ -201,7 +201,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
     private static JsonNode createSchemaFromProperty(final String specification, final Property schema) {
         if (schema instanceof MapProperty) {
             try {
-                final String schemaString = Json.mapper().writeValueAsString(schema);
+                final String schemaString = Json.writer().writeValueAsString(schema);
 
                 return parseJsonSchema(schemaString);
             } catch (final JsonProcessingException e) {
@@ -226,7 +226,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
 
     private static JsonNode parseJsonSchema(final String schema) {
         try {
-            return Json.mapper().readTree(schema);
+            return Json.reader().readTree(schema);
         } catch (final IOException e) {
             throw new IllegalStateException("Unable to parse given JSON schema: " + StringUtils.abbreviate(schema, 100), e);
         }

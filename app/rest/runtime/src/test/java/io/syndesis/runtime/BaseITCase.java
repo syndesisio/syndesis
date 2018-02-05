@@ -257,7 +257,7 @@ public abstract class BaseITCase {
     }
     /* default */ static final class JsonJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
         JsonJackson2HttpMessageConverter() {
-            super(Json.mapper(), MediaType.parseMediaType("application/json"));
+            super(Json.copyObjectMapperConfiguration(), MediaType.parseMediaType("application/json"));
         }
     }
 

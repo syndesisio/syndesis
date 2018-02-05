@@ -50,9 +50,9 @@ public final class TestHelper {
             return null;
         }
 
-        final Map<?, ?> tree = Json.mapper().readValue(json, Map.class);
+        final Map<?, ?> tree = Json.reader().forType(Map.class).readValue(json);
 
-        return Json.mapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
+        return Json.copyObjectMapperConfiguration().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
             .writeValueAsString(tree);
     }
 
