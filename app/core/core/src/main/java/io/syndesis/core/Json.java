@@ -16,6 +16,7 @@
 package io.syndesis.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +40,10 @@ public final class Json {
 
     public static ObjectMapper mapper() {
         return OBJECT_MAPPER;
+    }
+
+    public static ObjectMapper mapperWithoutSourceAutoclose(){
+        return OBJECT_MAPPER.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
     }
 
     public static String toString(Object value) {
