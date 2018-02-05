@@ -15,14 +15,13 @@
  */
 package io.syndesis.extension.converter;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.core.Json;
 import io.syndesis.model.extension.Extension;
+
+import java.io.IOException;
+import java.util.Optional;
 
 class DefaultExtensionConverter implements ExtensionConverter {
 

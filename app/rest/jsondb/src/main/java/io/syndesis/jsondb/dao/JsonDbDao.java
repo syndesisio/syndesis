@@ -15,22 +15,12 @@
  */
 package io.syndesis.jsondb.dao;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import io.syndesis.core.SyndesisServerException;
 import io.syndesis.core.Json;
+import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.operators.IdPrefixFilter;
 import io.syndesis.jsondb.GetOptions;
@@ -38,6 +28,14 @@ import io.syndesis.jsondb.JsonDB;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.WithId;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Implements a DataAccessObject using the {@see: JsonDB}.

@@ -15,7 +15,6 @@
  */
 package io.syndesis.rest.v1.handler.integration.support;
 
-import com.fasterxml.jackson.databind.ObjectReader;
 import io.syndesis.core.Json;
 import io.syndesis.model.ModelExport;
 import org.junit.Test;
@@ -25,8 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class IntegrationSupportHandlerTest {

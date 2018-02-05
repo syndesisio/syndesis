@@ -15,8 +15,44 @@
  */
 package io.syndesis.maven;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.v2.JavaClass;
+import io.syndesis.core.Json;
+import io.syndesis.core.Names;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
+import io.syndesis.extension.converter.ExtensionConverter;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ActionDescriptor;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.extension.Extension;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.StringUtils;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.repository.RemoteRepository;
+
+import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
@@ -39,46 +75,6 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.annotation.Nullable;
-
-import com.fasterxml.jackson.databind.ObjectWriter;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.StringUtils;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.repository.RemoteRepository;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.atlasmap.core.DefaultAtlasConversionService;
-import io.atlasmap.java.inspect.ClassInspectionService;
-import io.atlasmap.java.v2.JavaClass;
-import io.syndesis.core.Json;
-import io.syndesis.core.Names;
-import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
-import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.extension.Extension;
 
 
 /**

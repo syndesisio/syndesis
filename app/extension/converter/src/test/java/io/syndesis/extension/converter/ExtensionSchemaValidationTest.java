@@ -15,17 +15,9 @@
  */
 package io.syndesis.extension.converter;
 
-import java.io.IOException;
-import java.util.OptionalInt;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
@@ -39,9 +31,10 @@ import io.syndesis.model.extension.Extension;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import java.io.IOException;
+import java.util.OptionalInt;
+
+import static org.junit.Assert.*;
 
 public class ExtensionSchemaValidationTest {
 
