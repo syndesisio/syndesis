@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterStateSnapshot } from '@angular/router';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Connection, UserService, CanComponentDeactivate } from '@syndesis/ui/platform';
@@ -27,7 +26,6 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     private modalService: ModalService,
     private connectionService: ConnectionService,
     private router: Router,
-    public tourService: TourService,
     private userService: UserService
   ) {
     this.reviewForm = this.createReviewForm();
@@ -96,21 +94,6 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
         this.createConnection();
       }
     });
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-        route: 'connections/create/review',
-        anchorId: 'connections.publish',
-        title: 'Make It Available',
-        content: 'Click Create to make the new connection available for use in integrations.',
-        placement: 'left',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {

@@ -1,22 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-integration-basics',
   templateUrl: 'integration-basics.component.html',
   styleUrls: ['./integration-basics.component.scss']
 })
-export class IntegrationBasicsComponent extends FlowPage implements OnInit {
+export class IntegrationBasicsComponent extends FlowPage {
   constructor(
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
-    public router: Router,
-    public tourService: TourService,
-    private userService: UserService
+    public router: Router
   ) {
     super(currentFlow, route, router);
   }
@@ -72,23 +67,5 @@ export class IntegrationBasicsComponent extends FlowPage implements OnInit {
       property: 'tags',
       value: _tags
     });
-  }
-
-  ngOnInit() {
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([{
-          anchorId: 'integrations.publish',
-          title: 'Publish',
-          content: `Click Publish to start running the integration, which will
-            take a moment or two.  Click Save as Draft to save the integration
-            without deploying it.`,
-          placement: 'left',
-        }],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 }

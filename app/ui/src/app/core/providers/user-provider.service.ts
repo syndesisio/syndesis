@@ -24,20 +24,6 @@ export class UserProviderService extends UserService {
   }
 
   /**
-   * Set state of Guided Tour
-   */
-  setTourState(val): void {
-    return localStorage.setItem('guidedTourState', JSON.stringify(val));
-  }
-
-  /**
-   * Get state of Guided Tour
-   */
-  getTourState() {
-    return JSON.parse(localStorage.getItem('guidedTourState'));
-  }
-
-  /**
    * Log the user out
    */
   logout(): Observable<any> {

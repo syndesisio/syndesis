@@ -1,15 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { IntegrationStore } from '@syndesis/ui/store';
 import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsCreatePage');
-import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { Integration, Step, UserService } from '@syndesis/ui/platform';
+import { Integration } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',
@@ -24,9 +21,7 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
     public currentFlow: CurrentFlow,
     public store: IntegrationStore,
     public route: ActivatedRoute,
-    public router: Router,
-    public tourService: TourService,
-    private userService: UserService
+    public router: Router
   ) {
     super(currentFlow, route, router);
   }
@@ -39,7 +34,6 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
     const child = route.firstChild;
     if (child && child.snapshot) {
       const path = child.snapshot.url;
-      // log.debugc(() => 'path from root: ' + path, category);
       try {
         const position = path[1].path;
         return +position;
@@ -47,7 +41,6 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
         return -1;
       }
     } else {
-      // log.debugc(() => 'no current child', category);
       return undefined;
     }
   }
@@ -154,21 +147,6 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
     );
     if (validate) {
       this.validateFlow();
-    }
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-        anchorId: 'integrations.step',
-        title: 'Operate On Data',
-        content: 'Clicking the plus sign lets you add an operation that the ' +
-        'integration performs between the start and finish connections.',
-        placement: 'right',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
     }
   }
 }

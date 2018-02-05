@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { Connections, Integrations, UserService } from '@syndesis/ui/platform';
 import { ConnectionStore } from '../store/connection/connection.store';
 import { IntegrationStore } from '../store/integration/integration.store';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 @Component({
   selector: 'syndesis-dashboard',
@@ -22,7 +21,6 @@ export class DashboardComponent implements OnInit {
   constructor(
     private connectionStore: ConnectionStore,
     private integrationStore: IntegrationStore,
-    public tourService: TourService,
     private userService: UserService
   ) {
     this.connections = this.connectionStore.list;
@@ -34,28 +32,5 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.connectionStore.loadAll();
     this.integrationStore.loadAll();
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-        route: 'dashboard',
-        anchorId: 'dashboard.navigation',
-        title: 'Navigation',
-        content: 'View integrations, connections or settings for applications that Fuse Ignite is registered with.',
-        placement: 'right',
-        }, {
-        route: 'dashboard',
-        anchorId: 'dashboard.integration',
-        title: 'Create Integration',
-        placement: 'bottom',
-        content: 'After creating at least two connections, you can create an integration.',
-        } ], {
-          route: 'dashboard',
-        }
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 }

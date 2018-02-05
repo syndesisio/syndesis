@@ -40,7 +40,6 @@ import {
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/components/logs.component';
 
 const editIntegrationChildRoutes = [
@@ -104,7 +103,6 @@ const routes: Routes = [
     PopoverModule,
     DataMapperModule,
     FileUploadModule,
-    TourNgxBootstrapModule,
     ActionModule,
     ListModule,
     ToolbarModule,

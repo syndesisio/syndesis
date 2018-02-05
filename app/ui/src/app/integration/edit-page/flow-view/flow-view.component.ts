@@ -1,21 +1,17 @@
 import {
   Component,
   ElementRef,
-  Input,
-  OnInit,
   OnDestroy,
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { ModalService } from '@syndesis/ui/common';
-import { Integration, Step, UserService } from '@syndesis/ui/platform';
+import { Integration, UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -25,7 +21,7 @@ const category = getCategory('IntegrationsCreatePage');
   styleUrls: ['./flow-view.component.scss']
 })
 export class FlowViewComponent extends ChildAwarePage
-  implements OnInit, OnDestroy {
+  implements OnDestroy {
   i: Integration;
   flowSubscription: Subscription;
   urls: UrlSegment[];
@@ -39,7 +35,6 @@ export class FlowViewComponent extends ChildAwarePage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public tourService: TourService,
     private userService: UserService,
     private modalService: ModalService
   ) {
@@ -230,22 +225,6 @@ export class FlowViewComponent extends ChildAwarePage
       case 'integration-connection-configure':
       default:
         break;
-    }
-  }
-
-  ngOnInit() {
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([{
-        anchorId: 'integrations.step',
-        title: 'Operate On Data',
-        content: 'Clicking the plus sign lets you add an operation that the integration performs between the start and finish connections.',
-        placement: 'right',
-      }],
-      );
-      setTimeout(() => this.tourService.start());
     }
   }
 

@@ -25,9 +25,6 @@
            #pop="bs-popover">
         <p>
           <i class="fa fa-plus-square"></i>
-          <!-- TODO causes exception
-             tourAnchor="integrations.step"></i>
-          -->
         </p>
       </div>
       <div class="col-md-10">
@@ -49,8 +46,7 @@
       <div class="col-md-12">
         <div class="form-group">
           <div class="clickable"
-               (click)="startEditingName()"
-               tourAnchor="integrations.panel">
+               (click)="startEditingName()">
             <input type="text"
                    #nameInput
                    class="form-control integration-name"

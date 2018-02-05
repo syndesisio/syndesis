@@ -12,13 +12,12 @@ import { saveAs } from 'file-saver';
 import { Restangular } from 'ngx-restangular';
 import { Notification, NotificationEvent } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
-import { ModalService } from './common/modal/modal.service';
-import { NavigationService } from './common/navigation.service';
+import { ModalService } from '@syndesis/ui/common/modal/modal.service';
+import { NavigationService } from '@syndesis/ui/common/navigation.service';
 import { UserService, User } from '@syndesis/ui/platform';
 import { ConfigService } from './config.service';
 import { log } from './logging';
 import { TestSupportService } from './store/test-support.service';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({
@@ -73,11 +72,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   userGuideLink = 'https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite/';
   /* tslint:enable */
 
-  /**
-   * Guided Tour status
-   */
-  guidedTourStatus = true;
-
   notifications: Observable<Notification[]>;
 
   /**
@@ -92,7 +86,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
     private navigationService: NavigationService,
-    public tourService: TourService,
     private modalService: ModalService,
     private title: Title,
     private meta: Meta,
@@ -156,28 +149,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.notifications = this.notificationService.getNotificationsObservable();
     this.showClose = true;
-  }
-
-  /**
-   * Guided Tour
-   */
-  getTourState() {
-    this.guidedTourStatus = this.userService.getTourState();
-    return this.guidedTourStatus;
-  }
-
-  startTour() {
-    this.tourService.start();
-    this.userService.setTourState(true);
-    this.guidedTourStatus = true;
-  }
-
-  endTour() {
-    if (!!this.guidedTourStatus) {
-      this.tourService.end();
-      this.userService.setTourState(false);
-      this.guidedTourStatus = false;
-    }
   }
 
   /**
@@ -261,7 +232,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     $patternFlyCards.matchHeight();
 
     this.navigationService.initialize();
-    this.userService.setTourState(true);
-    this.guidedTourStatus = this.userService.getTourState();
   }
 }

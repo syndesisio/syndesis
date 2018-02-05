@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
-import { Connectors, Connector, Connection, UserService } from '@syndesis/ui/platform';
+import { Connectors, Connector, Connection } from '@syndesis/ui/platform';
 import { TypeFactory } from '@syndesis/ui/model';
 import { CurrentConnectionService } from '../current-connection';
 import { ConnectorStore } from '../../../store/connector/connector.store';
@@ -20,9 +19,7 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   constructor(
     private current: CurrentConnectionService,
-    private connectorStore: ConnectorStore,
-    public tourService: TourService,
-    private userService: UserService
+    private connectorStore: ConnectorStore
   ) {
     this.loading = connectorStore.loading;
     this.connectors = connectorStore.list;
@@ -30,21 +27,6 @@ export class ConnectionsConnectionBasicsComponent implements OnInit {
 
   ngOnInit() {
     this.connectorStore.loadAll();
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([{
-          anchorId: 'connections.type',
-          title: 'Connection',
-          content:
-            'A connection represents a specific application that you want to obtain data from or send data to.',
-          placement: 'top',
-        }]
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   onSelected(connector: Connector) {

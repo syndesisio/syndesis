@@ -32,7 +32,6 @@
         <button class="btn btn-primary"
                 *ngIf="getCurrentPage() === 'review'"
                 (click)="doCreate()"
-                tourAnchor="connections.publish"
                 [disabled]="!canContinue()">Create
         </button>
       </div>

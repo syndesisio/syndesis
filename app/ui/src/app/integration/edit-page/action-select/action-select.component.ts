@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { Actions, Action, Connector, UserService, Step } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
@@ -35,7 +34,6 @@ export class IntegrationSelectActionComponent extends FlowPage
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public tourService: TourService,
     private userService: UserService
   ) {
     super(currentFlow, route, router);
@@ -126,20 +124,6 @@ export class IntegrationSelectActionComponent extends FlowPage
       this.position = +params.get('position');
       this.loadActions();
     });
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-        anchorId: 'actions.available',
-        title: 'Available Actions',
-        content: 'When an integration uses the selected connection it performs the action you select.',
-        placement: 'top',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {
