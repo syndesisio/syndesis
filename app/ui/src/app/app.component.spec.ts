@@ -14,7 +14,6 @@ import { UserService } from '@syndesis/ui/platform';
 import { ConfigService } from './config.service';
 import { StoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 /* tslint:disable:no-unused-variable */
 
@@ -35,8 +34,7 @@ describe('AppComponent', () => {
         RouterTestingModule.withRoutes([]),
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
-        NotificationModule,
-        TourNgxBootstrapModule.forRoot()
+        NotificationModule
       ],
       providers: [
         ConfigService,

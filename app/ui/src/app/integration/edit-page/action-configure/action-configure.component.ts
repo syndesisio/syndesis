@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
 import { FormFactoryService, UserService, Action, Step, IntegrationSupportService } from '@syndesis/ui/platform';
@@ -36,7 +35,6 @@ export class IntegrationConfigureActionComponent extends FlowPage
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public integrationSupport: IntegrationSupportService,
-    public tourService: TourService,
     private userService: UserService
   ) {
     super(currentFlow, route, router);
@@ -269,21 +267,6 @@ export class IntegrationConfigureActionComponent extends FlowPage
         this.initialize(position, page);
       }
     );
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-          anchorId: 'integrations.done',
-          title: 'Done',
-          content: 'Clicking Done adds the finish connection to the integration. ' +
-          'You can then add one or more steps that operate on the data.',
-          placement: 'left',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {

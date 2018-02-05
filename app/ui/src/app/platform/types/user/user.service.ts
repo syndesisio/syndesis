@@ -11,17 +11,6 @@ export abstract class UserService {
   abstract user: Observable<User>;
 
   /**
-   * Set state of Guided Tour
-   * @param val {any} TBD
-   */
-  abstract setTourState(val: any): void;
-
-  /**
-   * Get state of Guided Tour
-   */
-  abstract getTourState(): any;
-
-  /**
    * Log the user out
    */
   abstract logout(): Observable<any>;

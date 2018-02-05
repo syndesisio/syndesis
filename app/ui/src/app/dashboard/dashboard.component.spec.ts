@@ -11,7 +11,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
@@ -74,8 +73,7 @@ describe('DashboardComponent', () => {
               return new Http(backend, options);
             },
             deps: [MockBackend, RequestOptions]
-          },
-          TourService
+          }
         ]
       };
       TestBed.configureTestingModule(moduleConfig).compileComponents();

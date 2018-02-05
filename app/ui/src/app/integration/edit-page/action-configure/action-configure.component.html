@@ -19,8 +19,7 @@
     <button type="button"
             class="btn btn-primary"
             (click)="continue()"
-            [disabled]="maybeDisableDone()"
-            tourAnchor="integrations.done">
+            [disabled]="maybeDisableDone()">
       <ng-container *ngIf="page >= lastPage || !descriptor">
         Done
       </ng-container>

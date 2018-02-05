@@ -6,7 +6,6 @@ import { log, getCategory } from '../logging';
 
 import { Connection, Connections, Integrations, UserService } from '@syndesis/ui/platform';
 import { ConnectionStore } from '../store/connection/connection.store';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 const category = getCategory('Dashboard');
 
@@ -25,7 +24,6 @@ export class EmptyStateComponent implements OnInit {
   constructor(
     private connectionStore: ConnectionStore,
     private router: Router,
-    public tourService: TourService,
     private userService: UserService
   ) {
     this.connections = this.connectionStore.list;
@@ -37,20 +35,5 @@ export class EmptyStateComponent implements OnInit {
 
   ngOnInit() {
     this.connectionStore.loadAll();
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([
-        {
-          anchorId: 'dashboard.integration',
-          content: 'Create Integration',
-          placement: 'bottom',
-          title:
-            'After creating at least two connections, you can create an integration.'
-        }
-      ]);
-      setTimeout(() => this.tourService.start());
-    }
   }
 }

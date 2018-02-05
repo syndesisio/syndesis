@@ -21,7 +21,6 @@ import { CurrentFlow } from '../current-flow.service';
 import { SyndesisCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
 import { EventsService } from '../../../store/entity/events.service';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 describe('FlowViewComponent', () => {
   let component: FlowViewComponent;
@@ -64,8 +63,7 @@ describe('FlowViewComponent', () => {
           CurrentFlow,
           IntegrationStore,
           IntegrationService,
-          EventsService,
-          TourService
+          EventsService
         ]
       }).compileComponents();
     })

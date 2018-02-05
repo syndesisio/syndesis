@@ -19,7 +19,6 @@ import {
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TagInputModule } from 'ngx-chips';
 import { Restangular, RestangularModule } from 'ngx-restangular';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
@@ -30,7 +29,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
-import { StoreModule as LegacyStoreModule } from './store/store.module';
+import { StoreModule as LegacyStoreModule } from '@syndesis/ui/store/store.module';
 import { platformReducer, SYNDESIS_GUARDS } from './platform';
 
 export function restangularProviderConfigurer(
@@ -96,8 +95,7 @@ export function mapperRestangularProvider(
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,
-    NotificationModule,
-    TourNgxBootstrapModule.forRoot()
+    NotificationModule
   ],
   providers: [
     ...SYNDESIS_GUARDS,

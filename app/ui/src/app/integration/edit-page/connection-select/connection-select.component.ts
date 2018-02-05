@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connections, Connection, UserService } from '@syndesis/ui/platform';
@@ -28,7 +26,6 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
     public currentFlow: CurrentFlow,
     public route: ActivatedRoute,
     public router: Router,
-    public tourService: TourService,
     private userService: UserService
   ) {
     super(currentFlow, route, router);
@@ -117,27 +114,6 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
         this.position = +params.get('position');
         this.loadConnections();
       });
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([{
-        anchorId: 'integrations.panel',
-        title: 'Integration Panel',
-        content: 'As you create an integration, see its connections and steps ' +
-          'in the order in which they occur when the integration is running.',
-        placement: 'right',
-      }, {
-        anchorId: 'connections.available',
-        title: 'Available Connections',
-        content: 'After at least two connections are available, you can create ' +
-          'an integration that uses the connections you choose.',
-        placement: 'top',
-      }],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {

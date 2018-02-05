@@ -3,7 +3,6 @@ import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../../config.service';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { UserService } from '@syndesis/ui/platform';
 
 import { ObjectPropertyFilterConfig } from '../../common/object-property-filter.pipe';
@@ -69,9 +68,7 @@ export class OAuthAppsComponent implements OnInit {
 
   constructor(
     public store: OAuthAppStore,
-    public config: ConfigService,
-    public tourService: TourService,
-    private userService: UserService
+    public config: ConfigService
   ) {
     this.loading = store.loading;
     this.list = store.list;
@@ -121,29 +118,5 @@ export class OAuthAppsComponent implements OnInit {
       }
     });
     this.store.loadAll();
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize(
-        [
-          {
-            route: 'settings',
-            title: 'Get Started',
-            content:
-              'This series of popups acquaints you with Fuse Ignite. When you are ready to create a sample integration, ' +
-              'click the help icon and select Documentation to get step-by-step instructions.',
-            anchorId: 'get.started',
-            placement: 'bottom'
-          }
-        ],
-        {
-          route: ''
-        }
-      );
-
-      setTimeout(() => this.tourService.start());
-    }
   }
 }
