@@ -83,7 +83,9 @@ jobs:
       - run:
           name: Build UI
           command: |
-            apt-get update && apt-get install libxss1 && ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
+            apt-get update
+            apt-get install libxss1
+            ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
@@ -311,9 +313,15 @@ jobs:
           name: Run System Tests
           command: |
             if [ -n "${OPENSHIFT_TOKEN}" ]; then
+              # Install 'oc' and login
               curl -fsSL https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
               oc login --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}"
               test_id="${CIRCLE_JOB}-${CIRCLE_BUILD_NUM}"
+
+              # Install missing libs for UI tests
+              apt-get update
+              apt-get install libxss1
+
               ./tools/bin/syndesis system-test --batch-mode --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}" --test-id "$test_id" | tee test_log.txt | grep -v " Download"
               # Always cleanup
               ./tools/bin/syndesis system-test --release-project --test-id "$test_id"
