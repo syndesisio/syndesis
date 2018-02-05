@@ -32,6 +32,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 @Service
+@ConditionalOnProperty(value = "features.metricscollector.enabled", havingValue = "true", matchIfMissing = false)
 public class MetricsCollector implements Runnable, Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);
