@@ -285,7 +285,7 @@
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.0.tgz#6316ac20a1a13c5d521a2dc661befc7184f73f5b"
 
-"@types/lodash@^4.14.62":
+"@types/lodash@^4.14.62", "@types/lodash@~4.14.62":
   version "4.14.100"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.100.tgz#f353dd9d3a9785638b6cb8023e6639097bd31969"
 
@@ -1664,11 +1664,7 @@ copy-webpack-plugin@^4.1.1:
     pify "^3.0.0"
     serialize-javascript "^1.4.0"
 
-core-js@2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.4.1.tgz#4de911e667b0eae9124e34254b53aea6fc618d3e"
-
-core-js@>=2.4.1, core-js@^2.2.0, core-js@^2.4.0, core-js@^2.4.1:
+core-js@>=2.4.1, core-js@^2.2.0, core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.1:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.3.tgz#8acc38345824f16d8365b7c9b4259168e8ed603e"
 
@@ -4977,13 +4973,17 @@ ngx-bootstrap@^1.8.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-1.9.3.tgz#28e75d14fb1beaee609383d7694de4eb3ba03b26"
 
+ngx-bootstrap@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.2.tgz#6862b2ee4764bb6cfd34c66528873d0d050c2faa"
+
 ngx-chips@^1.6.2:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/ngx-chips/-/ngx-chips-1.6.3.tgz#9f89c5f3c09523ff4a0b2e81e827c93d42a81cdb"
   dependencies:
     ng2-material-dropdown "~0.8.2"
 
-ngx-restangular@^2.0.2:
+ngx-restangular@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/ngx-restangular/-/ngx-restangular-2.0.2.tgz#3c98929b80885db9bcee4d901cb9cbec78fcc027"
   dependencies:
@@ -4995,13 +4995,13 @@ ngx-restangular@^2.0.2:
     rxjs "^5.0.0"
     typescript ">=2.4.2 <2.5"
 
-ngx-tour-core@^2.0.0:
+ngx-tour-core@2.0.0, ngx-tour-core@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ngx-tour-core/-/ngx-tour-core-2.0.0.tgz#46d2a6a5cfd783934d15ab78e5d3967c7717265d"
 
-ngx-tour-ngx-bootstrap@2.0.0-beta.9:
-  version "2.0.0-beta.9"
-  resolved "https://registry.yarnpkg.com/ngx-tour-ngx-bootstrap/-/ngx-tour-ngx-bootstrap-2.0.0-beta.9.tgz#83762a415f2b09ae181edddb7e2ef22dc61e1b8e"
+ngx-tour-ngx-bootstrap@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-tour-ngx-bootstrap/-/ngx-tour-ngx-bootstrap-2.0.0.tgz#d5464d5f2fa57d317b83979b9b35938488b843c1"
   dependencies:
     ngx-tour-core "^2.0.0"
     withinviewport "^2.0.0"
