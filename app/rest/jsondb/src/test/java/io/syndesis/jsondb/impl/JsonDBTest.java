@@ -16,6 +16,7 @@
 package io.syndesis.jsondb.impl;
 
 
+import static io.syndesis.core.Json.map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -36,7 +37,6 @@ import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.syndesis.jsondb.GetOptions;
@@ -600,24 +600,6 @@ public class JsonDBTest {
         while( (c=is.read())>=0 ) {
             os.write(c);
         }
-    }
-
-    // Helper method to help construct maps with concise syntax
-    private HashMap<String, Object> map(Object... values) {
-        HashMap<String, Object> rc = new HashMap<String, Object>() {
-            @Override
-            public String toString() {
-                try {
-                    return mapper.writeValueAsString(this);
-                } catch (JsonProcessingException e) {
-                    throw new JsonDBException(e);
-                }
-            }
-        };
-        for (int i = 0; i + 1 < values.length; i += 2) {
-            rc.put(values[i].toString(), values[i + 1]);
-        }
-        return rc;
     }
 
 }

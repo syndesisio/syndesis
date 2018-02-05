@@ -15,23 +15,25 @@
  */
 package io.syndesis.runtime;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import static io.syndesis.core.Json.map;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import io.syndesis.model.Violation;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.rest.v1.handler.exception.RestError;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.model.Violation;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.rest.v1.handler.exception.RestError;
 
 public class IntegrationsITCase extends BaseITCase {
 
@@ -109,7 +111,7 @@ public class IntegrationsITCase extends BaseITCase {
         post("/api/v1/integration-support/import", exportData.getBody(), byte[].class);
     }
 
-        @Test
+    @Test
     public void shouldDetermineValidityForInvalidIntegrations() {
         dataManager.create(new Integration.Builder().name("Existing integration").build());
 
@@ -129,6 +131,32 @@ public class IntegrationsITCase extends BaseITCase {
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         assertThat(got.getBody()).isNull();
+    }
+
+    @Test
+    public void patchIntegrationDescription() {
+        Integration integration = new Integration.Builder()
+            .id("3001")
+            .name("test")
+            .description("My first description")
+            .build();
+
+        post("/api/v1/integrations", integration, Integration.class);
+        ResponseEntity<Integration> result = get("/api/v1/integrations/3001", Integration.class);
+        assertThat(result.getBody().getDescription())
+            .as("description")
+            .isEqualTo(Optional.of("My first description"));
+
+        // Do the PATCH API call:
+        HashMap<String, Object> patchDoc = map(
+            "description", "The second description"
+        );
+        patch("/api/v1/integrations/3001", patchDoc);
+
+        result = get("/api/v1/integrations/3001", Integration.class);
+        assertThat(result.getBody().getDescription())
+            .as("description")
+            .isEqualTo(Optional.of("The second description"));
     }
 
     public static class IntegrationListResult {

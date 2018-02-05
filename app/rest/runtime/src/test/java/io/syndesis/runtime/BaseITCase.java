@@ -15,11 +15,18 @@
  */
 package io.syndesis.runtime;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import io.syndesis.core.Json;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.jsondb.impl.SqlJsonDB;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -47,16 +54,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
-import javax.annotation.PostConstruct;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.core.Json;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.jsondb.impl.SqlJsonDB;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -208,6 +211,35 @@ public abstract class BaseITCase {
     protected <T> ResponseEntity<T> put(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus, HttpHeaders headers) {
         return http(HttpMethod.PUT, url, body, responseClass, token, headers, expectedStatus);
     }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body) {
+        return patch(url, body, null, tokenRule.validToken());
+    }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body,  Class<T> responseClass) {
+        return patch(url, body, responseClass, tokenRule.validToken(), responseClass == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body, Class<T> responseClass, String token) {
+        return patch(url, body, responseClass, token, responseClass == null ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.PATCH, url, body, responseClass, token, expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body, ParameterizedTypeReference<T> responseClass) {
+        return http(HttpMethod.PATCH, url, body, responseClass, tokenRule.validToken(), new HttpHeaders(), HttpStatus.OK);
+    }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body, ParameterizedTypeReference<T> responseClass, String token, HttpStatus expectedStatus) {
+        return http(HttpMethod.PATCH, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
+    }
+
+    protected <T> ResponseEntity<T> patch(String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus, HttpHeaders headers) {
+        return http(HttpMethod.PATCH, url, body, responseClass, token, headers, expectedStatus);
+    }
+
 
     protected <T> ResponseEntity<T> http(HttpMethod method, String url, Object body, Class<T> responseClass, String token, HttpStatus expectedStatus) {
         return http(method, url, body, responseClass, token, new HttpHeaders(), expectedStatus);
