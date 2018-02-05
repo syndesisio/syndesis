@@ -202,10 +202,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         'Selected integration for activation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.store
-      .activate(integration)
-      .take(1)
-      .toPromise();
+    return this.integrationSupportService.deploy(integration).toPromise();
   }
 
   // Actual activate/deactivate action once the user confirms
@@ -215,10 +212,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.store
-      .deactivate(integration)
-      .take(1)
-      .toPromise();
+    return this.integrationSupportService.undeploy(integration).toPromise();
   }
 
   // Actual delete action once the user confirms

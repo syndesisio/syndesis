@@ -27,17 +27,6 @@ export class IntegrationStore extends AbstractStore<
     return 'Integration';
   }
 
-  public activate(integration: Integration): Observable<Integration> {
-    return this.update(integration).map(result => {
-      this.service.deploy(result);
-      return result;
-     });
-  }
-
-  public deactivate(integration: Integration): Observable<Response> {
-    return this.service.undeploy(integration);
-  }
-
   newInstance(): Integration {
     const integration = createIntegration();
     const start = createStep();

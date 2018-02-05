@@ -51,6 +51,10 @@ export abstract class IntegrationSupportService {
    */
   abstract publishIntegration(integration: Integration): Observable<any>;
 
+  abstract deploy(integration: Integration): Observable<any>;
+
+  abstract undeploy(integration: Integration): Observable<any>;
+
   /**
    * Change the state of a running integration
    */

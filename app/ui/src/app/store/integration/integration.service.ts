@@ -13,14 +13,4 @@ export class IntegrationService extends RESTService<Integration, Integrations> {
     super(restangular.service('integrations'), 'integration');
   }
 
-  public deploy(integration: Integration): Observable<Response> {
-    const url = this.restangularService.one(integration.id).one('deployments').getRestangularUrl();
-    return this.http.put(url, {});
-  }
-
-  public undeploy(integration: Integration): Observable<Response> {
-    const url = this.restangularService.one(integration.id).one('deployments').one(integration.deploymentVersion).one('targetState');
-    return this.http.post(url, {'targetState': 'Undeployed'});
-  }
-
 }

@@ -10,7 +10,8 @@ import { Action,
          IntegrationOverviews,
          IntegrationState,
          IntegrationSupportService,
-         ApiHttpService } from '@syndesis/ui/platform';
+         ApiHttpService,
+         UNDEPLOYED } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { integrationSupportEndpoints } from './integration-support.api';
 import { RequestMethod, ResponseContentType } from '@angular/http';
@@ -58,6 +59,16 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
 
   publishIntegration(integration: Integration): Observable<any> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).post(integration);
+  }
+
+  deploy(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).put({});
+  }
+
+  undeploy(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).put({
+      targetState: UNDEPLOYED
+    });
   }
 
   updateState(id: string, version: string | number, state: IntegrationState): Observable<any> {
