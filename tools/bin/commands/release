@@ -181,7 +181,7 @@ mvn_clean_install() {
 
     echo "==== Running 'mvn clean install'"
     cd $appdir
-    ./mvnw ${maven_opts} clean install
+    ./mvnw ${maven_opts} clean install -Pflash
 }
 
 generate_templates() {
