@@ -108,16 +108,10 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  deleteAction(integration: Integration) {
-    return this.integrationActionsService.requestAction('delete', integration)
-      .then(_ => this.router.navigate(['/integrations']));
-  }
-
   attributeUpdated(attr: string, value: string) {
     this.integration[attr] = value;
-    /*
     this.store
-      .update(this.integration)
+      .update(<any> this.integration)
       .toPromise()
       .then((update: Integration) => {
         this.notificationService.popNotification({
@@ -133,7 +127,6 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
           message: `Failed to update ${attr}: ${reason}`
         });
       });
-      */
   }
 
   deploymentAction(event, deployment) {
@@ -173,12 +166,6 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
-  }
-
-  exportIntegration() {
-    /*
-    this.integrationActionsService.requestAction('export', this.integration);
-    */
   }
 
   ngOnInit() {

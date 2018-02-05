@@ -9,8 +9,8 @@
              [config]="listConfig"
              [itemTemplate]="itemTemplate"
              [actionTemplate]="actionTemplate"
-             (onActionSelect)="handleAction($event, undefined)"
-             (onClick)="handleClick($event)">
+             (onActionSelect)="integrationActionsService.requestAction($event.id, undefined)"
+             (onClick)="integrationActionsService.requestAction('view', $event.item)">
     <ng-template #itemTemplate
                  let-integration="item"
                  let-index="index">
@@ -51,10 +51,7 @@
     <ng-template #actionTemplate
                  let-integration="item"
                  let-index="index">
-      <pfng-action class="list-pf-actions"
-                   [config]="actionConfigs[integration.id]"
-                   (onActionSelect)="integrationActionsService.requestAction($event.id, integration)">
-      </pfng-action>
+      <syndesis-integration-action-menu [integration]="integration"></syndesis-integration-action-menu>
     </ng-template>
   </pfng-list>
 </div>

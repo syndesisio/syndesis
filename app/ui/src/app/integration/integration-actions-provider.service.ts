@@ -35,11 +35,6 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     super();
   }
 
-  canEdit(integration: Integration) {
-    // I dont see when you wouldn't be able to edit.
-    return true; // integration.currentStatus !== UNDEPLOYED;
-  }
-
   canActivate(integration: Integration) {
     // TODO: false if integration.version == lastDeloyed.version && is active.
     return true; // integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
@@ -50,16 +45,13 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     return true; //integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
   }
 
-  canDelete(integration: Integration) {
-    // TODO: true always I think.
-    return true; // integration.currentStatus !== UNDEPLOYED;
-  }
-
   //----- Actions ------------------->>
 
   requestAction(action: string, integration: Integration) {
     let request, header, message, danger, reason;
     switch (action) {
+      case 'createIntegration':
+        return this.router.navigate(['/integrations/create']);
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
