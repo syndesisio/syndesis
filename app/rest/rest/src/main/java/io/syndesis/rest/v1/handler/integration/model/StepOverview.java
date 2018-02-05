@@ -38,6 +38,10 @@ public class StepOverview {
         return step.getKind();
     }
 
+    public String getStepKind() {
+        return step.getStepKind();
+    }
+
     public String getName() {
         return step.getName();
     }
