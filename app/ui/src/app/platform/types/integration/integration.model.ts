@@ -40,6 +40,7 @@ export interface IntegrationDeployment extends BaseEntity {
   integrationId: string;
   currentState: IntegrationState;
   targetState: IntegrationState;
+  statusMessage?: string;
   spec: Integration;
   [attr: string]: any;
 }
@@ -54,6 +55,7 @@ export interface IntegrationOverview extends BaseEntity {
   deployments?: Array<DeploymentOverview>;
   currentState: IntegrationState;
   targetState: IntegrationState;
+  statusMessage?: string;
 }
 export type IntegrationOverviews = Array<IntegrationOverview>;
 

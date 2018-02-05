@@ -77,4 +77,7 @@ public class IntegrationOverview {
         return null;
     }
 
+    public Optional<String> getStatusMessage() {
+        return deployment.flatMap(x -> x.getStatusMessage());
+    }
 }
