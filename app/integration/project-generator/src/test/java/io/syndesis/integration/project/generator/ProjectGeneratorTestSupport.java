@@ -197,16 +197,10 @@ public class ProjectGeneratorTestSupport {
     }
 
     // *****************************
-    //
-    // *****************************
-
-    private final TestResourceManager resourceManager = new TestResourceManager();
-
-    // *****************************
     // Helpers
     // *****************************
 
-    protected IntegrationDeployment newIntegration(Step... steps) {
+    protected IntegrationDeployment newIntegration(TestResourceManager resourceManager, Step... steps) {
         for (int i = 0; i < steps.length; i++) {
             steps[i].getConnection().filter(r -> r.getId().isPresent()).ifPresent(
                 resource -> resourceManager.put(resource.getId().get(), resource)
@@ -233,8 +227,7 @@ public class ProjectGeneratorTestSupport {
             .build();
     }
 
-    protected Path generate(IntegrationDeployment deployment, ProjectGeneratorConfiguration generatorConfiguration) throws IOException {
-        final IntegrationResourceManager resourceManager = new TestResourceManager();
+    protected Path generate(IntegrationDeployment deployment, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
 
         try (InputStream is = generator.generate(deployment)) {
@@ -295,7 +288,7 @@ public class ProjectGeneratorTestSupport {
     // Resources
     // *****************************
 
-    private class TestResourceManager implements IntegrationResourceManager {
+    protected class TestResourceManager implements IntegrationResourceManager {
         private final ConcurrentMap<String , Object> resources;
 
         public TestResourceManager() {
@@ -325,6 +318,11 @@ public class ProjectGeneratorTestSupport {
             final InputStream is = IOUtils.toInputStream(id, StandardCharsets.UTF_8);
 
             return Optional.of(is);
+        }
+
+        @Override
+        public String decrypt(String encrypted) {
+            return encrypted;
         }
     }
 }

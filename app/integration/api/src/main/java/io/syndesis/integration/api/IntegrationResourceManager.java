@@ -33,16 +33,52 @@ import io.syndesis.model.integration.Step;
 
 public interface IntegrationResourceManager {
 
+    /**
+     * Load a connector from the underlying storage by id.
+     */
     Optional<Connector> loadConnector(String id);
 
+    /**
+     * Load a connector from the give connection or from the underlying storage
+     * if the connector is referenced by id.
+     */
+    default Optional<Connector> loadConnector(Connection connection) {
+        final Optional<Connector> connector;
+
+        if (connection.getConnector().isPresent()) {
+            connector = connection.getConnector();
+        } else {
+            connector = loadConnector(connection.getConnectorId().get());
+        }
+
+        return connector;
+    }
+
+    /**
+     * Load an extension from the underlying storage by id.
+     */
     Optional<Extension> loadExtension(String id);
 
+    /**
+     * Load an extension binary from the underlying storage by id.
+     */
     Optional<InputStream> loadExtensionBLOB(String id);
 
+    /**
+     * Decrypt a property.
+     */
+    String decrypt(String encrypted);
+
+    /**
+     * Collect dependencies.
+     */
     default Collection<Dependency> collectDependencies(IntegrationDeployment deployment) {
         return collectDependencies(deployment.getSpec().getSteps());
     }
 
+    /**
+     * Collect dependencies.
+     */
     default Collection<Dependency> collectDependencies(Collection<? extends Step> steps) {
         final List<Dependency> dependencies = new ArrayList<>();
 

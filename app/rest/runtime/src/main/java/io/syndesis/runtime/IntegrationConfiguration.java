@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
@@ -38,6 +39,7 @@ public class IntegrationConfiguration {
     @Autowired
     public IntegrationResourceManager integrationResourceManager(
             DataManager dataManager,
+            EncryptionComponent encryptionComponent,
             ExtensionDataManager extensionDataManager) {
 
         return new IntegrationResourceManager() {
@@ -54,6 +56,11 @@ public class IntegrationConfiguration {
             @Override
             public Optional<InputStream> loadExtensionBLOB(String id) {
                 return Optional.ofNullable(extensionDataManager.getExtensionBinaryFile(id));
+            }
+
+            @Override
+            public String decrypt(String encrypted) {
+                return encryptionComponent.decrypt(encrypted);
             }
         };
     }
