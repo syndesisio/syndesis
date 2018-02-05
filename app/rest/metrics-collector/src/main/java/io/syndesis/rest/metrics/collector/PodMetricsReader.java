@@ -99,7 +99,7 @@ public class PodMetricsReader implements Runnable {
                     Date startDate = toDate(m.get(START_TIMESTAMP));
 
 
-                    handler.handle(new RawMetrics.Builder()
+                    handler.persist(new RawMetrics.Builder()
                         .pod(pod)
                         .integrationId(integrationId)
                         .version(version)

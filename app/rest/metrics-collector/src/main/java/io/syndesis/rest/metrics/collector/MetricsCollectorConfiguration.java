@@ -15,12 +15,10 @@
  */
 package io.syndesis.rest.metrics.collector;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan
-@ConditionalOnProperty(value = "features.metricscollector.enabled", havingValue = "true", matchIfMissing = false)
 public class MetricsCollectorConfiguration {
 }
