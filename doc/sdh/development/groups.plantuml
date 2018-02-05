@@ -7,18 +7,19 @@ component [integration] #lightblue
 
 [common]
 [connector] --> [common]
+[connector] --> [integration]
+
 [extension] --> [common]
 
 [integration] --> [common]
 [integration] --> [extension]
-[integration] --> [connector]
 
 [rest] --> [common]
 [rest] --> [extension]
 [rest] --> [integration]
 
 [meta] --> [common]
-[meta] --> [connector]
+[meta] -up-> [connector]
 
 ' end::uml[]
 @enduml
