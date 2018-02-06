@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FileUploadModule } from 'ng2-file-upload';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
 import { IntegrationImportModule, IntegrationImportComponent } from './import';
@@ -29,7 +28,6 @@ const routes: Routes = [
     CommonModule,
     SyndesisCommonModule,
     PatternflyUIModule,
-    FileUploadModule,
     IntegrationImportModule,
     RouterModule.forChild(routes),
   ],

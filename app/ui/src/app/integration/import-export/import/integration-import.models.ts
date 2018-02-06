@@ -1,5 +1,5 @@
 import { StringMap, BaseReducerModel, BaseRequestModel } from '@syndesis/ui/platform';
-import { Integrations } from '@syndesis/ui/integration';
+import { Integrations } from '@syndesis/ui/platform';
 
 export interface IntegrationUploadValidationError {
   error?: string;
@@ -51,7 +51,7 @@ export interface IntegrationAuthSettings {
   tokenEndpoint?: string;
 }
 
-export interface IntegrationImportRequest extends IntegrationUploadRequest, IntegrationImportData {
+export interface IntegrationImportRequest extends IntegrationUploadRequest, IntegrationUploadData {
   specificationFile?: File;
   iconFile?: File;
 }

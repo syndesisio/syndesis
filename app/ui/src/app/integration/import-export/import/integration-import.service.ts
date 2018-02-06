@@ -8,12 +8,6 @@ import { IntegrationImportData, IntegrationImportRequest } from './integration-i
 export class IntegrationImportService {
   constructor(private apiHttpService: ApiHttpService) { }
 
-  getImport(id: string): Observable<IntegrationImportData> {
-    return this.apiHttpService
-      .setEndpointUrl('selectImport', { id })
-      .get<IntegrationImportData>();
-  }
-
   validateImportInfo(importRequest: IntegrationImportRequest): Observable<IntegrationImportData> {
     const apiHttpService = this.apiHttpService.setEndpointUrl('validateImportInfo');
     const { specificationFile, integrationTemplateId } = importRequest;
