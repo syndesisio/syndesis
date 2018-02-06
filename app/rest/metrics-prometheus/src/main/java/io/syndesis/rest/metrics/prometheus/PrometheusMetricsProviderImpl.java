@@ -13,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.metrics;
+package io.syndesis.rest.metrics.prometheus;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
-import io.syndesis.rest.metrics.prometheus.HttpClient;
-import io.syndesis.rest.metrics.prometheus.HttpQuery;
-import io.syndesis.rest.metrics.prometheus.QueryResult;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.stereotype.Component;
+import io.syndesis.rest.metrics.MetricsProvider;
 
 @Component
-@ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
-@EnableConfigurationProperties({PrometheusConfigurationProperties.class})
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     private final String serviceName;

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.metrics;
+package io.syndesis.rest.metrics.prometheus;
 
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.rest.metrics.MetricsProvider;
 
 import org.junit.Ignore;
 import org.junit.Test;

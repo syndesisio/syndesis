@@ -697,6 +697,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- Prometheus implementation -->
+    <dependency>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-metrics-prometheus</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-catalog</artifactId>
