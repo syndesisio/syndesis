@@ -38,22 +38,21 @@
               </div>
               <!-- Toolbar -->
               <div *ngIf="!allLogsSelected" class="container-fluid">
-                <div class="row vertical-align support-toolbar">
-                  <div class="col-md-8">
-                    <pfng-toolbar [config]="toolbarConfig"
-                                  (onFilterChange)="filterChanged($event)"
-                                  (onSortChange)="sortChanged($event)">
-                    </pfng-toolbar>
+              <pfng-toolbar [config]="toolbarConfig"
+                            (onFilterChange)="filterChanged($event)"
+                            (onSortChange)="sortChanged($event)"
+                            [viewTemplate]="viewTemplate">
+                <ng-template #viewTemplate>
+                  <div class="toolbar-pf-action-right">
+                    <div class="form-group">
+                      <strong>{{ selectedItems() }}</strong> of <strong>{{ totalItems() }}</strong> Items
+                    </div>
+                    <div class="form-group">
+                      <a role="button">Select All</a>
+                    </div>
                   </div>
-                  <div class="col-md-4 support-form__toolbar-extras">
-                    <span class="support-form__form-group">
-                        <strong>{{ selectedItems() }} of {{ totalItems() }} Items</strong>
-                    </span>
-                    <span class="support-form__form-group">
-                        <a role="button">Select All</a>
-                    </span>
-                  </div>
-                </div>
+                </ng-template>  
+              </pfng-toolbar>
                 <div class="row">
                   <!-- List displayed here -->
                   <syndesis-loading >

@@ -1,6 +1,7 @@
 import { Component,  Input,  ViewChild, ElementRef, OnInit } from '@angular/core';
 
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
+import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
 import { Restangular } from 'ngx-restangular';
 import { Http } from '@angular/http';
@@ -29,7 +30,11 @@ export class SupportComponent implements OnInit {
     filter: '',
     propertyName: 'name'
   };
-
+  sort: ObjectPropertySortConfig = {
+    sortField: 'name',
+    descending: false
+  };
+    
   // List configuration
   listConfig = {
     multiSelect: true,
@@ -54,6 +59,16 @@ export class SupportComponent implements OnInit {
           type: 'text'
         }
       ]
+    },
+    sortConfig: {
+      fields: [
+        {
+          id: 'name',
+          title: 'Name',
+          sortType: 'alpha'
+        }
+      ],
+      isAscending: true
     }
   };
 
@@ -102,6 +117,12 @@ export class SupportComponent implements OnInit {
       this.filter.propertyName = filter.field.id;
       this.filter.filter = filter.value;
     });
+  }
+
+  // Handles events when the user interacts with the toolbar sort
+  sortChanged($event) {
+    this.sort.sortField = $event.field.id;
+    this.sort.descending = !$event.isAscending;
   }
 
   onSubmit() {

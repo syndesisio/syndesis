@@ -1,25 +1,11 @@
 @import 'patternfly-sass/assets/stylesheets/patternfly/variables';
 
-.support-panel {
-  & ::ng-deep .toolbar-pf {
-    border: none;
-    box-shadow: none;
+::ng-deep .toolbar-pf {
+  border: none;
+  box-shadow: none;
 
-    .form-group {
-      border: none;
-    }
-  }
-}
-
-.support-form {
-  // Add item count and select all to the toolbar
-  &__toolbar-extras {
-    justify-content: flex-end;
-}
-
-  &__form-group:not(:first-child) {
-    border-left: 1px solid $sidebar-pf-border-color;
-    padding-left: ($grid-gutter-width/2);
-    margin-left: ($grid-gutter-width/2);
+  .toolbar-pf-view-selector {
+    font-size: $font-size-base;
+    padding-top: 5px;
   }
 }
