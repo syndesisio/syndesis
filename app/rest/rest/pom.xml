@@ -369,6 +369,7 @@
             <ignoredUnusedDeclaredDependency>io.syndesis.integration:integration-project-generator</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>com.sun.xml.bind:jaxb-impl</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>com.sun.xml.bind:jaxb-core</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>commons-logging:commons-logging</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
           <ignoredUsedUndeclaredDependencies>
             <!-- if declared complains about being unused -->
