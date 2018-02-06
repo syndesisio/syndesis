@@ -25,7 +25,6 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.WithId;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.validation.UniqueProperty;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;

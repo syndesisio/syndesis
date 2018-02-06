@@ -29,7 +29,6 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 
 public interface IntegrationResourceManager {

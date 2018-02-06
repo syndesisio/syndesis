@@ -15,14 +15,15 @@
  */
 package io.syndesis.runtime;
 
-import static io.syndesis.core.Json.map;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import io.syndesis.model.Violation;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.rest.v1.handler.exception.RestError;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,9 +32,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.syndesis.model.Violation;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.rest.v1.handler.exception.RestError;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationsITCase extends BaseITCase {
 

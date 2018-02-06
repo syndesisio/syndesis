@@ -16,7 +16,6 @@
 package io.syndesis.jsondb.impl;
 
 
-import static io.syndesis.core.Json.map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 

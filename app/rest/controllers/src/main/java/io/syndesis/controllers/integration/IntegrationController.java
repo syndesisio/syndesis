@@ -16,7 +16,6 @@
 package io.syndesis.controllers.integration;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -31,16 +30,15 @@ import javax.annotation.PreDestroy;
 
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
-import io.syndesis.controllers.StateUpdate;
 import io.syndesis.core.EventBus;
 import io.syndesis.core.Json;
 import io.syndesis.core.util.Exceptions;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
-
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

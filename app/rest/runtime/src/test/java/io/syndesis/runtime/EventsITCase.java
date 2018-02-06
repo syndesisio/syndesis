@@ -22,7 +22,6 @@ import com.launchdarkly.eventsource.MessageEvent;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.EventMessage;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;

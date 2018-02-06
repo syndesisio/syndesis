@@ -34,7 +34,6 @@ import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import io.syndesis.core.Json;
 import io.syndesis.core.cache.CacheManager;
 import io.syndesis.core.cache.LRUCacheManager;
 import io.syndesis.dao.manager.DataAccessObject;
@@ -46,7 +45,6 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 public class DataManagerTest {

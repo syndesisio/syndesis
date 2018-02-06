@@ -19,13 +19,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.core.Json;
 import io.syndesis.model.ModelData;
 import io.syndesis.dao.init.ReadApiClientData;
@@ -35,7 +33,6 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorGroup;
 import io.syndesis.model.integration.Integration;
 
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.junit.Assert;
 import org.junit.Test;
 

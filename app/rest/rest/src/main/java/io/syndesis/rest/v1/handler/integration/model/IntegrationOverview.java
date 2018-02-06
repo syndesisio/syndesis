@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.model.integration.Step;
 
 public class IntegrationOverview {
 

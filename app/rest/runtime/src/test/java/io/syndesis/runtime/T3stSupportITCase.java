@@ -17,7 +17,6 @@ package io.syndesis.runtime;
 
 import io.syndesis.model.ModelData;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

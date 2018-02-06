@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import io.syndesis.model.integration.Integration;
 
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;

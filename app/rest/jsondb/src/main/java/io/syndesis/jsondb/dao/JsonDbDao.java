@@ -23,7 +23,6 @@ import io.syndesis.core.Json;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.operators.IdPrefixFilter;
-import io.syndesis.dao.manager.operators.ReverseFilter;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDB;
 import io.syndesis.model.Kind;
