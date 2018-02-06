@@ -24,6 +24,10 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images,
                               "openshift" for image streams (default: "openshift")
     --docker                  Shortcut for "--image-mode docker"
+    --local                   install from local Git repo when using.
+                              By default the resource descriptor is
+                              downloaded from GitHub remotely.
+-o  --open                    Open Syndesis in browser when installation is ready
 ----
 
 The deployment will always happen for the currently connected OpenShift cluster.
@@ -41,8 +45,9 @@ You can switch off the security question with the option `--yes` (short: `-y`).
 
 WARNING: Don't use `syndesis install --project $(oc project -q) --yes`. You will shoot yourself into the foot. Ask the author if you want to know more details.
 
-
 If you want to wait until everything is running (including fetching of the Docker images), you can specify `--watch` (short: `-w`) which blocks the script until everything is set up.
+
+You can also automatically open Syndesis in the browser after the installation with `--open` (short: `-o`)
 
 ### Development mode
 
@@ -127,14 +132,14 @@ Just download this https://raw.githubusercontent.com/syndesisio/syndesis/master/
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com
+bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com --open
 ----
 
 Or, if you feel fancy (and trust us), then you can directly install the latest version of Syndesis by deleting and recreating the current project with a single line:
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-bash <(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com
+bash <(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com -o
 ----
 
 All you need is to have `bash`, `curl` and `oc` installed and you need to be connected to an OpenShift cluster.
