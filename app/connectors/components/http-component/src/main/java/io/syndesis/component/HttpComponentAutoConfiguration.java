@@ -50,6 +50,7 @@ public class HttpComponentAutoConfiguration {
     @Bean(name = "syndesis-http-component")
     @ConditionalOnClass(CamelContext.class)
     @ConditionalOnMissingBean(HttpComponent.class)
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public HttpComponent configureHttpComponent(CamelContext camelContext,
                                                 HttpComponentConfiguration configuration) throws Exception {
         HttpComponent component = new HttpComponent();
@@ -73,7 +74,8 @@ public class HttpComponentAutoConfiguration {
                         camelContext.getTypeConverter(), nestedProperty,
                         nestedParameters);
                     entry.setValue(nestedProperty);
-                } catch (NoSuchFieldException e) {
+                } catch (NoSuchFieldException ignored) {
+                    // ignore
                 }
             }
         }
@@ -99,8 +101,8 @@ public class HttpComponentAutoConfiguration {
         }
 
         private boolean isEnabled(
-            org.springframework.context.annotation.ConditionContext context,
-            java.lang.String prefix, boolean defaultValue) {
+            ConditionContext context,
+            String prefix, boolean defaultValue) {
             RelaxedPropertyResolver resolver = new RelaxedPropertyResolver(
                 context.getEnvironment(), prefix);
             return resolver.getProperty("enabled", Boolean.class, defaultValue);

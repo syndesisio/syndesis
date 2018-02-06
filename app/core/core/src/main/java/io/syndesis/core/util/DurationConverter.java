@@ -45,7 +45,7 @@ public class DurationConverter {
     private static class ConverterCheck {
         private final Pattern pattern;
         private final Function<Long, Duration> converter;
-        ConverterCheck(Pattern pattern, Function<Long, Duration> converter) {
+        /* default */ ConverterCheck(Pattern pattern, Function<Long, Duration> converter) {
             this.pattern = pattern;
             this.converter = converter;
         }

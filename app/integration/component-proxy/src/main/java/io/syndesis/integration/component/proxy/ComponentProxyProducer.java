@@ -45,26 +45,31 @@ public class ComponentProxyProducer extends DefaultAsyncProducer {
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStart() throws Exception {
         ServiceHelper.startServices(processor);
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStop() throws Exception {
         ServiceHelper.stopServices(processor);
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doSuspend() throws Exception {
         ServiceHelper.suspendService(processor);
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doResume() throws Exception {
         ServiceHelper.resumeService(processor);
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doShutdown() throws Exception {
         ServiceHelper.stopAndShutdownServices(processor);
     }

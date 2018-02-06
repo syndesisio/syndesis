@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
+@SuppressWarnings("PMD")
 public final class MavenGav implements Comparable<MavenGav> {
     private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
     private static final char SEPARATOR_COORDINATE = ':';
@@ -36,8 +37,8 @@ public final class MavenGav implements Comparable<MavenGav> {
     private final String groupId;
     private final String artifactId;
     private final String version;
-    private String type;
-    private String classifier;
+    private final String type;
+    private final String classifier;
 
     public MavenGav(String groupId, String artifactId, String version) {
         this.groupId = groupId;
@@ -55,8 +56,8 @@ public final class MavenGav implements Comparable<MavenGav> {
                 + coordinates);
         }
 
-        this.type = DEFAULT_TYPE;
-        this.classifier = EMPTY_STRING;
+        String determinedType = DEFAULT_TYPE;
+        String determinedClassifier = EMPTY_STRING;
         this.groupId = m.group(IS_POS_1);
         this.artifactId = m.group(ID_POS_2);
 
@@ -73,15 +74,18 @@ public final class MavenGav implements Comparable<MavenGav> {
             this.version = position3;
             break;
         case 3:
-            this.type = position3 == null || position3.length() == 0 ? DEFAULT_TYPE : position3;
+            determinedType = position3 == null || position3.length() == 0 ? DEFAULT_TYPE : position3;
             this.version = position4;
             break;
         default:
-            this.type = position3 == null || position3.length() == 0 ? DEFAULT_TYPE : position3;
-            this.classifier = position4;
+            determinedType = position3 == null || position3.length() == 0 ? DEFAULT_TYPE : position3;
+            determinedClassifier = position4;
             this.version = position5;
             break;
         }
+
+        this.classifier = determinedClassifier;
+        this.type = determinedType;
     }
 
     public String getPackaging() {

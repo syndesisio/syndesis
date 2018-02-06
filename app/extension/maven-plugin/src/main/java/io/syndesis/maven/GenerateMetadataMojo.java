@@ -48,8 +48,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.repository.RemoteRepository;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -104,12 +102,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/syndesis-extension-definition.json")
     private String metadataDestination;
-
-    @Parameter(readonly = true, defaultValue = "${repositorySystemSession}", required = true)
-    private RepositorySystemSession repoSession;
-
-    @Parameter(readonly = true, defaultValue = "${project.remoteProjectRepositories}")
-    private List<RemoteRepository> remoteRepos;
 
     @Parameter(defaultValue = "${project.groupId}:${project.artifactId}")
     private String extensionId;
@@ -180,7 +172,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                     } catch (IOException e) {
                         getLog().error("Error reading file " + path);
                     }
-                };
+                }
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 throw new MojoExecutionException("Error checking annotations.", e);
             }
@@ -542,10 +534,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
             final String name = Names.sanitize(actionId);
 
             File outputFile = new File(syndesisMetadataSourceDir, String.format("%s/%s/%s.json", inspectionsResourceDir, name, type));
-            if (!outputFile.getParentFile().exists()) {
-                if (outputFile.getParentFile().mkdirs()) {
-                    getLog().debug("Directory " + outputFile.getParentFile() + " created");
-                }
+            if (!outputFile.getParentFile().exists() && outputFile.getParentFile().mkdirs()) {
+                getLog().debug("Directory " + outputFile.getParentFile() + " created");
             }
 
             getLog().info("Generating inspection for action: " + actionId + " (" + name + "), and type: " + type);

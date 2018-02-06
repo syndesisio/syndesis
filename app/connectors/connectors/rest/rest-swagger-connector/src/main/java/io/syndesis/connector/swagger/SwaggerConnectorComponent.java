@@ -141,7 +141,7 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 
         final String swaggerSpecificationPath = File.createTempFile(scheme, ".swagger").getAbsolutePath();
 
-        try (final OutputStream out = new FileOutputStream(swaggerSpecificationPath)) {
+        try (OutputStream out = new FileOutputStream(swaggerSpecificationPath)) {
             IOUtils.write(specification, out, StandardCharsets.UTF_8);
         }
 

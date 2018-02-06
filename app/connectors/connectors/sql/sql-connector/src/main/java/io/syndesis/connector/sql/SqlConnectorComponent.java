@@ -36,8 +36,8 @@ import io.syndesis.connector.sql.stored.JSONBeanUtil;
 public class SqlConnectorComponent extends DefaultConnectorComponent {
     private final static Logger LOGGER = LoggerFactory.getLogger(SqlConnectorComponent.class);
 
-    final static String COMPONENT_NAME  ="sql-connector";
-    final static String COMPONENT_SCHEME="sql-connector";
+    /* default */ final static String COMPONENT_NAME  ="sql-connector";
+    /* default */ final static String COMPONENT_SCHEME="sql-connector";
 
     public SqlConnectorComponent() {
         this(null);
@@ -52,15 +52,13 @@ public class SqlConnectorComponent extends DefaultConnectorComponent {
 
     @Override
     public Processor getBeforeProducer() {
-
-        final Processor processor = exchange -> {
+        return exchange -> {
             final String body = exchange.getIn().getBody(String.class);
             if (body!=null) {
                 final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
                 exchange.getIn().setBody(properties);
             }
         };
-        return processor;
     }
     
     @Override

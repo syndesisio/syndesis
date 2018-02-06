@@ -34,8 +34,8 @@ import java.util.function.Consumer;
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
     private final static Logger LOGGER = LoggerFactory.getLogger(SqlStoredConnectorComponent.class);
 
-    final static String COMPONENT_NAME  ="sql-stored-connector";
-    final static String COMPONENT_SCHEME="sql-stored-connector";
+    /* default */ final static String COMPONENT_NAME  ="sql-stored-connector";
+    /* default */ final static String COMPONENT_SCHEME="sql-stored-connector";
 
     public SqlStoredConnectorComponent() {
         this(null);
@@ -50,24 +50,21 @@ public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
 
     @Override
     public Processor getBeforeProducer() {
-
-        final Processor processor = exchange -> {
+        return exchange -> {
             final String body = exchange.getIn().getBody(String.class);
             final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
             exchange.getIn().setBody(properties);
         };
-        return processor;
     }
 
     @Override
     public Processor getAfterProducer() {
-        final Processor processor = exchange -> {
+        return exchange -> {
             @SuppressWarnings("unchecked")
             Map<String,Object> map = exchange.getIn().getBody(Map.class);
             String jsonBean = JSONBeanUtil.toJSONBean(map);
             exchange.getIn().setBody(jsonBean);
         };
-        return processor;
     }
 
     @Override

@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public final class ProjectGeneratorHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGeneratorHelper.class);
 

@@ -20,6 +20,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SqlStatementParser {
 
@@ -36,9 +37,9 @@ public class SqlStatementParser {
      * output params
      * table name
      */
-    private Connection connection;
-    private String schema;
-    private SqlStatementMetaData statementInfo;
+    private final Connection connection;
+    private final String schema;
+    private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
 
     public SqlStatementParser(Connection connection, String schema, String sql) {
@@ -54,15 +55,13 @@ public class SqlStatementParser {
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
 
-        switch (sqlArray.get(0).toUpperCase()) {
-            case "SELECT":
-                parseSelect(meta);
-                if (! statementInfo.getInParams().isEmpty()) {
-                    throw new SQLException("Your statement is invalid and cannot contain input parameters");
-                }
-                break;
-            default:
-                throw new SQLException("Your statement is invalid and should start with SELECT");
+        if ("SELECT".equals(sqlArray.get(0).toUpperCase(Locale.US))) {
+            parseSelect(meta);
+            if (! statementInfo.getInParams().isEmpty()) {
+                throw new SQLException("Your statement is invalid and cannot contain input parameters");
+            }
+        } else {
+            throw new SQLException("Your statement is invalid and should start with SELECT");
         }
         return statementInfo;
     }
@@ -73,7 +72,7 @@ public class SqlStatementParser {
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
 
-        switch (sqlArray.get(0).toUpperCase()) {
+        switch (sqlArray.get(0).toUpperCase(Locale.US)) {
             case "INSERT":
                 parseInsert(meta);
                 break;
@@ -171,7 +170,7 @@ public class SqlStatementParser {
         List<SqlParam> params = findInputParams();
         if (columnNames.size() == params.size()) {
             for (int i=0; i<params.size(); i++) {
-                params.get(i).setColumn(columnNames.get(i).toUpperCase());
+                params.get(i).setColumn(columnNames.get(i).toUpperCase(Locale.US));
             }
         }
         return params;
@@ -191,7 +190,7 @@ public class SqlStatementParser {
                 if (column.startsWith(":#") || "VALUES".equals(column)) {
                     param.setColumnPos(columnPos++);
                 } else {
-                    param.setColumn(column.toUpperCase());
+                    param.setColumn(column.toUpperCase(Locale.US));
                 }
                 params.add(param);
             }

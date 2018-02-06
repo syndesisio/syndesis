@@ -37,8 +37,8 @@ import java.util.function.Consumer;
 public class SqlStartConnectorComponent extends DefaultConnectorComponent {
     private final static Logger LOGGER = LoggerFactory.getLogger(SqlStartConnectorComponent.class);
 
-    final static String COMPONENT_NAME  ="sql-start-connector";
-    final static String COMPONENT_SCHEME="sql-start-connector";
+    /* default */ final static String COMPONENT_NAME  ="sql-start-connector";
+    /* default */ final static String COMPONENT_SCHEME="sql-start-connector";
 
     public SqlStartConnectorComponent() {
         super(COMPONENT_NAME, SqlStartConnectorComponent.class.getName());
@@ -47,7 +47,7 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
     }
 
     public SqlStartConnectorComponent(String componentScheme) {
-        super(COMPONENT_NAME, SqlStartConnectorComponent.class.getName());
+        super(COMPONENT_NAME, componentScheme, SqlStartConnectorComponent.class);
     }
 
     @Override
@@ -58,15 +58,13 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
 
     @Override
     public Processor getBeforeProducer() {
-
-        final Processor processor = exchange -> {
+        return exchange -> {
             final String body = exchange.getIn().getBody(String.class);
             if (body!=null) {
                 final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
                 exchange.getIn().setBody(properties);
             }
         };
-        return processor;
     }
 
     @Override

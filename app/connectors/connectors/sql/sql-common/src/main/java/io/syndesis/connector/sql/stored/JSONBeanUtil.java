@@ -31,7 +31,11 @@ import org.json.JSONObject;
  * @author kstam
  *
  */
-public class JSONBeanUtil {
+public final class JSONBeanUtil {
+
+    private JSONBeanUtil() {
+        // utility class
+    }
 
     /**
      * Convenience method to parse the properties from a simple BeanJSON.
@@ -62,7 +66,7 @@ public class JSONBeanUtil {
     public static String toJSONBean(final Map<String,Object> map) {
         final JSONObject obj = new JSONObject();
         for (String key : map.keySet()) {
-            if (! key.startsWith("#")) {  //don't include Camel stats
+            if (key.charAt(0) != '#') {  //don't include Camel stats
                 obj.put(key, map.get(key));
             }
         }
@@ -86,10 +90,10 @@ public class JSONBeanUtil {
                 Map<String,Object> map = (Map<String,Object>) list.get(i);
                 stringBuilder.append(JSONBeanUtil.toJSONBean(map));
                 if ( i < (list.size()-1 )) {
-                    stringBuilder.append(",");
+                    stringBuilder.append(',');
                 }
             }
-            stringBuilder.append("]");
+            stringBuilder.append(']');
             json = stringBuilder.toString();
         }
         return json;

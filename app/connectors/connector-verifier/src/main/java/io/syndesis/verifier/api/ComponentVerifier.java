@@ -36,11 +36,12 @@ import org.slf4j.LoggerFactory;
  */
 public class ComponentVerifier implements Verifier {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(ComponentVerifier.class);
 
     private final Class<? extends ComponentVerifierExtension> verifierExtensionClass;
     private final String defaultComponentScheme;
 
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
     private volatile ComponentVerifierExtension verifierExtension;
 
     public ComponentVerifier() {
@@ -90,17 +91,18 @@ public class ComponentVerifier implements Verifier {
         // Hook for customizing params
     }
 
+    @SuppressWarnings("PMD.AvoidDeeplyNestedIfStmts")
     protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
         if (verifierExtension == null) {
             synchronized (this) {
                 if (verifierExtension == null) {
                     Component component = context.getComponent(scheme, true, false);
                     if (component == null) {
-                        log.error("Component {} does not exist", scheme);
+                        LOG.error("Component {} does not exist", scheme);
                     } else {
                         verifierExtension = component.getExtension(verifierExtensionClass).orElse(null);
                         if (verifierExtension == null) {
-                            log.warn("Component {} does not support verifier extension", scheme);
+                            LOG.warn("Component {} does not support verifier extension", scheme);
                         }
                     }
                 }
@@ -119,12 +121,12 @@ public class ComponentVerifier implements Verifier {
                 ComponentVerifierExtension.Result result = verifier.verify(toComponentScope(scope), params);
                 resp.add(toVerifierResponse(result));
 
-                log.info("Verify ({}): {} === {}", scope, scheme, result.getStatus());
+                LOG.info("Verify ({}): {} === {}", scope, scheme, result.getStatus());
 
                 if (result.getStatus() == ComponentVerifierExtension.Result.Status.ERROR) {
-                    log.error("{} --> ", scheme);
+                    LOG.error("{} --> ", scheme);
                     for (ComponentVerifierExtension.VerificationError error : result.getErrors()) {
-                        log.error("   {} : {}", error.getCode(), error.getDescription());
+                        LOG.error("   {} : {}", error.getCode(), error.getDescription());
                     }
                 }
 
@@ -132,9 +134,9 @@ public class ComponentVerifier implements Verifier {
                     result.getStatus() == ComponentVerifierExtension.Result.Status.UNSUPPORTED) {
                     break;
                 }
-            } catch (Exception exp) {
+            } catch (@SuppressWarnings("PMD") Exception exp) {
                 resp.add(toExceptionResponse(exp, scope, params.keySet()));
-                log.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
+                LOG.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
             }
         }
 

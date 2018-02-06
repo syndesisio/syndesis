@@ -123,7 +123,7 @@ public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExten
             if (connection == null) {
                 throw new SQLException("No Connection");
             }
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
                     VerificationError.StandardCode.AUTHENTICATION, e.getMessage());
             builder.error(errorBuilder.build());
