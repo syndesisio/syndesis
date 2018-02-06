@@ -1,77 +1,90 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Support</h1>
-    <p>To obtain support, download diagnostic information through this page. </p>
-    <p>If the downloaded zip file is less than 1/2 GB then attach it to an email message that requests help and send the message to <a href="mailto:fuse-online-tech-preview@redhat.com">fuse-online-tech-preview@redhat.com</a>. </p>
-      <p>If the downloaded zip file is larger then 1/2 GB, send an email message to request help, do not attach the file but indicate that the zip file is too large to attach. 
-        Technical support will provide instructions for sending the zip file.</p>
+    <p>To obtain support, download diagnostic information through this page. If the downloaded zip file is less than 0.5 GB, attach it to an email message that requests help and send the message to <a class="text-nowrap" href="mailto:fuse-online-tech-preview@redhat.com">fuse-online-tech-preview@redhat.com</a>. If the downloaded zip file is larger than 0.5 GB, send an email message that requests help, but do not attach the file, and indicate that the zip file is too large to attach. Technical support will provide instructions for sending the zip file.</p>
 
-    <h1>Version</h1>
-    <p class="version"><strong>Syndesis</strong> v1.0</p>
+    <h2>Version</h2>
+    <p><strong>Syndesis:</strong> v1.0</p>
 
-    <h1>Download Trobuleshooting Diagnostics</h1>
-    <p>
-        System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames and passwords are not present in the downloaded zip file. 
-    </p>
+    <h2>Download Trobuleshooting Diagnostics</h2>
+    <p>System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames and passwords are not present in the downloaded zip file.</p>
 
-    <div class="mainform">
-      <p>Select the integrations to capture diagnostics for:</p>
-      <form novalidate>
-        <fieldset>
-            <p> 
-              <input type="radio" id="alllogs" name="logs" [value]="true" [(ngModel)]="allLogsSelected" (click)="deselectAll()">
-              <label for="alllogs">All integrations</label>
-            </p>
-            <p>
-              <input type="radio" id="specificlogs" name="logs" [value]="false" [(ngModel)]="allLogsSelected">
-              <label for="specificlogs">Specific integrations</label>
-            </p>
-          <!-- Toolbar -->
-          <div class="row">
-            <div class="col-md-4">
+    <div class="panel panel-default support-panel">
+      <div class="panel-body">
+        <p>Select the integrations to capture diagnostics for:</p>
+        <form novalidate class="support-form">
+          <fieldset>
+            <div class="syn-form-input-list">
+              <div class="syn-form-input-list__option">
+                <label>
+                  <input type="radio"
+                        id="alllogs"
+                        name="logs" 
+                        [value]="true" 
+                        [(ngModel)]="allLogsSelected" 
+                        (click)="deselectAll()">
+                  All integrations 
+                </label>
+              </div>
+              <div class="syn-form-input-list__option">
+                <label>
+                  <input type="radio" 
+                        id="specificlogs" 
+                        name="logs" 
+                        [value]="false" 
+                        [(ngModel)]="allLogsSelected"> 
+                  Specific integrations
+                </label>
+              </div>
+              <!-- Toolbar -->
+              <div *ngIf="!allLogsSelected" class="container-fluid">
               <pfng-toolbar [config]="toolbarConfig"
                             (onFilterChange)="filterChanged($event)"
-                            (onSortChange)="sortChanged($event)">
+                            (onSortChange)="sortChanged($event)"
+                            [viewTemplate]="viewTemplate">
+                <ng-template #viewTemplate>
+                  <div class="toolbar-pf-action-right">
+                    <div class="form-group">
+                      <strong>{{ selectedItems() }}</strong> of <strong>{{ totalItems() }}</strong> Items
+                    </div>
+                    <div class="form-group">
+                      <a role="button">Select All</a>
+                    </div>
+                  </div>
+                </ng-template>  
               </pfng-toolbar>
-            </div>
-            <div class="col-md-8 filter_labels">
-              <div>
-              <strong>{{ selectedItems() }} of {{ totalItems() }} Items</strong>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-          <!-- List displayed here -->
-          <syndesis-loading >
-            <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
-                      [config]="listConfig"
-                      [itemTemplate]="listItemMain"
-                      (onSelectionChange)="handleSelectionChange($event)">
-            </pfng-list>
-          </syndesis-loading>
-
-          <!-- One list item, main row -->
-          <ng-template #listItemMain
-                      let-item="item">
-            <div class="list-pf-content list-pf-content-flex">
-              <div class="list-pf-content-wrapper">
-                <div class="list-pf-main-content">
-                  <div class="list-pf-title">
-                    {{ item.name }}
-                  </div>
-                  <div class="list-pf-description">
-                    <i>{{ item.description }}</i>
-                  </div>
+                <div class="row">
+                  <!-- List displayed here -->
+                  <syndesis-loading >
+                    <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+                            [config]="listConfig"
+                            [itemTemplate]="listItemMain"
+                            (onSelectionChange)="handleSelectionChange($event)">
+                    </pfng-list>
+                  </syndesis-loading>
+                  <!-- One list item, main row -->
+                  <ng-template #listItemMain
+                            let-item="item">
+                    <div class="list-pf-content list-pf-content-flex">
+                      <div class="list-pf-content-wrapper">
+                        <div class="list-pf-main-content">
+                          <div class="list-pf-title">
+                            {{ item.name }}
+                          </div>
+                          <div class="list-pf-description">
+                            <i>{{ item.description }}</i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
               </div>
             </div>
-          </ng-template>
-        </div>
-        </fieldset>
-        <button (click)="onSubmit()" class="btn btn-primary">Download</button>
-      </form>
+          </fieldset>
+          <button (click)="onSubmit()" class="btn btn-primary syn-form__submit">Download</button>
+        </form>
+      </div>
     </div>
-
   </div>
 </div>
-
