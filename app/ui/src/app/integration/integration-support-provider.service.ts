@@ -66,7 +66,10 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   undeploy(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).put({
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.updateState, {
+      id: integration.id,
+      version: integration.deploymentVersion,
+    }).post({
       targetState: UNDEPLOYED
     });
   }

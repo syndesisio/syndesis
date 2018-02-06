@@ -177,7 +177,7 @@ public class IntegrationController {
                         LOG.info("{} : Setting status to {}{}",
                             getLabel(integrationDeployment),
                             update.getState(),
-                            Optional.of(update.getStatusMessage()).map(x->" ("+x+")").orElse(""));
+                            Optional.ofNullable(update.getStatusMessage()).map(x->" ("+x+")").orElse(""));
                     }
 
                     // handler.execute might block for while so refresh our copy of the integration

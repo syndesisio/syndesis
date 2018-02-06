@@ -44,7 +44,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         // Model

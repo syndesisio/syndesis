@@ -73,6 +73,10 @@ public class IntegrationOverview {
         return deployment.map(x -> x.getTargetState()).orElse(Undeployed);
     }
 
+    public Optional<Integer> getDeploymentVersion() {
+        return integration.getDeploymentVersion();
+    }
+
     public List<DeploymentOverview> getDeployments() {
         return null;
     }

@@ -30,10 +30,10 @@ public class DataMapperStepHandler implements IntegrationStepHandler{
     }
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex) {
         ObjectHelper.notNull(route, "route");
 
-        final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
+        final String index = Integer.toString(stepIndex);
 
         return Optional.of(
             route.toF("atlas:mapping-step-%s.json", index)

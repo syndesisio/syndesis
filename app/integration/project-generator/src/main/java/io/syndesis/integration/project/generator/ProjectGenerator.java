@@ -111,18 +111,18 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         // Connectors
         //
         // ****************************************
+        for (int i = 0; i < steps.size(); i++) {
+            Step step = steps.get(i);
+            if( step.getStepKind().equals("endpoint")
+                    &&  step.getAction().filter(ConnectorAction.class::isInstance).isPresent()
+                    && step.getConnection().isPresent() ) {
 
-        steps.stream()
-            .filter(step -> step.getStepKind().equals("endpoint"))
-            .filter(step -> step.getAction().filter(ConnectorAction.class::isInstance).isPresent())
-            .filter(step -> step.getConnection().isPresent())
-            .forEach(step -> {
-                final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
+                final String index = Integer.toString(i);
                 final Connection connection = step.getConnection().get();
                 final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
                 final ConnectorDescriptor descriptor = action.getDescriptor();
                 final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
-                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId().get())
+                        () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId().get())
                 );
 
                 if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {
@@ -131,17 +131,17 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
 
                     Stream.of(connector, connection, step)
-                        .filter(WithConfiguredProperties.class::isInstance)
-                        .map(WithConfiguredProperties.class::cast)
-                        .map(WithConfiguredProperties::getConfiguredProperties)
-                        .flatMap(map -> map.entrySet().stream())
-                        .filter(Predicates.or(connector::isSecret, action::isSecret))
-                        .distinct()
-                        .forEach(
-                            e -> {
-                                addDecryptedKeyProperty(properties, index, componentScheme, e);
-                            }
-                        );
+                            .filter(WithConfiguredProperties.class::isInstance)
+                            .map(WithConfiguredProperties.class::cast)
+                            .map(WithConfiguredProperties::getConfiguredProperties)
+                            .flatMap(map -> map.entrySet().stream())
+                            .filter(Predicates.or(connector::isSecret, action::isSecret))
+                            .distinct()
+                            .forEach(
+                                    e -> {
+                                        addDecryptedKeyProperty(properties, index, componentScheme, e);
+                                    }
+                            );
                 } else {
                     // The component scheme is defined as camel connector prefix
                     // for 'old' style connectors.
@@ -149,37 +149,38 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                     // endpoint secrets
                     Stream.of(connector, connection, step)
-                        .filter(WithConfiguredProperties.class::isInstance)
-                        .map(WithConfiguredProperties.class::cast)
-                        .map(WithConfiguredProperties::getConfiguredProperties)
-                        .flatMap(map -> map.entrySet().stream())
-                        .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
-                        .filter(Predicates.or(connector::isSecret, action::isSecret))
-                        .distinct()
-                        .forEach(
-                            e -> {
-                                addDecryptedKeyProperty(properties, index, componentScheme, e);
-                            }
-                        );
+                            .filter(WithConfiguredProperties.class::isInstance)
+                            .map(WithConfiguredProperties.class::cast)
+                            .map(WithConfiguredProperties::getConfiguredProperties)
+                            .flatMap(map -> map.entrySet().stream())
+                            .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
+                            .filter(Predicates.or(connector::isSecret, action::isSecret))
+                            .distinct()
+                            .forEach(
+                                    e -> {
+                                        addDecryptedKeyProperty(properties, index, componentScheme, e);
+                                    }
+                            );
 
                     // Component properties triggers connectors aliasing so we
                     // can have multiple instances of the same connectors
                     Stream.of(connector, connection, step)
-                        .filter(WithConfiguredProperties.class::isInstance)
-                        .map(WithConfiguredProperties.class::cast)
-                        .map(WithConfiguredProperties::getConfiguredProperties)
-                        .flatMap(map -> map.entrySet().stream())
-                        .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
-                        .distinct()
-                        .forEach(
-                            e -> {
-                                String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
-                                addDecryptedKeyProperty(properties, index, propKeyPrefix, e);
-                            }
-                        );
-                }
-            });
+                            .filter(WithConfiguredProperties.class::isInstance)
+                            .map(WithConfiguredProperties.class::cast)
+                            .map(WithConfiguredProperties::getConfiguredProperties)
+                            .flatMap(map -> map.entrySet().stream())
+                            .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
+                            .distinct()
+                            .forEach(
+                                    e -> {
+                                        String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
+                                        addDecryptedKeyProperty(properties, index, propKeyPrefix, e);
+                                    }
+                            );
 
+                }
+            }
+        }
         return properties;
     }
 
@@ -256,13 +257,15 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addExtensions(tos, integration);
                 addAdditionalResources(tos);
 
-                for (Step step : integration.getSteps()) {
+                List<Step> steps = integration.getSteps();
+                for (int i = 0; i < steps.size(); i++) {
+                    Step step = steps.get(i);
                     if ("mapper".equals(step.getStepKind())) {
                         final Map<String, String> properties = step.getConfiguredProperties();
                         final String mapping = properties.get("atlasmapping");
 
                         if (mapping != null) {
-                            final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
+                            final String index = Integer.toString(i);
                             final String resource = "mapping-step-"  +index + ".json";
 
                             addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));

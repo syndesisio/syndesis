@@ -55,7 +55,7 @@ public class StepHandlerTestSupport {
 
     protected static Integration newIntegrationDeployment(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
-            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            steps[i] = new Step.Builder().createFrom(steps[i]).build();
         }
 
         return new Integration.Builder()

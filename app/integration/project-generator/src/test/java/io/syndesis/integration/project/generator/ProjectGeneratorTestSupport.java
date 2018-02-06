@@ -211,7 +211,7 @@ public class ProjectGeneratorTestSupport {
                 resource -> resourceManager.put(resource.getId().get(), resource)
             );
 
-            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            steps[i] = new Step.Builder().createFrom(steps[i]).build();
         }
 
         return new Integration.Builder()

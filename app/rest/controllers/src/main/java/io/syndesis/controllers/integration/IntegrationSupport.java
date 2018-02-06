@@ -40,7 +40,6 @@ public final class IntegrationSupport {
 
             Step.Builder stepBuilder = new Step.Builder();
             stepBuilder.createFrom(source);
-            stepBuilder.putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i));
 
             source.getConnection().ifPresent(connection -> {
                 // If connector is not set, fetch it from data source and update connection

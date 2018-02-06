@@ -30,7 +30,7 @@ import org.apache.camel.util.ObjectHelper;
 abstract class AbstractFilterStepHandler implements IntegrationStepHandler {
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         final String expression = ObjectHelper.notNull(getFilterExpression(step), "expression");

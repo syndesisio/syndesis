@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -180,27 +181,37 @@ public class IntegrationHandler extends BaseHandler
 
         // We might need to undeploy the previous deployment.
         if( integration.getDeploymentVersion().isPresent() ) {
-            String compositeId = IntegrationDeployment.compositeId(id, integration.getDeploymentVersion().get());
-            IntegrationDeployment activeDeployment = getDataManager().fetch(IntegrationDeployment.class, compositeId);
-            if (activeDeployment != null && activeDeployment.getTargetState() != IntegrationDeploymentState.Undeployed ) {
-                getDataManager().update(activeDeployment.withTargetState(IntegrationDeploymentState.Undeployed ));
-            }
             nextDeploymentVersion = integration.getDeploymentVersion().get()+1;
         }
 
+        // Update previous deployments targetState=Undeployed and make sure nextDeploymentVersion is larger than all previous ones.
+        Set<String> deploymentIds = getDataManager().fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id);
+        if (deploymentIds != null && !deploymentIds.isEmpty()) {
+            Stream<IntegrationDeployment> deployments = deploymentIds.stream()
+                .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
+                .filter(r -> r != null);
+            for (IntegrationDeployment d : deployments.toArray(IntegrationDeployment[]::new)) {
+                nextDeploymentVersion = Math.max(nextDeploymentVersion, d.getVersion()+1);
+                getDataManager().update(d.withTargetState(IntegrationDeploymentState.Undeployed));
+            }
+        }
+
+
+        integration = new Integration.Builder()
+            .createFrom(integration)
+            .deploymentVersion(nextDeploymentVersion)
+            .build();
+
         IntegrationDeployment deployment = new IntegrationDeployment.Builder()
             .id(IntegrationDeployment.compositeId(id, nextDeploymentVersion))
+            .spec(integration)
             .version(nextDeploymentVersion)
             // .userId(SecurityContextHolder.getContext().getAuthentication().getName())
             .userId(sec.getUserPrincipal().getName())
             .build();
 
         deployment = getDataManager().create(deployment);
-        getDataManager().update(new Integration.Builder()
-            .createFrom(integration)
-            .deploymentVersion(integration.getDeploymentVersion())
-            .build());
-
+        getDataManager().update(integration);
         return deployment;
     }
 

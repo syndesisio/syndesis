@@ -70,7 +70,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
             if (is != null) {
                 LOGGER.info("Loading integration from: {}", configurationUri);
-                integration = Json.reader().forType(Integration.class).readValue(is);
+                        integration = Json.reader().forType(Integration.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
             }
@@ -94,7 +94,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
 
             final IntegrationStepHandler handler = findHandler(step);
-            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this);
+            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, i);
 
             if (route == null && definition.isPresent()) {
                 definition.filter(RouteDefinition.class::isInstance)

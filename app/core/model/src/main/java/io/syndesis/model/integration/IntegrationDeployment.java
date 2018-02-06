@@ -68,6 +68,7 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
         return Collections.emptyList();
     }
 
+    @Value.Default
     default Optional<String> getIntegrationId() {
         return getSpec().getId();
     }
