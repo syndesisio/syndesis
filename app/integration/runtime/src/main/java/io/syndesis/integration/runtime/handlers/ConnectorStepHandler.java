@@ -66,7 +66,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -74,7 +74,6 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
-        final String index = Integer.toString(stepIndex);
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
         final String componentId = scheme + "-" + index;
@@ -150,7 +149,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         }
 
         // Handle split
-        return handleSplit(descriptor, route, builder, stepIndex);
+        return handleSplit(descriptor, route, builder, index);
     }
 
     // *************************

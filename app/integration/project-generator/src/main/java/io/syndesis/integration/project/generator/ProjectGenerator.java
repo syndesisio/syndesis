@@ -117,7 +117,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     &&  step.getAction().filter(ConnectorAction.class::isInstance).isPresent()
                     && step.getConnection().isPresent() ) {
 
-                final String index = Integer.toString(i);
+                final String index = Integer.toString(i+1);
                 final Connection connection = step.getConnection().get();
                 final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
                 final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -265,7 +265,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                         final String mapping = properties.get("atlasmapping");
 
                         if (mapping != null) {
-                            final String index = Integer.toString(i);
+                            final String index = Integer.toString(i+1);
                             final String resource = "mapping-step-"  +index + ".json";
 
                             addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));

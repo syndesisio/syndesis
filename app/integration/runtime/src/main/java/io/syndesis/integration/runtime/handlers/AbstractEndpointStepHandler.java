@@ -27,7 +27,7 @@ import org.apache.camel.model.ProcessorDefinition;
 abstract class AbstractEndpointStepHandler implements IntegrationStepHandler {
 
     @SuppressWarnings("PMD")
-    protected Optional<ProcessorDefinition> handleSplit(ConnectorDescriptor descriptor, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex) {
+    protected Optional<ProcessorDefinition> handleSplit(ConnectorDescriptor descriptor, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         // Handle split
         if (descriptor.getSplit().isPresent()) {
             final Split split = descriptor.getSplit().get();

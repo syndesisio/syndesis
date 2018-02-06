@@ -30,13 +30,11 @@ public class DataMapperStepHandler implements IntegrationStepHandler{
     }
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
-        final String index = Integer.toString(stepIndex);
-
         return Optional.of(
-            route.toF("atlas:mapping-step-%s.json", index)
+            route.toF("atlas:mapping-step-%s.json", stepIndex)
         );
     }
 }

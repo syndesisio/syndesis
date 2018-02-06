@@ -43,26 +43,17 @@
     "stepKind" : "endpoint",
     "configuredProperties" : {
       "period" : "5000"
-    },
-    "metadata" : {
-      "step.index" : "1"
     }
   }, {
     "stepKind" : "mapper",
     "configuredProperties" : {
       "atlasmapping" : "{}"
-    },
-    "metadata" : {
-      "step.index" : "2"
     }
   }, {
     "stepKind" : "rule-filter",
     "configuredProperties" : {
       "predicate" : "AND",
       "rules" : "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]"
-    },
-    "metadata" : {
-      "step.index" : "3"
     }
   }, {
     "action" : {
@@ -91,9 +82,6 @@
     "configuredProperties" : {
       "key-1" : "val-1",
       "key-2" : "val-2"
-    },
-    "metadata" : {
-      "step.index" : "4"
     }
   }, {
     "action" : {
@@ -112,9 +100,6 @@
     "configuredProperties" : {
       "key-1" : "val-1",
       "key-2" : "val-2"
-    },
-    "metadata" : {
-      "step.index" : "5"
     }
   }, {
     "action" : {
@@ -133,9 +118,6 @@
     "configuredProperties" : {
       "key-1" : "val-1",
       "key-2" : "val-2"
-    },
-    "metadata" : {
-      "step.index" : "6"
     }
   }, {
     "action" : {
@@ -210,9 +192,6 @@
       "username" : "admin",
       "password" : "admin",
       "token" : "mytoken"
-    },
-    "metadata" : {
-      "step.index" : "7"
     }
   } ],
   "description" : "This is a test integration!",

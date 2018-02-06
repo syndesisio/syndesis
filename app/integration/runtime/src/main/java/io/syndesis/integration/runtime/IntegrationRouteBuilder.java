@@ -94,7 +94,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
 
             final IntegrationStepHandler handler = findHandler(step);
-            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, i);
+            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, Integer.toString(i+1));
 
             if (route == null && definition.isPresent()) {
                 definition.filter(RouteDefinition.class::isInstance)

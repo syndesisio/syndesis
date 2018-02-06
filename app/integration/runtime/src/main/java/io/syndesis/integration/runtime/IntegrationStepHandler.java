@@ -29,5 +29,5 @@ public interface IntegrationStepHandler {
     /**
      * Customize the given route according to the given step.
      */
-    Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, int stepIndex);
+    Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex);
 }
