@@ -69,7 +69,7 @@ public final class SalesforceMetadataAdapter implements MetadataAdapter {
             try {
                 final String objectName = (String) properties.get(SalesforceEndpointConfig.SOBJECT_NAME);
                 final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
-                final String specification = Json.mapper().writeValueAsString(inputOutputSchema);
+                final String specification = Json.writer().writeValueAsString(inputOutputSchema);
 
                 return new SyndesisMetadata(
                     enrichedProperties,

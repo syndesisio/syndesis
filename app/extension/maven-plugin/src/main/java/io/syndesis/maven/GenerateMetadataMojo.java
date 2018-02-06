@@ -15,31 +15,25 @@
  */
 package io.syndesis.maven;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.annotation.Nullable;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.v2.JavaClass;
+import io.syndesis.core.Json;
+import io.syndesis.core.Names;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
+import io.syndesis.extension.converter.ExtensionConverter;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ActionDescriptor;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.extension.Extension;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -57,25 +51,30 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.atlasmap.core.DefaultAtlasConversionService;
-import io.atlasmap.java.inspect.ClassInspectionService;
-import io.atlasmap.java.v2.JavaClass;
-import io.syndesis.core.Json;
-import io.syndesis.core.Names;
-import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
-import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.extension.Extension;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -373,7 +372,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         if (template.exists()) {
             try {
-                JsonNode tree = Json.mapper().readTree(template);
+                JsonNode tree = Json.reader().readTree(Files.newBufferedReader(template.toPath(), Charset.defaultCharset()));
                 Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 
@@ -450,7 +449,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
         try {
             JsonNode tree = ExtensionConverter.getDefault().toPublicExtension(jsonObject);
-            Json.mapper().writerWithDefaultPrettyPrinter().writeValue(targetFile, tree);
+            ObjectWriter writer = Json.writer();
+            writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValue(targetFile, tree);
             getLog().info("Created file " + targetFile.getAbsolutePath());
         } catch (IOException e) {
             throw new MojoExecutionException("Cannot write to file: " + metadataDestination, e);

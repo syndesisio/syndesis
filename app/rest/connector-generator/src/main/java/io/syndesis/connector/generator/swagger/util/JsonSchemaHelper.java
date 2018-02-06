@@ -87,7 +87,7 @@ public final class JsonSchemaHelper {
 
     public static String serializeJson(final ObjectNode schemaNode) {
         try {
-            return Json.mapper().writeValueAsString(schemaNode);
+            return Json.writer().writeValueAsString(schemaNode);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize JSON schema", e);
         }

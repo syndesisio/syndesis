@@ -93,12 +93,12 @@ public final class SqlMetadataAdapter implements MetadataAdapter {
                     new DataShape.Builder()
                         .kind("json-schema")
                         .type(builderIn.getTitle())
-                        .specification(Json.mapper().writeValueAsString(builderIn))
+                        .specification(Json.writer().writeValueAsString(builderIn))
                         .build(),
                     new DataShape.Builder()
                         .kind("json-schema")
                         .type(builderOut.getTitle())
-                        .specification(Json.mapper().writeValueAsString(builderOut))
+                        .specification(Json.writer().writeValueAsString(builderOut))
                         .build());
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException(e);
@@ -148,12 +148,12 @@ public final class SqlMetadataAdapter implements MetadataAdapter {
                     new DataShape.Builder()
                         .kind("json-schema")
                         .type(builderIn.getTitle())
-                        .specification(Json.mapper().writeValueAsString(builderIn))
+                        .specification(Json.writer().writeValueAsString(builderIn))
                         .build(),
                     new DataShape.Builder()
                         .kind("json-schema")
                         .type(builderOut.getTitle())
-                        .specification(Json.mapper().writeValueAsString(builderOut))
+                        .specification(Json.writer().writeValueAsString(builderOut))
                         .build());
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException(e);

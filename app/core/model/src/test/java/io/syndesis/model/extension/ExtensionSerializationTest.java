@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.core.Json;
 import org.junit.Test;
 
@@ -27,17 +29,18 @@ import static junit.framework.TestCase.fail;
 public class ExtensionSerializationTest {
     @Test
     public void testSerializeDeserialize() throws IOException {
-        final ObjectMapper mapper = Json.mapper();
+        final ObjectReader reader = Json.reader();
+        final ObjectWriter writer = Json.writer();
 
         try (InputStream source = getClass().getResourceAsStream("syndesis-extension-definition.json")) {
             try {
-                mapper.readValue(
-                    mapper.writeValueAsString(
+                reader.forType(Extension.class).readValue(
+                    writer.writeValueAsString(
                         new Extension.Builder()
-                            .createFrom(mapper.readValue(source, Extension.class))
+                            .createFrom(reader.forType(Extension.class).readValue(source))
                             .build()
-                    ),
-                    Extension.class
+                    )
+
                 );
             } catch (IOException e) {
                 fail("Should not throw an exception");

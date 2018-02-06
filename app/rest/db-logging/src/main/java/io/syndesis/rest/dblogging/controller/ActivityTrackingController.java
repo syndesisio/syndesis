@@ -230,7 +230,7 @@ public class ActivityTrackingController implements Closeable {
     }
 
     public void setPodLogState(String podName, PodLogState state) throws IOException {
-        jsonDB.set("/activity/pods/" + podName, Json.mapper().writeValueAsBytes(state));
+        jsonDB.set("/activity/pods/" + podName, Json.writer().writeValueAsBytes(state));
     }
 
     public PodLogState getPodLogState(String podName) throws IOException {
@@ -246,7 +246,7 @@ public class ActivityTrackingController implements Closeable {
         if (data == null) {
             return null;
         }
-        return Json.mapper().readValue(data, type);
+        return Json.reader().forType(type).readValue(data);
     }
 
     private void processEventQueue() {
@@ -283,7 +283,7 @@ public class ActivityTrackingController implements Closeable {
                     }
 
                     // Write the batch..
-                    jsonDB.update("/activity", Json.mapper().writeValueAsBytes(batch));
+                    jsonDB.update("/activity", Json.writer().writeValueAsBytes(batch));
                     LOG.info("Batch ingested {} log events", eventCounter);
 
                 } catch (IOException e) {
