@@ -18,15 +18,14 @@ package io.syndesis.rest.metrics.prometheus;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.internal.readiness.Readiness;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.rest.metrics.MetricsProvider;
 
 @Component
@@ -47,16 +46,15 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // map integration Id to pod name
-        List<Pod> integrationPodList = kubernetes.pods().withLabel("integration").list().getItems();
-        final List<Pod> pods = integrationPodList.stream()
-            .filter(p -> Readiness.isReady(p)
-                && integrationId.equals(p.getMetadata().getAnnotations().get("syndesis.io/integration-id")))
-            .collect(Collectors.toList());
+        List<Pod> pods = kubernetes.pods()
+            .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
+            .list().getItems();
 
         if (pods.isEmpty()) {
             throw new IllegalArgumentException("Missing pod with integration id " + integrationId);
         }
 
+        // TODO: lookup values per version
         final String podName = pods.get(0).getMetadata().getName();
         final Optional<Long> totalMessages = getMetricValue(podName, "org_apache_camel_ExchangesTotal", Long.class);
         final Optional<Long> failedMessages = getMetricValue(podName, "org_apache_camel_ExchangesFailed", Long.class);
