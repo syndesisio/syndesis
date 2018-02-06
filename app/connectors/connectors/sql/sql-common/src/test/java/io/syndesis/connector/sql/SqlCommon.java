@@ -36,7 +36,7 @@ public class SqlCommon {
         try {
             connection = DriverManager.getConnection(url,user,password);
         } catch (Exception ex) {
-            fail("Exception during database startup.");
+            fail("Exception during database startup." + ex.getMessage());
         }
         return connection;
     }
