@@ -136,10 +136,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                         .distinct()
                         .forEach(
                             e -> {
-                                String key = String.format("%s-%s.%s", componentScheme, index, e.getKey());
-                                String val = mandatoryDecrypt(resourceManager, e);
-
-                                properties.put(key, val);
+                                addDecryptedKeyProperty(properties, index, componentScheme, e);
                             }
                         );
                 } else {
@@ -158,10 +155,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                         .distinct()
                         .forEach(
                             e -> {
-                                String key = String.format("%s-%s.%s", componentScheme, index, e.getKey());
-                                String val = mandatoryDecrypt(resourceManager, e);
-
-                                properties.put(key, val);
+                                addDecryptedKeyProperty(properties, index, componentScheme, e);
                             }
                         );
 
@@ -176,16 +170,21 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                         .distinct()
                         .forEach(
                             e -> {
-                                String key = String.format("%s.configurations.%s-%s.%s", componentScheme, componentScheme, index, e.getKey());
-                                String val = mandatoryDecrypt(resourceManager, e);
-
-                                properties.put(key, val);
+                                String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
+                                addDecryptedKeyProperty(properties, index, propKeyPrefix, e);
                             }
                         );
                 }
             });
 
         return properties;
+    }
+
+    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, Map.Entry<String, String> e) {
+        String key = String.format("%s-%s.%s", propKeyPrefix, index, e.getKey());
+        String val = mandatoryDecrypt(resourceManager, e);
+
+        properties.put(key, val);
     }
 
     @Override
