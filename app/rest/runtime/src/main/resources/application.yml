@@ -103,5 +103,8 @@ logging:
   level:
     io.swagger.parser: WARN
 
+prometheus:
+  service: syndesis-prometheus
+
 metrics:
-  kind: sql
+  kind: prometheus
