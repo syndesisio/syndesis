@@ -35,7 +35,7 @@ public final class TwitterCredentialProviderFactory implements CredentialProvide
         return "twitter";
     }
 
-    /* default */ static CredentialProvider createCredentialProvider(final SocialProperties properties) {
+    static CredentialProvider createCredentialProvider(final SocialProperties properties) {
         final TwitterConnectionFactory twitter = new TwitterConnectionFactory(properties.getAppId(),
             properties.getAppSecret());
         final OAuth1Applicator applicator = new OAuth1Applicator(properties);

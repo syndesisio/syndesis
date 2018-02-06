@@ -36,8 +36,8 @@ import io.syndesis.connector.sql.stored.JSONBeanUtil;
 public class SqlConnectorComponent extends DefaultConnectorComponent {
     private final static Logger LOGGER = LoggerFactory.getLogger(SqlConnectorComponent.class);
 
-    /* default */ final static String COMPONENT_NAME  ="sql-connector";
-    /* default */ final static String COMPONENT_SCHEME="sql-connector";
+    final static String COMPONENT_NAME  ="sql-connector";
+    final static String COMPONENT_SCHEME="sql-connector";
 
     public SqlConnectorComponent() {
         this(null);

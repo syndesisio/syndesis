@@ -56,8 +56,8 @@ public class IntegrationController {
     private final EventBus eventBus;
     private final ConcurrentHashMap<IntegrationDeploymentState, StateChangeHandler> handlers = new ConcurrentHashMap<>();
     private final Set<String> scheduledChecks = new HashSet<>();
-    /* default */ ExecutorService executor;
-    /* default */ ScheduledExecutorService scheduler;
+    ExecutorService executor;
+    ScheduledExecutorService scheduler;
 
     private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
 
@@ -157,7 +157,7 @@ public class IntegrationController {
         return "Integration " + integrationDeployment.getIntegrationId().orElse("[none]");
     }
 
-    /* default */ void callStateChangeHandler(StateChangeHandler handler, String integrationDeploymentId) {
+    void callStateChangeHandler(StateChangeHandler handler, String integrationDeploymentId) {
         executor.execute(() -> {
             IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
             String checkKey = getIntegrationMarkerKey(integrationDeployment);

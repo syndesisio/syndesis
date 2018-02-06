@@ -19,14 +19,14 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.connector.DataType;
 
-/* default */ final class UnmarshallOutputProcessor extends UnmarshallProcessor {
+final class UnmarshallOutputProcessor extends UnmarshallProcessor {
 
     public UnmarshallOutputProcessor(final DataType dataType) {
         super(dataType);
     }
 
     @Override
-    /* default */ Message message(final Exchange exchange) {
+    Message message(final Exchange exchange) {
         return exchange.getOut();
     }
 

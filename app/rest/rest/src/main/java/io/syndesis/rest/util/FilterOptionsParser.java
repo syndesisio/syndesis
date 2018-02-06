@@ -57,7 +57,7 @@ public class FilterOptionsParser {
 
         private final Optional<String> value;
 
-        /* default */ Filter(String property, String operation, String value) {
+        Filter(String property, String operation, String value) {
             this.property = property;
             this.operation = Optional.ofNullable(operation);
             this.value = Optional.ofNullable(value);

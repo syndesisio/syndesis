@@ -265,7 +265,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             this.stepsPerformed = new ArrayList<>(integrationDeployment.getStepsDone());
         }
 
-        /* default */ void perform(String step, IoCheckedFunction<IntegrationDeployment> callable, DeploymentData data) throws IOException {
+        void perform(String step, IoCheckedFunction<IntegrationDeployment> callable, DeploymentData data) throws IOException {
             if (!stepsPerformed.contains(step)) {
                 callable.apply(integrationDeployment, data);
                 stepsPerformed.add(step);
@@ -274,7 +274,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             }
         }
 
-        /* default */ List<String> getStepsPerformed() {
+        List<String> getStepsPerformed() {
             return stepsPerformed;
         }
     }

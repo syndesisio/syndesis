@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
  */
-/* default */ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
+class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
     private final String base;
     private final JsonGenerator jg;
@@ -50,7 +50,7 @@ import java.util.function.Consumer;
     private boolean closed;
     private String currentRootField;
 
-    /* default */ JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
+    JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
         this.base = base;
         this.output = output;
         try {

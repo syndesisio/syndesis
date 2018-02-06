@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UniquePropertyValidator implements ConstraintValidator<UniqueProperty, WithId<?>> {
 
     @Autowired
-    /* default */ DataManager dataManager;
+    DataManager dataManager;
 
     private String property;
 
@@ -74,7 +74,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         return isUnique;
     }
 
-    /* default */ boolean consideredValidByException(@SuppressWarnings("rawtypes") final Class<WithId> modelClass,
+    boolean consideredValidByException(@SuppressWarnings("rawtypes") final Class<WithId> modelClass,
         final String id) {
         @SuppressWarnings("unchecked")
         final WithId<?> modelInstance = dataManager.fetch(modelClass, id);

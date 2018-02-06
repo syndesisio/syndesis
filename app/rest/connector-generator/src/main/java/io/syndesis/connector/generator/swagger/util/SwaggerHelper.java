@@ -108,7 +108,7 @@ public final class SwaggerHelper {
         }
     }
 
-    /* default */ static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
+    static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
         final JsonNode specRoot;
         if (specification.matches("\\s+\\{")) {
             specRoot = JSON_MAPPER.readTree(specification);
@@ -118,7 +118,7 @@ public final class SwaggerHelper {
         return specRoot;
     }
 
-    /* default */ static String resolve(final String specification) throws Exception {
+    static String resolve(final String specification) throws Exception {
         final String specificationToUse;
         if (specification.toLowerCase().startsWith("http")) {
             specificationToUse = RemoteUrl.urlToString(specification, null);

@@ -142,7 +142,7 @@ public class SqlStatementParser {
         statementInfo.setOutParams(DatabaseMetaDataHelper.getOutputColumnInfo(connection, statementInfo.getDefaultedSqlStatement()));
     }
 
-    /* default */ List<String> splitSqlStatement(String sql) {
+    List<String> splitSqlStatement(String sql) {
         List<String> sqlArray = new ArrayList<>();
         String[] segments = sql.split("=|\\,|\\s|\\(|\\)");
         for (String segment : segments) {
@@ -153,7 +153,7 @@ public class SqlStatementParser {
         return sqlArray;
     }
 
-    /* default */ List<SqlParam> findInsertParams(String tableName) {
+    List<SqlParam> findInsertParams(String tableName) {
         boolean isColumnName = false;
         List<String> columnNames = new ArrayList<>();
         for (String word: sqlArray) {
@@ -176,7 +176,7 @@ public class SqlStatementParser {
         return params;
     }
     
-    /* default */ List<SqlParam> findInputParams() {
+    List<SqlParam> findInputParams() {
         List<SqlParam> params = new ArrayList<>();
         int i=0;
         int columnPos=0;
@@ -199,7 +199,7 @@ public class SqlStatementParser {
         return params;
     }
     
-    /* default */ List<SqlParam> findOutputColumnsInSelectStatement() {
+    List<SqlParam> findOutputColumnsInSelectStatement() {
         boolean isParam = true;
         List<SqlParam> params = new ArrayList<>();
         for (String word: sqlArray) {
@@ -215,7 +215,7 @@ public class SqlStatementParser {
         return params;
     }
 
-    /* default */ List<String> findTablesInSelectStatement() {
+    List<String> findTablesInSelectStatement() {
         boolean isTable = false;
         List<String> tables = new ArrayList<>();
         for (String word: sqlArray) {

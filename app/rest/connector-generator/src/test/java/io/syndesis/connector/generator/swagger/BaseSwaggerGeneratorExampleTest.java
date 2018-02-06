@@ -106,7 +106,7 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
         }
     }
 
-    /* default */ abstract ConnectorGenerator generator();
+    abstract ConnectorGenerator generator();
 
     private static Map<String, String> without(final Map<String, String> map, final String key) {
         final Map<String, String> ret = new HashMap<>(map);

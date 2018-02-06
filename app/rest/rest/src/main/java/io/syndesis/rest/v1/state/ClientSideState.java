@@ -97,13 +97,13 @@ public final class ClientSideState {
 
     private final LongSupplier timeSource;
 
-    /* default */ static class TimestampedState<T> implements Comparable<TimestampedState<T>> {
+    static class TimestampedState<T> implements Comparable<TimestampedState<T>> {
 
         private final T state;
 
         private final long timestamp;
 
-        /* default */ TimestampedState(final T state, final long timestamp) {
+        TimestampedState(final T state, final long timestamp) {
             this.state = Objects.requireNonNull(state, "state");
             this.timestamp = timestamp;
         }
@@ -157,12 +157,12 @@ public final class ClientSideState {
             ClientSideState::deserialize, timeout);
     }
 
-    /* default */ ClientSideState(final Edition edition, final LongSupplier timeSource, final long timeout) {
+    ClientSideState(final Edition edition, final LongSupplier timeSource, final long timeout) {
         this(edition, timeSource, new RandomIvSource(), ClientSideState::serialize, ClientSideState::deserialize,
             timeout);
     }
 
-    /* default */ ClientSideState(final Edition edition, final LongSupplier timeSource, final Supplier<byte[]> ivSource,
+    ClientSideState(final Edition edition, final LongSupplier timeSource, final Supplier<byte[]> ivSource,
         final Function<Object, byte[]> serialization, final BiFunction<Class<?>, byte[], Object> deserialization,
         final long timeout) {
         this.edition = edition;
@@ -193,18 +193,18 @@ public final class ClientSideState {
         return restoreWithTimestamp(cookie, type).state;
     }
 
-    /* default */ byte[] atime() {
+    byte[] atime() {
         final long nowInSec = timeSource.getAsLong();
         final String nowAsStr = Long.toString(nowInSec);
 
         return nowAsStr.getBytes(StandardCharsets.US_ASCII);
     }
 
-    /* default */ byte[] iv() {
+    byte[] iv() {
         return ivSource.get();
     }
 
-    /* default */ String protect(final Object value) {
+    String protect(final Object value) {
         final byte[] clear = serialization.apply(value);
 
         final byte[] iv = iv();
@@ -230,7 +230,7 @@ public final class ClientSideState {
         return base.toString();
     }
 
-    /* default */ <T> TimestampedState<T> restoreWithTimestamp(final Cookie cookie, final Class<T> type) {
+    <T> TimestampedState<T> restoreWithTimestamp(final Cookie cookie, final Class<T> type) {
         final String value = cookie.getValue();
 
         final String[] parts = value.split("\\|", 5);
@@ -268,17 +268,17 @@ public final class ClientSideState {
         return new TimestampedState<>(ret, atimeLong);
     }
 
-    /* default */ static long atime(final byte[] atime) {
+    static long atime(final byte[] atime) {
         final String timeAsStr = new String(atime, StandardCharsets.US_ASCII);
 
         return Long.parseLong(timeAsStr);
     }
 
-    /* default */ static long currentTimestmpUtc() {
+    static long currentTimestmpUtc() {
         return Instant.now().toEpochMilli() / 1000;
     }
 
-    /* default */ static byte[] decrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] encrypted,
+    static byte[] decrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] encrypted,
         final SecretKey encryptionKey) {
         try {
             final Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
@@ -291,7 +291,7 @@ public final class ClientSideState {
         }
     }
 
-    /* default */ static Object deserialize(final Class<?> type, final byte[] pickle) {
+    static Object deserialize(final Class<?> type, final byte[] pickle) {
         final ObjectReader reader = MAPPER.readerFor(type);
 
         try {
@@ -301,7 +301,7 @@ public final class ClientSideState {
         }
     }
 
-    /* default */ static byte[] encrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] clear,
+    static byte[] encrypt(final String encryptionAlgorithm, final byte[] iv, final byte[] clear,
         final SecretKey encryptionKey) {
         try {
             final Cipher cipher = Cipher.getInstance(encryptionAlgorithm);
@@ -314,7 +314,7 @@ public final class ClientSideState {
         }
     }
 
-    /* default */ static byte[] mac(final String authenticationAlgorithm, final CharSequence base,
+    static byte[] mac(final String authenticationAlgorithm, final CharSequence base,
         final SecretKey authenticationKey) {
         try {
             final String baseString = base.toString();
@@ -331,7 +331,7 @@ public final class ClientSideState {
         }
     }
 
-    /* default */ static byte[] serialize(final Object value) {
+    static byte[] serialize(final Object value) {
         final ObjectWriter writer = MAPPER.writerFor(value.getClass());
 
         try {

@@ -55,7 +55,7 @@ public final class ErrorMap {
      * @param rawMsg
      * @return ErrorMap
      */
-    /* default */ static String parseWith(String rawMsg, ObjectMapper mapper) {
+    static String parseWith(String rawMsg, ObjectMapper mapper) {
         try {
             final JsonNode jsonNode = mapper.readTree(rawMsg);
             final Optional<String> error = determineError(jsonNode);
@@ -66,7 +66,7 @@ public final class ErrorMap {
         return rawMsg;
     }
 
-    /* default */ static Optional<String> determineError(final JsonNode node) {
+    static Optional<String> determineError(final JsonNode node) {
         return Optional.of(tryLookingUp(node, "errors", "message")
             .orElseGet(() -> tryLookingUp(node, "error", "message")
                 .orElseGet(() -> tryLookingUp(node, "error")
@@ -74,7 +74,7 @@ public final class ErrorMap {
                         .orElse(null)))));
     }
 
-    /* default */ static Optional<String> tryLookingUp(final JsonNode node, final String... pathElements) {
+    static Optional<String> tryLookingUp(final JsonNode node, final String... pathElements) {
         JsonNode current = node;
         for (String pathElement : pathElements) {
             current = current.get(pathElement);

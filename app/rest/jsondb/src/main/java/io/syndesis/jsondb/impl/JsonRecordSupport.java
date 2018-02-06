@@ -46,12 +46,12 @@ public final class JsonRecordSupport {
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
     public static final Pattern INDEX_EXTRACTOR_PATTERN = Pattern.compile("^(.+)/[^/]+/([^/]+)/$");
 
-    /* default */ static class PathPart {
+    static class PathPart {
         private final String path;
 
         private int idx;
 
-        /* default */ PathPart(String path, boolean array) {
+        PathPart(String path, boolean array) {
             this.path = path;
             this.idx = array ? 0 : -1;
         }
@@ -195,7 +195,7 @@ public final class JsonRecordSupport {
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
-    /* default */ static String toLexSortableString(int value, char marker) {
+    static String toLexSortableString(int value, char marker) {
         ArrayList<String> seqs = new ArrayList<String>();
 
         String seq = Integer.toString(value);
@@ -215,7 +215,7 @@ public final class JsonRecordSupport {
         return builder.toString();
     }
 
-    /* default */ static int fromLexSortableStringToInt(String value, char marker) {
+    static int fromLexSortableStringToInt(String value, char marker) {
         // Trim the initial markers.
         String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(marker)) + "+", "");
 

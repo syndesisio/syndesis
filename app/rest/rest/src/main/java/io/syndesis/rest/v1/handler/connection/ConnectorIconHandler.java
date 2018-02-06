@@ -58,7 +58,7 @@ public final class ConnectorIconHandler extends BaseHandler {
     private final IconDataAccessObject iconDao;
     private final ExtensionDataManager extensionDataManager;
 
-    /* default */ ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao,
+    ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao,
                                        final ExtensionDataManager extensionDataManager) {
         super(dataMgr);
         this.connector = connector;

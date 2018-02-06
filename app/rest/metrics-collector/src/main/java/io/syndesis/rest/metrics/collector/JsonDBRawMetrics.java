@@ -161,15 +161,15 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         }
     }
 
-    /* default */ static String path(String integrationId, String podName) {
+    static String path(String integrationId, String podName) {
         return String.format("%s/integrations/%s/pods/%s", RawMetrics.class.getSimpleName(), integrationId, podName);
     }
 
-    /* default */ static String path(String integrationId) {
+    static String path(String integrationId) {
         return String.format("%s/integrations/%s/pods", RawMetrics.class.getSimpleName(), integrationId);
     }
 
-    /* default */ static String path() {
+    static String path() {
         return String.format("%s/integrations", RawMetrics.class.getSimpleName());
     }
 }

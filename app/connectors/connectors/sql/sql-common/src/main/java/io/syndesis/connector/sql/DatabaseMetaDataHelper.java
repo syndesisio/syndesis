@@ -71,7 +71,7 @@ public final class DatabaseMetaDataHelper {
     }
     
     
-    /* default */ static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
+    static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
         final String schemaPattern, final String tableNamePattern) throws SQLException {
         Set<String> tablesInSchema = new HashSet<>();
         ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
@@ -81,13 +81,13 @@ public final class DatabaseMetaDataHelper {
         return tablesInSchema;
     }
 
-    /* default */ static ResultSet fetchTableColumns(final DatabaseMetaData meta, final String catalog,
+    static ResultSet fetchTableColumns(final DatabaseMetaData meta, final String catalog,
             final String schema, final String tableName, final String columnName) throws SQLException {
 
         return meta.getColumns(catalog, schema, tableName, columnName);
     }
 
-    /* default */ static List<SqlParam> getJDBCInfoByColumnNames(final DatabaseMetaData meta, String catalog, 
+    static List<SqlParam> getJDBCInfoByColumnNames(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         for (int i=0; i<params.size(); i++) {
@@ -105,7 +105,7 @@ public final class DatabaseMetaDataHelper {
         return paramList;
     }
 
-    /* default */ static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
+    static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         ResultSet columnSet = meta.getColumns(catalog, "SA", tableName, null); // NOPMD, TODO: fishy
@@ -119,7 +119,7 @@ public final class DatabaseMetaDataHelper {
         return paramList;
     }
 
-    /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection, 
+    static List<SqlParam> getOutputColumnInfo(final Connection connection, 
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         Statement stmt = connection.createStatement();

@@ -226,7 +226,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter {
         return isPresent(properties, property) && properties.get(property) != null;
     }
 
-    /* default */ static JsonSchema schemaFor(final JDBCType jdbcType) {
+    static JsonSchema schemaFor(final JDBCType jdbcType) {
         final JsonSchemaFactory factory = new JsonSchemaFactory();
         switch (jdbcType) {
         case ARRAY:

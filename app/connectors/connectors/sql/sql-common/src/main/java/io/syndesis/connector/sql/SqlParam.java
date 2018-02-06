@@ -65,23 +65,23 @@ public class SqlParam {
     
     public static class SqlSampleValue {
 
-        /* default */ static List<String> arrayValue = Arrays.asList("1","2","3");
-        /* default */ static byte[] binaryValue = {1,2,3};
-        /* default */ static String stringValue = "abc";
-        /* default */ static Character charValue = 'a';
-        /* default */ static Date dateValue = new Date(new java.util.Date().getTime());
-        /* default */ static Time timeValue = new Time(new java.util.Date().getTime());
-        /* default */ static Timestamp timestampValue = new Timestamp(new java.util.Date().getTime());
-        /* default */ static BigDecimal decimalValue = BigDecimal.ZERO;
-        /* default */ static Boolean booleanValue = Boolean.TRUE;
-        /* default */ static Double doubleValue = Double.valueOf(0);
-        /* default */ static Integer integerValue = 0;
-        /* default */ static Long longValue = 0l;
-        /* default */ static Float floatValue = 0f;
+        static List<String> arrayValue = Arrays.asList("1","2","3");
+        static byte[] binaryValue = {1,2,3};
+        static String stringValue = "abc";
+        static Character charValue = 'a';
+        static Date dateValue = new Date(new java.util.Date().getTime());
+        static Time timeValue = new Time(new java.util.Date().getTime());
+        static Timestamp timestampValue = new Timestamp(new java.util.Date().getTime());
+        static BigDecimal decimalValue = BigDecimal.ZERO;
+        static Boolean booleanValue = Boolean.TRUE;
+        static Double doubleValue = Double.valueOf(0);
+        static Integer integerValue = 0;
+        static Long longValue = 0l;
+        static Float floatValue = 0f;
     }
     
     @SuppressWarnings({"rawtypes", "PMD.CyclomaticComplexity"})
-    /* default */ static TypeValue<?> javaType(final JDBCType jdbcType) {
+    static TypeValue<?> javaType(final JDBCType jdbcType) {
         
         SqlParam sqlParam = new SqlParam();
         switch (jdbcType) {

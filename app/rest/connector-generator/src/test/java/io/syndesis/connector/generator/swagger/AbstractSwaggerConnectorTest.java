@@ -28,7 +28,7 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 public abstract class AbstractSwaggerConnectorTest {
 
-    /* default */ static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
+    static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
 
     private static ConnectorTemplate fetchSwaggerConnectorTemplateFromDeployment() {
         final Configuration configuration = Configuration.builder()//

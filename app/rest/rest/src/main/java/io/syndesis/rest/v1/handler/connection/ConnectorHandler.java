@@ -176,11 +176,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 
-    /* default */ Connector augmentedWithUsage(final Connector connector) {
+    Connector augmentedWithUsage(final Connector connector) {
         return augmentedWithUsage(Collections.singletonList(connector)).get(0);
     }
 
-    /* default */ List<Connector> augmentedWithUsage(final List<Connector> connectors) {
+    List<Connector> augmentedWithUsage(final List<Connector> connectors) {
         ListResult<Integration> integrationListResult = getDataManager().fetchAll(Integration.class);
         List<Integration> items = integrationListResult.getItems();
         final Map<String, Long> connectorUsage = items.stream()//

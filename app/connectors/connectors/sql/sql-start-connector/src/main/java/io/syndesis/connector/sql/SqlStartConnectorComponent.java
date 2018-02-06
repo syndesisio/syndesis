@@ -37,8 +37,8 @@ import java.util.function.Consumer;
 public class SqlStartConnectorComponent extends DefaultConnectorComponent {
     private final static Logger LOGGER = LoggerFactory.getLogger(SqlStartConnectorComponent.class);
 
-    /* default */ final static String COMPONENT_NAME  ="sql-start-connector";
-    /* default */ final static String COMPONENT_SCHEME="sql-start-connector";
+    final static String COMPONENT_NAME  ="sql-start-connector";
+    final static String COMPONENT_SCHEME="sql-start-connector";
 
     public SqlStartConnectorComponent() {
         super(COMPONENT_NAME, SqlStartConnectorComponent.class.getName());

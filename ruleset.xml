@@ -578,9 +578,6 @@
   <rule ref="rulesets/java/design.xml/UseUtilityClass">
     <priority>5</priority>
   </rule>
-  <rule ref="rulesets/java/comments.xml/CommentDefaultAccessModifier">
-    <priority>5</priority>
-  </rule>
   <rule ref="rulesets/java/clone.xml/ProperCloneImplementation">
     <priority>3</priority>
   </rule>

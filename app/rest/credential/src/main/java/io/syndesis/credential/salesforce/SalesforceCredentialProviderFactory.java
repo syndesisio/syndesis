@@ -36,7 +36,7 @@ public final class SalesforceCredentialProviderFactory implements CredentialProv
         return "salesforce";
     }
 
-    /* default */ static SalesforceConnectionFactory
+    static SalesforceConnectionFactory
         createConnectionFactory(final SocialProperties salesforceProperties) {
         final SalesforceConnectionFactory salesforce = new SalesforceConnectionFactory(salesforceProperties.getAppId(),
             salesforceProperties.getAppSecret());
@@ -49,7 +49,7 @@ public final class SalesforceCredentialProviderFactory implements CredentialProv
         return salesforce;
     }
 
-    /* default */ static CredentialProvider createCredentialProvider(final SocialProperties properties) {
+    static CredentialProvider createCredentialProvider(final SocialProperties properties) {
         final SalesforceConnectionFactory connectionFactory = createConnectionFactory(properties);
 
         return new OAuth2CredentialProvider<>("salesforce", connectionFactory,

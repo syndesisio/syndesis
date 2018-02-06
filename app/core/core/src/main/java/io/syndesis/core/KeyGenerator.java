@@ -68,7 +68,7 @@ public final class KeyGenerator {
         }
     }
 
-    /* default */ static long getRandomPart(final long timeStamp) {
+    static long getRandomPart(final long timeStamp) {
         return RANDOMNESS_LONG.updateAndGet(randomVal -> {
             long current;
             do {

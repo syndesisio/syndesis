@@ -34,8 +34,8 @@ import java.util.function.Consumer;
 public class SqlStoredConnectorComponent extends DefaultConnectorComponent {
     private final static Logger LOGGER = LoggerFactory.getLogger(SqlStoredConnectorComponent.class);
 
-    /* default */ final static String COMPONENT_NAME  ="sql-stored-connector";
-    /* default */ final static String COMPONENT_SCHEME="sql-stored-connector";
+    final static String COMPONENT_NAME  ="sql-stored-connector";
+    final static String COMPONENT_SCHEME="sql-stored-connector";
 
     public SqlStoredConnectorComponent() {
         this(null);

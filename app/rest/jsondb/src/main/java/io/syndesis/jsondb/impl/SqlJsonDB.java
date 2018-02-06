@@ -363,13 +363,13 @@ public class SqlJsonDB implements JsonDB {
         return key;
     }
 
-    /* default */ class BatchManager {
+    class BatchManager {
 
         private final Handle dbi;
         private long batchSize;
         private PreparedBatch insertBatch;
 
-        /* default */ BatchManager(Handle dbi) {
+        BatchManager(Handle dbi) {
             this.dbi = dbi;
         }
 

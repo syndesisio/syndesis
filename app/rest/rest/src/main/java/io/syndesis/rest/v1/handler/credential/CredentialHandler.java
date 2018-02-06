@@ -129,7 +129,7 @@ public class CredentialHandler {
         }
     }
 
-    /* default */ static URI addFragmentTo(final URI uri, final CallbackStatus status) {
+    static URI addFragmentTo(final URI uri, final CallbackStatus status) {
         try {
             final String fragment = SERIALIZER.writeValueAsString(status);
 
@@ -140,14 +140,14 @@ public class CredentialHandler {
         }
     }
 
-    /* default */ static Response fail(final HttpServletRequest request, final HttpServletResponse response,
+    static Response fail(final HttpServletRequest request, final HttpServletResponse response,
         final String message) {
         final URI redirect = appHome(request);
 
         return fail(request, response, redirect, null, message);
     }
 
-    /* default */ static Response fail(final HttpServletRequest request, final HttpServletResponse response,
+    static Response fail(final HttpServletRequest request, final HttpServletResponse response,
         final URI redirect, final String providerId, final String message) {
         removeCredentialCookies(request, response);
 
@@ -156,7 +156,7 @@ public class CredentialHandler {
         return Response.temporaryRedirect(redirectWithStatus).build();
     }
 
-    /* default */ static void removeCredentialCookies(final HttpServletRequest request,
+    static void removeCredentialCookies(final HttpServletRequest request,
         final HttpServletResponse response) {
         Arrays.stream(request.getCookies()).filter(c -> c.getName().startsWith(CredentialFlowState.CREDENTIAL_PREFIX))
             .forEach(c -> {

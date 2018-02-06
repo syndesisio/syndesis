@@ -101,7 +101,7 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
         this.username = username;
     }
 
-    /* default */ void addAuthenticationHeadersTo(final Map<String, Object> headers) {
+    void addAuthenticationHeadersTo(final Map<String, Object> headers) {
         if (authenticationType == AuthenticationType.oauth2) {
             headers.put("Authorization", "Bearer " + accessToken);
         } else if (authenticationType == AuthenticationType.basic) {
@@ -110,7 +110,7 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
         }
     }
 
-    /* default */ Map<String, Object> determineHeaders(final Map<String, Object> parameters) {
+    Map<String, Object> determineHeaders(final Map<String, Object> parameters) {
         final Map<String, Object> headers = new HashMap<>();
         final ClassInfo classInfo = IntrospectionSupport.cacheClass(RestSwaggerEndpoint.class);
 

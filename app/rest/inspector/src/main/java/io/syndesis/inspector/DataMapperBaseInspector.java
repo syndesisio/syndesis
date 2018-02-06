@@ -45,7 +45,7 @@ abstract class DataMapperBaseInspector implements Inspector {
 
     private final boolean strict;
 
-    /* default */ DataMapperBaseInspector(final boolean strict) {
+    DataMapperBaseInspector(final boolean strict) {
         this.strict = strict;
     }
 

@@ -36,12 +36,12 @@ public class VerifierResponse {
     private Verifier.Status status;
     private List<Error> errors;
 
-    /* default */ VerifierResponse(Verifier.Status status, Verifier.Scope scope) {
+    VerifierResponse(Verifier.Status status, Verifier.Scope scope) {
         this.status = status;
         this.scope = scope;
     }
 
-    /* default */ VerifierResponse(String status, String scope) {
+    VerifierResponse(String status, String scope) {
         this(Verifier.Status.valueOf(status.toUpperCase(Locale.US)),
              Verifier.Scope.valueOf(scope.toUpperCase(Locale.US)));
     }
@@ -59,10 +59,10 @@ public class VerifierResponse {
     }
 
     public static class Error {
-        /* default */ String code;
-        /* default */ String description;
-        /* default */ Set<String> parameters;
-        /* default */ Map<String, Object> attributes;
+        String code;
+        String description;
+        Set<String> parameters;
+        Map<String, Object> attributes;
 
         public String getCode() {
             return code;
@@ -112,9 +112,9 @@ public class VerifierResponse {
         }
 
         public class ErrorBuilder {
-            /* default */ Error error = new Error();
+            Error error = new Error();
 
-            /* default */ ErrorBuilder(String code) {
+            ErrorBuilder(String code) {
                 error.code = code;
             }
 

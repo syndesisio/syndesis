@@ -65,7 +65,7 @@ public final class AMQPUtil {
         private final String clientCertificate;
         private final boolean skipCertificateCheck;
 
-        /* default */ ConnectionParameters(String connectionUri, String username, String password, String brokerCertificate, String
+        ConnectionParameters(String connectionUri, String username, String password, String brokerCertificate, String
                 clientCertificate, boolean skipCertificateCheck) {
             this.connectionUri = connectionUri;
             this.username = username;

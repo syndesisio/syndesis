@@ -39,7 +39,7 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
     }
 
     @Override
-    /* default */ ConnectorGenerator generator() {
+    ConnectorGenerator generator() {
         return new SwaggerUnifiedShapeConnectorGenerator();
     }
 

@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public final class Urls {
 
-    /* default */ static final String ORIGIN_HEADER = "X-Forwarded-Origin";
+    static final String ORIGIN_HEADER = "X-Forwarded-Origin";
 
     private static final Pattern HOST_AND_PORT_PATTERN = Pattern.compile("(?<host>[^:]+)(?::(?<port>\\d+))?");
 
@@ -72,13 +72,13 @@ public final class Urls {
         }
     }
 
-    /* default */ static String basePath(final String path) {
+    static String basePath(final String path) {
         final String[] parts = path.split("/");
 
         return "/" + parts[1] + "/" + parts[2] + "/";
     }
 
-    /* default */ static URI currentUri(final HttpServletRequest httpRequest) {
+    static URI currentUri(final HttpServletRequest httpRequest) {
         // in development we have Angular CLI proxying to HA proxy (openshift
         // router) that proxies to the syndesis-rest; we need the origin
         // hostname/port/scheme/
@@ -102,7 +102,7 @@ public final class Urls {
         return currentUri;
     }
 
-    /* default */ static Map<String, String> parseKeyValueParts(final String origin) {
+    static Map<String, String> parseKeyValueParts(final String origin) {
         final String[] parts = origin.split(";", 3);
         if (parts.length == 0) {
             return Collections.emptyMap();
@@ -125,7 +125,7 @@ public final class Urls {
         return keyValues;
     }
 
-    /* default */ static Optional<URI> parseOrigin(final String origin) {
+    static Optional<URI> parseOrigin(final String origin) {
         if (origin == null || origin.isEmpty()) {
             return Optional.empty();
         }

@@ -41,11 +41,11 @@ public class DemoHandlerProvider implements StateChangeHandlerProvider {
             new DemoHandler(IntegrationDeploymentState.Undeployed, 5000L));
     }
 
-    /* default */ static class DemoHandler implements StateChangeHandler {
+    static class DemoHandler implements StateChangeHandler {
         private final IntegrationDeploymentState state;
         private final long waitMillis;
 
-        /* default */ DemoHandler(IntegrationDeploymentState state, long waitMillis) {
+        DemoHandler(IntegrationDeploymentState state, long waitMillis) {
             this.state = state;
             this.waitMillis = waitMillis;
         }
