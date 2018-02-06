@@ -1,4 +1,4 @@
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { UserService, ApiHttpService, User } from '@syndesis/ui/platform';

@@ -16,15 +16,13 @@ const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack 
 @Injectable()
 export class ApiHttpProviderService extends ApiHttpService {
   private uploadProgressSubject = new Subject<ApiRequestProgress>();
-  private apiBaseHost: string;
 
   constructor(private httpClient: HttpClient, private apiConfigService: ApiConfigService) {
     super();
-
-    this.apiBaseHost = this.apiConfigService.baseUrl;
   }
 
   getEndpointUrl(endpointKey: string, ...endpointParams: any[]): string {
+    const apiBaseHost = this.apiConfigService.baseUrl;
     const apiEndpoints = this.apiConfigService.endpoints || {};
     let endpoint = apiEndpoints[endpointKey] || endpointKey;
 
@@ -35,7 +33,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     }
 
     if (!endpoint.startsWith('http')) {
-      endpoint = `${this.apiBaseHost}${endpoint}`;
+      endpoint = `${apiBaseHost}${endpoint}`;
     }
 
     return endpoint;
@@ -46,17 +44,17 @@ export class ApiHttpProviderService extends ApiHttpService {
 
     return {
       url,
-      get: <T>(options?: ApiRequestOptions|any) => this.get<T>(url, options),
-      post: <T>(body: any, options?: ApiRequestOptions|any) => this.post<T>([endpointKey, ...endpointParams], body, options),
-      put: <T>(body: any, options?: ApiRequestOptions|any) => this.put<T>([endpointKey, ...endpointParams], body, options),
-      delete: <T>(options?: ApiRequestOptions|any) => this.delete<T>(url, options),
+      get: <T>(options?: ApiRequestOptions | any) => this.get<T>(url, options),
+      post: <T>(body: any, options?: ApiRequestOptions | any) => this.post<T>([endpointKey, ...endpointParams], body, options),
+      put: <T>(body: any, options?: ApiRequestOptions | any) => this.put<T>([endpointKey, ...endpointParams], body, options),
+      delete: <T>(options?: ApiRequestOptions | any) => this.delete<T>(url, options),
       upload: <T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions) => {
         return this.upload<T>([endpointKey, ...endpointParams], fileMap, body, options);
       }
     };
   }
 
-  get<T>(endpoint: string | any[], options?: ApiRequestOptions|any): Observable<T> {
+  get<T>(endpoint: string | any[], options?: ApiRequestOptions | any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
@@ -64,7 +62,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
-  post<T>(endpoint: string | any[], body?: any, options?: ApiRequestOptions|any): Observable<T> {
+  post<T>(endpoint: string | any[], body?: any, options?: ApiRequestOptions | any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
@@ -72,7 +70,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
-  put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions|any): Observable<T> {
+  put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
@@ -80,7 +78,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       .catch(error => Observable.throw(this.catchError(error)));
   }
 
-  delete<T>(endpoint: string | any[], options?: ApiRequestOptions|any): Observable<T> {
+  delete<T>(endpoint: string | any[], options?: ApiRequestOptions | any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient

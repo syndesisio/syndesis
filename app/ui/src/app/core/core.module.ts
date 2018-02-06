@@ -19,6 +19,11 @@ export class CoreModule {
     return [{
       ngModule: CoreModule,
       providers: [
+        SYNDESIS_PROVIDERS.IntegrationProviderService,
+        {
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationService,
+          useClass: SYNDESIS_PROVIDERS.IntegrationProviderService
+        },
         SYNDESIS_PROVIDERS.FormFactoryProviderService,
         {
           provide: SYNDESIS_ABSTRACT_PROVIDERS.FormFactoryService,

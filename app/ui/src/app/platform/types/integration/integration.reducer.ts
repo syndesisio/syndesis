@@ -1,6 +1,7 @@
-import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector } from '@ngrx/store';
 
-import { BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
+import { PlatformStore } from '@syndesis/ui/platform';
+
 import { IntegrationState } from './integration.models';
 import * as IntegrationActions from './integration.actions';
 

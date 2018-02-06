@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
-import { BaseEntity, Integration, Integrations } from '@syndesis/ui/platform';
+import { BaseEntity } from '@syndesis/ui/platform';
+import { Integration, Integrations } from './integration.models';
 
 @Injectable()
 export abstract class IntegrationService {

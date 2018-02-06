@@ -31,7 +31,7 @@ import { AppRoutingModule } from './app.routing';
 import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
-import { platformReducer, SYNDESIS_GUARDS } from './platform';
+import { platformReducer, platformEffects, PlatformEffects, platformEndpoints, SYNDESIS_GUARDS } from './platform';
 
 export function restangularProviderConfigurer(
   restangularProvider: any,
@@ -75,7 +75,7 @@ export function mapperRestangularProvider(
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    ApiModule.forRoot(),
+    ApiModule.forRoot(platformEndpoints),
     CoreModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
     DynamicFormsBootstrapUIModule,
@@ -92,7 +92,7 @@ export function mapperRestangularProvider(
     AppRoutingModule,
     LegacyStoreModule,
     StoreModule.forRoot(platformReducer),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot(PlatformEffects.rootEffects()),
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,

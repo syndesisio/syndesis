@@ -81,26 +81,3 @@ export class IntegrationDeleteFail implements Action {
 
   constructor(public payload: ActionReducerError) { }
 }
-
-
-//* ******************************************************* 
-// TEMP list of matches b/w actions and legacy methods in Store
-//******************************************************** */
-
-// FETCH
-// loadAll()/.list
-
-// UPDATE:
-// activate(integration)
-// deactivate(integration)
-// update(integration)
-
-// CREATE:
-// create - formerly newInstance
-
-// DELETE:
-// delete(integration)
-
-// ????
-// check store.updateOrCreate 
-// check store.loadOrCreate
