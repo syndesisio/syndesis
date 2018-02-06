@@ -119,7 +119,10 @@
               <goal>yarn</goal>
             </goals>
             <configuration>
-              <arguments>build:ci</arguments>
+              <!-- Switch to build:ci as soon as the AOT issues in
+                   https://github.com/syndesisio/syndesis/issues/1426 is fixed -->
+              <arguments>build:noaot</arguments>
+              <!--<arguments>build:ci</arguments>-->
             </configuration>
           </execution>
         </executions>
