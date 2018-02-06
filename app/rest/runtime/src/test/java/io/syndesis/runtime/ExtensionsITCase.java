@@ -210,7 +210,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(createdCopy1.getBody().getId()).isPresent();
         String idCopy1 = createdCopy1.getBody().getId().get();
 
-        // Install copy
+        // Install copyObjectMapperConfiguration
         post("/api/v1/extensions/" + idCopy1 + "/install", null, Void.class,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
@@ -375,7 +375,7 @@ public class ExtensionsITCase extends BaseITCase {
                 .build();
 
             JsonNode extensionTree = ExtensionConverter.getDefault().toPublicExtension(extension);
-            byte[] content = Json.mapper().writeValueAsBytes(extensionTree);
+            byte[] content = Json.writer().writeValueAsBytes(extensionTree);
             IOUtils.write(content, jar);
             jar.closeEntry();
             jar.flush();

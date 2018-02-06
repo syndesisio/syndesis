@@ -42,8 +42,6 @@ import org.junit.Test;
 
 public class ReadApiClientDataTest {
 
-    private final static ObjectMapper mapper = Json.mapper();
-
     @Test
     public void deserializeModelDataTest() throws IOException {
 
@@ -52,9 +50,9 @@ public class ReadApiClientDataTest {
                     .tags(new TreeSet<>(Arrays.asList("tag1", "tag2")))
                     .createdDate(new Date())
                     .build();
-        String integrationJson = mapper.writeValueAsString(integrationIn);
+        String integrationJson = Json.writer().writeValueAsString(integrationIn);
         System.out.println(integrationJson);
-        Integration integrationOut = mapper.readValue(integrationJson, Integration.class);
+        Integration integrationOut = Json.reader().forType(Integration.class).readValue(integrationJson);
         Assert.assertEquals(integrationIn.getDesiredStatus(), integrationOut.getDesiredStatus());
 
         //serialize
@@ -63,8 +61,8 @@ public class ReadApiClientDataTest {
         Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
 
         //deserialize
-        String json = mapper.writeValueAsString(mdIn);
-        ModelData<?> mdOut = mapper.readValue(json, ModelData.class);
+        String json = Json.writer().writeValueAsString(mdIn);
+        ModelData<?> mdOut = Json.reader().forType(ModelData.class).readValue(json);
         Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
     }
 

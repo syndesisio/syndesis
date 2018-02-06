@@ -140,7 +140,7 @@ public class DataManager implements DataAccessObjectRegistry {
                             System.getenv()
                         );
 
-                        Connector connector = Json.mapper().readValue(text, Connector.class);
+                        Connector connector = Json.reader().forType(Connector.class).readValue(text);
 
                         if (connector != null) {
                             LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());

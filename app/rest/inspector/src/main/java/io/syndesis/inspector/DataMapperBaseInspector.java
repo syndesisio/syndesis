@@ -86,7 +86,7 @@ abstract class DataMapperBaseInspector implements Inspector {
     protected final List<String> getPathsFromJavaClassJson(final String prefix, final String json, final List<String> visited) {
         final List<String> paths = new ArrayList<>();
         try {
-            final JsonNode node = Json.mapper().readTree(json);
+            final JsonNode node = Json.reader().readTree(json);
             if (node != null) {
                 final JsonNode javaClass = node.get(JAVA_CLASS);
                 if (javaClass != null) {

@@ -141,7 +141,7 @@ public class Application implements ApplicationRunner {
 
             if (resources != null) {
                 for (Resource resource: resources) {
-                    Connector connector = Json.mapper().readValue(resource.getInputStream(), Connector.class);
+                    Connector connector = Json.reader().forType(Connector.class).readValue(resource.getInputStream());
 
                     if (connector != null) {
                         for (final Action action : connector.getActions()) {
