@@ -57,7 +57,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
             throw new EntityNotFoundException();
         }
 
-        JsonNode document = Json.mapper().readTree(Json.mapper().writeValueAsBytes(existing));
+        JsonNode document = Json.reader().readTree(Json.writer().writeValueAsString(existing));
 
         // Attempt to apply the patch...
         final JsonMergePatch patch;
@@ -69,7 +69,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
         }
 
         // Convert the Json back to an entity.
-        T obj = Json.mapper().readValue(Json.mapper().writeValueAsBytes(document), modelClass);
+        T obj = Json.reader().forType(modelClass).readValue(Json.writer().writeValueAsBytes(document));
 
         // TODO: validate the updated obj before storing it/
         getDataManager().update(obj);

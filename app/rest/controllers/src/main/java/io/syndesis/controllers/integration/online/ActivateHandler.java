@@ -124,7 +124,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     }
 
     private DeploymentData createDeploymentData(Integration integration, IntegrationDeployment integrationDeployment) {
-        Properties applicationProperties = projectGenerator.generateApplicationProperties(integrationDeployment);
+        Properties applicationProperties = projectGenerator.generateApplicationProperties(integration);
 
         String username = integrationDeployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
