@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,7 +77,7 @@ public final class JsonRecordSupport {
         // utility class
     }
 
-    public static void jsonStreamToRecords(HashSet<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(Set<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
         try (JsonParser jp = new JsonFactory().createParser(is)) {
             jsonStreamToRecords(indexes, jp, dbPath, consumer);
 
@@ -120,7 +120,7 @@ public final class JsonRecordSupport {
         return key;
     }
 
-    public static void jsonStreamToRecords(HashSet<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(Set<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
         boolean inArray = false;
         int arrayIndex = 0;
         while (true) {
@@ -167,7 +167,7 @@ public final class JsonRecordSupport {
         }
     }
 
-    private static String indexFieldValue(HashSet<String> indexes, String path) {
+    private static String indexFieldValue(Set<String> indexes, String path) {
         Matcher matcher = INDEX_EXTRACTOR_PATTERN.matcher(path);
         if( !matcher.matches() ) {
             return null;
@@ -187,7 +187,7 @@ public final class JsonRecordSupport {
         return toLexSortableString(idx, '[');
     }
 
-    protected static int toArrayIndex(String value) {
+    static int toArrayIndex(String value) {
         return fromLexSortableStringToInt(value, '[');
     }
 

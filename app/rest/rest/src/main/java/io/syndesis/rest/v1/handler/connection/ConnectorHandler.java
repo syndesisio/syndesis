@@ -184,7 +184,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         ListResult<Integration> integrationListResult = getDataManager().fetchAll(Integration.class);
         List<Integration> items = integrationListResult.getItems();
         final Map<String, Long> connectorUsage = items.stream()//
-            .filter(i -> !i.getDeleted())//
+            .filter(i -> !i.isDeleted())//
             .flatMap(i -> i.getUsedConnectorIds().stream())//
             .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
 
@@ -234,6 +234,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         private InputStream iconInputStream;
 
         public ConnectorFormData() {
+            // allow JAX-RS to construct this class for binding
         }
 
         public ConnectorFormData(Connector connector, InputStream iconInputStream) {

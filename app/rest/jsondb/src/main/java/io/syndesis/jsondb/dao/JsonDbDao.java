@@ -73,7 +73,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD.CyclomaticComplexity"})
     public ListResult<T> fetchAll(Function<ListResult<T>, ListResult<T>>... operators) {
         try {
 

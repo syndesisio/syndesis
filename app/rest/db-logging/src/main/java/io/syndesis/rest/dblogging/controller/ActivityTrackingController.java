@@ -55,6 +55,7 @@ import java.util.function.Consumer;
  */
 @Service
 @ConditionalOnProperty(value = "controllers.dblogging.enabled", havingValue = "true", matchIfMissing = true)
+@SuppressWarnings({"PMD.DoNotUseThreads", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity"})
 public class ActivityTrackingController implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
@@ -107,7 +108,7 @@ public class ActivityTrackingController implements Closeable {
                     LOG.info("deleted {} transactions for integration: {}", count, integrationId);
                 }
             }
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             LOG.error("Unexpected Error occurred.", e);
         }
     }
@@ -203,7 +204,7 @@ public class ActivityTrackingController implements Closeable {
                     LOG.info("Pod state removed from db: {}", o);
                 }
             }
-        } catch (Throwable e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException | IOException e) {
             LOG.error("Unexpected Error occurred.", e);
         }
 

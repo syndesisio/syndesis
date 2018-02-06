@@ -113,7 +113,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @SuppressWarnings("PMD.EmptyCatchBlock")
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public Extension upload(MultipartFormDataInput dataInput, @Context SecurityContext sec, @QueryParam("updatedId") String updatedId) {
         Date rightNow = new Date();
         String id = KeyGenerator.createKey();
@@ -160,14 +160,14 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         } catch (SyndesisRestException ex) {
             try {
                 delete(id);
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception dex) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ignored) {
                 // ignore
             }
             throw ex;
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
             try {
                 delete(id);
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception dex) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ignored) {
                 // ignore
             }
             String message = "An error has occurred while trying to process the technical extension. Please, check the input file.";
@@ -285,6 +285,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     @Nonnull
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     private InputStream getBinaryArtifact(MultipartFormDataInput input) {
         if (input == null || input.getParts() == null || input.getParts().isEmpty()) {
             throw new IllegalArgumentException("Multipart request is empty");

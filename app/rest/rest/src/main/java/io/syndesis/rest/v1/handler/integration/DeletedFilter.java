@@ -29,7 +29,7 @@ public class DeletedFilter implements Function<ListResult<Integration>, ListResu
     @Override
     public ListResult<Integration> apply(ListResult<Integration> list) {
         List<Integration> filtered = list.getItems().stream()
-            .filter(i -> !i.getDeleted())
+            .filter(i -> !i.isDeleted())
             .collect(Collectors.toList());
 
         return new ListResult.Builder<Integration>()

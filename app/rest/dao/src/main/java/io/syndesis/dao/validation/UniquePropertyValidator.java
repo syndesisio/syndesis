@@ -82,7 +82,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         // if we're looking at Integration then we need to make sure that
         // the Integration in question is not deleted
         if (modelInstance instanceof Integration) {
-            return ((Integration) modelInstance).getDeleted();
+            return ((Integration) modelInstance).isDeleted();
         }
 
         return false;

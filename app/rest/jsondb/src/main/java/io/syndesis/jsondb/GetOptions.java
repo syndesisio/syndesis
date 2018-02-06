@@ -20,6 +20,7 @@ import io.syndesis.model.ToJson;
 /**
  * Options that can be configured on the {@link JsonDB#getAsString(String, GetOptions)}.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class GetOptions implements ToJson, Cloneable {
 
     public enum Order {

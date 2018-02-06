@@ -152,6 +152,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         }
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     private void processLine(byte[] line) throws IOException {
         // Could it be a data of json structured output?
 
@@ -221,10 +222,12 @@ class PodLogMonitor implements Consumer<InputStream> {
 
             }
 
-        } catch (JsonDBException | ClassCastException | IOException ignore) {
+        } catch (JsonDBException | ClassCastException | IOException ignored) {
             /// log record not in the expected format.
         } catch (InterruptedException e) {
-            throw new InterruptedIOException();
+            final InterruptedIOException rethrow = new InterruptedIOException(e.getMessage());
+            rethrow.initCause(e);
+            throw rethrow;
         }
     }
 

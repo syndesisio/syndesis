@@ -84,7 +84,7 @@ import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 @Path("/integration-support")
 @Api(value = "integration-support")
 @Component
-@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass" })
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.CyclomaticComplexity" })
 public class IntegrationSupportHandler {
 
     public static final String EXPORT_MODEL_FILE_NAME = "model.json";
@@ -281,7 +281,7 @@ public class IntegrationSupportHandler {
                     Integration integration = (Integration) model.getData();
                     Integration.Builder builder = new Integration.Builder()
                         .createFrom(integration)
-                        .deleted(false)
+                        .isDeleted(false)
                         .updatedAt(System.currentTimeMillis());
 
                     // Do we need to create it?

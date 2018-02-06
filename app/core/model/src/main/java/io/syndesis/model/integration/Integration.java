@@ -58,7 +58,7 @@ public interface Integration extends WithId<Integration>, WithVersion, WithModif
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default
-    default boolean getDeleted() {
+    default boolean isDeleted() {
         return false;
     }
 

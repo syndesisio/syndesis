@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
@@ -74,7 +74,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
     private String target;
 
     @Override
-    @SuppressWarnings("PMD.EmptyCatchBlock")
+    @SuppressWarnings({"PMD.EmptyCatchBlock", "PMD.CyclomaticComplexity"})
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         ArrayNode root = new ArrayNode(JsonNodeFactory.instance);
@@ -277,7 +277,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
             if (is == null) {
                 return null;
             }
-            return IOUtils.toString(is, Charset.defaultCharset());
+            return IOUtils.toString(is, StandardCharsets.UTF_8);
         } catch (IOException e) {
             return null;
         }

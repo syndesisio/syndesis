@@ -15,7 +15,7 @@
  */
 package io.syndesis.verifier;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.StringJoiner;
@@ -71,7 +71,7 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
                 headersJoined.add(header + ": " + String.join("|", Collections.list(request.getHeaders(header))));
             }
             LOG.debug("Headers: \n{}", headersJoined.toString());
-            LOG.debug("Request content: \n{}", new String(requestCache.getContentAsByteArray(), Charset.defaultCharset()));
+            LOG.debug("Request content: \n{}", new String(requestCache.getContentAsByteArray(), StandardCharsets.UTF_8));
         }
 
         final Error error = new Error(500, rootCauseMessage(exception), exception.getMessage());

@@ -44,7 +44,7 @@ public class SupportHandler extends BaseHandler {
 
     private final SupportUtil util;
 
-    private final Logger LOG = LoggerFactory.getLogger(SupportHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SupportHandler.class);
 
     public SupportHandler(final DataManager dataMgr, SupportUtil util) {
         super(dataMgr);

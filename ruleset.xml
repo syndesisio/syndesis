@@ -503,9 +503,6 @@
   <rule ref="rulesets/java/j2ee.xml/RemoteSessionInterfaceNamingConvention">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/controversial.xml/AvoidPrefixingMethodParameters">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/strings.xml/ConsecutiveLiteralAppends">
     <priority>3</priority>
   </rule>

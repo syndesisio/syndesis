@@ -77,7 +77,7 @@ public class SqlJsonDB implements JsonDB {
 
     private final DBI dbi;
     private final EventBus bus;
-    private final HashSet<String> indexes = new HashSet<>();
+    private final Set<String> indexes = new HashSet<>();
 
     // These values are used to compute a seq key
     private DatabaseKind databaseKind = DatabaseKind.PostgreSQL;
@@ -124,10 +124,6 @@ public class SqlJsonDB implements JsonDB {
         });
     }
 
-    private String getIndexNameOf(String index) {
-        return "jsondb_"+index;
-    }
-
     public void dropTables() {
         withTransaction(dbi -> {
             dbi.update("DROP TABLE jsondb");
@@ -149,6 +145,7 @@ public class SqlJsonDB implements JsonDB {
     }
 
     @Override
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
     public Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options) {
 
         GetOptions o;
@@ -527,7 +524,7 @@ public class SqlJsonDB implements JsonDB {
     }
 
     private void withTransaction(Consumer<Handle> cb) {
-        try (final Handle h = dbi.open()) {
+        try (Handle h = dbi.open()) {
             try {
                 h.begin();
                 cb.accept(h);

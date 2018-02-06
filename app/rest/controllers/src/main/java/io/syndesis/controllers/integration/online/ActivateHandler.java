@@ -71,9 +71,6 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
     @Override
     public StateUpdate execute(IntegrationDeployment integrationDeploymentDefinition) {
-        final IntegrationDeployment integrationDeployment = IntegrationSupport.sanitize(integrationDeploymentDefinition, dataManager, encryptionComponent);
-        final Integration integration = integrationOf(integrationDeployment);
-
         final int maxIntegrationsPerUser = properties.getMaxIntegrationsPerUser();
         if (maxIntegrationsPerUser != ControllersConfigurationProperties.UNLIMITED) {
             int userIntegrations = countActiveIntegrationsOfSameUserAs(integrationDeploymentDefinition);
@@ -92,10 +89,13 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             }
         }
 
+        final IntegrationDeployment integrationDeployment = IntegrationSupport.sanitize(integrationDeploymentDefinition, dataManager, encryptionComponent);
         logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
             isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
         BuildStepPerformer stepPerformer = new BuildStepPerformer(integrationDeployment);
         logInfo(integrationDeployment, "Steps performed so far: " + stepPerformer.getStepsPerformed());
+
+        final Integration integration = integrationOf(integrationDeployment);
         try {
 
             deactivatePreviousDeployments(integrationDeployment);

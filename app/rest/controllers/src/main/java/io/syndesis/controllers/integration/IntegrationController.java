@@ -169,7 +169,8 @@ public class IntegrationController {
             }
 
             try {
-                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationDeployment.getIntegrationId().get(), integrationDeployment.getVersion(), handler.getClass().getSimpleName());
+                final String integrationId = integrationDeployment.getIntegrationId().get();
+                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationId, integrationId, integrationDeployment.getVersion(), handler.getClass().getSimpleName());
                 handler.execute(integrationDeployment, update->{
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}",

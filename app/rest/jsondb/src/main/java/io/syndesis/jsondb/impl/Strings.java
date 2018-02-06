@@ -18,7 +18,11 @@ package io.syndesis.jsondb.impl;
 /**
  * Helper methods to work with String objects
  */
-public class Strings {
+public final class Strings {
+
+    private Strings() {
+        // utility class
+    }
 
     public static String prefix(String base, String prefix) {
         if( !base.startsWith(prefix) ) {

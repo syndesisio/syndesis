@@ -58,6 +58,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
     private static final Class<AbstractSerializableParameter<?>> PARAM_CLASS = (Class) AbstractSerializableParameter.class;
 
     @Override
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"})
     ConnectorDescriptor.Builder createDescriptor(final String specification, final Operation operation) {
         final ObjectNode unifiedSchema = JsonNodeFactory.instance.objectNode();
         unifiedSchema.put("$schema", "http://json-schema.org/draft-04/schema#");

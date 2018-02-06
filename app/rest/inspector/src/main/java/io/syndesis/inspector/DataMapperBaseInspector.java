@@ -59,7 +59,7 @@ abstract class DataMapperBaseInspector implements Inspector {
         return "java".equals(kind) && !StringUtils.isEmpty(type);
     }
 
-    protected abstract String fetchJsonFor(String fullyQualifiedName) throws Exception;
+    protected abstract String fetchJsonFor(String fullyQualifiedName) throws IOException;
 
     protected final List<String> getPathsForJavaClassName(final String prefix, final String fullyQualifiedName,
         final List<String> visited) {
@@ -84,36 +84,45 @@ abstract class DataMapperBaseInspector implements Inspector {
 
     @SuppressWarnings("PMD.CyclomaticComplexity")
     protected final List<String> getPathsFromJavaClassJson(final String prefix, final String json, final List<String> visited) {
-        final List<String> paths = new ArrayList<>();
         try {
             final JsonNode node = Json.reader().readTree(json);
-            if (node != null) {
-                final JsonNode javaClass = node.get(JAVA_CLASS);
-                if (javaClass != null) {
-                    final JsonNode fields = javaClass.get(JAVA_FIELDS);
-                    if (fields != null) {
-                        final JsonNode field = fields.get(JAVA_FIELD);
-                        if (field != null && field.isArray()) {
-                            for (final JsonNode f : field) {
-                                final String name = f.get(NAME).asText();
-                                final String fieldClassName = f.get(CLASSNAME).asText();
-                                final Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
-                                if (isPrimitive || isTerminal(fieldClassName)) {
-                                    paths.add(prependPrefix(prefix, name));
-                                    continue;
-                                }
-
-                                paths.addAll(getPathsForJavaClassName(prependPrefix(prefix, name), fieldClassName, visited));
-                            }
-                        }
-                    }
-                }
+            if (node == null) {
+                return Collections.emptyList();
             }
 
+            final JsonNode javaClass = node.get(JAVA_CLASS);
+            if (javaClass == null) {
+                return Collections.emptyList();
+            }
+
+            final JsonNode fields = javaClass.get(JAVA_FIELDS);
+            if (fields == null) {
+                return Collections.emptyList();
+            }
+
+            final JsonNode field = fields.get(JAVA_FIELD);
+            if (field != null && field.isArray()) {
+                final List<String> paths = new ArrayList<>();
+
+                for (final JsonNode f : field) {
+                    final String name = f.get(NAME).asText();
+                    final String fieldClassName = f.get(CLASSNAME).asText();
+                    final Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
+                    if (isPrimitive || isTerminal(fieldClassName)) {
+                        paths.add(prependPrefix(prefix, name));
+                        continue;
+                    }
+
+                    paths.addAll(getPathsForJavaClassName(prependPrefix(prefix, name), fieldClassName, visited));
+                }
+
+                return paths;
+            }
+
+            return Collections.emptyList();
         } catch (final IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
-        return paths;
     }
 
     private static String prependPrefix(final String prefix, final String name) {

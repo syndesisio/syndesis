@@ -36,7 +36,7 @@ import io.syndesis.model.Violation;
 /**
  * This class contains Syndesis custom validation rules for swagger definitions.
  */
-public class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo, SwaggerModelInfo> {
+public final class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo, SwaggerModelInfo> {
 
     private static final SyndesisSwaggerValidationRules INSTANCE = new SyndesisSwaggerValidationRules();
 
@@ -83,6 +83,7 @@ public class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo
     /**
      * Check if a request/response JSON schema is present
      */
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
     private SwaggerModelInfo validateResponses(final SwaggerModelInfo swaggerModelInfo) {
         if (swaggerModelInfo.getModel() == null) {
             return swaggerModelInfo;
@@ -113,7 +114,7 @@ public class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo
 
                 // Check responses
                 for (final Map.Entry<String, Response> responseEntry : notNull(operationEntry.getValue().getResponses()).entrySet()) {
-                    if (!responseEntry.getKey().startsWith("2")) {
+                    if (responseEntry.getKey().charAt(0) != '2') {
                         continue; // check only correct responses
                     }
 

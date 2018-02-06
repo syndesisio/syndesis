@@ -18,8 +18,9 @@ package io.syndesis.rest.util;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
-public class ReflectionUtils {
+public final class ReflectionUtils {
     private ReflectionUtils() {
+        // utility class
     }
 
     static Method getGetMethodOfType(Class<?> clazz, String fieldName, Class<?>... types) {

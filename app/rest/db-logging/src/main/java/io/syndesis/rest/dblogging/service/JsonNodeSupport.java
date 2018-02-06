@@ -25,9 +25,10 @@ import java.util.Set;
 /**
  * Static helpers for working with JsonNode objects
  */
-public class JsonNodeSupport {
+public final class JsonNodeSupport {
 
     private JsonNodeSupport(){
+        // utility class
     }
 
     public static String getString(JsonNode json, String field) {

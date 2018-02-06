@@ -43,7 +43,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
     private final JsonGenerator jg;
     private final OutputStream output;
     private final GetOptions options;
-    @SuppressWarnings("JdkObsolete")
+    @SuppressWarnings({"JdkObsolete", "PMD.LooseCoupling"})
     private final LinkedList<JsonRecordSupport.PathPart> currentPath = new LinkedList<>();
     private final Set<String> shallowObjects = new LinkedHashSet<>();
     private int entriesAdded;
@@ -70,6 +70,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
     }
 
     @Override
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public void accept(JsonRecord record) {
         try {
             String path = record.getPath();
@@ -134,7 +135,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
         count = newPath.size();
         for (int i = pathMatches; i < count; i++) {
             String part = newPath.get(i);
-            boolean array = part.startsWith("[");
+            boolean array = part.charAt(0) == '[';
 
             if (array) {
                 if (jg.getOutputContext().inRoot()) {
@@ -149,12 +150,12 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
             if (i + 1 < count) {
                 String nextPart = newPath.get(i + 1);
-                boolean nextArray = nextPart.startsWith("[");
+                boolean nextArray = nextPart.charAt(0) == '[';
 
                 JsonRecordSupport.PathPart pathPart = new JsonRecordSupport.PathPart(part, nextArray);
                 currentPath.add(pathPart);
 
-                if (nextPart.startsWith("[")) {
+                if (nextPart.charAt(0) == '[') {
                     jg.writeStartArray();
 
                     int idx = JsonRecordSupport.toArrayIndex(nextPart);
@@ -186,7 +187,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
         for (int i = 0; i < currentPath.size() && i < newPath.size(); i++) {
             JsonRecordSupport.PathPart lastPart = currentPath.get(i);
             if (lastPart.getPath().equals(newPath.get(i)) ||
-                (lastPart.isArray() && newPath.get(i).startsWith("["))) {
+                (lastPart.isArray() && newPath.get(i).charAt(0) == '[')) { // NOPMD, false positive
                 pathMatches++;
             } else {
                 break;

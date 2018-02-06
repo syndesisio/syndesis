@@ -42,6 +42,7 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.springframework.stereotype.Component;
 
 @Component("sql-adapter")
+@SuppressWarnings("PMD.GodClass")
 public final class SqlMetadataAdapter implements MetadataAdapter {
 
     static final String PROCEDURE_NAME = "procedureName";
@@ -61,6 +62,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter {
         }
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public SyndesisMetadata adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
@@ -107,6 +109,8 @@ public final class SqlMetadataAdapter implements MetadataAdapter {
             return new SyndesisMetadata(enrichedProperties, null, null);
         }
     }
+
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public SyndesisMetadata adaptForStoredSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
@@ -226,6 +230,7 @@ public final class SqlMetadataAdapter implements MetadataAdapter {
         return isPresent(properties, property) && properties.get(property) != null;
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     static JsonSchema schemaFor(final JDBCType jdbcType) {
         final JsonSchemaFactory factory = new JsonSchemaFactory();
         switch (jdbcType) {

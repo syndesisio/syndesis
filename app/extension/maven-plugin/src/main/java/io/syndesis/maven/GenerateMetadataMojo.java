@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -81,6 +80,7 @@ import java.util.stream.Stream;
  * @author pantinor
  */
 @Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields" })
 public class GenerateMetadataMojo extends AbstractMojo {
     public enum InspectionMode {
         RESOURCE,
@@ -364,7 +364,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         if (template.exists()) {
             try {
-                JsonNode tree = Json.reader().readTree(Files.newBufferedReader(template.toPath(), Charset.defaultCharset()));
+                JsonNode tree = Json.reader().readTree(Files.newBufferedReader(template.toPath(), StandardCharsets.UTF_8));
                 Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 

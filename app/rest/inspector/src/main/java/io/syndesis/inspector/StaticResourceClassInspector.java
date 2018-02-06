@@ -16,6 +16,7 @@
 package io.syndesis.inspector;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -42,7 +43,7 @@ public final class StaticResourceClassInspector extends DataMapperBaseInspector 
     }
 
     @Override
-    protected String fetchJsonFor(final String fullyQualifiedName) throws Exception {
+    protected String fetchJsonFor(final String fullyQualifiedName) throws IOException {
         final String path = PREFIX + fullyQualifiedName + SUFFIX;
 
         final Resource[] resources = resolver.getResources(path);

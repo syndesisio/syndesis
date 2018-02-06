@@ -36,27 +36,27 @@ public class ReflectiveFilterer<T> implements Function<ListResult<T>, ListResult
                 () -> new IllegalArgumentException("Missing filter operation")
             );
 
-            switch (op) {
-                case "=":
-                    String value = f.getValue().orElseThrow(
-                        () -> new IllegalArgumentException("Missing value in equality filter")
-                    );
-                    predicateFilters.add(equalityFilter(modelClass, f.getProperty(), value));
-                    break;
-                default:
-                    throw new IllegalArgumentException(String.format("Unknown filter operation %s", op));
+            if ("=".equals(op)) {
+                String value = f.getValue().orElseThrow(
+                    () -> new IllegalArgumentException("Missing value in equality filter")
+                );
+                predicateFilters.add(equalityFilter(modelClass, f.getProperty(), value));
+            } else {
+                throw new IllegalArgumentException(String.format("Unknown filter operation %s", op));
             }
         }
     }
 
     @Override
     public ListResult<T> apply(ListResult<T> result) {
+        ListResult<T> intermediate = result;
         for (PredicateFilter<T> pf : predicateFilters) {
-            result = pf.apply(result);
+            intermediate = pf.apply(intermediate);
         }
-        return result;
+        return intermediate;
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     private PredicateFilter<T> equalityFilter(final Class<T> modelClass, final String property, final String value) {
         Method stringGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, property, String.class);
         if (stringGetMethod != null) {

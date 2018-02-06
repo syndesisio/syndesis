@@ -115,7 +115,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
             return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
                 .warnings(swaggerInfo.getWarnings()).build();
-        } catch (final Exception ex) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
                 // Just log and return the validation errors if any
                 LOG.error("An error occurred while trying to create a swagger connector", ex);

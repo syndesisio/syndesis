@@ -99,7 +99,7 @@ public class IntegrationHandler extends BaseHandler
     @Override
     public Integration get(String id) {
         Integration integration = Getter.super.get(id);
-        if ( integration.getDeleted() ) {
+        if ( integration.isDeleted() ) {
             //Not sure if we need to do that for both current and desired status,
             //but If we don't do include the desired state, IntegrationITCase is not going to pass anytime soon. Why?
             //Cause that test, is using NoopHandlerProvider, so that means no controllers.
@@ -238,7 +238,7 @@ public class IntegrationHandler extends BaseHandler
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(existing)
             .updatedAt(System.currentTimeMillis())
-            .deleted(true)
+            .isDeleted(true)
             .build();
 
         Updater.super.update(id, updatedIntegration);
@@ -279,8 +279,7 @@ public class IntegrationHandler extends BaseHandler
     @Path("/{id}/deployments/{version}")
     public IntegrationDeployment getDeployment(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull @PathParam("version") @ApiParam(required = true) Integer version) {
         String compositeId = IntegrationDeployment.compositeId(id, version);
-        IntegrationDeployment integrationDeployment = getDataManager().fetch(IntegrationDeployment.class, compositeId);
-        return integrationDeployment;
+        return getDataManager().fetch(IntegrationDeployment.class, compositeId);
     }
 
     @SuppressFBWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")
@@ -308,11 +307,11 @@ public class IntegrationHandler extends BaseHandler
         return validator;
     }
 
-    private static class IntegrationIdFilter implements Function<ListResult<IntegrationDeployment>, ListResult<IntegrationDeployment>> {
+    static class IntegrationIdFilter implements Function<ListResult<IntegrationDeployment>, ListResult<IntegrationDeployment>> {
 
         private final String integrationId;
 
-        private IntegrationIdFilter(String integrationId) {
+        IntegrationIdFilter(String integrationId) {
             this.integrationId = integrationId;
         }
 

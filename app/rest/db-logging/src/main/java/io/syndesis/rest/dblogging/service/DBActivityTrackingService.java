@@ -176,16 +176,16 @@ public class DBActivityTrackingService implements ActivityTrackingService {
                 to.put("id", entry.getKey());
                 try {
                     to.put("at", KeyGenerator.getKeyTimeMillis(entry.getKey()));
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                     // looks like bad id format, skip over it.
                 }
                 T apply = converter.apply(to);
                 if( apply !=null ) {
                     rc.add(apply);
                 }
-            } catch (RuntimeException ignore) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException ignored) {
                 // We could get stuff like class cast exceptions..
-                LOG.debug("Could convert entry: {}", entry, ignore);
+                LOG.debug("Could convert entry: {}", entry, ignored);
             }
         }
         return rc;
