@@ -17,6 +17,7 @@ package io.syndesis.integration.api;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 import io.syndesis.model.integration.IntegrationDeployment;
 
@@ -32,6 +33,7 @@ public interface IntegrationProjectGenerator {
      */
     InputStream generate(IntegrationDeployment deployment) throws IOException;
 
+    Properties generateApplicationProperties(IntegrationDeployment deployment);
 
     byte[] generatePom(IntegrationDeployment deployment) throws IOException;
 }

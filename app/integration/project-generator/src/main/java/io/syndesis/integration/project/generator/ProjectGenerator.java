@@ -17,7 +17,6 @@ package io.syndesis.integration.project.generator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -26,23 +25,33 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
+import io.syndesis.core.Optionals;
+import io.syndesis.core.Predicates;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.integration.project.generator.mvn.PomContext;
 import io.syndesis.model.Dependency;
+import io.syndesis.model.WithConfiguredProperties;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -51,23 +60,30 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
+
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ProjectGenerator implements IntegrationProjectGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGenerator.class);
 
-    private final MustacheFactory mf = new DefaultMustacheFactory();
-    private final ProjectGeneratorConfiguration generatorProperties;
+    private final ProjectGeneratorConfiguration configuration;
     private final IntegrationResourceManager resourceManager;
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
     private final Mustache pomMustache;
 
-    public ProjectGenerator(ProjectGeneratorConfiguration generatorProperties, IntegrationResourceManager resourceManager) throws IOException {
-        this.generatorProperties = generatorProperties;
+    public ProjectGenerator(ProjectGeneratorConfiguration configuration, IntegrationResourceManager resourceManager) throws IOException {
+        this.configuration = configuration;
         this.resourceManager = resourceManager;
-        this.applicationJavaMustache = compile(generatorProperties, "Application.java.mustache", "Application.java");
-        this.applicationPropertiesMustache = compile(generatorProperties, "application.properties.mustache", "application.properties");
-        this.pomMustache = compile(generatorProperties, "pom.xml.mustache", "pom.xml");
+
+        MustacheFactory mf = new DefaultMustacheFactory();
+
+        this.applicationJavaMustache = compile(mf, configuration, "Application.java.mustache", "Application.java");
+        this.applicationPropertiesMustache = compile(mf, configuration, "application.properties.mustache", "application.properties");
+        this.pomMustache = compile(mf, configuration, "pom.xml.mustache", "pom.xml");
     }
 
     @Override
@@ -80,6 +96,95 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         executor.execute(generateAddProjectTarEntries(deployment, os));
 
         return is;
+    }
+
+    @Override
+    public Properties generateApplicationProperties(IntegrationDeployment deployment) {
+        final Properties properties = new Properties();
+        final List<? extends Step> steps = deployment.getSpec().getSteps();
+
+        // ****************************************
+        //
+        // Connectors
+        //
+        // ****************************************
+
+        steps.stream()
+            .filter(step -> step.getStepKind().equals("endpoint"))
+            .filter(step -> step.getAction().filter(ConnectorAction.class::isInstance).isPresent())
+            .filter(step -> step.getConnection().isPresent())
+            .forEach(step -> {
+                final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
+                final Connection connection = step.getConnection().get();
+                final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
+                final ConnectorDescriptor descriptor = action.getDescriptor();
+                final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
+                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId().get())
+                );
+
+                if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {
+                    // Grab the component scheme from the component descriptor or
+                    // from the connector
+                    final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
+
+                    Stream.of(connector, connection, step)
+                        .filter(WithConfiguredProperties.class::isInstance)
+                        .map(WithConfiguredProperties.class::cast)
+                        .map(WithConfiguredProperties::getConfiguredProperties)
+                        .flatMap(map -> map.entrySet().stream())
+                        .filter(Predicates.or(connector::isSecret, action::isSecret))
+                        .distinct()
+                        .forEach(
+                            e -> {
+                                addDecryptedKeyProperty(properties, index, componentScheme, e);
+                            }
+                        );
+                } else {
+                    // The component scheme is defined as camel connector prefix
+                    // for 'old' style connectors.
+                    final String componentScheme = descriptor.getCamelConnectorPrefix();
+
+                    // endpoint secrets
+                    Stream.of(connector, connection, step)
+                        .filter(WithConfiguredProperties.class::isInstance)
+                        .map(WithConfiguredProperties.class::cast)
+                        .map(WithConfiguredProperties::getConfiguredProperties)
+                        .flatMap(map -> map.entrySet().stream())
+                        .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
+                        .filter(Predicates.or(connector::isSecret, action::isSecret))
+                        .distinct()
+                        .forEach(
+                            e -> {
+                                addDecryptedKeyProperty(properties, index, componentScheme, e);
+                            }
+                        );
+
+                    // Component properties triggers connectors aliasing so we
+                    // can have multiple instances of the same connectors
+                    Stream.of(connector, connection, step)
+                        .filter(WithConfiguredProperties.class::isInstance)
+                        .map(WithConfiguredProperties.class::cast)
+                        .map(WithConfiguredProperties::getConfiguredProperties)
+                        .flatMap(map -> map.entrySet().stream())
+                        .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
+                        .distinct()
+                        .forEach(
+                            e -> {
+                                String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
+                                addDecryptedKeyProperty(properties, index, propKeyPrefix, e);
+                            }
+                        );
+                }
+            });
+
+        return properties;
+    }
+
+    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, Map.Entry<String, String> e) {
+        String key = String.format("%s-%s.%s", propKeyPrefix, index, e.getKey());
+        String val = mandatoryDecrypt(resourceManager, e);
+
+        properties.put(key, val);
     }
 
     @Override
@@ -97,38 +202,14 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 deployment.getName(),
                 deployment.getSpec().getDescription().orElse(null),
                 dependencies,
-                generatorProperties.getMavenProperties()),
+                configuration.getMavenProperties()),
             pomMustache
         );
     }
 
-    private Mustache compile(ProjectGeneratorConfiguration generatorProperties, String template, String name) throws IOException {
-        String overridePath = generatorProperties.getTemplates().getOverridePath();
-        URL resource = null;
-
-        if (!StringUtils.isEmpty(overridePath)) {
-            resource = getClass().getResource("templates/" + overridePath + "/" + template);
-        }
-        if (resource == null) {
-            resource = getClass().getResource("templates/" + template);
-        }
-        if (resource == null) {
-            throw new IllegalArgumentException(
-                String.format("Unable to find te required template (overridePath=%s, template=%s)"
-                    , overridePath
-                    , template
-                )
-            );
-        }
-
-        try (InputStream stream = resource.openStream()) {
-            return mf.compile(new InputStreamReader(stream, StandardCharsets.UTF_8), name);
-        }
-    }
-
     private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
-        for (ProjectGeneratorConfiguration.Templates.Resource additionalResource : generatorProperties.getTemplates().getAdditionalResources()) {
-            String overridePath = generatorProperties.getTemplates().getOverridePath();
+        for (ProjectGeneratorConfiguration.Templates.Resource additionalResource : configuration.getTemplates().getAdditionalResources()) {
+            String overridePath = configuration.getTemplates().getOverridePath();
             URL resource = null;
 
             if (!StringUtils.isEmpty(overridePath)) {
@@ -147,7 +228,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             }
 
             try {
-                ProjectGeneratorHelper.addTarEntry(tos, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
+                addTarEntry(tos, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
             } catch (URISyntaxException e) {
                 throw new IOException(e);
             }
@@ -161,10 +242,10 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
-                ProjectGeneratorHelper.addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(deployment, applicationJavaMustache));
-                ProjectGeneratorHelper.addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(deployment, applicationPropertiesMustache));
-                ProjectGeneratorHelper.addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsBytes(deployment));
-                ProjectGeneratorHelper.addTarEntry(tos, "pom.xml", generatePom(deployment));
+                addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(deployment, applicationJavaMustache));
+                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(deployment, applicationPropertiesMustache));
+                addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", Json.mapper().writerWithDefaultPrettyPrinter().writeValueAsBytes(deployment));
+                addTarEntry(tos, "pom.xml", generatePom(deployment));
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, deployment);
                 addAdditionalResources(tos);
@@ -178,7 +259,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                             final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
                             final String resource = "mapping-step-"  +index + ".json";
 
-                            ProjectGeneratorHelper.addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
+                            addTarEntry(tos, "src/main/resources/" + resource, mapping.getBytes(StandardCharsets.UTF_8));
                         }
                     }
                 }
@@ -193,13 +274,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         };
     }
 
-    private void addResource(TarArchiveOutputStream tos, String destination, String resource) throws IOException {
-        final URL url = getClass().getResource(resource);
-        final byte[] bytes = IOUtils.toByteArray(url);
-
-        ProjectGeneratorHelper.addTarEntry(tos, destination, bytes);
-    }
-
     private void addExtensions(TarArchiveOutputStream tos, IntegrationDeployment deployment) throws IOException {
         final Set<String> extensions = resourceManager.collectDependencies(deployment).stream()
             .filter(Dependency::isExtension)
@@ -207,10 +281,10 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             .collect(Collectors.toCollection(TreeSet::new));
 
         if (!extensions.isEmpty()) {
-            ProjectGeneratorHelper. addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(extensions));
+            addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(extensions));
 
             for (String extensionId : extensions) {
-                ProjectGeneratorHelper.addTarEntry(
+                addTarEntry(
                     tos,
                     "extensions/" + Names.sanitize(extensionId) + ".jar",
                     IOUtils.toByteArray(
@@ -231,7 +305,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 .append('=')
                 .append(extensions.stream()
                     .map(Names::sanitize)
-                    .map(id -> generatorProperties.getSyndesisExtensionPath() + "/" + id + ".jar")
+                    .map(id -> configuration.getSyndesisExtensionPath() + "/" + id + ".jar")
                     .collect(Collectors.joining(",")))
                 .append('\n')
                 .toString()
