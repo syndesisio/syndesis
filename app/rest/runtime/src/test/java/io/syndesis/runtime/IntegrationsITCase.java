@@ -60,7 +60,7 @@ public class IntegrationsITCase extends BaseITCase {
     }
 
     @Test
-    public void createAndGetIntegration() throws IOException {
+    public void createAndGetIntegration() {
 
         // Verify that the integration does not exist.
         get("/api/v1/integrations/2001", RestError.class,
@@ -147,9 +147,7 @@ public class IntegrationsITCase extends BaseITCase {
             .isEqualTo(Optional.of("My first description"));
 
         // Do the PATCH API call:
-        HashMap<String, Object> patchDoc = map(
-            "description", "The second description"
-        );
+        Map<String, Object> patchDoc = Collections.singletonMap("description", "The second description");
         patch("/api/v1/integrations/3001", patchDoc);
 
         result = get("/api/v1/integrations/3001", Integration.class);
