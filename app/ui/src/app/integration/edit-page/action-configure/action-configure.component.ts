@@ -195,7 +195,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       this.loading = false;
       return;
     }
-    if (!descriptor || !descriptor.propertyDefinitionSteps || !descriptor.propertyDefinitionSteps.length) {
+    if (this.hasActionPropertiesToDisplay(descriptor)) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {
@@ -234,6 +234,12 @@ export class IntegrationConfigureActionComponent extends FlowPage
       });
       this.loading = false;
     }, 30);
+  }
+
+  hasActionPropertiesToDisplay(descriptor: ActionDefinition) {
+    return !descriptor || descriptor === undefined ||
+      descriptor.propertyDefinitionSteps === undefined ||
+      Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0;
   }
 
   configuredPropertiesForMetadataCall() {
