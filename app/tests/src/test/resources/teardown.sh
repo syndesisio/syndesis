@@ -6,7 +6,7 @@
 
 #Configure the SYNDESIS_TEMPLATE_TYPE
 if [ -z "${SYNDESIS_TEMPLATE_TYPE}" ]; then
-    SYNDESIS_TEMPLATE_TYPE="syndesis-ci"
+    SYNDESIS_TEMPLATE_TYPE="syndesis-restricted"
 fi
 
 echo "Remove Syndesis from ${KUBERNETES_NAMESPACE}"
@@ -19,4 +19,7 @@ echo "Removing Syndesis from ${KUBERNETES_NAMESPACE}"
 oc process ${SYNDESIS_TEMPLATE_TYPE} -n ${KUBERNETES_NAMESPACE} \
     ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com \
     OPENSHIFT_MASTER=$(oc whoami --show-server) \
-    OPENSHIFT_OAUTH_CLIENT_ID=$(oc project -q)  | oc delete -f - -n ${KUBERNETES_NAMESPACE}
+    OPENSHIFT_PROJECT=$(oc project -q) \
+    OPENSHIFT_OAUTH_CLIENT_SECRET="none" | oc delete -f - -n ${KUBERNETES_NAMESPACE}
+
+oc delete templates ${SYNDESIS_TEMPLATE_TYPE}
