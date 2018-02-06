@@ -140,22 +140,6 @@ public class SqlParserTest {
     }
 
     @Test
-    public void parseInsertIntoAllColumnsOfTheTable2() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema,
-                "INSERT INTO NAME0 VALUES (29, :#firstname, :#lastname)");
-        SqlStatementMetaData info = parser.parse();
-        Assert.assertEquals("NAME0", info.getTableNames().get(0));
-        Assert.assertEquals(3, info.getInParams().size());
-        Assert.assertEquals("id", info.getInParams().get(0).getName());
-        Assert.assertEquals(0, info.getInParams().get(0).getColumnPos());
-        Assert.assertEquals("firstname", info.getInParams().get(1).getName());
-        Assert.assertEquals(1, info.getInParams().get(1).getColumnPos());
-        Assert.assertEquals("lastname", info.getInParams().get(2).getName());
-        Assert.assertEquals(2, info.getInParams().get(2).getColumnPos());
-        Assert.assertEquals(String.class, info.getInParams().get(2).getTypeValue().getClazz());
-    }
-
-    @Test
     public void parseInsertWithSpecifiedColumnNames() throws SQLException {
         SqlStatementParser parser = new SqlStatementParser(connection, schema,
                 "INSERT INTO NAME0 (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");

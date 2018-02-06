@@ -79,8 +79,8 @@ public class SqlMetaDataTest {
         SqlStatementMetaData paramInfo = sqlParser.parse();
         
         final DatabaseMetaData meta = connection.getMetaData();
-        List<SqlParam> inputParams = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(meta, null,
-                schema, paramInfo.getTableNames().get(0), paramInfo.getInParams());
+        List<SqlParam> inputParams = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(meta, 
+                new DBInfo(null,schema, paramInfo.getTableNames().get(0)), paramInfo.getInParams());
         //information for input
         Assert.assertEquals(1,inputParams.size());
         Assert.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
@@ -129,8 +129,8 @@ public class SqlMetaDataTest {
 
         List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
                 connection.getMetaData(), 
-                null, 
-                null, "NAME2", info.getInParams());
+                new DBInfo(null, null, "NAME2"),
+                info.getInParams());
         Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
@@ -153,8 +153,8 @@ public class SqlMetaDataTest {
 
         List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
                 connection.getMetaData(), 
-                null, 
-                null, "NAME3", info.getInParams());
+                new DBInfo(null, null, "NAME3"),
+                info.getInParams());
         Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
