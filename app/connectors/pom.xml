@@ -64,7 +64,6 @@
     <module>connectors-maven-plugin</module>
     <module>connectors-catalog</module>
     <module>connector-verify</module>
-    <module>catalog</module>
 
     <module>connectors/aws-s3-connector</module>
     <module>connectors/http</module>
