@@ -20,8 +20,6 @@ features:
       enabled: true
   dblogging:
     enabled: true
-  metricscollector:
-    enabled: true
 
 server:
   useForwardHeaders: true

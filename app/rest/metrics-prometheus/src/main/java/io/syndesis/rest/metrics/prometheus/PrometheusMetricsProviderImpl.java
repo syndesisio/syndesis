@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.fabric8.kubernetes.api.model.Pod;
@@ -29,6 +30,7 @@ import io.syndesis.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.rest.metrics.MetricsProvider;
 
 @Component
+@ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     private final String serviceName;
