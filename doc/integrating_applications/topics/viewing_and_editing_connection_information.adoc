@@ -1,0 +1,32 @@
+[id='viewing-and-editing-connection-information']
+= Viewing and editing connection information
+
+After you create a connection, {prodname} assigns an internal identifier to
+the connection. This identifier does not change. You can
+change the connection's name, description, or configuration values and 
+{prodname} recognizes it as the same connection.  
+
+There are two ways to view and edit information about a connection:
+
+* In the left panel, click *Connections* and then click any connection to
+view its details. 
+
+* In the left panel, click *Integrations* and then click any integration
+to view its details. In the *Integration Summary* page, in the flow diagram 
+of the integration, click a 
+connection icon to view that connection's details. 
+
+On the *Connection Details* page, for the connection you want to edit, click 
+image:images/PencilForEditing.png[Edit] next to a field to edit that field. 
+Or, for some connections, below the configuration fields, click *Edit* to
+change configuration values. After you change a value, be sure to click
+*Save*. 
+
+If you update a connection that is used in an integration that is running,
+{prodname} you must republishes the integration. To republish the
+integration, stop it and restart it. 
+
+For connections to applications that use the OAuth protocol to authorize 
+access, you cannot change the login credentials that the connection uses.
+To connect to the application and use different login credentials, you 
+must create a new connection. 

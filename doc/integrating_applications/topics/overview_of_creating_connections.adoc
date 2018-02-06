@@ -2,19 +2,25 @@
 = Overview of creating connections
 
 You must create a connection to 
-each application that you want to integrate. The particular steps for
-creating connections vary for each application. The following topics
+each application that you want to integrate. The procedure for
+creating a connection varies for each application. The following topics
 provide an overview of the workflow:
 
 * <<obtaining-authorization-to-access-applications>>
 * <<about-creating-connections>>
 * <<about-adding-connections-to-integrations>>
+* <<viewing-and-editing-connection-information>>
+* <<about-connection-validation>>
 
 include::obtaining_authorization_to_access_applications.adoc[leveloffset=+1]
 
 include::about_creating_connections.adoc[leveloffset=+1]
 
 include::about_adding_connections_to_integrations.adoc[leveloffset=+1]
+
+include::viewing_and_editing_connection_information.adoc[leveloffset=+1]
+
+include::about_connection_validation.adoc[leveloffset=+1]
 
 
 

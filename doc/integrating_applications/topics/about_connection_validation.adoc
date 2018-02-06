@@ -1,0 +1,41 @@
+[id='about-connection-validation']
+= About connection validation
+
+Applications that you connect to might use 
+the OAuth protocol to authenticate access requests. For example, 
+connections to Salesforce and Twitter use OAuth. To create connections
+to these applications, the first step is to register your {prodname}
+environment as a client of the application you want to connect to. 
+See <<obtaining-authorization-to-access-applications>>.
+
+After obtaining authorization, you can create a connection.
+When you create a connection, {prodname} validates it to confirm that
+authorization is in place. At any time, you can validate the connection again to
+ensure that authorization is still in place.
+
+To validate a connection that uses OAuth:
+
+. In the left panel, click *Connections*. 
+. Click the connection you want to validate. 
+. In the connection's details page, click *Validate*. 
+
+If validation fails, then check with the application/service provider to 
+determine if the application's OAuth keys, IDs, tokens, or secrets are still 
+valid. It's possible that an item has expired or been revoked. 
+
+If you find that an OAuth item is invalid, has expired, or been
+revoked, obtain new values and paste them into the {prodname} settings
+for the application. See the instructions in this guide for 
+registering the application whose connection did not validate. With the
+updated settings in place, follow the instructions above to try to
+validate the updated connection. If validation is successful, and there
+is a running integration that is using this connection, republish
+the integration. To republish an integration, stop it and restart it. 
+
+If everything appears to be valid at the service provider, then try reregistering 
+your {prodname} environment with the application and then recreate the 
+connection. {prodname} validates the connection when you recreate it. 
+If you recreate the connection, and there is an integration that is
+using the connection, then you must edit the integration to delete the old 
+connection and add the new connection. If the integration is running, 
+then you must stop it and restart it. 
