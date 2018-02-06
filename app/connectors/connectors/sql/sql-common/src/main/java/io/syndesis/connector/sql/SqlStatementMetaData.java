@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import lombok.Data;
@@ -42,7 +43,7 @@ public class SqlStatementMetaData {
     }
 
     public String addTable(String tableName) throws SQLException {
-        String upperCaseTableName = tableName.toUpperCase();
+        String upperCaseTableName = tableName.toUpperCase(Locale.getDefault());
         if (tablesInSchema.contains(upperCaseTableName)) {
             tableNames.add(upperCaseTableName);
         } else {
