@@ -47,6 +47,8 @@ import io.swagger.annotations.ApiParam;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
+import io.syndesis.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.dao.manager.operators.ReverseFilter;
 import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.Kind;
@@ -112,7 +114,10 @@ public class IntegrationHandler extends BaseHandler
     @Path(value = "/{id}/overview")
     public IntegrationOverview getOverview(@PathParam("id") final String id) {
         Integration integration = Getter.super.get(id);
-        List<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class).getItems();
+        List<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class,
+            new IdPrefixFilter<>(id+":"), ReverseFilter.getInstance())
+            .getItems();
+
 
         return new IntegrationOverview(integration, deployments.stream().findFirst()) {
             @Override

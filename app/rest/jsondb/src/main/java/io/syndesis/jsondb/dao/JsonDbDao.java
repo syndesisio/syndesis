@@ -23,6 +23,7 @@ import io.syndesis.core.Json;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataAccessObject;
 import io.syndesis.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.dao.manager.operators.ReverseFilter;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDB;
 import io.syndesis.model.Kind;
@@ -85,8 +86,8 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                     Function<ListResult<T>, ListResult<T>> operator = operators[i];
                     if( operator.getClass() == IdPrefixFilter.class ) {
                         IdPrefixFilter<T> filter = (IdPrefixFilter<T>) operator;
-                        options.startAt(filter.getPrefix());
-                        options.endAt(filter.getPrefix());
+                        options.startAt(":"+filter.getPrefix());
+                        options.endAt(":"+filter.getPrefix());
                         operators[i] = null; // Take it out of the list.
                     }
                 }
