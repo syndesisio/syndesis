@@ -29,10 +29,12 @@ import io.syndesis.rest.metrics.prometheus.HttpQuery;
 import io.syndesis.rest.metrics.prometheus.QueryResult;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
+@EnableConfigurationProperties({PrometheusConfigurationProperties.class})
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     private final String serviceName;
