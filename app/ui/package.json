@@ -14,7 +14,7 @@
     "start:minishift": "./scripts/minishift-setup.sh && yarn ng serve --host 0.0.0.0 --disable-host-check --public-host $(oc get routes syndesis --template '{{.spec.host}}'); ./scripts/minishift-restore.sh",
     "restore:minishift": "./scripts/minishift-restore.sh",
     "build:ci": "yarn ng build --aot --prod --progress=false",
-    "build:noaot": "yarn ng build --prod --progress=false",
+    "build:noaot": "yarn ng build --aot=false --prod --progress=false",
     "build:flash": "yarn ng build --aot=false --sourcemaps=true --vendor-chunk=true",
     "lint": "yarn ng lint --format stylish",
     "lint:fix": "yarn ng lint --fix",
