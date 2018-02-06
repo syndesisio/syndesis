@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-5033-gf3abf9c02,</span>
+<span id="revnumber">version 1.1.3-5035-g9a8a15788,</span>
 <span id="revdate">2018-02-06</span>
 </div>
 <div id="toc" class="toc2">
@@ -1806,7 +1806,11 @@ If you want to install to <a href="https://www.openshift.org/minishift/">Minishi
 -w  --watch                   Wait until cluster is up
 -i  --image-mode &lt;mode&gt;       Which templates to install: "docker" for plain images,
                               "openshift" for image streams (default: "openshift")
-    --docker                  Shortcut for "--image-mode docker"</code></pre>
+    --docker                  Shortcut for "--image-mode docker"
+    --local                   install from local Git repo when using.
+                              By default the resource descriptor is
+                              downloaded from GitHub remotely.
+-o  --open                    Open Syndesis in browser when installation is ready</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1839,6 +1843,9 @@ Don&#8217;t use <code>syndesis install --project $(oc project -q) --yes</code>. 
 </div>
 <div class="paragraph">
 <p>If you want to wait until everything is running (including fetching of the Docker images), you can specify <code>--watch</code> (short: <code>-w</code>) which blocks the script until everything is set up.</p>
+</div>
+<div class="paragraph">
+<p>You can also automatically open Syndesis in the browser after the installation with <code>--open</code> (short: <code>-o</code>)</p>
 </div>
 </div>
 <div class="sect3">
@@ -1969,7 +1976,7 @@ Just download this <a href="https://raw.githubusercontent.com/syndesisio/syndesi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com --open</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1977,7 +1984,7 @@ Just download this <a href="https://raw.githubusercontent.com/syndesisio/syndesi
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">bash &lt;(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">bash &lt;(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com -o</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2984,8 +2991,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-5033-gf3abf9c02<br>
-Last updated 2018-02-06 09:26:12 UTC
+Version 1.1.3-5035-g9a8a15788<br>
+Last updated 2018-02-06 09:48:29 UTC
 </div>
 </div>
 </body>
