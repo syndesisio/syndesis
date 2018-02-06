@@ -11,6 +11,7 @@ import { Integration,
   ACTIVE,
   INACTIVE,
   DRAFT,
+  IntegrationOverview,
   IntegrationActionsService,
   IntegrationSupportService,
   IntegrationDeployment } from '@syndesis/ui/platform';
@@ -49,12 +50,12 @@ const publish = {
   styleUrls: ['detail.component.scss']
 })
 export class IntegrationDetailComponent implements OnInit, OnDestroy {
-  integration$: Observable<Integration>;
+  integration$: Observable<IntegrationOverview>;
   integrationDeployments$: Observable<Array<IntegrationDeployment>>;
   integrationSubscription: Subscription;
   eventsSubscription: Subscription;
-  integration: Integration;
-  readonly loading$: Observable<boolean>;
+  integration: IntegrationOverview;
+  loading = true;
   routeSubscription: Subscription;
   loggingEnabled = false;
   usesMapping: { [valueComparator: string]: string } = {
@@ -80,8 +81,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
 
   ) {
-    this.integration$ = this.store.resource;
-    this.loading$ = this.store.loading;
+
   }
 
   get modalTitle() {
@@ -102,21 +102,16 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     if (index === 0) {
       return 'start';
     }
-    if (index === this.integration.steps.length - 1) {
+    if (index === (<any>this.integration).steps.length - 1) {
       return 'finish';
     }
     return '';
   }
 
-  deleteAction(integration: Integration) {
-    return this.integrationActionsService.requestAction('delete', integration)
-      .then(_ => this.router.navigate(['/integrations']));
-  }
-
   attributeUpdated(attr: string, value: string) {
     this.integration[attr] = value;
     this.store
-      .update(this.integration)
+      .update(<any> this.integration)
       .toPromise()
       .then((update: Integration) => {
         this.notificationService.popNotification({
@@ -138,37 +133,39 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     switch (event.id) {
       case REPLACE_DRAFT:
         {
+          /*
           const integration = { ...this.integration };
           integration.steps = deployment.spec.steps;
-          integration.desiredStatus = DRAFT;
+          //integration.desiredStatus = DRAFT;
           this.integrationActionsService.requestAction('replaceDraft', integration);
+          */
         }
         break;
       case CREATE_DRAFT:
         // TODO doesn't this just mean edit?
         break;
       case STOP_INTEGRATION:
+        /*
         this.integrationActionsService.requestAction('deactivate', this.integration);
+        */
         break;
       case PUBLISH:
+        /*
         {
           const integration = { ...this.integration };
-          delete integration.deploymentId;
+          delete integration.deploymentVersion;
           integration.steps = deployment.spec.steps;
-          this.integration.desiredStatus = ACTIVE;
+          //this.integration.desiredStatus = ACTIVE;
           this.integrationActionsService.requestAction('publish', integration);
-          break;
         }
+        */
+        break;
       default:
     }
   }
 
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
-  }
-
-  exportIntegration() {
-    this.integrationActionsService.requestAction('export', this.integration);
   }
 
   ngOnInit() {
@@ -178,45 +175,24 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
       useExpandItems: true
     } as ListConfig;
     this.loggingEnabled = this.config.getSettings('features', 'logging', false);
-    this.integrationSubscription = this.integration$
-      .first( i => i.id !== undefined )
-      .subscribe(i => {
-        this.integration = i;
-        this.integrationDeployments$ = this.integrationSupportService.watchDeployments(this.integration.id)
-            .map(val => {
-              this.deploymentActionConfigs = {};
-              const answer = val.items.sort((a, b) => b.version - a.version);
-              const integration = this.integration;
-              // build our map of actions for all the deployments
-              for (const deployment of answer) {
-                const actionConfig = {
-                  primaryActions: [],
-                  moreActions: [],
-                  moreActionsVisible: true
-                } as ActionConfig;
-                actionConfig.moreActions.push(replaceDraft);
-                if (deployment.version === (integration.version || integration.deploymentId)) {
-                  this.currentDeployment = deployment;
-                  if (integration.currentStatus === ACTIVE) {
-                    actionConfig.moreActions.push(stopIntegration);
-                  } else {
-                    actionConfig.moreActions.push(publish);
-                  }
-                } else {
-                  actionConfig.moreActions.push(publish);
-                }
-                this.deploymentActionConfigs[deployment.id] = actionConfig;
-              }
-              return answer;
-            });
-    });
     this.routeSubscription = this.route.paramMap
       .first( params => params.has('integrationId'))
-      .subscribe(paramMap => this.store.load(paramMap.get('integrationId')));
+      .subscribe(paramMap => {
+        if (this.integrationSubscription) {
+          this.integrationSubscription.unsubscribe();
+        }
+        this.integration$ = this.integrationSupportService.watchOverview(paramMap.get('integrationId'));
+        this.integrationSubscription = this.integration$.subscribe((integration: IntegrationOverview) => {
+          this.loading = false;
+          this.integration = integration;
+        });
+      });
   }
 
   ngOnDestroy() {
+    if (this.integrationSubscription) {
     this.integrationSubscription.unsubscribe();
+    }
     this.routeSubscription.unsubscribe();
   }
 

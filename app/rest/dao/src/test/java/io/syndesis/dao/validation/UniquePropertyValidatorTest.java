@@ -25,7 +25,6 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.WithId;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.validation.UniqueProperty;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
@@ -66,7 +65,7 @@ public class UniquePropertyValidatorTest {
         when(validator.dataManager.fetchIdsByPropertyValue(Integration.class, "name", "Existing"))
             .thenReturn(new HashSet<>(Arrays.asList("deleted")));
         when(validator.dataManager.fetch(Integration.class, "deleted"))
-            .thenReturn(new Integration.Builder().name("Existing").id("deleted").currentStatus(IntegrationDeploymentState.Undeployed).build());
+            .thenReturn(new Integration.Builder().name("Existing").id("deleted").deleted(true).build());
     }
 
     @Test

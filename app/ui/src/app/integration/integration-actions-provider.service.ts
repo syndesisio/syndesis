@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Integration,
   IntegrationActionsService,
   IntegrationSupportService,
+  Step,
   DRAFT,
   PENDING,
   ACTIVE,
@@ -34,20 +35,14 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     super();
   }
 
-  canEdit(integration: Integration) {
-    return integration.currentStatus !== UNDEPLOYED;
-  }
-
   canActivate(integration: Integration) {
-    return integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
+    // TODO: false if integration.version == lastDeloyed.version && is active.
+    return true; // integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
   }
 
   canDeactivate(integration: Integration) {
-    return integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
-  }
-
-  canDelete(integration: Integration) {
-    return integration.currentStatus !== UNDEPLOYED;
+    // TODO: true if lastDeloyed is active.
+    return true; //integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
   }
 
   //----- Actions ------------------->>
@@ -55,6 +50,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   requestAction(action: string, integration: Integration) {
     let request, header, message, danger, reason;
     switch (action) {
+      case 'createIntegration':
+        return this.router.navigate(['/integrations/create']);
       case 'view':
         return this.router.navigate(['/integrations', integration.id]);
       case 'edit':
@@ -205,10 +202,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         'Selected integration for activation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.store
-      .activate(integration)
-      .take(1)
-      .toPromise();
+    return this.integrationSupportService.deploy(integration).toPromise();
   }
 
   // Actual activate/deactivate action once the user confirms
@@ -218,10 +212,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.store
-      .deactivate(integration)
-      .take(1)
-      .toPromise();
+    return this.integrationSupportService.undeploy(integration).toPromise();
   }
 
   // Actual delete action once the user confirms
@@ -243,11 +234,11 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   //-----  Icons ------------------->>
 
   getStart(integration: Integration) {
-    return integration.steps[0];
+    return integration.steps ? integration.steps[0] : {} as Step;
   }
 
   getFinish(integration: Integration) {
-    return integration.steps.slice(-1)[0];
+    return integration.steps ? integration.steps.slice(-1)[0] : {} as Step;
   }
 
   //-----  Modal ------------------->>

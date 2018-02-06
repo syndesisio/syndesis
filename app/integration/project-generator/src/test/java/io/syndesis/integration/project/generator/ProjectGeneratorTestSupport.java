@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.project.generator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,11 +29,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
 
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -41,18 +50,8 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ProjectGeneratorTestSupport {
@@ -200,7 +199,7 @@ public class ProjectGeneratorTestSupport {
     // Helpers
     // *****************************
 
-    protected IntegrationDeployment newIntegration(TestResourceManager resourceManager, Step... steps) {
+    protected Integration newIntegration(TestResourceManager resourceManager, Step... steps) {
         for (int i = 0; i < steps.length; i++) {
             steps[i].getConnection().filter(r -> r.getId().isPresent()).ifPresent(
                 resource -> resourceManager.put(resource.getId().get(), resource)
@@ -212,25 +211,21 @@ public class ProjectGeneratorTestSupport {
                 resource -> resourceManager.put(resource.getId().get(), resource)
             );
 
-            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            steps[i] = new Step.Builder().createFrom(steps[i]).build();
         }
 
-        return new IntegrationDeployment.Builder()
-            .integrationId("test-integration")
-            .name("Test Integration")
-            .spec(new IntegrationDeploymentSpec.Builder()
+        return new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
                 .description("This is a test integration!")
                 .steps(Arrays.asList(steps))
-                .build())
-            .lastUpdated(new Date(0))
-            .lastUpdated(new Date(0))
-            .build();
+                .build();
     }
 
-    protected Path generate(IntegrationDeployment deployment, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
+    protected Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
 
-        try (InputStream is = generator.generate(deployment)) {
+        try (InputStream is = generator.generate(integration)) {
             Path ret = testFolder.newFolder("integration-project").toPath();
 
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {

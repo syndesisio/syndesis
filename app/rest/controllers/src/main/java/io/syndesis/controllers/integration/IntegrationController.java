@@ -16,8 +16,8 @@
 package io.syndesis.controllers.integration;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -30,15 +30,15 @@ import javax.annotation.PreDestroy;
 
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
-import io.syndesis.controllers.StateUpdate;
 import io.syndesis.core.EventBus;
 import io.syndesis.core.Json;
+import io.syndesis.core.util.Exceptions;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
-
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,32 +169,25 @@ public class IntegrationController {
             }
 
             try {
-                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationDeployment.getIntegrationId().get(), integrationDeployment.getVersion().get(), handler.getClass().getSimpleName());
-                StateUpdate update = handler.execute(integrationDeployment);
-                if (update!=null) {
+                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationDeployment.getIntegrationId().get(), integrationDeployment.getVersion(), handler.getClass().getSimpleName());
+                handler.execute(integrationDeployment, update->{
                     if (LOG.isInfoEnabled()) {
-                        LOG.info("{} : Setting status to {}{}", getLabel(integrationDeployment), update.getState(), (update.getStatusMessage() != null ? " (" + update.getStatusMessage() + ")" : ""));
+                        LOG.info("{} : Setting status to {}{}",
+                            getLabel(integrationDeployment),
+                            update.getState(),
+                            Optional.ofNullable(update.getStatusMessage()).map(x->" ("+x+")").orElse(""));
                     }
-                    // handler.execute might block for while so refresh our copyObjectMapperConfiguration of the integration
-                    // data before we update the current status
-                    if (update.getState() == IntegrationDeploymentState.Undeployed) {
-                        dataManager.delete(IntegrationDeployment.class, integrationDeploymentId);
-                    } else {
-                        // TODO: do this in a single TX.
-                        Date now = new Date();
-                        IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
-                        IntegrationDeployment updated = new IntegrationDeployment.Builder()
-                            .createFrom(current)
-                            //.statusMessage(Optional.ofNullable(update.getStatusMessage()))
-                            .currentState(update.getState())
-                            .stepsDone(update.getStepsPerformed())
-                            .createdDate(IntegrationDeploymentState.Active.equals(update.getState()) ? now : integrationDeployment.getCreatedDate())
-                            .lastUpdated(new Date())
-                            .build();
 
-                        dataManager.update(updated);
-                    }
-                }
+                    // handler.execute might block for while so refresh our copy of the integration
+                    // data before we update the current status
+                    IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
+                    dataManager.update(current.builder()
+                        .statusMessage(Optional.ofNullable(update.getStatusMessage()))
+                        .currentState(update.getState())
+                        .stepsDone(update.getStepsPerformed())
+                        .updatedAt(System.currentTimeMillis())
+                        .build());
+                });
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 LOG.error("Error while processing integration status for integration {}", integrationDeploymentId, e);
                 // Something went wrong.. lets note it.
@@ -202,7 +195,8 @@ public class IntegrationController {
                 dataManager.update(new IntegrationDeployment.Builder()
                     .createFrom(current)
                     .currentState(IntegrationDeploymentState.Error)
-                    .lastUpdated(new Date())
+                    .statusMessage(Exceptions.toString(e))
+                    .updatedAt(System.currentTimeMillis())
                     .build());
 
             } finally {

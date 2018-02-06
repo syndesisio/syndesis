@@ -15,6 +15,8 @@
  */
 package io.syndesis.core;
 
+import java.util.HashMap;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,4 +86,27 @@ public final class Json {
             throw new SyndesisServerException(e);
         }
     }
+
+    // Helper method to help construct json style object maps with concise syntax
+    public static HashMap<String, Object> map(Object... values) throws IllegalArgumentException {
+        if ((values.length % 2) != 0) {
+            throw new IllegalArgumentException("values argument should contain an even number of entries.");
+        }
+        HashMap<String, Object> rc = new HashMap<String, Object>() {
+            @Override
+            public String toString() {
+                try {
+                    return OBJECT_MAPPER.writeValueAsString(this);
+                } catch (JsonProcessingException e) {
+                    throw new SyndesisServerException(e);
+                }
+            }
+        };
+        for (int i = 0; i + 1 < values.length; i += 2) {
+            rc.put(values[i].toString(), values[i + 1]);
+        }
+        return rc;
+    }
+
+
 }

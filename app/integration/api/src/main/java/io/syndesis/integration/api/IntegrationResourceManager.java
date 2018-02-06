@@ -28,7 +28,7 @@ import io.syndesis.model.WithDependencies;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 
 public interface IntegrationResourceManager {
@@ -72,8 +72,8 @@ public interface IntegrationResourceManager {
     /**
      * Collect dependencies.
      */
-    default Collection<Dependency> collectDependencies(IntegrationDeployment deployment) {
-        return collectDependencies(deployment.getSpec().getSteps());
+    default Collection<Dependency> collectDependencies(Integration integration) {
+        return collectDependencies(integration.getSteps());
     }
 
     /**

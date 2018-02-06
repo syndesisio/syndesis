@@ -34,7 +34,6 @@ import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import io.syndesis.core.Json;
 import io.syndesis.core.cache.CacheManager;
 import io.syndesis.core.cache.LRUCacheManager;
 import io.syndesis.dao.manager.DataAccessObject;
@@ -46,7 +45,6 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 public class DataManagerTest {
@@ -125,12 +123,6 @@ public class DataManagerTest {
         Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
         Assert.assertEquals(4, integration.getSteps().size());
         Assert.assertTrue(integration.getTags().contains("example"));
-
-        //making sure we can deserialize Enums such as StatusType
-        Integration int2 = new Integration.Builder().createFrom(integration).desiredStatus(IntegrationDeploymentState.Active).build();
-        String json = Json.writer().writeValueAsString(int2);
-        Integration int3 = Json.reader().forType(Integration.class).readValue(json);
-        Assert.assertEquals(int2.getDesiredStatus(), int3.getDesiredStatus());
     }
 
     @Test

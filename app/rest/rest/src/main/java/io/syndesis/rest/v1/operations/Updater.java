@@ -15,23 +15,75 @@
  */
 package io.syndesis.rest.v1.operations;
 
+import java.io.IOException;
+import java.util.Set;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.jaxrs.PATCH;
+import io.syndesis.core.Json;
 import io.syndesis.dao.manager.WithDataManager;
 import io.syndesis.model.WithId;
+import io.syndesis.model.validation.AllValidations;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 
 public interface Updater<T extends WithId<T>> extends Resource, WithDataManager {
 
     @PUT
     @Path(value = "/{id}")
-    @Consumes("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
     default void update(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull @Valid T obj) {
+        getDataManager().update(obj);
+    }
+
+    @PATCH
+    @Path(value = "/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    default void patch(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull JsonNode patchJson) throws IOException {
+        Class<T> modelClass = resourceKind().getModelClass();
+        final T existing = getDataManager().fetch(modelClass, id);
+        if( existing == null ) {
+            throw new EntityNotFoundException();
+        }
+
+        JsonNode document = Json.reader().readTree(Json.writer().writeValueAsString(existing));
+
+        // Attempt to apply the patch...
+        final JsonMergePatch patch;
+        try {
+            patch = JsonMergePatch.fromJson(patchJson);
+            document = patch.apply(document);
+        } catch (JsonPatchException e) {
+            throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
+        }
+
+        // Convert the Json back to an entity.
+        T obj = Json.reader().forType(modelClass).readValue(Json.writer().writeValueAsBytes(document));
+
+        if (this instanceof Validating) {
+            final Validator validator = ((Validating<?>) this).getValidator();
+            final Set<ConstraintViolation<T>> violations = validator.validate(obj, AllValidations.class);
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(violations);
+            }
+        }
+
         getDataManager().update(obj);
     }
 

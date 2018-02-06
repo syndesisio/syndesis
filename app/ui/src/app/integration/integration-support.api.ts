@@ -5,9 +5,16 @@ export const integrationSupportEndpoints: Endpoints = {
   metadata: '/connections/{connectionId}/actions/{actionId}',
   // TODO should this go into the integration service
   filterOptions: '/integrations/filters/options',
-  history: '/integrations/{id}/history',
+
+  overviews: '/integration-support/overviews',
+  overview: '/integrations/{id}/overview',
+
+  publish: '/integrations/{id}/deployments',
+  updateState: '/integrations/{id}/deployments/{version}/targetState',
+
   deployments: '/integrations/{id}/deployments',
   deployment: '/integrations/{id}/deployments/{version}',
+
   pom: '/integration-support/generate/pom.xml',
   export: '/integration-support/export.zip',
   import: '/integration-support/import',

@@ -16,55 +16,56 @@ export const ACTIVE = 'Active';
 export const INACTIVE = 'Inactive';
 export const UNDEPLOYED = 'Undeployed';
 
-export type IntegrationState = 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
+export type IntegrationState = 'Pending' | 'Active' | 'Inactive' | 'Undeployed' | 'Error';
 
 export interface Integration extends BaseEntity {
   description?: string;
-  statusMessage: string;
-  token: string;
   steps: Array<Step>;
-  gitRepo: string;
-  users: Array<User>;
   connections: Array<Connection>;
-  userId: string;
-  desiredStatus: IntegrationState;
-  currentStatus: IntegrationState;
   stepsDone: Array<string>;
-  lastUpdated: string;
-  createdDate: string;
-  timesUsed: number;
+  updatedAt: number;
+  createdAt: number;
   id: string;
   tags: Array<string>;
   name: string;
-  deploymentId?: number;
+  deploymentVersion?: number;
   version?: number;
 }
 export type Integrations = Array<Integration>;
 
-export interface IntegrationDeploymentSpec {
-  connections: Array<Connection>;
-  name: string;
-  resources: Array<any>;
-  steps: Array<Step>;
-  tags: Array<any>;
-}
-export type IntegrationDeploymentSpecs = Array<IntegrationDeploymentSpec>;
-
 export interface IntegrationDeployment extends BaseEntity {
-  createdDate: number;
-  name: string;
-  lastUpdated: number;
-  integrationId: string;
   version: number;
+  updatedAt: number;
+  createdAt: number;
+  integrationId: string;
   currentState: IntegrationState;
   targetState: IntegrationState;
-  currentMessage?: string;
-  targetMessage?: string;
-  spec: IntegrationDeploymentSpec;
-  timesUsed: number;
+  statusMessage?: string;
+  spec: Integration;
   [attr: string]: any;
 }
 export type IntegrationDeployments = Array<IntegrationDeployment>;
+
+export interface IntegrationOverview extends BaseEntity {
+  version: number;
+  name: string;
+  tags: Array<string>;
+  description?: string;
+  draft: boolean;
+  deployments?: Array<DeploymentOverview>;
+  currentState: IntegrationState;
+  targetState: IntegrationState;
+  statusMessage?: string;
+}
+export type IntegrationOverviews = Array<IntegrationOverview>;
+
+export interface DeploymentOverview extends BaseEntity {
+  version: number;
+  currentState: IntegrationState;
+  targetState: IntegrationState;
+  createdAt: number;
+  integrationVersion: number;
+}
 
 // this is for the basic filter operation
 export interface Op extends BaseEntity {

@@ -34,7 +34,7 @@ public class SplitStepHandler implements IntegrationStepHandler {
 
     @SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.AvoidDeeplyNestedIfStmts"})
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         String languageName = step.getConfiguredProperties().get("language");

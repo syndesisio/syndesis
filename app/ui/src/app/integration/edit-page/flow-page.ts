@@ -65,31 +65,17 @@ export abstract class FlowPage implements OnDestroy {
     this.currentFlow.events.emit({
       kind: 'integration-save',
       action: (i: Integration) => {
-        if (i.id) {
-          // Go to detail page
-          router.navigate(['/integrations', i.id]);
-        } else {
-          // Just in case safety net...
-          router.navigate(['/integrations']);
-        }
-      },
-      error: error => {
-        setTimeout(() => {
-          this.errorMessage = error;
+        if (this.saveInProgress) {
           this.saveInProgress = false;
-          this.publishInProgress = false;
-        }, 10);
+          return;
+        }
+        const target = i.id ? ['/integrations', i.id] : ['/integrations'];
+        this.router.navigate(target);
       }
     });
   }
 
   save(status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = undefined) {
-    if (status) {
-      this.currentFlow.integration.desiredStatus = status;
-    }
-    if (!this.currentFlow.integration.desiredStatus) {
-      this.currentFlow.integration.desiredStatus = 'Draft';
-    }
     this.saveInProgress = true;
     this.doSave();
   }
@@ -97,7 +83,6 @@ export abstract class FlowPage implements OnDestroy {
   publish(
     status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = 'Active'
   ) {
-    this.currentFlow.integration.desiredStatus = status;
     this.publishInProgress = true;
     this.doSave();
   }

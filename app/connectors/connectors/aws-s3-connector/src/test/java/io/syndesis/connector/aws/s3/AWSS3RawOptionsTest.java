@@ -20,20 +20,20 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.test.junit4.CamelTestSupport;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.junit.Ignore;
-import org.junit.Test;
 
 @Ignore("AWS SDK starts even if route is set to not autostart")
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
@@ -59,14 +59,11 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new IntegrationRouteBuilder("", Collections.emptyList()) {
             @Override
-            protected IntegrationDeployment loadDeployment() throws IOException {
-                return new IntegrationDeployment.Builder()
-                    .integrationId("asw-integration")
-                    .name("asw-integration")
-                    .spec(new IntegrationDeploymentSpec.Builder()
+            protected Integration loadIntegration() throws IOException {
+                return new Integration.Builder()
+                        .id("asw-integration")
                         .name("asw-integration")
                         .addStep(new Step.Builder()
-                            .putMetadata(Step.METADATA_STEP_INDEX, "1")
                             .stepKind("endpoint")
                             .connection(new Connection.Builder()
                                 .putConfiguredProperty("accessKey", "my-accessKey")
@@ -113,7 +110,6 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
                                 .build())
                             .build())
                         .addStep(new Step.Builder()
-                            .putMetadata(Step.METADATA_STEP_INDEX, "2")
                             .stepKind("endpoint")
                             .action(new ConnectorAction.Builder()
                                 .descriptor(new ConnectorDescriptor.Builder()
@@ -122,9 +118,7 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
                                     .build())
                                 .build())
                             .build())
-                        .build())
-
-                    .build();
+                        .build();
             }
         };
     }

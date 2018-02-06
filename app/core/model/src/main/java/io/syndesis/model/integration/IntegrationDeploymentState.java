@@ -16,10 +16,6 @@
 package io.syndesis.model.integration;
 
 public enum IntegrationDeploymentState {
-    /**
-     * Initial state of an {@link IntegrationDeployment}. The IntegrationDeployment is not yet deployed.
-     */
-    Draft,
 
     /**
      * {@link IntegrationDeployment} is deployed and running.
@@ -40,7 +36,7 @@ public enum IntegrationDeploymentState {
     Error,
 
     /**
-     * The {@link IntegrationDeployment} is in peding state. (Desired != Actual).
+     * The {@link IntegrationDeployment} is in pending state. (Desired != Actual).
      */
     Pending;
 }

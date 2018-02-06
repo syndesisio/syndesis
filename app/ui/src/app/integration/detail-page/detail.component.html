@@ -1,7 +1,7 @@
 <syndesis-modal [title]="modalTitle"
                 [message]="modalMessage">
 </syndesis-modal>
-<syndesis-loading [loading]="loading$ | async">
+<syndesis-loading [loading]="loading">
   <div *ngIf="integration"
        class="row integration-detail">
     <div class=" toolbar-pf toolbar">
@@ -18,15 +18,7 @@
           </ol>
         </div>
         <div class="toolbar-pf-action-right">
-          <button type="button"
-                  class="btn btn-primary"
-                  [routerLink]="['..']">Done</button>
-          <button type="button"
-                  class="btn btn-default"
-                  (click)="exportIntegration()">Export</button>
-          <button type="button"
-                  class="btn btn-default"
-                  [routerLink]="['edit']">Edit Integration</button>
+          <syndesis-integration-action-menu [integration]="integration" [showPrimaryActions]="true" [showViewAction]="false"></syndesis-integration-action-menu>
         </div>
       </div>
     </div>
@@ -41,7 +33,7 @@
           Description:
         </dt>
         <dd>
-          <p>
+          <p *ngIf="integration.steps">
             <!--<pre>{{ currentDeployment | json }}</pre>-->
             <ng-template ngFor
                          let-step
@@ -80,35 +72,6 @@
             <syndesis-editable-textarea [value]="integration.description"
                                         placeholder="No description set..."
                                         (onSave)="attributeUpdated('description', $event, integration)"></syndesis-editable-textarea>
-          </p>
-        </dd>
-      </dl>
-      <!--
-      <dl class="dl-horizontal">
-        <dt>Tags:</dt>
-        <dd>
-          <syndesis-editable-tags [value]="integration.tags"
-                                  placeholder="No tags set..."
-                                  (onSave)="onAttributeUpdated('tags', $event)"></syndesis-editable-tags>
-
-        </dd>
-      </dl>
-      -->
-      <dl class="dl-horizontal">
-        <dt>
-          Status:
-        </dt>
-        <dd>
-          <p>
-            <syndesis-integration-status [integration]="integration"></syndesis-integration-status>
-          </p>
-          <p>
-            <button *ngIf="integrationActionsService.canDeactivate(integration)"
-                    class="btn btn-default"
-                    (click)="integrationActionsService.requestAction('deactivate', integration)">Stop Integration</button>
-            <button *ngIf="integrationActionsService.canActivate(integration)"
-                    class="btn btn-default"
-                    (click)="integrationActionsService.requestAction('activate', integration)">Start Integration</button>
           </p>
         </dd>
       </dl>
@@ -171,15 +134,6 @@
           </dl>
         </syndesis-loading>
       </ng-container>
-      <dl class="dl-horizontal">
-        <dt>
-        </dt>
-        <dd>
-          <button *ngIf="integrationActionsService.canDelete(integration)"
-                  class="btn btn-danger"
-                  (click)="integrationActionsService.requestAction('delete', integration)">Delete Integration</button>
-        </dd>
-      </dl>
       <dl class="dl-horizontal" *ngIf="loggingEnabled">
         <dt>
           Logs:

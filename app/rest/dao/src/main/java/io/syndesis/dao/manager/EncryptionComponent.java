@@ -15,18 +15,18 @@
  */
 package io.syndesis.dao.manager;
 
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.Step;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.stereotype.Component;
+
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Step;
 
 /**
  * Handy methods used to apply encryption to configured secrets.
@@ -80,7 +80,7 @@ public class EncryptionComponent {
     public IntegrationDeployment encrypt(IntegrationDeployment integrationDeployment) {
         return new IntegrationDeployment.Builder()
             .createFrom(integrationDeployment)
-            .spec(new IntegrationDeploymentSpec.Builder().createFrom(integrationDeployment.getSpec()).steps(encrypt(integrationDeployment.getSpec().getSteps())).build())
+            .spec(encrypt(integrationDeployment.getSpec()))
             .build();
     }
 

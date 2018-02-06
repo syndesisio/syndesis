@@ -33,6 +33,7 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
     public void testGenerateProject() throws Exception {
         TestResourceManager manager = new TestResourceManager();
 
-        IntegrationDeployment deployment = newIntegration(
+        Integration deployment = newIntegration(
             manager,
             new Step.Builder()
                 .stepKind("endpoint")
@@ -280,7 +281,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager);
-        IntegrationDeployment deployment = newIntegration(resourceManager, s1, s2);
+        Integration deployment = newIntegration(resourceManager, s1, s2);
         Properties properties = generator.generateApplicationProperties(deployment);
 
         assertThat(properties.size()).isEqualTo(6);

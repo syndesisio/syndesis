@@ -76,7 +76,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
         final int maxIntegrationsPerUser = properties.getMaxIntegrationsPerUser();
         if (maxIntegrationsPerUser != ControllersConfigurationProperties.UNLIMITED) {
-            int userIntegrations = countActiveIntegrationsOfSameUserAs(integration);
+            int userIntegrations = countActiveIntegrationsOfSameUserAs(integrationDeploymentDefinition);
             if (userIntegrations >= maxIntegrationsPerUser) {
                 //What the user sees.
                 return new StateUpdate(IntegrationDeploymentState.Inactive, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
@@ -85,7 +85,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
         final int maxDeploymentsPerUser = properties.getMaxDeploymentsPerUser();
         if (maxDeploymentsPerUser != ControllersConfigurationProperties.UNLIMITED) {
-            int userDeployments = countDeployments(integration);
+            int userDeployments = countDeployments(integrationDeploymentDefinition);
             if (userDeployments >= maxDeploymentsPerUser) {
                 //What we actually want to limit. So even though this should never happen, we still need to make sure.
                 return new StateUpdate(IntegrationDeploymentState.Inactive, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
@@ -112,7 +112,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
         // Set status to activate if finally running. Also clears the previous step which has been performed
         if (isRunning(integrationDeployment)) {
             logInfo(integrationDeployment, "[ACTIVATED] bc. integration is running with 1 pod");
-            updateIntegration(integrationDeployment, IntegrationDeploymentState.Active);
+            updateDeploymentState(integrationDeployment, IntegrationDeploymentState.Active);
             return new StateUpdate(IntegrationDeploymentState.Active);
         }
 
@@ -124,16 +124,16 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     }
 
     private DeploymentData createDeploymentData(Integration integration, IntegrationDeployment integrationDeployment) {
-        Properties applicationProperties = projectGenerator.generateApplicationProperties(integrationDeployment);
+        Properties applicationProperties = projectGenerator.generateApplicationProperties(integration);
 
-        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+        String username = integrationDeployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         return DeploymentData.builder()
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"))))
-            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL, integrationDeployment.getVersion().orElse(0).toString())
+            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL,  Integer.toString(integrationDeployment.getVersion()))
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationDeployment.getIntegrationId().get())
-            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion().get()))
+            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion()))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
@@ -142,15 +142,15 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     // =============================================================================
     // Various steps to perform:
 
-    private void build(IntegrationDeployment integrationDeployment, DeploymentData data) throws IOException {
-        InputStream tarInputStream = createProjectFiles(integrationDeployment);
-        logInfo(integrationDeployment, "Created project files and starting build");
-        openShiftService().build(integrationDeployment.getName(), data, tarInputStream);
+    private void build(IntegrationDeployment integration, DeploymentData data) throws IOException {
+        InputStream tarInputStream = createProjectFiles(integration.getSpec());
+        logInfo(integration, "Created project files and starting build");
+        openShiftService().build(integration.getSpec().getName(), data, tarInputStream);
     }
 
     private void deploy(IntegrationDeployment integration, DeploymentData data) throws IOException {
         logInfo(integration, "Starting deployment");
-        openShiftService().deploy(integration.getName(), data);
+        openShiftService().deploy(integration.getSpec().getName(), data);
         logInfo(integration, "Deployment done");
     }
 
@@ -158,36 +158,29 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
         dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integrationDeployment.getIntegrationId().get(), "currentState", "Active")
             .stream()
             .map(id -> dataManager.fetch(IntegrationDeployment.class, id))
-            .filter(r -> r.getVersion().orElse(0) >= integrationDeployment.getVersion().orElse(0))
+            .filter(r -> r.getVersion() >= integrationDeployment.getVersion())
             .map(r -> r.withCurrentState(IntegrationDeploymentState.Undeployed))
             .forEach(r -> dataManager.update(r));
     }
 
-    private void updateIntegration(IntegrationDeployment integrationDeployment, IntegrationDeploymentState state) {
-        Integration current = dataManager.fetch(Integration.class, integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId")));
-
-        //Set the deployed integrationDeployment id.
-        Integration updated = new Integration.Builder().createFrom(current)
-            .deploymentId(integrationDeployment.getVersion().get())
-            .currentStatus(state)
-            .build();
-
-        dataManager.update(updated);
+    private void updateDeploymentState(IntegrationDeployment integrationDeployment, IntegrationDeploymentState state) {
+        IntegrationDeployment d = dataManager.fetch(IntegrationDeployment.class, integrationDeployment.getId().get());
+        dataManager.update(d.withCurrentState(state));
     }
 
 
     // =================================================================================
 
     private boolean isBuildStarted(IntegrationDeployment integrationDeployment) {
-        return openShiftService().isBuildStarted(integrationDeployment.getName());
+        return openShiftService().isBuildStarted(integrationDeployment.getSpec().getName());
     }
 
     private boolean isReady(IntegrationDeployment integrationDeployment) {
-        return openShiftService().isDeploymentReady(integrationDeployment.getName());
+        return openShiftService().isDeploymentReady(integrationDeployment.getSpec().getName());
     }
 
     public boolean isRunning(IntegrationDeployment integrationDeployment) {
-        return openShiftService().isScaled(integrationDeployment.getName(), 1);
+        return openShiftService().isScaled(integrationDeployment.getSpec().getName(), 1);
     }
 
     private static String propsToString(Properties data) {
@@ -211,20 +204,18 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     /**
      * Counts active integrations (in DB) of the owner of the specified integration.
      *
-     * @param integration The specified integration.
+     * @param deployment The specified IntegrationDeployment.
      * @return The number of integrations (excluding the current).
      */
-    private int countActiveIntegrationsOfSameUserAs(Integration integration) {
+    private int countActiveIntegrationsOfSameUserAs(IntegrationDeployment deployment) {
+        Integration integration = deployment.getSpec();
         String integrationId = integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration."));
-        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+        String username = deployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         return (int) dataManager.fetchAll(IntegrationDeployment.class).getItems()
             .stream()
             .filter(i -> !i.getIntegrationId().get().equals(integrationId)) //The "current" integration will already be in the database.
             .filter(i -> IntegrationDeploymentState.Active == i.getCurrentState())
-            .map(i -> i.getIntegrationId().get())
-            .distinct()
-            .map(i -> dataManager.fetch(Integration.class, i))
             .filter(i -> i.getUserId().map(username::equals).orElse(Boolean.FALSE))
             .count();
     }
@@ -232,12 +223,13 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     /**
      * Count the deployments of the owner of the specified integration.
      *
-     * @param integration The specified integration.
+     * @param deployment The specified IntegrationDeployment.
      * @return The number of deployed integrations (excluding the current).
      */
-    private int countDeployments(Integration integration) {
+    private int countDeployments(IntegrationDeployment deployment) {
+        Integration integration = deployment.getSpec();
         String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
-        String username = integration.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
+        String username = deployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
         labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
@@ -249,7 +241,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             .count();
     }
 
-    private InputStream createProjectFiles(IntegrationDeployment integrationDeployment) {
+    private InputStream createProjectFiles(Integration integrationDeployment) {
         try {
             return projectGenerator.generate(integrationDeployment);
         } catch (IOException e) {

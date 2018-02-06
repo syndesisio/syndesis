@@ -55,13 +55,12 @@ public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
 
     @SuppressWarnings({"unchecked", "PMD"})
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
         // Model
         final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
-        final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
         final String componentScheme = action.getDescriptor().getComponentScheme().get();
         final Map<String, String> configuredProperties = step.getConfiguredProperties();
         final Map<String, String> properties = action.filterEndpointProperties(configuredProperties);
@@ -95,6 +94,6 @@ public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
         }
 
         // Handle split
-        return handleSplit(descriptor, route, builder);
+        return handleSplit(descriptor, route, builder, index);
     }
 }

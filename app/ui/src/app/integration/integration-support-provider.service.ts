@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-
 import { Action,
          Connection,
          Activity,
          Integration,
          IntegrationDeployment,
          IntegrationDeployments,
+         IntegrationOverview,
+         IntegrationOverviews,
+         IntegrationState,
          IntegrationSupportService,
-         ApiHttpService } from '@syndesis/ui/platform';
-
+         ApiHttpService,
+         UNDEPLOYED } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { integrationSupportEndpoints } from './integration-support.api';
 import { RequestMethod, ResponseContentType } from '@angular/http';
@@ -25,12 +27,57 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService.post(integrationSupportEndpoints.filterOptions, dataShape);
   }
 
-  getHistory(id: string): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.history, { id }).get();
+  getOverview(id: string): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.overview, { id }).get();
+  }
+
+  watchOverview(id: string): Observable<IntegrationOverview> {
+    return Observable.merge(
+      this.getOverview(id),
+      this.eventsService.changeEvents
+        .filter(event => event.id === id)
+        .flatMap(event => this.getOverview(id))
+    );
+  }
+
+  getOverviews(): Observable<IntegrationOverviews> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.overviews).get().map( (value: any) => value.items || []);
+  }
+
+  watchOverviews(): Observable<IntegrationOverviews> {
+    return Observable.merge(
+      this.getOverviews(),
+      this.eventsService.changeEvents
+        .filter(event => event.kind === 'integration')
+        .flatMap(event => this.getOverviews())
+    );
   }
 
   getDeployments(id: string): Observable<IntegrationDeployments> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployments, { id }).get();
+  }
+
+  publishIntegration(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).post(integration);
+  }
+
+  deploy(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).put({});
+  }
+
+  undeploy(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.updateState, {
+      id: integration.id,
+      version: integration.deploymentVersion,
+    }).post({
+      targetState: UNDEPLOYED
+    });
+  }
+
+  updateState(id: string, version: string | number, state: IntegrationState): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.updateState, { id, version }).post({
+      targetState: state
+    });
   }
 
   watchDeployments(id: string): Observable<any> {

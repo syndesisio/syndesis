@@ -13,21 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model.integration;
+package io.syndesis.rest.v1.handler.integration.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.immutables.value.Value;
+import java.util.Optional;
 
-import java.util.List;
+import io.syndesis.model.connection.Connection;
 
-@Value.Immutable
-@JsonDeserialize(builder = IntegrationHistory.Builder.class)
-public interface IntegrationHistory {
+public class ConnectionOverview {
+    private final Connection value;
 
-    List<IntegrationDeployment> getDeployments();
-    List<String> getMessages();
+    public ConnectionOverview(Connection value) {
+        this.value = value;
+    }
 
-    class Builder extends ImmutableIntegrationHistory.Builder {
-        // allow access to ImmutableIntegrationStatus.Builder
+    public String getName() {
+        return value.getName();
+    }
+
+    public Optional<String> getId() {
+        return value.getId();
+    }
+
+    public Optional<String> getConnectorId() {
+        return value.getConnectorId();
+    }
+
+    public String getIcon() {
+        return value.getIcon();
     }
 }
