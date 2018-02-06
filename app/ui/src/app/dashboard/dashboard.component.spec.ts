@@ -15,7 +15,6 @@ import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
 import { StoreModule } from '@syndesis/ui/store';
-import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 import { DashboardConnectionsComponent } from './connections.component';
@@ -27,6 +26,7 @@ import { IconPathPipe } from '@syndesis/ui/common/icon-path.pipe.ts';
 import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.pipe';
 import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
 import { ConfigService } from '@syndesis/ui/config.service';
+import { IntegrationActionMenuComponent } from '@syndesis/ui/integration/list/action-menu.component.ts';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -39,8 +39,8 @@ describe('DashboardComponent', () => {
           CoreModule.forRoot(),
           ApiModule.forRoot(),
           HttpClientModule,
-          ListModule,
           ActionModule,
+          ListModule,
           ChartsModule,
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
@@ -60,7 +60,8 @@ describe('DashboardComponent', () => {
           LoadingComponent,
           IconPathPipe,
           TruncateCharactersPipe,
-          ModalComponent
+          ModalComponent,
+          IntegrationActionMenuComponent
         ],
         providers: [
           ConfigService,
