@@ -631,7 +631,6 @@
 
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
 
-    <!-- Top most layer, entrypoint. It contains the deps to other modules -->
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-model</artifactId>
@@ -665,6 +664,12 @@
     <dependency>
       <groupId>io.syndesis.rest</groupId>
       <artifactId>rest-connector-generator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-controller</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
