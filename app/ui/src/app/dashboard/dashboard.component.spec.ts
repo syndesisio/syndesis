@@ -15,6 +15,8 @@ import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
 import { StoreModule } from '@syndesis/ui/store';
+import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
 import { DashboardConnectionsComponent } from './connections.component';
@@ -48,20 +50,15 @@ describe('DashboardComponent', () => {
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule,
-          NotificationModule
+          NotificationModule,
+          IntegrationListModule,
+          SyndesisCommonModule
         ],
         declarations: [
           DashboardComponent,
           EmptyStateComponent,
           DashboardConnectionsComponent,
-          DashboardIntegrationsComponent,
-          IntegrationStatusComponent,
-          IntegrationListComponent,
-          LoadingComponent,
-          IconPathPipe,
-          TruncateCharactersPipe,
-          ModalComponent,
-          IntegrationActionMenuComponent
+          DashboardIntegrationsComponent
         ],
         providers: [
           ConfigService,

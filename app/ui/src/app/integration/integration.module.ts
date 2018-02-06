@@ -3,16 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import {
-  CollapseModule,
-  ModalModule,
-  PopoverModule,
-  TabsModule,
-  TooltipModule
-} from 'ngx-bootstrap';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
-import { ActionModule, ListModule, ToolbarModule } from 'patternfly-ng';
-
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 import { IntegrationListModule } from './list';
 import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationDetailComponent } from './detail-page';
@@ -95,17 +87,10 @@ const routes: Routes = [
     PatternflyUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
-    TabsModule,
+    SyndesisVendorModule,
     SyndesisCommonModule,
-    CollapseModule,
-    TooltipModule,
-    ModalModule,
-    PopoverModule,
     DataMapperModule,
     FileUploadModule,
-    ActionModule,
-    ListModule,
-    ToolbarModule,
     IntegrationSupportModule,
     IntegrationListModule,
   ],

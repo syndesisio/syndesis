@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import { ListModule, ToolbarModule } from 'patternfly-ng';
 import { SyndesisCommonModule } from '../common/common.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 
 import { SettingsRootComponent } from './settings-root.component';
 import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
@@ -36,9 +36,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     DynamicFormsCoreModule,
     PatternflyUIModule,
-    ListModule,
-    ToolbarModule,
     RouterModule.forChild(routes),
+    SyndesisVendorModule,
     SyndesisCommonModule
   ],
   exports: [],

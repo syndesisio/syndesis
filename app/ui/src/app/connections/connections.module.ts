@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TagInputModule } from 'ngx-chips';
 
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 import { SyndesisCommonModule } from '../common/common.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -33,9 +32,8 @@ import { ConnectionConfigurationValidationComponent } from './common/configurati
     PatternflyUIModule,
     RouterModule,
     SyndesisCommonModule,
-    ModalModule,
-    BsDropdownModule.forRoot(),
-    TagInputModule
+    TagInputModule,
+    SyndesisVendorModule
   ],
   declarations: [
     ConnectionsCreatePage,

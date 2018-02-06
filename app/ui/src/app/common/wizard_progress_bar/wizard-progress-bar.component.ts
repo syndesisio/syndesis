@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { SlugifyPipe } from '@syndesis/ui/common';
+import { SlugifyPipe } from '@syndesis/ui/common/slugify.pipe';
 
 @Component({
   selector: 'syndesis-wizard-progress-bar',
