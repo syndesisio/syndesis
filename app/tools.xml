@@ -11,6 +11,7 @@
       <directory>..</directory>
       <outputDirectory>syndesis</outputDirectory>
       <includes>
+        <include>ruleset.xml</include>
         <include>checkstyle.xml</include>
         <include>checkstyle-suppressions.xml</include>
       </includes>

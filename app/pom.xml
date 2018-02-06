@@ -569,6 +569,23 @@
         </plugin>
 
         <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <configuration>
+            <rulesets>
+              <ruleset>/syndesis/ruleset.xml</ruleset>
+            </rulesets>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
           <groupId>org.basepom.maven</groupId>
           <artifactId>duplicate-finder-maven-plugin</artifactId>
           <configuration>
