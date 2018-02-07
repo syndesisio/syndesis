@@ -40,33 +40,27 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     @Override
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
-        // TODO aggregate values across versions
-        final Optional<Long> totalMessages = getMetricValue(integrationId, "org_apache_camel_ExchangesTotal", Long.class);
-        final Optional<Long> failedMessages = getMetricValue(integrationId, "org_apache_camel_ExchangesFailed", Long.class);
-        final Optional<Date> startTime = getMetricValue(integrationId, "org_apache_camel_StartTimestamp", Date.class);
-        final Optional<Date> lastProcessingTime = getMetricValue(integrationId, "org_apache_camel_LastExchangeCompletedTimestamp", Date.class);
+        // aggregate values across versions
+        final Optional<Map<String, Long>> totalMessagesMap = getMetricValues(integrationId,"org_apache_camel_ExchangesTotal", "syndesis_io_deployment_id", Long.class);
+        final Optional<Map<String, Long>> failedMessagesMap = getMetricValues(integrationId, "org_apache_camel_ExchangesFailed", "syndesis_io_deployment_id", Long.class);
+        final Optional<Map<String, Date>> startTimeMap = getMetricValues(integrationId, "org_apache_camel_StartTimestamp", "syndesis_io_deployment_id", Date.class);
+        final Optional<Map<String, Date>> lastProcessingTimeMap = getMetricValues(integrationId, "org_apache_camel_LastExchangeCompletedTimestamp", "syndesis_io_deployment_id", Date.class);
+
+        Optional<Long> totalMessages = totalMessagesMap.map(Map::values).flatMap(
+            longs -> Optional.of(longs.stream().mapToLong(Long::longValue).sum()));
+        Optional<Long> failedMessages = failedMessagesMap.map(Map::values).flatMap(
+            longs -> Optional.of(longs.stream().mapToLong(Long::longValue).sum()));
+        Optional<Date> startTime = startTimeMap.map(Map::values).flatMap(
+            dates -> dates.stream().max(Date::compareTo));
+        Optional<Date> lastProcessingTime = lastProcessingTimeMap.map(Map::values).flatMap(
+            dates -> dates.stream().max(Date::compareTo));
 
         return new IntegrationMetricsSummary.Builder()
                 .start(startTime)
                 .lastProcessed(lastProcessingTime)
-                .messages(totalMessages.get())
-                .errors(failedMessages.get())
+                .messages(totalMessages.orElse(0L))
+                .errors(failedMessages.orElse(0L))
                 .build();
-    }
-
-    private Optional<Date> getMaxTime(Optional<Date> maxStartTime, Optional<Date> startTime) {
-        Optional<Date> result;
-        if (maxStartTime.isPresent()) {
-            if (startTime.isPresent()) {
-                result = startTime.get().after(maxStartTime.get()) ? startTime : maxStartTime;
-            } else {
-                result = maxStartTime;
-            }
-        } else {
-            result = startTime;
-        }
-
-        return result;
     }
 
     @Override
