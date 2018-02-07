@@ -55,6 +55,11 @@ public class SqlMetaDataTest {
 
     @AfterClass
     public static void afterClass() throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.execute("DROP table ALLTYPES");
+        stmt.execute("DROP table NAME");
+        stmt.execute("DROP table NAME2");
+        stmt.execute("DROP table NAME3");
         sqlCommon.closeConnection(connection);
     }
     
@@ -74,8 +79,8 @@ public class SqlMetaDataTest {
         SqlStatementMetaData paramInfo = sqlParser.parse();
         
         final DatabaseMetaData meta = connection.getMetaData();
-        List<SqlParam> inputParams = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(meta, null,
-                schema, paramInfo.getTableNames().get(0), paramInfo.getInParams());
+        List<SqlParam> inputParams = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(meta, 
+                new DBInfo(null,schema, paramInfo.getTableNames().get(0)), paramInfo.getInParams());
         //information for input
         Assert.assertEquals(1,inputParams.size());
         Assert.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
@@ -96,7 +101,7 @@ public class SqlMetaDataTest {
         String createTable = "CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
                 "lastName VARCHAR(255))"; 
         stmt.executeUpdate(createTable);
-        stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
+        stmt.executeUpdate("INSERT INTO name VALUES (1, 'Joe', 'Jackson')");
         stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
 
         String sqlStatement = "SELECT FIRSTNAME, LASTNAME FROM NAME WHERE ID=:#id";
@@ -122,19 +127,14 @@ public class SqlMetaDataTest {
         SqlStatementParser parser = new SqlStatementParser(connection, schema, sqlStatement);
         SqlStatementMetaData info = parser.parse();
 
-        try {
-            List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
-                    connection.getMetaData(), 
-                    null, 
-                    null, "NAME2", info.getInParams());
-            Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
-            Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
-            Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
-            
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
+                connection.getMetaData(), 
+                new DBInfo(null, null, "NAME2"),
+                info.getInParams());
+        Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
+        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
+
     }
 
     @Test
@@ -153,8 +153,8 @@ public class SqlMetaDataTest {
 
         List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
                 connection.getMetaData(), 
-                null, 
-                null, "NAME3", info.getInParams());
+                new DBInfo(null, null, "NAME3"),
+                info.getInParams());
         Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());

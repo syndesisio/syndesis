@@ -100,11 +100,15 @@ public class SqlStatementParser {
             if (inputParams.get(0).getColumn() != null) {
                 statementInfo.setInParams(
                         DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                                meta, null, schema, tableNameInsert, inputParams));
+                                meta, 
+                                new DBInfo(null, schema, tableNameInsert),
+                                inputParams));
             } else {
                 statementInfo.setInParams(
                         DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
-                                meta, null, schema, tableNameInsert, inputParams));
+                                meta, 
+                                new DBInfo(null, schema, tableNameInsert),
+                                inputParams));
             }
         }
     }
@@ -116,7 +120,9 @@ public class SqlStatementParser {
             List<SqlParam> inputParams = findInputParams();
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                            meta, null, schema, tableNameUpdate, inputParams));
+                            meta, 
+                            new DBInfo(null, schema, tableNameUpdate), 
+                            inputParams));
         }
     }
 
@@ -127,7 +133,9 @@ public class SqlStatementParser {
             List<SqlParam> inputParams = findInputParams();
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                            meta, null, schema, tableNameDelete, inputParams));
+                            meta, 
+                            new DBInfo(null, schema, tableNameDelete),
+                            inputParams));
         }
     }
 
@@ -135,10 +143,12 @@ public class SqlStatementParser {
         statementInfo.setStatementType(StatementType.SELECT);
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInputParams();
-            statementInfo.setTableNames(findTablesInSelectStatement()); //TODO support multiple tables
+            statementInfo.setTableNames(findTablesInSelectStatement());
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                            meta, null, schema, statementInfo.getTableNames().get(0), inputParams));
+                            meta, 
+                            new DBInfo(null, schema, statementInfo.getTableNames().get(0)), 
+                            inputParams));
         }
         statementInfo.setOutParams(DatabaseMetaDataHelper.getOutputColumnInfo(connection, statementInfo.getDefaultedSqlStatement()));
     }
