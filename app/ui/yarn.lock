@@ -409,6 +409,14 @@ angular-tree-component@^6.0.0:
     mobx ">=3"
     mobx-angular ">=1"
 
+"angular-tree-component@^6.0.0 || ^7.0.0":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-7.0.1.tgz#fc8d0e72d8c34b87131a3ba2bd32ad20945689ac"
+  dependencies:
+    lodash "4.17.4"
+    mobx ">=3"
+    mobx-angular ">=1"
+
 angular2-text-mask@^8.0.1:
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/angular2-text-mask/-/angular2-text-mask-8.0.4.tgz#07e485746cfb9f27e710b27b2785eac4cc4871fc"
@@ -4973,7 +4981,7 @@ ngx-bootstrap@^1.8.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-1.9.3.tgz#28e75d14fb1beaee609383d7694de4eb3ba03b26"
 
-ngx-bootstrap@^2.0.2:
+"ngx-bootstrap@^1.8.0 || ^2.0.0", ngx-bootstrap@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.2.tgz#6862b2ee4764bb6cfd34c66528873d0d050c2faa"
 
@@ -5535,6 +5543,19 @@ patternfly-ng@^2.1.2:
     angular-tree-component "^6.0.0"
     c3 "^0.4.15"
     ng2-dragula "^1.5.0"
+
+patternfly-ng@^3.0.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-3.1.1.tgz#642fec9b476489328926aa04148015a60eab59eb"
+  dependencies:
+    lodash "^4.17.4"
+    patternfly "^3.28.0"
+  optionalDependencies:
+    "@swimlane/ngx-datatable" "^11.1.7"
+    angular-tree-component "^6.0.0 || ^7.0.0"
+    c3 "^0.4.15"
+    ng2-dragula "^1.5.0"
+    ngx-bootstrap "^1.8.0 || ^2.0.0"
 
 patternfly-sass@3.23.2:
   version "3.23.2"
