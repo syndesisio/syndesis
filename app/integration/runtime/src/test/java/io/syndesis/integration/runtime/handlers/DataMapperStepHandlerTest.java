@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.List;
 
+import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
 import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -107,7 +108,9 @@ public class DataMapperStepHandlerTest extends StepHandlerTestSupport {
 
             assertThat(processors).hasSize(2);
             assertThat(processors.get(0)).isInstanceOf(ToDefinition.class);
-            assertThat(ToDefinition.class.cast(processors.get(0)).getUri()).isEqualTo("atlas:mapping-step-2.json");
+            assertThat(ToDefinition.class.cast(processors.get(0)).getUri())
+                .isEqualTo("atlas:mapping-step-2.json?sourceMapName=" +
+                        OutMessageCaptureInterceptStrategy.CAPTURED_OUT_MESSAGES_MAP);
             assertThat(processors.get(1)).isInstanceOf(ToDefinition.class);
         } finally {
             context.stop();
