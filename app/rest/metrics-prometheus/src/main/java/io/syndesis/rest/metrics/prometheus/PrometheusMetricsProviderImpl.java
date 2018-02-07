@@ -16,16 +16,13 @@
 package io.syndesis.rest.metrics.prometheus;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.KubernetesClient;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
-import io.syndesis.openshift.OpenShiftService;
 import io.syndesis.rest.metrics.MetricsProvider;
 
 @Component
@@ -33,40 +30,43 @@ import io.syndesis.rest.metrics.MetricsProvider;
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     private final String serviceName;
-    private final KubernetesClient kubernetes;
 
     private final HttpClient httpClient = new HttpClient();
 
-    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config, KubernetesClient kubernetes) {
+    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config) {
         this.serviceName = config.getService();
-        this.kubernetes = kubernetes;
     }
 
     @Override
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
-        // map integration Id to pod name
-        List<Pod> pods = kubernetes.pods()
-            .withLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
-            .list().getItems();
-
-        if (pods.isEmpty()) {
-            throw new IllegalArgumentException("Missing pod with integration id " + integrationId);
-        }
-
-        // TODO: lookup values per version
-        final String podName = pods.get(0).getMetadata().getName();
-        final Optional<Long> totalMessages = getMetricValue(podName, "org_apache_camel_ExchangesTotal", Long.class);
-        final Optional<Long> failedMessages = getMetricValue(podName, "org_apache_camel_ExchangesFailed", Long.class);
-        final Optional<Date> startTime = getMetricValue(podName, "org_apache_camel_StartTimestamp", Date.class);
-        final Optional<Date> lastProcessingTime = getMetricValue(podName, "org_apache_camel_LastExchangeCompletedTimestamp", Date.class);
+        // TODO aggregate values across versions
+        final Optional<Long> totalMessages = getMetricValue(integrationId, "org_apache_camel_ExchangesTotal", Long.class);
+        final Optional<Long> failedMessages = getMetricValue(integrationId, "org_apache_camel_ExchangesFailed", Long.class);
+        final Optional<Date> startTime = getMetricValue(integrationId, "org_apache_camel_StartTimestamp", Date.class);
+        final Optional<Date> lastProcessingTime = getMetricValue(integrationId, "org_apache_camel_LastExchangeCompletedTimestamp", Date.class);
 
         return new IntegrationMetricsSummary.Builder()
                 .start(startTime)
                 .lastProcessed(lastProcessingTime)
-                .messages(totalMessages.orElse(0L))
-                .errors(failedMessages.orElse(0L))
+                .messages(totalMessages.get())
+                .errors(failedMessages.get())
                 .build();
+    }
+
+    private Optional<Date> getMaxTime(Optional<Date> maxStartTime, Optional<Date> startTime) {
+        Optional<Date> result;
+        if (maxStartTime.isPresent()) {
+            if (startTime.isPresent()) {
+                result = startTime.get().after(maxStartTime.get()) ? startTime : maxStartTime;
+            } else {
+                result = maxStartTime;
+            }
+        } else {
+            result = startTime;
+        }
+
+        return result;
     }
 
     @Override
@@ -74,18 +74,25 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         throw new UnsupportedOperationException();
     }
 
-    private <T> Optional<T> getMetricValue(String podName, String metric, Class<? extends T> clazz) {
-        HttpQuery queryTotalMessages = createHttpQuery(podName, metric);
+    private <T> Optional<Map<String, T>> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz) {
+        HttpQuery queryTotalMessages = createHttpQuery(integrationId, metric);
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
-        return QueryResult.getResponseValue(response, clazz);
+        return QueryResult.getValueMap(response, label, clazz);
     }
 
-    private HttpQuery createHttpQuery(String podName, String metric) {
+    private <T> Optional<T> getMetricValue(String integrationId, String metric, Class<? extends T> clazz) {
+        HttpQuery queryTotalMessages = createHttpQuery(integrationId, metric);
+        QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
+        validateResponse(response);
+        return QueryResult.getFirstValue(response, clazz);
+    }
+
+    private HttpQuery createHttpQuery(String integrationId, String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
                 .metric(metric)
-                .addLabelValues(HttpQuery.LabelValue.Builder.of(podName, "integration"))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId, "syndesis_io_integration_id"))
                 .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
                 .build();
     }

@@ -15,12 +15,11 @@
  */
 package io.syndesis.rest.metrics.prometheus;
 
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.syndesis.model.metrics.IntegrationMetricsSummary;
-import io.syndesis.rest.metrics.MetricsProvider;
-
 import org.junit.Ignore;
 import org.junit.Test;
+
+import io.syndesis.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.rest.metrics.MetricsProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,8 +33,8 @@ public class PrometheusMetricsProviderImplTest {
     public void getIntegrationMetricsSummary() throws Exception {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.20.nip.io");
-        MetricsProvider impl = new PrometheusMetricsProviderImpl(config, new DefaultKubernetesClient());
-        final IntegrationMetricsSummary summary = impl.getIntegrationMetricsSummary("-L4cW1YAyODR3qQ_6o7v");
+        MetricsProvider impl = new PrometheusMetricsProviderImpl(config);
+        final IntegrationMetricsSummary summary = impl.getIntegrationMetricsSummary("l4in0sm-qhug5gnbvbk");
         assertThat(summary.getMessages()).isNotNull();
     }
 

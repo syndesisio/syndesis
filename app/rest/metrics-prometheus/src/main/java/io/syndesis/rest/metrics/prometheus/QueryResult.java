@@ -20,12 +20,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.immutables.value.Value;
 
 import io.syndesis.core.Json;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import org.immutables.value.Value;
 
 /**
  * Query result from Prometheus HTTP API.
@@ -35,19 +36,31 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = QueryResult.Builder.class)
 public interface QueryResult extends Serializable {
 
-    static <T> Optional<T> getResponseValue(QueryResult response, Class<? extends T> clazz) {
-        final List<Data.Result> result = response.getData().orElseThrow(IllegalArgumentException::new)
-            .getResult();
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        else {
+    static <T> Optional<T> getFirstValue(QueryResult response, Class<? extends T> clazz) {
+        return response.getData().map(data -> {
             try {
-                return Optional.of(Json.reader().forType(clazz).readValue(result.get(0).getValue().get(1).toString()));
+                final List<Data.Result> result = data.getResult();
+                return result.isEmpty() ? null : result.get(0).getTypedValue(clazz);
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error parsing metric value " + e.getMessage());
             }
-        }
+        });
+    }
+
+    static <T> Optional<Map<String, T>> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz) {
+        return response.getData().map(data ->
+                data.getResult().stream().collect(
+                    Collectors.toMap(
+                        r -> r.getLabel(label), r -> {
+                            try {
+                                return r.getTypedValue(clazz);
+                            } catch (IOException e) {
+                                throw new IllegalArgumentException("Error parsing metric value " + e.getMessage());
+                            }
+                        }
+                    )
+                )
+            );
     }
 
     class Builder extends ImmutableQueryResult.Builder {
@@ -73,6 +86,18 @@ public interface QueryResult extends Serializable {
             Map<String, String> getMetric();
 
             List<Object> getValue();
+
+            default String getLabel(String label) {
+                return getMetric().get(label);
+            }
+
+            default String getStringValue() {
+                return getValue().get(1).toString();
+            }
+
+            default <T> T getTypedValue(Class<? extends T> clazz) throws IOException {
+                return Json.reader().forType(clazz).readValue(getStringValue());
+            }
         }
 
         String getResultType();

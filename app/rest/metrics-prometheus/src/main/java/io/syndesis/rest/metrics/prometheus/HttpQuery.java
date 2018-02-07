@@ -18,9 +18,9 @@ package io.syndesis.rest.metrics.prometheus;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Prometheus HTTP Query
@@ -42,6 +42,10 @@ public interface HttpQuery {
             public static HttpQuery.LabelValue of(final String value, final String label) {
                 return new Builder().label(label).value(value).build();
             }
+        }
+
+        default void appendTo(StringBuilder builder) {
+            builder.append(getLabel()).append('=').append('"').append(getValue()).append('"');
         }
 
         String getLabel();
@@ -67,11 +71,7 @@ public interface HttpQuery {
                 } else {
                     queryExpression.append(',');
                 }
-                queryExpression.append(label.getLabel());
-                queryExpression.append('=');
-                queryExpression.append('"');
-                queryExpression.append(label.getValue());
-                queryExpression.append('"');
+                label.appendTo(queryExpression);
             }
             queryExpression.append("%7D");
         }
