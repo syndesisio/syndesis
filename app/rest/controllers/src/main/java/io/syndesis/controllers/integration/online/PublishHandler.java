@@ -90,8 +90,13 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
             isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
+
         BuildStepPerformer stepPerformer = new BuildStepPerformer(integrationDeployment);
         logInfo(integrationDeployment, "Steps performed so far: " + stepPerformer.getStepsPerformed());
+
+        if (isBuildFailed(integrationDeployment)){
+            return new StateUpdate(IntegrationDeploymentState.Error, stepPerformer.getStepsPerformed(), "Error");
+        }
 
         final Integration integration = integrationOf(integrationDeployment);
         try {
@@ -171,6 +176,10 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
     private boolean isBuildStarted(IntegrationDeployment integrationDeployment) {
         return openShiftService().isBuildStarted(integrationDeployment.getSpec().getName());
+    }
+
+    private boolean isBuildFailed(IntegrationDeployment integrationDeployment) {
+        return openShiftService().isBuildFailed(integrationDeployment.getSpec().getName());
     }
 
     private boolean isReady(IntegrationDeployment integrationDeployment) {
