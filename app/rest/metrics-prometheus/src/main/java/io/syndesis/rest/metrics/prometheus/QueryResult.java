@@ -43,7 +43,7 @@ public interface QueryResult extends Serializable {
         }
         else {
             try {
-                return Optional.of(Json.mapper().readValue(result.get(0).getValue().get(1).toString(), clazz));
+                return Optional.of(Json.reader().forType(clazz).readValue(result.get(0).getValue().get(1).toString()));
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error parsing metric value " + e.getMessage());
             }
