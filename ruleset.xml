@@ -7,6 +7,9 @@
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidCatchingGenericException">
     <priority>3</priority>
+    <properties>
+      <property name="violationSuppressXPath" value="//Annotation[./*/Name[@Image = 'Generated']]" />
+    </properties>
   </rule>
   <rule ref="rulesets/java/design.xml/NonStaticInitializer">
     <priority>3</priority>
@@ -206,9 +209,6 @@
   <rule ref="rulesets/java/basic.xml/DontUseFloatTypeForLoopIndices">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/logging-jakarta-commons.xml/GuardDebugLogging">
-    <priority>4</priority>
-  </rule>
   <rule ref="rulesets/java/imports.xml/UnusedImports">
     <priority>4</priority>
   </rule>
@@ -278,7 +278,7 @@
   <rule ref="rulesets/java/naming.xml/BooleanGetMethodName">
     <priority>4</priority>
   </rule>
-  <rule ref="rulesets/java/unnecessary.xml/UnnecessaryFinalModifier">
+  <rule ref="rulesets/java/unnecessary.xml/UnnecessaryModifier">
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/junit.xml/UseAssertTrueInsteadOfAssertEquals">
@@ -308,7 +308,7 @@
   <rule ref="rulesets/java/empty.xml/EmptyIfStmt">
     <priority>4</priority>
   </rule>
-  <rule ref="rulesets/java/empty.xml/EmptyStaticInitializer">
+  <rule ref="rulesets/java/empty.xml/EmptyInitializer">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/EmptyMethodInAbstractClassShouldBeAbstract">
@@ -360,7 +360,10 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/unnecessary.xml/UselessParentheses">
-    <priority>5</priority>
+    <priority>3</priority>
+    <properties>
+      <property name="violationSuppressXPath" value="//Annotation[./*/Name[@Image = 'Generated']]" />
+    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/JumbledIncrementer">
     <priority>3</priority>
@@ -386,7 +389,7 @@
       <property name="minimum" value="3" />
     </properties>
   </rule>
-  <rule ref="rulesets/java/naming.xml/MisleadingVariableName">
+  <rule ref="rulesets/java/naming.xml/MisLeadingVariableName">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyTryBlock">
@@ -566,9 +569,6 @@
   <rule ref="rulesets/java/finalizers.xml/EmptyFinalizer">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/controversial.xml/UnnecessaryParentheses">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/codesize.xml/StdCyclomaticComplexity">
     <priority>3</priority>
   </rule>
@@ -600,7 +600,7 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/controversial.xml/UseObjectForClearerAPI">
-    <priority>3</priority>
+    <priority>5</priority>
   </rule>
   <rule ref="rulesets/java/braces.xml/ForLoopsMustUseBraces">
     <priority>4</priority>
@@ -656,7 +656,7 @@
   <rule ref="rulesets/java/j2ee.xml/DoNotCallSystemExit">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/logging-java.xml/GuardLogStatementJavaUtil">
+  <rule ref="rulesets/java/logging-jakarta-commons.xml/GuardLogStatement">
     <priority>5</priority>
   </rule>
   <rule ref="rulesets/java/imports.xml/DontImportJavaLang">
@@ -664,6 +664,9 @@
   </rule>
   <rule ref="rulesets/java/strictexception.xml/SignatureDeclareThrowsException">
     <priority>3</priority>
+    <properties>
+      <property name="violationSuppressXPath" value="//Annotation[./*/Name[@Image = 'Generated']]" />
+    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/AvoidUsingOctalValues">
     <priority>3</priority>
@@ -718,6 +721,9 @@
   </rule>
   <rule ref="rulesets/java/design.xml/ImmutableField">
     <priority>5</priority>
+    <properties>
+      <property name="violationSuppressXPath" value="//Annotation[./*/Name[@Image = 'Generated']]" />
+    </properties>
   </rule>
   <rule ref="rulesets/java/basic.xml/MisplacedNullCheck">
     <priority>3</priority>
