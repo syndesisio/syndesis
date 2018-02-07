@@ -60,7 +60,7 @@ public class IntegrationOverview {
         return integration.getDescription();
     }
 
-    public boolean getDraft() {
+    public boolean isDraft() {
         return deployment.map(x -> x.getVersion() != integration.getVersion()).orElse(true);
     }
 

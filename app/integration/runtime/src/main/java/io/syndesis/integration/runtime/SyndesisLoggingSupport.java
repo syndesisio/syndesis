@@ -33,15 +33,17 @@ import io.syndesis.integration.runtime.util.DefaultRoutePolicy;
 /**
  * Created by chirino on 1/10/18.
  */
-public class SyndesisLoggingSupport {
-
-    private SyndesisLoggingSupport() {
-    }
+@SuppressWarnings("PMD.SystemPrintln")
+public final class SyndesisLoggingSupport {
 
     private static final DefaultExchangeFormatter FORMATTER = new DefaultExchangeFormatter();
 
     static {
         FORMATTER.setShowOut(true);
+    }
+
+    private SyndesisLoggingSupport() {
+        // utility class
     }
 
     public static void install(CamelContext context) {
@@ -108,7 +110,7 @@ public class SyndesisLoggingSupport {
                 long startedAt = System.nanoTime();
                 try {
                     target.process(exchange);
-                } catch (RuntimeException e) {
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
                     exchange.setException(e);
                 } finally {
                     // currentTimeMillis is not monotonic, nanoTime likely is

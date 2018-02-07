@@ -18,6 +18,7 @@ package io.syndesis.inspector;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 import com.google.common.io.Resources;
 import io.fabric8.mockwebserver.DefaultMockServer;
@@ -39,9 +40,9 @@ public class DataMapperClassInspectorTest {
     public void shouldHandleNesting() throws IOException {
         DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(cache, new RestTemplate(), config);
 
-        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.StatusJSONImpl").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.StatusJSONImpl.json"), Charset.defaultCharset())).always();
-        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Logger").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Logger.json"), Charset.defaultCharset())).always();
-        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.LoggerFactory").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.LoggerFactory.json"), Charset.defaultCharset())).always();
+        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.StatusJSONImpl").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.StatusJSONImpl.json"), StandardCharsets.UTF_8)).always();
+        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Logger").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Logger.json"), StandardCharsets.UTF_8)).always();
+        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.LoggerFactory").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.LoggerFactory.json"), StandardCharsets.UTF_8)).always();
         List<String> paths = dataMapperClassInspector.getPaths("java", "twitter4j.StatusJSONImpl", null, null);
 
         Assert.assertNotNull(paths);
@@ -52,7 +53,7 @@ public class DataMapperClassInspectorTest {
     @Test
     public void shouldHandleInterfaces() throws IOException {
         DataMapperClassInspector dataMapperClassInspector = new DataMapperClassInspector(cache, new RestTemplate(), config);
-        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Status").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Status.json"), Charset.defaultCharset())).always();
+        mockServer.expect().get().withPath("/v2/atlas/java/class?className=twitter4j.Status").andReturn(200, Resources.toString(getClass().getResource("/twitter4j.Status.json"), StandardCharsets.UTF_8)).always();
 
         List<String> paths = dataMapperClassInspector.getPaths("java", "twitter4j.Status", null, null);
 

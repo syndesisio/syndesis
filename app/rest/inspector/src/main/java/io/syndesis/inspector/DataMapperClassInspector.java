@@ -57,7 +57,7 @@ public class DataMapperClassInspector extends DataMapperBaseInspector {
     }
 
     @Override
-    protected String fetchJsonFor(final String fullyQualifiedName) throws Exception {
+    protected String fetchJsonFor(final String fullyQualifiedName) {
         final ResponseEntity<String> response = restTemplate.getForEntity(getClassInspectionUrl(config, fullyQualifiedName), String.class);
 
         return response.getBody();

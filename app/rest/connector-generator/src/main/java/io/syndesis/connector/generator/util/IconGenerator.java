@@ -99,8 +99,8 @@ public final class IconGenerator {
         final Map<Character, String> letters = new HashMap<>();
 
         for (char ch = 'A'; ch <= 'Z'; ch++) {
-            try (final InputStream letterStream = IconGenerator.class.getResourceAsStream("/icon-generator/" + ch + ".svg");
-                final InputStreamReader letterReader = new InputStreamReader(letterStream, StandardCharsets.UTF_8)) {
+            try (InputStream letterStream = IconGenerator.class.getResourceAsStream("/icon-generator/" + ch + ".svg");
+                InputStreamReader letterReader = new InputStreamReader(letterStream, StandardCharsets.UTF_8)) {
                 final String path = CharStreams.toString(letterReader);
 
                 letters.put(ch, path);

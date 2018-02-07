@@ -38,11 +38,11 @@ public class JolokiaKubernetesAuthenticator implements J4pAuthenticator {
         httpClientBuilder.addInterceptorFirst(new BearerTokenInterceptor(kubernetes.getConfiguration().getRequestConfig().getOauthToken()));
     }
 
-    private static class BearerTokenInterceptor implements HttpRequestInterceptor {
+    static class BearerTokenInterceptor implements HttpRequestInterceptor {
 
         private final String token;
 
-        private BearerTokenInterceptor(String token) {
+        BearerTokenInterceptor(String token) {
             this.token = token;
         }
 

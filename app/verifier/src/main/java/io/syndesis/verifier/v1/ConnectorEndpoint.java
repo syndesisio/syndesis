@@ -35,7 +35,7 @@ public class ConnectorEndpoint {
     private CamelContext camelContext;
 
     @Path("/{connectorId}/actions")
-    public ActionDefinitionEndpoint actions(@PathParam("connectorId") final String connectorId) throws Exception {
+    public ActionDefinitionEndpoint actions(@PathParam("connectorId") final String connectorId) {
         MetadataAdapter adapter;
 
         try {

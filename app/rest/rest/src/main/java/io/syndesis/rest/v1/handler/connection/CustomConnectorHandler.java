@@ -47,7 +47,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
     private final IconDataAccessObject iconDao;
 
-    /* default */ CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDataAccessObject iconDao) {
+    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDataAccessObject iconDao) {
         super(dataManager, applicationContext);
         this.iconDao = iconDao;
     }

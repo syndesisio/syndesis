@@ -21,7 +21,11 @@ import javax.ws.rs.core.Response;
 /**
  * Holds static utility methods for constructing Response objects containing a RestError
  */
-public class RestErrorResponses {
+public final class RestErrorResponses {
+
+    private RestErrorResponses() {
+        // utility class
+    }
 
     public static Response badRequest(Throwable e) {
         return create(Response.Status.BAD_REQUEST, e.getMessage(), e.toString());

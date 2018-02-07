@@ -17,6 +17,7 @@ package io.syndesis.jsondb.rest;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -105,8 +106,8 @@ public class JsonDBResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @POST
-    public HashMap<String, String> push(@PathParam("path") String path, InputStream body) {
-        HashMap<String, String> result = new HashMap<>();
+    public Map<String, String> push(@PathParam("path") String path, InputStream body) {
+        Map<String, String> result = new HashMap<>();
         result.put("name", jsondb.push(path, body));
         return result;
     }

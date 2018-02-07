@@ -60,7 +60,7 @@ public class SqlStatementMetaData {
         int fromIndex = 0;
         int numberOfInputParams=0;
         while (fromIndex >= 0) {
-            fromIndex = sqlStatement.indexOf(":",fromIndex);
+            fromIndex = sqlStatement.indexOf(':', fromIndex);
             numberOfInputParams++;
         }
         return numberOfInputParams;

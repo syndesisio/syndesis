@@ -61,7 +61,7 @@ class MetadataEndpoint {
                 .orElseThrow(() -> new IllegalArgumentException("No Metadata returned by the metadata extension"));
 
             return adapter.adapt(actionId, properties, metaData);
-        } catch (final Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
             throw new IllegalStateException("Unable to fetch and process metadata", e);
         }
     }

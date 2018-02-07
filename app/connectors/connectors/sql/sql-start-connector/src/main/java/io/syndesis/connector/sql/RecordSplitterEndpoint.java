@@ -37,7 +37,7 @@ import org.apache.camel.processor.Splitter;
 @SuppressWarnings("deprecation")
 public class RecordSplitterEndpoint extends DefaultConnectorEndpoint{
 
-    private DefaultConnectorEndpoint endpoint; 
+    private final DefaultConnectorEndpoint endpoint; 
 
     public RecordSplitterEndpoint(String endpointUri, ConnectorComponent component, DefaultConnectorEndpoint endpoint, DataType inputDataType,
             DataType outputDataType) {

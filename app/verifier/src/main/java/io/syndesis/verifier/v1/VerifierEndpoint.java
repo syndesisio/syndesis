@@ -73,7 +73,7 @@ public class VerifierEndpoint {
                 final Class<?> type = finder.findClass(connectorId);
 
                 verifier = (Verifier) camelContext.getInjector().newInstance(type);
-            } catch (Exception e) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 LOGGER.warn("No factory finder of type: {} for id: {}", Verifier.class.getName(), connectorId, e);
             }
         }

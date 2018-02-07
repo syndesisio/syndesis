@@ -45,7 +45,7 @@ public final class TestHelper {
         return resource;
     }
 
-    /* default */ static String reformatJson(final String json) throws IOException {
+    static String reformatJson(final String json) throws IOException {
         if (json == null) {
             return null;
         }
@@ -56,7 +56,7 @@ public final class TestHelper {
             .writeValueAsString(tree);
     }
 
-    /* default */ static String resource(final String path, final String alternative) throws IOException {
+    static String resource(final String path, final String alternative) throws IOException {
         if (TestHelper.class.getResource(path) != null) {
             return resource(path);
         }

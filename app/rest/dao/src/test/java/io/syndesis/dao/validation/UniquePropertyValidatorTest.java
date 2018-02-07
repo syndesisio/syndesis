@@ -65,7 +65,7 @@ public class UniquePropertyValidatorTest {
         when(validator.dataManager.fetchIdsByPropertyValue(Integration.class, "name", "Existing"))
             .thenReturn(new HashSet<>(Arrays.asList("deleted")));
         when(validator.dataManager.fetch(Integration.class, "deleted"))
-            .thenReturn(new Integration.Builder().name("Existing").id("deleted").deleted(true).build());
+            .thenReturn(new Integration.Builder().name("Existing").id("deleted").isDeleted(true).build());
     }
 
     @Test

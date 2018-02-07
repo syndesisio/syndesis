@@ -23,10 +23,10 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.charset.StandardCharsets;
 
-/* default */ final class InMemoryUrlStreamHandler extends URLStreamHandler {
+final class InMemoryUrlStreamHandler extends URLStreamHandler {
     private final String specification;
 
-    /* default */ InMemoryUrlStreamHandler(final String specification) {
+    InMemoryUrlStreamHandler(final String specification) {
         this.specification = specification;
     }
 

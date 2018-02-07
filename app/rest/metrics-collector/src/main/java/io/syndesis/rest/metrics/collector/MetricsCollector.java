@@ -46,6 +46,7 @@ import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 @Service
 @ConditionalOnProperty(value = "features.metricscollector.enabled", havingValue = "true", matchIfMissing = false)
+@SuppressWarnings("PMD.DoNotUseThreads")
 public class MetricsCollector implements Runnable, Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsCollector.class);

@@ -37,20 +37,20 @@ import java.util.function.Consumer;
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
  */
-/* default */ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
+class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
     private final String base;
     private final JsonGenerator jg;
     private final OutputStream output;
     private final GetOptions options;
-    @SuppressWarnings("JdkObsolete")
+    @SuppressWarnings({"JdkObsolete", "PMD.LooseCoupling"})
     private final LinkedList<JsonRecordSupport.PathPart> currentPath = new LinkedList<>();
     private final Set<String> shallowObjects = new LinkedHashSet<>();
     private int entriesAdded;
     private boolean closed;
     private String currentRootField;
 
-    /* default */ JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
+    JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
         this.base = base;
         this.output = output;
         try {
@@ -70,6 +70,7 @@ import java.util.function.Consumer;
     }
 
     @Override
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public void accept(JsonRecord record) {
         try {
             String path = record.getPath();
@@ -134,7 +135,7 @@ import java.util.function.Consumer;
         count = newPath.size();
         for (int i = pathMatches; i < count; i++) {
             String part = newPath.get(i);
-            boolean array = part.startsWith("[");
+            boolean array = part.charAt(0) == '[';
 
             if (array) {
                 if (jg.getOutputContext().inRoot()) {
@@ -149,12 +150,12 @@ import java.util.function.Consumer;
 
             if (i + 1 < count) {
                 String nextPart = newPath.get(i + 1);
-                boolean nextArray = nextPart.startsWith("[");
+                boolean nextArray = nextPart.charAt(0) == '[';
 
                 JsonRecordSupport.PathPart pathPart = new JsonRecordSupport.PathPart(part, nextArray);
                 currentPath.add(pathPart);
 
-                if (nextPart.startsWith("[")) {
+                if (nextPart.charAt(0) == '[') {
                     jg.writeStartArray();
 
                     int idx = JsonRecordSupport.toArrayIndex(nextPart);
@@ -186,7 +187,7 @@ import java.util.function.Consumer;
         for (int i = 0; i < currentPath.size() && i < newPath.size(); i++) {
             JsonRecordSupport.PathPart lastPart = currentPath.get(i);
             if (lastPart.getPath().equals(newPath.get(i)) ||
-                (lastPart.isArray() && newPath.get(i).startsWith("["))) {
+                (lastPart.isArray() && newPath.get(i).charAt(0) == '[')) { // NOPMD, false positive
                 pathMatches++;
             } else {
                 break;

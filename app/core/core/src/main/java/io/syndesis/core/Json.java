@@ -15,6 +15,7 @@
  */
 package io.syndesis.core;
 
+import java.util.Map;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -35,6 +36,7 @@ public final class Json {
     private static final ObjectMapper OBJECT_MAPPER;
     private static final ObjectWriter OBJECT_WRITER;
     private static final ObjectReader OBJECT_READER;
+
     static {
         OBJECT_MAPPER = new ObjectMapper()
             .registerModules(new Jdk8Module())
@@ -46,8 +48,6 @@ public final class Json {
         OBJECT_READER = OBJECT_MAPPER.reader();
         OBJECT_WRITER = OBJECT_MAPPER.writer();
     }
-
-
 
     private Json() {
     }
@@ -88,11 +88,11 @@ public final class Json {
     }
 
     // Helper method to help construct json style object maps with concise syntax
-    public static HashMap<String, Object> map(Object... values) throws IllegalArgumentException {
-        if ((values.length % 2) != 0) {
+    public static Map<String, Object> map(Object... values) {
+        if (values.length % 2 != 0) {
             throw new IllegalArgumentException("values argument should contain an even number of entries.");
         }
-        HashMap<String, Object> rc = new HashMap<String, Object>() {
+        Map<String, Object> rc = new HashMap<String, Object>() {
             @Override
             public String toString() {
                 try {
@@ -107,6 +107,5 @@ public final class Json {
         }
         return rc;
     }
-
-
 }
+

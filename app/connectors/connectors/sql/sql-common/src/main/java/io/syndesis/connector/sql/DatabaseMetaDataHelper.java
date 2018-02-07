@@ -25,9 +25,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
-public class DatabaseMetaDataHelper {
+public final class DatabaseMetaDataHelper {
+
+    private DatabaseMetaDataHelper() {
+        // utility class
+    }
 
     public static String getDefaultSchema(final String databaseProductName, String dbUser) {
 
@@ -39,7 +44,7 @@ public class DatabaseMetaDataHelper {
             defaultSchema = "public";
         } else if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
             if (dbUser != null) {
-                defaultSchema = dbUser.toUpperCase();
+                defaultSchema = dbUser.toUpperCase(Locale.US);
             } else {
                 defaultSchema = "NULL";
             }
@@ -66,46 +71,46 @@ public class DatabaseMetaDataHelper {
     }
     
     
-    /* default */ static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
+    static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
         final String schemaPattern, final String tableNamePattern) throws SQLException {
         Set<String> tablesInSchema = new HashSet<>();
         ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
         while (rs.next()) {
-            tablesInSchema.add(rs.getString(3).toUpperCase());
+            tablesInSchema.add(rs.getString(3).toUpperCase(Locale.US));
         }
         return tablesInSchema;
     }
 
-    /* default */ static ResultSet fetchTableColumns(final DatabaseMetaData meta, final String catalog,
+    static ResultSet fetchTableColumns(final DatabaseMetaData meta, final String catalog,
             final String schema, final String tableName, final String columnName) throws SQLException {
 
         return meta.getColumns(catalog, schema, tableName, columnName);
     }
 
-    /* default */ static List<SqlParam> getJDBCInfoByColumnNames(final DatabaseMetaData meta, String catalog, 
+    static List<SqlParam> getJDBCInfoByColumnNames(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         for (int i=0; i<params.size(); i++) {
             SqlParam param = params.get(i);
             String columnName = param.getColumn();
-            ResultSet column = meta.getColumns(catalog, schema, tableName, columnName);
+            ResultSet column = meta.getColumns(catalog, schema, tableName, columnName); // NOPMD, TODO: fishy
             if (column.getFetchSize() == 0) {
                 //Postgresql does lowercase instead, so let's try that if we don't have a match
-                column = meta.getColumns(catalog, schema, tableName.toLowerCase(), columnName.toLowerCase());
+                column = meta.getColumns(catalog, schema, tableName.toLowerCase(Locale.US), columnName.toLowerCase(Locale.US));
             }
-            column.next();
+            column.next(); // NOPMD, TODO: fishy
             param.setJdbcType(JDBCType.valueOf(column.getInt("DATA_TYPE")));
             paramList.add(param);
         }
         return paramList;
     }
 
-    /* default */ static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
+    static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
-        ResultSet columnSet = meta.getColumns(catalog, "SA", tableName, null);
+        ResultSet columnSet = meta.getColumns(catalog, "SA", tableName, null); // NOPMD, TODO: fishy
         for (int i=0; i<params.size(); i++) {
-            columnSet.next();
+            columnSet.next(); // NOPMD, TODO: fishy
             SqlParam param = params.get(i);
             param.setColumn(columnSet.getString("COLUMN_NAME"));
             param.setJdbcType(JDBCType.valueOf(columnSet.getInt("DATA_TYPE")));
@@ -114,7 +119,7 @@ public class DatabaseMetaDataHelper {
         return paramList;
     }
 
-    /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection, 
+    static List<SqlParam> getOutputColumnInfo(final Connection connection, 
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         Statement stmt = connection.createStatement();

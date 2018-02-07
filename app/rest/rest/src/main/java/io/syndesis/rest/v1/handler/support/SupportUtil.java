@@ -52,7 +52,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -176,7 +176,7 @@ public class SupportUtil {
             try {
                 addEntryToZip(integrationName, fileContent, os);
             } catch (IOException e) {
-                LOG.error("Error preparing logs for integration: " + integrationName, e);
+                LOG.error("Error preparing logs for integration: {}", integrationName, e);
             }
         });
     }
@@ -186,7 +186,7 @@ public class SupportUtil {
             getComponentLogs(componentName).ifPresent((Reader reader) -> {
                 try {
                     addEntryToZip("platform_logs/" + componentName, reader, os);
-                } catch (Exception e) {
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                     LOG.error("Error preparing logs for component: {}", componentName, e);
                 }
             });
@@ -208,7 +208,7 @@ public class SupportUtil {
         ZipEntry ze = new ZipEntry(integrationName + ".log");
         os.putNextEntry(ze);
         File file = File.createTempFile(integrationName, ".log");
-        FileUtils.writeStringToFile( file, fileContent, Charset.defaultCharset() );
+        FileUtils.writeStringToFile( file, fileContent, StandardCharsets.UTF_8 );
         FileUtils.copyFile(file, os);
         os.closeEntry();
     }
@@ -216,7 +216,7 @@ public class SupportUtil {
     protected void addEntryToZip(String integrationName, Reader fileContent, ZipOutputStream os) throws IOException {
         ZipEntry ze = new ZipEntry(integrationName + ".log");
         os.putNextEntry(ze);
-        IOUtils.copy(fileContent, os, Charset.defaultCharset());
+        IOUtils.copy(fileContent, os, StandardCharsets.UTF_8);
         os.closeEntry();
     }
 
@@ -245,18 +245,13 @@ public class SupportUtil {
                     Request request = new Request.Builder()
                         .url(pod.getResourceUrl().toString() + "/log?pretty=false&timestamps=true")
                         .build();
-                    Response response = null;
-                    try {
-                        response = okHttpClient.newCall(request).execute();
+                    try (Response response = okHttpClient.newCall(request).execute()) {
                         if (!response.isSuccessful()) {
                             throw new IOException("Unexpected response from /log endpoint: " + response);
                         }
                         return Optional.of(new RegexBasedMasqueradeReader(new BufferedReader(response.body().charStream()), MASKING_REGEXP));
-                    } catch (IOException e) {
+                    } catch (IOException e) { // NOPMD
                         LOG.error("Error downloading log file for integration {}" , integrationName, e );
-                        if (response != null){
-                            response.close();
-                        }
                     }
                 } catch (MalformedURLException e) {
                     LOG.error("Error downloading log file for integration {}" , integrationName, e );
@@ -274,6 +269,6 @@ public class SupportUtil {
     }
 
     public static void dumpAsYaml(HasMetadata obj, OutputStream outputStream) {
-        YAML.dump(obj, new OutputStreamWriter(outputStream, Charset.defaultCharset()));;
+        YAML.dump(obj, new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
     }
 }

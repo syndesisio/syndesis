@@ -41,9 +41,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhirajsb
  */
-public class ActiveMQUtil {
+public final class ActiveMQUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActiveMQUtil.class);
+
+    private ActiveMQUtil() {
+        // utility class
+    }
 
     public static KeyManager[] createKeyManagers(String clientCertificate) throws GeneralSecurityException, IOException {
         final KeyStore clientKs = createKeyStore("amq-client", clientCertificate);
@@ -72,6 +76,7 @@ public class ActiveMQUtil {
         return keyStore;
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public static ActiveMQConnectionFactory createActiveMQConnectionFactory(String brokerUrl, String username, String password, String brokerCertificate, String clientCertificate, boolean skipCertificateCheck) {
         final ActiveMQConnectionFactory connectionFactory;
         if (brokerUrl.contains("ssl:")) {
@@ -98,10 +103,10 @@ public class ActiveMQUtil {
                 if (ObjectHelper.isEmpty(brokerCertificate)) {
                     if (skipCertificateCheck) {
                         // use a trust all TrustManager
-                        LOG.warn("Skipping Certificate check for Broker " + brokerUrl);
+                        LOG.warn("Skipping Certificate check for Broker {}", brokerUrl);
                         trustManagers = new TrustManager[]{new TrustAllTrustManager()};
                     } else {
-                        LOG.debug("Using default JVM Trust Manager for Broker " + brokerUrl);
+                        LOG.debug("Using default JVM Trust Manager for Broker {}", brokerUrl);
                         trustManagers = null;
                     }
                 } else {

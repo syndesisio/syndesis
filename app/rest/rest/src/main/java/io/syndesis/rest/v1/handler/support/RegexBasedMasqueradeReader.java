@@ -53,7 +53,7 @@ public class RegexBasedMasqueradeReader extends FilterReader {
 
     // This overridden method fills sharedBuf with characters read from in.
     @Override
-    @SuppressWarnings({"PMD.CyclomaticComplexity"})
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity"})
     public int read(char sharedBuf[], int offset, int len) throws IOException {
         int off = offset;
         // Fetch new line if necessary

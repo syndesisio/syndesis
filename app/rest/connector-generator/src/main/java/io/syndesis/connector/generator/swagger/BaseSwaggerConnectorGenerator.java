@@ -61,9 +61,9 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
-    /* default */ static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
+    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
-    /* default */ static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()//
+    static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()//
         .kind("property")//
         .displayName("Operation ID")//
         .group("producer")//
@@ -77,7 +77,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         .description("ID of operation to invoke")//
         .build();
 
-    /* default */ static final String URL_EXTENSION = "x-syndesis-swagger-url";
+    static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseSwaggerConnectorGenerator.class);
 
@@ -115,7 +115,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
             return new ConnectorSummary.Builder().createFrom(connector).actionsSummary(actionsSummary).errors(swaggerInfo.getErrors())
                 .warnings(swaggerInfo.getWarnings()).build();
-        } catch (final Exception ex) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception ex) {
             if (!swaggerInfo.getErrors().isEmpty()) {
                 // Just log and return the validation errors if any
                 LOG.error("An error occurred while trying to create a swagger connector", ex);
@@ -267,7 +267,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         return title;
     }
 
-    /* default */ static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
+    static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
         final Map<String, Parameter> globalParameters = swagger.getParameters();
         if (globalParameters != null) {
             globalParameters.forEach((name, parameter) -> {
@@ -278,15 +278,15 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    /* default */ static String createActionId(final String connectorId, final String connectorGav, final Operation operation) {
+    static String createActionId(final String connectorId, final String connectorGav, final Operation operation) {
         return connectorGav + ":" + connectorId + ":" + operation.getOperationId();
     }
 
-    /* default */ static List<PropertyValue> createEnums(final List<String> enums) {
+    static List<PropertyValue> createEnums(final List<String> enums) {
         return enums.stream().map(BaseSwaggerConnectorGenerator::createPropertyValue).collect(Collectors.toList());
     }
 
-    /* default */ static Optional<ConfigurationProperty> createPropertyFromParameter(final Parameter parameter) {
+    static Optional<ConfigurationProperty> createPropertyFromParameter(final Parameter parameter) {
         if (parameter instanceof RefParameter || parameter instanceof BodyParameter) {
             // Reference parameters are not supported, body parameters are
             // handled in createShape* methods
@@ -330,16 +330,16 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         return Optional.of(propertyBuilder.build());
     }
 
-    /* default */ static PropertyValue createPropertyValue(final String value) {
+    static PropertyValue createPropertyValue(final String value) {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
-    /* default */ static SwaggerModelInfo parseSpecification(final ConnectorSettings connectorSettings, final boolean validate) {
+    static SwaggerModelInfo parseSpecification(final ConnectorSettings connectorSettings, final boolean validate) {
         final String specification = requiredSpecification(connectorSettings);
         return SwaggerHelper.parse(specification, validate);
     }
 
-    /* default */ static String requiredSpecification(final ConnectorSettings connectorSettings) {
+    static String requiredSpecification(final ConnectorSettings connectorSettings) {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
         final String specification = configuredProperties.get("specification");

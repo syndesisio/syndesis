@@ -71,6 +71,8 @@
     <camel.version>2.20.1</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
+    <dep.plugin.pmd.version>3.9.0</dep.plugin.pmd.version>
+    <dep.pmd.version>6.0.1</dep.pmd.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
@@ -557,6 +559,27 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <configuration>
             <configLocation>/syndesis/checkstyle.xml</configLocation>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <configuration>
+            <analysisCache>true</analysisCache>
+            <rulesets>
+              <ruleset>/syndesis/ruleset.xml</ruleset>
+            </rulesets>
+            <excludeRoots combine.children="append">
+              <excludeRoot>target/generated-sources</excludeRoot>
+            </excludeRoots>
           </configuration>
           <dependencies>
             <dependency>

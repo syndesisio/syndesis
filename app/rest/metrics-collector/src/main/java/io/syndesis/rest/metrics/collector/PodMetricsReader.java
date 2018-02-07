@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@SuppressWarnings("PMD") // uff
 public class PodMetricsReader implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PodMetricsReader.class);

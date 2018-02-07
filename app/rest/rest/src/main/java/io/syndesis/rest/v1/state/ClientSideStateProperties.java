@@ -95,7 +95,7 @@ public class ClientSideStateProperties {
     }
 
     private static <T> T value(final T given, final Consumer<T> setter, final Supplier<T> generator) {
-        if (given != null && !String.valueOf(given).trim().isEmpty()) {
+        if (given != null && !StringUtils.isEmpty(given.toString())) {
             return given;
         }
 

@@ -57,7 +57,6 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 
 @SpringBootApplication(
@@ -66,6 +65,7 @@ import io.syndesis.model.integration.Step;
         ProjectGeneratorAutoConfiguration.class
     }
 )
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity"})
 public class Application implements ApplicationRunner {
     @Autowired
     private ResourceLoader resourceLoader;
@@ -160,7 +160,7 @@ public class Application implements ApplicationRunner {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
             // ignore
         }
 

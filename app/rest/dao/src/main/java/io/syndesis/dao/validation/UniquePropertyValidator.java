@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UniquePropertyValidator implements ConstraintValidator<UniqueProperty, WithId<?>> {
 
     @Autowired
-    /* default */ DataManager dataManager;
+    DataManager dataManager;
 
     private String property;
 
@@ -74,7 +74,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         return isUnique;
     }
 
-    /* default */ boolean consideredValidByException(@SuppressWarnings("rawtypes") final Class<WithId> modelClass,
+    boolean consideredValidByException(@SuppressWarnings("rawtypes") final Class<WithId> modelClass,
         final String id) {
         @SuppressWarnings("unchecked")
         final WithId<?> modelInstance = dataManager.fetch(modelClass, id);
@@ -82,7 +82,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         // if we're looking at Integration then we need to make sure that
         // the Integration in question is not deleted
         if (modelInstance instanceof Integration) {
-            return ((Integration) modelInstance).getDeleted();
+            return ((Integration) modelInstance).isDeleted();
         }
 
         return false;

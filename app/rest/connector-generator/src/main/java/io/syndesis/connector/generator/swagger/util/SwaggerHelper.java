@@ -18,6 +18,7 @@ package io.syndesis.connector.generator.swagger.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -75,7 +76,7 @@ public final class SwaggerHelper {
         try {
             resolvedSpecification = resolve(specification);
             resultBuilder.resolvedSpecification(resolvedSpecification);
-        } catch (final Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
             LOG.debug("Unable to resolve Swagger specification\n{}\n", specification, e);
             return resultBuilder
                 .addError(new Violation.Builder().error("error").property("").message("Unable to resolve Swagger specification from: "
@@ -108,7 +109,7 @@ public final class SwaggerHelper {
         }
     }
 
-    /* default */ static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
+    static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
         final JsonNode specRoot;
         if (specification.matches("\\s+\\{")) {
             specRoot = JSON_MAPPER.readTree(specification);
@@ -118,9 +119,10 @@ public final class SwaggerHelper {
         return specRoot;
     }
 
-    /* default */ static String resolve(final String specification) throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    static String resolve(final String specification) throws Exception {
         final String specificationToUse;
-        if (specification.toLowerCase().startsWith("http")) {
+        if (specification.toLowerCase(Locale.US).startsWith("http")) {
             specificationToUse = RemoteUrl.urlToString(specification, null);
         } else {
             specificationToUse = specification;

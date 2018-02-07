@@ -26,6 +26,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
+@SuppressWarnings("PMD.StdCyclomaticComplexity")
 public class SqlParam {
 
     private String name;
@@ -64,8 +65,7 @@ public class SqlParam {
     
     public static class SqlSampleValue {
 
-        @SuppressWarnings("rawtypes")
-        static List arrayValue = Arrays.asList("1","2","3");
+        static List<String> arrayValue = Arrays.asList("1","2","3");
         static byte[] binaryValue = {1,2,3};
         static String stringValue = "abc";
         static Character charValue = 'a';
@@ -80,7 +80,7 @@ public class SqlParam {
         static Float floatValue = 0f;
     }
     
-    /* default */ @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "PMD.CyclomaticComplexity"})
     static TypeValue<?> javaType(final JDBCType jdbcType) {
         
         SqlParam sqlParam = new SqlParam();

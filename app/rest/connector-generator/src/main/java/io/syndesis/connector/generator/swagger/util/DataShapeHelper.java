@@ -30,7 +30,7 @@ import static io.syndesis.connector.generator.swagger.util.JsonSchemaHelper.dete
 
 public final class DataShapeHelper {
 
-    /* default */ static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
+    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
 
     private DataShapeHelper() {
         // utility class

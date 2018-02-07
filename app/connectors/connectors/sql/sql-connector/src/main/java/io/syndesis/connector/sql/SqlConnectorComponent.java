@@ -52,15 +52,13 @@ public class SqlConnectorComponent extends DefaultConnectorComponent {
 
     @Override
     public Processor getBeforeProducer() {
-
-        final Processor processor = exchange -> {
+        return exchange -> {
             final String body = exchange.getIn().getBody(String.class);
             if (body!=null) {
                 final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
                 exchange.getIn().setBody(properties);
             }
         };
-        return processor;
     }
     
     @Override

@@ -23,6 +23,7 @@ import io.syndesis.model.Dependency;
 import io.syndesis.model.WithDependencies;
 import io.syndesis.model.WithId;
 import org.immutables.value.Value;
+import org.apache.commons.lang3.StringUtils;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorAction.Builder.class)
@@ -47,9 +48,7 @@ public interface ConnectorAction extends Action, WithId<ConnectorAction>, WithDe
     default List<Dependency> getDependencies() {
         final String gav = getDescriptor().getCamelConnectorGAV();
 
-        return gav == null || gav.length() == 0 || gav.trim().length() == 0
-            ? Collections.emptyList()
-            : Collections.singletonList(Dependency.maven(gav));
+        return StringUtils.isEmpty(gav) ? Collections.emptyList() : Collections.singletonList(Dependency.maven(gav));
     }
 
     class Builder extends ImmutableConnectorAction.Builder {

@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
 
 public class TestCredentialProviderFactory implements CredentialProviderFactory {
 
-    /* default */ static class TestCredentialProvider implements CredentialProvider {
+    static class TestCredentialProvider implements CredentialProvider {
 
         private final SocialProperties properties;
 

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,12 +46,12 @@ public final class JsonRecordSupport {
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
     public static final Pattern INDEX_EXTRACTOR_PATTERN = Pattern.compile("^(.+)/[^/]+/([^/]+)/$");
 
-    /* default */ static class PathPart {
+    static class PathPart {
         private final String path;
 
         private int idx;
 
-        /* default */ PathPart(String path, boolean array) {
+        PathPart(String path, boolean array) {
             this.path = path;
             this.idx = array ? 0 : -1;
         }
@@ -77,7 +77,7 @@ public final class JsonRecordSupport {
         // utility class
     }
 
-    public static void jsonStreamToRecords(HashSet<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(Set<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
         try (JsonParser jp = new JsonFactory().createParser(is)) {
             jsonStreamToRecords(indexes, jp, dbPath, consumer);
 
@@ -120,7 +120,7 @@ public final class JsonRecordSupport {
         return key;
     }
 
-    public static void jsonStreamToRecords(HashSet<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(Set<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
         boolean inArray = false;
         int arrayIndex = 0;
         while (true) {
@@ -167,7 +167,7 @@ public final class JsonRecordSupport {
         }
     }
 
-    private static String indexFieldValue(HashSet<String> indexes, String path) {
+    private static String indexFieldValue(Set<String> indexes, String path) {
         Matcher matcher = INDEX_EXTRACTOR_PATTERN.matcher(path);
         if( !matcher.matches() ) {
             return null;
@@ -187,7 +187,7 @@ public final class JsonRecordSupport {
         return toLexSortableString(idx, '[');
     }
 
-    protected static int toArrayIndex(String value) {
+    static int toArrayIndex(String value) {
         return fromLexSortableStringToInt(value, '[');
     }
 
@@ -195,7 +195,7 @@ public final class JsonRecordSupport {
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
-    /* default */ static String toLexSortableString(int value, char marker) {
+    static String toLexSortableString(int value, char marker) {
         ArrayList<String> seqs = new ArrayList<String>();
 
         String seq = Integer.toString(value);
@@ -215,7 +215,7 @@ public final class JsonRecordSupport {
         return builder.toString();
     }
 
-    /* default */ static int fromLexSortableStringToInt(String value, char marker) {
+    static int fromLexSortableStringToInt(String value, char marker) {
         // Trim the initial markers.
         String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(marker)) + "+", "");
 

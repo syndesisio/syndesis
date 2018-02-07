@@ -58,7 +58,7 @@ public final class ConnectorIconHandler extends BaseHandler {
     private final IconDataAccessObject iconDao;
     private final ExtensionDataManager extensionDataManager;
 
-    /* default */ ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao,
+    ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao,
                                        final ExtensionDataManager extensionDataManager) {
         super(dataMgr);
         this.connector = connector;
@@ -71,6 +71,7 @@ public final class ConnectorIconHandler extends BaseHandler {
     @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Updated Connector icon"))
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public Connector create(MultipartFormDataInput dataInput) {
         if (dataInput == null || dataInput.getParts() == null || dataInput.getParts().isEmpty()) {
             throw new IllegalArgumentException("Multipart request is empty");
@@ -126,6 +127,7 @@ public final class ConnectorIconHandler extends BaseHandler {
     }
 
     @GET
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public Response get() {
         String connectorIcon = connector.getIcon();
         if (connectorIcon == null) {

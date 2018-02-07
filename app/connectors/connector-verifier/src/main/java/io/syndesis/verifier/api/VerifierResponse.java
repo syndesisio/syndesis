@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,14 +36,14 @@ public class VerifierResponse {
     private Verifier.Status status;
     private List<Error> errors;
 
-    private VerifierResponse(Verifier.Status status, Verifier.Scope scope) {
+    VerifierResponse(Verifier.Status status, Verifier.Scope scope) {
         this.status = status;
         this.scope = scope;
     }
 
-    private VerifierResponse(String status, String scope) {
-        this(Verifier.Status.valueOf(status.toUpperCase()),
-             Verifier.Scope.valueOf(scope.toUpperCase()));
+    VerifierResponse(String status, String scope) {
+        this(Verifier.Status.valueOf(status.toUpperCase(Locale.US)),
+             Verifier.Scope.valueOf(scope.toUpperCase(Locale.US)));
     }
 
     public Verifier.Scope getScope() {
@@ -81,7 +82,7 @@ public class VerifierResponse {
     }
 
     public static class Builder {
-        private VerifierResponse resp;
+        private final VerifierResponse resp;
 
         public Builder(String status, String scope) {
             resp = new VerifierResponse(status, scope);
@@ -99,7 +100,7 @@ public class VerifierResponse {
             error.code = code;
             error.description = description;
             resp.errors.add(error);
-            return Builder.this;
+            return this;
         }
 
         public ErrorBuilder withError(String code) {

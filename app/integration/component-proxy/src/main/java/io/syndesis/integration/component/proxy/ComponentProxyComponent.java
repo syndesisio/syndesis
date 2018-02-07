@@ -120,6 +120,7 @@ public class ComponentProxyComponent extends DefaultComponent {
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStart() throws Exception {
         this.remainingOptions.clear();
         this.remainingOptions.putAll(this.configuredOptions);
@@ -165,6 +166,7 @@ public class ComponentProxyComponent extends DefaultComponent {
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStop() throws Exception {
         if (componentSchemeAlias.isPresent()) {
             LOGGER.debug("Stopping component: {}", componentSchemeAlias.get());

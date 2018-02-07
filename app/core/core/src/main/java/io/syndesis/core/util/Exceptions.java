@@ -21,9 +21,10 @@ import java.io.StringWriter;
 /**
  * Helper utility methods for working with Exceptions.
  */
-public class Exceptions {
+public final class Exceptions {
 
     private Exceptions(){
+        // utility class
     }
 
     public static String toString(Throwable exception) {

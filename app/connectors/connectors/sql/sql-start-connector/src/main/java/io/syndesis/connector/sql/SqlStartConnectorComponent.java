@@ -47,7 +47,7 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
     }
 
     public SqlStartConnectorComponent(String componentScheme) {
-        super(COMPONENT_NAME, SqlStartConnectorComponent.class.getName());
+        super(COMPONENT_NAME, componentScheme, SqlStartConnectorComponent.class);
     }
 
     @Override
@@ -58,15 +58,13 @@ public class SqlStartConnectorComponent extends DefaultConnectorComponent {
 
     @Override
     public Processor getBeforeProducer() {
-
-        final Processor processor = exchange -> {
+        return exchange -> {
             final String body = exchange.getIn().getBody(String.class);
             if (body!=null) {
                 final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
                 exchange.getIn().setBody(properties);
             }
         };
-        return processor;
     }
 
     @Override

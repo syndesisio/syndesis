@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/* default */ abstract class UnmarshallProcessor implements Processor {
+abstract class UnmarshallProcessor implements Processor {
 
     private static final ObjectMapper MAPPER = JsonUtils.createObjectMapper();
 
@@ -70,6 +70,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
         }
     }
 
-    /* default */ abstract Message message(final Exchange exchange);
+    abstract Message message(final Exchange exchange);
 
 }

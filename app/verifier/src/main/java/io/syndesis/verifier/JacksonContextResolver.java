@@ -28,9 +28,9 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @Component
 public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    public JacksonContextResolver() throws Exception {
+    public JacksonContextResolver() {
         this.objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)

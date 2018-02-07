@@ -25,6 +25,7 @@ import org.apache.camel.util.FileUtil;
 import org.apache.camel.util.StringHelper;
 
 @Metadata(label = "verifiers", enums = "PARAMETERS,CONNECTIVITY")
+@SuppressWarnings("PMD")
 public class HttpComponent extends org.apache.camel.component.http4.HttpComponent {
 
     @Metadata(label = "producer", enums = "http,https", defaultValue = "http", required = "true", description = "To use either HTTP or HTTPS")
@@ -35,12 +36,6 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
     private Integer port;
     @Metadata(label = "producer", description = "The context-path")
     private String path;
-    @Metadata(label = "security", description = "Enable usage of global SSL context parameters")
-    private boolean useGlobalSslContextParameters;
-
-    public HttpComponent() {
-
-    }
 
     @Override
     public void doStart() throws Exception {
@@ -83,6 +78,7 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public Endpoint createEndpoint(String uri) throws Exception {
         String build = buildUrl(scheme, hostname, port, path, uri);
         return super.createEndpoint(build);
@@ -148,15 +144,5 @@ public class HttpComponent extends org.apache.camel.component.http4.HttpComponen
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    @Override
-    public boolean isUseGlobalSslContextParameters() {
-        return super.isUseGlobalSslContextParameters();
-    }
-
-    @Override
-    public void setUseGlobalSslContextParameters(boolean useGlobalSslContextParameters) {
-        super.setUseGlobalSslContextParameters(useGlobalSslContextParameters);
     }
 }

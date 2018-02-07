@@ -97,7 +97,7 @@ public class CredentialsIntegrationTest {
             return mock(EventBus.class);
         }
 
-        /* default */ static Connector mockConnector(final String id) {
+        static Connector mockConnector(final String id) {
             return new Connector.Builder().id(id)
                 .putProperty("clientId", new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build())
                 .putProperty("clientSecret",
