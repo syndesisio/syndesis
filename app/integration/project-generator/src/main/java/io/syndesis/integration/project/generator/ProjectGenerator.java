@@ -55,6 +55,7 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -111,7 +112,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             final Step step = steps.get(i);
 
             // Check if a step is of supported type.
-            if(!step.getStepKind().equals("endpoint")) {
+            if(StepKind.endpoint != step.getStepKind()) {
                 continue;
             }
 
@@ -261,7 +262,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 List<Step> steps = integration.getSteps();
                 for (int i = 0; i < steps.size(); i++) {
                     Step step = steps.get(i);
-                    if ("mapper".equals(step.getStepKind())) {
+                    if (StepKind.mapper == step.getStepKind()) {
                         final Map<String, String> properties = step.getConfiguredProperties();
                         final String mapping = properties.get("atlasmapping");
 

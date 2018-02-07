@@ -22,6 +22,7 @@ import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.Split;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 
 abstract class AbstractEndpointStepHandler implements IntegrationStepHandler {
@@ -31,7 +32,7 @@ abstract class AbstractEndpointStepHandler implements IntegrationStepHandler {
         // Handle split
         if (descriptor.getSplit().isPresent()) {
             final Split split = descriptor.getSplit().get();
-            final Step.Builder splitBuilder = new Step.Builder().stepKind("split");
+            final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
 
             split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
             split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));

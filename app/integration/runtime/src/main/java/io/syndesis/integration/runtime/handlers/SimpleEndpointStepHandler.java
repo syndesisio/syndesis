@@ -23,6 +23,7 @@ import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
 import org.apache.camel.util.ObjectHelper;
@@ -33,7 +34,7 @@ import org.apache.camel.util.ObjectHelper;
 public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        if (!"endpoint".equals(step.getStepKind()) && !"connector".equals(step.getStepKind())) {
+        if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
 

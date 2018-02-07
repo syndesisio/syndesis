@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.handlers;
+package io.syndesis.model.integration;
 
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
-
-public class ExpressionFilterStepHandler extends AbstractFilterStepHandler {
-    @Override
-    public boolean canHandle(Step step) {
-        return StepKind.expressionFilter == step.getStepKind();
-    }
-
-    @Override
-    protected String getFilterExpression(Step step) {
-        return step.getConfiguredProperties().get("filter");
-    }
+public enum StepKind {
+    endpoint,
+    connector,
+    expressionFilter,
+    ruleFilter,
+    extension,
+    mapper,
+    split,
+    log
 }

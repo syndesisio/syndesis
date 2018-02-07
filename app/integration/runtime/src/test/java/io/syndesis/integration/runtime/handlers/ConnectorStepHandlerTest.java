@@ -26,6 +26,7 @@ import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
@@ -124,7 +125,7 @@ public class ConnectorStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(TWITTER_MENTION_ACTION)
                     .connection(
                         new Connection.Builder()
@@ -137,7 +138,7 @@ public class ConnectorStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("delay", "1234")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")

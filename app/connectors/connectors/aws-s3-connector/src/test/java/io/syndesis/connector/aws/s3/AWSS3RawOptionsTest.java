@@ -18,13 +18,9 @@ package io.syndesis.connector.aws.s3;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.model.action.ConnectorAction;
@@ -34,14 +30,38 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.aws.s3.S3Component;
+import org.apache.camel.component.aws.s3.S3Configuration;
+import org.apache.camel.component.aws.s3.S3Endpoint;
+import org.apache.camel.test.junit4.CamelTestSupport;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
-@Ignore("AWS SDK starts even if route is set to not autostart")
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class AWSS3RawOptionsTest extends CamelTestSupport {
     @Override
     protected CamelContext createCamelContext() throws Exception {
         CamelContext camelContext = super.createCamelContext();
         camelContext.setAutoStartup(false);
+        camelContext.addComponent("aws-s3", new S3Component() {
+            @Override
+            protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
+                final S3Configuration configuration = new S3Configuration();
+                setProperties(configuration, parameters);
+
+                return new S3Endpoint(uri, this, configuration) {
+                    @Override
+                    public void doStart() throws Exception {
+                        // don't let the endpoint to start as it would try to
+                        // process the keys
+                    }
+                };
+            }
+        });
 
         return camelContext;
     }
@@ -64,7 +84,7 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
                         .id("asw-integration")
                         .name("asw-integration")
                         .addStep(new Step.Builder()
-                            .stepKind("endpoint")
+                            .stepKind(StepKind.endpoint)
                             .connection(new Connection.Builder()
                                 .putConfiguredProperty("accessKey", "my-accessKey")
                                 .putConfiguredProperty("secretKey", "my-secretKey")
@@ -110,7 +130,7 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
                                 .build())
                             .build())
                         .addStep(new Step.Builder()
-                            .stepKind("endpoint")
+                            .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                 .descriptor(new ConnectorDescriptor.Builder()
                                     .componentScheme("mock")
@@ -124,8 +144,12 @@ public class AWSS3RawOptionsTest extends CamelTestSupport {
     }
 
     @Test
-    public void testCustomizer() throws Exception {
+    public void testRawOptions() {
         assertNotNull(context());
-        //Collection<Endpoint> endpoints = context.getEndpoints();
+
+        Optional<Endpoint> endpoint = context.getEndpoints().stream().filter(e -> e instanceof S3Endpoint).findFirst();
+
+        Assertions.assertThat(endpoint.isPresent()).isTrue();
+        Assertions.assertThat(endpoint.get().getEndpointUri()).isEqualTo("aws-s3://my-bucketNameOrArn?accessKey=RAW(my-accessKey)&region=EU_CENTRAL_1&secretKey=RAW(my-secretKey)");
     }
 }

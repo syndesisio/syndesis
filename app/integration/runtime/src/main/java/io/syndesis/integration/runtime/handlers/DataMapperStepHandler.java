@@ -21,13 +21,14 @@ import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 
 public class DataMapperStepHandler implements IntegrationStepHandler{
     @Override
     public boolean canHandle(Step step) {
-        return "mapper".equals(step.getStepKind());
+        return StepKind.mapper == step.getStepKind();
     }
 
     @Override

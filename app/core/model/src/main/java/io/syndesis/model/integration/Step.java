@@ -45,7 +45,7 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
 
     Optional<Extension> getExtension();
 
-    String getStepKind();
+    StepKind getStepKind();
 
     String getName();
 

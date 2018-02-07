@@ -25,11 +25,12 @@ import io.syndesis.core.Json;
 import io.syndesis.model.filter.FilterPredicate;
 import io.syndesis.model.filter.FilterRule;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 
 public class RuleFilterStepHandler extends AbstractFilterStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        return "rule-filter".equals(step.getStepKind());
+        return StepKind.ruleFilter == step.getStepKind();
     }
 
     @Override

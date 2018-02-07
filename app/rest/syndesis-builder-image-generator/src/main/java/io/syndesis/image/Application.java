@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.syndesis.model.integration.StepKind;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -106,7 +107,7 @@ public class Application implements ApplicationRunner {
                 for (final Action action : connector.getActions()) {
                     steps.add(
                         new Step.Builder()
-                            .stepKind("endpoint")
+                            .stepKind(StepKind.endpoint)
                             .connection(new Connection.Builder()
                                 .connector(connector)
                                 .connectorId(connector.getId())
@@ -121,7 +122,7 @@ public class Application implements ApplicationRunner {
                 final ConnectorTemplate template = (ConnectorTemplate) model.getData();
                 steps.add(
                     new Step.Builder()
-                        .stepKind("endpoint")
+                        .stepKind(StepKind.endpoint)
                         .connection(new Connection.Builder()
                             .connectorId("connector-" + template.getId())
                             .build())
@@ -148,7 +149,7 @@ public class Application implements ApplicationRunner {
                         for (final Action action : connector.getActions()) {
                             steps.add(
                                 new Step.Builder()
-                                    .stepKind("endpoint")
+                                    .stepKind(StepKind.endpoint)
                                     .connection(new Connection.Builder()
                                         .connector(connector)
                                         .connectorId(connector.getId())

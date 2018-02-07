@@ -20,6 +20,7 @@ import java.util.Optional;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.model.Kind;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 
 @SuppressFBWarnings({"URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", "URF_UNREAD_FIELD"})
 public class StepOverview {
@@ -38,7 +39,7 @@ public class StepOverview {
         return step.getKind();
     }
 
-    public String getStepKind() {
+    public StepKind getStepKind() {
         return step.getStepKind();
     }
 

@@ -33,6 +33,7 @@ import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -89,7 +90,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         for (int i = 0; i< steps.size(); i++) {
             final Step step = steps.get(i);
 
-            if (i == 0 && !"endpoint".equals(step.getStepKind())) {
+            if (i == 0 && StepKind.endpoint != step.getStepKind()) {
                 throw new IllegalStateException("No connector found as first step (found: " + step.getKind() + ")");
             }
 
