@@ -24,7 +24,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
   selectedId = undefined;
   truncateTrail = '…';
 
-  doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
+  doughnutChartLabels: string[] = ['Published', 'Draft', 'Unpublished'];
 
   get doughnutChartData() {
     return this.chartData;
@@ -35,9 +35,9 @@ export class DashboardIntegrationsComponent implements OnChanges {
   doughnutChartColors = [
     {
       backgroundColor: [
-        '#0088CE', // PatternFly Blue 400, Active
+        '#0088CE', // PatternFly Blue 400, Published
         '#EC7A08', // PatternFly Orange 400, Draft
-        '#D1D1D1' // PatternFly Black 300, Inactive
+        '#D1D1D1' // PatternFly Black 300, Unpublished
       ]
     }
   ];
@@ -64,11 +64,11 @@ export class DashboardIntegrationsComponent implements OnChanges {
     let total = 0;
     (this.integrations || []).forEach(integration => {
       switch (integration.currentState) {
-        case 'Active':
+        case 'Published':
           total = total + 1;
           active.push(integration);
           break;
-        case 'Inactive':
+        case 'Unpublished':
           total = total + 1;
           inactive.push(integration);
           break;
@@ -119,10 +119,10 @@ export class DashboardIntegrationsComponent implements OnChanges {
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
     */
     switch (integration.currentStatus) {
-      case 'Active':
+      case 'Published':
       default:
         return 'label-primary';
-      case 'Inactive':
+      case 'Unpublished':
         return 'label-default';
       case 'Draft':
         return 'label-warning';

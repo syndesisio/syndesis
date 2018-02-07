@@ -15,7 +15,7 @@
  */
 package io.syndesis.rest.v1.handler.integration.model;
 
-import static io.syndesis.model.integration.IntegrationDeploymentState.Undeployed;
+import static io.syndesis.model.integration.IntegrationDeploymentState.Unpublished;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,15 +65,15 @@ public class IntegrationOverview {
     }
 
     public IntegrationDeploymentState getCurrentState() {
-        return deployment.map(x -> x.getCurrentState()).orElse(Undeployed);
+        return deployment.map(x -> x.getCurrentState()).orElse(Unpublished);
     }
 
     public IntegrationDeploymentState getTargetState() {
-        return deployment.map(x -> x.getTargetState()).orElse(Undeployed);
+        return deployment.map(x -> x.getTargetState()).orElse(Unpublished);
     }
 
     public Optional<Integer> getDeploymentVersion() {
-        return integration.getDeploymentVersion();
+        return deployment.map(x->x.getVersion());
     }
 
     public List<DeploymentOverview> getDeployments() {
@@ -83,4 +83,6 @@ public class IntegrationOverview {
     public Optional<String> getStatusMessage() {
         return deployment.flatMap(x -> x.getStatusMessage());
     }
+
+
 }

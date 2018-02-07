@@ -15,44 +15,32 @@
  */
 package io.syndesis.controllers.integration.online;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
-import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.openshift.OpenShiftService;
 
-public class DeactivateHandler extends BaseHandler implements StateChangeHandler {
-    DeactivateHandler(OpenShiftService openShiftService) {
+public class UnpublishHandler extends BaseHandler implements StateChangeHandler {
+    UnpublishHandler(OpenShiftService openShiftService) {
         super(openShiftService);
     }
 
     @Override
     public Set<IntegrationDeploymentState> getTriggerStates() {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(IntegrationDeploymentState.Inactive)));
+        return Collections.singleton(IntegrationDeploymentState.Unpublished);
     }
 
     @Override
     public StateUpdate execute(IntegrationDeployment integrationDeployment) {
-        try {
-            openShiftService().scale(integrationDeployment.getSpec().getName(), 0);
-            logInfo(integrationDeployment,"Deactivated");
-        } catch (KubernetesClientException e) {
-            // Ignore 404 errors, means the deployment does not exist for us
-            // to scale down
-            if( e.getCode() != 404 ) {
-                throw e;
-            }
-        }
-
-        IntegrationDeploymentState currentState = openShiftService().isScaled(integrationDeployment.getSpec().getName(), 0)
-            ? IntegrationDeploymentState.Inactive
-                : IntegrationDeploymentState.Pending;
+        IntegrationDeploymentState currentState = !openShiftService().exists(integrationDeployment.getSpec().getName())
+            || openShiftService().delete(integrationDeployment.getSpec().getName())
+            ? IntegrationDeploymentState.Unpublished
+            : IntegrationDeploymentState.Pending;
+        logInfo(integrationDeployment,"Deleted");
 
         return new StateUpdate(currentState);
     }

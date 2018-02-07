@@ -12,11 +12,10 @@ export type Steps = Array<Step>;
 
 export const DRAFT = 'Draft';
 export const PENDING = 'Pending';
-export const ACTIVE = 'Active';
-export const INACTIVE = 'Inactive';
-export const UNDEPLOYED = 'Undeployed';
+export const PUBLISHED = 'Published';
+export const UNPUBLISHED = 'Unpublished';
 
-export type IntegrationState = 'Pending' | 'Active' | 'Inactive' | 'Undeployed' | 'Error';
+export type IntegrationState = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
 export interface Integration extends BaseEntity {
   description?: string;

@@ -6,9 +6,8 @@ import { Integration,
   Step,
   DRAFT,
   PENDING,
-  ACTIVE,
-  INACTIVE,
-  UNDEPLOYED } from '@syndesis/ui/platform';
+  PUBLISHED,
+  UNPUBLISHED } from '@syndesis/ui/platform';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { log } from '@syndesis/ui/logging';
@@ -37,12 +36,12 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   canActivate(integration: Integration) {
     // TODO: false if integration.version == lastDeloyed.version && is active.
-    return true; // integration.currentStatus === INACTIVE || integration.currentStatus === DRAFT;
+    return true; // integration.currentStatus === UNPUBLISHED || integration.currentStatus === DRAFT;
   }
 
   canDeactivate(integration: Integration) {
     // TODO: true if lastDeloyed is active.
-    return true; //integration.currentStatus === ACTIVE || integration.currentStatus === PENDING;
+    return true; //integration.currentStatus === PUBLISHED || integration.currentStatus === PENDING;
   }
 
   //----- Actions ------------------->>
@@ -88,7 +87,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
       case 'deactivate':
         header = 'Integration is deactivating';
         message =
-          'Please allow a moment for the integration to be deactivated.';
+          'Please allow a moment for the integration to be unpublished.';
         danger = 'Failed to deactivate integration';
         reason = 'Error deactivating integration';
         request = this.requestDeactivate(integration);

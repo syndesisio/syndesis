@@ -53,9 +53,6 @@ public interface Integration extends WithId<Integration>, WithVersion, WithModif
         return Kind.Integration;
     }
 
-    //TODO: This is actually the deployment version and not the deployment. At some point we need to rename it.
-    Optional<Integer> getDeploymentVersion();
-
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default
     default boolean isDeleted() {

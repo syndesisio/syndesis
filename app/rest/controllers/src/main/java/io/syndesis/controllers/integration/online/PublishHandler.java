@@ -40,7 +40,7 @@ import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.openshift.DeploymentData;
 import io.syndesis.openshift.OpenShiftService;
 
-public class ActivateHandler extends BaseHandler implements StateChangeHandler {
+public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
     private final DataManager dataManager;
     private final IntegrationProjectGenerator projectGenerator;
@@ -48,7 +48,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     private final EncryptionComponent encryptionComponent;
 
     @SuppressWarnings("PMD.DefaultPackage")
-    ActivateHandler(
+    PublishHandler(
         DataManager dataManager,
         OpenShiftService openShiftService,
         IntegrationProjectGenerator projectGenerator,
@@ -65,7 +65,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
     @Override
     public Set<IntegrationDeploymentState> getTriggerStates() {
-        return Collections.singleton(IntegrationDeploymentState.Active);
+        return Collections.singleton(IntegrationDeploymentState.Published);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             int userIntegrations = countActiveIntegrationsOfSameUserAs(integrationDeployment);
             if (userIntegrations >= maxIntegrationsPerUser) {
                 //What the user sees.
-                return new StateUpdate(IntegrationDeploymentState.Inactive, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
+                return new StateUpdate(IntegrationDeploymentState.Unpublished, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
             }
         }
 
@@ -84,7 +84,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             int userDeployments = countDeployments(integrationDeployment);
             if (userDeployments >= maxDeploymentsPerUser) {
                 //What we actually want to limit. So even though this should never happen, we still need to make sure.
-                return new StateUpdate(IntegrationDeploymentState.Inactive, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
+                return new StateUpdate(IntegrationDeploymentState.Unpublished, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
             }
         }
 
@@ -110,8 +110,8 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
         // Set status to activate if finally running. Also clears the previous step which has been performed
         if (isRunning(integrationDeployment)) {
             logInfo(integrationDeployment, "[ACTIVATED] bc. integration is running with 1 pod");
-            updateDeploymentState(integrationDeployment, IntegrationDeploymentState.Active);
-            return new StateUpdate(IntegrationDeploymentState.Active);
+            updateDeploymentState(integrationDeployment, IntegrationDeploymentState.Published);
+            return new StateUpdate(IntegrationDeploymentState.Published);
         }
 
         logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
@@ -157,7 +157,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
             .stream()
             .map(id -> dataManager.fetch(IntegrationDeployment.class, id))
             .filter(r -> r.getVersion() >= integrationDeployment.getVersion())
-            .map(r -> r.withCurrentState(IntegrationDeploymentState.Undeployed))
+            .map(r -> r.withCurrentState(IntegrationDeploymentState.Unpublished))
             .forEach(r -> dataManager.update(r));
     }
 
@@ -213,7 +213,7 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
         return (int) dataManager.fetchAll(IntegrationDeployment.class).getItems()
             .stream()
             .filter(i -> !i.getIntegrationId().get().equals(integrationId)) //The "current" integration will already be in the database.
-            .filter(i -> IntegrationDeploymentState.Active == i.getCurrentState())
+            .filter(i -> IntegrationDeploymentState.Published == i.getCurrentState())
             .filter(i -> i.getUserId().map(username::equals).orElse(Boolean.FALSE))
             .count();
     }

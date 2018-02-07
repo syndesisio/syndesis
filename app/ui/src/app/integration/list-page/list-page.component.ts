@@ -33,8 +33,8 @@ export class IntegrationListPage implements OnInit {
       type: 'select',
       placeholder: 'Filter by state...',
       queries: [
-        { id: 'actived', value: 'Active' },
-        { id: 'deactivated', value: 'Inactive' },
+        { id: 'published', value: 'Published' },
+        { id: 'unpublished', value: 'Unpublished' },
         { id: 'draft', value: 'Draft' }
       ]
     }
