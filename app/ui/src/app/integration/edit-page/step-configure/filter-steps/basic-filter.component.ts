@@ -24,8 +24,7 @@ export class BasicFilterComponent implements OnChanges {
   rulesArrayModel: DynamicFormArrayModel;
   loading = true;
 
-  @Input() inputDataShape: DataShape;
-  @Input() outputDataShape: DataShape;
+  @Input() dataShape: DataShape;
   @Input() position;
   @Input()
   configuredProperties: BasicFilter = {
@@ -89,19 +88,9 @@ export class BasicFilterComponent implements OnChanges {
       self.validChange.emit(self.formGroup.valid);
     }
 
-    // check if there's a data mapper in the previous steps
-    const prevSteps = this.currentFlow.getPreviousSteps(this.position);
-    const hasDataMapper =
-      prevSteps.find(step => step.stepKind === DATA_MAPPER) !== undefined;
-    let dataShape = undefined;
-    if (hasDataMapper) {
-      dataShape = this.inputDataShape;
-    } else {
-      dataShape = this.outputDataShape;
-    }
     // Fetch our form data
     this.integrationSupport
-      .getFilterOptions(dataShape)
+      .getFilterOptions(this.dataShape)
       .toPromise()
       .then((body: any) => {
         const ops = body.ops;
