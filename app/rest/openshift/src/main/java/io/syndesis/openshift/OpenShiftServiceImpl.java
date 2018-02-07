@@ -211,7 +211,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .addNewContainer()
             .withImage(" ").withImagePullPolicy("Always").withName(name)
             .withEnv(new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null))
-            .withEnv(new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/prometheus-config.yml", null))
+            .withEnv(new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null))
             .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")
