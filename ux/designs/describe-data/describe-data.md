@@ -40,7 +40,9 @@ This design uses AMQ connection as an example to demonstrate the user workflow.
 
 4. Specify Root Element field is disabled until there’s a valid schema file.
 
-5. “Done” action button is disabled until there’s valid data input.
+5. Users can specify Data Type Name and Data Type Description that would be displayed in the data mapper UI and integration visualization panel.
+
+6. “Done” action button is disabled until there’s valid data input.
 
 ![Image of import uploading](img/describe-data-define-uploading.png)
 
@@ -59,6 +61,13 @@ This design uses AMQ connection as an example to demonstrate the user workflow.
 2.	Users would be able to specify root element once there’s a schema.
 
 3.	“Done” action button becomes active.
+
+![Image of import uploading](img/describe-data-define-dataTypeNameAndDescription.png)
+
+1. Popover appears on clicking information icon. Provide additional information on field input. Next click wil close popover.
+
+2. Data Type Name field only accepts input that is less than 20 characters in length. Validation is required for this field. Show error message when validation failed. 
+
 
 ![Image of import via url](img/describe-data-define-url.png)
 
