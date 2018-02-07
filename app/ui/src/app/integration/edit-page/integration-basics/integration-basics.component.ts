@@ -1,23 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 @Component({
   selector: 'syndesis-integration-integration-basics',
   templateUrl: 'integration-basics.component.html',
   styleUrls: ['./integration-basics.component.scss']
 })
-export class IntegrationBasicsComponent extends FlowPage {
+export class IntegrationBasicsComponent implements OnInit {
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router
   ) {
-    super(currentFlow, route, router);
+
+  }
+
+  get errorMessage() {
+    return this.flowPageService.errorMessage;
+  }
+
+  get saveInProgress() {
+    return this.flowPageService.saveInProgress;
+  }
+
+  get publishInProgress() {
+    return this.flowPageService.publishInProgress;
+  }
+
+  cancel() {
+    this.flowPageService.cancel();
+  }
+
+  save() {
+    this.flowPageService.save(this.route);
+  }
+
+  publish() {
+    this.flowPageService.publish(this.route);
   }
 
   canContinue() {
-    const integrationName = this.currentFlow.integration.name;
+    const integrationName = this.currentFlowService.integration.name;
     return integrationName && integrationName !== '';
   }
 
@@ -29,11 +54,11 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   get name(): string {
-    return this.currentFlow.integration.name || '';
+    return this.currentFlowService.integration.name || '';
   }
 
   set name(name: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-property',
       property: 'name',
       value: name
@@ -41,11 +66,11 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   get description(): string {
-    return this.currentFlow.integration.description || '';
+    return this.currentFlowService.integration.description || '';
   }
 
   set description(description: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-property',
       property: 'description',
       value: description
@@ -53,7 +78,7 @@ export class IntegrationBasicsComponent extends FlowPage {
   }
 
   get tagsArray(): string[] {
-    return this.currentFlow.integration.tags;
+    return this.currentFlowService.integration.tags;
   }
 
   get tags(): string {
@@ -62,10 +87,14 @@ export class IntegrationBasicsComponent extends FlowPage {
 
   set tags(tags: string) {
     const _tags = tags.split(',').map(str => str.trim());
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-property',
       property: 'tags',
       value: _tags
     });
+  }
+
+  ngOnInit() {
+    this.flowPageService.initialize();
   }
 }

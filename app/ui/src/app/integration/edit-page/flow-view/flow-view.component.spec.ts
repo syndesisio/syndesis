@@ -17,10 +17,10 @@ import { FlowViewComponent } from './flow-view.component';
 import { FlowViewStepComponent } from './flow-view-step.component';
 import { IntegrationStore } from '../../../store/integration/integration.store';
 import { IntegrationService } from '../../../store/integration/integration.service';
-import { CurrentFlow } from '../current-flow.service';
 import { SyndesisCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
 import { EventsService } from '../../../store/entity/events.service';
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 describe('FlowViewComponent', () => {
   let component: FlowViewComponent;
@@ -60,7 +60,8 @@ describe('FlowViewComponent', () => {
             },
             deps: [MockBackend, RequestOptions]
           },
-          CurrentFlow,
+          CurrentFlowService,
+          FlowPageService,
           IntegrationStore,
           IntegrationService,
           EventsService

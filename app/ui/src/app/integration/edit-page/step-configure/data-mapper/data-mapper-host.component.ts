@@ -21,7 +21,7 @@ import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
 import { DataShape, IntegrationSupportService, Step } from '@syndesis/ui/platform';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 /*
  * Example host component:
@@ -57,7 +57,7 @@ const MAPPING_KEY = 'atlasmapping';
     DocumentManagementService
   ]
 })
-export class DataMapperHostComponent extends FlowPage implements OnInit {
+export class DataMapperHostComponent implements OnInit {
   routeSubscription: Subscription;
   outstandingTasks = 1;
 
@@ -72,30 +72,29 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
   cfg: ConfigModel = new ConfigModel();
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
     public route: ActivatedRoute,
     public router: Router,
     public configService: ConfigService,
     public initializationService: InitializationService,
     public support: IntegrationSupportService,
   ) {
-    super(currentFlow, route, router);
     this.resetConfig();
   }
 
   initialize() {
     this.resetConfig();
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     let mappings = undefined;
     if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
       mappings = <string>step.configuredProperties[MAPPING_KEY];
     }
     this.cfg.mappings = new MappingDefinition();
 
-    for (const pair of this.currentFlow.getPreviousStepsWithDataShape(this.position)) {
+    for (const pair of this.currentFlowService.getPreviousStepsWithDataShape(this.position)) {
       if (this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape)) {
         this.addInitializationTask();
-        this.currentFlow.fetchOutputDataShapeFor(pair.step).then(dataShape => {
+        this.currentFlowService.fetchOutputDataShapeFor(pair.step).then(dataShape => {
           this.addSourceDocument(pair.step.id, pair.index, dataShape);
           this.removeInitializationTask();
         })
@@ -106,7 +105,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
 
     // Single target document for now
     let targetPair;
-    for (const pair of this.currentFlow.getSubsequentStepsWithDataShape(this.position)) {
+    for (const pair of this.currentFlowService.getSubsequentStepsWithDataShape(this.position)) {
       if (this.isSupportedDataShape(pair.step.action.descriptor.inputDataShape)) {
         targetPair = pair;
         break;
@@ -114,7 +113,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     }
     if (targetPair) {
       this.addInitializationTask();
-      this.currentFlow.fetchInputDataShapeFor(targetPair.step).then(dataShape => {
+      this.currentFlowService.fetchInputDataShapeFor(targetPair.step).then(dataShape => {
         this.addTargetDocument(targetPair.step.id, targetPair.index, dataShape);
         this.removeInitializationTask();
       })
@@ -184,7 +183,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
         const properties = {
           atlasmapping: JSON.stringify(json)
         };
-        this.currentFlow.events.emit({
+        this.currentFlowService.events.emit({
           kind: 'integration-set-properties',
           position: this.position,
           properties: properties,
@@ -197,7 +196,7 @@ export class DataMapperHostComponent extends FlowPage implements OnInit {
     );
 
     // make sure the property is set on the integration
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: {

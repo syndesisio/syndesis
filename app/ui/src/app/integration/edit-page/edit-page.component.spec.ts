@@ -8,7 +8,10 @@ import { RestangularModule } from 'ngx-restangular';
 import { ToolbarModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule, NavigationService } from '@syndesis/ui/common';
-import { CurrentFlow, FlowViewComponent, FlowViewStepComponent, IntegrationEditPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService,
+  FlowViewComponent,
+  FlowViewStepComponent,
+  IntegrationEditPage } from '@syndesis/ui/integration/edit-page';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
 import { StoreModule } from '@syndesis/ui/store';
 
@@ -54,8 +57,8 @@ describe('IntegrationsEditComponent', () => {
             },
             deps: [MockBackend, RequestOptions]
           },
+          CurrentFlowService,
           NavigationService,
-          CurrentFlow
         ]
       }).compileComponents();
     })

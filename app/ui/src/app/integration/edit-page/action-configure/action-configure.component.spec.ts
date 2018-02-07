@@ -13,7 +13,7 @@ import {
 } from '@syndesis/ui/platform';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import { CurrentFlow } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { ActivatedRoute } from '@angular/router';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -83,7 +83,8 @@ describe('IntegrationConfigureActionComponent', () => {
                 declarations: [IntegrationConfigureActionComponent],
                 providers: [
                     ConfigService,
-                    CurrentFlow,
+                    FlowPageService,
+                    CurrentFlowService,
                     IntegrationStore,
                     IntegrationService,
                     EventsService

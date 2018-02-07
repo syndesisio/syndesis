@@ -5,7 +5,7 @@ import { DynamicFormService, DynamicFormControlModel, DynamicFormArrayModel, Dyn
 import { DataShape, IntegrationSupportService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { DATA_MAPPER } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { createBasicFilterModel, findById } from './basic-filter.model';
 import { BasicFilter } from './filter.interface';
 
@@ -49,10 +49,10 @@ export class BasicFilterComponent implements OnChanges {
   @Output() validChange = new EventEmitter<boolean>();
 
   constructor(
-    public currentFlow: CurrentFlow,
-    public integrationSupport: IntegrationSupportService,
-    private formService: DynamicFormService
-  ) {}
+    public currentFlowService: CurrentFlowService,
+    public integrationSupportService: IntegrationSupportService,
+    private dynamicFormService: DynamicFormService
+  ) { }
 
   ngOnChanges(changes: any) {
     if (!('position' in changes)) {
@@ -68,7 +68,7 @@ export class BasicFilterComponent implements OnChanges {
         ops,
         paths
       );
-      self.formGroup = self.formService.createFormGroup(self.basicFilterModel);
+      self.formGroup = self.dynamicFormService.createFormGroup(self.basicFilterModel);
       self.predicateControl = self.formGroup
         .get('filterSettingsGroup')
         .get('predicate') as FormControl;
@@ -89,7 +89,7 @@ export class BasicFilterComponent implements OnChanges {
     }
 
     // Fetch our form data
-    this.integrationSupport
+    this.integrationSupportService
       .getFilterOptions(this.dataShape)
       .toPromise()
       .then((body: any) => {
@@ -112,7 +112,7 @@ export class BasicFilterComponent implements OnChanges {
 
   // Manage Individual Fields
   add() {
-    this.formService.addFormArrayGroup(
+    this.dynamicFormService.addFormArrayGroup(
       this.rulesArrayControl,
       this.rulesArrayModel
     );
@@ -121,7 +121,7 @@ export class BasicFilterComponent implements OnChanges {
   }
 
   remove(context: DynamicFormArrayModel, index: number) {
-    this.formService.removeFormArrayGroup(
+    this.dynamicFormService.removeFormArrayGroup(
       index,
       this.rulesArrayControl,
       context

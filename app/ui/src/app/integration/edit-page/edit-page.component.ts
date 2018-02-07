@@ -6,7 +6,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { NavigationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
 import { Integration } from '@syndesis/ui/platform';
-import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
+import { FlowEvent } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService } from './current-flow.service';
+import { FlowPageService } from './flow-page.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsEditPage');
@@ -16,8 +18,7 @@ const category = getCategory('IntegrationsEditPage');
   templateUrl: './edit-page.component.html',
   styleUrls: ['./edit-page.component.scss']
 })
-export class IntegrationEditPage extends ChildAwarePage
-  implements OnInit, OnDestroy {
+export class IntegrationEditPage implements OnInit, OnDestroy {
   integration: Observable<Integration>;
   readonly loading: Observable<boolean>;
 
@@ -30,17 +31,17 @@ export class IntegrationEditPage extends ChildAwarePage
   position: number;
 
   constructor(
-    public currentFlow: CurrentFlow,
-    public store: IntegrationStore,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
+    public integrationStore: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
-    public nav: NavigationService
+    public navigationService: NavigationService
   ) {
-    super(currentFlow, route, router);
-    this.integration = this.store.resource;
-    this.loading = this.store.loading;
-    this.store.clear();
-    this.flowSubscription = this.currentFlow.events.subscribe(
+    this.integration = this.integrationStore.resource;
+    this.loading = this.integrationStore.loading;
+    this.integrationStore.clear();
+    this.flowSubscription = this.currentFlowService.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
       }
@@ -48,7 +49,7 @@ export class IntegrationEditPage extends ChildAwarePage
   }
 
   getPageRow() {
-    switch (this.currentStepKind) {
+    switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
         return 'row datamapper';
       default:
@@ -57,7 +58,7 @@ export class IntegrationEditPage extends ChildAwarePage
   }
 
   getSidebarClass() {
-    switch (this.currentStepKind) {
+    switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
         return 'mapper-sidebar';
       default:
@@ -66,7 +67,7 @@ export class IntegrationEditPage extends ChildAwarePage
   }
 
   getPageContainer() {
-    switch (this.currentStepKind) {
+    switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
         return 'mapper-main';
       default:
@@ -75,7 +76,7 @@ export class IntegrationEditPage extends ChildAwarePage
   }
 
   handleFlowEvent(event: FlowEvent) {
-    const child = this.getCurrentChild();
+    const child = this.flowPageService.getCurrentChild(this.route);
     let validate = false;
     switch (event.kind) {
       case 'integration-updated':
@@ -109,20 +110,20 @@ export class IntegrationEditPage extends ChildAwarePage
     this.integrationSubscription = this.integration.subscribe(
       (i: Integration) => {
         if (i) {
-          this.currentFlow.integration = i;
+          this.currentFlowService.integration = i;
         }
       }
     );
 
     this.routeSubscription = this.route.paramMap
       .map(params => params.get('integrationId'))
-      .subscribe(integrationId => this.store.loadOrCreate(integrationId));
+      .subscribe(integrationId => this.integrationStore.loadOrCreate(integrationId));
 
-    this.nav.hide();
+    this.navigationService.hide();
   }
 
   ngOnDestroy() {
-    this.nav.show();
+    this.navigationService.show();
     if (this.integrationSubscription) {
       this.integrationSubscription.unsubscribe();
     }

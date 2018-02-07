@@ -1,7 +1,7 @@
 import { Restangular } from 'ngx-restangular';
 import { Observable } from 'rxjs/Observable';
 
-import { BaseEntity } from '@syndesis/ui/platform';
+import { BaseEntity, ApiHttpService } from '@syndesis/ui/platform';
 
 export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   protected constructor(

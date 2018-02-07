@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -26,13 +26,18 @@ import {
   CancelAddStepComponent,
   FlowViewComponent,
   FlowViewStepComponent,
-  CurrentFlow
+  CurrentFlowService,
+  FlowPageService,
 } from './edit-page';
 
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/components/logs.component';
+
+const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
+const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
+const integrationListModuleFwd = forwardRef(() => IntegrationListModule);
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationSaveOrAddStepComponent },
@@ -88,11 +93,11 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ConnectionsModule,
     SyndesisVendorModule,
-    SyndesisCommonModule,
+    syndesisCommonModuleFwd,
     DataMapperModule,
     FileUploadModule,
-    IntegrationSupportModule,
-    IntegrationListModule,
+    integrationSupportModuleFwd,
+    integrationListModuleFwd,
   ],
   declarations: [
     DataMapperHostComponent,
@@ -117,7 +122,8 @@ const routes: Routes = [
     CancelAddStepComponent
   ],
   providers: [
-    CurrentFlow,
+    CurrentFlowService,
+    FlowPageService,
   ]
 })
 export class IntegrationModule {}

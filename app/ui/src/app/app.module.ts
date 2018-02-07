@@ -37,6 +37,11 @@ export function restangularProviderConfigurer(
           data = data.items || [];
         }
         break;
+      case 'put':
+        if (data === null) {
+          data = [];
+        }
+        break;
       default:
     }
     return data;
