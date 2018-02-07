@@ -11,7 +11,7 @@ import { Action,
          IntegrationState,
          IntegrationSupportService,
          ApiHttpService,
-         UNDEPLOYED } from '@syndesis/ui/platform';
+         UNPUBLISHED } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { integrationSupportEndpoints } from './integration-support.api';
 import { RequestMethod, ResponseContentType } from '@angular/http';
@@ -70,7 +70,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       id: integration.id,
       version: integration.deploymentVersion,
     }).post({
-      targetState: UNDEPLOYED
+      targetState: UNPUBLISHED
     });
   }
 

@@ -8,8 +8,8 @@ import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from '
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
 import { Integration,
   Step,
-  ACTIVE,
-  INACTIVE,
+  PUBLISHED,
+  UNPUBLISHED,
   DRAFT,
   IntegrationOverview,
   IntegrationActionsService,
@@ -153,9 +153,8 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         /*
         {
           const integration = { ...this.integration };
-          delete integration.deploymentVersion;
           integration.steps = deployment.spec.steps;
-          //this.integration.desiredStatus = ACTIVE;
+          //this.integration.desiredStatus = PUBLISHED;
           this.integrationActionsService.requestAction('publish', integration);
         }
         */

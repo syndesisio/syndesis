@@ -4,9 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { Integration,
   DRAFT,
   PENDING,
-  ACTIVE,
-  INACTIVE,
-  UNDEPLOYED,
+  PUBLISHED,
+  UNPUBLISHED,
   Step } from '@syndesis/ui/platform';
 
 @Injectable()

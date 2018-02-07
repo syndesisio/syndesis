@@ -75,13 +75,13 @@ export abstract class FlowPage implements OnDestroy {
     });
   }
 
-  save(status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = undefined) {
+  save(status: 'Draft' | 'Published' | 'Unpublished' = undefined) {
     this.saveInProgress = true;
     this.doSave();
   }
 
   publish(
-    status: 'Draft' | 'Active' | 'Inactive' | 'Undeployed' = 'Active'
+    status: 'Draft' | 'Published' | 'Unpublished' = 'Published'
   ) {
     this.publishInProgress = true;
     this.doSave();

@@ -344,7 +344,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             return false;
         }
 
-        if (IntegrationDeploymentState.Active != integrationDeployment.getTargetState()) {
+        if (IntegrationDeploymentState.Published != integrationDeployment.getTargetState()) {
             return false;
         }
 

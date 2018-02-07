@@ -31,7 +31,7 @@
             </button>
             <button type="button"
                     class="btn btn-primary"
-                    (click)="publish('Active')"
+                    (click)="publish('Published')"
                     [disabled]="!canContinue() || saveInProgress || publishInProgress">
               <span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
           </div>

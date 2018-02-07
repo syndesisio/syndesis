@@ -55,14 +55,13 @@ public class OnlineHandlerProvider extends BaseHandler implements StateChangeHan
     @Override
     public List<StateChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new ActivateHandler(
+            new PublishHandler(
                 dataManager,
                 openShiftService(),
                 projectGenerator,
                 properties,
                 encryptionComponent
             ),
-            new DeactivateHandler(openShiftService()),
-            new DeleteHandler(openShiftService()));
+            new UnpublishHandler(openShiftService()));
     }
 }

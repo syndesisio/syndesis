@@ -35,9 +35,8 @@ public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandl
     @Override
     public Set<IntegrationDeploymentState> getTriggerStates() {
         return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            IntegrationDeploymentState.Active,
-            IntegrationDeploymentState.Inactive,
-            IntegrationDeploymentState.Undeployed)));
+            IntegrationDeploymentState.Published,
+            IntegrationDeploymentState.Unpublished)));
     }
 
     @Override

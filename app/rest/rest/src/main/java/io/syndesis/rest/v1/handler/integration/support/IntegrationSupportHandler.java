@@ -58,6 +58,8 @@ import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.dao.manager.operators.ReverseFilter;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.ChangeEvent;
@@ -72,6 +74,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
@@ -126,11 +129,13 @@ public class IntegrationSupportHandler {
         ).getItems().stream();
 
         return ListResult.of(stream.map(integration -> {
-            Optional<IntegrationDeployment> deployment = integration.getDeploymentVersion().map(ver -> {
-                String deploymentId = IntegrationDeployment.compositeId(integration.getId().get(), ver);
-                return getDataManager().fetch(IntegrationDeployment.class, deploymentId);
-            });
-            return new IntegrationOverview(integration, deployment);
+
+            List<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class,
+                new IdPrefixFilter<>(integration.getId().get()+":"), ReverseFilter.getInstance())
+                .getItems();
+
+            // find the deployment we want published..
+            return new IntegrationOverview(integration, deployments.stream().findFirst());
         }).collect(Collectors.toList()));
     }
 

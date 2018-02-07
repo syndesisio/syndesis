@@ -168,7 +168,6 @@ public class IntegrationHandler extends BaseHandler
         Integration updatedIntegration = new Integration.Builder()
             .createFrom(encryptionSupport.encrypt(integration))
             .version(existing.getVersion()+1)
-            .deploymentVersion(existing.getDeploymentVersion())
             .updatedAt(System.currentTimeMillis())
             .build();
 
@@ -184,11 +183,6 @@ public class IntegrationHandler extends BaseHandler
 
         int nextDeploymentVersion = 1;
 
-        // We might need to undeploy the previous deployment.
-        if( integration.getDeploymentVersion().isPresent() ) {
-            nextDeploymentVersion = integration.getDeploymentVersion().get()+1;
-        }
-
         // Update previous deployments targetState=Undeployed and make sure nextDeploymentVersion is larger than all previous ones.
         Set<String> deploymentIds = getDataManager().fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id);
         if (deploymentIds != null && !deploymentIds.isEmpty()) {
@@ -197,15 +191,9 @@ public class IntegrationHandler extends BaseHandler
                 .filter(r -> r != null);
             for (IntegrationDeployment d : deployments.toArray(IntegrationDeployment[]::new)) {
                 nextDeploymentVersion = Math.max(nextDeploymentVersion, d.getVersion()+1);
-                getDataManager().update(d.withTargetState(IntegrationDeploymentState.Undeployed));
+                getDataManager().update(d.withTargetState(IntegrationDeploymentState.Unpublished));
             }
         }
-
-
-        integration = new Integration.Builder()
-            .createFrom(integration)
-            .deploymentVersion(nextDeploymentVersion)
-            .build();
 
         IntegrationDeployment deployment = new IntegrationDeployment.Builder()
             .id(IntegrationDeployment.compositeId(id, nextDeploymentVersion))
@@ -216,7 +204,6 @@ public class IntegrationHandler extends BaseHandler
             .build();
 
         deployment = getDataManager().create(deployment);
-        getDataManager().update(integration);
         return deployment;
     }
 
@@ -231,7 +218,7 @@ public class IntegrationHandler extends BaseHandler
             deploymentIds.stream()
                 .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
                 .filter(r -> r != null)
-                .map(r -> r.withTargetState(IntegrationDeploymentState.Undeployed))
+                .map(r -> r.withTargetState(IntegrationDeploymentState.Unpublished))
                 .forEach(r -> getDataManager().update(r));
         }
 

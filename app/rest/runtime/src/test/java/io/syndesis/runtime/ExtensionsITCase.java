@@ -248,8 +248,8 @@ public class ExtensionsITCase extends BaseITCase {
 
         dataManager.create(new IntegrationDeployment.Builder()
             .version(1)
-            .targetState(IntegrationDeploymentState.Active)
-            .currentState(IntegrationDeploymentState.Active)
+            .targetState(IntegrationDeploymentState.Published)
+            .currentState(IntegrationDeploymentState.Published)
             .createdAt(System.currentTimeMillis())
             .spec(new Integration.Builder()
                 .id("integration-extension-1")
@@ -269,8 +269,8 @@ public class ExtensionsITCase extends BaseITCase {
         // Create a inactive integration that uses the extension
         dataManager.create(new IntegrationDeployment.Builder()
             .version(1)
-            .targetState(IntegrationDeploymentState.Undeployed)
-            .currentState(IntegrationDeploymentState.Active)
+            .targetState(IntegrationDeploymentState.Unpublished)
+            .currentState(IntegrationDeploymentState.Published)
             .createdAt(System.currentTimeMillis())
             .spec(new Integration.Builder()
                 .id("integration-extension-2")
@@ -320,8 +320,8 @@ public class ExtensionsITCase extends BaseITCase {
         // Create a active integration that uses the extension
         dataManager.create(new IntegrationDeployment.Builder()
             .version(1)
-            .targetState(IntegrationDeploymentState.Active)
-            .currentState(IntegrationDeploymentState.Active)
+            .targetState(IntegrationDeploymentState.Published)
+            .currentState(IntegrationDeploymentState.Published)
             .createdAt(System.currentTimeMillis())
             .spec(new Integration.Builder()
                 .id("integration-extension")

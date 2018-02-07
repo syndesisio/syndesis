@@ -60,7 +60,7 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
 
     @Value.Default
     default IntegrationDeploymentState getTargetState() {
-        return IntegrationDeploymentState.Active;
+        return IntegrationDeploymentState.Published;
     }
 
     @Value.Default
@@ -91,12 +91,6 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
 
     default IntegrationDeployment withTargetState(IntegrationDeploymentState state) {
         return builder().targetState(state).build();
-    }
-
-    @JsonIgnore
-    default boolean isInactive() {
-        return getCurrentState() == IntegrationDeploymentState.Undeployed
-                || getCurrentState() == IntegrationDeploymentState.Inactive;
     }
 
 }

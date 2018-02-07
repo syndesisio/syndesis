@@ -6,7 +6,7 @@
 //
 // 2 Primary State Categories:
 //
-// 1 - Active/Inactive - Is the user currently on this section/step?
+// 1 - Published/Unpublished - Is the user currently on this section/step?
 // 2 - Complete/Incomplete - Has the user completed/configured this section/step?
 //
 // 03/24/2017
@@ -68,10 +68,10 @@
         //width: 24px;
         height: 24px;
         margin-top: 1px;
-      } //----- Sidebar: Progress Line: Active State ----------------->>
+      } //----- Sidebar: Progress Line: Published State ----------------->>
       &.active {
         border-color: $color-pf-blue-400;
-      } //----- Sidebar: Progress Line: Inactive State ----------------->>
+      } //----- Sidebar: Progress Line: Unpublished State ----------------->>
       &.inactive {
         border-color: #d0d0d0;
       } //----- Sidebar: Progress Line: Complete State ----------------->>
@@ -103,7 +103,7 @@
         font-size: x-small;
         padding-right: 5px;
         margin-right: 5px;
-      } // Active State for Entire Container of Single Step
+      } // Published State for Entire Container of Single Step
       &.active {
         .fa.fa-trash {
           color: #ffffff;
@@ -119,11 +119,11 @@
         }
         padding: 8px 18px 8px 8px;
         text-transform: uppercase;
-        white-space: nowrap; //----- Sidebar: Menu: Parent Step: Active State ----------------->>
+        white-space: nowrap; //----- Sidebar: Menu: Parent Step: Published State ----------------->>
         &.active {
           background-color: #158acc;
           color: #ffffff;
-        } //----- Sidebar: Menu: Parent Step: Inactive State ----------------->>
+        } //----- Sidebar: Menu: Parent Step: Unpublished State ----------------->>
         &.inactive {
         }
         //----- Sidebar: Menu: Parent Step: Complete State ----------------->>
@@ -148,14 +148,14 @@
           display: list-item;
           list-style-type: none;
           margin: 7px 0 0 0;
-          padding: 5px 5px 5px 30px; //----- Sidebar: Menu: Sub Step: Active State ----------------->>
+          padding: 5px 5px 5px 30px; //----- Sidebar: Menu: Sub Step: Published State ----------------->>
           &.active {
             background-color: #d6eefa;
             border-bottom: 1px solid #b8dff3;
             border-top: 1px solid #b8dff3;
             color: #363636;
             cursor: pointer;
-          } //----- Sidebar: Menu: Sub Step: Inactive State ----------------->>
+          } //----- Sidebar: Menu: Sub Step: Unpublished State ----------------->>
           &.inactive {
           }
           //----- Sidebar: Menu: Sub Step: Complete State ----------------->>
