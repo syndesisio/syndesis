@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -74,11 +75,15 @@ public class IntegrationController {
 
     @PostConstruct
     public void start() {
-        executor = Executors.newSingleThreadExecutor();
-        scheduler = Executors.newScheduledThreadPool(1);
+        executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
+        scheduler = Executors.newScheduledThreadPool(1, threadFactory("Integration Controller Scheduler"));
         scanIntegrationsForWork();
 
         eventBus.subscribe("integration-deployment-controller", getChangeEventSubscription());
+    }
+
+    private static ThreadFactory threadFactory(String name) {
+        return r -> new Thread(null, r, name);
     }
 
     private EventBus.Subscription getChangeEventSubscription() {
