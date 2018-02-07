@@ -7,16 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng-dynamic-forms/ui-bootstrap';
-import {
-  AlertModule,
-  CollapseModule,
-  ModalModule,
-  PopoverModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
-} from 'ngx-bootstrap';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 import { TagInputModule } from 'ngx-chips';
 import { Restangular, RestangularModule } from 'ngx-restangular';
 import { NotificationModule } from 'patternfly-ng';
@@ -79,14 +70,7 @@ export function mapperRestangularProvider(
     DynamicFormsCoreModule.forRoot(),
     DynamicFormsBootstrapUIModule,
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
-    TabsModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    CollapseModule.forRoot(),
-    AlertModule.forRoot(),
-    PopoverModule.forRoot(),
-    TypeaheadModule.forRoot(),
+    SyndesisVendorModule,
     TagInputModule,
     AppRoutingModule,
     LegacyStoreModule,

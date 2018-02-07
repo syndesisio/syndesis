@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NotificationModule } from 'patternfly-ng';
 import { TagInputModule } from 'ngx-chips';
 
 import { CancelConfirmationModalComponent } from './cancel_confirmation_modal';
@@ -57,8 +56,6 @@ import { NavigationService } from './navigation.service';
     ...SYNDESYS_VALIDATION_DIRECTIVES
   ],
   exports: [
-    CommonModule,
-    ReactiveFormsModule, FormsModule,
     DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
