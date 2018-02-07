@@ -22,12 +22,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Step;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
@@ -127,5 +133,44 @@ public final class ProjectGeneratorHelper {
         }
 
         return answer;
+    }
+
+    public static Integration sanitize(Integration integration, IntegrationResourceManager resourceManager) {
+        final List<Step> steps = new ArrayList<>(integration.getSteps());
+
+        for (int i = 0; i < steps.size(); i++) {
+            final Step source = steps.get(i);
+
+            if (source.getConnection().isPresent()) {
+                final Connection connection = source.getConnection().get();
+
+                // If connector is not set, fetch it from data source and update connection
+                if (connection.getConnectorId().isPresent() && !connection.getConnector().isPresent()) {
+                    Connector connector = resourceManager.loadConnector(connection.getConnectorId().get()).orElseThrow(
+                        () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId().get())
+                    );
+
+                    // Add missing connector to connection.
+                    Connection newConnection = new Connection.Builder()
+                        .createFrom(connection)
+                        .connector(connector)
+                        .build();
+
+                    // Replace with the new 'sanitized' step
+                    steps.set(
+                        i,
+                        new Step.Builder()
+                            .createFrom(source)
+                            .connection(newConnection)
+                            .build()
+                    );
+                }
+            }
+        }
+
+        return new Integration.Builder()
+            .createFrom(integration)
+            .steps(steps)
+            .build();
     }
 }

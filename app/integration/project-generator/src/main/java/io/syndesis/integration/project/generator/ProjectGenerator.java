@@ -15,11 +15,6 @@
  */
 package io.syndesis.integration.project.generator;
 
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,17 +35,10 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.core.Optionals;
@@ -67,6 +55,17 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
+import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.sanitize;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ProjectGenerator implements IntegrationProjectGenerator {
@@ -91,7 +90,8 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
     @Override
     @SuppressWarnings("resource")
-    public InputStream generate(Integration integration) throws IOException {
+    public InputStream generate(final Integration integrationDefinition) throws IOException {
+        final Integration integration = sanitize(integrationDefinition, resourceManager);
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
@@ -102,22 +102,22 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     }
 
     @Override
-    public Properties generateApplicationProperties(Integration integration) {
+    public Properties generateApplicationProperties(final Integration integrationDefinition) {
+        final Integration integration = sanitize(integrationDefinition, resourceManager);
         final Properties properties = new Properties();
         final List<? extends Step> steps = integration.getSteps();
 
-        // ****************************************
-        //
-        // Connectors
-        //
-        // ****************************************
         for (int i = 0; i < steps.size(); i++) {
-            Step step = steps.get(i);
-            if( step.getStepKind().equals("endpoint")
-                    &&  step.getAction().filter(ConnectorAction.class::isInstance).isPresent()
-                    && step.getConnection().isPresent() ) {
+            final Step step = steps.get(i);
 
-                final String index = Integer.toString(i+1);
+            // Check if a step is of supported type.
+            if(!step.getStepKind().equals("endpoint")) {
+                continue;
+            }
+
+            // Check if a step has the required options
+            if(step.getAction().filter(ConnectorAction.class::isInstance).isPresent() && step.getConnection().isPresent()) {
+                final String index = Integer.toString(i + 1);
                 final Connection connection = step.getConnection().get();
                 final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
                 final ConnectorDescriptor descriptor = action.getDescriptor();
@@ -181,18 +181,12 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 }
             }
         }
+
         return properties;
     }
 
-    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, Map.Entry<String, String> e) {
-        String key = String.format("%s-%s.%s", propKeyPrefix, index, e.getKey());
-        String val = mandatoryDecrypt(resourceManager, e);
-
-        properties.put(key, val);
-    }
-
     @Override
-    public byte[] generatePom(Integration integration) throws IOException {
+    public byte[] generatePom(final Integration integration) throws IOException {
         final Set<MavenGav> dependencies = resourceManager.collectDependencies(integration).stream()
             .filter(Dependency::isMaven)
             .map(Dependency::getId)
@@ -203,12 +197,19 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         return ProjectGeneratorHelper.generate(
             new PomContext(
                 integration.getId().orElse(""),
-                    integration.getName(),
+                integration.getName(),
                 integration.getDescription().orElse(null),
                 dependencies,
                 configuration.getMavenProperties()),
             pomMustache
         );
+    }
+
+    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, Map.Entry<String, String> e) {
+        String key = String.format("%s-%s.%s", propKeyPrefix, index, e.getKey());
+        String val = mandatoryDecrypt(resourceManager, e);
+
+        properties.put(key, val);
     }
 
     private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
@@ -273,7 +274,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     }
                 }
 
-                LOGGER.info("IntegrationDeployment [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
+                LOGGER.info("Integration [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
             } catch (IOException e) {
                 if (LOGGER.isErrorEnabled()) {
                     LOGGER.error(String.format("Exception while creating runtime build tar for deployment %s : %s",

@@ -29,7 +29,6 @@ import java.util.Set;
 import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
-import io.syndesis.controllers.integration.IntegrationSupport;
 import io.syndesis.core.Labels;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
@@ -70,10 +69,10 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
     }
 
     @Override
-    public StateUpdate execute(IntegrationDeployment integrationDeploymentDefinition) {
+    public StateUpdate execute(final IntegrationDeployment integrationDeployment) {
         final int maxIntegrationsPerUser = properties.getMaxIntegrationsPerUser();
         if (maxIntegrationsPerUser != ControllersConfigurationProperties.UNLIMITED) {
-            int userIntegrations = countActiveIntegrationsOfSameUserAs(integrationDeploymentDefinition);
+            int userIntegrations = countActiveIntegrationsOfSameUserAs(integrationDeployment);
             if (userIntegrations >= maxIntegrationsPerUser) {
                 //What the user sees.
                 return new StateUpdate(IntegrationDeploymentState.Inactive, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
@@ -82,14 +81,13 @@ public class ActivateHandler extends BaseHandler implements StateChangeHandler {
 
         final int maxDeploymentsPerUser = properties.getMaxDeploymentsPerUser();
         if (maxDeploymentsPerUser != ControllersConfigurationProperties.UNLIMITED) {
-            int userDeployments = countDeployments(integrationDeploymentDefinition);
+            int userDeployments = countDeployments(integrationDeployment);
             if (userDeployments >= maxDeploymentsPerUser) {
                 //What we actually want to limit. So even though this should never happen, we still need to make sure.
                 return new StateUpdate(IntegrationDeploymentState.Inactive, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
             }
         }
 
-        final IntegrationDeployment integrationDeployment = IntegrationSupport.sanitize(integrationDeploymentDefinition, dataManager, encryptionComponent);
         logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
             isBuildStarted(integrationDeployment), isRunning(integrationDeployment), isReady(integrationDeployment));
         BuildStepPerformer stepPerformer = new BuildStepPerformer(integrationDeployment);
