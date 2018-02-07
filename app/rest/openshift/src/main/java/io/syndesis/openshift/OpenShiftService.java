@@ -94,6 +94,13 @@ public interface OpenShiftService {
     boolean isScaled(String name, int desiredReplicas);
 
     /**
+     * Check whether a given build is failed
+     * @param name name of the build to check
+     * @return true if the build is failed
+     */
+    boolean isBuildFailed(String name);
+
+    /**
      * Returns the {@link DeploymentConfig}s that match the specified labels.
      * @param labels            The specified labels.
      * @return                  The list of {@link DeploymentConfig}s.
