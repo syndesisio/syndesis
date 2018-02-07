@@ -93,13 +93,12 @@ public final class DatabaseMetaDataHelper {
         for (int i=0; i<params.size(); i++) {
             SqlParam param = params.get(i);
             String columnName = param.getColumn();
-            ResultSet column = meta.getColumns(catalog, schema, tableName, columnName); // NOPMD, TODO: fishy
-            if (column.getFetchSize() == 0) {
-                //Postgresql does lowercase instead, so let's try that if we don't have a match
-                column = meta.getColumns(catalog, schema, tableName.toLowerCase(Locale.US), columnName.toLowerCase(Locale.US));
+            ResultSet columns = getColumns(meta, catalog, schema, tableName, columnName, 1);
+            if (columns.next()) {
+                param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
+            } else {
+                throw new SQLException("Could not determine data type of parameter " + param.getName());
             }
-            column.next(); // NOPMD, TODO: fishy
-            param.setJdbcType(JDBCType.valueOf(column.getInt("DATA_TYPE")));
             paramList.add(param);
         }
         return paramList;
@@ -108,18 +107,39 @@ public final class DatabaseMetaDataHelper {
     static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
-        ResultSet columnSet = meta.getColumns(catalog, "SA", tableName, null); // NOPMD, TODO: fishy
-        for (int i=0; i<params.size(); i++) {
-            columnSet.next(); // NOPMD, TODO: fishy
-            SqlParam param = params.get(i);
-            param.setColumn(columnSet.getString("COLUMN_NAME"));
-            param.setJdbcType(JDBCType.valueOf(columnSet.getInt("DATA_TYPE")));
+        ResultSet columns = getColumns(meta, catalog, schema, tableName, null, params.size());
+        int i=0;
+        while (columns.next()) {
+            SqlParam param = params.get(i++);
+            param.setColumn(columns.getString("COLUMN_NAME"));
+            param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
             paramList.add(param);
         }
         return paramList;
     }
 
-    static List<SqlParam> getOutputColumnInfo(final Connection connection, 
+    private static ResultSet getColumns(final DatabaseMetaData meta, String catalog, 
+            String schema, String tableName, String columnName, int expectedSize) throws SQLException {
+        ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);
+        String table = tableName;
+        String column = columnName;
+        int  numberOfRecords = numberOfRecords(columns);
+        if (numberOfRecords == 0) {
+            //Postgresql does lowercase instead, so let's try that if we don't have a match
+            table = table.toLowerCase();
+            column = columnName == null ? null : columnName.toLowerCase();
+            columns = meta.getColumns(catalog, schema, table, column);
+            numberOfRecords = numberOfRecords(columns);
+        }
+        if (numberOfRecords != expectedSize) {
+            String msg = String.format("Invalid SQL, the number of columns (%s) should match the number of number of input parameters (%s)",
+                    numberOfRecords, expectedSize);
+            throw new SQLException(msg);
+        }
+        return columns = meta.getColumns(catalog, schema, table, column);
+    }
+
+    /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection, 
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         Statement stmt = connection.createStatement();
@@ -133,5 +153,13 @@ public final class DatabaseMetaDataHelper {
             }
         }
         return paramList;
+    }
+
+    private static int numberOfRecords(ResultSet resultSet) throws SQLException {
+        int numberOfRecords = 0;
+        while (resultSet.next()) {
+            numberOfRecords++;
+        }
+        return numberOfRecords;
     }
 }

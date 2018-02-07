@@ -47,7 +47,7 @@ public class SqlParserTest {
         schema = DatabaseMetaDataHelper.getDefaultSchema(
                 connection.getMetaData().getDatabaseProductName(), parameters.get("user").toString());
         Statement stmt = connection.createStatement();
-        String createTable = "CREATE TABLE NAME0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
+        String createTable = "CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + 
                              "lastName VARCHAR(255))";
         String createTableAddress = "CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + 
                 "lastName VARCHAR(255))"; 
@@ -57,12 +57,16 @@ public class SqlParserTest {
 
     @AfterClass
     public static void afterClass() throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.execute("DROP table NAME0");
+        stmt.execute("DROP table ADDRESS0");
         sqlCommon.closeConnection(connection);
     }
     
     @Test
     public void parseSelect() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID=:#id");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID=:#id");
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
@@ -72,7 +76,8 @@ public class SqlParserTest {
 
     @Test
     public void parseSelectWithLike() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE FIRSTNAME LIKE :#first");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE FIRSTNAME LIKE :#first");
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
@@ -82,7 +87,8 @@ public class SqlParserTest {
 
     @Test
     public void parseSelectWithJoin() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "SELECT FIRSTNAME, NAME0.LASTNAME, ADDRESS FROM NAME0, ADDRESS0 WHERE NAME0.LASTNAME=ADDRESS0.LASTNAME AND FIRSTNAME LIKE :#first");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "SELECT FIRSTNAME, NAME0.LASTNAME, ADDRESS FROM NAME0, ADDRESS0 WHERE NAME0.LASTNAME=ADDRESS0.LASTNAME AND FIRSTNAME LIKE :#first");
         SqlStatementMetaData info = parser.parse();
         Assert.assertTrue(info.getTableNames().contains("NAME0"));
         Assert.assertTrue(info.getTableNames().contains("ADDRESS0"));
@@ -93,7 +99,8 @@ public class SqlParserTest {
 
     @Test
     public void parseUpdate() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "UPDATE NAME0 SET FIRSTNAME=:#first WHERE ID=:#id");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "UPDATE NAME0 SET FIRSTNAME=:#first WHERE ID=:#id");
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(2, info.getInParams().size());
@@ -105,7 +112,8 @@ public class SqlParserTest {
 
     @Test
     public void parseDelete() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "DELETE FROM NAME0 WHERE ID=:#id");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "DELETE FROM NAME0 WHERE ID=:#id");
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(1, info.getInParams().size());
@@ -117,7 +125,8 @@ public class SqlParserTest {
 
     @Test
     public void parseInsertIntoAllColumnsOfTheTable() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "INSERT INTO NAME0 VALUES (:#id, :#firstname, :#lastname)");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "INSERT INTO NAME0 VALUES (:#id, :#firstname, :#lastname)");
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(3, info.getInParams().size());
@@ -132,7 +141,8 @@ public class SqlParserTest {
 
     @Test
     public void parseInsertWithSpecifiedColumnNames() throws SQLException {
-        SqlStatementParser parser = new SqlStatementParser(connection, schema, "INSERT INTO NAME0 (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
+        SqlStatementParser parser = new SqlStatementParser(connection, schema,
+                "INSERT INTO NAME0 (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
         SqlStatementMetaData info = parser.parse();
         Assert.assertEquals("NAME0", info.getTableNames().get(0));
         Assert.assertEquals(2, info.getInParams().size());
