@@ -94,8 +94,11 @@ public final class DatabaseMetaDataHelper {
             SqlParam param = params.get(i);
             String columnName = param.getColumn();
             ResultSet columns = getColumns(meta, catalog, schema, tableName, columnName, 1);
-            columns.next();
-            param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
+            if (columns.next()) {
+                param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
+            } else {
+                throw new SQLException("Could not determine data type of parameter " + param.getName());
+            }
             paramList.add(param);
         }
         return paramList;
@@ -105,9 +108,9 @@ public final class DatabaseMetaDataHelper {
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         ResultSet columns = getColumns(meta, catalog, schema, tableName, null, params.size());
-        for (int i=0; i<params.size(); i++) {
-            columns.next();
-            SqlParam param = params.get(i);
+        int i=0;
+        while (columns.next()) {
+            SqlParam param = params.get(i++);
             param.setColumn(columns.getString("COLUMN_NAME"));
             param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
             paramList.add(param);
