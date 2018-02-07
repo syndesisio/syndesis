@@ -81,10 +81,9 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            - --pass-user-bearer-token
 {{#Restricted}}
-            - --openshift-sar={"namespace":"${OPENSHIFT_PROJECT}","resource":"pods","verb":"get"}
-            - --openshift-delegate-urls={"/api":{"resource":"projects","verb":"get","resourceName":"${OPENSHIFT_PROJECT}","namespace":"${OPENSHIFT_PROJECT}"}}
+            # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
+            # can be given by a cluster-admin
 {{/Restricted}}
           env:
           - name: OAUTH_COOKIE_SECRET
