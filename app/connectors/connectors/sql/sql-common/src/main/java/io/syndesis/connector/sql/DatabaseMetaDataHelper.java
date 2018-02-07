@@ -94,12 +94,8 @@ public final class DatabaseMetaDataHelper {
         for (int i=0; i<params.size(); i++) {
             SqlParam param = params.get(i);
             String columnName = param.getColumn();
-            ResultSet columns = getColumns(meta, catalog, schema, tableName, columnName, 1);
-            if (columns.next()) {
-                param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
-            } else {
-                throw new SQLException("Could not determine data type of parameter " + param.getName());
-            }
+            List<ColumnMetaData> cList = getColumnMetaData(meta, catalog, schema, tableName, columnName, 1);
+            param.setJdbcType(cList.get(0).getType());
             paramList.add(param);
         }
         return paramList;
@@ -108,37 +104,34 @@ public final class DatabaseMetaDataHelper {
     static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
-        ResultSet columns = getColumns(meta, catalog, schema, tableName, null, params.size());
-        int i=0;
-        while (columns.next()) {
-            SqlParam param = params.get(i++);
-            param.setColumn(columns.getString("COLUMN_NAME"));
-            param.setJdbcType(JDBCType.valueOf(columns.getInt("DATA_TYPE")));
+        List<ColumnMetaData> cList = getColumnMetaData(meta, catalog, schema, tableName, null, params.size());
+        for (SqlParam param : params) {
+            ColumnMetaData c = cList.get(param.getColumnPos());
+            param.setColumn(c.getName());
+            param.setJdbcType(c.getType());
             paramList.add(param);
         }
         return paramList;
     }
 
     @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
-    private static ResultSet getColumns(final DatabaseMetaData meta, String catalog, 
+    private static List<ColumnMetaData> getColumnMetaData(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, String columnName, int expectedSize) throws SQLException {
         ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);
-        String table = tableName;
-        String column = columnName;
-        int  numberOfRecords = numberOfRecords(columns);
-        if (numberOfRecords == 0) {
+        List<ColumnMetaData> columnList = convert(columns);
+        if (columnList.isEmpty()) {
             //Postgresql does lowercase instead, so let's try that if we don't have a match
-            table = table.toLowerCase(Locale.US);
-            column = columnName == null ? null : columnName.toLowerCase(Locale.US);
+            String table = tableName.toLowerCase(Locale.US);
+            String column = columnName == null ? null : columnName.toLowerCase(Locale.US);
             columns = meta.getColumns(catalog, schema, table, column);
-            numberOfRecords = numberOfRecords(columns);
+            columnList = convert(columns);
         }
-        if (numberOfRecords != expectedSize) {
+        if (columnList.size() < expectedSize) {
             String msg = String.format("Invalid SQL, the number of columns (%s) should match the number of number of input parameters (%s)",
-                    numberOfRecords, expectedSize);
+                    columnList.size(), expectedSize);
             throw new SQLException(msg);
         }
-        return columns = meta.getColumns(catalog, schema, table, column);
+        return columnList;
     }
 
     /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection, 
@@ -157,11 +150,16 @@ public final class DatabaseMetaDataHelper {
         return paramList;
     }
 
-    private static int numberOfRecords(ResultSet resultSet) throws SQLException {
-        int numberOfRecords = 0;
+    private static List<ColumnMetaData> convert(ResultSet resultSet) throws SQLException {
+        List<ColumnMetaData> list = new ArrayList<>();
+        Integer position = 0;
         while (resultSet.next()) {
-            numberOfRecords++;
+            ColumnMetaData columnMetaData = new ColumnMetaData();
+            columnMetaData.setName(resultSet.getString("COLUMN_NAME"));
+            columnMetaData.setType(JDBCType.valueOf(resultSet.getInt("DATA_TYPE")));
+            columnMetaData.setPosition(position++);
+            list.add(columnMetaData);
         }
-        return numberOfRecords;
+        return list;
     }
 }

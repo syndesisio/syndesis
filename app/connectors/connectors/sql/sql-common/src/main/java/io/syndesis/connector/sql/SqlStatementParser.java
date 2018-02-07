@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -112,7 +113,7 @@ public class SqlStatementParser {
         statementInfo.setStatementType(StatementType.UPDATE);
         String tableNameUpdate = statementInfo.addTable(sqlArray.get(1));
         if (statementInfo.hasInputParams()) {
-            List<SqlParam> inputParams = findInputParams();
+            List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
                             meta, null, schema, tableNameUpdate, inputParams));
@@ -123,7 +124,7 @@ public class SqlStatementParser {
         statementInfo.setStatementType(StatementType.DELETE);
         String tableNameDelete = statementInfo.addTable(sqlArray.get(2));
         if (statementInfo.hasInputParams()) {
-            List<SqlParam> inputParams = findInputParams();
+            List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
                             meta, null, schema, tableNameDelete, inputParams));
@@ -133,7 +134,7 @@ public class SqlStatementParser {
     private void parseSelect(DatabaseMetaData meta) throws SQLException  {
         statementInfo.setStatementType(StatementType.SELECT);
         if (statementInfo.hasInputParams()) {
-            List<SqlParam> inputParams = findInputParams();
+            List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setTableNames(findTablesInSelectStatement()); //TODO support multiple tables
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
@@ -153,6 +154,15 @@ public class SqlStatementParser {
         return sqlArray;
     }
 
+    /**
+     * INSERT INTO table_name (column1, column2, column3, ...)
+     * VALUES (value1, value2, value3, ...);
+     *
+     * INSERT INTO table_name
+     * VALUES (value1, value2, value3, ...);
+     * @param tableName
+     * @return
+     */
     List<SqlParam> findInsertParams(String tableName) {
         boolean isColumnName = false;
         List<String> columnNames = new ArrayList<>();
@@ -167,19 +177,28 @@ public class SqlStatementParser {
                 isColumnName = true; //in the next iteration
             }
         }
-        List<SqlParam> params = findInputParams();
-        if (columnNames.size() == params.size()) {
-            for (int i=0; i<params.size(); i++) {
-                params.get(i).setColumn(columnNames.get(i).toUpperCase(Locale.US));
+        int v = sqlArray.indexOf("VALUES") + 1;
+        List<SqlParam> params;
+        if (columnNames.size() > 0) {
+            
+            List<String> values = sqlArray.subList(v, v + columnNames.size() );
+            params = findInputParams(values);
+            int paramCounter = 0;
+            for (int i=0; i<columnNames.size(); i++) {
+                if (values.get(i).startsWith(":#")) {
+                    params.get(paramCounter++).setColumn(columnNames.get(i).toUpperCase(Locale.US));
+                }
             }
+        } else {
+            List<String> values = sqlArray.subList(v, sqlArray.size());
+            params = findInputParams(values);
         }
         return params;
     }
     
-    List<SqlParam> findInputParams() {
+    List<SqlParam> findInputParams(List<String> values) {
         List<SqlParam> params = new ArrayList<>();
         int i=0;
-        int columnPos=0;
         for (String word: sqlArray) {
             if (word.startsWith(":#")) {
                 SqlParam param = new SqlParam(word.substring(2));
@@ -187,8 +206,8 @@ public class SqlStatementParser {
                 if ("LIKE".equals(column)) {
                     column = sqlArray.get(i-2);
                 }
-                if (column.startsWith(":#") || "VALUES".equals(column)) {
-                    param.setColumnPos(columnPos++);
+                if (column.startsWith(":#") || "VALUES".equals(column) || values.contains(column)) {
+                    param.setColumnPos(values.indexOf(word));
                 } else {
                     param.setColumn(column.toUpperCase(Locale.US));
                 }

@@ -30,6 +30,21 @@ public class SqlParserTest {
     public static SqlConnectionRule db = new SqlConnectionRule();
 
     @Test
+    public void parseUpdateWithConstant() throws SQLException {
+        SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,
+                "UPDATE NAME0 SET FIRSTNAME=:#first, LASTNAME='Jenssen' WHERE ID=:#id");
+        SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(2, info.getInParams().size());
+        Assert.assertEquals("first", info.getInParams().get(0).getName());
+        Assert.assertEquals("FIRSTNAME", info.getInParams().get(0).getColumn());
+        Assert.assertEquals(String.class, info.getInParams().get(0).getTypeValue().getClazz());
+        Assert.assertEquals("id", info.getInParams().get(1).getName());
+        Assert.assertEquals("ID", info.getInParams().get(1).getColumn());
+        Assert.assertEquals(Integer.class, info.getInParams().get(1).getTypeValue().getClazz());
+    }
+
+    @Test
     public void parseDelete() throws SQLException {
         final SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema, "DELETE FROM NAME0 WHERE ID=:#id");
         final SqlStatementMetaData info = parser.parse();
@@ -55,6 +70,20 @@ public class SqlParserTest {
         Assert.assertEquals("lastname", info.getInParams().get(2).getName());
         Assert.assertEquals(2, info.getInParams().get(2).getColumnPos());
         Assert.assertEquals(String.class, info.getInParams().get(2).getTypeValue().getClazz());
+    }
+
+    @Test
+    public void parseInsertWithConstant() throws SQLException {
+        SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,
+                "INSERT INTO NAME0 VALUES (29, :#firstname, :#lastname)");
+        SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(2, info.getInParams().size());
+        Assert.assertEquals(1, info.getInParams().get(0).getColumnPos());
+        Assert.assertEquals("firstname", info.getInParams().get(0).getName());
+        Assert.assertEquals(2, info.getInParams().get(1).getColumnPos());
+        Assert.assertEquals("lastname", info.getInParams().get(1).getName());
+        Assert.assertEquals(String.class, info.getInParams().get(1).getTypeValue().getClazz());
     }
 
     @Test
@@ -133,5 +162,17 @@ public class SqlParserTest {
             stmt.executeUpdate("CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");
             stmt.executeUpdate("CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + "lastName VARCHAR(255))");
         }
+    }
+    
+    @Test
+    public void parseInsertWithConstantAndColumnNames() throws SQLException {
+        SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,
+                "INSERT INTO NAME0 (FIRSTNAME, LASTNAME) VALUES ('Kurt', :#lastname)");
+        SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("lastname", info.getInParams().get(0).getName());
+        Assert.assertEquals(1, info.getInParams().get(0).getColumnPos());
+        Assert.assertEquals("LASTNAME", info.getInParams().get(0).getColumn());
     }
 }
