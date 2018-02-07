@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-abstract class DataMapperBaseInspector implements Inspector {
+abstract class DataMapperBaseInspector<T> implements Inspector {
 
     private static final String CLASSNAME = "className";
     private static final String DEFAULT_SEPARATOR = ".";
@@ -45,33 +45,59 @@ abstract class DataMapperBaseInspector implements Inspector {
 
     private final boolean strict;
 
-    /* default */ DataMapperBaseInspector(final boolean strict) {
+    static class Context<T> {
+        private final T state;
+
+        private final List<String> visited = new ArrayList<>();
+
+        public Context(final T initial) {
+            this.state = initial;
+        }
+
+        public T getState() {
+            return state;
+        }
+
+        void addVisited(final String fullyQualifiedName) {
+            visited.add(fullyQualifiedName);
+        }
+
+        boolean hasVisited(final String fullyQualifiedName) {
+            return visited.contains(fullyQualifiedName);
+        }
+    }
+
+    DataMapperBaseInspector(final boolean strict) {
         this.strict = strict;
     }
 
     @Override
     public List<String> getPaths(final String kind, final String type, final String specification, final Optional<byte[]> exemplar) {
-        return getPathsForJavaClassName("", type, new ArrayList<>());
+        return getPathsForJavaClassName("", type, specification, createContext(kind, type, specification, exemplar));
     }
 
     @Override
     public final boolean supports(final String kind, final String type, final String specification, final Optional<byte[]> exemplar) {
-        return "java".equals(kind) && !StringUtils.isEmpty(type);
+        return "java".equals(kind) && !StringUtils.isEmpty(type) && internalSupports(kind, type, specification, exemplar);
     }
 
-    protected abstract String fetchJsonFor(String fullyQualifiedName) throws Exception;
+    protected Context<T> createContext(final String kind, final String type, final String specification, final Optional<byte[]> exemplar) {
+        return new Context<>(null);
+    }
 
-    protected final List<String> getPathsForJavaClassName(final String prefix, final String fullyQualifiedName,
-        final List<String> visited) {
-        if (visited.contains(fullyQualifiedName)) {
+    protected abstract String fetchJsonFor(String fullyQualifiedName, Context<T> context) throws IOException;
+
+    protected final List<String> getPathsForJavaClassName(final String prefix, final String fullyQualifiedName, final String specification,
+        final Context<T> context) {
+        if (context.hasVisited(fullyQualifiedName)) {
             return Collections.emptyList();
         }
 
-        visited.add(fullyQualifiedName);
+        context.addVisited(fullyQualifiedName);
 
         String json;
         try {
-            json = fetchJsonFor(fullyQualifiedName);
+            json = fetchJsonFor(fullyQualifiedName, context);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
             if (strict) {
                 throw SyndesisServerException.launderThrowable(e);
@@ -79,42 +105,54 @@ abstract class DataMapperBaseInspector implements Inspector {
             return Collections.emptyList();
         }
 
-        return getPathsFromJavaClassJson(prefix, json, visited);
+        return getPathsFromJavaClassJson(prefix, json, context);
     }
 
     @SuppressWarnings("PMD.CyclomaticComplexity")
-    protected final List<String> getPathsFromJavaClassJson(final String prefix, final String json, final List<String> visited) {
-        final List<String> paths = new ArrayList<>();
+    protected final List<String> getPathsFromJavaClassJson(final String prefix, final String specification, final Context<T> context) {
         try {
-            final JsonNode node = Json.mapper().readTree(json);
-            if (node != null) {
-                final JsonNode javaClass = node.get(JAVA_CLASS);
-                if (javaClass != null) {
-                    final JsonNode fields = javaClass.get(JAVA_FIELDS);
-                    if (fields != null) {
-                        final JsonNode field = fields.get(JAVA_FIELD);
-                        if (field != null && field.isArray()) {
-                            for (final JsonNode f : field) {
-                                final String name = f.get(NAME).asText();
-                                final String fieldClassName = f.get(CLASSNAME).asText();
-                                final Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
-                                if (isPrimitive || isTerminal(fieldClassName)) {
-                                    paths.add(prependPrefix(prefix, name));
-                                    continue;
-                                }
-
-                                paths.addAll(getPathsForJavaClassName(prependPrefix(prefix, name), fieldClassName, visited));
-                            }
-                        }
-                    }
-                }
+            final JsonNode node = Json.mapper().reader().readTree(specification);
+            if (node == null) {
+                return Collections.emptyList();
             }
 
+            final JsonNode javaClass = node.get(JAVA_CLASS);
+            if (javaClass == null) {
+                return Collections.emptyList();
+            }
+
+            final JsonNode fields = javaClass.get(JAVA_FIELDS);
+            if (fields == null) {
+                return Collections.emptyList();
+            }
+
+            final JsonNode field = fields.get(JAVA_FIELD);
+            if (field != null && field.isArray()) {
+                final List<String> paths = new ArrayList<>();
+
+                for (final JsonNode f : field) {
+                    final String name = f.get(NAME).asText();
+                    final String fieldClassName = f.get(CLASSNAME).asText();
+                    final Boolean isPrimitive = f.get(PRIMITIVE).asBoolean();
+                    if (isPrimitive || isTerminal(fieldClassName)) {
+                        paths.add(prependPrefix(prefix, name));
+                        continue;
+                    }
+
+                    paths.addAll(getPathsForJavaClassName(prependPrefix(prefix, name), fieldClassName, specification, context));
+                }
+
+                return paths;
+            }
+
+            return Collections.emptyList();
         } catch (final IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
-        return paths;
     }
+
+    protected abstract boolean internalSupports(final String kind, final String type, final String specification,
+        final Optional<byte[]> exemplar);
 
     private static String prependPrefix(final String prefix, final String name) {
         return StringUtils.hasLength(prefix) ? prefix + DEFAULT_SEPARATOR + name : name;
