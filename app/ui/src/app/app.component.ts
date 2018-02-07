@@ -1,4 +1,3 @@
-import { IntegrationState } from './platform/types/integration/integration.models';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -14,7 +13,7 @@ import { Restangular } from 'ngx-restangular';
 import { Notification, NotificationEvent } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { UserService, User, PlatformActions, getIntegrationState } from '@syndesis/ui/platform';
+import { UserService, User, PlatformActions, PlatformState } from '@syndesis/ui/platform';
 import { ModalService } from './common/modal/modal.service';
 import { NavigationService } from './common/navigation.service';
 import { ConfigService } from './config.service';
@@ -89,7 +88,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   showClose: boolean;
 
   constructor(
-    private store: Store<any>,
+    private store: Store<PlatformState>,
     private config: ConfigService,
     private userService: UserService,
     public testSupport: TestSupportService,
@@ -103,9 +102,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.store.dispatch(new PlatformActions.PlatformBootstrap());
+    this.store.dispatch(new PlatformActions.AppBootstrap());
 
-    //this.store.select<IntegrationState>(getIntegrationState).subscribe(foo => console.log(foo));
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
     this.title.setTitle(this.appName);
     this.meta.updateTag({ content: this.appName }, 'id="appName"');

@@ -1,7 +1,5 @@
 import { createFeatureSelector } from '@ngrx/store';
 
-import { PlatformStore } from '@syndesis/ui/platform';
-
 import { IntegrationState } from './integration.models';
 import * as IntegrationActions from './integration.actions';
 
@@ -168,9 +166,4 @@ export function integrationReducer(state = initialState, action: any): Integrati
   }
 }
 
-// Most likely not needed since this is meant to become and app-wide state segment
-export interface IntegrationStore extends PlatformStore {
-  integrationState: IntegrationState;
-}
-
-export const getIntegrationState = createFeatureSelector<IntegrationState>('integrationState');
+export const selectIntegrationState = createFeatureSelector<IntegrationState>('integrationState');

@@ -1,6 +1,6 @@
 import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
-import { BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
+import { BaseReducerModel, PlatformState } from '@syndesis/ui/platform';
 import { ApiConnectorState, CustomApiConnectorRequest, CustomConnectorRequest } from './api-connector.models';
 import {
   ApiConnectorActions,
@@ -206,7 +206,7 @@ export function apiConnectorReducer(state = initialState, action: any): ApiConne
   }
 }
 
-export interface ApiConnectorStore extends PlatformStore {
+export interface ApiConnectorStore extends PlatformState {
   apiConnectorState: ApiConnectorState;
 }
 
