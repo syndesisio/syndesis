@@ -15,8 +15,17 @@
  */
 package io.syndesis.integration.project.generator;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,6 +33,7 @@ import java.util.List;
 import java.util.Properties;
 
 import io.syndesis.core.KeyGenerator;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -34,9 +44,15 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -44,7 +60,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 @RunWith(Parameterized.class)
-public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
+public class ProjectGeneratorTest {
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+    @Rule
+    public TestName testName = new TestName();
+
     private final String basePath;
     private final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources;
 
@@ -76,18 +97,17 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
 
     @Test
     public void testGenerateProject() throws Exception {
-        TestResourceManager manager = new TestResourceManager();
+        TestResourceManager resourceManager = new TestResourceManager();
 
-        Integration deployment = newIntegration(
-            manager,
+        Integration integration = resourceManager.newIntegration(
             new Step.Builder()
                 .stepKind("endpoint")
                 .connection(new Connection.Builder()
                     .id("timer-connection")
-                    .connector(TIMER_CONNECTOR)
+                    .connector(TestConstants.TIMER_CONNECTOR)
                     .build())
                 .putConfiguredProperty("period", "5000")
-                .action(PERIODIC_TIMER_ACTION)
+                .action(TestConstants.PERIODIC_TIMER_ACTION)
                 .build(),
             new Step.Builder()
                 .stepKind("mapper")
@@ -153,13 +173,13 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
                 .stepKind("endpoint")
                 .connection(new Connection.Builder()
                     .id("http-connection")
-                    .connector(HTTP_CONNECTOR)
+                    .connector(TestConstants.HTTP_CONNECTOR)
                     .build())
                 .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
                 .putConfiguredProperty("username", "admin")
                 .putConfiguredProperty("password", "admin")
                 .putConfiguredProperty("token", "mytoken")
-                .action(HTTP_GET_ACTION)
+                .action(TestConstants.HTTP_GET_ACTION)
                 .build()
         );
 
@@ -171,7 +191,7 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(deployment, configuration, manager);
+        Path runtimeDir = generate(integration, configuration, resourceManager);
 
         assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
 
@@ -281,8 +301,8 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager);
-        Integration deployment = newIntegration(resourceManager, s1, s2);
-        Properties properties = generator.generateApplicationProperties(deployment);
+        Integration integration = resourceManager.newIntegration(s1, s2);
+        Properties properties = generator.generateApplicationProperties(integration);
 
         assertThat(properties.size()).isEqualTo(6);
         assertThat(properties.getProperty("old.configurations.old-1.token")).isEqualTo("my-token-1");
@@ -291,5 +311,65 @@ public class ProjectGeneratorTest extends ProjectGeneratorTestSupport {
         assertThat(properties.getProperty("http4-2.token")).isEqualTo("my-token-2");
         assertThat(properties.getProperty("http4-2.username")).isEqualTo("my-username-2");
         assertThat(properties.getProperty("http4-2.password")).isEqualTo("my-password-2");
+    }
+    // *****************************
+    // Helpers
+    // *****************************
+
+    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
+        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
+
+        try (InputStream is = generator.generate(integration)) {
+            Path ret = testFolder.newFolder("integration-project").toPath();
+
+            try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
+                TarArchiveEntry tarEntry = tis.getNextTarEntry();
+
+                // tarIn is a TarArchiveInputStream
+                while (tarEntry != null) {
+                    // create a file with the same name as the tarEntry
+                    File destPath = new File(ret.toFile(), tarEntry.getName());
+                    if (tarEntry.isDirectory()) {
+                        destPath.mkdirs();
+                    } else {
+                        destPath.getParentFile().mkdirs();
+                        destPath.createNewFile();
+
+                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
+                            IOUtils.copy(tis, bout);
+                        }
+                    }
+                    tarEntry = tis.getNextTarEntry();
+                }
+            }
+
+            return ret;
+        }
+    }
+
+    private void assertFileContents(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
+        URL resource = null;
+        String overridePath = generatorConfiguration.getTemplates().getOverridePath();
+        String methodName = testName.getMethodName();
+
+        int index = methodName.indexOf('[');
+        if (index != -1) {
+            methodName = methodName.substring(0, index);
+        }
+
+        if (!StringUtils.isEmpty(overridePath)) {
+            resource = ProjectGeneratorTest.class.getResource(methodName + "/" + overridePath + "/" + expectedFileName);
+        }
+        if (resource == null) {
+            resource = ProjectGeneratorTest.class.getResource(methodName + "/" + expectedFileName);
+        }
+        if (resource == null) {
+            throw new IllegalArgumentException("Unable to find te required resource (" + expectedFileName + ")");
+        }
+
+        final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8).trim();
+        final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
+
+        assertThat(actual).isEqualTo(expected);
     }
 }
