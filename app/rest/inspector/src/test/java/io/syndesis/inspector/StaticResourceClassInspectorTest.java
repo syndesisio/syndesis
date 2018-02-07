@@ -24,7 +24,7 @@ public class StaticResourceClassInspectorTest {
 
     @Test
     public void shouldFetchFromStaticResource() throws Exception {
-        final String json = new StaticResourceClassInspector(new DefaultResourceLoader()).fetchJsonFor("twitter4j.Status");
+        final String json = new StaticResourceClassInspector(new DefaultResourceLoader()).fetchJsonFor("twitter4j.Status", null);
 
         assertThat(json).isNotEmpty();
     }

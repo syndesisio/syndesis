@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
-public final class StaticResourceClassInspector extends DataMapperBaseInspector {
+public final class StaticResourceClassInspector extends DataMapperBaseInspector<Void> {
 
     private static final String PREFIX = "classpath:/static/mapper/v1/java-inspections/**/";
 
@@ -43,7 +45,7 @@ public final class StaticResourceClassInspector extends DataMapperBaseInspector 
     }
 
     @Override
-    protected String fetchJsonFor(final String fullyQualifiedName) throws IOException {
+    protected String fetchJsonFor(final String fullyQualifiedName, final Context<Void> context) throws IOException {
         final String path = PREFIX + fullyQualifiedName + SUFFIX;
 
         final Resource[] resources = resolver.getResources(path);
@@ -59,6 +61,11 @@ public final class StaticResourceClassInspector extends DataMapperBaseInspector 
         try (InputStream in = resource.getInputStream()) {
             return IOUtils.toString(in, StandardCharsets.UTF_8);
         }
+    }
+
+    @Override
+    protected boolean internalSupports(final String kind, final String type, final String specification, final Optional<byte[]> exemplar) {
+        return StringUtils.isEmpty(specification);
     }
 
 }
