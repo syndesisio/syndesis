@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
 
-import io.syndesis.core.Json;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -92,11 +91,12 @@ public interface QueryResult extends Serializable {
             }
 
             default String getStringValue() {
-                return getValue().get(1).toString();
+                // needs the quotes for types like Date
+                return String.format("\"%s\"", getValue().get(1));
             }
 
             default <T> T getTypedValue(Class<? extends T> clazz) throws IOException {
-                return Json.reader().forType(clazz).readValue(getStringValue());
+                return Utils.getObjectReader().forType(clazz).readValue(getStringValue());
             }
         }
 

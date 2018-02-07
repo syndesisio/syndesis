@@ -15,6 +15,8 @@
  */
 package io.syndesis.rest.metrics.prometheus;
 
+import java.util.Date;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -28,6 +30,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @Ignore ("requires an instrumented pod and prometheus service name")
 public class PrometheusMetricsProviderImplTest {
+
+
+    @Test
+    public void testDateConverter() throws Exception {
+        final Date value = Utils.getObjectReader().forType(Date.class).readValue("\"2018-02-07T04:37:25Z\"");
+        assertThat(value).isNotNull();
+    }
 
     @Test
     public void getIntegrationMetricsSummary() throws Exception {
