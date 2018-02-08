@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -42,10 +43,17 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // aggregate values across versions
-        final Optional<Map<String, Long>> totalMessagesMap = getMetricValues(integrationId,"org_apache_camel_ExchangesTotal", "syndesis_io_deployment_id", Long.class);
-        final Optional<Map<String, Long>> failedMessagesMap = getMetricValues(integrationId, "org_apache_camel_ExchangesFailed", "syndesis_io_deployment_id", Long.class);
-        final Optional<Map<String, Date>> startTimeMap = getMetricValues(integrationId, "io_syndesis_camel_StartTimestamp", "syndesis_io_deployment_id", Date.class);
-        final Optional<Map<String, Date>> lastProcessingTimeMap = getMetricValues(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", "syndesis_io_deployment_id", Date.class);
+        final BinaryOperator<Long> sumLongs = (aLong, aLong2) -> aLong + aLong2;
+        final Optional<Map<String, Long>> totalMessagesMap = getMetricValues(integrationId,
+            "org_apache_camel_ExchangesTotal", "syndesis_io_deployment_id", Long.class, sumLongs);
+        final Optional<Map<String, Long>> failedMessagesMap = getMetricValues(integrationId,
+            "org_apache_camel_ExchangesFailed", "syndesis_io_deployment_id", Long.class, sumLongs);
+
+        final BinaryOperator<Date> maxDate = (date, date2) -> date.compareTo(date2) < 0 ? date2 : date;
+        final Optional<Map<String, Date>> startTimeMap = getMetricValues(integrationId,
+            "io_syndesis_camel_StartTimestamp", "syndesis_io_deployment_id", Date.class, maxDate);
+        final Optional<Map<String, Date>> lastProcessingTimeMap = getMetricValues(integrationId,
+            "io_syndesis_camel_LastExchangeCompletedTimestamp", "syndesis_io_deployment_id", Date.class, maxDate);
 
         Optional<Long> totalMessages = totalMessagesMap.map(Map::values).flatMap(
             longs -> Optional.of(longs.stream().mapToLong(Long::longValue).sum()));
@@ -69,11 +77,11 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         throw new UnsupportedOperationException();
     }
 
-    private <T> Optional<Map<String, T>> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz) {
+    private <T> Optional<Map<String, T>> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
         HttpQuery queryTotalMessages = createHttpQuery(integrationId, metric);
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
-        return QueryResult.getValueMap(response, label, clazz);
+        return QueryResult.getValueMap(response, label, clazz, mergeFunction);
     }
 
     private HttpQuery createHttpQuery(String integrationId, String metric) {

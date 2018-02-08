@@ -44,7 +44,7 @@ public class PrometheusMetricsProviderImplTest {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.20.nip.io");
         MetricsProvider impl = new PrometheusMetricsProviderImpl(config);
-        final IntegrationMetricsSummary summary = impl.getIntegrationMetricsSummary("l4in0sm-qhug5gnbvbk");
+        final IntegrationMetricsSummary summary = impl.getIntegrationMetricsSummary("l4ohe2jvho7adwiw4xo");
         assertThat(summary.getMessages()).isNotNull();
     }
 

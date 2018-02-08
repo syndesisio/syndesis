@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
@@ -50,6 +51,15 @@ public interface QueryResult extends Serializable {
         return response.getData().map(data ->
                 data.getResult().stream().collect(
                     Collectors.toMap(r -> r.getLabel(label), r -> r.getTypedValue(clazz).orElse(null))
+                )
+            );
+    }
+
+    static <T> Optional<Map<String, T>> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz,
+                                                    BinaryOperator<T> mergeFunction) {
+        return response.getData().map(data ->
+                data.getResult().stream().collect(
+                    Collectors.toMap(r -> r.getLabel(label), r -> r.getTypedValue(clazz).orElse(null), mergeFunction)
                 )
             );
     }
