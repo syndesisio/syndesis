@@ -18,6 +18,21 @@ startDelaySecs: 5
 ssl: false
 blacklistObjectNames: ["java.lang:*"]
 rules:
+# Syndesis Camel Context
+  - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>LastExchangeCompletedTimestamp'
+    name: io.syndesis.camel.LastExchangeCompletedTimestamp
+    help: Last Exchange Completed Timestamp
+    type: COUNTER
+    labels:
+      context: $1
+      type: context
+  - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>StartTimestamp'
+    name: io.syndesis.camel.StartTimestamp
+    help: Start Timestamp
+    type: COUNTER
+    labels:
+      context: $1
+      type: context
 # Context level
   - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>ExchangesCompleted'
     name: org.apache.camel.ExchangesCompleted
@@ -44,20 +59,6 @@ rules:
     name: org.apache.camel.ExchangesTotal
     help: Exchanges Total
     type: COUNTER
-    labels:
-      context: $1
-      type: context
-  - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>LastExchangeCompletedTimestamp'
-    name: org.apache.camel.LastExchangeCompletedTimestamp
-    help: Last Exchange Completed Timestamp
-    type: UNTYPED
-    labels:
-      context: $1
-      type: context
-  - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>StartTimestamp'
-    name: org.apache.camel.StartTimestamp
-    help: Start Timestamp
-    type: UNTYPED
     labels:
       context: $1
       type: context
@@ -152,20 +153,6 @@ rules:
       context: $1
       route: $2
       type: routes
-  - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>LastExchangeCompletedTimestamp'
-    name: org.apache.camel.LastExchangeCompletedTimestamp
-    help: Last Exchange Completed Timestamp
-    type: UNTYPED
-    labels:
-      context: $1
-      type: context
-  - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>StartTimestamp'
-    name: org.apache.camel.StartTimestamp
-    help: Start Timestamp
-    type: UNTYPED
-    labels:
-      context: $1
-      type: context
   - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>FailuresHandled'
     name: org.apache.camel.FailuresHandled
     help: Failures Handled
@@ -264,20 +251,6 @@ rules:
       context: $1
       processor: $2
       type: processors
-  - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>LastExchangeCompletedTimestamp'
-    name: org.apache.camel.LastExchangeCompletedTimestamp
-    help: Last Exchange Completed Timestamp
-    type: UNTYPED
-    labels:
-      context: $1
-      type: context
-  - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>StartTimestamp'
-    name: org.apache.camel.StartTimestamp
-    help: Start Timestamp
-    type: UNTYPED
-    labels:
-      context: $1
-      type: context
   - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>FailuresHandled'
     name: org.apache.camel.FailuresHandled
     help: Failures Handled
