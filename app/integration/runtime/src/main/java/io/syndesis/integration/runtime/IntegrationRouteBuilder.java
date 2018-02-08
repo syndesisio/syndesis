@@ -22,6 +22,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.util.ResourceHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.syndesis.core.Json;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
@@ -31,15 +38,10 @@ import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
+import io.syndesis.integration.runtime.jmx.CamelContextMetadataMBean;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.util.ResourceHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
@@ -114,6 +116,10 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 }).orElse(route);
             }
         }
+
+        // register custom mbean
+        getContext().addService(new CamelContextMetadataMBean());
+        LOGGER.info("Added Syndesis MBean Service");
     }
 
     // Visibility changed for test purpose.
