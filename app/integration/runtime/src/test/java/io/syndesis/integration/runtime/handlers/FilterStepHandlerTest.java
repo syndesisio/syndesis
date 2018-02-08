@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.filter.FilterPredicate;
@@ -56,7 +56,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class FilterStepHandlerTest extends StepHandlerTestSupport {
+public class FilterStepHandlerTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

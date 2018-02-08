@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.Split;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -58,7 +58,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
     }
 )
 @SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.UseLocaleWithCaseConversions"})
-public class SimpleEndpointStepHandlerTest extends StepHandlerTestSupport {
+public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

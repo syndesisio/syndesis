@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.extension.api.SyndesisStepExtension;
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
@@ -61,7 +61,7 @@ import static org.junit.Assert.fail;
         }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class LogsAndErrorsTest extends StepHandlerTestSupport {
+public class LogsAndErrorsTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

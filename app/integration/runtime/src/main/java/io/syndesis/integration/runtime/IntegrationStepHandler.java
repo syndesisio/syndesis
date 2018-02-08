@@ -30,4 +30,8 @@ public interface IntegrationStepHandler {
      * Customize the given route according to the given step.
      */
     Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex);
+
+    // Marker interface to mark handlers as valid start for a route
+    interface Consumer {
+    }
 }

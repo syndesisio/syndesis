@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import io.syndesis.extension.api.SyndesisStepExtension;
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
@@ -79,7 +79,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings({"PMD.ExcessiveImports", "PMD.JUnitTestContainsTooManyAsserts"})
-public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
+public class ExtensionStepHandlerTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

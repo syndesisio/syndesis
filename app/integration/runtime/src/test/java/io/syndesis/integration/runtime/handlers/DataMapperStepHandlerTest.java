@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.List;
 
 import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
@@ -60,7 +60,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         DirtiesContextTestExecutionListener.class
     }
 )
-public class DataMapperStepHandlerTest extends StepHandlerTestSupport {
+public class DataMapperStepHandlerTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

@@ -17,6 +17,7 @@ package io.syndesis.integration.project.generator;
 
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Scheduler;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
 import org.junit.Test;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProjectGeneratorHelperTest {
 
     @Test
-    public void testSanitize() {
+    public void testSanitizeConnectors() {
         TestResourceManager resourceManager = new TestResourceManager();
         resourceManager.put(TestConstants.TIMER_CONNECTOR.getId().get(), TestConstants.TIMER_CONNECTOR);
 
@@ -50,5 +51,62 @@ public class ProjectGeneratorHelperTest {
         assertThat(sanitized.getSteps().get(0).getConnection().isPresent()).isTrue();
         assertThat(sanitized.getSteps().get(0).getConnection().get().getConnector().isPresent()).isTrue();
         assertThat(sanitized.getSteps().get(0).getConnection().get().getConnector().get()).isEqualTo(TestConstants.TIMER_CONNECTOR);
+    }
+
+    @Test
+    public void testSanitizeScheduler() {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration source = resourceManager.newIntegration(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .id("timer-connection")
+                    .connector(TestConstants.HTTP_CONNECTOR)
+                    .build())
+                .putConfiguredProperty("schedulerType", "timer")
+                .putConfiguredProperty("schedulerExpression", "1s")
+                .action(TestConstants.HTTP_GET_ACTION)
+                .build()
+        );
+
+        assertThat(source.getScheduler().isPresent()).isFalse();
+
+        Integration sanitized = ProjectGeneratorHelper.sanitize(source, resourceManager);
+
+        assertThat(sanitized.getScheduler().isPresent()).isTrue();
+        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("type", Scheduler.Type.timer);
+        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("expression", "1s");
+        assertThat(sanitized.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
+        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
+    }
+
+    @Test
+    public void testSanitizeDefaultScheduler() {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration source = resourceManager.newIntegration(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .id("timer-connection")
+                    .connector(TestConstants.HTTP_CONNECTOR)
+                    .build())
+                .putConfiguredProperty("schedulerExpression", "1s")
+                .action(TestConstants.HTTP_GET_ACTION)
+                .build()
+        );
+
+        assertThat(source.getScheduler().isPresent()).isFalse();
+
+        Integration sanitized = ProjectGeneratorHelper.sanitize(source, resourceManager);
+
+        assertThat(sanitized.getScheduler().isPresent()).isTrue();
+        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("type", Scheduler.Type.timer);
+        assertThat(sanitized.getScheduler().get()).hasFieldOrPropertyWithValue("expression", "1s");
+        assertThat(sanitized.getSteps().get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-type");
+        assertThat(sanitized.getSteps().get(0).getConfiguredProperties()).doesNotContainKey("scheduler-expression");
     }
 }

@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.Properties;
 
 import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -73,7 +73,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings("PMD.ExcessiveImports")
-public class ConnectorStepHandlerTest extends StepHandlerTestSupport {
+public class ConnectorStepHandlerTest extends IntegrationTestSupport {
     private static final ConnectorAction TWITTER_MENTION_ACTION = new ConnectorAction.Builder()
         .id("twitter-mention-action")
         .descriptor(new ConnectorDescriptor.Builder()

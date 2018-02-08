@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -47,7 +47,7 @@ import org.springframework.test.context.junit4.SpringRunner;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class SplitStepHandlerJsonTest extends StepHandlerTestSupport {
+public class SplitStepHandlerJsonTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

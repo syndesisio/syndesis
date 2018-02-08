@@ -15,7 +15,6 @@
  */
 package io.syndesis.integration.runtime;
 
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import org.apache.camel.model.FromDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
@@ -44,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class IntegrationRouteBuilderTest extends StepHandlerTestSupport {
+public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
     @Autowired
     private IntegrationRouteBuilder routeBuilder;
 

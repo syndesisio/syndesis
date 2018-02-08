@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.handlers.support;
+package io.syndesis.integration.runtime;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,12 +27,11 @@ import org.apache.camel.model.RouteDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 
-public class StepHandlerTestSupport {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StepHandlerTestSupport.class);
+public class IntegrationTestSupport {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
 
     protected void dumpRoutes(CamelContext context) {
         for (RouteDefinition definition: context.getRouteDefinitions()) {
@@ -48,21 +47,21 @@ public class StepHandlerTestSupport {
         return new IntegrationRouteBuilder("", Collections.emptyList()) {
             @Override
             protected Integration loadIntegration() throws IOException {
-                return newIntegrationDeployment(steps);
+                return newIntegration(steps);
             }
         };
     }
 
-    protected static Integration newIntegrationDeployment(Step... steps) {
+    protected static Integration newIntegration(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
             steps[i] = new Step.Builder().createFrom(steps[i]).build();
         }
 
         return new Integration.Builder()
-                .id("test-integration")
-                .name("Test Integration")
-                .description("This is a test integration!")
-                .steps(Arrays.asList(steps))
-                .build();
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .steps(Arrays.asList(steps))
+            .build();
     }
 }
