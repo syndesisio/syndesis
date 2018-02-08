@@ -15,13 +15,15 @@
  */
 package io.syndesis.connector.sql.stored;
 
-import java.util.Iterator;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Utility to help with parsing the data from the simple serialized java bean.
@@ -32,6 +34,12 @@ import org.json.JSONObject;
  *
  */
 public final class JSONBeanUtil {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private static final TypeReference<Map<String, String>> STRING_STRING_MAP = new TypeReference<Map<String, String>>() {
+        // type token pattern
+    };
 
     private JSONBeanUtil() {
         // utility class
@@ -45,51 +53,38 @@ public final class JSONBeanUtil {
      *            for the SqlStoredConnector
      * @return Properties representation of the simple JSON bean
      */
-    public static Properties parsePropertiesFromJSONBean(final String json) throws JSONException {
-        final Properties properties = new Properties();
-        final JSONObject obj = new JSONObject(json);
-        @SuppressWarnings("unchecked")
-        final Iterator<String> iterator = obj.keys();
-        while (iterator.hasNext()) {
-            final String key = iterator.next();
-            final String value = String.valueOf(obj.get(key));
-            properties.setProperty(key, value);
+    public static Properties parsePropertiesFromJSONBean(final String json) {
+        final Map<String, String> parsed;
+        try {
+            parsed = MAPPER.readerFor(STRING_STRING_MAP).readValue(json);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException("Unable to parse given JSON", e);
         }
-        return properties;
+
+        final Properties ret = new Properties();
+        ret.putAll(parsed);
+
+        return ret;
     }
+
     /**
      * Convenience method to convert a Camel Map output to a JSON Bean String.
-     * 
-     * @param map
-     * @return JSON bean String
-     */
-    public static String toJSONBean(final Map<String,Object> map) {
-        final JSONObject obj = new JSONObject();
-        for (String key : map.keySet()) {
-            if (key.charAt(0) != '#') {  //don't include Camel stats
-                obj.put(key, map.get(key));
-            }
-        }
-        return obj.toString();
-    }
-    /**
-     * Convenience method to convert a Camel Map output to a JSON Bean String.
-     * 
+     *
      * @param map
      * @return JSON bean String
      */
     @SuppressWarnings("unchecked")
     public static String toJSONBean(final List<Object> list) {
         String json = null;
-        if (list.size()==1) {
-            Map<String,Object> map = (Map<String,Object>) list.get(0);
+        if (list.size() == 1) {
+            final Map<String, Object> map = (Map<String, Object>) list.get(0);
             json = JSONBeanUtil.toJSONBean(map);
         } else if (list.size() > 1) {
-            StringBuilder stringBuilder = new StringBuilder("[");
-            for (int i=0; i<list.size(); i++) {
-                Map<String,Object> map = (Map<String,Object>) list.get(i);
+            final StringBuilder stringBuilder = new StringBuilder("[");
+            for (int i = 0; i < list.size(); i++) {
+                final Map<String, Object> map = (Map<String, Object>) list.get(i);
                 stringBuilder.append(JSONBeanUtil.toJSONBean(map));
-                if ( i < (list.size()-1 )) {
+                if (i < list.size() - 1) {
                     stringBuilder.append(',');
                 }
             }
@@ -97,5 +92,26 @@ public final class JSONBeanUtil {
             json = stringBuilder.toString();
         }
         return json;
+    }
+
+    /**
+     * Convenience method to convert a Camel Map output to a JSON Bean String.
+     *
+     * @param map
+     * @return JSON bean String
+     */
+    public static String toJSONBean(final Map<String, Object> map) {
+        final Map<String, Object> data = new HashMap<>(map.size());
+        for (final String key : map.keySet()) {
+            if (key.charAt(0) != '#') { // don't include Camel stats
+                data.put(key, map.get(key));
+            }
+        }
+
+        try {
+            return MAPPER.writeValueAsString(data);
+        } catch (final JsonProcessingException e) {
+            throw new IllegalArgumentException("Unable to serialize to JSON", e);
+        }
     }
 }

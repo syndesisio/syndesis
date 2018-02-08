@@ -71,11 +71,10 @@
           <div *ngSwitchCase="'rule-filter'">
             <div class="row">
               <div class="col-md-12"
-                   *ngIf="step && inputDataShape && outputDataShape">
+                   *ngIf="step && dataShape">
                 <syndesis-basic-filter [(configuredProperties)]="customProperties"
                                        [(valid)]="valid"
-                                       [inputDataShape]="inputDataShape"
-                                       [outputDataShape]="outputDataShape"
+                                       [dataShape]="dataShape"
                                        [position]="position"></syndesis-basic-filter>
                 <div class="pull-right control-buttons">
                   <ng-container *ngTemplateOutlet="controlButtons"></ng-container>

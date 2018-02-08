@@ -25,10 +25,7 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
   formConfig: any;
   cfg: any = undefined;
   customProperties: any = undefined;
-  // this is the output of the previous step
-  outputDataShape: DataShape = undefined;
-  // This is the input of the next step
-  inputDataShape: DataShape = undefined;
+  dataShape: DataShape = undefined;
   loading = false;
   error: any = undefined;
   valid = true;
@@ -138,16 +135,38 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     }
     const prevStep = this.currentFlow.getPreviousStepWithDataShape(this.position);
     const nextStep = this.currentFlow.getSubsequentStepWithDataShape(this.position);
-    this.currentFlow.fetchOutputDataShapeFor(prevStep)
-      .then(inDataShape => {
-        this.inputDataShape = inDataShape;
-        this.currentFlow.fetchInputDataShapeFor(nextStep)
-          .then(outDataShape => {
-            this.outputDataShape = outDataShape;
-          })
-          .catch(response => this.handleDataShapeError(nextStep, response));
+
+    // we now have previous and next steps that have the data shapes defined
+    // now we need to determine if there is a mapping step inbetween
+    // mapping step doesn't specify shape but it changes it to the input shape
+    // of the step after it, in that case we need to look at the input sep of
+    // the next step, otherwise we need to look at the output step of the
+    // previous step
+
+    const prevIdx = this.currentFlow.steps.indexOf(prevStep);
+    const nextIdx = this.currentFlow.steps.indexOf(nextStep);
+    let stepToFilterOn;
+    let shapePromise;
+    if (prevIdx + 1 < this.position) {
+      // there is a step in front of this step that doesn't have a shape,
+      // we're betting on it's the mapper step
+      // integration is: previous - mapping - this - ... - next
+      // we need to take the input shape of the next step
+      stepToFilterOn = nextStep;
+      shapePromise = this.currentFlow.fetchInputDataShapeFor(stepToFilterOn);
+    } else {
+      // here prevIdx + 1 should be this.position, that means there is nothing
+      // to change the shape of the previous step
+      // integration is: previous - this - ... - next
+      // we need to take the output of the previous step
+      stepToFilterOn = prevStep;
+      shapePromise = this.currentFlow.fetchOutputDataShapeFor(stepToFilterOn);
+    }
+
+    shapePromise.then(shape => {
+        this.dataShape = shape;
       })
-      .catch(response => this.handleDataShapeError(prevStep, response))
+      .catch(response => this.handleDataShapeError(stepToFilterOn, response))
       .then(() => this.loadFormSetup(step));
   }
 
@@ -207,8 +226,7 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
         this.formConfig = undefined;
         this.cfg = undefined;
         this.customProperties = undefined;
-        this.inputDataShape = undefined;
-        this.outputDataShape = undefined;
+        this.dataShape = undefined;
         this.error = undefined;
         this.position = +params.get('position');
         this.loadForm();
