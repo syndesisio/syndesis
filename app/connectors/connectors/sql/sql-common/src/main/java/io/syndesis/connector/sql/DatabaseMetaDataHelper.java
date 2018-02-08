@@ -116,7 +116,7 @@ public final class DatabaseMetaDataHelper {
 
     @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
     private static List<ColumnMetaData> getColumnMetaData(final DatabaseMetaData meta, String catalog, 
-            String schema, String tableName, String columnName, int expectedSize) throws SQLException {
+            String schema, String tableName, String columnName, int expectedSize) throws SQLException { //NOPMD
         ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);
         List<ColumnMetaData> columnList = convert(columns);
         if (columnList.isEmpty()) {

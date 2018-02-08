@@ -179,8 +179,7 @@ public class SqlStatementParser {
         }
         int v = sqlArray.indexOf("VALUES") + 1;
         List<SqlParam> params = Collections.emptyList();
-        if (columnNames.size() > 0) {
-            
+        if (!columnNames.isEmpty()) {
             List<String> values = sqlArray.subList(v, v + columnNames.size() );
             params = findInputParams(values);
             int paramCounter = 0;
