@@ -355,6 +355,9 @@
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">
     <priority>4</priority>
+    <properties>
+      <property name="allowExceptionNameRegex" value="ignored" />
+    </properties>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidThrowingNullPointerException">
     <priority>3</priority>
@@ -389,7 +392,7 @@
       <property name="minimum" value="3" />
     </properties>
   </rule>
-  <rule ref="rulesets/java/naming.xml/MisLeadingVariableName">
+  <rule ref="rulesets/java/naming.xml/MisleadingVariableName">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyTryBlock">

@@ -31,6 +31,7 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
 
+@SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention"})
 public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;

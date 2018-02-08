@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.core.IndexedProperty;

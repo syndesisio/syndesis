@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
  */
+@SuppressWarnings("PMD.GodClass")
 class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
     private final String base;

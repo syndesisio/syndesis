@@ -81,6 +81,7 @@ public final class DatabaseMetaDataHelper {
         return tablesInSchema;
     }
 
+    @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
     static ResultSet fetchTableColumns(final DatabaseMetaData meta, final String catalog,
             final String schema, final String tableName, final String columnName) throws SQLException {
 
@@ -118,6 +119,7 @@ public final class DatabaseMetaDataHelper {
         return paramList;
     }
 
+    @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
     private static ResultSet getColumns(final DatabaseMetaData meta, String catalog, 
             String schema, String tableName, String columnName, int expectedSize) throws SQLException {
         ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);
@@ -126,8 +128,8 @@ public final class DatabaseMetaDataHelper {
         int  numberOfRecords = numberOfRecords(columns);
         if (numberOfRecords == 0) {
             //Postgresql does lowercase instead, so let's try that if we don't have a match
-            table = table.toLowerCase();
-            column = columnName == null ? null : columnName.toLowerCase();
+            table = table.toLowerCase(Locale.US);
+            column = columnName == null ? null : columnName.toLowerCase(Locale.US);
             columns = meta.getColumns(catalog, schema, table, column);
             numberOfRecords = numberOfRecords(columns);
         }

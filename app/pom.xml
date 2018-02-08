@@ -71,8 +71,8 @@
     <camel.version>2.20.1</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
-    <dep.plugin.pmd.version>3.9.0</dep.plugin.pmd.version>
-    <dep.pmd.version>6.0.1</dep.pmd.version>
+    <dep.plugin.pmd.version>3.8</dep.plugin.pmd.version>
+    <dep.pmd.version>5.8.1</dep.pmd.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
@@ -574,6 +574,7 @@
           <artifactId>maven-pmd-plugin</artifactId>
           <configuration>
             <analysisCache>true</analysisCache>
+            <printFailingErrors>true</printFailingErrors>
             <rulesets>
               <ruleset>/syndesis/ruleset.xml</ruleset>
             </rulesets>
