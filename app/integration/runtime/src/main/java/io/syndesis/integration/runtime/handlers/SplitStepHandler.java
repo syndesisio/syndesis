@@ -20,6 +20,7 @@ import java.util.Optional;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.Expression;
 import org.apache.camel.builder.Builder;
 import org.apache.camel.model.ProcessorDefinition;
@@ -29,7 +30,7 @@ import org.apache.camel.util.ObjectHelper;
 public class SplitStepHandler implements IntegrationStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        return "split".equals(step.getStepKind());
+        return StepKind.split == step.getStepKind();
     }
 
     @SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.AvoidDeeplyNestedIfStmts"})

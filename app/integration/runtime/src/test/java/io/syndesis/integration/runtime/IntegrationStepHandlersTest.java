@@ -25,6 +25,7 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +39,7 @@ public class IntegrationStepHandlersTest {
         assertThat(
             builder.findHandler(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("file")
@@ -54,7 +55,7 @@ public class IntegrationStepHandlersTest {
         assertThat(
             builder.findHandler(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .build())
@@ -69,7 +70,7 @@ public class IntegrationStepHandlersTest {
         assertThat(
             builder.findHandler(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("file")
@@ -81,7 +82,7 @@ public class IntegrationStepHandlersTest {
         assertThat(
             builder.findHandler(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .build())

@@ -18,6 +18,7 @@ package io.syndesis.integration.project.generator;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +32,7 @@ public class ProjectGeneratorHelperTest {
 
         Integration source = resourceManager.newIntegration(
             new Step.Builder()
-                .stepKind("endpoint")
+                .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
                     .id("timer-connection")
                     .connectorId(TestConstants.TIMER_CONNECTOR.getId())

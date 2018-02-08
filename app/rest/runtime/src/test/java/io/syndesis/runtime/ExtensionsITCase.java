@@ -15,8 +15,6 @@
  */
 package io.syndesis.runtime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,6 +23,19 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.syndesis.core.Json;
+import io.syndesis.extension.converter.ExtensionConverter;
+import io.syndesis.model.ListResult;
+import io.syndesis.model.ResourceIdentifier;
+import io.syndesis.model.Violation;
+import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.IntegrationDeploymentState;
+import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
+import io.syndesis.rest.v1.handler.exception.RestError;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,19 +47,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import io.syndesis.core.Json;
-import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.ListResult;
-import io.syndesis.model.ResourceIdentifier;
-import io.syndesis.model.Violation;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentState;
-import io.syndesis.model.integration.Step;
-import io.syndesis.rest.v1.handler.exception.RestError;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExtensionsITCase extends BaseITCase {
 
@@ -258,7 +257,7 @@ public class ExtensionsITCase extends BaseITCase {
                 new Step.Builder()
                     .id("step1")
                     .name("step1")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())
@@ -279,7 +278,7 @@ public class ExtensionsITCase extends BaseITCase {
                 new Step.Builder()
                     .id("step1")
                     .name("step1")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())
@@ -331,7 +330,7 @@ public class ExtensionsITCase extends BaseITCase {
                 new Step.Builder()
                     .id("step1")
                     .name("step1")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())

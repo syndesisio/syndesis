@@ -45,6 +45,7 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
@@ -101,7 +102,7 @@ public class ProjectGeneratorTest {
 
         Integration integration = resourceManager.newIntegration(
             new Step.Builder()
-                .stepKind("endpoint")
+                .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
                     .id("timer-connection")
                     .connector(TestConstants.TIMER_CONNECTOR)
@@ -110,16 +111,16 @@ public class ProjectGeneratorTest {
                 .action(TestConstants.PERIODIC_TIMER_ACTION)
                 .build(),
             new Step.Builder()
-                .stepKind("mapper")
+                .stepKind(StepKind.mapper)
                 .putConfiguredProperty("atlasmapping", "{}")
                 .build(),
             new Step.Builder()
-                .stepKind("rule-filter")
+                .stepKind(StepKind.ruleFilter)
                 .putConfiguredProperty("predicate", "AND")
                 .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]")
                 .build(),
             new Step.Builder()
-                .stepKind("extension")
+                .stepKind(StepKind.extension)
                 .extension(new Extension.Builder()
                     .id("my-extension-1")
                     .extensionId("my-extension-1")
@@ -138,7 +139,7 @@ public class ProjectGeneratorTest {
                     ).build())
                 .build(),
             new Step.Builder()
-                .stepKind("extension")
+                .stepKind(StepKind.extension)
                 .extension(new Extension.Builder()
                     .id("my-extension-2")
                     .extensionId("my-extension-2")
@@ -154,7 +155,7 @@ public class ProjectGeneratorTest {
                     ).build())
                 .build(),
             new Step.Builder()
-                .stepKind("extension")
+                .stepKind(StepKind.extension)
                 .extension(new Extension.Builder()
                     .id("my-extension-3")
                     .extensionId("my-extension-3")
@@ -170,7 +171,7 @@ public class ProjectGeneratorTest {
                     ).build())
                 .build(),
             new Step.Builder()
-                .stepKind("endpoint")
+                .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
                     .id("http-connection")
                     .connector(TestConstants.HTTP_CONNECTOR)
@@ -276,7 +277,7 @@ public class ProjectGeneratorTest {
         // ******************
 
         Step s1 = new Step.Builder()
-            .stepKind("endpoint")
+            .stepKind(StepKind.endpoint)
             .connection(new Connection.Builder()
                 .id(KeyGenerator.createKey())
                 .connector(oldConnector)
@@ -287,7 +288,7 @@ public class ProjectGeneratorTest {
             .action(oldAction)
             .build();
         Step s2 = new Step.Builder()
-            .stepKind("endpoint")
+            .stepKind(StepKind.endpoint)
             .connection(new Connection.Builder()
                 .id(KeyGenerator.createKey())
                 .connector(newConnector)

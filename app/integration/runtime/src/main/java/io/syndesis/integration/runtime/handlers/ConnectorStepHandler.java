@@ -34,6 +34,7 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.ClassResolver;
@@ -44,7 +45,7 @@ import org.apache.camel.util.ObjectHelper;
 public class ConnectorStepHandler extends AbstractEndpointStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        if (!"endpoint".equals(step.getStepKind()) && !"connector".equals(step.getStepKind())) {
+        if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
 

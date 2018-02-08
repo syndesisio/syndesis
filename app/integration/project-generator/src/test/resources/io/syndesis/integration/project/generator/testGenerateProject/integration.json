@@ -50,7 +50,7 @@
       "atlasmapping" : "{}"
     }
   }, {
-    "stepKind" : "rule-filter",
+    "stepKind" : "ruleFilter",
     "configuredProperties" : {
       "predicate" : "AND",
       "rules" : "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]"

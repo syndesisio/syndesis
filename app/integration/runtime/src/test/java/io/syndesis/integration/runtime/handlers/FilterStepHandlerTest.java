@@ -26,6 +26,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.filter.FilterPredicate;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -66,7 +67,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -75,11 +76,11 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("filter")
+                    .stepKind(StepKind.expressionFilter)
                     .putConfiguredProperty("filter", "${body.name} == 'James'")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -121,7 +122,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
     public void testRuleFilterExpression() {
         String expression = new RuleFilterStepHandler().getFilterExpression(
             new Step.Builder()
-                .stepKind("rule-filter")
+                .stepKind(StepKind.ruleFilter)
                 .putConfiguredProperty("predicate", FilterPredicate.AND.toString())
                 .putConfiguredProperty("rules","[ { \"path\": \"person.name\", \"op\": \"==\", \"value\": \"Ioannis\"}, " +
                     "  { \"path\": \"person.favoriteDrinks\", \"op\": \"contains\", \"value\": \"Gin\" } ]")
@@ -139,7 +140,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -148,13 +149,13 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("rule-filter")
+                    .stepKind(StepKind.ruleFilter)
                     .putConfiguredProperty("type", "rule")
                     .putConfiguredProperty("predicate", "OR")
                     .putConfiguredProperty("rules", "[{\"path\":\"name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"name\",\"op\":\"==\",\"value\":\"Roland\"}]")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -199,7 +200,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -208,13 +209,13 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("rule-filter")
+                    .stepKind(StepKind.ruleFilter)
                     .putConfiguredProperty("type", "rule")
                     .putConfiguredProperty("predicate", "OR")
                     .putConfiguredProperty("rules", "[{\"path\":\"user.name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"user.name\",\"op\":\"==\",\"value\":\"Roland\"}]")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -259,7 +260,7 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -268,13 +269,13 @@ public class FilterStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("rule-filter")
+                    .stepKind(StepKind.ruleFilter)
                     .putConfiguredProperty("type", "rule")
                     .putConfiguredProperty("predicate", "OR")
                     .putConfiguredProperty("rules", "[{\"path\":\"name\",\"op\":\"==\",\"value\":\"James\"}, {\"path\":\"name\",\"op\":\"==\",\"value\":\"Roland\"}]")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
