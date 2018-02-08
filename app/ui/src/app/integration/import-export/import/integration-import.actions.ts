@@ -1,82 +1,41 @@
 import { Action } from '@ngrx/store';
-import { ActionReducerError } from '@syndesis/ui/platform';
-import { IntegrationImportRequest, IntegrationUploadRequest } from './integration-import.models';
-import { Integrations } from '@syndesis/ui/platform';
 
-export class IntegrationImportActions {
-  static IMPORT = '[Import Integration] Import integration(s) request';
-  static IMPORT_COMPLETE = '[Import Integration] Import integration complete';
-  static IMPORT_FAIL = '[Import Integration] Import integration failed';
-  static UPLOAD = '[Import Integration] Upload integration for import request';
-  static UPLOAD_CANCEL = '[Import Integration] Upload integration for import cancelled';
-  static UPLOAD_COMPLETE = '[Import Integration] Upload integration for import complete';
-  static UPLOAD_FAIL = '[Import Integration] Upload integration for import failed';
+import {
+  IntegrationImportEditState,
+  IntegrationImportUploadState
+} from './integration-import.models';
 
-  static import(payload: IntegrationImportRequest): IntegrationImport {
-    return new IntegrationImport(payload);
-  }
+export const UPLOAD_INTEGRATION = '[Integrations] Upload imported integration';
+export const UPLOAD_INTEGRATION_COMPLETE = '[Integrations] Uploaded imported integration';
+export const UPLOAD_INTEGRATION_FAIL = '[Integrations] Upload integration failed';
 
-  static importFail(payload: ActionReducerError): IntegrationImportFail {
-    return new IntegrationImportFail(payload);
-  }
+export const EDIT_INTEGRATION = '[Integrations] Edit imported integration';
+export const EDIT_INTEGRATION_COMPLETE = '[Integrations] Edited imported integration';
+export const EDIT_INTEGRATION_FAIL = '[Integrations] Edit integration failed';
 
-  static importComplete(payload: any): IntegrationImportComplete {
-    return new IntegrationImportComplete(payload);
-  }
+export class IntegrationImportActions {}
 
-  static upload(payload: IntegrationUploadRequest): IntegrationUpload {
-    return new IntegrationUpload(payload);
-  }
+/**
+ * Step 1: Integration Upload
+ * User selects one or more integration files and uploads them.
+ */
+export class IntegrationImportUpload implements Action {
+  readonly type = UPLOAD_INTEGRATION;
 
-  static uploadFail(payload: ActionReducerError): IntegrationUploadFail {
-    return new IntegrationUploadFail(payload);
-  }
-
-  static uploadComplete(payload: any): IntegrationUploadComplete {
-    return new IntegrationUploadComplete(payload);
-  }
-
-  static uploadCancel(): IntegrationUploadCancel {
-    return new IntegrationUploadCancel();
-  }
+  constructor(public payload: IntegrationImportUploadState) { }
 }
 
-export class IntegrationImport implements Action {
-  readonly type = IntegrationImportActions.IMPORT;
+/**
+ * Step 2: Integration Edit
+ * Once the integration has been uploaded, it is available for review.
+ * Once the user has reviewed the payload, they can then press 'Done' to
+ * proceed to the Edit Integration view, which will be populated.
+ */
+export class IntegrationImportEdit implements Action {
+  readonly type = EDIT_INTEGRATION;
 
-  constructor(public payload: IntegrationUploadRequest) { }
+  constructor(public payload: IntegrationImportEditState) { }
 }
 
-export class IntegrationImportComplete implements Action {
-  readonly type = IntegrationImportActions.IMPORT_COMPLETE;
 
-  constructor(public payload: IntegrationUploadRequest) { }
-}
 
-export class IntegrationImportFail implements Action {
-  readonly type = IntegrationImportActions.IMPORT_FAIL;
-
-  constructor(public payload: ActionReducerError) { }
-}
-
-export class IntegrationUpload implements Action {
-  readonly type = IntegrationImportActions.UPLOAD;
-
-  constructor(public payload: IntegrationUploadRequest) { }
-}
-
-export class IntegrationUploadComplete implements Action {
-  readonly type = IntegrationImportActions.UPLOAD_COMPLETE;
-
-  constructor(public payload: IntegrationUploadRequest) { }
-}
-
-export class IntegrationUploadFail implements Action {
-  readonly type = IntegrationImportActions.UPLOAD_FAIL;
-
-  constructor(public payload: ActionReducerError) { }
-}
-
-export class IntegrationUploadCancel implements Action {
-  readonly type = IntegrationImportActions.UPLOAD_CANCEL;
-}

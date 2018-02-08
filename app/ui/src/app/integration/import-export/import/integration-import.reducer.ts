@@ -1,96 +1,38 @@
-import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
+import { PlatformStore } from '@syndesis/ui/platform';
+import { ActionReducerMap } from '@ngrx/store';
 
-import { BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
-import { IntegrationImportState, IntegrationImportRequest, IntegrationUploadRequest } from './integration-import.models';
-import * as ImportActions from './integration-import.actions';
+import {
+  IntegrationImportEditState,
+  IntegrationImportsEditState,
+  IntegrationImportUploadState,
+  IntegrationImportsUploadState
+} from './integration-import.models';
 
-const initialUploadRequest: IntegrationUploadRequest = {
-  integrationTemplateId: null,
-  isComplete: false,
-  isOK: false,
-  isRequested: false
-};
+import * as IntegrationImportActions from './integration-import.actions';
 
-const initialImportRequest: IntegrationImportRequest = {
-  integrationTemplateId: null,
-  isComplete: false,
-  isOK: false,
-  isRequested: false
-};
-
-const initialState: IntegrationImportState = {
+const initialState: IntegrationImportUploadState = {
+  file: null,
+  importResults: {
+    integrations: [],
+    connections: [],
+  },
   list: [],
-  importRequest: initialImportRequest,
-  uploadRequest: initialUploadRequest,
-  loading: false,
+  loading: true,
   loaded: false,
   hasErrors: false,
   errors: []
 };
 
-export function integrationImportReducer(state = initialState, action: any): IntegrationImportState {
+export function integrationImportUploadReducer(state = initialState, action: any): IntegrationImportUploadState {
   switch (action.type) {
 
-    case ImportActions.IntegrationImportActions.UPLOAD: {
-      const uploadRequest = (action as ImportActions.IntegrationUpload).payload;
+    case IntegrationImportActions.UPLOAD_INTEGRATION: {
+      const request = (action as IntegrationImportActions.IntegrationImportUpload).payload;
       return {
         ...state,
-        uploadRequest: { ...uploadRequest, isComplete: false, isRequested: true },
+        file: request.file,
         loading: true,
-        hasErrors: false,
-        errors: []
-      };
-    }
-
-    case ImportActions.IntegrationImportActions.UPLOAD_COMPLETE: {
-      const uploadRequest = (action as ImportActions.IntegrationUploadComplete).payload;
-      return {
-        ...state,
-        uploadRequest: { ...uploadRequest, isComplete: true },
-        loading: false,
-        hasErrors: false,
-        errors: []
-      };
-    }
-
-    case ImportActions.IntegrationImportActions.IMPORT: {
-      const importedIntegration = (action as ImportActions.IntegrationImport).payload;
-      //const list = [...state.list].filter(integration => integration.id !== importedIntegration.id);
-      //list.unshift(importedIntegration);
-
-      return {
-        ...state,
-        //list,
-        loading: true,
-        hasErrors: false,
-        errors: []
-      };
-    }
-
-    case ImportActions.IntegrationImportActions.IMPORT_COMPLETE: {
-      return {
-        ...state,
-        loading: false,
-        hasErrors: false,
-        errors: []
-      };
-    }
-
-    case ImportActions.IntegrationImportActions.UPLOAD_FAIL:
-    case ImportActions.IntegrationImportActions.IMPORT_FAIL: {
-      return {
-        ...state,
-        loading: false,
-        hasErrors: true,
-        errors: [action.payload]
-      };
-    }
-
-    case ImportActions.IntegrationImportActions.UPLOAD_CANCEL: {
-      return {
-        ...state,
-        uploadRequest: initialUploadRequest,
-        loading: false,
+        loaded: false,
         hasErrors: false,
         errors: []
       };
@@ -102,8 +44,12 @@ export function integrationImportReducer(state = initialState, action: any): Int
   }
 }
 
-export interface IntegrationStore extends PlatformStore {
-  importState: IntegrationImportState;
+export interface PlatformStore {
+  integrationImportUploadState: IntegrationImportUploadState;
+  integrationImportEditState: IntegrationImportEditState;
 }
 
-export const getIntegrationImportState = createFeatureSelector<IntegrationImportState>('integrationImportState');
+export const platformReducer: ActionReducerMap<PlatformStore> = {
+  integrationImportUploadState: integrationImportUploadReducer,
+};
+
