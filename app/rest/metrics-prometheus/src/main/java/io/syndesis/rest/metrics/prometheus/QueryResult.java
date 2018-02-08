@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(builder = QueryResult.Builder.class)
 public interface QueryResult extends Serializable {
 
-    public static final Logger LOG = LoggerFactory.getLogger(QueryResult.class);
+    Logger LOG = LoggerFactory.getLogger(QueryResult.class);
 
     static <T> Optional<T> getFirstValue(QueryResult response, Class<? extends T> clazz) {
         return response.getData().map(data -> {

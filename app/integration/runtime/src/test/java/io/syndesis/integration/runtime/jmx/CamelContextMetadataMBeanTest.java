@@ -54,13 +54,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class CamelContextMetadataMBeanTest extends StepHandlerTestSupport {
 
-    public static final String[] ATTRIBUTES = {"StartTimestamp",
+    private static final String[] ATTRIBUTES = {"StartTimestamp",
             "LastExchangeCompletedTimestamp"};
+
     @Autowired
     private IntegrationRouteBuilder routeBuilder;
 
     @Before
-    public void init() throws Exception {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void beforeTest() throws Exception {
         // initialize routes
         routeBuilder.configure();
 

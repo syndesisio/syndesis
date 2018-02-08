@@ -40,7 +40,7 @@ public class PrometheusMetricsProviderImplTest {
     }
 
     @Test
-    public void getIntegrationMetricsSummary() throws Exception {
+    public void testGetIntegrationMetricsSummary() throws Exception {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.20.nip.io");
         MetricsProvider impl = new PrometheusMetricsProviderImpl(config);
