@@ -101,7 +101,7 @@ public class MetricsCollector implements Runnable, Closeable {
                     executor.execute(new PodMetricsReader(
                             kubernetes,
                             p.getMetadata().getName(),
-                            p.getMetadata().getLabels().get("integration"),
+                            p.getMetadata().getAnnotations().get("syndesis.io/integration-name"),
                             p.getMetadata().getAnnotations().get("syndesis.io/integration-id"),
                             p.getMetadata().getAnnotations().get("syndesis.io/deployment-version"),
                             rmh))
