@@ -20,8 +20,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 /**
  * Prometheus HTTP Query
  */
@@ -34,7 +32,6 @@ public interface HttpQuery {
     }
 
     @Value.Immutable
-    @JsonDeserialize(builder = HttpQuery.LabelValue.Builder.class)
     interface LabelValue {
 
         @SuppressWarnings("PMD.UseUtilityClass")
@@ -55,12 +52,25 @@ public interface HttpQuery {
 
     String getHost();
 
+    String getFunction();
+
     String getMetric();
 
     List<LabelValue> getLabelValues();
 
+    String getRange();
+
     default UriBuilder getUriBuilder() {
         StringBuilder queryExpression = new StringBuilder();
+
+        // is there a query function?
+        final String function = getFunction();
+        boolean closeFunction = false;
+        if (function != null && !function.isEmpty()) {
+            queryExpression.append(function).append('(');
+            closeFunction = true;
+        }
+
         queryExpression.append(getMetric());
         if (!getLabelValues().isEmpty()) {
             queryExpression.append("%7B");
@@ -74,6 +84,17 @@ public interface HttpQuery {
                 label.appendTo(queryExpression);
             }
             queryExpression.append("%7D");
+        }
+
+        // is there a range?
+        final String range = getRange();
+        if (range != null && !range.isEmpty()) {
+            queryExpression.append('[').append(range).append(']');
+        }
+
+        // close function?
+        if (closeFunction) {
+            queryExpression.append(')');
         }
 
         return UriBuilder.fromPath(String.format("http://%s/api/v1/query", getHost()))
