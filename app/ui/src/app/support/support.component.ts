@@ -34,7 +34,7 @@ export class SupportComponent implements OnInit {
     sortField: 'name',
     descending: false
   };
-    
+
   // List configuration
   listConfig = {
     multiSelect: true,
