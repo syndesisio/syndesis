@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.jms.ActiveMQRespondComponent",
   "groupId" : "io.syndesis",
   "artifactId" : "activemq-respond-connector",
-  "version" : "1.2.7",
+  "version" : "1.2.9",
   "description" : "Respond to requests using JMS Messages",
   "labels" : [ "jms" ],
   "pattern" : "From",
