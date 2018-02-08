@@ -44,12 +44,3 @@ export function integrationImportUploadReducer(state = initialState, action: any
   }
 }
 
-export interface PlatformStore {
-  integrationImportUploadState: IntegrationImportUploadState;
-  integrationImportEditState: IntegrationImportEditState;
-}
-
-export const platformReducer: ActionReducerMap<PlatformStore> = {
-  integrationImportUploadState: integrationImportUploadReducer,
-};
-
