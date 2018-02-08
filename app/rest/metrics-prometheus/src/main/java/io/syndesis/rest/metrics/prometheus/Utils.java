@@ -15,13 +15,21 @@
  */
 package io.syndesis.rest.metrics.prometheus;
 
+import java.io.IOException;
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
 /**
@@ -35,13 +43,12 @@ public final class Utils {
 
     static {
         ObjectMapper objectMapper = new ObjectMapper()
-            .registerModules(new Jdk8Module())
+            .registerModules(new Jdk8Module(), new EpochMillisTimeModule())
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-            .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
-            .setDateFormat(new ISO8601DateFormat());
+            .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
         OBJECT_READER = objectMapper.reader();
     }
 
@@ -50,5 +57,36 @@ public final class Utils {
 
     public static ObjectReader getObjectReader() {
         return OBJECT_READER;
+    }
+
+    public static class EpochMillisTimeModule extends SimpleModule {
+        public EpochMillisTimeModule() {
+            super();
+            addSerializer(Date.class, new EpochMillisTimeSerializer());
+            addDeserializer(Date.class, new EpochMillisTimeDeserializer());
+        }
+
+        private static class EpochMillisTimeSerializer extends StdSerializer<Date> {
+            protected EpochMillisTimeSerializer() {
+                super(Date.class);
+            }
+
+            @Override
+            public void serialize(Date value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+                gen.writeNumber(value.getTime());
+            }
+        }
+
+        private static class EpochMillisTimeDeserializer extends StdDeserializer<Date> {
+            protected EpochMillisTimeDeserializer() {
+                super(Date.class);
+            }
+
+            @Override
+            public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+                final String strDate = _parseString(p, ctxt);
+                return new Date(Long.parseLong(strDate));
+            }
+        }
     }
 }
