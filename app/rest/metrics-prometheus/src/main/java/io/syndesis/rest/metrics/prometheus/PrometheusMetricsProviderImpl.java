@@ -43,8 +43,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         // aggregate values across versions
         final Optional<Map<String, Long>> totalMessagesMap = getMetricValues(integrationId,"org_apache_camel_ExchangesTotal", "syndesis_io_deployment_id", Long.class);
         final Optional<Map<String, Long>> failedMessagesMap = getMetricValues(integrationId, "org_apache_camel_ExchangesFailed", "syndesis_io_deployment_id", Long.class);
-        final Optional<Map<String, Date>> startTimeMap = getMetricValues(integrationId, "org_apache_camel_StartTimestamp", "syndesis_io_deployment_id", Date.class);
-        final Optional<Map<String, Date>> lastProcessingTimeMap = getMetricValues(integrationId, "org_apache_camel_LastExchangeCompletedTimestamp", "syndesis_io_deployment_id", Date.class);
+        final Optional<Map<String, Date>> startTimeMap = getMetricValues(integrationId, "io_syndesis_camel_StartTimestamp", "syndesis_io_deployment_id", Date.class);
+        final Optional<Map<String, Date>> lastProcessingTimeMap = getMetricValues(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", "syndesis_io_deployment_id", Date.class);
 
         Optional<Long> totalMessages = totalMessagesMap.map(Map::values).flatMap(
             longs -> Optional.of(longs.stream().mapToLong(Long::longValue).sum()));
@@ -85,9 +85,11 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private HttpQuery createHttpQuery(String integrationId, String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
+                .function("max_over_time")
                 .metric(metric)
                 .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId, "syndesis_io_integration_id"))
                 .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
+                .range("1d")
                 .build();
     }
 

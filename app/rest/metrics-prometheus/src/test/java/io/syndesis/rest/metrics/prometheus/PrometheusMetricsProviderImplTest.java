@@ -34,7 +34,8 @@ public class PrometheusMetricsProviderImplTest {
 
     @Test
     public void testDateConverter() throws Exception {
-        final Date value = Utils.getObjectReader().forType(Date.class).readValue("\"2018-02-07T04:37:25Z\"");
+//        final Date value = Utils.getObjectReader().forType(Date.class).readValue("\"2018-02-07T04:37:25Z\"");
+        final Date value = Utils.getObjectReader().forType(Date.class).readValue("\"1518048434686\"");
         assertThat(value).isNotNull();
     }
 
