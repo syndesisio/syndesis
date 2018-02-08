@@ -295,6 +295,16 @@ release_project() {
     done
 }
 
+is_minishift() {
+    if [ -x "$(command -v foo)" ]; then
+        local minishift_ip=$(minishift ip)
+        local server_url=$(oc version | grep Server | cut -d' ' -f 2)
+        if [ "https://$minishift_ip:8443" == "$server_url"]; then
+            echo "true"
+        fi
+    fi
+}
+
 test_build() {
     source "$(basedir)/commands/build"
 
@@ -309,10 +319,14 @@ test_build() {
         trap "release_project "$pool" "$test_id"" EXIT
     fi
 
+    local minishift=$(is_minishift)
+    if [ -n "$minishift" ]; then
+        export MINISHIFT_ENABLED="true"
+    fi
     export NAMESPACE_USE_EXISTING=$project
     export KUBERNETES_NAMESPACE=$project
     export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
-    export WORKSPACE=deploy
+    export WORKSPACE=$(appdir)
 
     oc project $project
     local maven_args=$(maven_args $project)
