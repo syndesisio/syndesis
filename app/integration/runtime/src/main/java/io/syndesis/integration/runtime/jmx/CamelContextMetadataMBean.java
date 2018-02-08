@@ -56,13 +56,9 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
         // register mbean
         final String contextName = camelContext.getName();
 
-        try {
-            final ObjectName instance = ObjectName.getInstance(String.format("io.syndesis.camel:context=%s,type=context,name=\"%s\"", contextName, contextName));
-            camelContext.getManagementStrategy().manageNamedObject(this, instance);
-            LOG.info("Registered mbean " + instance);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+        final ObjectName instance = ObjectName.getInstance(String.format("io.syndesis.camel:context=%s,type=context,name=\"%s\"", contextName, contextName));
+        camelContext.getManagementStrategy().manageNamedObject(this, instance);
+        LOG.info("Registered mbean " + instance);
     }
 
     @Override
