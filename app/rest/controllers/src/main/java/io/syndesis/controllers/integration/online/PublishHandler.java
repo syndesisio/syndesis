@@ -135,6 +135,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"))))
             .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL,  Integer.toString(integrationDeployment.getVersion()))
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
+            .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
             .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationDeployment.getIntegrationId().get())
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion()))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
