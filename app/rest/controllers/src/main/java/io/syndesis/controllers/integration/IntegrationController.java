@@ -82,6 +82,7 @@ public class IntegrationController {
         eventBus.subscribe("integration-deployment-controller", getChangeEventSubscription());
     }
 
+    @SuppressWarnings("PMD.DoNotUseThreads")
     private static ThreadFactory threadFactory(String name) {
         return r -> new Thread(null, r, name);
     }

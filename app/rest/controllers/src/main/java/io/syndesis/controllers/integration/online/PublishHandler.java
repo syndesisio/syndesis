@@ -32,7 +32,6 @@ import io.syndesis.controllers.StateUpdate;
 import io.syndesis.core.Labels;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
@@ -45,22 +44,19 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
     private final DataManager dataManager;
     private final IntegrationProjectGenerator projectGenerator;
     private final ControllersConfigurationProperties properties;
-    private final EncryptionComponent encryptionComponent;
 
     @SuppressWarnings("PMD.DefaultPackage")
     PublishHandler(
         DataManager dataManager,
         OpenShiftService openShiftService,
         IntegrationProjectGenerator projectGenerator,
-        ControllersConfigurationProperties properties,
-        EncryptionComponent encryptionComponent) {
+        ControllersConfigurationProperties properties) {
 
         super(openShiftService);
 
         this.dataManager = dataManager;
         this.projectGenerator = projectGenerator;
         this.properties = properties;
-        this.encryptionComponent = encryptionComponent;
     }
 
     @Override

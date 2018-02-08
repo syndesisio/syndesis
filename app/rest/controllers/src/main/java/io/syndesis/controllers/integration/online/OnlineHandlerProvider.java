@@ -22,7 +22,6 @@ import io.syndesis.controllers.ControllersConfigurationProperties;
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.openshift.OpenShiftService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -35,21 +34,18 @@ public class OnlineHandlerProvider extends BaseHandler implements StateChangeHan
     private final DataManager dataManager;
     private final IntegrationProjectGenerator projectGenerator;
     private final ControllersConfigurationProperties properties;
-    private final EncryptionComponent encryptionComponent;
 
     public OnlineHandlerProvider(
             DataManager dataManager,
             OpenShiftService openShiftService,
             IntegrationProjectGenerator projectGenerator,
-            ControllersConfigurationProperties properties,
-            EncryptionComponent encryptionComponent) {
+            ControllersConfigurationProperties properties) {
 
         super(openShiftService);
 
         this.dataManager = dataManager;
         this.projectGenerator = projectGenerator;
         this.properties = properties;
-        this.encryptionComponent = encryptionComponent;
     }
 
     @Override
@@ -59,8 +55,7 @@ public class OnlineHandlerProvider extends BaseHandler implements StateChangeHan
                 dataManager,
                 openShiftService(),
                 projectGenerator,
-                properties,
-                encryptionComponent
+                properties
             ),
             new UnpublishHandler(openShiftService()));
     }
