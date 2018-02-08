@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import {
-  Action,
+import { Action,
   Connection,
   Activity,
   Integration,
@@ -12,7 +11,8 @@ import {
   IntegrationStatus,
   IntegrationSupportService,
   ApiHttpService,
-  UNPUBLISHED
+  UNPUBLISHED,
+  PUBLISHED
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { integrationSupportEndpoints } from './integration-support.api';
@@ -37,7 +37,16 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return Observable.merge(
       this.getOverview(id),
       this.eventsService.changeEvents
-        .filter(event => event.id === id)
+        .filter(event => {
+          switch (event.kind) {
+            case 'integration':
+              return event.id === id;
+            case 'integration-deployment':
+              return event.id.startsWith(id);
+            default:
+              return false;
+          }
+        })
         .flatMap(event => this.getOverview(id))
     );
   }
@@ -50,7 +59,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return Observable.merge(
       this.getOverviews(),
       this.eventsService.changeEvents
-        .filter(event => event.kind === 'integration')
+        .filter(event => event.kind === 'integration' || event.kind === 'integration-deployment')
         .flatMap(event => this.getOverviews())
     );
   }
@@ -59,12 +68,20 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployments, { id }).get();
   }
 
-  publishIntegration(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).post(integration);
-  }
-
-  deploy(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.publish, { id: integration.id }).put({});
+  deploy(integration: Integration | IntegrationDeployment): Observable<any> {
+    let url, state, method;
+    if ('integrationVersion' in integration) {
+      // it's an IntegrationDeployment
+      url = integrationSupportEndpoints.updateState;
+      state = { targetState: PUBLISHED };
+      method = 'post';
+    } else {
+      // it's an Integration
+      url = integrationSupportEndpoints.publish;
+      state = { };
+      method = 'put';
+    }
+    return this.apiHttpService.setEndpointUrl(url, { id: integration.id, version: integration.version })[method](state);
   }
 
   undeploy(integration: Integration): Observable<any> {

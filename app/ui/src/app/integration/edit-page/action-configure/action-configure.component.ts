@@ -173,17 +173,8 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       .then(descriptor => {
         this.initForm(position, page, descriptor);
       })
-      .catch(response => {
-        log.debug('Error response: ' + JSON.stringify(response, undefined, 2));
-        try {
-          const error = JSON.parse(response[ '_body' ]);
-          this.initForm(position, page, undefined, error);
-        } catch (err) {
-          /* Bailout at this point... */
-          this.initForm(position, page, undefined, {
-            message: err
-          });
-        }
+      .catch(error => {
+        this.initForm(position, page, undefined, error);
       });
   }
 
