@@ -23,6 +23,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.immutables.value.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -35,29 +37,19 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(builder = QueryResult.Builder.class)
 public interface QueryResult extends Serializable {
 
+    public static final Logger LOG = LoggerFactory.getLogger(QueryResult.class);
+
     static <T> Optional<T> getFirstValue(QueryResult response, Class<? extends T> clazz) {
         return response.getData().map(data -> {
-            try {
-                final List<Data.Result> result = data.getResult();
-                return result.isEmpty() ? null : result.get(0).getTypedValue(clazz);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Error parsing metric value " + e.getMessage());
-            }
+            final List<Data.Result> result = data.getResult();
+            return result.isEmpty() ? null : result.get(0).getTypedValue(clazz).orElse(null);
         });
     }
 
     static <T> Optional<Map<String, T>> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz) {
         return response.getData().map(data ->
                 data.getResult().stream().collect(
-                    Collectors.toMap(
-                        r -> r.getLabel(label), r -> {
-                            try {
-                                return r.getTypedValue(clazz);
-                            } catch (IOException e) {
-                                throw new IllegalArgumentException("Error parsing metric value " + e.getMessage());
-                            }
-                        }
-                    )
+                    Collectors.toMap(r -> r.getLabel(label), r -> r.getTypedValue(clazz).orElse(null))
                 )
             );
     }
@@ -95,8 +87,14 @@ public interface QueryResult extends Serializable {
                 return String.format("\"%s\"", getValue().get(1));
             }
 
-            default <T> T getTypedValue(Class<? extends T> clazz) throws IOException {
-                return Utils.getObjectReader().forType(clazz).readValue(getStringValue());
+            default <T> Optional<T> getTypedValue(Class<? extends T> clazz) {
+                final String value = getStringValue();
+                try {
+                    return Optional.of(Utils.getObjectReader().forType(clazz).readValue(value));
+                } catch (IOException e) {
+                    LOG.warn("Returning empty value due to error parsing {} as {}: {}", value, clazz.getName(), e.getMessage());
+                }
+                return Optional.empty();
             }
         }
 

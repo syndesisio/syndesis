@@ -42,7 +42,7 @@ public interface HttpQuery {
         }
 
         default void appendTo(StringBuilder builder) {
-            builder.append(getLabel()).append('=').append('"').append(getValue()).append('"');
+            builder.append(getLabel()).append("=\"").append(getValue()).append('"');
         }
 
         String getLabel();

@@ -75,13 +75,6 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         return QueryResult.getValueMap(response, label, clazz);
     }
 
-    private <T> Optional<T> getMetricValue(String integrationId, String metric, Class<? extends T> clazz) {
-        HttpQuery queryTotalMessages = createHttpQuery(integrationId, metric);
-        QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
-        validateResponse(response);
-        return QueryResult.getFirstValue(response, clazz);
-    }
-
     private HttpQuery createHttpQuery(String integrationId, String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
