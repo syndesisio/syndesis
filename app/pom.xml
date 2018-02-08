@@ -574,6 +574,7 @@
           <artifactId>maven-pmd-plugin</artifactId>
           <configuration>
             <analysisCache>true</analysisCache>
+            <printFailingErrors>true</printFailingErrors>
             <rulesets>
               <ruleset>/syndesis/ruleset.xml</ruleset>
             </rulesets>
