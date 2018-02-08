@@ -16,6 +16,7 @@
 package io.syndesis.rest.metrics.prometheus;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -80,7 +81,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .host(serviceName)
                 .function("max_over_time")
                 .metric(metric)
-                .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId.toLowerCase(), "syndesis_io_integration_id"))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId.toLowerCase(Locale.US), "syndesis_io_integration_id"))
                 .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
                 .range("1d")
                 .build();
