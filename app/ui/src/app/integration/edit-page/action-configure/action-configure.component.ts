@@ -12,15 +12,14 @@ import {
   Step,
   IntegrationSupportService } from '@syndesis/ui/platform';
 import { log } from '@syndesis/ui/logging';
-import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 @Component({
   selector: 'syndesis-integration-action-configure',
   templateUrl: 'action-configure.component.html',
   styleUrls: ['./action-configure.component.scss']
 })
-export class IntegrationConfigureActionComponent extends FlowPage
-  implements OnInit, OnDestroy {
+export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   page: number;
@@ -35,7 +34,8 @@ export class IntegrationConfigureActionComponent extends FlowPage
   error: any = undefined;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
     public formFactory: FormFactoryService,
@@ -43,13 +43,13 @@ export class IntegrationConfigureActionComponent extends FlowPage
     public integrationSupport: IntegrationSupportService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router);
+    // nothing to do
   }
 
   goBack() {
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     step.action = undefined;
-    super.goBack([ 'action-select', this.position ]);
+    this.flowPageService.goBack([ 'action-select', this.position ], this.route);
   }
 
   buildData(data: any) {
@@ -59,7 +59,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
 
   previous(data: any = undefined) {
     data = this.buildData(data);
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: data,
@@ -95,7 +95,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
   continue(data: any = undefined) {
     this.error = undefined;
     data = this.buildData(data);
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: data,
@@ -153,7 +153,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
 
   initialize(position: number, page: number) {
     this.error = undefined;
-    const step = <Step>this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     if (!step) {
       this.router.navigate(['connection-select', this.position], {
         relativeTo: this.route.parent
@@ -228,7 +228,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
     setTimeout(() => {
-      this.currentFlow.events.emit({
+      this.currentFlowService.events.emit({
         kind: 'integration-action-configure',
         position: this.position
       });
@@ -282,7 +282,6 @@ export class IntegrationConfigureActionComponent extends FlowPage
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
     this.routeSubscription.unsubscribe();
   }
 }

@@ -3,7 +3,7 @@
 
   <ng-template #tooltipPopover>
     <span>
-      <strong> {{ getStepText() }} </strong>
+      <strong [innerHtml]="getStepText()"></strong>
     </span>
   </ng-template>
 

@@ -1,4 +1,4 @@
-<syndesis-loading [loading]="!currentFlow.loaded">
+<syndesis-loading [loading]="!currentFlowService.loaded">
   <!-- Navigation buttons -->
   <ng-template #controlButtons>
     <syndesis-cancel-add-step></syndesis-cancel-add-step>
@@ -33,9 +33,9 @@
                   <a [routerLink]="['/integrations']">Integrations</a>
                 </li>
                 <li>
-                  <a *ngIf="integrationName"
-                     [routerLink]="['/integrations', currentFlow.integration.id]">{{ integrationName }}</a>
-                  <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                  <a *ngIf="flowPageService.integrationName"
+                     [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
+                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
                 </li>
 
                 <li class="active">Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</li>

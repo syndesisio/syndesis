@@ -8,7 +8,7 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/c
 import { Action, DataShape, FormFactoryService, IntegrationSupportService, Step } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore, DATA_MAPPER, BASIC_FILTER } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -17,7 +17,8 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss']
 })
-export class IntegrationStepConfigureComponent extends FlowPage implements OnInit, OnDestroy {
+export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
+  flowSubscription: Subscription;
   position: number;
   step: Step = undefined;
   formModel: DynamicFormControlModel[] = undefined;
@@ -32,21 +33,26 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
   routeSubscription: Subscription;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public stepStore: StepStore,
   ) {
-    super(currentFlow, route, router);
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      }
+    );
   }
 
   goBack() {
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     step.stepKind = undefined;
     step.configuredProperties = undefined;
-    super.goBack(['step-select', this.position]);
+    this.flowPageService.goBack(['step-select', this.position], this.route);
   }
 
   isInvalidInput() {
@@ -76,7 +82,7 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
 
     // set a copy in the integration
     const properties = JSON.parse(JSON.stringify(data));
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: properties,
@@ -114,18 +120,18 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
 
   postEvent() {
     this.loading = false;
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-action-configure',
       position: this.position
     });
   }
 
   loadForm() {
-    if (!this.currentFlow.loaded || this.loading) {
+    if (!this.currentFlowService.loaded || this.loading) {
       return;
     }
     this.loading = true;
-    const step = (this.step = <Step>this.currentFlow.getStep(this.position));
+    const step = (this.step = <Step>this.currentFlowService.getStep(this.position));
     // If no Step exists or it's not actually a step, redirect to the Select Step view
     if (!step || step.stepKind === 'endpoint') {
       this.router.navigate(['step-select', this.position], {
@@ -133,8 +139,8 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
       });
       return;
     }
-    const prevStep = this.currentFlow.getPreviousStepWithDataShape(this.position);
-    const nextStep = this.currentFlow.getSubsequentStepWithDataShape(this.position);
+    const prevStep = this.currentFlowService.getPreviousStepWithDataShape(this.position);
+    const nextStep = this.currentFlowService.getSubsequentStepWithDataShape(this.position);
 
     // we now have previous and next steps that have the data shapes defined
     // now we need to determine if there is a mapping step inbetween
@@ -143,8 +149,8 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
     // the next step, otherwise we need to look at the output step of the
     // previous step
 
-    const prevIdx = this.currentFlow.steps.indexOf(prevStep);
-    const nextIdx = this.currentFlow.steps.indexOf(nextStep);
+    const prevIdx = this.currentFlowService.steps.indexOf(prevStep);
+    const nextIdx = this.currentFlowService.steps.indexOf(nextStep);
     let stepToFilterOn;
     let shapePromise;
     if (prevIdx + 1 < this.position) {
@@ -153,14 +159,14 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
       // integration is: previous - mapping - this - ... - next
       // we need to take the input shape of the next step
       stepToFilterOn = nextStep;
-      shapePromise = this.currentFlow.fetchInputDataShapeFor(stepToFilterOn);
+      shapePromise = this.currentFlowService.fetchInputDataShapeFor(stepToFilterOn);
     } else {
       // here prevIdx + 1 should be this.position, that means there is nothing
       // to change the shape of the previous step
       // integration is: previous - this - ... - next
       // we need to take the output of the previous step
       stepToFilterOn = prevStep;
-      shapePromise = this.currentFlow.fetchOutputDataShapeFor(stepToFilterOn);
+      shapePromise = this.currentFlowService.fetchOutputDataShapeFor(stepToFilterOn);
     }
 
     shapePromise.then(shape => {
@@ -234,7 +240,9 @@ export class IntegrationStepConfigureComponent extends FlowPage implements OnIni
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();
     }

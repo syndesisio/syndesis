@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IntegrationStore } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -13,40 +13,45 @@ import { Integration } from '@syndesis/ui/platform';
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: ['./save-or-add-step.component.scss']
 })
-export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnInit, OnDestroy {
+export class IntegrationSaveOrAddStepComponent implements OnInit {
   integration: Integration;
-  errorMessage: any = undefined;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router
   ) {
-    super(currentFlow, route, router);
+
+  }
+
+  get errorMessage() {
+    return this.flowPageService.errorMessage;
+  }
+
+  get saveInProgress() {
+    return this.flowPageService.saveInProgress;
+  }
+
+  get publishInProgress() {
+    return this.flowPageService.publishInProgress;
+  }
+
+  cancel() {
+    this.flowPageService.cancel();
+  }
+
+  save() {
+    this.flowPageService.save(this.route);
+  }
+
+  publish() {
+    this.flowPageService.publish(this.route);
   }
 
   get currentStep() {
-    return this.getCurrentStep();
-  }
-
-  getCurrentPosition(route: ActivatedRoute = this.route): number {
-    const child = route.firstChild;
-    if (child && child.snapshot) {
-      const path = child.snapshot.url;
-      try {
-        const position = path[1].path;
-        return +position;
-      } catch (error) {
-        return -1;
-      }
-    } else {
-      return undefined;
-    }
-  }
-
-  getCurrentStep(route: ActivatedRoute = this.route) {
-    return this.currentFlow.getStep(this.getCurrentPosition(route));
+    return this.flowPageService.getCurrentStep(this.route);
   }
 
   goBack() {
@@ -64,21 +69,21 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   addNew(type: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-add-step',
       type: type
     });
   }
 
   showPopouts(type: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-show-popouts',
       type: type
     });
   }
 
   insertStepAfter(position: number) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-insert-step',
       position: position,
       onSave: () => {
@@ -90,7 +95,7 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   insertConnectionAfter(position: number) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-insert-connection',
       position: position,
       onSave: () => {
@@ -102,39 +107,39 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   startConnection() {
-    return this.currentFlow.getStartStep();
+    return this.currentFlowService.getStartStep();
   }
 
   endConnection() {
-    return this.currentFlow.getEndStep();
+    return this.currentFlowService.getEndStep();
   }
 
   firstPosition() {
-    return this.currentFlow.getFirstPosition();
+    return this.currentFlowService.getFirstPosition();
   }
 
   lastPosition() {
-    return this.currentFlow.getLastPosition();
+    return this.currentFlowService.getLastPosition();
   }
 
   getMiddleSteps() {
-    return this.currentFlow.getMiddleSteps();
+    return this.currentFlowService.getMiddleSteps();
   }
 
   validateFlow() {
-    if (!this.currentFlow.loaded) {
+    if (!this.currentFlowService.loaded) {
       return;
     }
-    if (this.currentFlow.getStartConnection() === undefined) {
+    if (this.currentFlowService.getStartConnection() === undefined) {
       this.router.navigate(
-        ['connection-select', this.currentFlow.getFirstPosition()],
+        ['connection-select', this.currentFlowService.getFirstPosition()],
         { relativeTo: this.route.parent }
       );
       return;
     }
-    if (this.currentFlow.getEndConnection() === undefined) {
+    if (this.currentFlowService.getEndConnection() === undefined) {
       this.router.navigate(
-        ['connection-select', this.currentFlow.getLastPosition()],
+        ['connection-select', this.currentFlowService.getLastPosition()],
         { relativeTo: this.route.parent }
       );
       return;
@@ -142,6 +147,7 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   ngOnInit() {
+    this.flowPageService.initialize();
     const validate = this.route.queryParams.map(
       params => params['validate'] || false
     );

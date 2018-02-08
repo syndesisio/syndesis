@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { CurrentFlow } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 
 @Component({
   selector: 'syndesis-cancel-add-step',
@@ -15,7 +15,7 @@ export class CancelAddStepComponent implements OnInit {
   private position: number;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
     public route: ActivatedRoute,
     public router: Router
   ) {}
@@ -29,16 +29,16 @@ export class CancelAddStepComponent implements OnInit {
   isIntermediateStep(): boolean {
     return (
       this.position !== 0 &&
-      this.position !== this.currentFlow.getLastPosition()
+      this.position !== this.currentFlowService.getLastPosition()
     );
   }
 
   onClick() {
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     // Currently a half-configured step doesn't have this, so we can
     // remove it, otherwise we'll just discard any changes.
     if (!step.configuredProperties) {
-      this.currentFlow.events.emit({
+      this.currentFlowService.events.emit({
         kind: 'integration-remove-step',
         position: this.position,
         onSave: () => {

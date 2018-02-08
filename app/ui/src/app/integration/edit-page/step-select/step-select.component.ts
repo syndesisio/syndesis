@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import {
   ActionConfig,
   FilterConfig,
@@ -18,7 +19,7 @@ import {
   StepKind,
   StepKinds
 } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { TypeFactory } from '@syndesis/ui/model';
 import { Extension, Extensions, Step, Steps } from '@syndesis/ui/platform';
 import { ObjectPropertyFilterPipe } from '@syndesis/ui/common';
@@ -29,8 +30,8 @@ import { log, getCategory } from '@syndesis/ui/logging';
   templateUrl: './step-select.component.html',
   styleUrls: ['./step-select.component.scss']
 })
-export class IntegrationStepSelectComponent extends FlowPage
-  implements OnInit, OnDestroy {
+export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
+  flowSubscription: Subscription;
   steps: Steps;
   filteredSteps: Steps;
   extensions$: Observable<Extensions>;
@@ -41,19 +42,25 @@ export class IntegrationStepSelectComponent extends FlowPage
   private propertyFilter = new ObjectPropertyFilterPipe();
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
     private stepStore: StepStore,
     private extensionStore: ExtensionStore
   ) {
-    super(currentFlow, route, router);
+
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      }
+    );
     this.extensions$ = this.extensionStore.list;
     this.loading$ = this.extensionStore.loading;
   }
 
   goBack() {
-    super.goBack(['save-or-add-step']);
+    this.flowPageService.goBack(['save-or-add-step'], this.route);
   }
 
   getName(step: StepKind) {
@@ -65,12 +72,12 @@ export class IntegrationStepSelectComponent extends FlowPage
   }
 
   isSelected(step: Step) {
-    const _step = this.currentFlow.getStep(this.position);
+    const _step = this.currentFlowService.getStep(this.position);
     return _step && step.stepKind === _step.stepKind;
   }
 
   handleFlowEvent(event: FlowEvent) {
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     if (!step || !('stepKind' in step) || step.stepKind === 'endpoint') {
       // safety net
       this.router.navigate(['save-or-add-step'], {
@@ -140,12 +147,12 @@ export class IntegrationStepSelectComponent extends FlowPage
   }
 
   onSelect(step: Step) {
-    const _step = this.currentFlow.getStep(this.position);
+    const _step = this.currentFlowService.getStep(this.position);
     // Maintain the configuration if the user chose the same step kind
     if (_step && _step.stepKind === step.stepKind) {
       step = { ...step, ..._step };
     }
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-step',
       position: this.position,
       step: step,
@@ -193,7 +200,7 @@ export class IntegrationStepSelectComponent extends FlowPage
           this.steps = this.stepStore.getSteps(extensions);
           // trigger initial filtering for the view
           this.onFilterChange({});
-          this.currentFlow.events.emit({
+          this.currentFlowService.events.emit({
             kind: 'integration-step-select',
             position: this.position
           });
@@ -203,6 +210,8 @@ export class IntegrationStepSelectComponent extends FlowPage
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
   }
 }

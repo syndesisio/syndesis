@@ -11,7 +11,7 @@ const category = getCategory('Actions');
   templateUrl: './list-actions.component.html',
   styleUrls: ['./list-actions.component.scss']
 })
-export class ListActionsComponent implements OnInit {
+export class ListActionsComponent {
   truncateLimit = 80;
   truncateTrail = '…';
   selectedId = undefined;
@@ -20,7 +20,6 @@ export class ListActionsComponent implements OnInit {
   @Output() onSelected: EventEmitter<Action> = new EventEmitter();
 
   onSelect(action: Action) {
-    log.debugc(() => 'Selected action (list): ' + action.name, category);
     this.selectedId = action.id;
     this.onSelected.emit(action);
   }
@@ -29,14 +28,4 @@ export class ListActionsComponent implements OnInit {
     return action.id === this.selectedId;
   }
 
-  toggled(open): void {
-    log.debugc(() => 'Dropdown is now: ' + open);
-  }
-
-  ngOnInit() {
-    log.debugc(
-      () => 'Got actions: ' + JSON.stringify(this.actions, undefined, 2),
-      category
-    );
-  }
 }

@@ -6,6 +6,7 @@ import { Action,
   Connection,
   createIntegration,
   createStep,
+  createConnectionStep,
   DataShape,
   Integration,
   Step,
@@ -13,22 +14,12 @@ import { Action,
   IntegrationSupportService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
+import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('CurrentFlow');
 
-export class FlowEvent {
-  kind: string;
-  [name: string]: any;
-}
-
-function createStepWithId(): Step {
-  const step = createStep();
-  step.id = key();
-  return step;
-}
-
 @Injectable()
-export class CurrentFlow {
+export class CurrentFlowService {
   events = new EventEmitter<FlowEvent>();
 
   private subscription: Subscription;
@@ -44,9 +35,9 @@ export class CurrentFlow {
     );
   }
 
-  isValid() {
+  isValid(): boolean {
     // TODO more validations on the integration
-    return this.integration.name && this.integration.name.length;
+    return this.integration.name && this.integration.name.length > 0;
   }
 
   /**
@@ -338,7 +329,7 @@ export class CurrentFlow {
             position === this.getFirstPosition() ||
             position === this.getLastPosition()
           ) {
-            this.steps[position] = createStepWithId();
+            this.steps[position] = createStep();
             this.steps[position].stepKind = 'endpoint';
           } else {
             this.steps.splice(position, 1);
@@ -350,7 +341,7 @@ export class CurrentFlow {
       case 'integration-set-step': {
         const position = +event['position'];
         const step = <Step>event['step'];
-        this.steps[position] = { ...createStepWithId(), ...step };
+        this.steps[position] = { ...createStep(), ...step };
         if (this.steps[position].id == undefined) {
           this.steps[position].id = key();
         }
@@ -362,7 +353,7 @@ export class CurrentFlow {
         const position = +event['position'];
         const action = event['action'];
         const properties = this.stringifyValues(event['properties']);
-        const step = this.steps[position] || createStepWithId();
+        const step = this.steps[position] || createStep();
         step.configuredProperties = properties;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
@@ -380,7 +371,7 @@ export class CurrentFlow {
         const position = +event['position'];
         const action = event['action'];
         // TODO no step here should really raise an error
-        const step = this.steps[position] || createStepWithId();
+        const step = this.steps[position] || createStep();
         step.action = action;
         step.stepKind = 'endpoint';
         this.steps[position] = step;
@@ -394,7 +385,7 @@ export class CurrentFlow {
       case 'integration-set-connection': {
         const position = +event['position'];
         const connection = event['connection'];
-        const step = createStepWithId();
+        const step = createStep();
         step.stepKind = 'endpoint';
         step.connection = connection;
         this.steps[position] = step;
@@ -428,18 +419,27 @@ export class CurrentFlow {
             tags.push(id);
           }
         });
+        const finishUp = (i: Integration, subscription: Subscription) => {
+          log.debugc(
+            () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
+            category
+          );
+          const action = event['action'];
+          if (action && typeof action === 'function') {
+            action(i);
+          }
+          sub.unsubscribe();
+        };
         integration.tags = tags;
         const sub = this.integrationStore.updateOrCreate(integration).subscribe(
           (i: Integration) => {
-            log.debugc(
-              () => 'Saved integration: ' + JSON.stringify(i, undefined, 2),
-              category
-            );
-            const action = event['action'];
-            if (action && typeof action === 'function') {
-              action(i);
+            if (event.publish) {
+              this.integrationSupportService.deploy(i).toPromise().then(() => {
+                finishUp(i, sub);
+              });
+            } else {
+              finishUp(i, sub);
             }
-            sub.unsubscribe();
           },
           (reason: any) => {
             log.infoc(
@@ -561,15 +561,14 @@ export class CurrentFlow {
 
   private insertStepAfter(position: number) {
     const target = position + 1;
-    const step = createStepWithId();
+    const step = createStep();
     step.stepKind = undefined;
     this.steps.splice(target, 0, step);
   }
 
   private insertConnectionAfter(position: number) {
     const target = position + 1;
-    const step = createStepWithId();
-    step.stepKind = 'endpoint';
+    const step = createConnectionStep();
     this.steps.splice(target, 0, step);
   }
 

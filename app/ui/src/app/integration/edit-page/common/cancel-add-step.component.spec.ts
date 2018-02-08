@@ -1,6 +1,5 @@
 import { CancelAddStepComponent } from './cancel-add-step.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CurrentFlow } from '../current-flow.service';
 
 describe('CancelAddStepComponent', () => {
   let component, currentFlow, route, router;

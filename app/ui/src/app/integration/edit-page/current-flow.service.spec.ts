@@ -1,3 +1,4 @@
+
 /* tslint:disable */
 import { TestBed, async, inject } from '@angular/core/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
@@ -17,7 +18,7 @@ import { ApiModule } from '@syndesis/ui/api';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { TypeFactory } from '@syndesis/ui/model';
 import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
-import { CurrentFlow, FlowEvent } from './current-flow.service';
+import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
 
 describe('CurrentFlow', () => {
@@ -30,7 +31,7 @@ describe('CurrentFlow', () => {
         IntegrationSupportModule,
       ],
       providers: [
-        CurrentFlow,
+        CurrentFlowService,
         IntegrationStore,
         IntegrationService,
         EventsService,
@@ -83,27 +84,27 @@ describe('CurrentFlow', () => {
 
   it(
     'should return the previous connection',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const step = service.getPreviousConnection(2);
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const step = currentFlowService.getPreviousConnection(2);
       expect(step.id).toEqual('3');
     })
   );
 
   it(
     'should return the subsequent connection',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const step = service.getSubsequentConnection(2);
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const step = currentFlowService.getSubsequentConnection(2);
       expect(step.id).toEqual('4');
     })
   );
 
   it(
     'should return all subsequent connections',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const steps = service.getSubsequentConnections(2);
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const steps = currentFlowService.getSubsequentConnections(2);
       expect(steps.length).toEqual(1);
       expect(steps[0].id).toEqual('4');
     })
@@ -111,9 +112,9 @@ describe('CurrentFlow', () => {
 
   it(
     'should return all previous connections',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const steps = service.getPreviousConnections(2);
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const steps = currentFlowService.getPreviousConnections(2);
       expect(steps.length).toEqual(2);
       expect(steps[0].id).toEqual('foobar');
     })
@@ -121,27 +122,27 @@ describe('CurrentFlow', () => {
 
   it(
     'should return the first step in the flow',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const conn = service.getStartConnection();
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const conn = currentFlowService.getStartConnection();
       expect(conn.connectorId).toEqual('timer');
     })
   );
 
   it(
     'should return the last step in the flow',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const conn = service.getEndConnection();
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const conn = currentFlowService.getEndConnection();
       expect(conn.connectorId).toEqual('http');
     })
   );
 
   it(
     'should return the middle steps in the flow',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = getDummyIntegration();
-      const steps: Step[] = service.getMiddleSteps();
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = getDummyIntegration();
+      const steps: Step[] = currentFlowService.getMiddleSteps();
       expect(steps.length).toEqual(2);
       expect(steps[0].id).toEqual('3');
       expect(steps[0].stepKind).toEqual('endpoint');
@@ -150,12 +151,12 @@ describe('CurrentFlow', () => {
 
   it(
     'Should return an undefined start and end connection with an empty integration',
-    inject([CurrentFlow], (service: CurrentFlow) => {
-      service.integration = <Integration>{};
-      expect(service.getStartConnection()).toBeUndefined();
-      expect(service.getEndConnection()).toBeUndefined();
-      expect(service.getFirstPosition()).toEqual(0);
-      expect(service.getLastPosition()).toEqual(1);
+    inject([CurrentFlowService], (currentFlowService: CurrentFlowService) => {
+      currentFlowService.integration = <Integration>{};
+      expect(currentFlowService.getStartConnection()).toBeUndefined();
+      expect(currentFlowService.getEndConnection()).toBeUndefined();
+      expect(currentFlowService.getFirstPosition()).toEqual(0);
+      expect(currentFlowService.getLastPosition()).toEqual(1);
     })
   );
 });

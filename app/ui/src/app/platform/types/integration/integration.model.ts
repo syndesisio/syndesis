@@ -1,4 +1,4 @@
-import { Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
+import { Action, BaseEntity, Connection, User, key } from '@syndesis/ui/platform';
 
 export interface Step extends BaseEntity {
   action: Action;
@@ -14,6 +14,7 @@ export const DRAFT = 'Draft';
 export const PENDING = 'Pending';
 export const PUBLISHED = 'Published';
 export const UNPUBLISHED = 'Unpublished';
+export const ERROR = 'Error';
 
 export type IntegrationState = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
@@ -101,8 +102,17 @@ export interface ActivityStep extends BaseEntity {
   events?: any;
 }
 
-export function createStep() {
-  return {} as Step;
+export function createStep(): Step {
+  const step = {} as Step;
+  step.id = key();
+  step.stepKind = undefined;
+  return step;
+}
+
+export function createConnectionStep(): Step {
+  const step = createStep();
+  step.stepKind = 'endpoint';
+  return step;
 }
 
 export function createIntegration() {

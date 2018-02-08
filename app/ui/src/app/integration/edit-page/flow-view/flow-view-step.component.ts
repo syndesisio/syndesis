@@ -8,7 +8,7 @@ import { Action, Integration, Step } from '@syndesis/ui/platform';
 import { ModalService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore } from '@syndesis/ui/store';
-import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -17,7 +17,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view-step.component.html',
   styleUrls: ['./flow-view-step.component.scss']
 })
-export class FlowViewStepComponent extends ChildAwarePage {
+export class FlowViewStepComponent {
   // the step object in the current flow
   @Input() step: Step;
 
@@ -33,16 +33,21 @@ export class FlowViewStepComponent extends ChildAwarePage {
   @ViewChild('pop') public pop: PopoverDirective;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
     private stepStore: StepStore
   ) {
-    super(currentFlow, route, router);
+
+  }
+
+  get currentStepKind() {
+    return this.flowPageService.getCurrentStepKind(this.route);
   }
 
   showTooltip() {
-    if (this.currentStepKind === 'mapper') {
+    if (this.flowPageService.getCurrentStepKind(this.route) === 'mapper') {
       this.pop.show();
     }
   }
@@ -86,7 +91,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
   }
 
   deletePrompt() {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-delete-prompt',
       position: this.getPosition()
     });
@@ -95,7 +100,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
   getPosition() {
     let position = this.position;
     if (this.position === -1) {
-      position = this.currentFlow.getLastPosition();
+      position = this.currentFlowService.getLastPosition();
     }
     return position;
   }
@@ -106,7 +111,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
       //clazz = 'current';
       clazz = 'active';
     }
-    const step = this.currentFlow.getStep(this.currentPosition);
+    const step = this.currentFlowService.getStep(this.currentPosition);
     if (step && !this.stepIsComplete(step)) {
       clazz = clazz + ' disabled';
     }
@@ -147,7 +152,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
     if (this.getTextClass(state) !== 'active') {
       answer = answer + ' inactive';
     }
-    const currentIndex = this.getCurrentStepIndex();
+    const currentIndex = this.flowPageService.getCurrentStepIndex(this.route);
     if (page !== undefined && currentIndex >= 0) {
       if (page === currentIndex) {
         answer = 'active';
@@ -251,7 +256,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
       }
     }
     // validate that the step is complete before we move
-    const step = this.currentFlow.getStep(this.currentPosition);
+    const step = this.currentFlowService.getStep(this.currentPosition);
     // step can be null if we're on the save or add step page
     if (step && !this.stepIsComplete(step)) {
       return;
@@ -280,7 +285,7 @@ export class FlowViewStepComponent extends ChildAwarePage {
         if (this.getPosition() === 0) {
           return 'Start';
         }
-        if (this.getPosition() === this.currentFlow.getLastPosition()) {
+        if (this.getPosition() === this.currentFlowService.getLastPosition()) {
           return 'Finish';
         }
         return 'Set up this connection';
