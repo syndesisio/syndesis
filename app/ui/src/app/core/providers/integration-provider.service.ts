@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import {
   BaseEntity,
   ApiHttpService,
-  IntegrationService, Integration, Integrations, integrationEndpoints
+  IntegrationService, Integration, Integrations, integrationEndpoints, IntegrationMetrics
 } from '@syndesis/ui/platform';
 
 @Injectable()
@@ -36,5 +36,12 @@ export class IntegrationProviderService extends IntegrationService {
     return this.apiHttpService
       .setEndpointUrl(integrationEndpoints.integration, { id: integration.id })
       .delete();
+  }
+
+  fetchMetrics(id?: string): Observable<IntegrationMetrics> {
+    const endpointKey = id ? integrationEndpoints.integrationMetricsById : integrationEndpoints.integrationMetrics;
+    return this.apiHttpService
+      .setEndpointUrl(endpointKey, { id })
+      .get<IntegrationMetrics>();
   }
 }

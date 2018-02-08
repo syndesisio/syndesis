@@ -108,5 +108,17 @@ export function createIntegration() {
   return {} as Integration;
 }
 
-/* tslint:disable:no-empty-interface */
-export interface IntegrationState extends BaseReducerCollectionModel<Integration> {}
+export interface IntegrationMetrics {
+  id?: string;
+  numberOfProcessedMessages: number;
+  numberOfErrors: number;
+  lastProcessedTimestamp: number; // XXX: Might requrie timestamp parsing through MomentJS
+  uptimeInMilliSeconds: number;
+}
+
+export interface IntegrationState extends BaseReducerCollectionModel<Integration> {
+  metrics: {
+    summary: IntegrationMetrics;
+    list: Array<IntegrationMetrics>;
+  };
+}

@@ -61,7 +61,7 @@ export interface BaseRequestModel {
  * TODO: Document each one in more detail
  */
 export interface BaseEntity {
-  readonly id?: string;
+  id?: string;
   kind?: string;
   name?: string;
 }

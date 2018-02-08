@@ -31,7 +31,7 @@ import { AppRoutingModule } from './app.routing';
 import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
-import { platformReducer, platformEffects, PlatformEffects, platformEndpoints, SYNDESIS_GUARDS } from './platform';
+import { platformReducer, PlatformEffects, platformEndpoints, SYNDESIS_GUARDS } from './platform';
 
 export function restangularProviderConfigurer(
   restangularProvider: any,

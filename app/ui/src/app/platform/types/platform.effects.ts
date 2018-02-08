@@ -10,7 +10,7 @@ import { IntegrationEffects, IntegrationActions } from './integration';
 export class PlatformEffects {
   @Effect()
   bootstrapIntegration$: Observable<Action> = this.actions$
-    .ofType(PlatformActions.PLATFORM_BOOTSTRAP)
+    .ofType(PlatformActions.APP_BOOTSTRAP)
     .map(() => ({ type: IntegrationActions.FETCH_INTEGRATIONS }));
 
   constructor(private actions$: Actions) { }

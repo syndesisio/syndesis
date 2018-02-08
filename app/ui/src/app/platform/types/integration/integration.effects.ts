@@ -22,6 +22,22 @@ export class IntegrationEffects {
         }))
     );
 
+  @Effect()
+  fetchIntegrationMetrics$: Observable<Action> = this.actions$
+    .ofType<IntegrationActions.FetchMetrics>(
+      IntegrationActions.FETCH_METRICS,
+      IntegrationActions.FETCH_INTEGRATIONS
+    )
+    .mergeMap(action =>
+      this.integrationService
+        .fetchMetrics(action.id)
+        .map(response => ({ type: IntegrationActions.FETCH_METRICS_COMPLETE, payload: response }))
+        .catch(error => Observable.of({
+          type: IntegrationActions.FETCH_METRICS_FAIL,
+          payload: error
+        }))
+    );
+
   constructor(
     private actions$: Actions,
     private integrationService: IntegrationService

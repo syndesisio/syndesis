@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
-import { BaseEntity, ActionReducerError, Integration, Integrations } from '@syndesis/ui/platform';
+import { BaseEntity, ActionReducerError } from '@syndesis/ui/platform';
+import { Integration, Integrations, IntegrationMetrics } from './integration.models';
 
 export const FETCH_INTEGRATIONS            = '[Integrations] Fetch integrations request';
 export const FETCH_INTEGRATIONS_COMPLETE   = '[Integrations] Fetch integrations complete';
@@ -17,6 +18,10 @@ export const CREATE_INTEGRATION_FAIL       = '[Integrations] New Integrarion syn
 export const DELETE_INTEGRATION            = '[Integrations] Delete integration';
 export const DELETE_INTEGRATION_COMPLETE   = '[Integrations] Deleted integration now synchronized';
 export const DELETE_INTEGRATION_FAIL       = '[Integrations] Deleted integration sync failed';
+
+export const FETCH_METRICS                 = '[Integrations] Fetch metrics request';
+export const FETCH_METRICS_COMPLETE        = '[Integrations] Fetch metrics complete';
+export const FETCH_METRICS_FAIL            = '[Integrations] Fetch metrics failed';
 
 export class IntegrationsFetch implements Action {
   readonly type = FETCH_INTEGRATIONS;
@@ -78,6 +83,24 @@ export class IntegrationDeleteComplete implements Action {
 
 export class IntegrationDeleteFail implements Action {
   readonly type = DELETE_INTEGRATION_FAIL;
+
+  constructor(public payload: ActionReducerError) { }
+}
+
+export class FetchMetrics implements Action {
+  readonly type = FETCH_METRICS;
+
+  constructor(public id?: string) { }
+}
+
+export class FetchMetricsComplete implements Action {
+  readonly type = FETCH_METRICS_COMPLETE;
+
+  constructor(public payload: IntegrationMetrics) { }
+}
+
+export class FetchMetricsFailure implements Action {
+  readonly type = FETCH_METRICS_FAIL;
 
   constructor(public payload: ActionReducerError) { }
 }

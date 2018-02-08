@@ -1,10 +1,21 @@
 import { createFeatureSelector } from '@ngrx/store';
 
-import { IntegrationState } from './integration.models';
+import { IntegrationState, IntegrationMetrics } from './integration.models';
 import * as IntegrationActions from './integration.actions';
+
+const initialIntegrationMetrics: IntegrationMetrics = {
+  numberOfProcessedMessages: 0,
+  numberOfErrors: 0,
+  lastProcessedTimestamp: 0,
+  uptimeInMilliSeconds: 0
+};
 
 const initialState: IntegrationState = {
   collection: [],
+  metrics: {
+    summary: initialIntegrationMetrics,
+    list: []
+  },
   loading: false,
   loaded: false,
   hasErrors: false,
@@ -34,6 +45,7 @@ export function integrationReducer(state = initialState, action: any): Integrati
       };
     }
 
+    case IntegrationActions.FETCH_METRICS_FAIL:
     case IntegrationActions.FETCH_INTEGRATIONS_FAIL: {
       const error = (action as IntegrationActions.IntegrationsFetchFail).payload;
       return {
@@ -157,6 +169,50 @@ export function integrationReducer(state = initialState, action: any): Integrati
         loading: false,
         hasErrors: true,
         errors: [error]
+      };
+    }
+
+    case IntegrationActions.FETCH_METRICS: {
+      const id = (action as IntegrationActions.FetchMetrics).id;
+      let list = state.metrics.list;
+      if (id) {
+        if (list.some(integrationMetrics => integrationMetrics.id === id)) {
+          list = list.filter(integrationMetrics => integrationMetrics.id !== id);
+        }
+
+        list.push({ id, ...initialIntegrationMetrics });
+      }
+
+      return {
+        ...state,
+        metrics: { ...state.metrics, list },
+        loading: true,
+        loaded: false,
+        hasErrors: false,
+        errors: []
+      };
+    }
+
+    case IntegrationActions.FETCH_METRICS_COMPLETE: {
+      const payload = (action as IntegrationActions.FetchMetricsComplete).payload;
+      let { list, summary } = state.metrics;
+      if (payload.id) {
+        if (list.some(integrationMetrics => integrationMetrics.id === payload.id)) {
+          list = list.filter(integrationMetrics => integrationMetrics.id !== payload.id);
+        }
+
+        list.push(payload);
+      } else {
+        summary = payload;
+      }
+
+      return {
+        ...state,
+        metrics: { ...state.metrics, summary, list },
+        loading: true,
+        loaded: false,
+        hasErrors: false,
+        errors: []
       };
     }
 
