@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -17,7 +17,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss']
 })
-export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
+export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, AfterViewInit {
   flowSubscription: Subscription;
   position: number;
   step: Step = undefined;
@@ -33,6 +33,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
@@ -237,6 +238,10 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
         this.position = +params.get('position');
         this.loadForm();
       });
+  }
+
+  ngAfterViewInit() {
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnDestroy() {
