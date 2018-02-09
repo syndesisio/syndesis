@@ -76,6 +76,7 @@
     <module>connectors/jms/activemq-connectors</module>
     <module>connectors/jms/amqp-connector</module>
     <module>connectors/odata</module>
+	<module>connectors/ftp</module>
   </modules>
 
   <dependencyManagement>
