@@ -59,7 +59,7 @@ skinparam database {
 }
 
 ' ======== Script
-rectangle "<b>syndesis update</b>" <<Shell>> as cli
+rectangle "<b>syndesis upgrade</b>" <<Shell>> as cli
 folder backup [
 jsondb_dump
 configmaps.json
