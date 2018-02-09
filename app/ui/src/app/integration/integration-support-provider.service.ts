@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Action,
-         Connection,
-         Activity,
-         Integration,
-         IntegrationDeployment,
-         IntegrationDeployments,
-         IntegrationOverview,
-         IntegrationOverviews,
-         IntegrationState,
-         IntegrationSupportService,
-         ApiHttpService,
-         UNPUBLISHED } from '@syndesis/ui/platform';
+import {
+  Action,
+  Connection,
+  Activity,
+  Integration,
+  IntegrationDeployment,
+  IntegrationDeployments,
+  IntegrationOverview,
+  IntegrationOverviews,
+  IntegrationStatus,
+  IntegrationSupportService,
+  ApiHttpService,
+  UNPUBLISHED
+} from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { integrationSupportEndpoints } from './integration-support.api';
 import { RequestMethod, ResponseContentType } from '@angular/http';
@@ -41,7 +43,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   getOverviews(): Observable<IntegrationOverviews> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.overviews).get().map( (value: any) => value.items || []);
+    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.overviews).get().map((value: any) => value.items || []);
   }
 
   watchOverviews(): Observable<IntegrationOverviews> {
@@ -74,9 +76,9 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     });
   }
 
-  updateState(id: string, version: string | number, state: IntegrationState): Observable<any> {
+  updateState(id: string, version: string | number, status: IntegrationStatus): Observable<any> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.updateState, { id, version }).post({
-      targetState: state
+      targetState: status
     });
   }
 
@@ -139,7 +141,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     });
   }
 
-  downloadSupportData(data: any[]): Observable<Blob>  {
+  downloadSupportData(data: any[]): Observable<Blob> {
     return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.supportData)
       .post<Blob>(data, { responseType: 'blob' });
   }
