@@ -44,18 +44,24 @@
     <div class="row name"
          *ngIf="currentStepKind !== 'mapper'">
       <div class="col-md-12">
-        <div class="form-group">
-          <div class="clickable"
-               (click)="startEditingName()">
+        <div class="vertical-align">
+          <div class="integration-name">
             <input type="text"
-                   #nameInput
-                   class="form-control integration-name"
-                   placeholder="Enter integration name..."
-                   [(ngModel)]="integrationName"
-                   [readonly]="!editingName"
-                   (blur)="stopEditingName()">
-            <span class="pficon pficon-edit pull-right"
-                  *ngIf="!editingName"></span>
+                  #nameInput
+                  class="form-control integration-name-field"
+                  placeholder="Enter integration name..."
+                  [(ngModel)]="integrationName"
+                  [readonly]="!editingName"
+                  (blur)="stopEditingName()"
+                  (click)="!editingName && startEditingName()"
+                  (keyup)="$event.keyCode == 13 && stopEditingName()">
+          </div>
+          <div class="integration-name-edit">
+            <button class="btn btn-link  integration-name-edit-btn" type="button">
+              <span class="fa fa-pencil"
+                    *ngIf="!editingName"
+                    (click)="startEditingName()"></span>
+            </button>
           </div>
         </div>
       </div>
