@@ -34,6 +34,8 @@ doc::run() {
     local input_file=$(readopt --input -i)
     if [ -z "${input_file}" ]; then
         input_file="index.adoc"
+    else
+        docdir=$(cd $(dirname $input_file) && pwd)
     fi
 
     local outdir=$(readopt --out)
@@ -101,7 +103,7 @@ call_asciidoctor() {
         cd $docdir
         eval "$@"
     else
-        docker run -it -v ${docdir}:/documents $asciidoctor_image $@
+        docker run -t -v ${docdir}:/documents $asciidoctor_image $@
     fi
 }
 
@@ -112,7 +114,7 @@ optional_arg() {
     local out=$(hasflag $option)
     if [ -n "${out}" ]; then
         out=$(readopt $option)
-        if [ -z "${out}" ] || [[ $out = "--"* ]]; then
+        if [ -z "${out}" ] || [[ $out = "-"* ]]; then
             out=$default_value
         fi
         echo $out
