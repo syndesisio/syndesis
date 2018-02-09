@@ -140,41 +140,13 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       });
       return;
     }
+
     const prevStep = this.currentFlowService.getPreviousStepWithDataShape(this.position);
-    const nextStep = this.currentFlowService.getSubsequentStepWithDataShape(this.position);
-
-    // we now have previous and next steps that have the data shapes defined
-    // now we need to determine if there is a mapping step inbetween
-    // mapping step doesn't specify shape but it changes it to the input shape
-    // of the step after it, in that case we need to look at the input sep of
-    // the next step, otherwise we need to look at the output step of the
-    // previous step
-
-    const prevIdx = this.currentFlowService.steps.indexOf(prevStep);
-    const nextIdx = this.currentFlowService.steps.indexOf(nextStep);
-    let stepToFilterOn;
-    let shapePromise;
-    if (prevIdx + 1 < this.position) {
-      // there is a step in front of this step that doesn't have a shape,
-      // we're betting on it's the mapper step
-      // integration is: previous - mapping - this - ... - next
-      // we need to take the input shape of the next step
-      stepToFilterOn = nextStep;
-      shapePromise = this.currentFlowService.fetchInputDataShapeFor(stepToFilterOn);
-    } else {
-      // here prevIdx + 1 should be this.position, that means there is nothing
-      // to change the shape of the previous step
-      // integration is: previous - this - ... - next
-      // we need to take the output of the previous step
-      stepToFilterOn = prevStep;
-      shapePromise = this.currentFlowService.fetchOutputDataShapeFor(stepToFilterOn);
-    }
-
-    shapePromise.then(shape => {
-        this.dataShape = shape;
-      })
-      .catch(response => this.handleDataShapeError(stepToFilterOn, response))
-      .then(() => this.loadFormSetup(step));
+    this.currentFlowService.fetchOutputDataShapeFor(prevStep).then(shape => {
+      this.dataShape = shape;
+    })
+    .catch(response => this.handleDataShapeError(prevStep, response))
+    .then(() => this.loadFormSetup(step));
   }
 
   loadFormSetup(step: Step) {
