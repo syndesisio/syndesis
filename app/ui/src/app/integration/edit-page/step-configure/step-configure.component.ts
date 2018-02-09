@@ -33,7 +33,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
 
   constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
@@ -241,7 +241,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.cd.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnDestroy() {
