@@ -1,5 +1,4 @@
 = Syndesis Updates
-
 Roland Huß <roland@syndes.is>
 v0.2, 2018-02-09
 :toc:
@@ -59,7 +58,7 @@ skinparam database {
 }
 
 ' ======== Script
-rectangle "syndesis update" <<Shell>> as cli
+rectangle "<b>syndesis update</b>" <<Shell>> as cli
 folder backup [
 jsondb_dump
 configmaps.json
@@ -75,12 +74,13 @@ node OpenShift {
      ]
    }
    package Infrastructure #thistle {
-     database "JsonDB Volume" <<State>> as pv
 
-     rectangle "syndesis-db" <<Pod>> as db
+
+     rectangle "syndesis-ui" <<Pod>> as ui
      rectangle "syndesis-rest" <<Pod>> as rest
-     rectangle "syndesis-meta" <<Pod>> as meta
+     rectangle "syndesis-db" <<Pod>> as db
 
+     rectangle "syndesis-meta" <<Pod>> as meta
      folder ConfigMap <<State>> [
      syndesis-sampledb-config
      syndesis-ui-config
@@ -88,14 +88,17 @@ node OpenShift {
      syndesis-ui-config
      syndesis-verifier-config
      ]
+     database "JsonDB Volume" <<State>> as pv
    }
 
 }
 
 ' ====== Links
-cli -right-> Infrastructure
-db .. pv
-cli -down-> backup
+db .down. pv
+
+cli -down-> Infrastructure
+cli -right-> backup
+
 twsf -down-> Secrets
 ' end::uml[]
 @enduml
