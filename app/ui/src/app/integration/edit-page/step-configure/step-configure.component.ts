@@ -17,7 +17,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss']
 })
-export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
+export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, AfterViewInit {
   flowSubscription: Subscription;
   position: number;
   step: Step = undefined;
