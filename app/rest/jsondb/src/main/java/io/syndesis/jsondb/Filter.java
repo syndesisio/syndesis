@@ -23,10 +23,9 @@ import io.syndesis.jsondb.impl.LogicalFilter;
 /**
  *
  */
-@SuppressWarnings("PMD")
-public abstract class Filter {
+public interface Filter {
 
-    public enum Op {
+    enum Op {
         EQ,
         NEQ,
         LT,
@@ -35,15 +34,15 @@ public abstract class Filter {
         GTE,
     }
 
-    public static Filter and(Filter ...filters) {
+    static Filter and(Filter ...filters) {
         return new LogicalFilter(LogicalFilter.Op.AND, Arrays.asList(filters));
     }
 
-    public static Filter or(Filter ...filters) {
+    static Filter or(Filter ...filters) {
         return new LogicalFilter(LogicalFilter.Op.OR, Arrays.asList(filters));
     }
 
-    public static Filter child(String field, Op op, Object value) {
+    static Filter child(String field, Op op, Object value) {
         return new ChildFilter(field, op, value);
     }
 

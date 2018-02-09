@@ -13,36 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.jsondb.impl;
 
-import io.syndesis.jsondb.Filter;
-import io.syndesis.model.ToJson;
-
-/**
- *
- */
-public class ChildFilter implements Filter, ToJson {
-
-    private final String field;
-    private final Op op;
-    private final Object value;
-
-    public ChildFilter(String field, Op op, Object value) {
-        this.field = field;
-        this.op = op;
-        this.value = value;
-    }
-
-    public String field() {
-        return field;
-    }
-
-    public Op op() {
-        return op;
-    }
-
-    public Object value() {
-        return value;
-    }
-
-}
+var data = jsondb.get("/test");
+console.log("Data: ", data);
+data["u10001"].name += " Migrated"
+jsondb.set("/test", data);
+jsondb.set("/junk", "Delete me");

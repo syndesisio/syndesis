@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.jsondb.impl;
+package io.syndesis.core.util;
 
-import io.syndesis.jsondb.Filter;
-import io.syndesis.model.ToJson;
+import java.nio.charset.StandardCharsets;
 
 /**
- *
+ * Utilities for working with Strings
  */
-public class ChildFilter implements Filter, ToJson {
+public final class Strings {
 
-    private final String field;
-    private final Op op;
-    private final Object value;
-
-    public ChildFilter(String field, Op op, Object value) {
-        this.field = field;
-        this.op = op;
-        this.value = value;
+    private Strings() {
     }
 
-    public String field() {
-        return field;
+    public static String utf8(byte[] data) {
+        return new String(data, StandardCharsets.UTF_8);
     }
-
-    public Op op() {
-        return op;
-    }
-
-    public Object value() {
-        return value;
-    }
-
 }

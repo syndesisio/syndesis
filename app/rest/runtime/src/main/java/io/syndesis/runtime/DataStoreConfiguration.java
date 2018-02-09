@@ -36,7 +36,7 @@ import java.util.Optional;
  */
 @Configuration
 public class DataStoreConfiguration {
-    private static final Logger LOG = LoggerFactory.getLogger(SchemaCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Migrations.class);
 
     @Bean
     @Autowired
