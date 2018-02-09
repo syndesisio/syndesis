@@ -34,6 +34,8 @@ public class SqlParam {
     private JDBCType jdbcType;
     private int columnPos;
     private TypeValue<?> typeValue;
+    private Boolean isConstant;
+    private String value;
 
     public SqlParam() {
         super();
