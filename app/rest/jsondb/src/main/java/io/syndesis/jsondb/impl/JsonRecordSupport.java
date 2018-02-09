@@ -50,7 +50,9 @@ public final class JsonRecordSupport {
     public static final char FALSE_VALUE_PREFIX = '\u0001';
     public static final char TRUE_VALUE_PREFIX = '\u0002';
     public static final char NUMBER_VALUE_PREFIX = '[';
+    public static final char NEG_NUMBER_VALUE_PREFIX = '-';
     public static final char STRING_VALUE_PREFIX = '`';
+    public static final char ARRAY_VALUE_PREFIX = NUMBER_VALUE_PREFIX;
 
 
     static class PathPart {
@@ -160,12 +162,9 @@ public final class JsonRecordSupport {
 
                 if( nextToken == JsonToken.VALUE_STRING ) {
                     value = STRING_VALUE_PREFIX + value;
-                } else if( nextToken == JsonToken.VALUE_NUMBER_INT ) {
+                } else if( nextToken == JsonToken.VALUE_NUMBER_INT || nextToken == JsonToken.VALUE_NUMBER_FLOAT ) {
                     ovalue = value; // hold on to the original number in th ovalue field.
                     value = toLexSortableString(value); // encode it so we can lexically sort.
-                } else if( nextToken == JsonToken.VALUE_NUMBER_FLOAT ) {
-                    ovalue = value; // hold on to the original number in th ovalue field.
-                    value = NUMBER_VALUE_PREFIX + value; // TODO: need to do proper lexical encoding of floats.
                 } else if( nextToken == JsonToken.VALUE_TRUE ) {
                     ovalue = value;
                     value = ""+TRUE_VALUE_PREFIX;
@@ -231,9 +230,22 @@ public final class JsonRecordSupport {
      * http://www.zanopha.com/docs/elen.pdf
      */
     public static String toLexSortableString(final String value) {
-        ArrayList<String> seqs = new ArrayList<String>();
 
         String seq = value;
+        char prefix = NUMBER_VALUE_PREFIX;
+        if( seq.startsWith("-") ) {
+            prefix = NEG_NUMBER_VALUE_PREFIX;
+            seq = seq.substring(1);
+        }
+
+        String suffix = null;
+        int dot = seq.indexOf('.');
+        if( dot >= 0 ) {
+            suffix = seq.substring(dot+1);
+            seq = seq.substring(0, dot);
+        }
+
+        ArrayList<String> seqs = new ArrayList<String>();
         seqs.add(seq);
         while (seq.length() > 1) {
             seq = Integer.toString(seq.length());
@@ -242,12 +254,33 @@ public final class JsonRecordSupport {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < seqs.size(); i++) {
-            builder.append(NUMBER_VALUE_PREFIX);
+            builder.append(prefix);
         }
         for (int i = seqs.size() - 1; i >= 0; i--) {
             builder.append(seqs.get(i));
         }
-        return builder.toString();
+
+        if( suffix!=null ) {
+            builder.append(suffix);
+            if( prefix == NEG_NUMBER_VALUE_PREFIX ) {
+                builder.append(NUMBER_VALUE_PREFIX);
+            } else {
+                builder.append(NEG_NUMBER_VALUE_PREFIX);
+            }
+        }
+
+        String rc = builder.toString();
+        if( prefix == NEG_NUMBER_VALUE_PREFIX ) {
+            char[] chars = rc.toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                char c = chars[i];
+                if( '0' <= c && c <= '9') {
+                    chars[i] = (char) ('9' - (c - '0'));
+                }
+            }
+            rc = new String(chars);
+        }
+        return rc;
     }
 
     static int fromLexSortableStringToInt(String value) {

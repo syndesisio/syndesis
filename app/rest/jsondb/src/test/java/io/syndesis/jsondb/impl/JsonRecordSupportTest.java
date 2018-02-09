@@ -15,9 +15,12 @@
  */
 package io.syndesis.jsondb.impl;
 
-import org.junit.Test;
-
+import static io.syndesis.jsondb.impl.JsonRecordSupport.toLexSortableString;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.regex.Pattern;
+
+import org.junit.Test;
 
 
 /**
@@ -31,7 +34,7 @@ public class JsonRecordSupportTest {
         // see: http://www.zanopha.com/docs/elen.pdf
 
         int intitialValue = 1234567890;
-        String r1 = JsonRecordSupport.toLexSortableString(intitialValue);
+        String r1 = toLexSortableString(intitialValue);
         assertThat(r1).isEqualTo("[[[2101234567890");
 
         int r2 = JsonRecordSupport.fromLexSortableStringToInt(r1);
@@ -39,11 +42,37 @@ public class JsonRecordSupportTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testSmallValues() {
-        for (int i = 0; i < 10; i++) {
-            String r1 = JsonRecordSupport.toLexSortableString(i);
-            int r2 = JsonRecordSupport.fromLexSortableStringToInt(r1);
-            assertThat(r2).isEqualTo(i);
+        String last=null;
+        for (int i = -1000; i < 1000; i++) {
+            String next = toLexSortableString(i);
+            if( last != null ) {
+                assertThat((Comparable)last).isLessThan(next);
+            }
+            last = next;
         }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testFloatsValues() {
+
+        assertThat(toLexSortableString("1.01")).isEqualTo("[101-");
+        assertThat(toLexSortableString("-100.5")).isEqualTo("--68994[");
+
+        String last=null;
+        for (int i = 0; i < 9000; i++) {
+            String value = rtrim(String.format("23.%04d",i),"0");
+            String next = toLexSortableString(value);
+            if( last != null ) {
+                assertThat((Comparable)last).isLessThan(next);
+            }
+            last = next;
+        }
+    }
+
+    private String rtrim(String value, String suffix) {
+        return value.replaceAll("("+Pattern.quote(suffix)+")+$", "");
     }
 }

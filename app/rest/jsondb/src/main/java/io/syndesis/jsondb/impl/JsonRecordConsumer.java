@@ -15,12 +15,8 @@
  */
 package io.syndesis.jsondb.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonStreamContext;
-import com.fasterxml.jackson.core.JsonTokenId;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDBException;
+import static io.syndesis.jsondb.impl.JsonRecordSupport.ARRAY_VALUE_PREFIX;
+import static io.syndesis.jsondb.impl.JsonRecordSupport.NUMBER_VALUE_PREFIX;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -33,6 +29,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonStreamContext;
+
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDBException;
 
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
@@ -135,7 +138,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
         count = newPath.size();
         for (int i = pathMatches; i < count; i++) {
             String part = newPath.get(i);
-            boolean array = part.charAt(0) == '[';
+            boolean array = part.charAt(0) == ARRAY_VALUE_PREFIX;
 
             if (array) {
                 if (jg.getOutputContext().inRoot()) {
@@ -150,12 +153,12 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
             if (i + 1 < count) {
                 String nextPart = newPath.get(i + 1);
-                boolean nextArray = nextPart.charAt(0) == '[';
+                boolean nextArray = nextPart.charAt(0) == ARRAY_VALUE_PREFIX;
 
                 JsonRecordSupport.PathPart pathPart = new JsonRecordSupport.PathPart(part, nextArray);
                 currentPath.add(pathPart);
 
-                if (nextPart.charAt(0) == '[') {
+                if (nextPart.charAt(0) == ARRAY_VALUE_PREFIX) {
                     jg.writeStartArray();
 
                     int idx = JsonRecordSupport.toArrayIndex(nextPart);
@@ -187,7 +190,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
         for (int i = 0; i < currentPath.size() && i < newPath.size(); i++) {
             JsonRecordSupport.PathPart lastPart = currentPath.get(i);
             if (lastPart.getPath().equals(newPath.get(i)) ||
-                (lastPart.isArray() && newPath.get(i).charAt(0) == '[')) { // NOPMD, false positive
+                (lastPart.isArray() && newPath.get(i).charAt(0) == ARRAY_VALUE_PREFIX)) { // NOPMD, false positive
                 pathMatches++;
             } else {
                 break;
@@ -237,7 +240,8 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
             case JsonRecordSupport.NULL_VALUE_PREFIX:
                 jg.writeNull();
                 break;
-            case JsonRecordSupport.NUMBER_VALUE_PREFIX:
+            case JsonRecordSupport.NEG_NUMBER_VALUE_PREFIX:
+            case NUMBER_VALUE_PREFIX:
                 jg.writeNumber(value.getOValue());
                 break;
             case JsonRecordSupport.TRUE_VALUE_PREFIX:

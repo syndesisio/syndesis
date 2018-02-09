@@ -17,7 +17,6 @@ package io.syndesis.jsondb.impl.expr;
 
 import static io.syndesis.jsondb.impl.JsonRecordSupport.FALSE_VALUE_PREFIX;
 import static io.syndesis.jsondb.impl.JsonRecordSupport.NULL_VALUE_PREFIX;
-import static io.syndesis.jsondb.impl.JsonRecordSupport.NUMBER_VALUE_PREFIX;
 import static io.syndesis.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
 import static io.syndesis.jsondb.impl.JsonRecordSupport.TRUE_VALUE_PREFIX;
 import static io.syndesis.jsondb.impl.JsonRecordSupport.toLexSortableString;
@@ -49,11 +48,8 @@ class LiteralSqlExpressionBuilder extends SqlExpressionBuilder {
                 query.bind("f" + b1, ""+TRUE_VALUE_PREFIX);
             } else if( value.getClass() == String.class ) {
                 query.bind("f" + b1, ""+STRING_VALUE_PREFIX+value);
-            } else if( value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long ) {
+            } else if( value instanceof Number ) {
                 query.bind("f" + b1, toLexSortableString(value.toString()));
-            } else if( value instanceof Float || value instanceof Double ) {
-                // TODO: handle lexical float encoding
-                query.bind("f" + b1, ""+NUMBER_VALUE_PREFIX+value.toString());
             } else {
                 query.bind("f" + b1, ""+STRING_VALUE_PREFIX+value.toString());
             }
