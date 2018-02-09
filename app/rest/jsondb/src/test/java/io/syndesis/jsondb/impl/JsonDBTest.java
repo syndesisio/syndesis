@@ -39,8 +39,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.syndesis.jsondb.Filter;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDBException;
+
+import io.syndesis.jsondb.Filter.Op;
 
 /**
  * Unit Tests for the JsonDB implementation.
@@ -56,11 +59,15 @@ public class JsonDBTest {
     @Before
     public void before() {
         JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+        ds.setURL("jdbc:h2:/tmp/test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         DBI dbi = new DBI(ds);
 
         this.jsondb = new SqlJsonDB(dbi, null,
-            Arrays.asList(new Index("/pair", "key"))
+            Arrays.asList(
+                new Index("/pair", "key"),
+                new Index("/users", "name"),
+                new Index("/users", "age")
+            )
         );
 
         try {
@@ -585,6 +592,108 @@ public class JsonDBTest {
 
         assertThat(jsondb.fetchIdsByPropertyValue("/pair", "key", "value")).containsOnly("/pair/:id");
         assertThat(jsondb.fetchIdsByPropertyValue("/pair", "key", "nope")).isEmpty();
+    }
+
+
+    @Test
+    public void testGetFilter() throws IOException {
+
+        jsondb.set("/users/u1", mapper.writeValueAsString(map(
+            "name", "u1",
+            "age", 9
+        )));
+        jsondb.set("/users/u2", mapper.writeValueAsString(map(
+            "name", "u2",
+            "age", 10
+        )));
+        jsondb.set("/users/u3", mapper.writeValueAsString(map(
+            "name", "u3",
+            "age", 21
+        )));
+
+        ////////////////////////////////////////
+        //
+        // Check filtering ops against strings..
+        //
+        ////////////////////////////////////////
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("name", Op.EQ, "u2")
+        ))).isEqualTo(
+            "{\"u2\":{\"age\":10,\"name\":\"u2\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("name", Op.NEQ, "u2")
+        ))).isEqualTo(
+            "{\"u1\":{\"age\":9,\"name\":\"u1\"},\"u3\":{\"age\":21,\"name\":\"u3\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("name", Op.LT, "u2")
+        ))).isEqualTo(
+            "{\"u1\":{\"age\":9,\"name\":\"u1\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("name", Op.GT, "u2")
+        ))).isEqualTo(
+            "{\"u3\":{\"age\":21,\"name\":\"u3\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("name", Op.LTE, "u2")
+        ))).isEqualTo(
+            "{\"u1\":{\"age\":9,\"name\":\"u1\"},\"u2\":{\"age\":10,\"name\":\"u2\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("name", Op.GTE, "u2")
+        ))).isEqualTo(
+            "{\"u2\":{\"age\":10,\"name\":\"u2\"},\"u3\":{\"age\":21,\"name\":\"u3\"}}"
+        );
+
+        ////////////////////////////////////////
+        //
+        // Check filtering ops against numbers..
+        //
+        ////////////////////////////////////////
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("age", Op.EQ, 10)
+        ))).isEqualTo(
+            "{\"u2\":{\"age\":10,\"name\":\"u2\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("age", Op.NEQ, 10)
+        ))).isEqualTo(
+            "{\"u1\":{\"age\":9,\"name\":\"u1\"},\"u3\":{\"age\":21,\"name\":\"u3\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("age", Op.LT, 10)
+        ))).isEqualTo(
+            "{\"u1\":{\"age\":9,\"name\":\"u1\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("age", Op.GT, 10)
+        ))).isEqualTo(
+            "{\"u3\":{\"age\":21,\"name\":\"u3\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("age", Op.LTE, 10)
+        ))).isEqualTo(
+            "{\"u1\":{\"age\":9,\"name\":\"u1\"},\"u2\":{\"age\":10,\"name\":\"u2\"}}"
+        );
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.child("age", Op.GTE, 10)
+        ))).isEqualTo(
+            "{\"u2\":{\"age\":10,\"name\":\"u2\"},\"u3\":{\"age\":21,\"name\":\"u3\"}}"
+        );
+
+        ////////////////////////////////////////
+        //
+        // Check filtering on multiple conditions.
+        //
+        ////////////////////////////////////////
+        assertThat(jsondb.getAsString("/users", new GetOptions().filter(
+            Filter.and(Filter.child("age", Op.GT, 9),Filter.child("name", Op.LT, "u3"))
+        ))).isEqualTo(
+            "{\"u2\":{\"age\":10,\"name\":\"u2\"}}"
+        );
+
     }
 
     private String load(String file) throws IOException {

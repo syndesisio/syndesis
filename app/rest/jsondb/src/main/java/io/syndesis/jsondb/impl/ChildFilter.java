@@ -13,12 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.jsondb.impl;
+
+import io.syndesis.jsondb.Filter;
+import io.syndesis.model.ToJson;
 
 /**
- * This class is used to track the current model schema version.
+ *
  */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final String VERSION = "25";
+public class ChildFilter extends Filter implements ToJson {
+
+    private final String field;
+    private final Op op;
+    private final Object value;
+
+    public ChildFilter(String field, Op op, Object value) {
+        this.field = field;
+        this.op = op;
+        this.value = value;
+    }
+
+    public String field() {
+        return field;
+    }
+
+    public Op op() {
+        return op;
+    }
+
+    public Object value() {
+        return value;
+    }
+
 }

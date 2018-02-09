@@ -137,7 +137,7 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, "", nextToken.id(), indexFieldValue(indexes, currentPath)));
+                consumer.accept(JsonRecord.of(currentPath, "", null, nextToken.id(), indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -147,7 +147,16 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, jp.getValueAsString(), nextToken.id(), indexFieldValue(indexes, currentPath)));
+
+                String value = jp.getValueAsString();
+                String ovalue = null;
+
+                if( nextToken == JsonToken.VALUE_NUMBER_INT ) {
+                    ovalue = value; // hold on to th original number in th ovalue field.
+                    value = toLexSortableString(jp.getValueAsLong()); // encode it so we can lexically sort.
+                }
+
+                consumer.accept(JsonRecord.of(currentPath, value, ovalue, nextToken.id(), indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -173,7 +182,7 @@ public final class JsonRecordSupport {
             return null;
         }
 
-        String idx = matcher.replaceAll("$1/$2");
+        String idx = matcher.replaceAll("$1/#$2");
         if( !indexes.contains(idx) ) {
             return null;
         }
@@ -181,24 +190,26 @@ public final class JsonRecordSupport {
         return idx;
     }
 
+    static char marker = '[';
+
     private static String toArrayIndexPath(int idx) {
         // todo: encode the idx using something like http://www.zanopha.com/docs/elen.pdf
         // so we get lexicographic ordering.
-        return toLexSortableString(idx, '[');
+        return toLexSortableString(idx);
     }
 
     static int toArrayIndex(String value) {
-        return fromLexSortableStringToInt(value, '[');
+        return fromLexSortableStringToInt(value);
     }
 
     /**
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
-    static String toLexSortableString(int value, char marker) {
+    public static String toLexSortableString(long value) {
         ArrayList<String> seqs = new ArrayList<String>();
 
-        String seq = Integer.toString(value);
+        String seq = Long.toString(value);
         seqs.add(seq);
         while (seq.length() > 1) {
             seq = Integer.toString(seq.length());
@@ -215,7 +226,7 @@ public final class JsonRecordSupport {
         return builder.toString();
     }
 
-    static int fromLexSortableStringToInt(String value, char marker) {
+    static int fromLexSortableStringToInt(String value) {
         // Trim the initial markers.
         String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(marker)) + "+", "");
 
@@ -225,7 +236,6 @@ public final class JsonRecordSupport {
             remaining = remaining.substring(rc);
             rc = Integer.parseInt(x);
         }
-
         return rc;
     }
 

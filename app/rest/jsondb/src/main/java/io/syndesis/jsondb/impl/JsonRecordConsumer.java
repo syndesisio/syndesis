@@ -238,8 +238,10 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
                 jg.writeNull();
                 break;
             case JsonTokenId.ID_NUMBER_FLOAT:
-            case JsonTokenId.ID_NUMBER_INT:
                 jg.writeNumber(value.getValue());
+                break;
+            case JsonTokenId.ID_NUMBER_INT:
+                jg.writeNumber(value.getOValue());
                 break;
             case JsonTokenId.ID_TRUE:
                 jg.writeBoolean(true);
