@@ -1,28 +1,28 @@
 #!/bin/bash
 
-update::description() {
-    echo "Update a Syndesis installation"
+upgrade::description() {
+    echo "Upgrade a Syndesis installation"
 }
 
-update::usage() {
+upgrade::usage() {
     cat <<EOT
-    --tag <tag>               Syndesis version/tag to update to. This options is mandatory
-    --backup <dir>            Backup directory to use. The backup is kept after the update
+    --tag <tag>               Syndesis version/tag to upgrade to. This options is mandatory
+    --backup <dir>            Backup directory to use. The backup is kept after the upgrade
     --local                   Use the local templates stored in this director instead of
                               fetching them directly from GitHub
 EOT
 }
 
 
-update::run() {
+upgrade::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
-    local stepsdir="$(basedir)/commands/update_steps"
+    local stepsdir="$(basedir)/commands/upgrade_steps"
     local tag=$(readopt --tag)
     if [ -z "${tag}" ]; then
       echo "ERROR: --tag is required to specify the target version"
       echo
-      display_help update
+      display_help upgrade
       exit 1
     fi
 
@@ -33,11 +33,11 @@ update::run() {
     fi
 
     echo "============================================="
-    echo "===== STARTING UPDATE TO SYNDESIS $tag "
+    echo "===== STARTING UPGRADE TO SYNDESIS $tag "
     echo "============================================="
     echo
-    # Prepare for an update.
-    echo "===== Preparation"
+    # Prepare for an upgrade.
+    echo "===== Preparation ======"
     for prep in $(ls $stepsdir/prep_*); do
       source $prep
       local step="$(extract_step prep $prep)"
@@ -55,18 +55,18 @@ update::run() {
     done
 
     echo
-    echo "+++++ Update"
+    echo "+++++ Upgrade ++++++"
     local actions_performed=""
-    for update in $(ls $stepsdir/update_*); do
-      source $update
-      local step="$(extract_step update $update)"
+    for upgrade in $(ls $stepsdir/upgrade_*); do
+      source $upgrade
+      local step="$(extract_step upgrade $upgrade)"
       local label=$(eval "${step}::label")
       echo "+++ * $label"
       set +e
       (eval "${step}::run $backupdir")
       if [ $? -ne 0 ]; then
         set -e
-        echo "====> Update Error ==> Rollback"
+        echo "====> Upgrade Error ==> Rollback"
         rollback $backupdir $actions_performed
         cleanup_backupdir $backupdir
         exit 1

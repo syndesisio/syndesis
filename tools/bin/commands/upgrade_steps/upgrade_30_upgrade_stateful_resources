@@ -1,0 +1,13 @@
+#!/bin/bash
+
+upgrade_stateful_resources::label() {
+    echo "Upgrade stateful resources"
+}
+
+upgrade_stateful_resources::run() {
+  sleep 3
+}
+
+upgrade_stateful_resources::rollback() {
+  sleep 1
+}
