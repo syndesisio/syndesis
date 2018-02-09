@@ -23,6 +23,7 @@ import io.syndesis.jsondb.impl.LogicalFilter;
 /**
  *
  */
+@SuppressWarnings("PMD")
 public abstract class Filter {
 
     public enum Op {
