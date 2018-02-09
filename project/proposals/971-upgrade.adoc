@@ -176,11 +176,12 @@ The rollback step should clean up the database dump file (or kept for a later ma
 The next step is to backup _stateful resources_, i.e. `ConfigMap` used by the Syndesis infrastructure pods (_not_ the configmap and secrets used by integration runtime pods).
 
 The `ConfigMaps` to backupe are curently:
-  - `syndesis-atlasmap-config`
-  - `syndesis-rest-config`
-  - `syndesis-sampledb-config`
-  - `syndesis-ui-config`
-  - `syndesis-verifier-config`
+
+*  `syndesis-atlasmap-config`
+*  `syndesis-rest-config`
+*  `syndesis-sampledb-config`
+*  `syndesis-ui-config`
+*  `syndesis-verifier-config`
 
 At the time being, there are no `Secrets` required to upgrade.
 
