@@ -52,7 +52,7 @@ import io.syndesis.model.connection.ConnectorSummary;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.icon.Icon;
-import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.rest.v1.handler.BaseHandler;
 import io.syndesis.rest.v1.operations.Deleter;
 import io.syndesis.rest.v1.operations.Getter;
@@ -176,13 +176,15 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 
-    /* default */ Connector augmentedWithUsage(final Connector connector) {
+    Connector augmentedWithUsage(final Connector connector) {
         return augmentedWithUsage(Collections.singletonList(connector)).get(0);
     }
 
-    /* default */ List<Connector> augmentedWithUsage(final List<Connector> connectors) {
-        final Map<String, Long> connectorUsage = getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()//
-            .filter(i -> !i.isInactive())//
+    List<Connector> augmentedWithUsage(final List<Connector> connectors) {
+        ListResult<Integration> integrationListResult = getDataManager().fetchAll(Integration.class);
+        List<Integration> items = integrationListResult.getItems();
+        final Map<String, Long> connectorUsage = items.stream()//
+            .filter(i -> !i.isDeleted())//
             .flatMap(i -> i.getUsedConnectorIds().stream())//
             .collect(Collectors.groupingBy(String::toString, Collectors.counting()));
 
@@ -232,6 +234,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         private InputStream iconInputStream;
 
         public ConnectorFormData() {
+            // allow JAX-RS to construct this class for binding
         }
 
         public ConnectorFormData(Connector connector, InputStream iconInputStream) {

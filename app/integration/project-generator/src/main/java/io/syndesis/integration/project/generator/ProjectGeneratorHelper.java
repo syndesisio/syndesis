@@ -17,20 +17,42 @@ package io.syndesis.integration.project.generator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Step;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public final class ProjectGeneratorHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGeneratorHelper.class);
 
     private ProjectGeneratorHelper() {
+    }
+
+    public static void addResource(TarArchiveOutputStream tos, String destination, String resource) throws IOException {
+        final URL url = ProjectGeneratorHelper.class.getResource(resource);
+        final byte[] bytes = IOUtils.toByteArray(url);
+
+        addTarEntry(tos, destination, bytes);
     }
 
     public static void addTarEntry(TarArchiveOutputStream tos, String path, byte[] content) throws IOException {
@@ -73,5 +95,82 @@ public final class ProjectGeneratorHelper {
         }
 
         return answer;
+    }
+
+    public static Mustache compile(MustacheFactory mustacheFactory, ProjectGeneratorConfiguration generatorProperties, String template, String name) throws IOException {
+        String overridePath = generatorProperties.getTemplates().getOverridePath();
+        URL resource = null;
+
+        if (!StringUtils.isEmpty(overridePath)) {
+            resource = ProjectGeneratorHelper.class.getResource("templates/" + overridePath + "/" + template);
+        }
+        if (resource == null) {
+            resource = ProjectGeneratorHelper.class.getResource("templates/" + template);
+        }
+        if (resource == null) {
+            throw new IllegalArgumentException(
+                String.format("Unable to find te required template (overridePath=%s, template=%s)"
+                    , overridePath
+                    , template
+                )
+            );
+        }
+
+        try (InputStream stream = resource.openStream()) {
+            return mustacheFactory.compile(new InputStreamReader(stream, StandardCharsets.UTF_8), name);
+        }
+    }
+
+    public static String mandatoryDecrypt(IntegrationResourceManager manager, Map.Entry<String, String> entry) {
+        String answer = entry.getValue();
+
+        if (entry.getValue() != null) {
+
+            answer = manager.decrypt(entry.getValue());
+            if (answer == null) {
+                throw new IllegalArgumentException("Unable to decrypt key:" + entry.getKey());
+            }
+        }
+
+        return answer;
+    }
+
+    public static Integration sanitize(Integration integration, IntegrationResourceManager resourceManager) {
+        final List<Step> steps = new ArrayList<>(integration.getSteps());
+
+        for (int i = 0; i < steps.size(); i++) {
+            final Step source = steps.get(i);
+
+            if (source.getConnection().isPresent()) {
+                final Connection connection = source.getConnection().get();
+
+                // If connector is not set, fetch it from data source and update connection
+                if (connection.getConnectorId().isPresent() && !connection.getConnector().isPresent()) {
+                    Connector connector = resourceManager.loadConnector(connection.getConnectorId().get()).orElseThrow(
+                        () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId().get())
+                    );
+
+                    // Add missing connector to connection.
+                    Connection newConnection = new Connection.Builder()
+                        .createFrom(connection)
+                        .connector(connector)
+                        .build();
+
+                    // Replace with the new 'sanitized' step
+                    steps.set(
+                        i,
+                        new Step.Builder()
+                            .createFrom(source)
+                            .connection(newConnection)
+                            .build()
+                    );
+                }
+            }
+        }
+
+        return new Integration.Builder()
+            .createFrom(integration)
+            .steps(steps)
+            .build();
     }
 }

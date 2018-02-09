@@ -1,4 +1,4 @@
-<syndesis-loading [loading]="!currentFlow.loaded">
+<syndesis-loading [loading]="!currentFlowService.loaded">
   <div class="action-select">
 
     <!-- Toolbar -->
@@ -11,15 +11,15 @@
             <div class="inline-block">
               <ol class="breadcrumb">
                 <li>
-                  <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                  <a [routerLink]="['/']">Home</a>
                 </li>
                 <li>
                   <a [routerLink]="['/integrations']">Integrations</a>
                 </li>
                 <li>
-                  <a *ngIf="integrationName"
-                     [routerLink]="['/integrations', currentFlow.integration.id]">{{ integrationName }}</a>
-                  <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                  <a *ngIf="flowPageService.integrationName"
+                     [routerLink]="['/integrations', currentFlowService.integration.id]">{{ integrationName }}</a>
+                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
                 </li>
                 <li class="active">Choose Action</li>
               </ol>

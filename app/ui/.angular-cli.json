@@ -30,6 +30,7 @@
       "styles": [
         "../node_modules/patternfly/dist/css/patternfly.css",
         "../node_modules/patternfly/dist/css/patternfly-additions.css",
+        "../node_modules/patternfly-ng/dist/css/patternfly-ng.min.css",
         "styles.scss"
       ],
       "stylePreprocessorOptions": {

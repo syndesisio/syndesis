@@ -17,7 +17,6 @@ package io.syndesis.runtime;
 
 import io.syndesis.model.ModelData;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,14 +51,12 @@ public class T3stSupportITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("3001")
             .name("test")
-            .desiredStatus(IntegrationDeploymentState.Draft)
-            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r2 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r2.getBody().length).isEqualTo(2);
+        assertThat(r2.getBody().length).isEqualTo(1);
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
@@ -73,7 +70,7 @@ public class T3stSupportITCase extends BaseITCase {
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r4 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r4.getBody().length).isEqualTo(2);
+        assertThat(r4.getBody().length).isEqualTo(1);
 
     }
 

@@ -33,7 +33,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Step.Builder.class)
 @SuppressWarnings("immutables")
 public interface Step extends WithId<Step>, WithConfiguredProperties, WithDependencies, WithMetadata, Serializable {
-    String METADATA_STEP_INDEX = "step.index";
 
     @Override
     default Kind getKind() {
@@ -46,7 +45,7 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
 
     Optional<Extension> getExtension();
 
-    String getStepKind();
+    StepKind getStepKind();
 
     String getName();
 

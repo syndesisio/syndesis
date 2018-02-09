@@ -28,12 +28,12 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 public abstract class AbstractSwaggerConnectorTest {
 
-    /* default */ static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
+    static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
 
     private static ConnectorTemplate fetchSwaggerConnectorTemplateFromDeployment() {
         final Configuration configuration = Configuration.builder()//
-            .jsonProvider(new JacksonJsonProvider(Json.mapper()))//
-            .mappingProvider(new JacksonMappingProvider(Json.mapper()))//
+            .jsonProvider(new JacksonJsonProvider(Json.copyObjectMapperConfiguration()))//
+            .mappingProvider(new JacksonMappingProvider(Json.copyObjectMapperConfiguration()))//
             .build();
 
         final List<ConnectorTemplate> templates = JsonPath.using(configuration)

@@ -26,6 +26,7 @@ import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.util.StringHelpers;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.model.ProcessorDefinition;
@@ -35,7 +36,7 @@ import org.apache.camel.util.ObjectHelper;
 public class ExtensionStepHandler implements IntegrationStepHandler{
     @Override
     public boolean canHandle(Step step) {
-        if (!"extension".equals(step.getStepKind())) {
+        if (StepKind.extension != step.getStepKind()) {
             return false;
         }
 
@@ -44,7 +45,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         // Model

@@ -2,20 +2,24 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/core';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 
-import { FormFactoryService, UserService, Action, Step, IntegrationSupportService } from '@syndesis/ui/platform';
+import {
+  ActionDefinition,
+  FormFactoryService,
+  UserService,
+  Action,
+  Step,
+  IntegrationSupportService } from '@syndesis/ui/platform';
 import { log } from '@syndesis/ui/logging';
-import { CurrentFlow, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 @Component({
   selector: 'syndesis-integration-action-configure',
   templateUrl: 'action-configure.component.html',
   styleUrls: ['./action-configure.component.scss']
 })
-export class IntegrationConfigureActionComponent extends FlowPage
-  implements OnInit, OnDestroy {
+export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   position: number;
   page: number;
@@ -30,22 +34,22 @@ export class IntegrationConfigureActionComponent extends FlowPage
   error: any = undefined;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
     public formFactory: FormFactoryService,
     public formService: DynamicFormService,
     public integrationSupport: IntegrationSupportService,
-    public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router);
+    // nothing to do
   }
 
   goBack() {
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     step.action = undefined;
-    super.goBack([ 'action-select', this.position ]);
+    this.flowPageService.goBack([ 'action-select', this.position ], this.route);
   }
 
   buildData(data: any) {
@@ -55,7 +59,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
 
   previous(data: any = undefined) {
     data = this.buildData(data);
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: data,
@@ -91,7 +95,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
   continue(data: any = undefined) {
     this.error = undefined;
     data = this.buildData(data);
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
       properties: data,
@@ -149,7 +153,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
 
   initialize(position: number, page: number) {
     this.error = undefined;
-    const step = <Step>this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     if (!step) {
       this.router.navigate(['connection-select', this.position], {
         relativeTo: this.route.parent
@@ -183,7 +187,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       });
   }
 
-  initForm(position: number, page: number, descriptor: any, error?: any) {
+  initForm(position: number, page: number, descriptor: ActionDefinition, error?: any) {
     if (error) {
       this.error = error;
       this.error.message = error.message || error.userMsg || error.developerMsg;
@@ -191,7 +195,7 @@ export class IntegrationConfigureActionComponent extends FlowPage
       this.loading = false;
       return;
     }
-    if (!descriptor || descriptor === undefined || Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0) {
+    if (this.hasActionPropertiesToDisplay(descriptor)) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
       this.error = {
@@ -224,12 +228,18 @@ export class IntegrationConfigureActionComponent extends FlowPage
     );
     this.formGroup = this.formService.createFormGroup(this.formModel);
     setTimeout(() => {
-      this.currentFlow.events.emit({
+      this.currentFlowService.events.emit({
         kind: 'integration-action-configure',
         position: this.position
       });
       this.loading = false;
     }, 30);
+  }
+
+  hasActionPropertiesToDisplay(descriptor: ActionDefinition) {
+    return !descriptor || descriptor === undefined ||
+      descriptor.propertyDefinitionSteps === undefined ||
+      Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0;
   }
 
   configuredPropertiesForMetadataCall() {
@@ -269,25 +279,9 @@ export class IntegrationConfigureActionComponent extends FlowPage
         this.initialize(position, page);
       }
     );
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-          anchorId: 'integrations.done',
-          title: 'Done',
-          content: 'Clicking Done adds the finish connection to the integration. ' +
-          'You can then add one or more steps that operate on the data.',
-          placement: 'left',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
     this.routeSubscription.unsubscribe();
   }
 }

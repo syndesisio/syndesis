@@ -45,18 +45,18 @@ public final class TestHelper {
         return resource;
     }
 
-    /* default */ static String reformatJson(final String json) throws IOException {
+    static String reformatJson(final String json) throws IOException {
         if (json == null) {
             return null;
         }
 
-        final Map<?, ?> tree = Json.mapper().readValue(json, Map.class);
+        final Map<?, ?> tree = Json.reader().forType(Map.class).readValue(json);
 
-        return Json.mapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
+        return Json.copyObjectMapperConfiguration().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
             .writeValueAsString(tree);
     }
 
-    /* default */ static String resource(final String path, final String alternative) throws IOException {
+    static String resource(final String path, final String alternative) throws IOException {
         if (TestHelper.class.getResource(path) != null) {
             return resource(path);
         }

@@ -36,7 +36,7 @@ public class LRUCacheManager implements CacheManager {
         return Map.class.cast(maps.computeIfAbsent(name, this::newCache));
     }
 
-    private <K, V> Map<K, V> newCache(String name) {
+    private <K, V> Map<K, V> newCache(@SuppressWarnings("PMD.UnusedFormalParameter") String name) {
         return Collections.synchronizedMap(new LinkedHashMap<K, V>() {
             @Override
             protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {

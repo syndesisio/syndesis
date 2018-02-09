@@ -30,6 +30,7 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
@@ -40,7 +41,7 @@ import org.apache.camel.util.URISupport;
 public class EndpointStepHandler extends AbstractEndpointStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        if (!"endpoint".equals(step.getStepKind()) && !"connector".equals(step.getStepKind())) {
+        if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
 
@@ -62,7 +63,7 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
 
     @SuppressWarnings({"unchecked", "PMD"})
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String stepIndex) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -70,7 +71,6 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
-        final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
         final String componentScheme = action.getDescriptor().getCamelConnectorPrefix();
         final Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, String> properties = CollectionsUtils.aggregate(connector.filterEndpointProperties(configuredProperties), action.filterEndpointProperties(configuredProperties));
@@ -79,7 +79,7 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
             .stream()
             .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
             .filter(Predicates.or(connector::isSecret, action::isSecret))
-            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, index, e.getKey())));
+            .forEach(e -> e.setValue(String.format("{{%s-%s.%s}}", componentScheme, stepIndex, e.getKey())));
 
         // raw values.
         properties.entrySet()
@@ -93,7 +93,7 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
         String uri = componentScheme;
 
         if (hasComponentProperties(configuredProperties, connector, action)) {
-            uri = String.format("%s-%s", componentScheme ,index);
+            uri = String.format("%s-%s", componentScheme, stepIndex);
         }
 
         if (ObjectHelper.isNotEmpty(uri) && ObjectHelper.isNotEmpty(properties)) {
@@ -111,7 +111,7 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
         }
 
         // Handle split
-        return handleSplit(descriptor, route, builder);
+        return handleSplit(descriptor, route, builder, stepIndex);
     }
 
     // *************************

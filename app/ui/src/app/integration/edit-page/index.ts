@@ -1,8 +1,8 @@
 // same level
-export * from './child-aware-page';
-export * from './current-flow.service';
 export * from './edit-page.component';
-export * from './flow-page';
+export * from './edit-page.models';
+export * from './current-flow.service';
+export * from './flow-page.service';
 
 // subdirectories
 export * from './action-configure';

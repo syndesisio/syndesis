@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { Connection, Connections, Integration, Integrations } from '@syndesis/ui/platform';
+import { Connection, Connections, IntegrationOverview, IntegrationOverviews } from '@syndesis/ui/platform';
 
 const category = getCategory('Dashboard');
 
@@ -14,14 +14,14 @@ const category = getCategory('Dashboard');
 })
 export class DashboardIntegrationsComponent implements OnChanges {
   chartData: number[];
-  @Input() integrations: Integrations;
+  @Input() integrations: IntegrationOverviews;
   @Input() connections: Connections;
   @Input() integrationsLoading: boolean;
   @Input() connectionsLoading: boolean;
   selectedId = undefined;
   truncateTrail = '…';
 
-  doughnutChartLabels: string[] = ['Active', 'Draft', 'Inactive'];
+  doughnutChartLabels: string[] = ['Published', 'Draft', 'Unpublished'];
 
   get doughnutChartData() {
     return this.chartData;
@@ -32,9 +32,9 @@ export class DashboardIntegrationsComponent implements OnChanges {
   doughnutChartColors = [
     {
       backgroundColor: [
-        '#0088CE', // PatternFly Blue 400, Active
+        '#0088CE', // PatternFly Blue 400, Published
         '#EC7A08', // PatternFly Orange 400, Draft
-        '#D1D1D1' // PatternFly Black 300, Inactive
+        '#D1D1D1' // PatternFly Black 300, Unpublished
       ]
     }
   ];
@@ -59,28 +59,21 @@ export class DashboardIntegrationsComponent implements OnChanges {
     const draft = [];
     const inactive = [];
     let total = 0;
-    (this.integrations || []).forEach(function(a) {
-      /* TODO - too noisy
-      log.debugc(() => 'Integration: ' + JSON.stringify(a));
-      log.debugc(() => 'currentStatus: ' + JSON.stringify(a.currentStatus));
-      log.debugc(() => 'desiredStatus: ' + JSON.stringify(a.desiredStatus));
-      */
-
-      switch (a.currentStatus) {
-        case 'Active':
+    (this.integrations || []).forEach(integration => {
+      switch (integration.currentState) {
+        case 'Published':
           total = total + 1;
-          active.push(a);
+          active.push(integration);
           break;
-        case 'Draft':
+        case 'Unpublished':
           total = total + 1;
-          draft.push(a);
-          break;
-        case 'Inactive':
-          total = total + 1;
-          inactive.push(a);
+          inactive.push(integration);
           break;
         default:
           break;
+      }
+      if (integration.draft) {
+        draft.push(integration);
       }
     });
     return {
@@ -123,34 +116,22 @@ export class DashboardIntegrationsComponent implements OnChanges {
     log.debugc(() => 'Integration: ' + JSON.stringify(integration));
     */
     switch (integration.currentStatus) {
-      case 'Active':
+      case 'Published':
       default:
         return 'label-primary';
-      case 'Inactive':
+      case 'Unpublished':
         return 'label-default';
       case 'Draft':
         return 'label-warning';
     }
   }
 
-  getStatusText(integration: Integration): string {
-    switch (integration.currentStatus) {
-      case 'Active':
-        return 'Active';
-      case 'Inactive':
-        return 'Inactive';
-      default:
-        return integration.currentStatus;
-    }
-  }
-
   //-----  Selecting a Connection or Integration ------------------->>
-
   selectedConnection(connection: Connection) {
     this.router.navigate(['/connections', connection.id]);
   }
 
-  goto(integration: Integration) {
+  goto(integration: IntegrationOverview) {
     this.router.navigate(
       ['/integration/edit', integration.id, 'save-or-add-step'],
       { relativeTo: this.route }

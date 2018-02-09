@@ -18,17 +18,18 @@ package io.syndesis.integration.runtime.handlers.support;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+
 import javax.xml.bind.JAXBException;
 
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.RouteDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Step;
 
 public class StepHandlerTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepHandlerTestSupport.class);
@@ -46,24 +47,22 @@ public class StepHandlerTestSupport {
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Step... steps) {
         return new IntegrationRouteBuilder("", Collections.emptyList()) {
             @Override
-            protected IntegrationDeployment loadDeployment() throws IOException {
+            protected Integration loadIntegration() throws IOException {
                 return newIntegrationDeployment(steps);
             }
         };
     }
 
-    protected static IntegrationDeployment newIntegrationDeployment(Step... steps) {
+    protected static Integration newIntegrationDeployment(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
-            steps[i] = new Step.Builder().createFrom(steps[i]).putMetadata(Step.METADATA_STEP_INDEX, Integer.toString(i + 1)).build();
+            steps[i] = new Step.Builder().createFrom(steps[i]).build();
         }
 
-        return new IntegrationDeployment.Builder()
-            .integrationId("test-integration")
-            .name("Test Integration")
-            .spec(new IntegrationDeploymentSpec.Builder()
+        return new Integration.Builder()
+                .id("test-integration")
+                .name("Test Integration")
                 .description("This is a test integration!")
                 .steps(Arrays.asList(steps))
-                .build())
-            .build();
+                .build();
     }
 }

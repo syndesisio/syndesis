@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
-import { ModalModule } from 'ngx-bootstrap';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 import { SyndesisCommonModule } from '../common/common.module';
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 
@@ -15,8 +13,6 @@ import { EmptyStateComponent } from './emptystate.component';
 
 import { DashboardConnectionsComponent } from './connections.component';
 import { DashboardIntegrationsComponent } from './integrations.component';
-
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }
@@ -27,12 +23,9 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SyndesisCommonModule,
+    SyndesisVendorModule,
     ChartsModule,
-    ModalModule,
-    TooltipModule,
-    TourNgxBootstrapModule,
     IntegrationListModule,
-    BsDropdownModule.forRoot()
   ],
   declarations: [
     DashboardComponent,

@@ -39,7 +39,7 @@ public class RegexBasedMasqueradeReader extends FilterReader {
     // If true, the newline at the end of curLine has not been returned.
     // It would have been more convenient to append the newline
     // onto freshly fetched lines. However, that would incur another
-    // allocation and copy.
+    // allocation and copyObjectMapperConfiguration.
     boolean emitNewline;
 
     // Matcher used to test every line
@@ -53,7 +53,7 @@ public class RegexBasedMasqueradeReader extends FilterReader {
 
     // This overridden method fills sharedBuf with characters read from in.
     @Override
-    @SuppressWarnings({"PMD.CyclomaticComplexity"})
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.NPathComplexity"})
     public int read(char sharedBuf[], int offset, int len) throws IOException {
         int off = offset;
         // Fetch new line if necessary

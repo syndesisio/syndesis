@@ -16,31 +16,24 @@
 package io.syndesis.model.integration;
 
 public enum IntegrationDeploymentState {
-    /**
-     * Initial state of an {@link IntegrationDeployment}. The IntegrationDeployment is not yet deployed.
-     */
-    Draft,
 
     /**
-     * {@link IntegrationDeployment} is deployed and running.
+     * {@link IntegrationDeployment} is published and running.
      */
-    Active,
-    /**
-     * {@link IntegrationDeployment} is deployed but is not running.
-     */
-    Inactive,
-    /**
-     * IntegrationDeployment has been un-deployed.
-     */
-    Undeployed,
+    Published,
 
     /**
-     * The {@link IntegrationDeployment} is deployed but in an error state.
+     * IntegrationDeployment has is not published and is not running.
+     */
+    Unpublished,
+
+    /**
+     * An error {@link IntegrationDeployment} occurred while publishing the integration.
      */
     Error,
 
     /**
-     * The {@link IntegrationDeployment} is in peding state. (Desired != Actual).
+     * The {@link IntegrationDeployment} is being transitioned to a new state.
      */
-    Pending;
+    Pending
 }

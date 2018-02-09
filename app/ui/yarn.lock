@@ -157,9 +157,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180131184819":
-  version "1.33.0-SNAPSHOT.20180131184819"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180131184819.tgz#67e580e233d3df156c965531097f5c2c6296ecfc"
+"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180208165220":
+  version "1.33.0-SNAPSHOT.20180208165220"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180208165220.tgz#d907634110bc27dd5330ee7302bc26e3fa0dff68"
   dependencies:
     "@angular/animations" "^5.0.0"
     "@angular/common" "^5.0.0"
@@ -180,10 +180,10 @@
     mkdirp "^0.5.1"
     moment "^2.18.1"
     ncp "^2.0.0"
-    ngx-bootstrap "2.0.0-rc.0"
+    ngx-bootstrap "^2.0.2"
     opn-cli "^3.1.0"
     patternfly "3.26.1"
-    patternfly-ng "^2.1.2"
+    patternfly-ng "^3.0.0"
     rxjs "^5.5.2"
     zone.js "^0.8.14"
 
@@ -401,9 +401,9 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angular-tree-component@^6.0.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-6.1.0.tgz#9d9a6b28a6881c2072cd6306b55229579e894071"
+"angular-tree-component@^6.0.0 || ^7.0.0":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/angular-tree-component/-/angular-tree-component-7.0.1.tgz#fc8d0e72d8c34b87131a3ba2bd32ad20945689ac"
   dependencies:
     lodash "4.17.4"
     mobx ">=3"
@@ -4965,15 +4965,7 @@ ng2-material-dropdown@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.8.2.tgz#2acd3f781030ef92bf31f05543d91148e68528ef"
 
-ngx-bootstrap@2.0.0-rc.0:
-  version "2.0.0-rc.0"
-  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.0-rc.0.tgz#c423117f9a3b36a19514c531b7fd9a56217f060e"
-
-ngx-bootstrap@^1.8.0:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-1.9.3.tgz#28e75d14fb1beaee609383d7694de4eb3ba03b26"
-
-ngx-bootstrap@^2.0.2:
+"ngx-bootstrap@^1.8.0 || ^2.0.0", ngx-bootstrap@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.2.tgz#6862b2ee4764bb6cfd34c66528873d0d050c2faa"
 
@@ -4994,17 +4986,6 @@ ngx-restangular@2.0.2:
     core-js ">=2.4.1"
     rxjs "^5.0.0"
     typescript ">=2.4.2 <2.5"
-
-ngx-tour-core@2.0.0, ngx-tour-core@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-tour-core/-/ngx-tour-core-2.0.0.tgz#46d2a6a5cfd783934d15ab78e5d3967c7717265d"
-
-ngx-tour-ngx-bootstrap@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-tour-ngx-bootstrap/-/ngx-tour-ngx-bootstrap-2.0.0.tgz#d5464d5f2fa57d317b83979b9b35938488b843c1"
-  dependencies:
-    ngx-tour-core "^2.0.0"
-    withinviewport "^2.0.0"
 
 no-case@^2.2.0:
   version "2.3.2"
@@ -5534,18 +5515,18 @@ patternfly-bootstrap-treeview@~2.1.0:
     bootstrap "3.3.x"
     jquery ">= 2.1.x"
 
-patternfly-ng@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-2.1.2.tgz#9ce515007463563076974910460501d79e7956fb"
+patternfly-ng@^3.0.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/patternfly-ng/-/patternfly-ng-3.1.1.tgz#642fec9b476489328926aa04148015a60eab59eb"
   dependencies:
     lodash "^4.17.4"
-    ngx-bootstrap "^1.8.0"
     patternfly "^3.28.0"
   optionalDependencies:
     "@swimlane/ngx-datatable" "^11.1.7"
-    angular-tree-component "^6.0.0"
+    angular-tree-component "^6.0.0 || ^7.0.0"
     c3 "^0.4.15"
     ng2-dragula "^1.5.0"
+    ngx-bootstrap "^1.8.0 || ^2.0.0"
 
 patternfly-sass@3.23.2:
   version "3.23.2"
@@ -8051,10 +8032,6 @@ widest-line@^1.0.0:
 window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
-
-withinviewport@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/withinviewport/-/withinviewport-2.0.0.tgz#5df1468b087832812dfba0a793c2be4e96b2da85"
 
 wordwrap@0.0.2:
   version "0.0.2"

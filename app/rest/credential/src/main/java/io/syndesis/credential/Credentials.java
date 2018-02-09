@@ -83,11 +83,11 @@ public final class Credentials {
         return credentialProvider.finish(flowState, baseUrl);
     }
 
-    /* default */ CredentialProvider providerFor(final String providerId) {
+    CredentialProvider providerFor(final String providerId) {
         return credentialProviderLocator.providerWithId(providerId);
     }
 
-    /* default */ CredentialProvider providerFrom(final CredentialFlowState flowState) {
+    CredentialProvider providerFrom(final CredentialFlowState flowState) {
         final String connectorId = flowState.getConnectorId();
 
         return providerFor(connectorId);

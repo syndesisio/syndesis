@@ -8,15 +8,15 @@
           <div class="inline-block">
             <ol class="breadcrumb">
               <li>
-                <a [routerLink]="['/']"><i class="fa fa-angle-double-left"></i> Home</a>
+                <a [routerLink]="['/']">Home</a>
               </li>
               <li>
                 <a [routerLink]="['/integrations']">Integrations</a>
               </li>
               <li>
-                <a *ngIf="integrationName"
-                   [routerLink]="['/integrations', currentFlow.integration.id]">{{ integrationName }}</a>
-                <ng-container *ngIf="!integrationName">New Integration</ng-container>
+                <a *ngIf="name"
+                   [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
+                <ng-container *ngIf="!name">New Integration</ng-container>
               </li>
             </ol>
           </div>
@@ -25,15 +25,14 @@
                     (click)="cancel()">Cancel
             </button> &nbsp;
             <button class="btn btn-default"
-                    (click)="save('Draft')"
+                    (click)="save()"
                     [disabled]="!canContinue() || saveInProgress || publishInProgress">
               <span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
             </button>
             <button type="button"
                     class="btn btn-primary"
-                    (click)="publish('Active')"
-                    [disabled]="!canContinue() || saveInProgress || publishInProgress"
-                    tourAnchor="integrations.publish">
+                    (click)="publish()"
+                    [disabled]="!canContinue() || saveInProgress || publishInProgress">
               <span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
           </div>
         </div>

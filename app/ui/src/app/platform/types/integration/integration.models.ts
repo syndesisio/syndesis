@@ -1,29 +1,32 @@
-import { BaseReducerCollectionModel, Action, BaseEntity, Connection, User } from '@syndesis/ui/platform';
+import { BaseReducerCollectionModel, Action, BaseEntity, Connection, User, key } from '@syndesis/ui/platform';
 
-export interface Step extends BaseEntity {
+export class Step implements BaseEntity {
+  id?: string;
+  kind?: string;
+  name?: string;
   action: Action;
   connection: Connection;
   configuredProperties: {};
-  stepKind: string;
+  stepKind?: string;
+
+  constructor() {
+    this.id = key();
+  }
 }
 
 export type Steps = Array<Step>;
 
 export const DRAFT = 'Draft';
 export const PENDING = 'Pending';
-export const ACTIVE = 'Active';
-export const INACTIVE = 'Inactive';
-export const UNDEPLOYED = 'Undeployed';
+export const PUBLISHED = 'Published';
+export const UNPUBLISHED = 'Unpublished';
+export const ERROR = 'Error';
 
-export type IntegrationStatus = 'Draft' | 'Pending' | 'Active' | 'Inactive' | 'Undeployed';
+export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
 export interface Integration extends BaseEntity {
   description?: string;
-  statusMessage: string;
-  token: string;
   steps: Array<Step>;
-  gitRepo: string;
-  users: Array<User>;
   connections: Array<Connection>;
   userId: string;
   desiredStatus: IntegrationStatus;
@@ -34,6 +37,9 @@ export interface Integration extends BaseEntity {
   timesUsed: number;
   tags: Array<string>;
   deploymentId?: number;
+  updatedAt: number;
+  createdAt: number;
+  deploymentVersion?: number;
   version?: number;
 }
 export type Integrations = Array<Integration>;
@@ -62,6 +68,27 @@ export interface IntegrationDeployment extends BaseEntity {
   [attr: string]: any;
 }
 export type IntegrationDeployments = Array<IntegrationDeployment>;
+
+export interface IntegrationOverview extends BaseEntity {
+  version: number;
+  name: string;
+  tags: Array<string>;
+  description?: string;
+  draft: boolean;
+  deployments?: Array<DeploymentOverview>;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
+  statusMessage?: string;
+}
+export type IntegrationOverviews = Array<IntegrationOverview>;
+
+export interface DeploymentOverview extends BaseEntity {
+  version: number;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
+  createdAt: number;
+  integrationVersion: number;
+}
 
 // this is for the basic filter operation
 export interface Op extends BaseEntity {
@@ -98,9 +125,14 @@ export interface ActivityStep extends BaseEntity {
   events?: any;
 }
 
-// TODO: Remove this TypeScript anti-pattern when the time is right
-export function createStep() {
-  return {} as Step;
+export function createStep(): Step {
+  return new Step();
+}
+
+export function createConnectionStep(): Step {
+  const step = createStep();
+  step.stepKind = 'endpoint';
+  return step;
 }
 
 // TODO: Remove this TypeScript anti-pattern when the time is right

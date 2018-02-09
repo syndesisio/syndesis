@@ -55,6 +55,7 @@ import java.util.function.Consumer;
  */
 @Service
 @ConditionalOnProperty(value = "controllers.dblogging.enabled", havingValue = "true", matchIfMissing = true)
+@SuppressWarnings({"PMD.DoNotUseThreads", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.CyclomaticComplexity"})
 public class ActivityTrackingController implements Closeable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
@@ -107,7 +108,7 @@ public class ActivityTrackingController implements Closeable {
                     LOG.info("deleted {} transactions for integration: {}", count, integrationId);
                 }
             }
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             LOG.error("Unexpected Error occurred.", e);
         }
     }
@@ -203,7 +204,7 @@ public class ActivityTrackingController implements Closeable {
                     LOG.info("Pod state removed from db: {}", o);
                 }
             }
-        } catch (Throwable e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException | IOException e) {
             LOG.error("Unexpected Error occurred.", e);
         }
 
@@ -230,7 +231,7 @@ public class ActivityTrackingController implements Closeable {
     }
 
     public void setPodLogState(String podName, PodLogState state) throws IOException {
-        jsonDB.set("/activity/pods/" + podName, Json.mapper().writeValueAsBytes(state));
+        jsonDB.set("/activity/pods/" + podName, Json.writer().writeValueAsBytes(state));
     }
 
     public PodLogState getPodLogState(String podName) throws IOException {
@@ -246,7 +247,7 @@ public class ActivityTrackingController implements Closeable {
         if (data == null) {
             return null;
         }
-        return Json.mapper().readValue(data, type);
+        return Json.reader().forType(type).readValue(data);
     }
 
     private void processEventQueue() {
@@ -283,7 +284,7 @@ public class ActivityTrackingController implements Closeable {
                     }
 
                     // Write the batch..
-                    jsonDB.update("/activity", Json.mapper().writeValueAsBytes(batch));
+                    jsonDB.update("/activity", Json.writer().writeValueAsBytes(batch));
                     LOG.info("Batch ingested {} log events", eventCounter);
 
                 } catch (IOException e) {

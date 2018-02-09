@@ -1,19 +1,12 @@
-.mainform {
-    background-color: white;
-    padding: 2em;
-}
+@import 'syndesis-sass';
 
-.removepasswords {
-    padding-top: 1em;
-}
+::ng-deep .toolbar-pf {
+  border: none;
+  box-shadow: none;
 
-.version {
-    padding-left: 3em;
-}
-
-.filter_labels {
-    padding-top: 13px;
-    // border-bottom: 1px solid #d1d1d1;
-    // box-shadow: 0 1px 0px rgba(3, 3, 3, 0.045);
+  .toolbar-pf-view-selector {
+    font-size: $font-size-base;
+    padding-top: 5px;
+  }
 }
 

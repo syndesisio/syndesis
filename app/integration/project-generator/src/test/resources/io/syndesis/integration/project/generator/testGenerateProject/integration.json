@@ -1,0 +1,203 @@
+{
+  "steps" : [ {
+    "action" : {
+      "id" : "periodic-timer-action",
+      "descriptor" : {
+        "connectorId" : "timer",
+        "camelConnectorGAV" : "io.syndesis.connector:connector-timer:1.3-SNAPSHOT",
+        "camelConnectorPrefix" : "periodic-timer-connector"
+      },
+      "actionType" : "connector",
+      "dependencies" : [ {
+        "type" : "MAVEN",
+        "id" : "io.syndesis.connector:connector-timer:1.3-SNAPSHOT"
+      } ]
+    },
+    "connection" : {
+      "connector" : {
+        "id" : "timer",
+        "actions" : [ {
+          "id" : "periodic-timer-action",
+          "descriptor" : {
+            "connectorId" : "timer",
+            "camelConnectorGAV" : "io.syndesis.connector:connector-timer:1.3-SNAPSHOT",
+            "camelConnectorPrefix" : "periodic-timer-connector"
+          },
+          "actionType" : "connector",
+          "dependencies" : [ {
+            "type" : "MAVEN",
+            "id" : "io.syndesis.connector:connector-timer:1.3-SNAPSHOT"
+          } ]
+        } ],
+        "properties" : {
+          "period" : {
+            "componentProperty" : false,
+            "kind" : "property",
+            "secret" : false
+          }
+        }
+      },
+      "id" : "timer-connection",
+      "isDerived" : false
+    },
+    "stepKind" : "endpoint",
+    "configuredProperties" : {
+      "period" : "5000"
+    }
+  }, {
+    "stepKind" : "mapper",
+    "configuredProperties" : {
+      "atlasmapping" : "{}"
+    }
+  }, {
+    "stepKind" : "ruleFilter",
+    "configuredProperties" : {
+      "predicate" : "AND",
+      "rules" : "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]"
+    }
+  }, {
+    "action" : {
+      "id" : "my-extension-1-action-1",
+      "descriptor" : {
+        "kind" : "ENDPOINT",
+        "entrypoint" : "direct:extension"
+      },
+      "actionType" : "step"
+    },
+    "extension" : {
+      "extensionId" : "my-extension-1",
+      "dependencies" : [ {
+        "type" : "MAVEN",
+        "id" : "org.slf4j:slf4j-api:1.7.11"
+      }, {
+        "type" : "MAVEN",
+        "id" : "org.slf4j:slf4j-simple:1.7.11"
+      }, {
+        "type" : "MAVEN",
+        "id" : "org.apache.camel:camel-spring-boot-starter:2.10.0"
+      } ],
+      "id" : "my-extension-1"
+    },
+    "stepKind" : "extension",
+    "configuredProperties" : {
+      "key-1" : "val-1",
+      "key-2" : "val-2"
+    }
+  }, {
+    "action" : {
+      "id" : "my-extension-1-action-1",
+      "descriptor" : {
+        "kind" : "BEAN",
+        "entrypoint" : "com.example.MyExtension::action"
+      },
+      "actionType" : "step"
+    },
+    "extension" : {
+      "extensionId" : "my-extension-2",
+      "id" : "my-extension-2"
+    },
+    "stepKind" : "extension",
+    "configuredProperties" : {
+      "key-1" : "val-1",
+      "key-2" : "val-2"
+    }
+  }, {
+    "action" : {
+      "id" : "my-extension-2-action-1",
+      "descriptor" : {
+        "kind" : "STEP",
+        "entrypoint" : "com.example.MyStep"
+      },
+      "actionType" : "step"
+    },
+    "extension" : {
+      "extensionId" : "my-extension-3",
+      "id" : "my-extension-3"
+    },
+    "stepKind" : "extension",
+    "configuredProperties" : {
+      "key-1" : "val-1",
+      "key-2" : "val-2"
+    }
+  }, {
+    "action" : {
+      "id" : "http-get-action",
+      "descriptor" : {
+        "connectorId" : "http",
+        "camelConnectorGAV" : "io.syndesis.connector:connector-http-get:1.3-SNAPSHOT",
+        "camelConnectorPrefix" : "http-get-connector"
+      },
+      "actionType" : "connector",
+      "dependencies" : [ {
+        "type" : "MAVEN",
+        "id" : "io.syndesis.connector:connector-http-get:1.3-SNAPSHOT"
+      } ]
+    },
+    "connection" : {
+      "connector" : {
+        "id" : "http",
+        "actions" : [ {
+          "id" : "http-get-action",
+          "descriptor" : {
+            "connectorId" : "http",
+            "camelConnectorGAV" : "io.syndesis.connector:connector-http-get:1.3-SNAPSHOT",
+            "camelConnectorPrefix" : "http-get-connector"
+          },
+          "actionType" : "connector",
+          "dependencies" : [ {
+            "type" : "MAVEN",
+            "id" : "io.syndesis.connector:connector-http-get:1.3-SNAPSHOT"
+          } ]
+        }, {
+          "id" : "http-post-action",
+          "descriptor" : {
+            "connectorId" : "http",
+            "camelConnectorGAV" : "io.syndesis.connector:connector-http-post:1.3-SNAPSHOT",
+            "camelConnectorPrefix" : "http-post-connector"
+          },
+          "actionType" : "connector",
+          "dependencies" : [ {
+            "type" : "MAVEN",
+            "id" : "io.syndesis.connector:connector-http-post:1.3-SNAPSHOT"
+          } ]
+        } ],
+        "properties" : {
+          "httpUri" : {
+            "componentProperty" : false,
+            "kind" : "property",
+            "secret" : false
+          },
+          "username" : {
+            "componentProperty" : false,
+            "kind" : "property",
+            "secret" : true
+          },
+          "password" : {
+            "kind" : "property",
+            "secret" : true
+          },
+          "token" : {
+            "componentProperty" : false,
+            "kind" : "property",
+            "secret" : true
+          }
+        }
+      },
+      "id" : "http-connection",
+      "isDerived" : false
+    },
+    "stepKind" : "endpoint",
+    "configuredProperties" : {
+      "httpUri" : "http://localhost:8080/hello",
+      "username" : "admin",
+      "password" : "admin",
+      "token" : "mytoken"
+    }
+  } ],
+  "description" : "This is a test integration!",
+  "id" : "test-integration",
+  "version" : 1,
+  "createdAt" : 0,
+  "updatedAt" : 0,
+  "name" : "Test Integration"
+}

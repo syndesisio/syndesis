@@ -66,7 +66,7 @@ public class SchemaCheck {
             return null;
         }
         try {
-            return Json.mapper().readValue(json, String.class);
+            return Json.reader().forType(String.class).readValue(json);
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -75,7 +75,7 @@ public class SchemaCheck {
     public static void setClusterProperty(SqlJsonDB jsondb, String name, String value) {
         String json;
         try {
-            json = Json.mapper().writeValueAsString(value);
+            json = Json.writer().writeValueAsString(value);
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }

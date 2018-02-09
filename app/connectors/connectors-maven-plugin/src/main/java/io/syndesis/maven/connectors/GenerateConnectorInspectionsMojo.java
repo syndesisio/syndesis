@@ -25,6 +25,7 @@ import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -36,11 +37,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.repository.RemoteRepository;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -62,19 +61,10 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     }
 
     @Component
-    private RepositorySystem system;
-
-    @Component
     private ArtifactFactory artifactFactory;
 
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
-
-    @Parameter(defaultValue = "${repositorySystemSession}", readonly = true, required = true)
-    private RepositorySystemSession repoSession;
-
-    @Parameter(defaultValue = "${project.remoteProjectRepositories}", readonly = true)
-    private List<RemoteRepository> remoteRepos;
 
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes")
     private String output;
@@ -86,9 +76,11 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     private File inspectionsOutputDir;
 
     @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
+    @SuppressWarnings("PMD.ImmutableField")
     private InspectionMode inspectionMode = InspectionMode.RESOURCE_AND_SPECIFICATION;
 
     @Override
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             inspectionsOutputDir.mkdirs();
@@ -101,12 +93,12 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 }
 
                 for (File file: files) {
-                    final Connector connector = Json.mapper().readValue(file, Connector.class);
+                    final Connector connector = Json.reader().forType(Connector.class).readValue(file);
                     final List<ConnectorAction> actions = new ArrayList<>();
 
                     for (ConnectorAction action : connector.getActions()) {
-                        Optional<DataShape> inputDataShape = generateInspections(file, connector, action.getDescriptor().getInputDataShape());
-                        Optional<DataShape> outputDataShape = generateInspections(file, connector, action.getDescriptor().getOutputDataShape());
+                        Optional<DataShape> inputDataShape = generateInspections(connector, action.getDescriptor().getInputDataShape());
+                        Optional<DataShape> outputDataShape = generateInspections(connector, action.getDescriptor().getOutputDataShape());
 
                         if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
                             if (inputDataShape.isPresent() || outputDataShape.isPresent()) {
@@ -128,7 +120,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                     }
 
                     if (!actions.isEmpty()) {
-                        Json.mapper().writeValue(
+                        Json.writer().writeValue(
                             file,
                             new Connector.Builder()
                                 .createFrom(connector)
@@ -139,7 +131,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             throw new MojoExecutionException("", e);
         }
     }
@@ -148,21 +140,22 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     // Inspections
     // ****************************************
 
-    private Optional<DataShape> generateInspections(File file, Connector connector, Optional<DataShape> shape) throws Exception {
+    @SuppressWarnings("PMD.CyclomaticComplexity")
+    private Optional<DataShape> generateInspections(Connector connector, Optional<DataShape> shape) throws IOException, DependencyResolutionRequiredException, ClassNotFoundException {
         if (!shape.isPresent() || !connector.getId().isPresent()) {
             return Optional.empty();
         }
 
-        if (StringUtils.equals("java", shape.get().getKind()) && StringUtils.isNotEmpty(shape.get().getType())) {
-            final String kind = shape.get().getKind();
-            final String type = shape.get().getType();
+        final DataShape given = shape.get();
+        DataShape ret = given;
+
+        if (StringUtils.equals("java", given.getKind()) && StringUtils.isNotEmpty(given.getType())) {
+            final String type = given.getType();
 
 
             File outputFile = new File(inspectionsOutputDir, String.format("%s/%s/%s.json", inspectionsResourceDir, connector.getId().get(), type));
-            if (!outputFile.getParentFile().exists()) {
-                if (outputFile.getParentFile().mkdirs()) {
-                    getLog().debug("Directory created:" + outputFile.getParentFile());
-                }
+            if (!outputFile.getParentFile().exists() && outputFile.getParentFile().mkdirs()) {
+                getLog().debug("Directory created:" + outputFile.getParentFile());
             }
 
             getLog().info("Generating for connector: " + connector.getId().get() + ", and type: " + type);
@@ -186,14 +179,12 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 final ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
 
                 if (inspectionMode == InspectionMode.SPECIFICATION || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
-                    shape = Optional.of(
-                        new DataShape.Builder()
-                            .createFrom(shape.get())
-                            .specification(mapper.writeValueAsString(c))
-                            .build()
-                    );
-
                     getLog().info("Specification for type: " + type + " created");
+                    ret = new DataShape.Builder()
+                                       .createFrom(given)
+                                       .specification(mapper.writeValueAsString(c))
+                                       .build();
+
                 }
 
                 if (inspectionMode == InspectionMode.RESOURCE || inspectionMode == InspectionMode.RESOURCE_AND_SPECIFICATION) {
@@ -203,7 +194,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             }
         }
 
-        return shape;
+        return Optional.of(ret);
     }
 
     protected Artifact toArtifact(org.apache.maven.model.Dependency dependency) {

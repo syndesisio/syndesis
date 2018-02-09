@@ -88,7 +88,7 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
 
-        JsonNode tree = Json.mapper().readTree(entry.get());
+        JsonNode tree = Json.reader().readTree(entry.get());
         Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
         if (extension == null) {
             throw new IllegalArgumentException("Cannot extract Extension from manifest file (" + MANIFEST_LOCATION + ") inside JAR");

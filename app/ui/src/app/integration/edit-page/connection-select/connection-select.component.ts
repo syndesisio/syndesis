@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connections, Connection, UserService } from '@syndesis/ui/platform';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { ConnectionStore } from '@syndesis/ui/store';
 
 const category = getCategory('Integrations');
@@ -17,7 +16,8 @@ const category = getCategory('Integrations');
   templateUrl: 'connection-select.component.html',
   styleUrls: ['./connection-select.component.scss']
 })
-export class IntegrationSelectConnectionComponent extends FlowPage implements OnInit, OnDestroy {
+export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
+  flowSubscription: Subscription;
   loading: Observable<boolean>;
   connections: Observable<Connections>;
   filteredConnections = new BehaviorSubject(<Connections>{});
@@ -25,13 +25,17 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
 
   constructor(
     public store: ConnectionStore,
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
-    public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router);
+    this.flowSubscription = this.currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      }
+    );
     this.loading = store.loading;
     this.connections = store.list;
   }
@@ -47,7 +51,7 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
 
     log.debugc(() => 'Selected connection: ' + connection.name, category);
 
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-connection',
       position: this.position,
       connection: connection,
@@ -60,26 +64,26 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
   }
 
   goBack() {
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     step.connection = undefined;
-    super.goBack(['save-or-add-step']);
+    this.flowPageService.goBack(['save-or-add-step'], this.route);
   }
 
   positionText() {
     if (this.position === 0) {
       return 'start';
     }
-    if (this.position === this.currentFlow.getLastPosition()) {
+    if (this.position === this.currentFlowService.getLastPosition()) {
       return 'finish';
     }
     return '';
   }
 
   loadConnections() {
-    if (!this.currentFlow.loaded) {
+    if (!this.currentFlowService.loaded) {
       return;
     }
-    const step = this.currentFlow.getStep(this.position);
+    const step = this.currentFlowService.getStep(this.position);
     if (!step || step.stepKind !== 'endpoint') {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
@@ -94,7 +98,7 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
       return;
     }
     this.store.loadAll();
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-connection-select',
       position: this.position
     });
@@ -117,30 +121,11 @@ export class IntegrationSelectConnectionComponent extends FlowPage implements On
         this.position = +params.get('position');
         this.loadConnections();
       });
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([{
-        anchorId: 'integrations.panel',
-        title: 'Integration Panel',
-        content: 'As you create an integration, see its connections and steps ' +
-          'in the order in which they occur when the integration is running.',
-        placement: 'right',
-      }, {
-        anchorId: 'connections.available',
-        title: 'Available Connections',
-        content: 'After at least two connections are available, you can create ' +
-          'an integration that uses the connections you choose.',
-        placement: 'top',
-      }],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
   }
 }

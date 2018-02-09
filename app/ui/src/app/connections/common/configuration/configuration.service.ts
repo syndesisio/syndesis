@@ -55,7 +55,9 @@ export class ConnectionConfigurationService {
   private getFormConfig(connection: Connection) {
     let props = {};
     if (connection.connector) {
-      props = this.cloneObject(connection.connector.properties);
+      if (connection.connector.properties) {
+        props = this.cloneObject(connection.connector.properties);
+      }
       if (connection.connector.configuredProperties) {
         Object.keys(connection.connector.configuredProperties).forEach(key => {
           if (props[key]) {

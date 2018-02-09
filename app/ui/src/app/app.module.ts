@@ -7,19 +7,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng-dynamic-forms/ui-bootstrap';
-import {
-  AlertModule,
-  CollapseModule,
-  ModalModule,
-  PopoverModule,
-  TabsModule,
-  TooltipModule,
-  TypeaheadModule
-} from 'ngx-bootstrap';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 import { TagInputModule } from 'ngx-chips';
 import { Restangular, RestangularModule } from 'ngx-restangular';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { NotificationModule } from 'patternfly-ng';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 
@@ -45,6 +35,11 @@ export function restangularProviderConfigurer(
       case 'getList':
         if (!Array.isArray(data)) {
           data = data.items || [];
+        }
+        break;
+      case 'put':
+        if (data === null) {
+          data = [];
         }
         break;
       default:
@@ -80,14 +75,7 @@ export function mapperRestangularProvider(
     DynamicFormsCoreModule.forRoot(),
     DynamicFormsBootstrapUIModule,
     RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
-    TabsModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    CollapseModule.forRoot(),
-    AlertModule.forRoot(),
-    PopoverModule.forRoot(),
-    TypeaheadModule.forRoot(),
+    SyndesisVendorModule,
     TagInputModule,
     AppRoutingModule,
     LegacyStoreModule,
@@ -96,8 +84,7 @@ export function mapperRestangularProvider(
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,
-    NotificationModule,
-    TourNgxBootstrapModule.forRoot()
+    NotificationModule
   ],
   providers: [
     ...SYNDESIS_GUARDS,

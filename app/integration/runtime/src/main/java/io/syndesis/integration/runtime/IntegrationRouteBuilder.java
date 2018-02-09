@@ -31,8 +31,9 @@ import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
-import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -64,37 +65,37 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.addAll(handlers);
     }
 
-    protected IntegrationDeployment loadDeployment() throws IOException {
-        final IntegrationDeployment deployment;
+    protected Integration loadIntegration() throws IOException {
+        final Integration integration;
 
         try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
             if (is != null) {
                 LOGGER.info("Loading integration from: {}", configurationUri);
-                deployment = Json.mapper().readValue(is, IntegrationDeployment.class);
+                        integration = Json.reader().forType(Integration.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
             }
         }
 
-        return deployment;
+        return integration;
     }
 
     @Override
     public void configure() throws Exception {
-        final IntegrationDeployment deployment = loadDeployment();
-        final List<? extends Step> steps = deployment.getSpec().getSteps();
+        final Integration integration = loadIntegration();
+        final List<? extends Step> steps = integration.getSteps();
 
         ProcessorDefinition route = null;
 
         for (int i = 0; i< steps.size(); i++) {
             final Step step = steps.get(i);
 
-            if (i == 0 && !"endpoint".equals(step.getStepKind())) {
+            if (i == 0 && StepKind.endpoint != step.getStepKind()) {
                 throw new IllegalStateException("No connector found as first step (found: " + step.getKind() + ")");
             }
 
             final IntegrationStepHandler handler = findHandler(step);
-            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this);
+            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, Integer.toString(i+1));
 
             if (route == null && definition.isPresent()) {
                 definition.filter(RouteDefinition.class::isInstance)
@@ -105,7 +106,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     });
 
                 route = definition.get();
-                deployment.getIntegrationId().ifPresent(route::setId);
+                integration.getId().ifPresent(route::setId);
             } else {
                 route = definition.map(rd -> {
                     step.getId().ifPresent(rd::id);

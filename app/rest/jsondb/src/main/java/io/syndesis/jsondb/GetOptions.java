@@ -20,6 +20,7 @@ import io.syndesis.model.ToJson;
 /**
  * Options that can be configured on the {@link JsonDB#getAsString(String, GetOptions)}.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class GetOptions implements ToJson, Cloneable {
 
     public enum Order {
@@ -36,6 +37,7 @@ public class GetOptions implements ToJson, Cloneable {
     private String endBefore;
     private Integer limitToFirst;
     private Order order = Order.ASC;
+    private Filter filter;
 
     public boolean prettyPrint() {
         return prettyPrint;
@@ -123,4 +125,14 @@ public class GetOptions implements ToJson, Cloneable {
         this.order = order;
         return this;
     }
+
+    public Filter filter() {
+        return filter;
+    }
+
+    public GetOptions filter(Filter filter) {
+        this.filter = filter;
+        return this;
+    }
+
 }

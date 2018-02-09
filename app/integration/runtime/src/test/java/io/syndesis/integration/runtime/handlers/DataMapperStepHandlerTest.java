@@ -17,10 +17,12 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.List;
 
+import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
 import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
@@ -69,7 +71,7 @@ public class DataMapperStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -78,11 +80,11 @@ public class DataMapperStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("mapper")
+                    .stepKind(StepKind.mapper)
                     .putConfiguredProperty("atlasmapping", "{}")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -107,7 +109,9 @@ public class DataMapperStepHandlerTest extends StepHandlerTestSupport {
 
             assertThat(processors).hasSize(2);
             assertThat(processors.get(0)).isInstanceOf(ToDefinition.class);
-            assertThat(ToDefinition.class.cast(processors.get(0)).getUri()).isEqualTo("atlas:mapping-step-2.json");
+            assertThat(ToDefinition.class.cast(processors.get(0)).getUri())
+                .isEqualTo("atlas:mapping-step-2.json?sourceMapName=" +
+                        OutMessageCaptureInterceptStrategy.CAPTURED_OUT_MESSAGES_MAP);
             assertThat(processors.get(1)).isInstanceOf(ToDefinition.class);
         } finally {
             context.stop();

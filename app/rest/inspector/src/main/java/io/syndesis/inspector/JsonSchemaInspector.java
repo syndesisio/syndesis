@@ -67,7 +67,7 @@ public class JsonSchemaInspector implements Inspector {
         return "json-schema".equals(kind) && !StringUtils.isEmpty(specification);
     }
 
-    /* default */ static void fetchPaths(final String context, final List<String> paths, final Map<String, JsonSchema> properties) {
+    static void fetchPaths(final String context, final List<String> paths, final Map<String, JsonSchema> properties) {
         for (final Entry<String, JsonSchema> entry : properties.entrySet()) {
             final JsonSchema subschema = entry.getValue();
 

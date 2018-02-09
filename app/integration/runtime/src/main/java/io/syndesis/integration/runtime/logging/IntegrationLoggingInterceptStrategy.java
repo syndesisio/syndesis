@@ -33,7 +33,7 @@ public class IntegrationLoggingInterceptStrategy implements InterceptStrategy {
 
     @SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidCatchingGenericException"})
     @Override
-    public Processor wrapProcessorInInterceptors(CamelContext context, ProcessorDefinition<?> definition, Processor target, Processor nextTarget) throws Exception {
+    public Processor wrapProcessorInInterceptors(CamelContext context, ProcessorDefinition<?> definition, Processor target, Processor nextTarget) {
         if (!definition.hasCustomIdAssigned()) {
             // skip over processors with a generated id
             return target;

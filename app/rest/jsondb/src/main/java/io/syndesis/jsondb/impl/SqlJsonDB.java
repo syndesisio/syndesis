@@ -15,26 +15,11 @@
  */
 package io.syndesis.jsondb.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import io.syndesis.core.EventBus;
-import io.syndesis.core.KeyGenerator;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDB;
-import io.syndesis.jsondb.JsonDBException;
-import org.skife.jdbi.v2.DBI;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.PreparedBatch;
-import org.skife.jdbi.v2.Query;
-import org.skife.jdbi.v2.ResultIterator;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
-import org.skife.jdbi.v2.util.IntegerColumnMapper;
-import org.skife.jdbi.v2.util.StringColumnMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static io.syndesis.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
+import static io.syndesis.jsondb.impl.JsonRecordSupport.validateKey;
+import static io.syndesis.jsondb.impl.Strings.prefix;
+import static io.syndesis.jsondb.impl.Strings.suffix;
+import static io.syndesis.jsondb.impl.Strings.trimSuffix;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,10 +40,29 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static io.syndesis.jsondb.impl.JsonRecordSupport.validateKey;
-import static io.syndesis.jsondb.impl.Strings.prefix;
-import static io.syndesis.jsondb.impl.Strings.suffix;
-import static io.syndesis.jsondb.impl.Strings.trimSuffix;
+import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.PreparedBatch;
+import org.skife.jdbi.v2.Query;
+import org.skife.jdbi.v2.ResultIterator;
+import org.skife.jdbi.v2.StatementContext;
+import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.skife.jdbi.v2.util.IntegerColumnMapper;
+import org.skife.jdbi.v2.util.StringColumnMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
+import io.syndesis.core.EventBus;
+import io.syndesis.core.KeyGenerator;
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDB;
+import io.syndesis.jsondb.JsonDBException;
+import io.syndesis.jsondb.impl.expr.SqlExpressionBuilder;
 
 /**
  * Implements the JsonDB via DBI/JDBC
@@ -71,13 +75,13 @@ public class SqlJsonDB implements JsonDB {
 
     private static final Logger LOG = LoggerFactory.getLogger(SqlJsonDB.class);
 
-    enum DatabaseKind {
+    public enum DatabaseKind {
         PostgreSQL, SQLite, H2, CockroachDB
     }
 
     private final DBI dbi;
     private final EventBus bus;
-    private final HashSet<String> indexes = new HashSet<>();
+    private final Set<String> indexes = new HashSet<>();
 
     // These values are used to compute a seq key
     private DatabaseKind databaseKind = DatabaseKind.PostgreSQL;
@@ -91,7 +95,7 @@ public class SqlJsonDB implements JsonDB {
         this.bus = bus;
 
         for (Index index : indexes) {
-            this.indexes.add(index.getPath()+"/"+index.getField());
+            this.indexes.add(index.getPath()+"/#"+index.getField());
         }
 
         // Lets find out the type of DB we are working with.
@@ -113,19 +117,20 @@ public class SqlJsonDB implements JsonDB {
         });
     }
 
+
     public void createTables() {
         withTransaction(dbi -> {
             if(databaseKind == DatabaseKind.PostgreSQL) {
-                dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, kind INT, idx VARCHAR COLLATE \"C\")");
+                dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR COLLATE \"C\")");
                 dbi.update("CREATE INDEX jsondb_idx ON jsondb (idx, value) WHERE idx IS NOT NULL");
             } else {
-                dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, kind INT, idx VARCHAR)");
+                dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR)");
+            }
+            if( databaseKind == DatabaseKind.H2 ) {
+                dbi.update("CREATE ALIAS IF NOT EXISTS split_part FOR \""+Strings.class.getName()+".splitPart\"");
+                dbi.update("CREATE ALIAS IF NOT EXISTS trim_suffix FOR \""+Strings.class.getName()+".trimSuffix\"");
             }
         });
-    }
-
-    private String getIndexNameOf(String index) {
-        return "jsondb_"+index;
     }
 
     public void dropTables() {
@@ -149,6 +154,7 @@ public class SqlJsonDB implements JsonDB {
     }
 
     @Override
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
     public Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options) {
 
         GetOptions o;
@@ -171,10 +177,16 @@ public class SqlJsonDB implements JsonDB {
         try {
 
             StringBuilder sql = new StringBuilder(250);
-            sql.append("select path,value,kind from jsondb where path LIKE :like");
-
             // Creating the iterator could fail with a runtime exception,
             ArrayList<Consumer<Query<Map<String, Object>>>> binds = new ArrayList<>();
+
+            if( o.filter() == null ) {
+                sql.append("select path,value,ovalue from jsondb where path LIKE :like");
+            } else {
+                sql.append("SELECT path,value,ovalue FROM jsondb A INNER JOIN (");
+                SqlExpressionBuilder.create(this, o.filter(), baseDBPath).build(sql, binds);
+                sql.append(") B ON A.path LIKE B.match_path||'%'");
+            }
 
             if (o.startAfter() != null) {
                 String startAfter = validateKey(o.startAfter());
@@ -279,6 +291,7 @@ public class SqlJsonDB implements JsonDB {
         return result;
     }
 
+
     @Override
     public boolean delete(String path) {
         String baseDBPath = JsonRecordSupport.convertToDBPath(path);
@@ -309,7 +322,7 @@ public class SqlJsonDB implements JsonDB {
 
         String path = prefix(trimSuffix(collectionPath, "/"), "/");
 
-        String idx = path+"/"+property;
+        String idx = path+"/#"+property;
         if( !indexes.contains(idx) ) {
             String message = "Index not defined for:  collectionPath: " + path + ", property: " + property;
             LOG.warn("fetchIdsByPropertyValue not optimzed !!!: {}", message);
@@ -320,7 +333,7 @@ public class SqlJsonDB implements JsonDB {
                 final String query = "SELECT path FROM jsondb WHERE idx = ? AND value = ?";
                 final List<String> paths = dbi.createQuery(query)
                     .bind(0, idx)
-                    .bind(1, value)
+                    .bind(1, STRING_VALUE_PREFIX+value)
                     .map(StringColumnMapper.INSTANCE).list();
 
                 String suffix = "/" + property + "/";
@@ -347,7 +360,9 @@ public class SqlJsonDB implements JsonDB {
                     "Don't know how to use regex in a query with database: " + databaseKind);
             }
 
-            final List<String> paths = dbi.createQuery(query).bind(0, pathRegex).bind(1, value)
+            final List<String> paths = dbi.createQuery(query)
+                .bind(0, pathRegex)
+                .bind(1, STRING_VALUE_PREFIX+value)
                 .map(StringColumnMapper.INSTANCE).list();
 
             ret.set(new HashSet<>(paths));
@@ -363,13 +378,13 @@ public class SqlJsonDB implements JsonDB {
         return key;
     }
 
-    /* default */ class BatchManager {
+    class BatchManager {
 
         private final Handle dbi;
         private long batchSize;
         private PreparedBatch insertBatch;
 
-        /* default */ BatchManager(Handle dbi) {
+        BatchManager(Handle dbi) {
             this.dbi = dbi;
         }
 
@@ -383,7 +398,7 @@ public class SqlJsonDB implements JsonDB {
                 PreparedBatch insert = getInsertBatch();
                 insert.bind("path", r.getPath())
                     .bind("value", r.getValue())
-                    .bind("kind", r.getKind())
+                    .bind("ovalue", r.getOValue())
                     .bind("idx", r.getIndex())
                     .add();
 
@@ -397,7 +412,7 @@ public class SqlJsonDB implements JsonDB {
 
         public PreparedBatch getInsertBatch() {
             if (insertBatch == null) {
-                insertBatch = dbi.prepareBatch("INSERT into jsondb (path, value, kind, idx) values (:path, :value, :kind, :idx)");
+                insertBatch = dbi.prepareBatch("INSERT into jsondb (path, value, ovalue, idx) values (:path, :value, :ovalue, :idx)");
             }
             return insertBatch;
         }
@@ -522,12 +537,12 @@ public class SqlJsonDB implements JsonDB {
         private static final JsonRecordMapper INSTANCE = new JsonRecordMapper();
         @Override
         public JsonRecord map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-            return JsonRecord.of(r.getString("path"), r.getString("value"), r.getInt("kind"), null);
+            return JsonRecord.of(r.getString("path"), r.getString("value"), r.getString("ovalue"), null);
         }
     }
 
     private void withTransaction(Consumer<Handle> cb) {
-        try (final Handle h = dbi.open()) {
+        try (Handle h = dbi.open()) {
             try {
                 h.begin();
                 cb.accept(h);
@@ -537,6 +552,14 @@ public class SqlJsonDB implements JsonDB {
                 throw e;
             }
         }
+    }
+
+    public Set<String> getIndexes() {
+        return indexes;
+    }
+
+    public DatabaseKind getDatabaseKind() {
+        return databaseKind;
     }
 
 }

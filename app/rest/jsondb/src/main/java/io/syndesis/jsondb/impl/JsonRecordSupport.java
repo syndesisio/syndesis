@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,12 +46,21 @@ public final class JsonRecordSupport {
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
     public static final Pattern INDEX_EXTRACTOR_PATTERN = Pattern.compile("^(.+)/[^/]+/([^/]+)/$");
 
-    /* default */ static class PathPart {
+    public static final char NULL_VALUE_PREFIX = '\u0000';
+    public static final char FALSE_VALUE_PREFIX = '\u0001';
+    public static final char TRUE_VALUE_PREFIX = '\u0002';
+    public static final char NUMBER_VALUE_PREFIX = '[';
+    public static final char NEG_NUMBER_VALUE_PREFIX = '-';
+    public static final char STRING_VALUE_PREFIX = '`';
+    public static final char ARRAY_VALUE_PREFIX = NUMBER_VALUE_PREFIX;
+
+
+    static class PathPart {
         private final String path;
 
         private int idx;
 
-        /* default */ PathPart(String path, boolean array) {
+        PathPart(String path, boolean array) {
             this.path = path;
             this.idx = array ? 0 : -1;
         }
@@ -77,7 +86,7 @@ public final class JsonRecordSupport {
         // utility class
     }
 
-    public static void jsonStreamToRecords(HashSet<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(Set<String> indexes, String dbPath, InputStream is, Consumer<JsonRecord> consumer) throws IOException {
         try (JsonParser jp = new JsonFactory().createParser(is)) {
             jsonStreamToRecords(indexes, jp, dbPath, consumer);
 
@@ -120,7 +129,7 @@ public final class JsonRecordSupport {
         return key;
     }
 
-    public static void jsonStreamToRecords(HashSet<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
+    public static void jsonStreamToRecords(Set<String> indexes, JsonParser jp, String path, Consumer<JsonRecord> consumer) throws IOException {
         boolean inArray = false;
         int arrayIndex = 0;
         while (true) {
@@ -137,7 +146,7 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, "", nextToken.id(), indexFieldValue(indexes, currentPath)));
+                consumer.accept(JsonRecord.of(currentPath, ""+NULL_VALUE_PREFIX, "null", indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -147,7 +156,24 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, jp.getValueAsString(), nextToken.id(), indexFieldValue(indexes, currentPath)));
+
+                String value = jp.getValueAsString();
+                String ovalue = null;
+
+                if( nextToken == JsonToken.VALUE_STRING ) {
+                    value = STRING_VALUE_PREFIX + value;
+                } else if( nextToken == JsonToken.VALUE_NUMBER_INT || nextToken == JsonToken.VALUE_NUMBER_FLOAT ) {
+                    ovalue = value; // hold on to the original number in th ovalue field.
+                    value = toLexSortableString(value); // encode it so we can lexically sort.
+                } else if( nextToken == JsonToken.VALUE_TRUE ) {
+                    ovalue = value;
+                    value = ""+TRUE_VALUE_PREFIX;
+                } else if( nextToken == JsonToken.VALUE_FALSE ) {
+                    ovalue = value;
+                    value = ""+FALSE_VALUE_PREFIX;
+                }
+
+                consumer.accept(JsonRecord.of(currentPath, value, ovalue, indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -167,13 +193,13 @@ public final class JsonRecordSupport {
         }
     }
 
-    private static String indexFieldValue(HashSet<String> indexes, String path) {
+    private static String indexFieldValue(Set<String> indexes, String path) {
         Matcher matcher = INDEX_EXTRACTOR_PATTERN.matcher(path);
         if( !matcher.matches() ) {
             return null;
         }
 
-        String idx = matcher.replaceAll("$1/$2");
+        String idx = matcher.replaceAll("$1/#$2");
         if( !indexes.contains(idx) ) {
             return null;
         }
@@ -184,21 +210,42 @@ public final class JsonRecordSupport {
     private static String toArrayIndexPath(int idx) {
         // todo: encode the idx using something like http://www.zanopha.com/docs/elen.pdf
         // so we get lexicographic ordering.
-        return toLexSortableString(idx, '[');
+        return toLexSortableString(idx);
     }
 
-    protected static int toArrayIndex(String value) {
-        return fromLexSortableStringToInt(value, '[');
+    static int toArrayIndex(String value) {
+        return fromLexSortableStringToInt(value);
+    }
+
+    public static String toLexSortableString(long value) {
+        return toLexSortableString(Long.toString(value));
+    }
+
+    public static String toLexSortableString(int value) {
+        return toLexSortableString(Integer.toString(value));
     }
 
     /**
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
-    /* default */ static String toLexSortableString(int value, char marker) {
-        ArrayList<String> seqs = new ArrayList<String>();
+    public static String toLexSortableString(final String value) {
 
-        String seq = Integer.toString(value);
+        String seq = value;
+        char prefix = NUMBER_VALUE_PREFIX;
+        if( seq.startsWith("-") ) {
+            prefix = NEG_NUMBER_VALUE_PREFIX;
+            seq = seq.substring(1);
+        }
+
+        String suffix = null;
+        int dot = seq.indexOf('.');
+        if( dot >= 0 ) {
+            suffix = seq.substring(dot+1);
+            seq = seq.substring(0, dot);
+        }
+
+        ArrayList<String> seqs = new ArrayList<String>();
         seqs.add(seq);
         while (seq.length() > 1) {
             seq = Integer.toString(seq.length());
@@ -207,17 +254,38 @@ public final class JsonRecordSupport {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < seqs.size(); i++) {
-            builder.append(marker);
+            builder.append(prefix);
         }
         for (int i = seqs.size() - 1; i >= 0; i--) {
             builder.append(seqs.get(i));
         }
-        return builder.toString();
+
+        if( suffix!=null ) {
+            builder.append(suffix);
+            if( prefix == NEG_NUMBER_VALUE_PREFIX ) {
+                builder.append(NUMBER_VALUE_PREFIX);
+            } else {
+                builder.append(NEG_NUMBER_VALUE_PREFIX);
+            }
+        }
+
+        String rc = builder.toString();
+        if( prefix == NEG_NUMBER_VALUE_PREFIX ) {
+            char[] chars = rc.toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                char c = chars[i];
+                if( '0' <= c && c <= '9') {
+                    chars[i] = (char) ('9' - (c - '0'));
+                }
+            }
+            rc = new String(chars);
+        }
+        return rc;
     }
 
-    /* default */ static int fromLexSortableStringToInt(String value, char marker) {
+    static int fromLexSortableStringToInt(String value) {
         // Trim the initial markers.
-        String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(marker)) + "+", "");
+        String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(NUMBER_VALUE_PREFIX)) + "+", "");
 
         int rc = 1;
         while (!remaining.isEmpty()) {
@@ -225,7 +293,6 @@ public final class JsonRecordSupport {
             remaining = remaining.substring(rc);
             rc = Integer.parseInt(x);
         }
-
         return rc;
     }
 

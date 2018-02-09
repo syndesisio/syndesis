@@ -20,13 +20,13 @@ package io.syndesis.rest.v1;
  */
 public class SyndesisRestException extends RuntimeException {
 
-    private String developerMsg;
+    private final String developerMsg;
 
-    private String userMsg;
+    private final String userMsg;
 
-    private String userMsgDetail;
+    private final String userMsgDetail;
 
-    private Integer errorCode;
+    private final Integer errorCode;
 
     public SyndesisRestException(String developerMsg, String userMsg, String userMsgDetail, Integer errorCode) {
         super(developerMsg);

@@ -4,11 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { Actions, Action, Connector, UserService, Step } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
 
 const category = getCategory('Integrations');
@@ -18,8 +17,8 @@ const category = getCategory('Integrations');
   templateUrl: 'action-select.component.html',
   styleUrls: ['./action-select.component.scss']
 })
-export class IntegrationSelectActionComponent extends FlowPage
-  implements OnInit, OnDestroy {
+export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
+  flowSubscription: Subscription;
   actions: Observable<Actions> = Observable.empty();
   filteredActions: Subject<Actions> = new BehaviorSubject(<Actions>{});
   connector: Observable<Connector>;
@@ -32,13 +31,17 @@ export class IntegrationSelectActionComponent extends FlowPage
 
   constructor(
     public connectorStore: ConnectorStore,
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
-    public tourService: TourService,
     private userService: UserService
   ) {
-    super(currentFlow, route, router);
+    this.flowSubscription = currentFlowService.events.subscribe(
+      (event: FlowEvent) => {
+        this.handleFlowEvent(event);
+      }
+    );
     this.connector = connectorStore.resource;
     this.loading = connectorStore.loading;
     connectorStore.clear();
@@ -46,7 +49,7 @@ export class IntegrationSelectActionComponent extends FlowPage
 
   onSelected(action: Action) {
     log.debugc(() => 'Selected action: ' + action.name, category);
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-action',
       position: this.position,
       action: action,
@@ -59,14 +62,14 @@ export class IntegrationSelectActionComponent extends FlowPage
   }
 
   goBack() {
-    super.goBack([ 'connection-select', this.position ]);
+    this.flowPageService.goBack([ 'connection-select', this.position ], this.route);
   }
 
   loadActions() {
-    if (!this.currentFlow.loaded) {
+    if (!this.currentFlowService.loaded) {
       return;
     }
-    const step = (this.step = this.currentFlow.getStep(this.position));
+    const step = (this.step = this.currentFlowService.getStep(this.position));
     if (!step) {
       /* Safety net */
       this.router.navigate(['save-or-add-step'], {
@@ -102,21 +105,21 @@ export class IntegrationSelectActionComponent extends FlowPage
   ngOnInit() {
     this.currentStep = +this.route.snapshot.paramMap.get('position');
 
-    if (this.currentStep === this.currentFlow.getFirstPosition()) {
+    if (this.currentStep === this.currentFlowService.getFirstPosition()) {
       this.actions = this.connector
         .filter(connector => connector !== undefined)
         .switchMap(connector => [connector.actions.filter(action => action.pattern === 'From')]);
     }
 
-    if (this.currentStep > this.currentFlow.getFirstPosition()
-      && this.currentStep <= this.currentFlow.getLastPosition()) {
+    if (this.currentStep > this.currentFlowService.getFirstPosition()
+      && this.currentStep <= this.currentFlowService.getLastPosition()) {
       this.actions = this.connector
         .filter(connector => connector !== undefined)
         .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To')]);
     }
 
     this.actionsSubscription = this.actions.subscribe(_ =>
-      this.currentFlow.events.emit({
+      this.currentFlowService.events.emit({
         kind: 'integration-action-select',
         position: this.position
       })
@@ -126,24 +129,12 @@ export class IntegrationSelectActionComponent extends FlowPage
       this.position = +params.get('position');
       this.loadActions();
     });
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-        anchorId: 'actions.available',
-        title: 'Available Actions',
-        content: 'When an integration uses the selected connection it performs the action you select.',
-        placement: 'top',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
-    }
   }
 
   ngOnDestroy() {
-    super.ngOnDestroy();
+    if (this.flowSubscription) {
+      this.flowSubscription.unsubscribe();
+    }
     if (this.actionsSubscription) {
       this.actionsSubscription.unsubscribe();
     }

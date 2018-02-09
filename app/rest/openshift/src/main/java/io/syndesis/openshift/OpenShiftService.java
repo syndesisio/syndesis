@@ -26,6 +26,7 @@ import io.fabric8.openshift.api.model.User;
 public interface OpenShiftService {
 
     String INTEGRATION_ID_ANNOTATION = "syndesis.io/integration-id";
+    String INTEGRATION_NAME_ANNOTATION = "syndesis.io/integration-name";
     String DEPLOYMENT_VERSION_ANNOTATION = "syndesis.io/deployment-version";
     String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
     String DEPLOYMENT_ID_LABEL = "syndesis.io/deployment-id";
@@ -92,6 +93,13 @@ public interface OpenShiftService {
      * @param desiredReplicas how many replicas should be running for this method to return true
      */
     boolean isScaled(String name, int desiredReplicas);
+
+    /**
+     * Check whether a given build is failed
+     * @param name name of the build to check
+     * @return true if the build is failed
+     */
+    boolean isBuildFailed(String name);
 
     /**
      * Returns the {@link DeploymentConfig}s that match the specified labels.

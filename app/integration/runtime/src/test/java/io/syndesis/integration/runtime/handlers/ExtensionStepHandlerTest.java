@@ -27,6 +27,7 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
@@ -89,7 +90,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -98,7 +99,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
                             .kind(StepAction.Kind.ENDPOINT)
@@ -109,7 +110,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("Property-2", "Val-2")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -153,7 +154,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -162,7 +163,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
                             .kind(StepAction.Kind.BEAN)
@@ -173,7 +174,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -214,7 +215,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -223,7 +224,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
                             .kind(StepAction.Kind.STEP)
@@ -234,7 +235,7 @@ public class ExtensionStepHandlerTest extends StepHandlerTestSupport {
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")

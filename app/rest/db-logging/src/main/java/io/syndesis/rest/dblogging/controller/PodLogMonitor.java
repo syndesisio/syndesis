@@ -152,6 +152,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         }
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     private void processLine(byte[] line) throws IOException {
         // Could it be a data of json structured output?
 
@@ -168,7 +169,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         String time = new String(line, 0, 30, StandardCharsets.US_ASCII);
         try {
             @SuppressWarnings("unchecked")
-            Map<String, Object> json = Json.mapper().readValue(line, 31, line.length - 31, HashMap.class); //NOPMD
+            Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(line, 31, line.length - 31); //NOPMD
 
             // are the required fields set?
             String exchange = validate((String) json.get("exchange"));
@@ -221,10 +222,12 @@ class PodLogMonitor implements Consumer<InputStream> {
 
             }
 
-        } catch (JsonDBException | ClassCastException | IOException ignore) {
+        } catch (JsonDBException | ClassCastException | IOException ignored) {
             /// log record not in the expected format.
         } catch (InterruptedException e) {
-            throw new InterruptedIOException();
+            final InterruptedIOException rethrow = new InterruptedIOException(e.getMessage());
+            rethrow.initCause(e);
+            throw rethrow;
         }
     }
 

@@ -36,16 +36,15 @@ public class DemoHandlerProvider implements StateChangeHandlerProvider {
     @Override
     public List<StateChangeHandler> getStatusChangeHandlers() {
         return Arrays.asList(
-            new DemoHandler(IntegrationDeploymentState.Active, 5000L),
-            new DemoHandler(IntegrationDeploymentState.Inactive, 5000L),
-            new DemoHandler(IntegrationDeploymentState.Undeployed, 5000L));
+            new DemoHandler(IntegrationDeploymentState.Published, 5000L),
+            new DemoHandler(IntegrationDeploymentState.Unpublished, 5000L));
     }
 
-    /* default */ static class DemoHandler implements StateChangeHandler {
+    static class DemoHandler implements StateChangeHandler {
         private final IntegrationDeploymentState state;
         private final long waitMillis;
 
-        /* default */ DemoHandler(IntegrationDeploymentState state, long waitMillis) {
+        DemoHandler(IntegrationDeploymentState state, long waitMillis) {
             this.state = state;
             this.waitMillis = waitMillis;
         }

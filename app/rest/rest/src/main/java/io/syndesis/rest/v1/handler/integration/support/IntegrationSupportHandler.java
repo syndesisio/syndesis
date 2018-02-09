@@ -15,7 +15,8 @@
  */
 package io.syndesis.rest.v1.handler.integration.support;
 
-import java.io.FilterInputStream;
+import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntry;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,9 +26,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -41,6 +45,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -48,11 +58,14 @@ import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.dao.extension.ExtensionDataManager;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.dao.manager.operators.ReverseFilter;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
+import io.syndesis.model.ListResult;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.ModelExport;
 import io.syndesis.model.Schema;
@@ -61,21 +74,19 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
+import io.syndesis.rest.util.PaginationFilter;
+import io.syndesis.rest.util.ReflectiveSorter;
+import io.syndesis.rest.v1.handler.integration.DeletedFilter;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntry;
+import io.syndesis.rest.v1.handler.integration.model.IntegrationOverview;
+import io.syndesis.rest.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 
 @Path("/integration-support")
 @Api(value = "integration-support")
 @Component
-@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass" })
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.CyclomaticComplexity" })
 public class IntegrationSupportHandler {
 
     public static final String EXPORT_MODEL_FILE_NAME = "model.json";
@@ -101,12 +112,38 @@ public class IntegrationSupportHandler {
         this.extensionDataManager = extensionDataManager;
     }
 
+    public DataManager getDataManager() {
+        return dataManager;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/overviews")
+    public ListResult<IntegrationOverview> getOverviews(@Context  UriInfo uriInfo) {
+
+        Stream<Integration> stream = getDataManager().fetchAll(Integration.class,
+            new DeletedFilter(),
+            new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+        ).getItems().stream();
+
+        return ListResult.of(stream.map(integration -> {
+
+            List<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class,
+                new IdPrefixFilter<>(integration.getId().get()+":"), ReverseFilter.getInstance())
+                .getItems();
+
+            // find the deployment we want published..
+            return new IntegrationOverview(integration, deployments.stream().findFirst());
+        }).collect(Collectors.toList()));
+    }
+
     @POST
     @Path("/generate/pom.xml")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public byte[] projectPom(IntegrationDeployment integrationDeployment) throws IOException {
-        return projectGenerator.generatePom(integrationDeployment);
+    public byte[] projectPom(Integration integration) throws IOException {
+        return projectGenerator.generatePom(integration);
     }
 
     @GET
@@ -143,7 +180,7 @@ public class IntegrationSupportHandler {
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
                 ModelExport exportObject = ModelExport.of(Schema.VERSION, models);
-                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.mapper().writeValueAsBytes(exportObject));
+                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.writer().writeValueAsBytes(exportObject));
                 for (String extensionId : extensions) {
                     addEntry(tos, "extensions/" + Names.sanitize(extensionId) + ".jar", IOUtils.toByteArray(
                         extensionDataManager.getExtensionBinaryFile(extensionId)
@@ -198,7 +235,7 @@ public class IntegrationSupportHandler {
                     break;
                 }
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    ModelExport models = Json.mapper().readValue(new DontClose(zis), ModelExport.class);
+                    ModelExport models = Json.reader().forType(ModelExport.class).readValue(zis);
                     changeEvents.addAll(importModels(sec, models));
                     for (ChangeEvent changeEvent : changeEvents) {
                         if( changeEvent.getKind().get().equals("extension") ) {
@@ -246,35 +283,22 @@ public class IntegrationSupportHandler {
             switch (model.getKind()) {
                 case Integration: {
                     Integration integration = (Integration) model.getData();
-                    integration = new Integration.Builder()
+                    Integration.Builder builder = new Integration.Builder()
                         .createFrom(integration)
-                        .desiredStatus(IntegrationDeploymentState.Draft)
-                        .build();
+                        .isDeleted(false)
+                        .updatedAt(System.currentTimeMillis());
 
                     // Do we need to create it?
                     String id = integration.getId().get();
-                    if (dataManager.fetch(Integration.class, id) == null) {
+                    Integration previous = dataManager.fetch(Integration.class, id);
+                    if (previous == null) {
                         LOG.info("Creating integration: {}", integration.getName());
-                        integrationHandler.create(sec, integration);
+                        integrationHandler.create(sec, builder.build());
                         result.add(ChangeEvent.of("created", integration.getKind().getModelName(), id));
                     } else {
                         LOG.info("Updating integration: {}", integration.getName());
-                        integrationHandler.update(id, integration);
+                        integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
                         result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
-                    }
-                    break;
-                }
-                case IntegrationDeployment: {
-                    IntegrationDeployment integrationDeployment = (IntegrationDeployment) model.getData();
-                    String id = integrationDeployment.getId().get();
-                    if (dataManager.fetch(IntegrationDeployment.class, id) == null) {
-                        LOG.info("Creating integration deployment: {} version: {} ", integrationDeployment.getName(), integrationDeployment.getVersion().orElse(1));
-                        dataManager.create(integrationDeployment);
-                        result.add(ChangeEvent.of("created", integrationDeployment.getKind().getModelName(), id));
-                    } else {
-                        LOG.info("Updating integration deployment: {} version: {} ", integrationDeployment.getName(), integrationDeployment.getVersion().orElse(1));
-                        dataManager.update(integrationDeployment);
-                        result.add(ChangeEvent.of("updated", integrationDeployment.getKind().getModelName(), id));
                     }
                     break;
                 }
@@ -332,7 +356,6 @@ public class IntegrationSupportHandler {
         for (ModelData<?> model : export.models()) {
             switch (model.getKind()) {
                 case Integration:
-                case IntegrationDeployment:
                 case Connection:
                 case Connector:
                 case Extension:
@@ -341,17 +364,6 @@ public class IntegrationSupportHandler {
                     throw new IOException("Cannot import unsupported model kind: " + model.getKind());
 
             }
-        }
-    }
-
-    private static class DontClose extends FilterInputStream {
-        public DontClose(ZipInputStream zis) {
-            super(zis);
-        }
-
-        @Override
-        public void close() throws IOException {
-            // We want to avoid closing zis
         }
     }
 }

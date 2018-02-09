@@ -25,6 +25,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.syndesis.model.integration.StepKind;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternUtils;
+
 import io.syndesis.core.Json;
 import io.syndesis.core.SuppressFBWarnings;
 import io.syndesis.dao.init.ReadApiClientData;
@@ -43,21 +57,8 @@ import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorTemplate;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternUtils;
 
 @SpringBootApplication(
     exclude = {
@@ -65,6 +66,7 @@ import org.springframework.core.io.support.ResourcePatternUtils;
         ProjectGeneratorAutoConfiguration.class
     }
 )
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity"})
 public class Application implements ApplicationRunner {
     @Autowired
     private ResourceLoader resourceLoader;
@@ -105,7 +107,7 @@ public class Application implements ApplicationRunner {
                 for (final Action action : connector.getActions()) {
                     steps.add(
                         new Step.Builder()
-                            .stepKind("endpoint")
+                            .stepKind(StepKind.endpoint)
                             .connection(new Connection.Builder()
                                 .connector(connector)
                                 .connectorId(connector.getId())
@@ -120,7 +122,7 @@ public class Application implements ApplicationRunner {
                 final ConnectorTemplate template = (ConnectorTemplate) model.getData();
                 steps.add(
                     new Step.Builder()
-                        .stepKind("endpoint")
+                        .stepKind(StepKind.endpoint)
                         .connection(new Connection.Builder()
                             .connectorId("connector-" + template.getId())
                             .build())
@@ -141,13 +143,13 @@ public class Application implements ApplicationRunner {
 
             if (resources != null) {
                 for (Resource resource: resources) {
-                    Connector connector = Json.mapper().readValue(resource.getInputStream(), Connector.class);
+                    Connector connector = Json.reader().forType(Connector.class).readValue(resource.getInputStream());
 
                     if (connector != null) {
                         for (final Action action : connector.getActions()) {
                             steps.add(
                                 new Step.Builder()
-                                    .stepKind("endpoint")
+                                    .stepKind(StepKind.endpoint)
                                     .connection(new Connection.Builder()
                                         .connector(connector)
                                         .connectorId(connector.getId())
@@ -159,31 +161,29 @@ public class Application implements ApplicationRunner {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
             // ignore
         }
 
-        IntegrationDeployment integrationDeployment = new IntegrationDeployment.Builder()
-            .integrationId("integration")
+
+        Integration integration = new Integration.Builder()
+            .id("Integration")
             .name("Integration")
-            .spec(new IntegrationDeploymentSpec.Builder()
-                .name("Integration")
-                .description("This integration is used to prime the .m2 repo")
-                .steps(steps)
-                .build())
+            .description("This integration is used to prime the .m2 repo")
+            .steps(steps)
             .build();
 
-        generate(integrationDeployment, project);
+        generate(integration, project);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(IntegrationDeployment integrationDeployment, File targetDir) throws IOException {
+    private static void generate(Integration integration, File targetDir) throws IOException {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager());
 
         Path dir =targetDir.toPath();
         Files.createDirectories(dir);
-        Files.write(dir.resolve("pom.xml"), generator.generatePom(integrationDeployment));
+        Files.write(dir.resolve("pom.xml"), generator.generatePom(integration));
 
         dir = dir.resolve("src/main/java/io/syndesis/example");
         Files.createDirectories(dir);
@@ -208,6 +208,11 @@ public class Application implements ApplicationRunner {
         @Override
         public Optional<InputStream> loadExtensionBLOB(String extensionId) {
             return Optional.empty();
+        }
+
+        @Override
+        public String decrypt(String encrypted) {
+            return encrypted;
         }
     }
 

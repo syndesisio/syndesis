@@ -37,7 +37,7 @@
     <syndesis.version>${project.version}</syndesis.version>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.33.0</atlasmap.version>
+    <atlasmap.version>1.33.1</atlasmap.version>
     <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
     <!-- Image names -->
@@ -57,7 +57,7 @@
     <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
 
     <jackson.version>2.8.10</jackson.version>
-
+    <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>2.4.1</kubernetes.client.version>
 
     <spring.version>4.3.12.RELEASE</spring.version>
@@ -71,6 +71,8 @@
     <camel.version>2.20.1</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
+    <dep.plugin.pmd.version>3.8</dep.plugin.pmd.version>
+    <dep.pmd.version>5.8.1</dep.pmd.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
@@ -569,6 +571,28 @@
         </plugin>
 
         <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <configuration>
+            <analysisCache>true</analysisCache>
+            <printFailingErrors>true</printFailingErrors>
+            <rulesets>
+              <ruleset>/syndesis/ruleset.xml</ruleset>
+            </rulesets>
+            <excludeRoots combine.children="append">
+              <excludeRoot>target/generated-sources</excludeRoot>
+            </excludeRoots>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
           <groupId>org.basepom.maven</groupId>
           <artifactId>duplicate-finder-maven-plugin</artifactId>
           <configuration>
@@ -1029,6 +1053,12 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>com.github.fge</groupId>
+        <artifactId>json-patch</artifactId>
+        <version>${json-patch.version}</version>
+      </dependency>
+
       <!-- ========================================== -->
 
       <!-- === Atlasmap -->
@@ -1116,6 +1146,12 @@
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.vaadin.external.google</groupId>
+        <artifactId>android-json</artifactId>
+        <version>0.0.20131108.vaadin1</version>
       </dependency>
 
     </dependencies>

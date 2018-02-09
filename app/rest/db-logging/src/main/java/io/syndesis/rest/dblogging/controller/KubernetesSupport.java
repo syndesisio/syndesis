@@ -65,8 +65,7 @@ public class KubernetesSupport {
                 .append(pod.getResourceUrl().toString())
                 .append("/log?pretty=false&follow=true&timestamps=true");
             if (sinceTime != null) {
-                url.append("&sinceTime=")
-                   .append("&sinceTime=");
+                url.append("&sinceTime=");
             }
             Request request = new Request.Builder().url(new URL(url.toString())).get().build();
             OkHttpClient clone = okHttpClient.newBuilder().readTimeout(0, TimeUnit.MILLISECONDS).build();
@@ -93,7 +92,7 @@ public class KubernetesSupport {
                     });
                 }
             });
-        } catch (RuntimeException t) {
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException t) {
             throw new IOException("Unexpected Error", t);
         }
     }

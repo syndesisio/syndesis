@@ -87,17 +87,17 @@ public final class JsonSchemaHelper {
 
     public static String serializeJson(final ObjectNode schemaNode) {
         try {
-            return Json.mapper().writeValueAsString(schemaNode);
+            return Json.writer().writeValueAsString(schemaNode);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize JSON schema", e);
         }
     }
 
-    /* default */ static URL inMemory(final String specification) throws MalformedURLException {
+    static URL inMemory(final String specification) throws MalformedURLException {
         return new URL("mem", null, 0, "specification", new InMemoryUrlStreamHandler(specification));
     }
 
-    /* default */ static String javaTypeFor(final String type, final String format) {
+    static String javaTypeFor(final String type, final String format) {
         switch (type) {
         case "string":
             return String.class.getName();

@@ -11,11 +11,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
 import { StoreModule } from '@syndesis/ui/store';
+import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
 import { EmptyStateComponent } from './emptystate.component';
@@ -28,6 +28,7 @@ import { IconPathPipe } from '@syndesis/ui/common/icon-path.pipe.ts';
 import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.pipe';
 import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
 import { ConfigService } from '@syndesis/ui/config.service';
+import { IntegrationActionMenuComponent } from '@syndesis/ui/integration/list/action-menu.component.ts';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -40,8 +41,8 @@ describe('DashboardComponent', () => {
           CoreModule.forRoot(),
           ApiModule.forRoot(),
           HttpClientModule,
-          ListModule,
           ActionModule,
+          ListModule,
           ChartsModule,
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
@@ -49,19 +50,15 @@ describe('DashboardComponent', () => {
           StoreModule,
           RouterTestingModule.withRoutes([]),
           RestangularModule,
-          NotificationModule
+          NotificationModule,
+          IntegrationListModule,
+          SyndesisCommonModule
         ],
         declarations: [
           DashboardComponent,
           EmptyStateComponent,
           DashboardConnectionsComponent,
-          DashboardIntegrationsComponent,
-          IntegrationStatusComponent,
-          IntegrationListComponent,
-          LoadingComponent,
-          IconPathPipe,
-          TruncateCharactersPipe,
-          ModalComponent
+          DashboardIntegrationsComponent
         ],
         providers: [
           ConfigService,
@@ -74,8 +71,7 @@ describe('DashboardComponent', () => {
               return new Http(backend, options);
             },
             deps: [MockBackend, RequestOptions]
-          },
-          TourService
+          }
         ]
       };
       TestBed.configureTestingModule(moduleConfig).compileComponents();

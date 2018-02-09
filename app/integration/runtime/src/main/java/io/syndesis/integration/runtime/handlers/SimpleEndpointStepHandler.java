@@ -23,6 +23,7 @@ import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
 import org.apache.camel.util.ObjectHelper;
@@ -33,7 +34,7 @@ import org.apache.camel.util.ObjectHelper;
 public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        if (!"endpoint".equals(step.getStepKind()) && !"connector".equals(step.getStepKind())) {
+        if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
 
@@ -55,13 +56,12 @@ public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
 
     @SuppressWarnings({"unchecked", "PMD"})
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
         // Model
         final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
-        final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
         final String componentScheme = action.getDescriptor().getComponentScheme().get();
         final Map<String, String> configuredProperties = step.getConfiguredProperties();
         final Map<String, String> properties = action.filterEndpointProperties(configuredProperties);
@@ -95,6 +95,6 @@ public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
         }
 
         // Handle split
-        return handleSplit(descriptor, route, builder);
+        return handleSplit(descriptor, route, builder, index);
     }
 }

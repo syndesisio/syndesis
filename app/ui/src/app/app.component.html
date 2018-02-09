@@ -6,20 +6,6 @@
                                 [showClose]="showClose">
   </pfng-toast-notification-list>
 
-  <tour-step-template>
-    <ng-template let-step="step">
-      <p class="tour-step-content">{{ step?.content }}</p>
-      <div class="tour-step-navigation text-right">
-        <button *ngIf="tourService.hasPrev(step)" class="btn btn-sm btn-primary" (click)="tourService.prev()">« Prev</button>
-        <button *ngIf="tourService.hasNext(step)" class="btn btn-sm btn-primary" (click)="tourService.next()">Next »</button>
-        <button (click)="endTour()"
-                class="close end-tour">
-          <span class="pficon pficon-close"></span>
-        </button>
-      </div>
-    </ng-template>
-  </tour-step-template>
-
   <ng-template #brandTemplate>
     <a routerLink="/"
        class="navbar-brand">
@@ -71,8 +57,7 @@
           <!-- Help Navbar -->
 
           <li dropdown
-              class="dropdown help"
-              tourAnchor="get.started">
+              class="dropdown help">
             <a dropdownToggle
                class="dropdown-toggle nav-item-iconic"
                id="dropdownHelp"
@@ -94,7 +79,6 @@
                    rel="nofollow"
                    target="_blank">User Guide</a>
               </li>
-              <li><a (click)="startTour()">Guided Tour</a></li>
               <li><a routerLink="/support">Support</a></li>
               <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
                    rel="nofollow"
@@ -173,8 +157,7 @@
         </a>
       </li>
       <li class="list-group-item"
-          routerLinkActive="active"
-          tourAnchor="dashboard.navigation">
+          routerLinkActive="active">
         <a routerLink="connections">
           <span class="pficon pficon-network"
                 data-toggle="tooltip"

@@ -15,11 +15,14 @@
  */
 package io.syndesis.runtime;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import io.syndesis.model.Violation;
 import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.rest.v1.handler.exception.RestError;
 
 import org.junit.Before;
@@ -27,9 +30,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +60,7 @@ public class IntegrationsITCase extends BaseITCase {
     }
 
     @Test
-    public void createAndGetIntegration() throws IOException {
+    public void createAndGetIntegration() {
 
         // Verify that the integration does not exist.
         get("/api/v1/integrations/2001", RestError.class,
@@ -69,8 +70,6 @@ public class IntegrationsITCase extends BaseITCase {
         Integration integration = new Integration.Builder()
             .id("2001")
             .name("test")
-            .desiredStatus(IntegrationDeploymentState.Draft)
-            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
@@ -82,8 +81,6 @@ public class IntegrationsITCase extends BaseITCase {
         integration = new Integration.Builder()
             .id("2002")
             .name("test2")
-            .desiredStatus(IntegrationDeploymentState.Draft)
-            .currentStatus(IntegrationDeploymentState.Draft)
             .build();
         post("/api/v1/integrations", integration, Integration.class);
 
@@ -113,7 +110,7 @@ public class IntegrationsITCase extends BaseITCase {
         post("/api/v1/integration-support/import", exportData.getBody(), byte[].class);
     }
 
-        @Test
+    @Test
     public void shouldDetermineValidityForInvalidIntegrations() {
         dataManager.create(new Integration.Builder().name("Existing integration").build());
 
@@ -127,12 +124,36 @@ public class IntegrationsITCase extends BaseITCase {
 
     @Test
     public void shouldDetermineValidityForValidIntegrations() {
-        final Integration integration = new Integration.Builder().name("Test integration").desiredStatus(IntegrationDeploymentState.Draft).build();
+        final Integration integration = new Integration.Builder().name("Test integration").build();
 
         final ResponseEntity<List<Violation>> got = post("/api/v1/integrations/validation", integration, RESPONSE_TYPE,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         assertThat(got.getBody()).isNull();
+    }
+
+    @Test
+    public void patchIntegrationDescription() {
+        Integration integration = new Integration.Builder()
+            .id("3001")
+            .name("test")
+            .description("My first description")
+            .build();
+
+        post("/api/v1/integrations", integration, Integration.class);
+        ResponseEntity<Integration> result = get("/api/v1/integrations/3001", Integration.class);
+        assertThat(result.getBody().getDescription())
+            .as("description")
+            .isEqualTo(Optional.of("My first description"));
+
+        // Do the PATCH API call:
+        Map<String, Object> patchDoc = Collections.singletonMap("description", "The second description");
+        patch("/api/v1/integrations/3001", patchDoc);
+
+        result = get("/api/v1/integrations/3001", Integration.class);
+        assertThat(result.getBody().getDescription())
+            .as("description")
+            .isEqualTo(Optional.of("The second description"));
     }
 
     public static class IntegrationListResult {

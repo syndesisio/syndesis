@@ -47,7 +47,7 @@ import javax.tools.StandardLocation;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressWarnings({"PMD.AvoidSynchronizedAtMethodLevel", "PMD.AvoidCatchingGenericException", "PMD.ExcessiveImports", "PMD.GodClass"})
+@SuppressWarnings("PMD")
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
     SyndesisExtensionActionProcessor.SYNDESIS_ANNOTATION_CLASS_NAME

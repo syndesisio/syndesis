@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@SuppressWarnings("PMD") // uff
 public class PodMetricsReader implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PodMetricsReader.class);
@@ -99,7 +100,7 @@ public class PodMetricsReader implements Runnable {
                     Date startDate = toDate(m.get(START_TIMESTAMP));
 
 
-                    handler.handle(new RawMetrics.Builder()
+                    handler.persist(new RawMetrics.Builder()
                         .pod(pod)
                         .integrationId(integrationId)
                         .version(version)

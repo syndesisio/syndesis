@@ -44,7 +44,7 @@ import org.apache.camel.impl.DefaultCamelContext;
  */
 public class ConnectorVerifier {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         ConnectorVerifier check = new ConnectorVerifier();
 
         // Replace the stdout stream so that only we output to it..
@@ -57,8 +57,6 @@ public class ConnectorVerifier {
 
         Properties response = check.verify(scope, componentPrefix, request);
         response.store(originalOut, null);
-
-        System.exit(0);
     }
 
     private static Properties toProperties(InputStream inputStream) throws IOException {
@@ -67,7 +65,8 @@ public class ConnectorVerifier {
         return result;
     }
 
-    public Properties verify(ComponentVerifierExtension.Scope scope, String component, Properties request) throws Exception {
+    @SuppressWarnings("PMD.CyclomaticComplexity")
+    public Properties verify(ComponentVerifierExtension.Scope scope, String component, Properties request) {
         Properties result = new Properties();
         CamelContext camel = null;
         try {
@@ -105,6 +104,8 @@ public class ConnectorVerifier {
                             i++;
                         }
                         break;
+                    default:
+                        throw new IllegalStateException("Unsupported verification result status: " +verificationResult.getStatus());
                 }
             } else {
                 result.put("value", "unsupported");
@@ -112,15 +113,15 @@ public class ConnectorVerifier {
 
             camel.stop();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            e.printStackTrace(); // NOPMD
             result.put("value", "error");
             result.put("error", "System Error, try again later");
         }
         return result;
     }
 
-    private Map<String, Object> toMap(Properties props) throws Exception {
+    private Map<String, Object> toMap(Properties props) {
         Map<String, Object> answer = new HashMap<>();
         Enumeration<?> en = props.propertyNames();
         while (en.hasMoreElements()) {

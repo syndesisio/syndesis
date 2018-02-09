@@ -16,11 +16,12 @@
 package io.syndesis.integration.runtime.handlers;
 
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 
 public class ExpressionFilterStepHandler extends AbstractFilterStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        return "filter".equals(step.getStepKind());
+        return StepKind.expressionFilter == step.getStepKind();
     }
 
     @Override

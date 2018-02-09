@@ -64,7 +64,6 @@
     <module>connectors-maven-plugin</module>
     <module>connectors-catalog</module>
     <module>connector-verify</module>
-    <module>catalog</module>
 
     <module>connectors/aws-s3-connector</module>
     <module>connectors/http</module>
@@ -73,8 +72,6 @@
     <module>connectors/salesforce</module>
     <module>connectors/sql</module>
     <module>connectors/rest/rest-swagger-connector</module>
-    <module>connectors/day-trade</module>
-    <module>connectors/trade-insight</module>
     <module>connectors/jms/activemq-connectors</module>
     <module>connectors/jms/amqp-connector</module>
     <module>connectors/odata</module>

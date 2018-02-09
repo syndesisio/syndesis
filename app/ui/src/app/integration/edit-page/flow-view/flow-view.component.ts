@@ -1,21 +1,17 @@
 import {
   Component,
   ElementRef,
-  Input,
-  OnInit,
   OnDestroy,
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { ChildAwarePage, CurrentFlow, FlowEvent } from '@syndesis/ui/integration/edit-page';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
+import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { ModalService } from '@syndesis/ui/common';
-import { Integration, Step, UserService } from '@syndesis/ui/platform';
+import { Integration, UserService } from '@syndesis/ui/platform';
 
 const category = getCategory('IntegrationsCreatePage');
 
@@ -24,8 +20,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view.component.html',
   styleUrls: ['./flow-view.component.scss']
 })
-export class FlowViewComponent extends ChildAwarePage
-  implements OnInit, OnDestroy {
+export class FlowViewComponent implements OnDestroy {
   i: Integration;
   flowSubscription: Subscription;
   urls: UrlSegment[];
@@ -36,15 +31,14 @@ export class FlowViewComponent extends ChildAwarePage
   @ViewChild('nameInput') nameInput: ElementRef;
 
   constructor(
-    public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
-    public tourService: TourService,
     private userService: UserService,
     private modalService: ModalService
   ) {
-    super(currentFlow, route, router);
-    this.flowSubscription = this.currentFlow.events.subscribe(
+    this.flowSubscription = this.currentFlowService.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
       }
@@ -52,15 +46,19 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   get currentPosition() {
-    return this.getCurrentPosition();
+    return this.flowPageService.getCurrentPosition(this.route);
   }
 
   get currentState() {
-    return this.getCurrentChild();
+    return this.flowPageService.getCurrentChild(this.route);
+  }
+
+  get currentStepKind() {
+    return this.flowPageService.getCurrentStepKind(this.route);
   }
 
   get containerClass() {
-    switch (this.currentStepKind) {
+    switch (this.flowPageService.getCurrentStepKind(this.route)) {
       case 'mapper':
         return 'flow-view-container collapsed';
       default:
@@ -86,31 +84,31 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   loaded() {
-    return this.currentFlow.loaded;
+    return this.currentFlowService.loaded;
   }
 
   get currentStep() {
-    return this.getCurrentStep();
+    return this.flowPageService.getCurrentStep(this.route);
   }
 
   startConnection() {
-    return this.currentFlow.getStartStep();
+    return this.currentFlowService.getStartStep();
   }
 
   endConnection() {
-    return this.currentFlow.getEndStep();
+    return this.currentFlowService.getEndStep();
   }
 
   firstPosition() {
-    return this.currentFlow.getFirstPosition();
+    return this.currentFlowService.getFirstPosition();
   }
 
   lastPosition() {
-    return this.currentFlow.getLastPosition();
+    return this.currentFlowService.getLastPosition();
   }
 
   getMiddleSteps() {
-    return this.currentFlow.getMiddleSteps();
+    return this.currentFlowService.getMiddleSteps();
   }
 
   insertStepAfter(position: number) {
@@ -118,7 +116,7 @@ export class FlowViewComponent extends ChildAwarePage
 
     this.selectedKind = undefined;
 
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-insert-step',
       position: position,
       onSave: () => {
@@ -134,7 +132,7 @@ export class FlowViewComponent extends ChildAwarePage
   insertConnectionAfter(position: number) {
     this.popovers.forEach(popover => popover.hide());
 
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-insert-connection',
       position: position,
       onSave: () => {
@@ -148,7 +146,7 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   get integrationName() {
-    return (this.currentFlow.integration || { name: '' }).name || '';
+    return (this.currentFlowService.integration || { name: '' }).name || '';
   }
 
   deletePrompt(position) {
@@ -156,10 +154,10 @@ export class FlowViewComponent extends ChildAwarePage
       .show('delete-step')
       .then(modal => {
         if (modal.result) {
-          const isFirst = position === this.currentFlow.getFirstPosition();
-          const isLast = position === this.currentFlow.getLastPosition();
+          const isFirst = position === this.currentFlowService.getFirstPosition();
+          const isLast = position === this.currentFlowService.getLastPosition();
 
-          this.currentFlow.events.emit({
+          this.currentFlowService.events.emit({
             kind: 'integration-remove-step',
             position: position,
             onSave: () => {
@@ -181,7 +179,7 @@ export class FlowViewComponent extends ChildAwarePage
   }
 
   set integrationName(name: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-set-property',
       property: 'name',
       value: name
@@ -230,22 +228,6 @@ export class FlowViewComponent extends ChildAwarePage
       case 'integration-connection-configure':
       default:
         break;
-    }
-  }
-
-  ngOnInit() {
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([{
-        anchorId: 'integrations.step',
-        title: 'Operate On Data',
-        content: 'Clicking the plus sign lets you add an operation that the integration performs between the start and finish connections.',
-        placement: 'right',
-      }],
-      );
-      setTimeout(() => this.tourService.start());
     }
   }
 

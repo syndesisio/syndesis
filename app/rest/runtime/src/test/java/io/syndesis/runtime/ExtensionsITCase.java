@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -31,10 +30,11 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.ResourceIdentifier;
 import io.syndesis.model.Violation;
 import io.syndesis.model.extension.Extension;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import io.syndesis.rest.v1.handler.exception.RestError;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -210,7 +210,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(createdCopy1.getBody().getId()).isPresent();
         String idCopy1 = createdCopy1.getBody().getId().get();
 
-        // Install copy
+        // Install copyObjectMapperConfiguration
         post("/api/v1/extensions/" + idCopy1 + "/install", null, Void.class,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
@@ -246,18 +246,18 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(got1.getBody()).isEmpty();
 
         dataManager.create(new IntegrationDeployment.Builder()
-            .integrationId("integration-extension-1")
             .version(1)
-            .targetState(IntegrationDeploymentState.Active)
-            .currentState(IntegrationDeploymentState.Active)
-            .createdDate(new Date())
-            .lastUpdated(new Date())
-            .spec(new IntegrationDeploymentSpec.Builder()
-            .steps(Collections.singletonList(
+            .targetState(IntegrationDeploymentState.Published)
+            .currentState(IntegrationDeploymentState.Published)
+            .createdAt(System.currentTimeMillis())
+            .spec(new Integration.Builder()
+                .id("integration-extension-1")
+                .name("test")
+                .steps(Collections.singletonList(
                 new Step.Builder()
                     .id("step1")
                     .name("step1")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())
@@ -267,18 +267,18 @@ public class ExtensionsITCase extends BaseITCase {
 
         // Create a inactive integration that uses the extension
         dataManager.create(new IntegrationDeployment.Builder()
-            .integrationId("integration-extension-2")
             .version(1)
-            .targetState(IntegrationDeploymentState.Undeployed)
-            .currentState(IntegrationDeploymentState.Active)
-            .createdDate(new Date())
-            .lastUpdated(new Date())
-            .spec(new IntegrationDeploymentSpec.Builder()
-            .steps(Collections.singletonList(
+            .targetState(IntegrationDeploymentState.Unpublished)
+            .currentState(IntegrationDeploymentState.Published)
+            .createdAt(System.currentTimeMillis())
+            .spec(new Integration.Builder()
+                .id("integration-extension-2")
+                .name("test")
+                .steps(Collections.singletonList(
                 new Step.Builder()
                     .id("step1")
                     .name("step1")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())
@@ -318,19 +318,19 @@ public class ExtensionsITCase extends BaseITCase {
 
         // Create a active integration that uses the extension
         dataManager.create(new IntegrationDeployment.Builder()
-            .integrationId("integration-extension")
             .version(1)
-            .targetState(IntegrationDeploymentState.Active)
-            .currentState(IntegrationDeploymentState.Active)
-            .createdDate(new Date())
-            .lastUpdated(new Date())
-            .spec(new IntegrationDeploymentSpec.Builder()
-            //.userId("important user")
-            .steps(Collections.singletonList(
+            .targetState(IntegrationDeploymentState.Published)
+            .currentState(IntegrationDeploymentState.Published)
+            .createdAt(System.currentTimeMillis())
+            .spec(new Integration.Builder()
+                .id("integration-extension")
+                .name("test")
+                //.userId("important user")
+                .steps(Collections.singletonList(
                 new Step.Builder()
                     .id("step1")
                     .name("step1")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .extension(
                         new Extension.Builder()
                             .createFrom(created.getBody())
@@ -375,7 +375,7 @@ public class ExtensionsITCase extends BaseITCase {
                 .build();
 
             JsonNode extensionTree = ExtensionConverter.getDefault().toPublicExtension(extension);
-            byte[] content = Json.mapper().writeValueAsBytes(extensionTree);
+            byte[] content = Json.writer().writeValueAsBytes(extensionTree);
             IOUtils.write(content, jar);
             jar.closeEntry();
             jar.flush();

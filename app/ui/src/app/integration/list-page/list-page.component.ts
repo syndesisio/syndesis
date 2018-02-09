@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FilterField, NotificationType } from 'patternfly-ng';
 import { IntegrationStore, ChangeEvent } from '@syndesis/ui/store';
-import { Integrations, IntegrationSupportService } from '@syndesis/ui/platform';
+import { IntegrationOverviews, IntegrationSupportService } from '@syndesis/ui/platform';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import {
   FileUploader,
@@ -20,35 +20,41 @@ import {
 export class IntegrationListPage implements OnInit {
   public uploader: FileUploader;
 
-  loading: Observable<boolean>;
-  integrations: Observable<Integrations>;
+  loading = true;
+  integrations: Observable<IntegrationOverviews>;
   filteredIntegrations: Subject<
-    Integrations
-  > = new BehaviorSubject(<Integrations>{});
+    IntegrationOverviews
+  > = new BehaviorSubject(<IntegrationOverviews>{});
   filterFields: Array<FilterField> = [
+    /*
     {
       id: 'currentStatus',
       title: 'State',
       type: 'select',
       placeholder: 'Filter by state...',
       queries: [
-        { id: 'actived', value: 'Active' },
-        { id: 'deactivated', value: 'Inactive' },
+        { id: 'published', value: 'Published' },
+        { id: 'unpublished', value: 'Unpublished' },
         { id: 'draft', value: 'Draft' }
       ]
     }
+    */
   ];
 
   constructor(
-    private store: IntegrationStore,
     private modalService: ModalService,
     private integrationSupportService: IntegrationSupportService,
     public notificationService: NotificationService,
   ) {
-    this.integrations = this.store.list;
-    this.loading = this.store.loading;
+  }
+
+  ngOnInit() {
+    this.integrations = this.integrationSupportService.watchOverviews();
+    this.integrations.subscribe( integrations => {
+      this.loading = false;
+    });
     this.uploader = new FileUploader({
-      url: integrationSupportService.importIntegrationURL(),
+      url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
       autoUpload: true
     });
@@ -83,10 +89,6 @@ export class IntegrationListPage implements OnInit {
         });
       }
     };
-  }
-
-  ngOnInit() {
-    this.store.loadAll();
   }
 
   /**

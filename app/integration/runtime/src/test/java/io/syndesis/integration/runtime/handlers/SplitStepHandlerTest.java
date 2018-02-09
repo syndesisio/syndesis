@@ -22,6 +22,7 @@ import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -59,7 +60,7 @@ public class SplitStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -68,10 +69,10 @@ public class SplitStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("split")
+                    .stepKind(StepKind.split)
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -110,7 +111,7 @@ public class SplitStepHandlerTest extends StepHandlerTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -119,12 +120,12 @@ public class SplitStepHandlerTest extends StepHandlerTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .stepKind("split")
+                    .stepKind(StepKind.split)
                     .putConfiguredProperty("language", "tokenize")
                     .putConfiguredProperty("expression", "|")
                     .build(),
                 new Step.Builder()
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")
@@ -146,7 +147,7 @@ public class SplitStepHandlerTest extends StepHandlerTestSupport {
             final String body = "a|b|c";
 
             result.expectedMessageCount(3);
-            result.expectedBodiesReceived(body.split("|"));
+            result.expectedBodiesReceived((Object[])body.split("|"));
 
             template.sendBody("direct:expression", body);
 

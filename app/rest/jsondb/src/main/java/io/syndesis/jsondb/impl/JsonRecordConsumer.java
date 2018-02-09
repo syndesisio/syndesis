@@ -15,12 +15,8 @@
  */
 package io.syndesis.jsondb.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonStreamContext;
-import com.fasterxml.jackson.core.JsonTokenId;
-import io.syndesis.jsondb.GetOptions;
-import io.syndesis.jsondb.JsonDBException;
+import static io.syndesis.jsondb.impl.JsonRecordSupport.ARRAY_VALUE_PREFIX;
+import static io.syndesis.jsondb.impl.JsonRecordSupport.NUMBER_VALUE_PREFIX;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -34,23 +30,31 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonStreamContext;
+
+import io.syndesis.jsondb.GetOptions;
+import io.syndesis.jsondb.JsonDBException;
+
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
  */
-/* default */ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
+@SuppressWarnings("PMD.GodClass")
+class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
     private final String base;
     private final JsonGenerator jg;
     private final OutputStream output;
     private final GetOptions options;
-    @SuppressWarnings("JdkObsolete")
+    @SuppressWarnings({"JdkObsolete", "PMD.LooseCoupling"})
     private final LinkedList<JsonRecordSupport.PathPart> currentPath = new LinkedList<>();
     private final Set<String> shallowObjects = new LinkedHashSet<>();
     private int entriesAdded;
     private boolean closed;
     private String currentRootField;
 
-    /* default */ JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
+    JsonRecordConsumer(String base, OutputStream output, GetOptions options) throws IOException {
         this.base = base;
         this.output = output;
         try {
@@ -70,6 +74,7 @@ import java.util.function.Consumer;
     }
 
     @Override
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public void accept(JsonRecord record) {
         try {
             String path = record.getPath();
@@ -134,7 +139,7 @@ import java.util.function.Consumer;
         count = newPath.size();
         for (int i = pathMatches; i < count; i++) {
             String part = newPath.get(i);
-            boolean array = part.startsWith("[");
+            boolean array = part.charAt(0) == ARRAY_VALUE_PREFIX;
 
             if (array) {
                 if (jg.getOutputContext().inRoot()) {
@@ -149,12 +154,12 @@ import java.util.function.Consumer;
 
             if (i + 1 < count) {
                 String nextPart = newPath.get(i + 1);
-                boolean nextArray = nextPart.startsWith("[");
+                boolean nextArray = nextPart.charAt(0) == ARRAY_VALUE_PREFIX;
 
                 JsonRecordSupport.PathPart pathPart = new JsonRecordSupport.PathPart(part, nextArray);
                 currentPath.add(pathPart);
 
-                if (nextPart.startsWith("[")) {
+                if (nextPart.charAt(0) == ARRAY_VALUE_PREFIX) {
                     jg.writeStartArray();
 
                     int idx = JsonRecordSupport.toArrayIndex(nextPart);
@@ -186,7 +191,7 @@ import java.util.function.Consumer;
         for (int i = 0; i < currentPath.size() && i < newPath.size(); i++) {
             JsonRecordSupport.PathPart lastPart = currentPath.get(i);
             if (lastPart.getPath().equals(newPath.get(i)) ||
-                (lastPart.isArray() && newPath.get(i).startsWith("["))) {
+                (lastPart.isArray() && newPath.get(i).charAt(0) == ARRAY_VALUE_PREFIX)) { // NOPMD, false positive
                 pathMatches++;
             } else {
                 break;
@@ -229,21 +234,21 @@ import java.util.function.Consumer;
 
 
     private void writeValue(JsonRecord value) throws IOException {
-        switch (value.getKind()) {
-            case JsonTokenId.ID_STRING:
-                jg.writeString(value.getValue());
+        switch (value.getValue().charAt(0)) {
+            case JsonRecordSupport.STRING_VALUE_PREFIX:
+                jg.writeString(value.getValue().substring(1));
                 break;
-            case JsonTokenId.ID_NULL:
+            case JsonRecordSupport.NULL_VALUE_PREFIX:
                 jg.writeNull();
                 break;
-            case JsonTokenId.ID_NUMBER_FLOAT:
-            case JsonTokenId.ID_NUMBER_INT:
-                jg.writeNumber(value.getValue());
+            case JsonRecordSupport.NEG_NUMBER_VALUE_PREFIX:
+            case NUMBER_VALUE_PREFIX:
+                jg.writeNumber(value.getOValue());
                 break;
-            case JsonTokenId.ID_TRUE:
+            case JsonRecordSupport.TRUE_VALUE_PREFIX:
                 jg.writeBoolean(true);
                 break;
-            case JsonTokenId.ID_FALSE:
+            case JsonRecordSupport.FALSE_VALUE_PREFIX:
                 jg.writeBoolean(false);
                 break;
             default:

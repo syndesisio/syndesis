@@ -63,6 +63,11 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
+    public boolean isBuildFailed(String name) {
+        return false;
+    }
+
+    @Override
     public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {
         return Collections.emptyList();
     }

@@ -34,6 +34,7 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.ClassResolver;
@@ -44,7 +45,7 @@ import org.apache.camel.util.ObjectHelper;
 public class ConnectorStepHandler extends AbstractEndpointStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        if (!"endpoint".equals(step.getStepKind()) && !"connector".equals(step.getStepKind())) {
+        if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
 
@@ -66,7 +67,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -74,7 +75,6 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
-        final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
         final String componentId = scheme + "-" + index;
@@ -150,7 +150,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         }
 
         // Handle split
-        return handleSplit(descriptor, route, builder);
+        return handleSplit(descriptor, route, builder, index);
     }
 
     // *************************

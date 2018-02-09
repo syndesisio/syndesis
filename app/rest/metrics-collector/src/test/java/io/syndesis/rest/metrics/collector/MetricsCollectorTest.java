@@ -15,8 +15,6 @@
  */
 package io.syndesis.rest.metrics.collector;
 
-
-import static io.syndesis.rest.metrics.collector.MetricsCollector.path;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
@@ -55,6 +53,9 @@ import io.syndesis.model.metrics.IntegrationMetricsSummary;
 public class MetricsCollectorTest {
 
     private SqlJsonDB jsondb;
+    private DataManager dataManager;
+    private JsonDBRawMetrics jsondbRM;
+    private IntegrationMetricsHandler intMH;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     @Before
@@ -74,15 +75,23 @@ public class MetricsCollectorTest {
         this.jsondb.createTables();
 
         load();
+
+        jsondbRM = new JsonDBRawMetrics(jsondb);
+        CacheManager cacheManager = new LRUCacheManager(100);
+        EncryptionComponent encryptionComponent = new EncryptionComponent(null);
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        //Create Data Manager
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        intMH = new IntegrationMetricsHandler(dataManager);
     }
-    
+
     private void load() throws IOException, ParseException {
-        jsondb.set(path("intId1","pod1"), Json.mapper().writeValueAsString(raw("intId1","pod1",3L, "31-01-2018 10:20:56")));
-        jsondb.set(path("intId1","pod2"), Json.mapper().writeValueAsString(raw("intId1","pod2",3L, "31-01-2018 10:22:56")));
-        jsondb.set(path("intId1","HISTORY"), Json.mapper().writeValueAsString(raw("intId1","HISTORY",3L, "22-01-2015 10:20:56")));
-        jsondb.set(path("intId2","pod3"), Json.mapper().writeValueAsString(raw("intId2","pod3",3L, "31-01-2018 10:20:56")));
-        jsondb.set(path("intId3","pod4"), Json.mapper().writeValueAsString(raw("intId3","pod4",3L, "31-01-2018 10:20:56")));
-        jsondb.set(path("intId3","pod5"), Json.mapper().writeValueAsString(raw("intId3","pod5",3L, "31-01-2018 10:20:56")));
+        jsondb.set(JsonDBRawMetrics.path("intId1","pod1"), Json.writer().writeValueAsString(raw("intId1","pod1",3L, "31-01-2018 10:20:56")));
+        jsondb.set(JsonDBRawMetrics.path("intId1","pod2"), Json.writer().writeValueAsString(raw("intId1","pod2",3L, "31-01-2018 10:22:56")));
+        jsondb.set(JsonDBRawMetrics.path("intId1","HISTORY"), Json.writer().writeValueAsString(raw("intId1","HISTORY",3L, "22-01-2015 10:20:56")));
+        jsondb.set(JsonDBRawMetrics.path("intId2","pod3"), Json.writer().writeValueAsString(raw("intId2","pod3",3L, "31-01-2018 10:20:56")));
+        jsondb.set(JsonDBRawMetrics.path("intId3","pod4"), Json.writer().writeValueAsString(raw("intId3","pod4",3L, "31-01-2018 10:20:56")));
+        jsondb.set(JsonDBRawMetrics.path("intId3","pod5"), Json.writer().writeValueAsString(raw("intId3","pod5",3L, "31-01-2018 10:20:56")));
     }
 
     private RawMetrics raw(String integrationId, String podName, Long messages, String startDateString) throws ParseException {
@@ -101,8 +110,8 @@ public class MetricsCollectorTest {
 
     @Test
     public void testGetMetricsForIntegration1() throws IOException {
-        String json = jsondb.getAsString(path("intId1"), new GetOptions().prettyPrint(true));
-        Map<String,RawMetrics> metrics = Json.mapper().readValue(json, new TypeReference<Map<String,RawMetrics>>() {});
+        String json = jsondb.getAsString(JsonDBRawMetrics.path("intId1"), new GetOptions().prettyPrint(true));
+        Map<String,RawMetrics> metrics = Json.reader().forType(new TypeReference<Map<String,RawMetrics>>() {}).readValue(json);
         assertThat(metrics.size()).isEqualTo(3);
         assertThat(metrics.keySet()).contains("HISTORY");
     }
@@ -110,17 +119,17 @@ public class MetricsCollectorTest {
     @Test
     public void testGetRawMetrics() throws IOException {
         MetricsCollector collector = new MetricsCollector(null, jsondb, null);
-        Map<String,RawMetrics> metrics = collector.getRawMetrics("intId1");
+        Map<String,RawMetrics> metrics = jsondbRM.getRawMetrics("intId1");
         assertThat(metrics.size()).isEqualTo(3);
         assertThat(metrics.keySet()).contains("HISTORY");
 
         //let's kill pod2, this so add pod2's metrics to the history
         Set<String> livePodIds = new HashSet<>(Arrays.asList("pod1"));
-        collector.curateDeadPodMetrics("intId1", metrics, livePodIds);
-        Map<String,RawMetrics> metrics2 = collector.getRawMetrics("intId1");
+        jsondbRM.curate("intId1", metrics, livePodIds);
+        Map<String,RawMetrics> metrics2 = jsondbRM.getRawMetrics("intId1");
         assertThat(metrics2.size()).isEqualTo(2);
         assertThat(metrics2.keySet()).contains("HISTORY");
-        
+
         collector.close();
     }
 
@@ -131,20 +140,20 @@ public class MetricsCollectorTest {
                 Arrays.asList("pod1", "pod2", "pod3", "pod4", "pod5"));
 
         MetricsCollector collector = new MetricsCollector(null, jsondb, null);
-        Map<String,RawMetrics> metrics = collector.getRawMetrics(integrationId);
-        IntegrationMetricsSummary summary = collector
-                .computeIntegrationSummary(integrationId, metrics, livePodIds);
+        Map<String,RawMetrics> metrics = jsondbRM.getRawMetrics(integrationId);
+        IntegrationMetricsSummary summary = intMH
+                .compute(integrationId, metrics, livePodIds);
 
         assertThat(summary.getMessages()).isEqualTo(9);
         assertThat(summary.getErrors()).isEqualTo(3);
         //Oldest living pod
         assertThat(summary.getStart().get()).isEqualTo(sdf.parse("31-01-2018 10:20:56"));
-        
+
         //Update pod2, add 6 messages
-        jsondb.update(path("intId1","pod2"), Json.mapper().writeValueAsString(raw("intId1","pod2",9L,"31-01-2018 10:22:56")));
-        Map<String,RawMetrics> updatedMetrics = collector.getRawMetrics(integrationId);
-        IntegrationMetricsSummary updatedSummary = collector
-                .computeIntegrationSummary(integrationId, updatedMetrics, livePodIds);
+        jsondb.update(JsonDBRawMetrics.path("intId1","pod2"), Json.writer().writeValueAsString(raw("intId1","pod2",9L,"31-01-2018 10:22:56")));
+        Map<String,RawMetrics> updatedMetrics = jsondbRM.getRawMetrics(integrationId);
+        IntegrationMetricsSummary updatedSummary = intMH
+                .compute(integrationId, updatedMetrics, livePodIds);
         assertThat(updatedSummary.getMessages()).isEqualTo(15);
         assertThat(updatedSummary.getErrors()).isEqualTo(3);
 
@@ -158,10 +167,10 @@ public class MetricsCollectorTest {
         //Update pod1 metrics and kill pod1
         Set<String> livePodIds = new HashSet<String>(
             Arrays.asList("pod2", "pod3", "pod4", "pod5"));
-        jsondb.update(path("intId1","pod1"), Json.mapper().writeValueAsString(raw("intId1","pod1",12L,"31-01-2018 10:22:56")));
-        Map<String,RawMetrics> metrics = collector.getRawMetrics(integrationId);
-        IntegrationMetricsSummary summary = collector
-                .computeIntegrationSummary(integrationId, metrics, livePodIds);
+        jsondb.update(JsonDBRawMetrics.path("intId1","pod1"), Json.writer().writeValueAsString(raw("intId1","pod1",12L,"31-01-2018 10:22:56")));
+        Map<String,RawMetrics> metrics = jsondbRM.getRawMetrics(integrationId);
+        IntegrationMetricsSummary summary = intMH
+                .compute(integrationId, metrics, livePodIds);
         assertThat(summary.getMessages()).isEqualTo(18);
         assertThat(summary.getErrors()).isEqualTo(3);
         //Oldest living pod is now pod2
@@ -172,34 +181,25 @@ public class MetricsCollectorTest {
 
     @Test
     public void testDeletedIntegrationsCurator() throws IOException, ParseException {
-        
-        CacheManager cacheManager = new LRUCacheManager(100);
-        EncryptionComponent encryptionComponent = new EncryptionComponent(null);
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-        //Create Data Manager
-        DataManager dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
-        
         String integrationId = "intId1";
         Set<String> livePodIds = new HashSet<String>(
                 Arrays.asList("pod1", "pod2"));
-        MetricsCollector collector = new MetricsCollector(dataManager, jsondb, null);
-        Map<String,RawMetrics> metrics = collector.getRawMetrics(integrationId);
-        IntegrationMetricsSummary summary = collector.computeIntegrationSummary(integrationId, metrics, livePodIds);
+        Map<String,RawMetrics> metrics = jsondbRM.getRawMetrics(integrationId);
+        IntegrationMetricsSummary summary = intMH.compute(integrationId, metrics, livePodIds);
         dataManager.create(summary);
-        
+
         assertThat(metrics.size()).isEqualTo(3);
         assertThat(dataManager.fetchAll(IntegrationMetricsSummary.class).getTotalCount()).isEqualTo(1);
-        
-        //Now pretend to delete the integration itself and 
+
+        //Now pretend to delete the integration itself and
         //run the curator with no active integrations
-        collector.curateDeletedIntegrationMetrics(new HashSet<String>());
-        
+        jsondbRM.curate(new HashSet<String>());
+        intMH.curate(new HashSet<String>());
+
         //expect all metrics to be deleted
-        Map<String,RawMetrics> metricsAfter = collector.getRawMetrics(integrationId);
+        Map<String,RawMetrics> metricsAfter = jsondbRM.getRawMetrics(integrationId);
         assertThat(metricsAfter.size()).isEqualTo(0);
         assertThat(dataManager.fetchAll(IntegrationMetricsSummary.class).getTotalCount()).isEqualTo(0);
-        
-        collector.close();
     }
 }

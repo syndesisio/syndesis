@@ -34,7 +34,7 @@ final class CredentialFlowStateHelper {
         // utility class
     }
 
-    /* default */ static Set<CredentialFlowState> restoreFrom(final Restorer restore,
+    static Set<CredentialFlowState> restoreFrom(final Restorer restore,
         final HttpServletRequest request) {
         final Cookie[] servletCookies = request.getCookies();
 
@@ -53,7 +53,7 @@ final class CredentialFlowStateHelper {
         }
     }
 
-    /* default */ static javax.ws.rs.core.Cookie toJaxRsCookie(final Cookie cookie) {
+    static javax.ws.rs.core.Cookie toJaxRsCookie(final Cookie cookie) {
         return new javax.ws.rs.core.Cookie(cookie.getName(), cookie.getValue(), cookie.getPath(), cookie.getDomain());
     }
 }

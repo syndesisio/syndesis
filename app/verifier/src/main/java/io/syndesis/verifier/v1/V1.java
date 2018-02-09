@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
  */
 @ApplicationPath("/api/v1")
 @Component
+@SuppressWarnings("PMD.ShortClassName")
 public class V1 extends Application {
 
     public V1() {

@@ -6,7 +6,6 @@ import { CollapseModule, ModalModule } from 'ngx-bootstrap';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { RestangularModule } from 'ngx-restangular';
 import { NotificationModule } from 'patternfly-ng';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { StoreModule as NgRxStoreModule, Store } from '@ngrx/store';
 
 import { AppComponent } from './app.component';
@@ -17,8 +16,6 @@ import { ConfigService } from './config.service';
 import { StoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
 import { platformReducer } from './platform';
-
-/* tslint:disable:no-unused-variable */
 
 describe('AppComponent', () => {
   const APP_NAME = 'Syndesis';
@@ -38,7 +35,6 @@ describe('AppComponent', () => {
         CollapseModule.forRoot(),
         BsDropdownModule.forRoot(),
         NotificationModule,
-        TourNgxBootstrapModule.forRoot(),
         NgRxStoreModule.forRoot(platformReducer),
       ],
       providers: [

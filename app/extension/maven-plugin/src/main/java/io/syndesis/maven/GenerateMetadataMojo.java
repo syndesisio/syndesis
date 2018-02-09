@@ -15,6 +15,41 @@
  */
 package io.syndesis.maven;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.v2.JavaClass;
+import io.syndesis.core.Json;
+import io.syndesis.core.Names;
+import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
+import io.syndesis.extension.converter.ExtensionConverter;
+import io.syndesis.model.DataShape;
+import io.syndesis.model.action.Action;
+import io.syndesis.model.action.ActionDescriptor;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.action.StepAction;
+import io.syndesis.model.action.StepDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
+import io.syndesis.model.extension.Extension;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.StringUtils;
+
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -38,45 +73,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.StringUtils;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.repository.RemoteRepository;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.atlasmap.core.DefaultAtlasConversionService;
-import io.atlasmap.java.inspect.ClassInspectionService;
-import io.atlasmap.java.v2.JavaClass;
-import io.syndesis.core.Json;
-import io.syndesis.core.Names;
-import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
-import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.extension.Extension;
-
 
 /**
  * Helper Maven plugin
@@ -84,6 +80,7 @@ import io.syndesis.model.extension.Extension;
  * @author pantinor
  */
 @Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields" })
 public class GenerateMetadataMojo extends AbstractMojo {
     public enum InspectionMode {
         RESOURCE,
@@ -105,12 +102,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/syndesis-extension-definition.json")
     private String metadataDestination;
-
-    @Parameter(readonly = true, defaultValue = "${repositorySystemSession}", required = true)
-    private RepositorySystemSession repoSession;
-
-    @Parameter(readonly = true, defaultValue = "${project.remoteProjectRepositories}")
-    private List<RemoteRepository> remoteRepos;
 
     @Parameter(defaultValue = "${project.groupId}:${project.artifactId}")
     private String extensionId;
@@ -181,7 +172,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                     } catch (IOException e) {
                         getLog().error("Error reading file " + path);
                     }
-                };
+                }
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                 throw new MojoExecutionException("Error checking annotations.", e);
             }
@@ -373,7 +364,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         if (template.exists()) {
             try {
-                JsonNode tree = Json.mapper().readTree(template);
+                JsonNode tree = Json.reader().readTree(Files.newBufferedReader(template.toPath(), StandardCharsets.UTF_8));
                 Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 
@@ -450,7 +441,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
         try {
             JsonNode tree = ExtensionConverter.getDefault().toPublicExtension(jsonObject);
-            Json.mapper().writerWithDefaultPrettyPrinter().writeValue(targetFile, tree);
+            ObjectWriter writer = Json.writer();
+            writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValue(targetFile, tree);
             getLog().info("Created file " + targetFile.getAbsolutePath());
         } catch (IOException e) {
             throw new MojoExecutionException("Cannot write to file: " + metadataDestination, e);
@@ -542,10 +534,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
             final String name = Names.sanitize(actionId);
 
             File outputFile = new File(syndesisMetadataSourceDir, String.format("%s/%s/%s.json", inspectionsResourceDir, name, type));
-            if (!outputFile.getParentFile().exists()) {
-                if (outputFile.getParentFile().mkdirs()) {
-                    getLog().debug("Directory " + outputFile.getParentFile() + " created");
-                }
+            if (!outputFile.getParentFile().exists() && outputFile.getParentFile().mkdirs()) {
+                getLog().debug("Directory " + outputFile.getParentFile() + " created");
             }
 
             getLog().info("Generating inspection for action: " + actionId + " (" + name + "), and type: " + type);

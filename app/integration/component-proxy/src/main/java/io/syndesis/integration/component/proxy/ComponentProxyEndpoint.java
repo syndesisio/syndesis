@@ -40,6 +40,7 @@ public class ComponentProxyEndpoint extends DefaultEndpoint implements DelegateE
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public Producer createProducer() throws Exception {
         final Producer producer = endpoint.createProducer();
 
@@ -54,6 +55,7 @@ public class ComponentProxyEndpoint extends DefaultEndpoint implements DelegateE
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public Consumer createConsumer(final Processor processor) throws Exception {
         final Processor beforeConsumer = getBeforeConsumer();
         final Processor afterConsumer = getAfterConsumer();
@@ -144,12 +146,14 @@ public class ComponentProxyEndpoint extends DefaultEndpoint implements DelegateE
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStart() throws Exception {
         super.doStart();
         ServiceHelper.startService(endpoint);
     }
 
     @Override
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStop() throws Exception {
         ServiceHelper.stopService(endpoint);
         super.doStop();

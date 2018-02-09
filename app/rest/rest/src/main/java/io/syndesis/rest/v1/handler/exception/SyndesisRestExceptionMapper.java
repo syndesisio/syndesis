@@ -31,9 +31,6 @@ public class SyndesisRestExceptionMapper implements ExceptionMapper<SyndesisRest
 
     private static final Logger LOG = LoggerFactory.getLogger(SyndesisRestExceptionMapper.class);
 
-    public SyndesisRestExceptionMapper() {
-    }
-
     @Override
     public Response toResponse(SyndesisRestException exception) {
         LOG.error(exception.getDeveloperMsg(), exception);

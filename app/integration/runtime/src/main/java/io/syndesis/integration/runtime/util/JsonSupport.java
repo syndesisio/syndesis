@@ -24,7 +24,7 @@ import java.io.StringWriter;
 /**
  * Simple utility class used to construct a json encoded object.
  */
-public class JsonSupport {
+public final class JsonSupport {
 
     private JsonSupport(){
     }

@@ -26,6 +26,7 @@ public class MavenProperties {
     private final Map<String, String> repositories = new ConcurrentSkipListMap<>();
 
     public MavenProperties() {
+        // allow instantiation, not 100% sure it's needed (or the setter below)
     }
 
     public MavenProperties(final Map<String, String> repositories) {

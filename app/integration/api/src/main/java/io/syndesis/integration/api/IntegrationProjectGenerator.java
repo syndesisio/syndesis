@@ -17,21 +17,22 @@ package io.syndesis.integration.api;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
-import io.syndesis.model.integration.IntegrationDeployment;
+import io.syndesis.model.integration.Integration;
 
 public interface IntegrationProjectGenerator {
-
     /**
      * Generate the project files in form of tar input stream
      *
-     * @param deployment the deployment
+     * @param integration the Integration
      * @return an {@link InputStream} which holds a tar archive and which can be directly used for
      * an S2I build
      * @throws IOException if generating fails
      */
-    InputStream generate(IntegrationDeployment deployment) throws IOException;
+    InputStream generate(Integration integration) throws IOException;
 
+    Properties generateApplicationProperties(Integration deployment);
 
-    byte[] generatePom(IntegrationDeployment deployment) throws IOException;
+    byte[] generatePom(Integration integration) throws IOException;
 }

@@ -19,6 +19,7 @@ install::usage() {
     --docker                  Shortcut for "--image-mode docker"
     --local                   install from local Git repo when using. By default the resource descriptor is
                               downloaded from GitHub remotely.
+-o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
 EOT
 }
 
@@ -48,11 +49,15 @@ install::run() {
     # Apply a template, based on the given arguments
     create_and_apply_template "$route" "$(select_template)" "$(readopt --tag)" "$(hasflag --local)"
 
-    if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ]; then
+    if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_syndesis_to_be_ready
     fi
 
     if [ $(hasflag --dev) ] && [ $(is_docker_mode) = "false" ]; then
         patch_imagestreams_for_initial_image
+    fi
+
+    if [ $(hasflag --open -o) ]; then
+        open_url "https://$route"
     fi
 }

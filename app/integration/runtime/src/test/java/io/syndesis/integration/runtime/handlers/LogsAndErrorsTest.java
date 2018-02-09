@@ -26,6 +26,7 @@ import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.action.StepDescriptor;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.LoggingLevel;
@@ -72,7 +73,7 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
                     .id("s1")
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("direct")
@@ -82,7 +83,7 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
                     .build(),
                 new Step.Builder()
                     .id("s2")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
                             .kind(StepAction.Kind.STEP)
@@ -92,7 +93,7 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
                     .build(),
                 new Step.Builder()
                     .id("s3")
-                    .stepKind("extension")
+                    .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
                             .kind(StepAction.Kind.STEP)
@@ -102,7 +103,7 @@ public class LogsAndErrorsTest extends StepHandlerTestSupport {
                     .build(),
                 new Step.Builder()
                     .id("s4")
-                    .stepKind("endpoint")
+                    .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
                             .componentScheme("mock")

@@ -38,7 +38,7 @@ import io.syndesis.model.connection.ConfigurationProperty.PropertyValue;
 
 import org.apache.commons.lang3.StringUtils;
 
-/* default */ enum PropertyGenerators {
+enum PropertyGenerators {
 
     accessToken {
         @Override
@@ -141,7 +141,7 @@ import org.apache.commons.lang3.StringUtils;
 
     protected abstract BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor();
 
-    /* default */ static String createHostUri(final String scheme, final String host) {
+    static String createHostUri(final String scheme, final String host) {
         try {
             return new URI(scheme, host, null, null).toString();
         } catch (final URISyntaxException e) {
@@ -149,14 +149,14 @@ import org.apache.commons.lang3.StringUtils;
         }
     }
 
-    /* default */ static Optional<ConfigurationProperty> createProperty(final String propertyName, final Swagger swagger,
+    static Optional<ConfigurationProperty> createProperty(final String propertyName, final Swagger swagger,
         final ConfigurationProperty template) {
         final PropertyGenerators propertyGenerator = PropertyGenerators.valueOf(propertyName);
 
         return propertyGenerator.propertyValueExtractor().apply(swagger, template);
     }
 
-    /* default */ static String determineHost(final Swagger swagger) {
+    static String determineHost(final Swagger swagger) {
         final Map<String, Object> vendorExtensions = Optional.ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
         final URI specificationUrl = (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
 

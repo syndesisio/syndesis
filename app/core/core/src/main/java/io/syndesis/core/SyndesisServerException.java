@@ -46,9 +46,9 @@ public class SyndesisServerException extends RuntimeException {
 
       public static RuntimeException launderThrowable(String message, Throwable cause) {
         if (cause instanceof RuntimeException) {
-          return ((RuntimeException) cause);
+          return (RuntimeException) cause;
         } else if (cause instanceof Error) {
-          throw ((Error) cause);
+          throw (Error) cause;
         } else {
           throw new SyndesisServerException(message, cause);
         }

@@ -19,7 +19,6 @@ import { NavigationService } from './common/navigation.service';
 import { ConfigService } from './config.service';
 import { log } from './logging';
 import { TestSupportService } from './store/test-support.service';
-import { TourService } from 'ngx-tour-ngx-bootstrap';
 import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notification-service';
 
 @Component({
@@ -74,11 +73,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   userGuideLink = 'https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite/';
   /* tslint:enable */
 
-  /**
-   * Guided Tour status
-   */
-  guidedTourStatus = true;
-
   notifications: Observable<Notification[]>;
 
   /**
@@ -94,7 +88,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     public testSupport: TestSupportService,
     private notificationService: NotificationService,
     private navigationService: NavigationService,
-    public tourService: TourService,
     private modalService: ModalService,
     private title: Title,
     private meta: Meta,
@@ -160,28 +153,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.notifications = this.notificationService.getNotificationsObservable();
     this.showClose = true;
-  }
-
-  /**
-   * Guided Tour
-   */
-  getTourState() {
-    this.guidedTourStatus = this.userService.getTourState();
-    return this.guidedTourStatus;
-  }
-
-  startTour() {
-    this.tourService.start();
-    this.userService.setTourState(true);
-    this.guidedTourStatus = true;
-  }
-
-  endTour() {
-    if (!!this.guidedTourStatus) {
-      this.tourService.end();
-      this.userService.setTourState(false);
-      this.guidedTourStatus = false;
-    }
   }
 
   /**
@@ -265,7 +236,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     $patternFlyCards.matchHeight();
 
     this.navigationService.initialize();
-    this.userService.setTourState(true);
-    this.guidedTourStatus = this.userService.getTourState();
   }
 }

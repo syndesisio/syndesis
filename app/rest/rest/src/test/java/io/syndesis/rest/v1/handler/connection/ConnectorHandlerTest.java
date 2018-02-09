@@ -15,6 +15,12 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,14 +28,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.extension.ExtensionDataManager;
@@ -41,9 +48,7 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.IntegrationDeployment;
-import io.syndesis.model.integration.IntegrationDeploymentSpec;
-import io.syndesis.model.integration.IntegrationDeploymentState;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.v1.state.ClientSideState;
 import io.syndesis.verifier.Verifier;
@@ -53,12 +58,6 @@ import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ConnectorHandlerTest {
 
@@ -95,7 +94,7 @@ public class ConnectorHandlerTest {
             final Connector connector = new Connector.Builder().id("connector-id").icon(mockWebServer.url("/u/23079786").toString())
                 .build();
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
-            when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(ListResult.of(Collections.emptyList()));
+            when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
 
             final Response response = handler.getConnectorIcon("connector-id").get();
 
@@ -135,12 +134,12 @@ public class ConnectorHandlerTest {
         final Step step1b = new Step.Builder().action(newActionBy(connector1)).build();
         final Step step2 = new Step.Builder().action(newActionBy(connector2)).build();
 
-        final IntegrationDeployment deployment1 = newDeployment(Arrays.asList(step1a, step1b));
-        final IntegrationDeployment deployment2 = newDeployment(Collections.singletonList(step2));
-        final IntegrationDeployment deployment3 = newDeployment(Collections.singletonList(step2));
+        final Integration deployment1 = newIntegration(Arrays.asList(step1a, step1b));
+        final Integration deployment2 = newIntegration(Collections.singletonList(step2));
+        final Integration deployment3 = newIntegration(Collections.singletonList(step2));
 
-        when(dataManager.fetchAll(IntegrationDeployment.class))
-            .thenReturn(new ListResult.Builder<IntegrationDeployment>().addItem(deployment1, deployment2, deployment3).build());
+        when(dataManager.fetchAll(Integration.class))
+            .thenReturn(new ListResult.Builder<Integration>().addItem(deployment1, deployment2, deployment3).build());
 
         final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
 
@@ -164,7 +163,11 @@ public class ConnectorHandlerTest {
         return new Connector.Builder().createFrom(connector).uses(usage).build();
     }
 
-    private static IntegrationDeployment newDeployment(List<Step> steps) {
-      return new IntegrationDeployment.Builder().spec(new IntegrationDeploymentSpec.Builder().steps(steps).build()).currentState(IntegrationDeploymentState.Active).build();
+    private static Integration newIntegration(List<Step> steps) {
+      return new Integration.Builder()
+          .id("test")
+          .name("test")
+          .steps(steps)
+          .build();
     }
 }

@@ -270,6 +270,11 @@
       <artifactId>atlas-service</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.fge</groupId>
+      <artifactId>json-patch</artifactId>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>

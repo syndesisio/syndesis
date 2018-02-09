@@ -19,24 +19,24 @@ import java.util.Optional;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
+import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 
 public class DataMapperStepHandler implements IntegrationStepHandler{
     @Override
     public boolean canHandle(Step step) {
-        return "mapper".equals(step.getStepKind());
+        return StepKind.mapper == step.getStepKind();
     }
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
-        final String index = step.getMetadata(Step.METADATA_STEP_INDEX).orElseThrow(() -> new IllegalArgumentException("Missing index for step:" + step));
-
         return Optional.of(
-            route.toF("atlas:mapping-step-%s.json", index)
+            route.toF("atlas:mapping-step-%s.json?sourceMapName=" + OutMessageCaptureInterceptStrategy.CAPTURED_OUT_MESSAGES_MAP, stepIndex)
         );
     }
 }

@@ -1,18 +1,10 @@
-import { NgModule } from '@angular/core';
+import { NgModule, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import {
-  CollapseModule,
-  ModalModule,
-  PopoverModule,
-  TabsModule,
-  TooltipModule
-} from 'ngx-bootstrap';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
-import { ActionModule, ListModule, ToolbarModule } from 'patternfly-ng';
-
+import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
 import { IntegrationListModule } from './list';
 import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationDetailComponent } from './detail-page';
@@ -34,14 +26,18 @@ import {
   CancelAddStepComponent,
   FlowViewComponent,
   FlowViewStepComponent,
-  CurrentFlow
+  CurrentFlowService,
+  FlowPageService,
 } from './edit-page';
 
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 import { FileUploadModule } from 'ng2-file-upload';
-import { TourNgxBootstrapModule } from 'ngx-tour-ngx-bootstrap';
 import { IntegrationLogsComponent } from '@syndesis/ui/integration/components/logs.component';
+
+const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
+const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
+const integrationListModuleFwd = forwardRef(() => IntegrationListModule);
 
 const editIntegrationChildRoutes = [
   { path: 'save-or-add-step', component: IntegrationSaveOrAddStepComponent },
@@ -96,20 +92,12 @@ const routes: Routes = [
     PatternflyUIModule,
     RouterModule.forChild(routes),
     ConnectionsModule,
-    TabsModule,
-    SyndesisCommonModule,
-    CollapseModule,
-    TooltipModule,
-    ModalModule,
-    PopoverModule,
+    SyndesisVendorModule,
+    syndesisCommonModuleFwd,
     DataMapperModule,
     FileUploadModule,
-    TourNgxBootstrapModule,
-    ActionModule,
-    ListModule,
-    ToolbarModule,
-    IntegrationSupportModule,
-    IntegrationListModule,
+    integrationSupportModuleFwd,
+    integrationListModuleFwd,
   ],
   declarations: [
     DataMapperHostComponent,
@@ -134,7 +122,8 @@ const routes: Routes = [
     CancelAddStepComponent
   ],
   providers: [
-    CurrentFlow,
+    CurrentFlowService,
+    FlowPageService,
   ]
 })
 export class IntegrationModule {}

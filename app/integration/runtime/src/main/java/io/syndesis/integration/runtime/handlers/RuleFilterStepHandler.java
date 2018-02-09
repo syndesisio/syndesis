@@ -25,11 +25,12 @@ import io.syndesis.core.Json;
 import io.syndesis.model.filter.FilterPredicate;
 import io.syndesis.model.filter.FilterRule;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 
 public class RuleFilterStepHandler extends AbstractFilterStepHandler {
     @Override
     public boolean canHandle(Step step) {
-        return "rule-filter".equals(step.getStepKind());
+        return StepKind.ruleFilter == step.getStepKind();
     }
 
     @Override
@@ -59,7 +60,7 @@ public class RuleFilterStepHandler extends AbstractFilterStepHandler {
             if (rulesString == null || rulesString.isEmpty()) {
                 return null;
             }
-            return Json.mapper().readValue(rulesString,new TypeReference<List<FilterRule>>(){});
+            return Json.reader().forType(new TypeReference<List<FilterRule>>(){}).readValue(rulesString);
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Cannot deserialize %s: %s", rulesString, e.getMessage()),e);
         }

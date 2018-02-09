@@ -1,57 +1,57 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { CurrentFlow, FlowEvent, FlowPage } from '@syndesis/ui/integration/edit-page';
+import { CurrentFlow, FlowEvent, FlowPage, CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import { IntegrationStore } from '@syndesis/ui/store';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { Integration } from '@syndesis/ui/platform';
 
 const category = getCategory('IntegrationsCreatePage');
-import { TourService } from 'ngx-tour-ngx-bootstrap';
-import { Integration, Step, UserService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: ['./save-or-add-step.component.scss']
 })
-export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnInit, OnDestroy {
+export class IntegrationSaveOrAddStepComponent implements OnInit {
   integration: Integration;
-  errorMessage: any = undefined;
 
   constructor(
     public currentFlow: CurrentFlow,
+    public currentFlowService: CurrentFlowService,
+    public flowPageService: FlowPageService,
     public route: ActivatedRoute,
-    public router: Router,
-    public tourService: TourService,
-    private userService: UserService
+    public router: Router
   ) {
-    super(currentFlow, route, router);
+
+  }
+
+  get errorMessage() {
+    return this.flowPageService.errorMessage;
+  }
+
+  get saveInProgress() {
+    return this.flowPageService.saveInProgress;
+  }
+
+  get publishInProgress() {
+    return this.flowPageService.publishInProgress;
+  }
+
+  cancel() {
+    this.flowPageService.cancel();
+  }
+
+  save() {
+    this.flowPageService.save(this.route);
+  }
+
+  publish() {
+    this.flowPageService.publish(this.route);
   }
 
   get currentStep() {
-    return this.getCurrentStep();
-  }
-
-  getCurrentPosition(route: ActivatedRoute = this.route): number {
-    const child = route.firstChild;
-    if (child && child.snapshot) {
-      const path = child.snapshot.url;
-      // log.debugc(() => 'path from root: ' + path, category);
-      try {
-        const position = path[1].path;
-        return +position;
-      } catch (error) {
-        return -1;
-      }
-    } else {
-      // log.debugc(() => 'no current child', category);
-      return undefined;
-    }
-  }
-
-  getCurrentStep(route: ActivatedRoute = this.route) {
-    return this.currentFlow.getStep(this.getCurrentPosition(route));
+    return this.flowPageService.getCurrentStep(this.route);
   }
 
   goBack() {
@@ -69,21 +69,21 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   addNew(type: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-add-step',
       type: type
     });
   }
 
   showPopouts(type: string) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-show-popouts',
       type: type
     });
   }
 
   insertStepAfter(position: number) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-insert-step',
       position: position,
       onSave: () => {
@@ -95,7 +95,7 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   insertConnectionAfter(position: number) {
-    this.currentFlow.events.emit({
+    this.currentFlowService.events.emit({
       kind: 'integration-insert-connection',
       position: position,
       onSave: () => {
@@ -107,39 +107,39 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   startConnection() {
-    return this.currentFlow.getStartStep();
+    return this.currentFlowService.getStartStep();
   }
 
   endConnection() {
-    return this.currentFlow.getEndStep();
+    return this.currentFlowService.getEndStep();
   }
 
   firstPosition() {
-    return this.currentFlow.getFirstPosition();
+    return this.currentFlowService.getFirstPosition();
   }
 
   lastPosition() {
-    return this.currentFlow.getLastPosition();
+    return this.currentFlowService.getLastPosition();
   }
 
   getMiddleSteps() {
-    return this.currentFlow.getMiddleSteps();
+    return this.currentFlowService.getMiddleSteps();
   }
 
   validateFlow() {
-    if (!this.currentFlow.loaded) {
+    if (!this.currentFlowService.loaded) {
       return;
     }
-    if (this.currentFlow.getStartConnection() === undefined) {
+    if (this.currentFlowService.getStartConnection() === undefined) {
       this.router.navigate(
-        ['connection-select', this.currentFlow.getFirstPosition()],
+        ['connection-select', this.currentFlowService.getFirstPosition()],
         { relativeTo: this.route.parent }
       );
       return;
     }
-    if (this.currentFlow.getEndConnection() === undefined) {
+    if (this.currentFlowService.getEndConnection() === undefined) {
       this.router.navigate(
-        ['connection-select', this.currentFlow.getLastPosition()],
+        ['connection-select', this.currentFlowService.getLastPosition()],
         { relativeTo: this.route.parent }
       );
       return;
@@ -147,26 +147,12 @@ export class IntegrationSaveOrAddStepComponent extends FlowPage implements OnIni
   }
 
   ngOnInit() {
+    this.flowPageService.initialize();
     const validate = this.route.queryParams.map(
       params => params['validate'] || false
     );
     if (validate) {
       this.validateFlow();
-    }
-
-    /**
-     * If guided tour state is set to be shown (i.e. true), then show it for this page, otherwise don't.
-     */
-    if (this.userService.getTourState() === true) {
-      this.tourService.initialize([ {
-        anchorId: 'integrations.step',
-        title: 'Operate On Data',
-        content: 'Clicking the plus sign lets you add an operation that the ' +
-        'integration performs between the start and finish connections.',
-        placement: 'right',
-        } ],
-      );
-      setTimeout(() => this.tourService.start());
     }
   }
 }

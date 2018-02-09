@@ -22,18 +22,18 @@ import io.syndesis.model.connection.Connector;
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 
 @SuppressWarnings("PMD.UseUtilityClass")
-/* default */ class ConnectorSettings extends SocialProperties {
+class ConnectorSettings extends SocialProperties {
 
     ConnectorSettings(final Connector connector) {
         setAppId(requiredProperty(connector, Credentials.CLIENT_ID_TAG));
         setAppSecret(requiredProperty(connector, Credentials.CLIENT_SECRET_TAG));
     }
 
-    /* default */ static Optional<String> optionalProperty(final Connector connector, final String tag) {
+    static Optional<String> optionalProperty(final Connector connector, final String tag) {
         return connector.propertyTaggedWith(tag);
     }
 
-    /* default */ static String requiredProperty(final Connector connector, final String tag) {
+    static String requiredProperty(final Connector connector, final String tag) {
         return optionalProperty(connector, tag).orElseThrow(
             () -> new IllegalArgumentException("No property tagged with `" + tag + "` on connector: " + connector));
     }

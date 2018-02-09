@@ -31,6 +31,7 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
 
+@SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention"})
 public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;
@@ -136,13 +137,21 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public boolean isBuildStarted(String name) {
-        String sName = Names.sanitize(name);
-        return !openShiftClient.builds()
-                               .withLabel("openshift.io/build-config.name", sName)
-                               .withField("status", "Running")
-                               .list().getItems().isEmpty();
+        return checkBuildStatus(name, "Running");
     }
 
+    @Override
+    public boolean isBuildFailed(String name) {
+        return checkBuildStatus(name, "Error");
+    }
+
+    protected boolean checkBuildStatus(String name, String status){
+        String sName = Names.sanitize(name);
+        return !openShiftClient.builds()
+            .withLabel("openshift.io/build-config.name", sName)
+            .withField("status", status)
+            .list().getItems().isEmpty();
+    }
 
     @Override
     public List<DeploymentConfig> getDeploymentsByLabel(Map<String, String> labels) {

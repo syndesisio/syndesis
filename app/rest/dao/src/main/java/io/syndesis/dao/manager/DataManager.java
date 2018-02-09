@@ -55,7 +55,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 @Service
-@SuppressWarnings("PMD.GodClass")
+@SuppressWarnings({"PMD.GodClass", "PMD.TooManyMethods"})
 public class DataManager implements DataAccessObjectRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataManager.class.getName());
@@ -140,7 +140,7 @@ public class DataManager implements DataAccessObjectRegistry {
                             System.getenv()
                         );
 
-                        Connector connector = Json.mapper().readValue(text, Connector.class);
+                        Connector connector = Json.reader().forType(Connector.class).readValue(text);
 
                         if (connector != null) {
                             LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());
@@ -149,7 +149,7 @@ public class DataManager implements DataAccessObjectRegistry {
                     }
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
             // ignore
         } catch (IOException e) {
             throw new IllegalStateException("Cannot load connector from resources due to: " + e.getMessage(), e);
