@@ -155,7 +155,7 @@ export class AppComponent implements OnInit {
 The above will dispatch an `UPDATE` action, but no state change has been performed yet.
 
 ### Creating Our Own Reducer
-Our reducer will initialize the state, meaning that it is already defined from the very moment the Store is initialized altogether. It will define action handlers that will react to whatever action comes whose `type` proeprty matches the `switch/case` defined:
+Our reducer will initialize the state, meaning that it is already defined from the very moment the Store is initialized altogether. It will define action handlers that will respond to whatever action comes whose `type` property matches the `switch/case` defined:
 
 ```typescript
 import { MetadataState } from './metadata.models';
@@ -192,9 +192,11 @@ export function metadataReducer(state = initialState, action: any): MetadataStat
 }
 ```
 
-So we initialize the state in `loading` mode, and populate it as soon as the `UPDATE` action is fired up, which will populate teh already existing state with the payload received plus set the `loading` property to `false`.
+We initialize the state in `loading` mode, and populate it as soon as the `UPDATE` action is fired up, which will populate the already existing state with the payload received and set the `loading` property to `false`.
 
-With an interface modelling `MetadataState` and a reducer taking care of all the changes in its state, the only step left is to declare these two in order to make application aware of those. You just need to open `platform.reducer.ts` and add the interface definition to the platform state definition (the actual Store definition indeed), mapped to a state token and the reducer to the `platformReducer` object that maps state token names with its corresponding reducers
+With an interface modelling `MetadataState` and a reducer taking care of all the changes in its state, the only step left is to declare these two in order to make application aware of them.
+
+Open `platform.reducer.ts` and add the interface definition to the platform state definition (the actual Store definition indeed). We then map a state token and the reducer to the `platformReducer` object, which maps state token names with its corresponding reducers:
 
 ```typescript
 export interface PlatformState {
@@ -211,19 +213,21 @@ export const platformReducer: ActionReducerMap<PlatformState> = {
 
 ### Dispatching actions depending on other actions and running middleware operations in the interim
 
-The real magic on actions relies on the fact that we can make actions react to other actions,allowing for more complex business logics which can be handled in a lower level, not necessarilly depending on user interactions all the time.
+The real magic behind actions relies on the fact that we can make actions respond to other actions. This allows for more complex business logic to be handled at a lower level, without necessarily depending on user interactions every time.
 
 #### A real case scenario in Syndesis 
 
-A good example would be to have an _Fetch Connections_ action being triggered right after successfully processing a _Create Connection_ action, for argument's sake. So, initially an user will make to the Syndesis app, go to the connections page, which will fetch all connections in the Store that was populated upon bootstrappng the application (by means fo an action, obviously) and then proceed to create a brand new Connection. 
+A good example would be to have an _Fetch Connections_ action being triggered right after successfully processing a _Create Connection_ action, for argument's sake.
 
-Once this new connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created connection. Since that list is only loaded when landin on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable, not to mention that if we ever want to understand who are the triggers of data changes in our applicatione ecosystem, we'll want to track down each and every component. 
+Initially a user will navigate to the Syndesis app, go to the Connections page, which will fetch all Connections in the Store that was populated upon bootstrapping the application (by means of an action), and then proceed to create a brand new Connection. 
 
-Triggering actions from components is not wrong... All the way around! But here we're facing a different scenario: We need to trigger an action which does not depend on an user interactin, but on the accomplishment of another action previously executed. Luckily, we have _Effects_ for achieve that.
+Once this new Connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created Connection. Since that list is only loaded when landing on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable. Moreover, if we ever want to understand which are the triggers of data changes in our application ecosystem, we'll want to track down each and every component. 
+
+Triggering actions from components is not wrong, but here we're facing a different scenario--we need to trigger an action that does not depend on a user interaction, but on the accomplishment of another action previously executed. Luckily, we can leverage _Effects_ to achieve that.
 
 #### Effects in action with a code example
 
-We saw earlier that our `MetadataState` example featured an `UPDATE` action that populated the overall state of this entity. New actions will be introduced as time goes by and at some point we might need actions to report errors. An example would be:
+We saw earlier that our `MetadataState` example featured an `UPDATE` action that populated the overall state of this entity. New actions will be introduced as time goes by, and at some point we might need actions to report errors. An example would be:
 
 ```typescript
 // rest of metadata.actioons.ts removed for brevity sake
@@ -237,7 +241,7 @@ export class MetadataReportError implements Action {
 // rest of metadata.actions.ts continues below...
 ```
 
-Question: _what if we want to rollback the state of the metadata state to its original state whenever an error occurs?_ We can either dispatch the `MetadataReset` error along with each dispatching of the `MetadataReportError` action, or we can make the former depend on the latter. We can create a `metadata.effects.ts` fiel for that and populate it like this:
+Question: _What if we want to rollback the state of the metadata state to its original state whenever an error occurs?_ We can either dispatch the `MetadataReset` error along with each dispatching of the `MetadataReportError` action, or we can make the former depend on the latter. We can create a `metadata.effects.ts` field for that and populate it like this:
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -258,7 +262,7 @@ export class MonitorEffects {
 }
 ```
 
-This is a simple example, but the most common use for _Effects_ is to allocate Http calls to the Syndesis REST API. In other words, and for the sole exception of simple, stateless components that do not impact the application or feature state, we **NEVER run Http calls (either directly or through Angular services) from components**. We proceed to call the API and digest its responses through Effects instead, like this:
+This is a simple example, but the most common use for _Effects_ is to allocate HTTP calls to the Syndesis REST API. In other words, and for the sole exception of simple, stateless components that does not impact the application or feature state, we **NEVER run HTTP calls (either directly or through Angular services) from components**. Instead, we proceed to call the API and digest its responses through Effects, like this:
 
 ```typescript
 @Injectable()
@@ -286,12 +290,16 @@ export class MonitorEffects {
 }
 ```
 
-The example above involves the `UPDATE` action we already know, which is intercepted by the _Effect_ which will read its payload and will send a `PUT` request to the API (by means of an imaginary `metadataService` object whose `put()` method allegedly leverages `ApiHttpService` to send PUT requests). When the Http call is successfully processed, the observable stream allows us return another action (represented as a raw `{ type: MetadataActions.UPDATE_COMPLETE }` object literal - we could use `new MetadataActions.UpdateComplete()` instead) and we handle errors by also returning an `MetadataActions.ERROR` object literal. In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end. 
+The example above involves the `UPDATE` action we already know, which is intercepted by the _Effect_, which will read its payload and send a `PUT` request to the API (by means of an imaginary `metadataService` object whose `put()` method leverages the `ApiHttpService` to send PUT requests).
 
-In the example provided, remember that the `ERROR` acion also triggered a `RESET` action by means of the previously created `resetMedatataUponError$` effect class member.
+When the HTTP call is successfully processed, the observable stream allows us to return another action (represented as a raw `{ type: MetadataActions.UPDATE_COMPLETE }` object literal, though we could use `new MetadataActions.UpdateComplete()` instead). We handle errors by also returning an `MetadataActions.ERROR` object literal.
+
+In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end. 
+
+In the example provided, remember that the `ERROR` action also triggered a `RESET` action by means of the previously created `resetMedatataUponError$` effect class member.
 
 ### How to fetch observable state streams and subscribe to state changes
-Let's figure out that we have observed the guidelines above to create a slice of state in the platform store (namely `PlatformState`) that allows us to persist the existing integrations. Or perhaps we might want to subscribe to changes in all the slices of state (which is not recommended anyways, given the huge volatility fo the store). Then you could do the following from any component:
+Let's assume that we have observed the guidelines above to create a slice of state in the platform store (namely `PlatformState`), which allows us to persist the existing Integrations. Or perhaps we might want to subscribe to changes in all the slices of state (which is not recommended anyway, given the volatility of the store). You could, then, do the following from any component:
 
 ```typescript
 import { Component, OnInit } from '@angular/core';
@@ -333,6 +341,6 @@ export class StatefulComponent implements OnInit {
 The example above leverages custom selectors to select partial slices of state. Please refer to the [online docs](https://github.com/ngrx/platform/blob/master/docs/store/selectors.md) about custom selectors for reference.
 
 ### Bear in mind these global state triggers
-In `platform.actions.ts` you will find some top application-level actions that you can listen in your own effects shoudl you need to run something when something happens:
+In `platform.actions.ts` you will find some top application-level actions that you can listen in your own effects should you need to run something when something happens:
 
 - `APP_BOOTSTRAP`: This action is dispatched as soon as `AppComponent` is initialized in the Syndesis project.
