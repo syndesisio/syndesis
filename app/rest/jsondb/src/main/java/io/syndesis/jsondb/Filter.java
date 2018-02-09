@@ -23,7 +23,7 @@ import io.syndesis.jsondb.impl.LogicalFilter;
 /**
  *
  */
-public abstract class Filter {
+public class Filter {
 
     public enum Op {
         EQ,

@@ -41,17 +41,17 @@ class LiteralSqlExpressionBuilder extends SqlExpressionBuilder {
         sql.append(":f").append(b1);
         binds.add(query -> {
             if( value == null  ) {
-                query.bind("f" + b1, ""+NULL_VALUE_PREFIX);
+                query.bind("f" + b1, String.valueOf(NULL_VALUE_PREFIX));
             } else if( value == Boolean.FALSE ) {
-                query.bind("f" + b1, ""+FALSE_VALUE_PREFIX);
+                query.bind("f" + b1, String.valueOf(FALSE_VALUE_PREFIX));
             } else if( value == Boolean.TRUE ) {
-                query.bind("f" + b1, ""+TRUE_VALUE_PREFIX);
+                query.bind("f" + b1, String.valueOf(TRUE_VALUE_PREFIX));
             } else if( value.getClass() == String.class ) {
-                query.bind("f" + b1, ""+STRING_VALUE_PREFIX+value);
+                query.bind("f" + b1, STRING_VALUE_PREFIX+value.toString());
             } else if( value instanceof Number ) {
                 query.bind("f" + b1, toLexSortableString(value.toString()));
             } else {
-                query.bind("f" + b1, ""+STRING_VALUE_PREFIX+value.toString());
+                query.bind("f" + b1, STRING_VALUE_PREFIX+value.toString());
             }
         });
     }
