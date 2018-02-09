@@ -103,7 +103,7 @@ call_asciidoctor() {
         cd $docdir
         eval "$@"
     else
-        docker run -t -v ${docdir}:/documents $asciidoctor_image $@
+        docker run --rm -it -v ${docdir}:/documents $asciidoctor_image $@
     fi
 }
 

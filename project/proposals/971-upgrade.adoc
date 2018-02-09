@@ -1,4 +1,4 @@
-= Syndesis Updates
+= Syndesis Upgrade
 Roland Huß <roland@syndes.is>
 v0.2, 2018-02-09
 :toc:
@@ -8,37 +8,37 @@ v0.2, 2018-02-09
 
 == Introduction
 
-The goal of this document is a concept how to perform _updates_ for Syndesis.
-An "update" in general is about getting Syndesis from one version to the next version.
-Updates have to be failsafe so that when the update process fails, a rollback to the original version and state has to be performed.
+The goal of this document is a concept how to perform _upgrades_ for Syndesis.
+An "upgrade" in general is about getting Syndesis from one version to the next version.
+Upgrades have to be failsafe so that when the upgrade process fails, a rollback to the original version and state has to be performed.
 
-In general, Syndesis updates can be divided into two parts:
+In general, Syndesis upgrades can be divided into two parts:
 
-* *<<update-infrastructure,Infrastructure Updates>>* for updating the Syndesis platform itself
-* *<<update-integration,Integration Updates>>* for updating user generated integrations because new dependent Syndesis components are available (like updated connectors).
+* *<<upgrade-infrastructure,Infrastructure Upgrade>>* for updating the Syndesis platform itself
+* *<<upgrade-integration,Integration Upgrade>>* for updating user generated integrations because new dependent Syndesis components are available (like upgraded connectors).
 
 This document provides concepts for both aspects independently.
 
-[[update-infrastructure]]
-== Infrastructure Update
+[[upgrade-infrastructure]]
+== Infrastructure Upgrade
 
-For the infrastructure update two strategies are possible:
+For the infrastructure upgrade two strategies are possible:
 
-* Updating Syndesis from the *inside* by deploying an update application to the Syndesis OpenShift project and perform all actions from within the cluster
-* From the *outside* by connecting with an external tool like `oc` to the OpenShift cluster and do all update steps from there.
+* Updating Syndesis from the *inside* by deploying an upgrade application to the Syndesis OpenShift project and perform all actions from within the cluster
+* From the *outside* by connecting with an external tool like `oc` to the OpenShift cluster and do all upgrade steps from there.
 
 In our experience operations against the OpenShift API from inside often struggles with permissions issues.
-Also, the interaction which such an internal update component is not as easy as when doing it from the command line outside the cluster.
+Also, the interaction which such an internal upgrade component is not as easy as when doing it from the command line outside the cluster.
 E.g. rollback and corrective actions could be only done automatically without any additional information provided by a human operator.
 
-The advantage of doing it from the inside is, that such an update component could automatically detect when new a new Syndesis version is available and perform the updated automatically and unattended.
+The advantage of doing it from the inside is, that such an upgrade component could automatically detect when new a new Syndesis version is available and perform the upgraded automatically and unattended.
 
 This concept is independent on the inside/outside strategy and applies to both.
-However, for the sake of concreteness, we focus on the _outside_ case, where a CLI tool triggered by a user performs the update on demand.
-On-demand updates should also be the priority, with auto updates second, as they provide better possibilities for interventions if something should go wrong.
+However, for the sake of concreteness, we focus on the _outside_ case, where a CLI tool triggered by a user performs the upgrade on demand.
+On-demand upgrades should also be the priority, with auto upgrades second, as they provide better possibilities for interventions if something should go wrong.
 
-.Outside Syndesis Update
-[plantuml,syndesis-update-from-outside,png]
+.Outside Syndesis Upgrade
+[plantuml,syndesis-upgrade-from-outside,png]
 ....
 @startuml
 ' tag::uml[]
@@ -105,12 +105,12 @@ twsf -down-> Secrets
 
 === Overview
 
-Before an update can be started, the current version of the Syndesis installation must be determined.
+Before an upgrade can be started, the current version of the Syndesis installation must be determined.
 It needs to be checked whether the new version is compatible with the running version.
-E.g. if the current version is too old for the target version, then no update can be performed.
-In this case, the update process needs to be stopped at that point.
+E.g. if the current version is too old for the target version, then no upgrade can be performed.
+In this case, the upgrade process needs to be stopped at that point.
 
-The update itself is a multi-step process.
+The upgrade itself is a multi-step process.
 Each step is explained in detail in separate sections.
 In summary, the following steps are suggested for a complete Syndesis infrastructure strategy:
 
@@ -118,28 +118,28 @@ In summary, the following steps are suggested for a complete Syndesis infrastruc
 
 * <<step-backup-db,Backup database>> by creating a full database from `syndesis-db` dump to disk.
 
-*  <<step-backup-stateful-resources,Backup ConfigMaps and Template>> because they are updated during the upgrade process.
+*  <<step-backup-stateful-resources,Backup ConfigMaps and Template>> because they are upgraded during the upgrade process.
 
-*  <<step-create-update-json, Create update resources locally>> by processing the application `Template` of the new version locally and filtering out all stateful application resources.
+*  <<step-create-upgrade-json, Create upgrade resources locally>> by processing the application `Template` of the new version locally and filtering out all stateful application resources.
 
 Up to this step, nothing destructive has been performed.
 So if there should be a failure of one of these steps, only local cleanup is required.
-Next, the real update steps are performed in the cluster:
+Next, the real upgrade steps are performed in the cluster:
 
-*  <<step-update-db,Migrate database>> by potentially transforming existing JsonDB objects to a new schema.
+*  <<step-upgrade-db,Migrate database>> by potentially transforming existing JsonDB objects to a new schema.
 
 *  <<step-stop-all,Stop all deployments>> by scaling them to 0 replicas.
 
-*  <<step-update-stateful-resources, Update ConfigMaps>> by first reading it, transforming it and storing it back.
+*  <<step-upgrade-stateful-resources, Upgrade ConfigMaps>> by first reading it, transforming it and storing it back.
 
-*  <<step-apply-update-json, Replace stateless resources>> to replace current resources with the new updated definitions.
+*  <<step-apply-upgrade-json, Replace stateless resources>> to replace current resources with the new upgraded definitions.
 
 *  <<step-replace-template, Replace original template>> so that it reflects the current state.
 
 [[steps-preparation]]
 === Preparation Steps
 
-Before the real update happens, preparation steps are used to backup and prepare the actual update.
+Before the real upgrade happens, preparation steps are used to backup and prepare the actual upgrade.
 A rollback is typically not required, except maybe for cleaning up locally generated files.
 But this could happen at the end of a run in one sweep, too.
 
@@ -149,7 +149,7 @@ But this could happen at the end of a run in one sweep, too.
 The first step to perform is to stop all pods which can change the backend state of Syndesis so that there are no race conditions during the upgrade.
 For the time being the only pod with access to backend state is `syndesis-rest`, accessed by the UI.
 Stopping should be performed by scaling down to 0 replicas for these pods and wait until they have been shut down in a controlled manner.
-Ideally, the UI will show a maintenance screen when in update mode.
+Ideally, the UI will show a maintenance screen when in upgrade mode.
 (But the UI should show a global error anyway when the backend `syndesis-rest` is not available).
 
 .Rollback
@@ -158,7 +158,7 @@ The compensation action for this step is to scale up `syndesis-rest` to 1 and wa
 [[step-backup-db]]
 ==== Backup database
 
-Before performing an update of the database content, a full backup has to be done.
+Before performing an upgrade of the database content, a full backup has to be done.
 When coming from the outside, a port forward to the Postgresql port needs to be created with `oc port-forward`.
 Standard `pg_dump` should be used to create the backup of the database.
 To avoid local installation issues and to guarantee version conformance to the database in use with `syndesis-db`, `pg_dump` should be taken directly from the Postgres image used by `syndesis-db` by starting this image from a local Docker daemon.
@@ -182,14 +182,14 @@ The `ConfigMaps` to backupe are curently:
   - `syndesis-ui-config`
   - `syndesis-verifier-config`
 
-At the time being, there are no `Secrets` required to update.
+At the time being, there are no `Secrets` required to upgrade.
 
 Also, the OpenShift template for creating syndesis should be backed up.
 
 .Rollback
 As for rollback only a cleanup of the configmap backup files is required (or kept for a later manual reversal).
 
-[[step-create-update-json]]
+[[step-create-upgrade-json]]
 ==== Process new Template
 
 In this step, the OpenShift template of the new Syndesis version is processed locally to create resource objects definitions.
@@ -203,22 +203,22 @@ The following objects need to be filtered out:
 * All `ConfigMaps`
 * All `PersistentVolumeClaims` which reference the persistent volumes of the database and other stateful services (e.g. Prometheus's time series database).
 
-Ideally, all such objects are annotated with `io.syndesis/update-mode: keep` and the local processing filters out every object with this annotation.
+Ideally, all such objects are annotated with `io.syndesis/upgrade-mode: keep` and the local processing filters out every object with this annotation.
 
-The files created are stored locally and are applied in a later <<step-apply-update-json, step>>.
+The files created are stored locally and are applied in a later <<step-apply-upgrade-json, step>>.
 
 .Rollback
 Only the locally created object definitions need to be cleaned up (or kept for a later manual rollback).
 
-[[steps-update]]
-=== Update Steps
+[[steps-upgrade]]
+=== Upgrade Steps
 
-The following subsections will describe all updates steps which are performed in this given order.
+The following subsections will describe all upgrades steps which are performed in this given order.
 Along with a description of each step's function, the corresponding _rollback step_ is described, too.
 Please note, that rollback step can also do a cleanup of backup files.
 However, there should also be an option to keep the backup files, so that a later, manual rollback can be performed if requested.
 
-[[step-update-db]]
+[[step-upgrade-db]]
 ==== Migrate Database
 
 If the database schema has changed for the new version to apply, then migration is required.
@@ -231,9 +231,9 @@ A Java CLI tool, which is stored in the `syndesis-rest` Docker image and which c
 
 This directory contains a migration script for every schema version:
 
-.Example update directory
+.Example upgrade directory
 ```
-/update-jsondb/
+/upgrade-jsondb/
     ...
     20.js
     21.js
@@ -241,13 +241,13 @@ This directory contains a migration script for every schema version:
     ...
 ```
 
-Each update script can only update from the prior version. In this example, if the DB is currently at schema `20` and the target schema is `23`, then the scripts `21.js` and `23.js` are executed.
+Each upgrade script can only upgrade from the prior version. In this example, if the DB is currently at schema `20` and the target schema is `23`, then the scripts `21.js` and `23.js` are executed.
 
 These scripts contain a single javascript function:
 
 .Simple JavaScript API
 ```javascript
-function update(jsondb) {
+function upgrade(jsondb) {
    // Perform migration by iterating of jsondb documents,
    // transforming them and then storing them back
 
@@ -267,55 +267,55 @@ docker run syndesis/syndesis-rest --net=host \
          --target-schema 23
 ```
 
-NOTE: The update script and mechanism could also be used internally by the syndesis-rest application to perform an update during startup. However, this is recommended only for a development setup as there is no easy way to rollback if things go wrong.
+NOTE: The upgrade script and mechanism could also be used internally by the syndesis-rest application to perform an upgrade during startup. However, this is recommended only for a development setup as there is no easy way to rollback if things go wrong.
 
 .Rollback
-If any of the update scripts fail with an error, a DB rollback needs to be performed.
+If any of the upgrade scripts fail with an error, a DB rollback needs to be performed.
 For this, the backup created in the previous <<step-backup-db, step>> needs to be played back (on a fresh database).
 
 [[step-stop-all]]
 ==== Stop all deployments
 
-Before doing updates on the resource objects, all deployments should be scaled down to 0 replicas and waited until all infrastructure pods are stopped.
+Before doing upgrades on the resource objects, all deployments should be scaled down to 0 replicas and waited until all infrastructure pods are stopped.
 
 .Rollback
 Scale back to one replica per deployment
 
-[[step-update-stateful-resources]]
-==== Update stateful resources
+[[step-upgrade-stateful-resources]]
+==== Upgrade stateful resources
 
-Now that the database has been migrated, the current infrastructure config maps might need to be updated, too.
+Now that the database has been migrated, the current infrastructure config maps might need to be upgraded, too.
 
-This update is similar to the DB migration, except that update shell scripts are used for each version:
+This upgrade is similar to the DB migration, except that upgrade shell scripts are used for each version:
 
-.Example ConfigMap update
+.Example ConfigMap upgrade
 ```
-/update-configmaps/
+/upgrade-configmaps/
     ...
     1.3.sh
     1.4.sh
     ...
 ```
 
-Again, as for JsonDB updates, these scripts are specific for a _target_ version.
-In general, these updates scripts are used to add default values for new features (if not present) or change defaults.
+Again, as for JsonDB upgrades, these scripts are specific for a _target_ version.
+In general, these upgrades scripts are used to add default values for new features (if not present) or change defaults.
 As input the get a pointer to a copy of the extracted <<step-backup-stateful-resources,configmap files>> which they should adopt in place.
 
-NOTE: No resources from generated integration pods are updated. This needs to be done as part of the <<update-integration,Integration Update>> process.
+NOTE: No resources from generated integration pods are upgraded. This needs to be done as part of the <<upgrade-integration,Integration Upgrade>> process.
 
-Finally, the generated updated configmaps are applied with `oc replace` to the cluster, overwriting the existing configmaps.
+Finally, the generated upgraded configmaps are applied with `oc replace` to the cluster, overwriting the existing configmaps.
 
 .Rollback
 A rollback replays all the original configmaps extracted in a previous <<step-backup-stateful-resources,configmap files>>
 
-[[step-apply-update-json]]
+[[step-apply-upgrade-json]]
 ==== Replace stateless resources
 
-Now it is time to do the update of the new version with an `oc replace` for all resource objects extracted <<step-create-update-json, previously>>.
+Now it is time to do the upgrade of the new version with an `oc replace` for all resource objects extracted <<step-create-upgrade-json, previously>>.
 This command will automatically spin up new versions (or the same if unchanged in this release) for all deployments.
 
 .Rollback
-Recreate the original resources objects by <<step-create-update-json,processing the original Template>> locally.
+Recreate the original resources objects by <<step-create-upgrade-json,processing the original Template>> locally.
 This template can be still obtained from the cluster.
 
 [[step-replace-template]]
@@ -330,19 +330,19 @@ Replace the Syndesis template with the original template which has been backuped
 
 A rollback is performed by executing _rollback steps_ which are compensation actions for each action that already has been completed.
 Ideally, a rollback step performs a full restore of the original state.
-For example, rolling back the database should clean the database and restore it from the full backup created in a previous step (instead of individually reverting the update steps).
+For example, rolling back the database should clean the database and restore it from the full backup created in a previous step (instead of individually reverting the upgrade steps).
 Full restores ensure robustness and a defined state.
 
-The whole update steps are arranged in such a way that steps, that do not require a rollback are performed first, before state changing update steps occur.
-For those state changing update steps, first the steps which are the riskiest and lengthy should be performed first, and the steps which are very likely so succeed last.
-For example, Database migrations should be done early, whereas updates to the new OpenShift template should be done last.
+The whole upgrade steps are arranged in such a way that steps, that do not require a rollback are performed first, before state changing upgrade steps occur.
+For those state changing upgrade steps, first the steps which are the riskiest and lengthy should be performed first, and the steps which are very likely so succeed last.
+For example, Database migrations should be done early, whereas upgrades to the new OpenShift template should be done last.
 
 Every step that succeeded records its success in a state file by adding an extra line at the end.
 In case of an error, this state file will be used and parsed in a reverse order to extract the arguments for the rollback steps.
 
 === CLI
 
-For performing updates from the outside, a CLI tool needs to be created.
+For performing upgrades from the outside, a CLI tool needs to be created.
 The question is, in which language such a tool should be written:
 
 * *Bash Script* as this is sufficiently well known by most of us and an interpreted language which can be easily changed and debugged.
@@ -359,9 +359,9 @@ This probably is the killer criterium for Perl (although I'm pretty sure that I 
 
 * *Java*. Please, not for infrastructure tooling.
 
-For the POC I started to add an `update` subcommand to `syndesis` which implements this concept.
+For the POC I started to add an `upgrade` subcommand to `syndesis` which implements this concept.
 
-[[update-integration]]
-== Integration Update
+[[upgrade-integration]]
+== Integration Upgrade
 
 IMPORTANT: _... to be done ..._
