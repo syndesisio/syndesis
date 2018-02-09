@@ -199,9 +199,86 @@ export const platformReducer: ActionReducerMap<PlatformState> = {
 
 ```
 
-### Dispatching actions after actions and running middleware operations in the interim
+### Dispatching actions depending on other actions and running middleware operations in the interim
 
-In progress...
+The real magic on actions relies on the fact that we can make actions react to other actions,allowing for more complex business logics which can be handled in a lower level, not necessarilly depending on user interactions all the time.
+
+#### A real case scenario in Syndesis 
+
+A good example would be to have an _Fetch Connections_ action being triggered right after successfully processing a _Create Connection_ action, for argument's sake. So, initially an user will make to the Syndesis app, go to the connections page, which will fetch all connections in the Store that was populated upon bootstrappng the application (by means fo an action, obviously) and then proceed to create a brand new Connection. 
+
+Once this new connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created connection. Since that list is only loaded when landin on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable, not to mention that if we ever want to understand who are the triggers of data changes in our applicatione ecosystem, we'll want to track down each and every component. 
+
+Triggering actions from components is not wrong... All the way around! But here we're facing a different scenario: We need to trigger an action which does not depend on an user interactin, but on the accomplishment of another action previously executed. Luckily, we have _Effects_ for achieve that.
+
+#### Effects in action with a code example
+
+We saw earlier that our `MetadataState` example featured an `UPDATE` action that populated the overall state of this entity. New actions will be introduced as time goes by and at some point we might need actions to report errors. An example would be:
+
+```typescript
+// rest of metadata.actioons.ts removed for brevity sake
+export const REPORT_ERROR     = '[Metadata] Error reported';
+
+export class MetadataReportError implements Action {
+  readonly type = REPORT_ERROR;
+
+  constructor(public error: Error) { }
+}
+// rest of metadata.actions.ts continues below...
+```
+
+Question: _what if we want to rollback the state of the metadata state to its original state whenever an error occurs?_ We can either dispatch the `MetadataReset` error along with each dispatching of the `MetadataReportError` action, or we can make the former depend on the latter. We can create a `metadata.effects.ts` fiel for that and populate it like this:
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Action } from '@ngrx/store';
+import { Actions, Effect } from '@ngrx/effects';
+import { Observable } from 'rxjs/Observable';
+
+import * as MetadataActions from './metadata.actions';
+
+@Injectable()
+export class MonitorEffects {
+  @Effect()
+  resetMedatataUponError$: Observable<Action> = this.actions$
+    .ofType(MetadataActions.ERROR)
+    .map(() => ({ type: MetadataActions.RESET }));
+
+  constructor(private actions$: Actions) { }
+}
+```
+
+This is a simple example, but the most common use for _Effects_ is to allocate Http calls to the Syndesis REST API. In other words, and for the sole exception of simple, stateless components that do not impact the application or feature state, we **NEVER run Http calls (either directly or through Angular services) from components**. We proceed to call the API and digest its responses through Effects instead, like this:
+
+```typescript
+@Injectable()
+export class MonitorEffects {
+  // Other effects hidden for brevity sake
+  // ...
+
+  @Effect()
+  fetchMetadataFromAPI$: Observable<Action> = this.actions$
+    .ofType<MetadataActions.MetadataUpdate>(MetadataActions.UPDATE)
+    .mergeMap(action =>
+      this.metadataService
+        .put(action.payload)
+        .map(() => ({ type: MetadataActions.UPDATE_COMPLETE }))
+        .catch(error => Observable.of({
+          type: MetadataActions.ERROR,
+          payload: error
+        }))
+    );
+
+  constructor(
+    private actions$: Actions,
+    private metadataService: MetadataService // <-- New injected service
+  ) { }
+}
+```
+
+The example above involves the `UPDATE` action we already know, which is intercepted by the _Effect_ which will read its payload and will send a `PUT` request to the API (by means of an imaginary `metadataService` object whose `put()` method allegedly leverages `ApiHttpService` to send PUT requests). When the Http call is successfully processed, the observable stream allows us return another action (represented as a raw `{ type: MetadataActions.UPDATE_COMPLETE }` object literal - we could use `new MetadataActions.UpdateComplete()` instead) and we handle errors by also returning an `MetadataActions.ERROR` object literal. In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end. 
+
+In the example provided, remember that the `ERROR` acion also triggered a `RESET` action by means of the previously created `resetMedatataUponError$` effect class member.
 
 ### How to fetch observable state streams and subscribe to state changes
 Let's figure out that we have observed the guidelines above to create a slice of state in the platform store (namely `PlatformState`) that allows us to persist the existing integrations. Or perhaps we might want to subscribe to changes in all the slices of state (which is not recommended anyways, given the huge volatility fo the store). Then you could do the following from any component:
