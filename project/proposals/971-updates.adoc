@@ -44,6 +44,7 @@ On-demand updates should also be the priority, with auto updates second, as they
 ' tag::uml[]
 ' see http://plantuml.com/deployment-diagram for syntax of this diagram:
 
+' Some nice colors ...
 skinparam sequenceArrowThickness 4
 skinparam rectangle {
   roundCorner<<Pod>> 25
@@ -67,15 +68,15 @@ template.json
 
 ' ======== Cluster
 node OpenShift {
-   package Integration {
+
+   package Integration as integration {
      rectangle "twitter-to-salesforce" <<Integration>> as twsf
      folder Secrets <<Integration>> [
      tw-sf-config
      ]
    }
-   package Infrastructure #thistle {
 
-
+   package Infrastructure as infra #thistle {
      rectangle "syndesis-ui" <<Pod>> as ui
      rectangle "syndesis-rest" <<Pod>> as rest
      rectangle "syndesis-db" <<Pod>> as db
@@ -90,16 +91,14 @@ node OpenShift {
      ]
      database "JsonDB Volume" <<State>> as pv
    }
-
 }
 
 ' ====== Links
 db .down. pv
-
-cli -down-> Infrastructure
+cli -down-> infra
 cli -right-> backup
-
 twsf -down-> Secrets
+
 ' end::uml[]
 @enduml
 ....

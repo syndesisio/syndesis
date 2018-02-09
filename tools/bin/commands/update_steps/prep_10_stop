@@ -1,0 +1,13 @@
+#!/bin/bash
+
+stop::label() {
+  echo "Stopping syndesis-rest"
+}
+
+stop::run() {
+  sleep 3
+}
+
+stop::rollback() {
+  sleep 2
+}
