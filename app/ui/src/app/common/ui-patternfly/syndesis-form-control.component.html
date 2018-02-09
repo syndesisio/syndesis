@@ -130,9 +130,9 @@
                                        [model]="model"
                                        [fieldId]="fieldHash"
                                        [bindId]="bindId"
-                                       (blur)="onFocusChange($event)"
-                                       (change)="onValueChange($event)"
-                                       (focus)="onFocusChange($event)">
+                                       (dfBlur)="onBlur($event)"
+                                       (dfChange)="onValueChange($event)"
+                                       (dfFocus)="onFocus($event)">
             </syndesis-duration-control>
           </ng-container>
           <ng-container *ngSwitchDefault>
