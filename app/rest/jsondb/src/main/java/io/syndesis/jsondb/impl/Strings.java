@@ -15,6 +15,8 @@
  */
 package io.syndesis.jsondb.impl;
 
+import java.util.regex.Pattern;
+
 /**
  * Helper methods to work with String objects
  */
@@ -51,4 +53,15 @@ public final class Strings {
         }
         return value;
     }
+
+    public static String splitPart(String delimiter, String value, int idx) {
+        int i = idx-1;
+        String[] split = value.split(Pattern.quote(delimiter));
+        if( i < split.length ) {
+            return split[i];
+        } else {
+            return value;
+        }
+    }
+
 }

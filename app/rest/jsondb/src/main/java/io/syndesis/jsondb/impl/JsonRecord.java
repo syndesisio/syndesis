@@ -22,13 +22,13 @@ public final class JsonRecord {
 
     private final String path;
     private final String value;
-    private final int kind;
+    private final String ovalue;
     private final String index;
 
-    private JsonRecord(String path, String value, int kind, String index) {
+    private JsonRecord(String path, String value, String ovalue, String index) {
         this.path = path;
         this.value = value;
-        this.kind = kind;
+        this.ovalue = ovalue;
         this.index = index;
     }
 
@@ -40,16 +40,16 @@ public final class JsonRecord {
         return value;
     }
 
-    public int getKind() {
-        return kind;
+    public String getOValue() {
+        return ovalue;
     }
 
     public String getIndex() {
         return index;
     }
 
-    public static JsonRecord of(String path, String value, int kind, String index) {
-        return new JsonRecord(path, value, kind, index);
+    public static JsonRecord of(String path, String value, String ovalue, String index) {
+        return new JsonRecord(path, value, ovalue, index);
     }
 
 }
