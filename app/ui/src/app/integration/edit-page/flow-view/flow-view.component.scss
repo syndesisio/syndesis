@@ -1,4 +1,4 @@
-@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+@import 'syndesis-sass';
 
 .collapsed {
   .step-insert {
@@ -133,7 +133,7 @@
       flex: 0 0 auto;
       min-height: 80px;
 
-      /deep/ .popover {
+      ::ng-deep .popover {
         margin-top: -2px;
         margin-left: 28px !important;
         border-color: $color-pf-black-500;
