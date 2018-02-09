@@ -19,11 +19,11 @@ export class ApiConnectorAuthComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    const { authenticationType, authorizationEndpoint } = this.customConnectorRequest.properties;
+    const { authenticationType, authorizationEndpoint, tokenEndpoint } = this.customConnectorRequest.properties;
     this.authSetupForm = this.formBuilder.group({
       authenticationType: [authenticationType ? authenticationType.defaultValue : ''],
       authorizationEndpoint: [authorizationEndpoint ? authorizationEndpoint.defaultValue : ''],
-      tokenEndpoint: ['']
+      tokenEndpoint: [tokenEndpoint ? tokenEndpoint.defaultValue : '']
     });
 
     this.authSetupFormValueSubscription = this.authSetupForm
