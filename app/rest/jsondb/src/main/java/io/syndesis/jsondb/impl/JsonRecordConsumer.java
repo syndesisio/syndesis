@@ -230,23 +230,20 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
 
     private void writeValue(JsonRecord value) throws IOException {
-        switch (value.getKind()) {
-            case JsonTokenId.ID_STRING:
-                jg.writeString(value.getValue());
+        switch (value.getValue().charAt(0)) {
+            case JsonRecordSupport.STRING_VALUE_PREFIX:
+                jg.writeString(value.getValue().substring(1));
                 break;
-            case JsonTokenId.ID_NULL:
+            case JsonRecordSupport.NULL_VALUE_PREFIX:
                 jg.writeNull();
                 break;
-            case JsonTokenId.ID_NUMBER_FLOAT:
-                jg.writeNumber(value.getValue());
-                break;
-            case JsonTokenId.ID_NUMBER_INT:
+            case JsonRecordSupport.NUMBER_VALUE_PREFIX:
                 jg.writeNumber(value.getOValue());
                 break;
-            case JsonTokenId.ID_TRUE:
+            case JsonRecordSupport.TRUE_VALUE_PREFIX:
                 jg.writeBoolean(true);
                 break;
-            case JsonTokenId.ID_FALSE:
+            case JsonRecordSupport.FALSE_VALUE_PREFIX:
                 jg.writeBoolean(false);
                 break;
             default:

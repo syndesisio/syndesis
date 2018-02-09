@@ -15,6 +15,7 @@
  */
 package io.syndesis.jsondb.impl;
 
+import static io.syndesis.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
 import static io.syndesis.jsondb.impl.JsonRecordSupport.validateKey;
 import static io.syndesis.jsondb.impl.Strings.prefix;
 import static io.syndesis.jsondb.impl.Strings.suffix;
@@ -120,10 +121,10 @@ public class SqlJsonDB implements JsonDB {
     public void createTables() {
         withTransaction(dbi -> {
             if(databaseKind == DatabaseKind.PostgreSQL) {
-                dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, ovalue VARCHAR, kind INT, idx VARCHAR COLLATE \"C\")");
+                dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR COLLATE \"C\")");
                 dbi.update("CREATE INDEX jsondb_idx ON jsondb (idx, value) WHERE idx IS NOT NULL");
             } else {
-                dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, ovalue VARCHAR, kind INT, idx VARCHAR)");
+                dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR)");
             }
             if( databaseKind == DatabaseKind.H2 ) {
                 dbi.update("CREATE ALIAS IF NOT EXISTS split_part FOR \""+Strings.class.getName()+".splitPart\"");
@@ -180,9 +181,9 @@ public class SqlJsonDB implements JsonDB {
             ArrayList<Consumer<Query<Map<String, Object>>>> binds = new ArrayList<>();
 
             if( o.filter() == null ) {
-                sql.append("select path,value,ovalue,kind from jsondb where path LIKE :like");
+                sql.append("select path,value,ovalue from jsondb where path LIKE :like");
             } else {
-                sql.append("SELECT path,value,ovalue,kind FROM jsondb A INNER JOIN (");
+                sql.append("SELECT path,value,ovalue FROM jsondb A INNER JOIN (");
                 SqlExpressionBuilder.create(this, o.filter(), baseDBPath).build(sql, binds);
                 sql.append(") B ON A.path LIKE B.match_path||'%'");
             }
@@ -332,7 +333,7 @@ public class SqlJsonDB implements JsonDB {
                 final String query = "SELECT path FROM jsondb WHERE idx = ? AND value = ?";
                 final List<String> paths = dbi.createQuery(query)
                     .bind(0, idx)
-                    .bind(1, value)
+                    .bind(1, STRING_VALUE_PREFIX+value)
                     .map(StringColumnMapper.INSTANCE).list();
 
                 String suffix = "/" + property + "/";
@@ -359,7 +360,9 @@ public class SqlJsonDB implements JsonDB {
                     "Don't know how to use regex in a query with database: " + databaseKind);
             }
 
-            final List<String> paths = dbi.createQuery(query).bind(0, pathRegex).bind(1, value)
+            final List<String> paths = dbi.createQuery(query)
+                .bind(0, pathRegex)
+                .bind(1, STRING_VALUE_PREFIX+value)
                 .map(StringColumnMapper.INSTANCE).list();
 
             ret.set(new HashSet<>(paths));
@@ -396,7 +399,6 @@ public class SqlJsonDB implements JsonDB {
                 insert.bind("path", r.getPath())
                     .bind("value", r.getValue())
                     .bind("ovalue", r.getOValue())
-                    .bind("kind", r.getKind())
                     .bind("idx", r.getIndex())
                     .add();
 
@@ -410,7 +412,7 @@ public class SqlJsonDB implements JsonDB {
 
         public PreparedBatch getInsertBatch() {
             if (insertBatch == null) {
-                insertBatch = dbi.prepareBatch("INSERT into jsondb (path, value, ovalue, kind, idx) values (:path, :value, :ovalue, :kind, :idx)");
+                insertBatch = dbi.prepareBatch("INSERT into jsondb (path, value, ovalue, idx) values (:path, :value, :ovalue, :idx)");
             }
             return insertBatch;
         }
@@ -535,7 +537,7 @@ public class SqlJsonDB implements JsonDB {
         private static final JsonRecordMapper INSTANCE = new JsonRecordMapper();
         @Override
         public JsonRecord map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-            return JsonRecord.of(r.getString("path"), r.getString("value"), r.getString("ovalue"), r.getInt("kind"), null);
+            return JsonRecord.of(r.getString("path"), r.getString("value"), r.getString("ovalue"), null);
         }
     }
 

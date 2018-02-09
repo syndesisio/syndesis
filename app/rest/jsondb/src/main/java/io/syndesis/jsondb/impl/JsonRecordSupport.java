@@ -46,6 +46,13 @@ public final class JsonRecordSupport {
     public static final Pattern INTEGER_PATTERN = Pattern.compile("^\\d+$");
     public static final Pattern INDEX_EXTRACTOR_PATTERN = Pattern.compile("^(.+)/[^/]+/([^/]+)/$");
 
+    public static final char NULL_VALUE_PREFIX = '\u0000';
+    public static final char FALSE_VALUE_PREFIX = '\u0001';
+    public static final char TRUE_VALUE_PREFIX = '\u0002';
+    public static final char NUMBER_VALUE_PREFIX = '[';
+    public static final char STRING_VALUE_PREFIX = '`';
+
+
     static class PathPart {
         private final String path;
 
@@ -137,7 +144,7 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, "", null, nextToken.id(), indexFieldValue(indexes, currentPath)));
+                consumer.accept(JsonRecord.of(currentPath, ""+NULL_VALUE_PREFIX, "null", indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -151,12 +158,23 @@ public final class JsonRecordSupport {
                 String value = jp.getValueAsString();
                 String ovalue = null;
 
-                if( nextToken == JsonToken.VALUE_NUMBER_INT ) {
-                    ovalue = value; // hold on to th original number in th ovalue field.
-                    value = toLexSortableString(jp.getValueAsLong()); // encode it so we can lexically sort.
+                if( nextToken == JsonToken.VALUE_STRING ) {
+                    value = STRING_VALUE_PREFIX + value;
+                } else if( nextToken == JsonToken.VALUE_NUMBER_INT ) {
+                    ovalue = value; // hold on to the original number in th ovalue field.
+                    value = toLexSortableString(value); // encode it so we can lexically sort.
+                } else if( nextToken == JsonToken.VALUE_NUMBER_FLOAT ) {
+                    ovalue = value; // hold on to the original number in th ovalue field.
+                    value = NUMBER_VALUE_PREFIX + value; // TODO: need to do proper lexical encoding of floats.
+                } else if( nextToken == JsonToken.VALUE_TRUE ) {
+                    ovalue = value;
+                    value = ""+TRUE_VALUE_PREFIX;
+                } else if( nextToken == JsonToken.VALUE_FALSE ) {
+                    ovalue = value;
+                    value = ""+FALSE_VALUE_PREFIX;
                 }
 
-                consumer.accept(JsonRecord.of(currentPath, value, ovalue, nextToken.id(), indexFieldValue(indexes, currentPath)));
+                consumer.accept(JsonRecord.of(currentPath, value, ovalue, indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -190,8 +208,6 @@ public final class JsonRecordSupport {
         return idx;
     }
 
-    static char marker = '[';
-
     private static String toArrayIndexPath(int idx) {
         // todo: encode the idx using something like http://www.zanopha.com/docs/elen.pdf
         // so we get lexicographic ordering.
@@ -202,14 +218,22 @@ public final class JsonRecordSupport {
         return fromLexSortableStringToInt(value);
     }
 
+    public static String toLexSortableString(long value) {
+        return toLexSortableString(Long.toString(value));
+    }
+
+    public static String toLexSortableString(int value) {
+        return toLexSortableString(Integer.toString(value));
+    }
+
     /**
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
-    public static String toLexSortableString(long value) {
+    public static String toLexSortableString(final String value) {
         ArrayList<String> seqs = new ArrayList<String>();
 
-        String seq = Long.toString(value);
+        String seq = value;
         seqs.add(seq);
         while (seq.length() > 1) {
             seq = Integer.toString(seq.length());
@@ -218,7 +242,7 @@ public final class JsonRecordSupport {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < seqs.size(); i++) {
-            builder.append(marker);
+            builder.append(NUMBER_VALUE_PREFIX);
         }
         for (int i = seqs.size() - 1; i >= 0; i--) {
             builder.append(seqs.get(i));
@@ -228,7 +252,7 @@ public final class JsonRecordSupport {
 
     static int fromLexSortableStringToInt(String value) {
         // Trim the initial markers.
-        String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(marker)) + "+", "");
+        String remaining = value.replaceFirst("^" + Pattern.quote(String.valueOf(NUMBER_VALUE_PREFIX)) + "+", "");
 
         int rc = 1;
         while (!remaining.isEmpty()) {
