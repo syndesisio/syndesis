@@ -18,23 +18,27 @@ package io.syndesis.integration.runtime.handlers;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.ProcessorDefinition;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LogStepHandler implements IntegrationStepHandler {
 
-    String STEP_KIND = "log";
-
     @Override
     public boolean canHandle(Step step) {
-        return STEP_KIND.equals(step.getStepKind());
+        return step.getStepKind() == StepKind.log;
     }
 
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder) {
+    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         return Optional.of(route.log(LoggingLevel.INFO, createMessage(step)));
     }
 
@@ -70,7 +74,7 @@ public class LogStepHandler implements IntegrationStepHandler {
 
         List<String> filtered = names
                 .stream()
-                .filter(n -> !n.equals("null"))
+                .filter(n -> !"null".equals(n))
                 .collect(Collectors.toList());
 
         if (filtered.isEmpty()) {
@@ -94,7 +98,7 @@ public class LogStepHandler implements IntegrationStepHandler {
 
     private static void configureHeaders(StringBuilder sb, HeaderKind kind, Collection<String> names) {
         if (kind == null) {
-            throw new NullPointerException("Kind should not be null. Please specify a valid value.");
+            throw new IllegalArgumentException("Kind should not be null. Please specify a valid value.");
         }
 
         if (names == null) {
@@ -103,7 +107,7 @@ public class LogStepHandler implements IntegrationStepHandler {
 
         List<String> filtered = names
                 .stream()
-                .filter(n -> !n.equals("null"))
+                .filter(n -> !"null".equals(n))
                 .collect(Collectors.toList());
 
         if (filtered.isEmpty()) {
@@ -114,9 +118,9 @@ public class LogStepHandler implements IntegrationStepHandler {
                 .collect(Collectors.joining(" ", kind.getLabel()+ " Headers[", "] ")));
     }
 
-    private static Boolean isBodyLoggingEnabled(Map<String, String> props) {
+    private static boolean isBodyLoggingEnabled(Map<String, String> props) {
         if (props == null || props.isEmpty()) {
-            return null;
+            return false;
         }
         return Boolean.parseBoolean(props.getOrDefault("bodyLoggingEnabled", "false"));
     }
