@@ -38,6 +38,9 @@ export interface ApiConnectorData {
     authorizationEndpoint?: {
       defaultValue: string;
     };
+    tokenEndpoint?: {
+      defaultValue: string;
+    };
   };
 }
 
