@@ -16,13 +16,13 @@
 package io.syndesis.jsondb.impl;
 
 
+import static io.syndesis.core.util.Resources.getResourceAsText;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,10 +40,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.syndesis.jsondb.Filter;
+import io.syndesis.jsondb.Filter.Op;
 import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.JsonDBException;
-
-import io.syndesis.jsondb.Filter.Op;
 
 /**
  * Unit Tests for the JsonDB implementation.
@@ -474,13 +473,13 @@ public class JsonDBTest {
 
         jsondb.set("/users/u1000", mapper.writeValueAsString(user));
         String result1 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result1).isEqualTo(load("result1.json").trim());
+        assertThat(result1).isEqualTo(getResourceAsText("result1.json").trim());
 
         String result2 = jsondb.getAsString("/", prettyPrint).trim();
         assertThat(result2).isEqualTo(result1);
 
         String result3 = jsondb.getAsString("/users/u1000", prettyPrint).trim();
-        assertThat(result3).isEqualTo(load("result3.json").trim());
+        assertThat(result3).isEqualTo(getResourceAsText("result3.json").trim());
 
         assertThat(jsondb.getAsString("/users/u1000/name")).isEqualTo("\"Joe\"");
         assertThat(jsondb.getAsString("/users/u1000/developer")).isEqualTo("false");
@@ -506,13 +505,13 @@ public class JsonDBTest {
 
         jsondb.set("/", mapper.writeValueAsString(user));
         String result3 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result3).isEqualTo(load("result3.json").trim());
+        assertThat(result3).isEqualTo(getResourceAsText("result3.json").trim());
 
         // Verify that if we write over an existing /developer value, it get replaced
         // with an object
         jsondb.set("/developer/users/u1000", mapper.writeValueAsString(user));
         String result4 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result4).isEqualTo(load("result4.json").trim());
+        assertThat(result4).isEqualTo(getResourceAsText("result4.json").trim());
 
 
         // Writing a new object wipe the previous values at that path.
@@ -522,7 +521,7 @@ public class JsonDBTest {
         );
         jsondb.set("/", mapper.writeValueAsString(user2));
         String result5 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result5).isEqualTo(load("result5.json").trim());
+        assertThat(result5).isEqualTo(getResourceAsText("result5.json").trim());
 
     }
 
@@ -537,16 +536,16 @@ public class JsonDBTest {
         );
         jsondb.set("/", mapper.writeValueAsString(user));
         String result6 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result6).isEqualTo(load("result6.json").trim());
+        assertThat(result6).isEqualTo(getResourceAsText("result6.json").trim());
 
         jsondb.set("/data/1", mapper.writeValueAsString("update"));
         String result7 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result7).isEqualTo(load("result7.json").trim());
+        assertThat(result7).isEqualTo(getResourceAsText("result7.json").trim());
 
         // Validate the large arrays stay sorted.
         jsondb.set("/", mapper.writeValueAsString(new Object[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}));
         String result8 = jsondb.getAsString("", prettyPrint).trim();
-        assertThat(result8).isEqualTo(load("result8.json").trim());
+        assertThat(result8).isEqualTo(getResourceAsText("result8.json").trim());
 
     }
 
@@ -694,21 +693,6 @@ public class JsonDBTest {
             "{\"u2\":{\"age\":10,\"name\":\"u2\"}}"
         );
 
-    }
-
-    private String load(String file) throws IOException {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(file)) {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            copy(is, os);
-            return new String(os.toByteArray(), StandardCharsets.UTF_8);
-        }
-    }
-
-    private void copy(InputStream is, ByteArrayOutputStream os) throws IOException {
-        int c;
-        while( (c=is.read())>=0 ) {
-            os.write(c);
-        }
     }
 
     // Helper method to help construct maps with concise syntax

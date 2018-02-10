@@ -23,7 +23,7 @@ import io.syndesis.model.ToJson;
 /**
  *
  */
-public class LogicalFilter extends Filter implements ToJson {
+public class LogicalFilter implements Filter, ToJson {
 
     public enum Op {
         AND,
