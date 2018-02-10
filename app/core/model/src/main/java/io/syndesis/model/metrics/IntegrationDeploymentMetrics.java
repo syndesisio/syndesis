@@ -17,25 +17,17 @@ package io.syndesis.model.metrics;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import io.syndesis.model.Kind;
-import io.syndesis.model.WithId;
-
 @Value.Immutable
-@JsonDeserialize(builder = IntegrationMetricsSummary.Builder.class)
+@JsonDeserialize(builder = IntegrationDeploymentMetrics.Builder.class)
 @SuppressWarnings("immutables")
-public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSummary>, Serializable{
+public interface IntegrationDeploymentMetrics extends Serializable{
 
-    @Override
-    default Kind getKind() {
-        return Kind.IntegrationMetricsSummary;
-    }
     /**
      * @return Number of successful messages
      */
@@ -54,9 +46,7 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
      */
     Optional<Date> getLastProcessed();
 
-    Optional<List<IntegrationDeploymentMetrics>> getIntegrationDeploymentMetrics();
-
-    class Builder extends ImmutableIntegrationMetricsSummary.Builder {
-        // allow access to ImmutablIntegrationMetricsSummary.Builder
+    class Builder extends ImmutableIntegrationDeploymentMetrics.Builder {
+        // allow access to ImmutableIntegrationDeploymentMetrics.Builder
     }
 }
