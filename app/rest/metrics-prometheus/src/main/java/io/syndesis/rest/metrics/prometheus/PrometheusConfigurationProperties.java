@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.rest.metrics.collector;
+package io.syndesis.rest.metrics.prometheus;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnProperty(value = "metrics.kind", havingValue = "sql")
 @Configuration
 @ComponentScan
-public class MetricsCollectorConfiguration {
+@ConfigurationProperties("prometheus")
+@ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
+public class PrometheusConfigurationProperties {
+
+    private String service = "syndesis-prometheus";
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
 }

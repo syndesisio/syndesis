@@ -55,9 +55,6 @@ openshift:
 verifier:
   kind: always-ok
 
-metrics:
-  kind: sql
-
 client:
   state:
     authenticationAlgorithm: HmacSHA1

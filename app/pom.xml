@@ -725,6 +725,12 @@
 
       <dependency>
         <groupId>io.syndesis.rest</groupId>
+        <artifactId>rest-metrics-prometheus</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.rest</groupId>
         <artifactId>rest-filestore</artifactId>
         <version>${project.version}</version>
       </dependency>
