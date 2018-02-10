@@ -20,6 +20,7 @@ Access UX design resource and documentation for Syndesis.
 * ### [Salesforce Dynamic Object](designs/salesforceobjects/salesforceobjects.md)
 * ### [Import Export](designs/importexport/importexport.md)
 * ### [Integration Details Page](designs/integration_details/integration_details_page.md)
+* ### [Integration  Activity](designs/integrationactivity/iintegrationactivity.md)
 * ### [Describe Data](designs/describe-data/describe-data.md)
 
 
@@ -36,7 +37,7 @@ Access UX design resource and documentation for Syndesis.
 * ### AWS S3 Connector Icon: [svg](designs/aws-s3/icon/_iPaaS_ConnectionIcons_AWS-S3.svg), [png](designs/aws-s3/icon/aws-s3-icon-png.png)
 
 ## Monitor
-* ### [System Metrics](designs/monitormetrics/monitormetrics.md) 
+* ### [System Metrics](designs/monitormetrics/monitormetrics.md)
 
 ## Archives
 * ### [Integration Summary Page](designs/integrationsummary/integrationsummary.md)
