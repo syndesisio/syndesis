@@ -92,9 +92,11 @@ public class PodMetricsReader implements Runnable {
                     long errors = toLong(m.getOrDefault(EXCHANGES_FAILED, "0"));
                     Date lastCompleted = toDate(m.get(LAST_COMPLETED_TIMESTAMP));
                     Date lastFailed = toDate(m.get(LAST_FAILED_TIMESTAMP));
-                    Date lastMessage = lastCompleted != null && lastFailed != null && lastCompleted.after(lastFailed)
-                        ? lastCompleted
-                        : lastFailed;
+                    Date lastMessage =
+                            (lastCompleted == null && lastFailed != null) ||
+                            (lastCompleted != null && lastFailed != null && lastFailed.after(lastCompleted))
+                        ? lastFailed
+                        : lastCompleted;
 
                     Date resetDate = toDate(m.get(RESET_TIMESTAMP));
                     Date startDate = toDate(m.get(START_TIMESTAMP));
