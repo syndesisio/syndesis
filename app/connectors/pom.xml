@@ -63,6 +63,7 @@
     <module>components</module>
     <module>connectors-maven-plugin</module>
     <module>connectors-catalog</module>
+    <module>connector-test</module>
     <module>connector-verify</module>
 
     <module>connectors/aws-s3-connector</module>
