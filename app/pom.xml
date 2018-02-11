@@ -862,34 +862,9 @@
         <version>${project.version}</version>
       </dependency>
 
-
       <dependency>
         <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-sql-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-sql-component</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-sql-start</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-sql-stored</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-sql-stored-start</artifactId>
+        <artifactId>connector-sql</artifactId>
         <version>${project.version}</version>
       </dependency>
 

@@ -59,77 +59,6 @@
       <artifactId>connector-verifier</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-http-get</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-http4-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-twitter</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-common</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-component</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-start</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-stored</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-sql-stored-start</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sql-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
     <!-- ===================================================================================== -->
 
     <dependency>
@@ -182,11 +111,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
     </dependency>
 
     <dependency>
@@ -261,6 +185,11 @@
       <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+    </dependency>
+
     <!-- === Connectors ================================================================== -->
 
     <dependency>
@@ -327,8 +256,27 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-http-get</artifactId>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-http4-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-twitter</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-sql</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->

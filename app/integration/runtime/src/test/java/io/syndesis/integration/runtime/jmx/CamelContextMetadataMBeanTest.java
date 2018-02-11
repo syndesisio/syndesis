@@ -21,6 +21,9 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationRouteBuilderTest;
+import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.model.RoutesDefinition;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +33,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jmx.support.JmxUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationRouteBuilderTest;
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,7 +50,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class CamelContextMetadataMBeanTest extends StepHandlerTestSupport {
+public class CamelContextMetadataMBeanTest {
 
     private static final String[] ATTRIBUTES = {"StartTimestamp",
             "LastExchangeCompletedTimestamp"};

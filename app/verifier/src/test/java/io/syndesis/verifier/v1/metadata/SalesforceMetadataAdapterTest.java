@@ -45,7 +45,7 @@ public class SalesforceMetadataAdapterTest {
 
     private static final Map<String, Object> NOT_USED = null;
 
-    private final SalesforceMetadataAdapter adapter = new SalesforceMetadataAdapter();
+    private final SalesforceMetadataRetrieval adapter = new SalesforceMetadataRetrieval();
 
     private final ObjectSchema payload;
 
@@ -79,7 +79,7 @@ public class SalesforceMetadataAdapterTest {
         properties.put("sObjectName", "SimpleObject");
         properties.put("sObjectIdName", null);
 
-        final SyndesisMetadata metadata = adapter.adapt(null, properties,
+        final SyndesisMetadata metadata = adapter.adapt(null, null, null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
         assertThat(metadata.properties).containsKey("sObjectIdName");
@@ -95,7 +95,7 @@ public class SalesforceMetadataAdapterTest {
         final Map<String, Object> properties = new HashMap<>();
         properties.put("sObjectName", "SimpleObject");
 
-        final SyndesisMetadata metadata = adapter.adapt(null, properties,
+        final SyndesisMetadata metadata = adapter.adapt(null, null, null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
         assertThat(metadata.inputShape).isSameAs(metadata.inputShape);
@@ -114,7 +114,7 @@ public class SalesforceMetadataAdapterTest {
         oneOf.add(simpleObjectSchema("Object2", "Object2 Label"));
         globalObjectsPayload.setOneOf(oneOf);
 
-        final SyndesisMetadata metadata = adapter.adapt(null, NOT_USED,
+        final SyndesisMetadata metadata = adapter.adapt(null, null, null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withPayload(globalObjectsPayload).build());
 
         assertThat(metadata.properties).containsKey("sObjectName");
@@ -130,7 +130,7 @@ public class SalesforceMetadataAdapterTest {
         final JsonNode payload = new ObjectMapper().readTree(
             "[{\"name\":\"Object1\",\"label\":\"Object1 Label\"},{\"name\":\"Object2\",\"label\":\"Object2 Label\"}]");
 
-        final SyndesisMetadata metadata = adapter.adapt(null, NOT_USED,
+        final SyndesisMetadata metadata = adapter.adapt(null, null, null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object_types").withPayload(payload).build());
 
         assertThat(metadata.properties).containsKey("sObjectName");

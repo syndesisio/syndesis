@@ -48,9 +48,8 @@ public class ActionDefinitionEndpointTest {
         try {
             context.start();
 
-            final PetstoreAdapter adapter = new PetstoreAdapter(PAYLOAD, PROPERTIES, INPUT, OUTPUT);
-            final ActionDefinitionEndpoint endpoint = new ActionDefinitionEndpoint(context, "petstore", adapter);
-            final SyndesisMetadata metadata = endpoint.definition("dog-food", Collections.emptyMap());
+            final PetstoreMetadataRetrieval adapter = new PetstoreMetadataRetrieval(PAYLOAD, PROPERTIES, INPUT, OUTPUT);
+            final SyndesisMetadata metadata = adapter.fetch(context, "petstore", "dog-food", Collections.emptyMap());
 
             assertThat(metadata.properties).isSameAs(PROPERTIES);
             assertThat(metadata.inputShape).isSameAs(INPUT);
