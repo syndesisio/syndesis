@@ -15,9 +15,11 @@
  */
 package io.syndesis.rest.metrics.collector;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+@ConditionalOnProperty(value = "metrics.kind", havingValue = "sql")
 @Configuration
 @ComponentScan
 public class MetricsCollectorConfiguration {

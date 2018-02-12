@@ -17,9 +17,13 @@ package io.syndesis.integration.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.core.Json;
@@ -31,12 +35,14 @@ import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
+import io.syndesis.integration.runtime.jmx.CamelContextMetadataMBean;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Scheduler;
 import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
 import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,19 +89,23 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         final Integration integration = loadIntegration();
-        final List<? extends Step> steps = integration.getSteps();
+        final List<Step> steps = Collections.unmodifiableList(integration.getSteps());
 
-        ProcessorDefinition route = null;
+        if (steps.isEmpty()) {
+            return;
+        }
+
+        ProcessorDefinition route = configureRouteScheduler(integration);
 
         for (int i = 0; i< steps.size(); i++) {
             final Step step = steps.get(i);
+            final IntegrationStepHandler handler = findHandler(step);
 
-            if (i == 0 && StepKind.endpoint != step.getStepKind()) {
-                throw new IllegalStateException("No connector found as first step (found: " + step.getKind() + ")");
+            if (route == null && !(handler instanceof IntegrationStepHandler.Consumer)) {
+                throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
             }
 
-            final IntegrationStepHandler handler = findHandler(step);
-            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, Integer.toString(i+1));
+            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, Integer.toString(i + 1));
 
             if (route == null && definition.isPresent()) {
                 definition.filter(RouteDefinition.class::isInstance)
@@ -114,6 +124,10 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 }).orElse(route);
             }
         }
+
+        // register custom mbean
+        getContext().addService(new CamelContextMetadataMBean());
+        LOGGER.info("Added Syndesis MBean Service");
     }
 
     // Visibility changed for test purpose.
@@ -128,5 +142,35 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
 
         throw new IllegalStateException("Unsupported step kind: " + step.getStepKind());
+    }
+
+    /**
+     * If the integration has a scheduler, start the route with a timer or quartz2
+     * endpoint.
+     */
+    private ProcessorDefinition configureRouteScheduler(Integration integration) throws URISyntaxException {
+        if (integration.getScheduler().isPresent()) {
+            Scheduler scheduler = integration.getScheduler().get();
+
+            // We now support simple timer only, cron support will be supported
+            // later on.
+            if (scheduler.isTimer()) {
+                Map<String, String> properties = new HashMap<>();
+                properties.put("timerName", "integration");
+                properties.put("period", scheduler.getExpression());
+
+                final RuntimeCamelCatalog catalog = getContext().getRuntimeCamelCatalog();
+                final String uri = catalog.asEndpointUri("timer", properties, false);
+
+                ProcessorDefinition route = this.from(uri);
+                integration.getId().ifPresent(route::setId);
+
+                return route;
+            } else {
+                throw new IllegalArgumentException("Unsupported scheduler type: " + scheduler.getType());
+            }
+        }
+
+        return null;
     }
 }

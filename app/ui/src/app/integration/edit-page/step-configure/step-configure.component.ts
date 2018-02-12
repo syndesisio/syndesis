@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -17,7 +17,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './step-configure.component.html',
   styleUrls: ['./step-configure.component.scss']
 })
-export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
+export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, AfterViewInit {
   flowSubscription: Subscription;
   position: number;
   step: Step = undefined;
@@ -33,6 +33,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
@@ -139,41 +140,13 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
       });
       return;
     }
+
     const prevStep = this.currentFlowService.getPreviousStepWithDataShape(this.position);
-    const nextStep = this.currentFlowService.getSubsequentStepWithDataShape(this.position);
-
-    // we now have previous and next steps that have the data shapes defined
-    // now we need to determine if there is a mapping step inbetween
-    // mapping step doesn't specify shape but it changes it to the input shape
-    // of the step after it, in that case we need to look at the input sep of
-    // the next step, otherwise we need to look at the output step of the
-    // previous step
-
-    const prevIdx = this.currentFlowService.steps.indexOf(prevStep);
-    const nextIdx = this.currentFlowService.steps.indexOf(nextStep);
-    let stepToFilterOn;
-    let shapePromise;
-    if (prevIdx + 1 < this.position) {
-      // there is a step in front of this step that doesn't have a shape,
-      // we're betting on it's the mapper step
-      // integration is: previous - mapping - this - ... - next
-      // we need to take the input shape of the next step
-      stepToFilterOn = nextStep;
-      shapePromise = this.currentFlowService.fetchInputDataShapeFor(stepToFilterOn);
-    } else {
-      // here prevIdx + 1 should be this.position, that means there is nothing
-      // to change the shape of the previous step
-      // integration is: previous - this - ... - next
-      // we need to take the output of the previous step
-      stepToFilterOn = prevStep;
-      shapePromise = this.currentFlowService.fetchOutputDataShapeFor(stepToFilterOn);
-    }
-
-    shapePromise.then(shape => {
-        this.dataShape = shape;
-      })
-      .catch(response => this.handleDataShapeError(stepToFilterOn, response))
-      .then(() => this.loadFormSetup(step));
+    this.currentFlowService.fetchOutputDataShapeFor(prevStep).then(shape => {
+      this.dataShape = shape;
+    })
+    .catch(response => this.handleDataShapeError(prevStep, response))
+    .then(() => this.loadFormSetup(step));
   }
 
   loadFormSetup(step: Step) {
@@ -237,6 +210,10 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
         this.position = +params.get('position');
         this.loadForm();
       });
+  }
+
+  ngAfterViewInit() {
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnDestroy() {

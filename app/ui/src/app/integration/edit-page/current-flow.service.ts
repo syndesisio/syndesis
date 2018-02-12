@@ -14,7 +14,11 @@ import {
   IntegrationSupportService
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { IntegrationStore } from '@syndesis/ui/store';
+import { IntegrationStore,
+  ENDPOINT,
+  DATA_MAPPER,
+  EXTENSION,
+  BASIC_FILTER } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('CurrentFlow');
@@ -130,11 +134,16 @@ export class CurrentFlowService {
   getSubsequentConnections(position): Array<Step> {
     const answer = this.getSubsequentSteps(position);
     if (answer) {
-      return answer.filter(s => s.stepKind === 'endpoint');
+      return answer.filter(s => s.stepKind === ENDPOINT);
     }
     return null;
   }
 
+  /**
+   * Return all DataShape aware steps after the supplied position.
+   * @param {number} position
+   * @returns {Array<{step: Step, index: number}>}
+   */
   getSubsequentStepsWithDataShape(position): Array<{step: Step, index: number}> {
     const answer: {step: Step, index: number}[] = [];
     const steps = this.getSubsequentSteps(position);
@@ -166,6 +175,11 @@ export class CurrentFlowService {
     }
   }
 
+  /**
+   * Return all DataShape aware steps before the supplied position.
+   * @param {number} position
+   * @returns {Array<{step: Step, index: number}>}
+   */
   getPreviousStepsWithDataShape(position): Array<{step: Step, index: number}> {
     const answer: {step: Step, index: number}[] = [];
     this.getPreviousSteps(position).forEach((step, index) => {
@@ -186,7 +200,7 @@ export class CurrentFlowService {
   getPreviousConnections(position): Array<Step> {
     const answer = this.getPreviousSteps(position);
     if (answer) {
-      return answer.filter(s => s.stepKind === 'endpoint');
+      return answer.filter(s => s.stepKind === ENDPOINT);
     }
     return null;
   }
@@ -331,7 +345,7 @@ export class CurrentFlowService {
             position === this.getLastPosition()
           ) {
             this.steps[position] = createStep();
-            this.steps[position].stepKind = 'endpoint';
+            this.steps[position].stepKind = ENDPOINT;
           } else {
             this.steps.splice(position, 1);
           }
@@ -371,10 +385,11 @@ export class CurrentFlowService {
       case 'integration-set-action': {
         const position = +event['position'];
         const action = event['action'];
+        const stepKind = event['stepKind'] || ENDPOINT;
         // TODO no step here should really raise an error
         const step = this.steps[position] || createStep();
         step.action = action;
-        step.stepKind = 'endpoint';
+        step.stepKind = stepKind;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
         log.debugc(
@@ -387,7 +402,7 @@ export class CurrentFlowService {
         const position = +event['position'];
         const connection = event['connection'];
         const step = createStep();
-        step.stepKind = 'endpoint';
+        step.stepKind = ENDPOINT;
         step.connection = connection;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
@@ -479,7 +494,7 @@ export class CurrentFlowService {
   private fetchDataShapeFor(step: Step, output = true): Promise<any> {
     return new Promise(resolve => {
       // extension step must be always carrying full data shape
-      if (step.stepKind === 'extension') {
+      if (step.stepKind === EXTENSION || step.stepKind === DATA_MAPPER) {
         if (output) {
           resolve(step.action.descriptor.outputDataShape);
         } else {
@@ -541,10 +556,10 @@ export class CurrentFlowService {
   }
 
   private hasDataShape(step: Step, isInput = false): boolean {
-      if (step.stepKind === 'endpoint') {
+      if (step.stepKind === ENDPOINT || step.stepKind === DATA_MAPPER) {
         return true;
       }
-      if (step.stepKind !== 'extension') {
+      if (step.stepKind !== EXTENSION) {
         return false;
       }
       // it's an extesion, we need to look at the action

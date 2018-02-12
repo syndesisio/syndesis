@@ -17,6 +17,7 @@ package io.syndesis.model.metrics;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -52,6 +53,8 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
      * @return the TimeStamp of when the last message for processed
      */
     Optional<Date> getLastProcessed();
+
+    Optional<List<IntegrationDeploymentMetrics>> getIntegrationDeploymentMetrics();
 
     class Builder extends ImmutableIntegrationMetricsSummary.Builder {
         // allow access to ImmutablIntegrationMetricsSummary.Builder

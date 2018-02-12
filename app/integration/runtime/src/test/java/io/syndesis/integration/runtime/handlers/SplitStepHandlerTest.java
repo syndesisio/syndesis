@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.Arrays;
 import java.util.List;
 
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
@@ -49,7 +49,7 @@ import org.springframework.test.context.junit4.SpringRunner;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class SplitStepHandlerTest extends StepHandlerTestSupport {
+public class SplitStepHandlerTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

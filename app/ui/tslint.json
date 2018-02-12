@@ -2,6 +2,9 @@
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
+  "extends": [
+    "rxjs-tslint-rules"
+  ],
   "rules": {
     // ***************************************************
     // TypeScript linting Ruleset
@@ -220,6 +223,19 @@
     "pipe-naming": ["camelCase"],
     "use-host-property-decorator": true,
     "use-input-property-decorator": true,
-    "use-output-property-decorator": true
+    "use-output-property-decorator": true,
+    // ***************************************************
+    // TSLint rules for RxJS
+    // ***************************************************
+    "rxjs-add": {
+      "options": [
+        {
+          "allowElsewhere": false,
+          "allowUnused": false,
+          "file": "polyfills.ts"
+        }
+      ],
+      "severity": "error"
+    }
   }
 }

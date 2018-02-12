@@ -40,9 +40,9 @@ class LogicalSqlExpressionBuilder extends SqlExpressionBuilder {
             if ( i!=0 ) {
                 sql.append(op);
             }
-            sql.append("(");
+            sql.append('(');
             builder.build(sql, binds, bindCounter);
-            sql.append(")");
+            sql.append(')');
         }
     }
 }

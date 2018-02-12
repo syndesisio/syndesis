@@ -17,7 +17,6 @@ package io.syndesis.integration.runtime;
 
 import java.util.Map;
 
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
@@ -58,7 +57,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class OutMessageCaptureInterceptStrategyTest extends StepHandlerTestSupport {
+public class OutMessageCaptureInterceptStrategyTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

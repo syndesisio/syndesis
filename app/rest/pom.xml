@@ -92,6 +92,7 @@
     <module>syndesis-builder-image-generator</module>
     <module>verifier</module>
     <module>metrics-collector</module>
+    <module>metrics-prometheus</module>
   </modules>
 
   <dependencyManagement>

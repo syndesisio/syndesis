@@ -23,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
+import io.syndesis.model.integration.Scheduler;
 import io.syndesis.model.integration.Step;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -137,6 +139,9 @@ public final class ProjectGeneratorHelper {
 
     public static Integration sanitize(Integration integration, IntegrationResourceManager resourceManager) {
         final List<Step> steps = new ArrayList<>(integration.getSteps());
+        if (steps.isEmpty()) {
+            return integration;
+        }
 
         for (int i = 0; i < steps.size(); i++) {
             final Step source = steps.get(i);
@@ -168,9 +173,39 @@ public final class ProjectGeneratorHelper {
             }
         }
 
-        return new Integration.Builder()
-            .createFrom(integration)
-            .steps(steps)
-            .build();
+        final Integration.Builder builder = new Integration.Builder().createFrom(integration);
+
+        // Temporary implementation until https://github.com/syndesisio/syndesis/issues/736
+        // is fully implemented and schedule options are set on integration.
+        if (!integration.getScheduler().isPresent()) {
+            Map<String, String> properties = new HashMap<>(steps.get(0).getConfiguredProperties());
+            String type = properties.remove("schedulerType");
+            String expr = properties.remove("schedulerExpression");
+
+            if (StringUtils.isNotEmpty(expr)) {
+                if (StringUtils.isEmpty(type)) {
+                    type = "timer";
+                }
+
+                builder.scheduler(
+                    new Scheduler.Builder()
+                        .type(Scheduler.Type.valueOf(type))
+                        .expression(expr)
+                        .build()
+                );
+            }
+
+            // Replace first step so underlying connector won't fail uri param
+            // validation if schedule options were set.
+            steps.set(
+                0,
+                new Step.Builder()
+                    .createFrom(steps.get(0))
+                    .configuredProperties(properties)
+                    .build()
+            );
+        }
+
+        return builder.steps(steps).build();
     }
 }

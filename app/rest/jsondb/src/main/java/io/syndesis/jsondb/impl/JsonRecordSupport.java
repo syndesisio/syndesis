@@ -146,7 +146,7 @@ public final class JsonRecordSupport {
                 if (inArray) {
                     currentPath = path + toArrayIndexPath(arrayIndex) + "/";
                 }
-                consumer.accept(JsonRecord.of(currentPath, ""+NULL_VALUE_PREFIX, "null", indexFieldValue(indexes, currentPath)));
+                consumer.accept(JsonRecord.of(currentPath, String.valueOf(NULL_VALUE_PREFIX), "null", indexFieldValue(indexes, currentPath)));
                 if( inArray ) {
                     arrayIndex++;
                 } else {
@@ -161,16 +161,16 @@ public final class JsonRecordSupport {
                 String ovalue = null;
 
                 if( nextToken == JsonToken.VALUE_STRING ) {
-                    value = STRING_VALUE_PREFIX + value;
+                    value = STRING_VALUE_PREFIX + value; //NOPMD
                 } else if( nextToken == JsonToken.VALUE_NUMBER_INT || nextToken == JsonToken.VALUE_NUMBER_FLOAT ) {
                     ovalue = value; // hold on to the original number in th ovalue field.
                     value = toLexSortableString(value); // encode it so we can lexically sort.
                 } else if( nextToken == JsonToken.VALUE_TRUE ) {
                     ovalue = value;
-                    value = ""+TRUE_VALUE_PREFIX;
+                    value = String.valueOf(TRUE_VALUE_PREFIX);
                 } else if( nextToken == JsonToken.VALUE_FALSE ) {
                     ovalue = value;
-                    value = ""+FALSE_VALUE_PREFIX;
+                    value = String.valueOf(FALSE_VALUE_PREFIX);
                 }
 
                 consumer.accept(JsonRecord.of(currentPath, value, ovalue, indexFieldValue(indexes, currentPath)));
@@ -229,6 +229,7 @@ public final class JsonRecordSupport {
      * Based on:
      * http://www.zanopha.com/docs/elen.pdf
      */
+    @SuppressWarnings("PMD.NPathComplexity")
     public static String toLexSortableString(final String value) {
 
         String seq = value;

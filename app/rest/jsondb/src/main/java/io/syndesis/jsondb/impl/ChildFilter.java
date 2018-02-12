@@ -21,7 +21,7 @@ import io.syndesis.model.ToJson;
 /**
  *
  */
-public class ChildFilter extends Filter implements ToJson {
+public class ChildFilter implements Filter, ToJson {
 
     private final String field;
     private final Op op;

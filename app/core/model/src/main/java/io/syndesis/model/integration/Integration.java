@@ -74,6 +74,8 @@ public interface Integration extends WithId<Integration>, WithVersion, WithModif
         return Collections.emptyList();
     }
 
+    Optional<Scheduler> getScheduler();
+
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getDescription();
 

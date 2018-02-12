@@ -163,27 +163,6 @@
             <artifactId>connector-activemq-request</artifactId>
             <version>${project.version}</version>
           </dependency>
-          <!-- ==== SQL ==== -->
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-component</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-start</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-stored</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-stored-start</artifactId>
-            <version>${project.version}</version>
-          </dependency>
           <!-- ==== REST Swagger ==== -->
           <dependency>
             <groupId>io.syndesis.connector</groupId>
@@ -697,6 +676,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- Prometheus implementation -->
+    <dependency>
+      <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-metrics-prometheus</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-catalog</artifactId>
@@ -900,6 +886,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
     </dependency>
 
     <dependency>

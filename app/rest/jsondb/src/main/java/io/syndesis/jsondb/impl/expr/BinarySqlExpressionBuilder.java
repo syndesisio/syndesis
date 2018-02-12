@@ -51,6 +51,6 @@ class BinarySqlExpressionBuilder extends SqlExpressionBuilder {
         arg1.build(sql, binds, bindCounter);
         sql.append(op);
         arg2.build(sql, binds, bindCounter);
-        sql.append(")");
+        sql.append(')');
     }
 }

@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import io.syndesis.integration.runtime.handlers.support.StepHandlerTestSupport;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
@@ -47,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class StepWithIdTest extends StepHandlerTestSupport {
+public class StepWithIdTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 

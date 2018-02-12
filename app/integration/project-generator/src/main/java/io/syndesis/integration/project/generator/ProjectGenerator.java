@@ -35,10 +35,12 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.core.Optionals;
@@ -56,11 +58,10 @@ import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
@@ -257,6 +258,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, integration);
+                addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
                 addAdditionalResources(tos);
 
                 List<Step> steps = integration.getSteps();

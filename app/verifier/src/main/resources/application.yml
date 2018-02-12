@@ -41,3 +41,5 @@ io:
     connector:
       verifier:
         enabled: true
+      meta:
+        enabled: true
