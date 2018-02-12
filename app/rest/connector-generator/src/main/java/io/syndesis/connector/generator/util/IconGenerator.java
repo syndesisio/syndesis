@@ -91,7 +91,7 @@ public final class IconGenerator {
         }
     }
 
-    /* default */static String trimXml(final String xml) {
+    static String trimXml(final String xml) {
         return xml.replaceAll(">\\s*<", "><").replaceAll("\\s\\s+", " ").replaceAll(" />", "/>");
     }
 

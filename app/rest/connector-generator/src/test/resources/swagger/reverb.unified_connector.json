@@ -8,6 +8,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-61",
       "name": "GET /articles",
+      "description": "Send GET request to /articles",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -73,6 +74,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-5",
       "name": "GET /categories/flat",
+      "description": "Send GET request to /categories/flat",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -204,6 +206,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-68",
       "name": "GET /comparison_shopping_pages/{id}",
+      "description": "Send GET request to /comparison_shopping_pages/{id}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -434,6 +437,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-38",
       "name": "GET /curated_sets/{slug}",
+      "description": "Send GET request to /curated_sets/{slug}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -1456,6 +1460,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-95",
       "name": "DELETE /my/curated_set/product/{product_id}",
+      "description": "Send DELETE request to /my/curated_set/product/{product_id}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -1488,6 +1493,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-126",
       "name": "DELETE /my/follows/{follow_id}/alert",
+      "description": "Send DELETE request to /my/follows/{follow_id}/alert",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -2972,6 +2978,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-94",
       "name": "POST /my/curated_set/product/{product_id}",
+      "description": "Send POST request to /my/curated_set/product/{product_id}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -3004,6 +3011,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-125",
       "name": "POST /my/follows/{follow_id}/alert",
+      "description": "Send POST request to /my/follows/{follow_id}/alert",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -4323,6 +4331,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-57",
       "name": "GET /sales/{slug}",
+      "description": "Send GET request to /sales/{slug}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
@@ -4454,6 +4463,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-62",
       "name": "GET /shipping/regions",
+      "description": "Send GET request to /shipping/regions",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",

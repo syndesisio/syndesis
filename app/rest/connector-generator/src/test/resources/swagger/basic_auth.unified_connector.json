@@ -113,6 +113,7 @@
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-0",
       "name": "GET /operation",
+      "description": "Send GET request to /operation",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesiss.version@",
         "camelConnectorPrefix": "swagger-operation",

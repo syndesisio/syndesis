@@ -35,7 +35,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.syndesis.core.Json;
 import io.syndesis.dao.manager.DataManager;
-import io.syndesis.jsondb.GetOptions;
 import io.syndesis.jsondb.impl.SqlJsonDB;
 
 @SpringBootTest()
