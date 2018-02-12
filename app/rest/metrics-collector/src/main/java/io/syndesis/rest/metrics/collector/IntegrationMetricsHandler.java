@@ -15,13 +15,18 @@
  */
 package io.syndesis.rest.metrics.collector;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
+import lombok.Data;
 
 public class IntegrationMetricsHandler {
 
@@ -73,39 +78,70 @@ public class IntegrationMetricsHandler {
             Map<String,RawMetrics> metrics,
             Set<String> livePodIds) {
 
-        Long messages = 0L;
-        Long errors = 0L;
-        Optional<Date> lastProcessed = Optional.empty();
-        Optional<Date> startDate = Optional.empty(); //we may have no more live pods for this integration
+        Map<String, Metrics> m = new HashMap<>();
 
+        Metrics tm = new Metrics();
         for (RawMetrics raw:metrics.values()) {
-            messages += raw.getMessages();
-            errors += raw.getErrors();
+            String version = raw.getVersion();
+            Metrics mh = m.containsKey(version) ? m.get(version) : new Metrics();
+            mh.add(livePodIds, raw);
+            m.put(version, mh);
+            tm = tm.add(livePodIds, raw);
+        }
+
+        List<IntegrationDeploymentMetrics> dmList = new ArrayList<>();
+        for (Metrics mh : m.values()) {
+            IntegrationDeploymentMetrics dm = new IntegrationDeploymentMetrics.Builder()
+                    .version(mh.getVersion())
+                    .messages(mh.getMessages())
+                    .errors(mh.getErrors())
+                    .start(mh.getStartDate())
+                    .lastProcessed(mh.getLastProcessed())
+                    .build();
+            dmList.add(dm);
+        }
+        return new IntegrationMetricsSummary.Builder()
+                .id(integrationId)
+                .messages(tm.getMessages())
+                .errors(tm.getErrors())
+                .start(tm.getStartDate())
+                .lastProcessed(tm.getLastProcessed())
+                .integrationDeploymentMetrics(dmList)
+                .build();
+    }
+    
+    @Data
+    class Metrics {
+
+        private Long messages = 0L;
+        private Long errors = 0L;
+        private Optional<Date> lastProcessed = Optional.empty();
+        private Optional<Date> startDate = Optional.empty(); //we may have no more live pods for this integration
+        private String version;
+
+        public Metrics add(Set<String> livePodIds, RawMetrics raw) {
+            
+            this.version = raw.getVersion();
+            this.messages += raw.getMessages();
+            this.errors += raw.getErrors();
             //Let's simply grab the oldest living pod, we will need to revisit when doing rolling upgrades etc
             if (livePodIds.contains(raw.getPod())) {
-                if (startDate.isPresent()) {
-                    if (raw.getStartDate().get().before(startDate.get())) {
-                        startDate = raw.getStartDate();
+                if (this.startDate.isPresent()) {
+                    if (raw.getStartDate().get().before(this.startDate.get())) {
+                        this.setStartDate(raw.getStartDate());
                     }
                 } else {
-                    startDate = raw.getStartDate();
+                    this.setStartDate(raw.getStartDate());
                 }
             }
             if (raw.getLastProcessed().isPresent()) {
-                if (lastProcessed.isPresent()) {
-                    lastProcessed = raw.getLastProcessed().get().after(lastProcessed.get()) ? raw.getLastProcessed() : lastProcessed;
+                if (this.getLastProcessed().isPresent()) {
+                    this.setLastProcessed(raw.getLastProcessed().get().after(this.getLastProcessed().get()) ? raw.getLastProcessed() : this.getLastProcessed());
                 } else {
-                    lastProcessed = raw.getLastProcessed();
+                    this.setLastProcessed(raw.getLastProcessed());
                 }
             }
+            return this;
         }
-
-        return new IntegrationMetricsSummary.Builder()
-                .id(integrationId)
-                .messages(messages)
-                .errors(errors)
-                .start(startDate)
-                .lastProcessed(lastProcessed)
-                .build();
     }
 }
