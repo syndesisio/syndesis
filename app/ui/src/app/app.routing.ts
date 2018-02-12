@@ -21,10 +21,6 @@ const routes: Routes = [
     loadChildren: './customizations/customizations.module#CustomizationsModule'
   },
   {
-    path: 'monitor',
-    loadChildren: './monitor/monitor.module#MonitorModule'
-  },
-  {
     path: 'settings',
     loadChildren: './settings/settings.module#SettingsModule'
   },
