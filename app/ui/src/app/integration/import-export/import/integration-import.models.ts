@@ -2,11 +2,11 @@ import { BaseReducerModel } from '@syndesis/ui/platform';
 
 export interface IntegrationImportState extends BaseReducerModel {
   file?: File;
-  importResults: {
+  importResults?: {
     integrations?: string[];
     connections?: string[];
   };
-  list: IntegrationImportsState;
+  list?: IntegrationImportsState;
 
 }
 

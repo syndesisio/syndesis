@@ -2,11 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { PlatformState } from '@syndesis/ui/platform';
 
-
-import {
-  IntegrationImportUpload
-} from './integration-import.actions';
-
 @Component({
   selector: 'syndesis-import-integration-component',
   templateUrl: './integration-import.component.html'
@@ -23,7 +18,5 @@ export class IntegrationImportComponent implements OnInit {
         connections: []
       }
     };
-
-    this.store.dispatch(new IntegrationImportUpload(payload));
   }
 }

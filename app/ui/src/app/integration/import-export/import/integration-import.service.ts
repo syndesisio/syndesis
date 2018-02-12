@@ -1,45 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ApiHttpService } from '@syndesis/ui/platform';
-import { IntegrationImportData, IntegrationImportRequest } from './integration-import.models';
+import { Integration } from '@syndesis/ui/platform';
+import { IntegrationImportState } from './integration-import.models';
 
 @Injectable()
-export class IntegrationImportService {
-  constructor(private apiHttpService: ApiHttpService) { }
-
-  validateImportInfo(importRequest: IntegrationImportRequest): Observable<IntegrationImportData> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl('validateImportInfo');
-    const { specificationFile, integrationTemplateId } = importRequest;
-    if (specificationFile) {
-      return apiHttpService.upload<IntegrationImportData>({
-        specification: specificationFile
-      }, {
-        connectorSettings: { integrationTemplateId }
-      });
-    } else {
-      return apiHttpService.post<IntegrationImportData>(importRequest);
-    }
-  }
-
-  importIntegration(importRequest: IntegrationImportRequest): Observable<any> {
-    const apiHttpService = this.apiHttpService.setEndpointUrl('submitImport');
-
-    const [importIntegration, icon, specification] = [
-      importRequest,
-      importRequest.iconFile,
-      importRequest.specificationFile
-    ];
-
-    if (specification || icon) {
-      const payload = specification && icon ? { specification, icon } : { specification } || { icon };
-      return apiHttpService.upload(payload, { importIntegration });
-    } else {
-      return apiHttpService.post(importIntegration);
-    }
-  }
-
-  uploadIntegration(importRequest: IntegrationImportRequest): Observable<any> {
-    return;
-  }
+export abstract class IntegrationImportService {
+  /**
+   * Expects a new IntegrationImportState object and submits it through a POST request to the REST API
+   * @param {Integration} integrationImport The Integration file to be uploaded
+   * @returns {Observable<any>} Whatever the API returns for this - TODO: Properly model this
+   */
+  abstract uploadIntegration(integrationImport: IntegrationImportState): Observable<any>;
 }
