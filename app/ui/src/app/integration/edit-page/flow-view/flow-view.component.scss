@@ -1,15 +1,8 @@
-@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+@import 'syndesis-sass';
 
 .collapsed {
   .step-insert {
     display: none;
-  }
-}
-
-.clickable {
-  cursor: pointer;
-  & > * {
-    cursor: pointer;
   }
 }
 
@@ -30,18 +23,19 @@
   .flow-view-container {
     flex: 1 1 auto;
     overflow-y: scroll;
-    padding-top: 20px;
+    padding-top: 15px;
     padding-bottom: 20px;
     margin-right: -20px;
-
     width: 320px;
     display: flex;
     flex-direction: column;
+
     &.collapsed {
       width: 130px;
       align-items: center;
       margin-right: 0;
     }
+
     .start,
     .finish {
       h5 {
@@ -51,50 +45,68 @@
         padding: 5px;
         text-transform: uppercase;
       }
+
       ul {
         min-width: 160px;
         padding: 10px 0; // Sub-Menu Items
+
         &.collapse {
           margin-top: 5px;
           padding: 5px 0;
+
           li {
             padding: 5px 5px 5px 17px;
+
             &.active {
               background-color: #d6eefa;
               border-bottom: 1px solid #b8dff3;
               border-top: 1px solid #b8dff3;
             }
+
             &.inactive {
               color: #d1d1d1;
             }
           }
         }
       }
+
       .fa {
         font-size: x-small;
         padding-right: 5px;
       }
     }
   }
+
   .name {
     flex: 0 0 auto;
-    margin-top: -10px;
     border-bottom: 1px #d9d9d9 solid;
+    padding-bottom: 20px;
+
     .integration-name {
-      background: none;
-      border: none;
-      box-shadow: none;
-      color: #363636;
-      font-size: 14px;
-      font-style: normal;
-      &.ng-invalid {
-        color: #ff0000;
+      flex: 1 0 0;
+      padding-right: 1em;
+
+      .integration-name-field {
+        color: #363636;
+        font-size: 14px;
+        font-style: normal;
+
+        &[readonly] {
+          background: none;
+          border-color: transparent;
+          box-shadow: none;
+        }
+
+        &.ng-invalid {
+          color: #ff0000;
+        }
       }
+
     }
-    .pficon.pficon-edit {
-      margin-top: -20px;
-    }
-  } ////////////////////////////////////////////////////////////////////////////////
+
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
   // LEFT-HAND NAV BAR W/ STEPS
   ////////////////////////////////////////////////////////////////////////////////
   .step {
@@ -102,6 +114,7 @@
     flex-wrap: nowrap;
     flex: 0 0 auto;
     min-height: 110px;
+
     .step-line {
       position: absolute;
       height: 100%;
@@ -110,32 +123,40 @@
       width: 2px;
       background-color: #d4d4d4;
     }
+
     &.finish {
       flex: 0 0 auto;
       min-height: 0px;
     }
+
     &.step-insert {
       flex: 0 0 auto;
       min-height: 80px;
-      /deep/ .popover {
+
+      ::ng-deep .popover {
         margin-top: -2px;
         margin-left: 28px !important;
         border-color: $color-pf-black-500;
+
         &.right > .arrow {
           border-right-color: $color-pf-black-500;
         }
       }
+
       a {
         text-decoration: none;
       }
+
       .popover-body {
         a {
           cursor: pointer;
           padding: 10px;
         }
       }
+
       .square-icon {
         padding-left: 0;
+
         .fa.fa-plus-square {
           color: #158acc;
           background-color: white;
