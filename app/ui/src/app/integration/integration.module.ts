@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
 import { VendorModule } from '@syndesis/ui/vendor';
+import { IntegrationImportExportModule } from './import-export/integration-import-export.module';
 import { IntegrationListModule } from './list';
 import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationDetailComponent } from './detail-page';
@@ -98,6 +99,7 @@ const routes: Routes = [
     FileUploadModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
+    IntegrationImportExportModule,
   ],
   declarations: [
     DataMapperHostComponent,

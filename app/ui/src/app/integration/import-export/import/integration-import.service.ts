@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Integration } from '@syndesis/ui/platform';
+import { ApiHttpService } from '@syndesis/ui/platform';
 import { IntegrationImportState } from './integration-import.models';
 
+import { integrationImportEndpoints } from './integration-import.api';
+
 @Injectable()
-export abstract class IntegrationImportService {
-  /**
-   * Expects a new IntegrationImportState object and submits it through a POST request to the REST API
-   * @param {Integration} integrationImport The Integration file to be uploaded
-   * @returns {Observable<any>} Whatever the API returns for this - TODO: Properly model this
-   */
-  abstract uploadIntegration(integrationImport: IntegrationImportState): Observable<any>;
+export class IntegrationImportService {
+  constructor(private apiHttpService: ApiHttpService) { }
+
+  uploadIntegration(integrationImport: IntegrationImportState): Observable<any> {
+    const apiHttpService = this.apiHttpService.setEndpointUrl(integrationImportEndpoints.uploadIntegration);
+    const [file] = [
+      integrationImport,
+      integrationImport.file
+    ];
+
+    return apiHttpService.post(file);
+  }
 }

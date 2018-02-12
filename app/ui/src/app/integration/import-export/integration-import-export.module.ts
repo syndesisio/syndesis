@@ -13,12 +13,8 @@ const routes: Routes = [
     component: IntegrationImportExportComponent,
     children: [
       {
-        path: 'import',
+        path: 'integration-import',
         component: IntegrationImportComponent
-      },
-      {
-        path: '',
-        redirectTo: 'import-export'
       }
     ]
   }
