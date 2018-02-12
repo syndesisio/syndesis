@@ -135,6 +135,7 @@
     <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
+        <scope>provided</scope>
     </dependency>
     <!-- === Testing Dependencies ======================================================== -->
 
@@ -153,12 +154,18 @@
     <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>javax.el</artifactId>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.jdbi</groupId>
       <artifactId>jdbi</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
       <scope>test</scope>
     </dependency>
 

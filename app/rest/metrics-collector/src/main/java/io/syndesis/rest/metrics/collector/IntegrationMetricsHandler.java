@@ -109,9 +109,9 @@ public class IntegrationMetricsHandler {
                 .integrationDeploymentMetrics(dmList)
                 .build();
     }
-    
+
     @Data
-    class Metrics {
+    static class Metrics {
 
         private Long messages = 0L;
         private Long errors = 0L;
@@ -120,7 +120,7 @@ public class IntegrationMetricsHandler {
         private String version;
 
         public Metrics add(Set<String> livePodIds, RawMetrics raw) {
-            
+
             this.version = raw.getVersion();
             this.messages += raw.getMessages();
             this.errors += raw.getErrors();

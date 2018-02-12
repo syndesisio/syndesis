@@ -153,7 +153,7 @@ public class PodMetricsReader implements Runnable {
         ObjectName on = cache.get(camelContextName);
         if (on == null) {
             ObjectName found = null;
-            J4pSearchResponse sr = jolokia.execute(new J4pSearchRequest("*:type=context,*"));
+            J4pSearchResponse sr = jolokia.execute(new J4pSearchRequest("org.apache.camel:type=context,*"));
             if (sr != null) {
                 for (ObjectName name : sr.getObjectNames()) {
                     String id = name.getKeyProperty("name");

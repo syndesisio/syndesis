@@ -27,9 +27,9 @@ public class PodMetricsReaderTest {
 
     @Test @Ignore
     public void readTest() {
-        String podName = "metrics-test-2-90qwf";
-        String integration = "metrics-test";
-        String integrationId = "id1";
+        String podName = "dbtest1-2-3nvf3";
+        String integration = "DBTest1";
+        String integrationId = "-L5ApZneYNfmLWG-PKQt";
         String version = "1";
         PodMetricsReader reader = new PodMetricsReader(
                 new DefaultKubernetesClient(), 
