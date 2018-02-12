@@ -1,0 +1,23 @@
+[id='amq2api-choose-start-connection']
+= Choose the start connection
+
+To choose the start connection:
+
+. On the left, click *Integrations*. 
+. Click *Create Integration*. 
+. On the *Choose a Start Connection* page, click your 
+AMQ connection. If you specified the example name, 
+you would click *AMQ Broker 1*.
+. On the *Choose an Action* page, click the *Subscribe for Messages* action
+to receive messages from the queue you specify. 
+. In the *Destination Name* field, enter `*inventoryReceived*` for 
+the name of the queue to obtain data from. 
+. Click in the *Destination Type* field and select *Queue*. 
+. Leave the other fields blank. 
+. Click *Done* to add the start connection to the integration. 
+
+After connecting to AMQ, the integration watches for 
+messages on the `inventoryReceived` queue. When a message is available,
+the integration passes it to the *Damage Reporter* step. 
+However, before you can add that step to the integration, you must choose the
+integration's finish connection. 

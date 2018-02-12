@@ -1,0 +1,18 @@
+[id='amq2api-add-mapping-step']
+= Add a data mapping step
+
+Add a data mapping step that correlates the `task` field in the
+output from the damage reporter step to the `task` field in the
+database that the REST API accesses:
+
+. In the left panel, hover over the plus sign between the damage reporter
+step and the finish connection to display a pop-up in which
+you click *Add a Step*.
+. On the *Choose a Step* page, click *Data Mapper*. In the data mapper,
+the *Sources* panel on the left displays the fields in the
+output from the damage reporter step. The
+*Target* panel on the right displays the fields in the database that
+the API accesses. 
+. In the *Sources* panel, click the `task` field. 
+. In the *Target* panel, expand the `body` field and click `task`. 
+. Click *Done*. 

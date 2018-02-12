@@ -1,0 +1,33 @@
+[id='amq2api-confirm-works']
+= Confirm that the AMQ to REST API integration works
+
+To confirm that the AMQ to REST API integration is working:
+
+. In the left panel, click *Integrations*.
+. If necessary, wait until your sample integration is the *Active* integration,
+which means that it is running. If you used the example name, you would 
+see that 
+*AMQ to REST API Sample Integration* is *Active*.
+
+. In a new browser window, go to the To Do app display by 
+inserting `*todo-*` in front of the URL
+for your {prodname} installation. For example: 
+`\https://todo-proj7614.6a63.fuse-ignite.openshiftapps.com/`.
+. In the *To Do App* display, click *Send JMS Message* to send a message
+to the AMQ broker in your OpenShift project. The message
+contains the XML that is in the text box above the button.
++
+Successful execution returns a task from the To Do app client API. The task 
+identifies the ID of the damaged item and the contact information for its
+vendor. 
+. Edit the XML message to change the result of running the
+integration:
+.. Change the undamaged item to `damaged="true"` and send the
+updated message. The
+result contains IDs for two damaged items and contact information for 
+two vendors. 
+.. For an item that has `damaged="true"`, change the name of the
+vendor and send the updated message. 
+The To Do app accesses a database that has only two vendors.
+Specification of any other vendor results in a message that indicates
+a damaged item for which no contact information is available. 

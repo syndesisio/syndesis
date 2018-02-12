@@ -18,16 +18,16 @@ to display the search field and enter `*name*`.
 .. Under the `user` folder, click the `name` field.
 .. In the *Mapping Details* panel, under *Action*, click 
 the down caret and select *Separate*. 
-.. Below that, under *Targets*, highlight *`[None]`* and start to type
-`*FirstName*`. When *FirstName* appears below the field, click it.
+.. Below that, under *Targets*, in the input field, start to type
+`*FirstName*`. When */FirstName* appears below the field, click it.
 The data mapper displays a line from the Twitter *name* field to the
 Salesforce *FirstName* field. 
 .. In the lower right, click *Add Target*. 
-.. In the new target, highlight *`[None]`* and start to type
-`*LastName*`. When *LastName* appears below the field, click it. 
+.. In the new target, in the input field, start to type
+`*LastName*`. When */LastName* appears below the field, click it. 
 The data mapper displays another line from the Twitter
 *name* field, but this time it goes to the Salesforce *LastName* field. 
-Blue lines indicates the current focus. 
+The blue lines indicate the current focus. 
 . Map the Twitter `screenName` field to the Salesforce
 `Title` field:
 .. In the *Sources* panel, scroll down to click 

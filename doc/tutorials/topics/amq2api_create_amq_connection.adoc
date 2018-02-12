@@ -1,0 +1,13 @@
+[id='amq2api-create-amq-connection']
+= Create an AMQ connection
+
+The AMQ to REST API sample integration starts by connecting to an
+AMQ broker that is provided in your OpenShift project. Before you 
+start to create the integration itself, you must:
+
+. <<amq2api-start-the-broker>>
+. <<amq2api-create-connection-to-amq-broker>>
+
+include::amq2api_start_the_broker.adoc[leveloffset=+1]
+
+include::amq2api_create_connection_to_broker.adoc[leveloffset=+1]

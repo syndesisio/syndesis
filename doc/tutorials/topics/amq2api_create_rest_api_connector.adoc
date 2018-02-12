@@ -1,0 +1,40 @@
+[id='amq2api-create-rest-api-connector']
+= Create a REST API connector
+
+{prodname} can create connectors for REST APIs
+that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1. 
+To do this, {prodname} requires a valid
+Swagger 2.0 specification that describes a REST API you want to connect to.
+
+Your {prodname} installation provides the To Do app, which has a REST API for
+which a Swagger specification is available.
+ 
+To create a REST API connector for the To Do app:
+
+. Identify the URL for your {prodname} installation's copy of the 
+Swagger specification:
+.. In the {prodname} navigation panel, click *Home*.
+.. Copy the URL into a text editor.
+.. At the beginning of the URL, insert `*todo-*`.
+.. At the end of the URL, replace `dashboard` with `*swagger.json*`.
+
++
+The result is something like this:
+`\https://todo-proj217402.6a63.fuse-ignite.openshiftapps.com/swagger.json`
+
+. In the {prodname} navigation panel, click *Customizations*.
+. Click *Create API Connector*. 
+. Select *Use a URL*. 
+. In the input box, paste the URL for your Swagger specification and
+click *Next*.
+. On the *Review Swagger Actions* page, click *Next*. If you see 
+a warning, you can ignore it. 
+. Click *Next* again to accept *HTTP Basic Authorization*.
+. On the *General Connector Info* page, in the *Host* field, paste the
+URL for your Swagger specification and then delete `/swagger.json` from
+the end. For example:
+`\https://todo-proj217402.6a63.fuse-ignite.openshiftapps.com`.
+. Accept the default values in the other fields and click *Create Connector*.
+
+{prodname} displays the *API Client Connectors* tab with an entry for 
+the *Todo App API* that you just created. 

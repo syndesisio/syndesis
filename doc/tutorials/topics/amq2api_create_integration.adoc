@@ -1,0 +1,20 @@
+[id='amq2api-create-integration']
+= Create and deploy AMQ to REST API sample integration
+
+To create and deploy the AMQ to REST API sample integration, the main steps are: 
+
+. <<amq2api-choose-start-connection>>
+. <<amq2api-choose-finish-connection>>
+. <<amq2api-add-damage-reporter-step>>
+. <<amq2api-add-mapping-step>>
+. <<amq2api-name-and-publish>>
+
+include::amq2api_choose_start.adoc[leveloffset=+1]
+
+include::amq2api_choose_finish.adoc[leveloffset=+1]
+
+include::amq2api_add_damage_reporter_step.adoc[leveloffset=+1]
+
+include::amq2api_add_mapping_step.adoc[leveloffset=+1]
+
+include::amq2api_name_and_publish.adoc[leveloffset=+1]

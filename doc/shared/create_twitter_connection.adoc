@@ -24,7 +24,7 @@ For example, enter `*Twitter Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Twitter connection
-that uses my Twitter log-in credentials.*`
+that uses my Twitter login credentials.*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you entered the example name, you would 
 see that *Twitter Connect 1* is now available. 

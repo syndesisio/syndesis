@@ -1,5 +1,5 @@
 // Reused in 
-// "t2sf_intro.adoc", "sf2db_intro.adoc"
+// "t2sf_intro.adoc", "sf2db_intro.adoc", "amq2api_intro.adoc"
 [id='cleanup_{context}']
 = Clean up your integration
 
