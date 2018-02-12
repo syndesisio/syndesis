@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { PlatformState } from '@syndesis/ui/platform';
 
@@ -15,9 +15,6 @@ export class IntegrationImportComponent implements OnInit {
   constructor(private store: Store<PlatformState>) { }
 
   ngOnInit() {
-    /**
-     * Payload for IntegrationImportUpload action
-     */
     const payload = {
       list: [],
       file: null,
@@ -27,8 +24,6 @@ export class IntegrationImportComponent implements OnInit {
       }
     };
 
-
-    // We dispatch the desired action with the given payload
     this.store.dispatch(new IntegrationImportUpload(payload));
   }
 }
