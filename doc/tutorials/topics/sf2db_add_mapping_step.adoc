@@ -12,7 +12,7 @@ and the *Target* panel on the right displays the database fields.
 
 . Map the Salesforce `Company` field to the 
 database `company` field:
-.. On the left, in the *Sources* panel, scroll down and click *Company*.
+.. On the left, in the *Sources* panel, click *Company*.
 .. On the right, in the *Target* panel, click *company*. 
 The data mapper displays a line
 from the source field to the target field. 
@@ -24,8 +24,8 @@ from the source field to the target field.
 .. In the *Target* panel, click *first_and_last_name*. 
 .. In the *Mapping Details* panel, under *Action*, select *Combine*.
 .. Just above that, click *Add Source*. 
-.. Under *Source*, highlight *`[None]`* and start to type
-`*LastName*`. When *LastName* appears below the field, click it.
+.. Under *Source*, in the input field, start to type
+`*LastName*`. When */LastName* appears below the field, click it.
 The data mapper displays a line from the *Sources* *LastName* field to the
 *Target* *first_and_last_name* field. 
 . Add the following mappings:  
@@ -38,6 +38,5 @@ The data mapper displays a line from the *Sources* *LastName* field to the
 |`Phone`    |`phone`    
 |`Rating`    |`rating`
 |=======================
-
 
 . In the upper right, click *Done*.

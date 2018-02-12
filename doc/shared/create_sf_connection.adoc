@@ -3,7 +3,7 @@
 [id='create-salesforce-connection_{context}']
 = Create a Salesforce connection
 
-A {prodname} connection to Salesforce requires registration of
+A connection to Salesforce requires registration of
 {prodname} as an application that can access Salesforce.
 ifeval::["{context}" == "t2sf"]
 If you did not already register {prodname} see <<register-with-salesforce_{context}>>.
@@ -13,7 +13,9 @@ ifeval::["{context}" == "sf2db"]
 If you did not already register {prodname}, see <<register-with-salesforce_{context}>>.
 endif::[]
 
-After you create a Salesforce connection, you can use it
+Be sure to wait 2 - 10 minutes after registering your {prodname} 
+installation as a Salesforce client before you try to create a 
+Salesforce connection. After you create a Salesforce connection, you can use it
 in multiple integrations.
 
 To create a Salesforce connection:
@@ -44,7 +46,7 @@ For example, enter `*SF Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Salesforce connection
-that uses my Salesforce log-in credentials.*`
+that uses my Salesforce login credentials.*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you entered the example name, you would 
 see that *SF Connect 1* is now available. 

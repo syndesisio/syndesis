@@ -5,10 +5,11 @@ Applications that you connect to might use
 the OAuth protocol to authenticate access requests. For example, 
 connections to Salesforce and Twitter use OAuth. To create connections
 to these applications, the first step is to register your {prodname}
-environment as a client of the application you want to connect to. 
+environment as a client of the application that you want to connect to. 
 See <<obtaining-authorization-to-access-applications>>.
 
-After obtaining authorization, you can create a connection.
+After obtaining authorization, you can create one or more connections
+to that application.
 When you create a connection, {prodname} validates it to confirm that
 authorization is in place. At any time, you can validate the connection again to
 ensure that authorization is still in place.
@@ -21,7 +22,7 @@ To validate a connection that uses OAuth:
 
 If validation fails, then check with the application/service provider to 
 determine if the application's OAuth keys, IDs, tokens, or secrets are still 
-valid. It's possible that an item has expired or been revoked. 
+valid. It is possible that an item has expired or been revoked. 
 
 If you find that an OAuth item is invalid, has expired, or been
 revoked, obtain new values and paste them into the {prodname} settings

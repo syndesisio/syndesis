@@ -36,7 +36,7 @@ For example, enter `PostgreSQL DB 1`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample PostgreSQL connection
-that uses my log-in credentials.*`
+that uses my login credentials.*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you entered the example name, you would 
 see that *PostgreSQL DB 1* is available. 
