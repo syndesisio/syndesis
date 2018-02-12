@@ -1,16 +1,10 @@
-import { PlatformState } from '@syndesis/ui/platform';
-import { ActionReducerMap } from '@ngrx/store';
-
 import {
-  IntegrationImportEditState,
-  IntegrationImportsEditState,
-  IntegrationImportUploadState,
-  IntegrationImportsUploadState
+  IntegrationImportState
 } from './integration-import.models';
 
 import * as IntegrationImportActions from './integration-import.actions';
 
-const initialState: IntegrationImportUploadState = {
+const initialState: IntegrationImportState = {
   file: null,
   importResults: {
     integrations: [],
@@ -23,14 +17,13 @@ const initialState: IntegrationImportUploadState = {
   errors: []
 };
 
-export function integrationImportUploadReducer(state = initialState, action: any): IntegrationImportUploadState {
+export function integrationImportReducer(state = initialState, action: any): IntegrationImportState {
   switch (action.type) {
 
     case IntegrationImportActions.UPLOAD_INTEGRATION: {
-      const request = (action as IntegrationImportActions.IntegrationImportUpload).payload;
       return {
         ...state,
-        file: request.file,
+        file: (action as IntegrationImportActions.IntegrationImportUpload).entity.file,
         loading: true,
         loaded: false,
         hasErrors: false,

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
-import { IntegrationImportModule, IntegrationImportComponent } from './import';
+import { IntegrationImportModule } from './import';
 import { IntegrationImportExportComponent } from './integration-import-export.component';
+import { IntegrationImportComponent } from './import/integration-import.component';
 
 const routes: Routes = [
   {
