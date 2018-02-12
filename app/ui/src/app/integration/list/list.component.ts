@@ -1,6 +1,5 @@
 import { ApplicationRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -14,9 +13,8 @@ import {
 } from 'patternfly-ng';
 
 import { log, getCategory } from '@syndesis/ui/logging';
-import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { IntegrationStore } from '@syndesis/ui/store';
-import { Integrations, Integration, IntegrationActionsService, IntegrationSupportService } from '@syndesis/ui/platform';
+import { Integrations, Integration, IntegrationActionsService } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-list',
@@ -29,13 +27,8 @@ export class IntegrationListComponent implements OnInit {
   listConfig: ListConfig;
 
   constructor(
-    public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router,
-    public notificationService: NotificationService,
-    public modalService: ModalService,
-    public application: ApplicationRef,
-    public integrationSupportService: IntegrationSupportService,
     public integrationActionsService: IntegrationActionsService
   ) {
 

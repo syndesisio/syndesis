@@ -8,7 +8,7 @@
 import { createFeatureSelector } from '@ngrx/store';
 
 import { MetadataState } from './metadata.models';
-import { MetadataActions } from './metadata.actions';
+import * as MetadataActions from './metadata.actions';
 
 const initialState: MetadataState = {
   appName          : 'Syndesis',
@@ -38,4 +38,4 @@ export function metadataReducer(state = initialState, action: any): MetadataStat
   }
 }
 
-export const getMetadataState = createFeatureSelector<MetadataState>('metadataState');
+export const selectMetadataState = createFeatureSelector<MetadataState>('metadataState');

@@ -6,6 +6,9 @@ import { IntegrationSupportProviderService } from './integration-support-provide
 import { IntegrationActionsProviderService } from './integration-actions-provider.service';
 import { ApiModule } from '@syndesis/ui/api';
 
+// TODO: This module is imported several times through the app, so it needs to
+//       expose forRoot() and forChild() methods. Otherwise it will wind up
+//       triggering the execution of ApiModule.forChild() on each import.
 @NgModule({
   imports: [
     ApiModule.forChild(integrationSupportEndpoints)

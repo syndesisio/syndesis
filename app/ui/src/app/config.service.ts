@@ -1,7 +1,11 @@
+import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+
 import { log, getCategory } from './logging';
 import { environment } from '../environments/environment';
+import { StringMap } from '@syndesis/ui/platform';
 
 const category = getCategory('ConfigService');
 
@@ -11,10 +15,15 @@ const defaultConfigJson = '/config.json';
 
 @Injectable()
 export class ConfigService {
+  asyncSettings$: Observable<any>;
   private settingsRepository = defaults;
+  private settingsSubject = new Subject<any>();
 
   constructor(private httpClient: HttpClient) {
+    this.asyncSettings$ = this.settingsSubject.asObservable();
+
     this.settingsRepository = this.getSettings();
+    this.settingsSubject.next(this.settingsRepository);
   }
 
   initialize(configJson = defaultConfigJson): Promise<any|ConfigService> {
@@ -27,6 +36,8 @@ export class ConfigService {
           ...this.settingsRepository,
           ...config,
         });
+
+        this.settingsSubject.next(this.settingsRepository);
 
         log.debugc(() =>
           'Using merged config: ' + JSON.stringify(this.settingsRepository, undefined, 2),

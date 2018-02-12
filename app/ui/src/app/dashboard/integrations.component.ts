@@ -5,9 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { Connection, Connections, IntegrationOverview, IntegrationOverviews } from '@syndesis/ui/platform';
 
-import { ConnectionStore } from '../store/connection/connection.store';
-import { IntegrationStore } from '../store/integration/integration.store';
-
 const category = getCategory('Dashboard');
 
 @Component({
@@ -140,5 +137,4 @@ export class DashboardIntegrationsComponent implements OnChanges {
       { relativeTo: this.route }
     );
   }
-
 }

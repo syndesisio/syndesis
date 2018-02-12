@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Action,
+import {
   Connection,
   createIntegration,
   createStep,
@@ -11,7 +11,8 @@ import { Action,
   Integration,
   Step,
   key,
-  IntegrationSupportService } from '@syndesis/ui/platform';
+  IntegrationSupportService
+} from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore,
   ENDPOINT,

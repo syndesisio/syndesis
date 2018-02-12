@@ -1,13 +1,19 @@
-import { Action, BaseEntity, Connection, User, key } from '@syndesis/ui/platform';
+import { BaseReducerCollectionModel, Action, BaseEntity, Connection, User, key } from '@syndesis/ui/platform';
 
-export interface Step extends BaseEntity {
+export class Step implements BaseEntity {
+  id?: string;
+  kind?: string;
+  name?: string;
   action: Action;
   connection: Connection;
-  name: string;
   configuredProperties: {};
-  stepKind: string;
-  id: string;
+  stepKind?: string;
+
+  constructor() {
+    this.id = key();
+  }
 }
+
 export type Steps = Array<Step>;
 
 export const DRAFT = 'Draft';
@@ -16,32 +22,49 @@ export const PUBLISHED = 'Published';
 export const UNPUBLISHED = 'Unpublished';
 export const ERROR = 'Error';
 
-export type IntegrationState = 'Pending' | 'Published' | 'Unpublished' | 'Error';
+export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
 export interface Integration extends BaseEntity {
   description?: string;
   steps: Array<Step>;
   connections: Array<Connection>;
+  userId: string;
+  desiredStatus: IntegrationStatus;
+  currentStatus: IntegrationStatus;
   stepsDone: Array<string>;
+  lastUpdated: string;
+  createdDate: string;
+  timesUsed: number;
+  tags: Array<string>;
+  deploymentId?: number;
   updatedAt: number;
   createdAt: number;
-  id: string;
-  tags: Array<string>;
-  name: string;
   deploymentVersion?: number;
   version?: number;
 }
 export type Integrations = Array<Integration>;
 
+export interface IntegrationDeploymentSpec {
+  connections: Array<Connection>;
+  name: string;
+  resources: Array<any>;
+  steps: Array<Step>;
+  tags: Array<any>;
+}
+
+export type IntegrationDeploymentSpecs = Array<IntegrationDeploymentSpec>;
+
 export interface IntegrationDeployment extends BaseEntity {
-  version: number;
-  updatedAt: number;
-  createdAt: number;
+  createdDate: number;
+  lastUpdated: number;
   integrationId: string;
-  currentState: IntegrationState;
-  targetState: IntegrationState;
-  statusMessage?: string;
-  spec: Integration;
+  version: number;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
+  currentMessage?: string;
+  targetMessage?: string;
+  spec: IntegrationDeploymentSpec;
+  timesUsed: number;
   [attr: string]: any;
 }
 export type IntegrationDeployments = Array<IntegrationDeployment>;
@@ -53,16 +76,16 @@ export interface IntegrationOverview extends BaseEntity {
   description?: string;
   draft: boolean;
   deployments?: Array<DeploymentOverview>;
-  currentState: IntegrationState;
-  targetState: IntegrationState;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
   statusMessage?: string;
 }
 export type IntegrationOverviews = Array<IntegrationOverview>;
 
 export interface DeploymentOverview extends BaseEntity {
   version: number;
-  currentState: IntegrationState;
-  targetState: IntegrationState;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
   createdAt: number;
   integrationVersion: number;
 }
@@ -103,10 +126,7 @@ export interface ActivityStep extends BaseEntity {
 }
 
 export function createStep(): Step {
-  const step = {} as Step;
-  step.id = key();
-  step.stepKind = undefined;
-  return step;
+  return new Step();
 }
 
 export function createConnectionStep(): Step {
@@ -115,6 +135,22 @@ export function createConnectionStep(): Step {
   return step;
 }
 
+// TODO: Remove this TypeScript anti-pattern when the time is right
 export function createIntegration() {
   return {} as Integration;
+}
+
+export interface IntegrationMetrics {
+  id?: string;
+  numberOfProcessedMessages: number;
+  numberOfErrors: number;
+  lastProcessedTimestamp: number; // XXX: Might requrie timestamp parsing through MomentJS
+  uptimeInMilliSeconds: number;
+}
+
+export interface IntegrationState extends BaseReducerCollectionModel<Integration> {
+  metrics: {
+    summary: IntegrationMetrics;
+    list: Array<IntegrationMetrics>;
+  };
 }

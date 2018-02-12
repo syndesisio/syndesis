@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -11,7 +10,7 @@ import {
   IntegrationDeployments,
   IntegrationOverview,
   IntegrationOverviews,
-  IntegrationState,
+  IntegrationStatus,
   ApiHttpService,
 } from '@syndesis/ui/platform';
 
@@ -58,7 +57,7 @@ export abstract class IntegrationSupportService {
   /**
    * Change the state of a running integration
    */
-  abstract updateState(id: string, version: string | number, state: IntegrationState): Observable<any>;
+  abstract updateState(id: string, version: string | number, status: IntegrationStatus): Observable<any>;
 
   /**
    * Fetch all the deployments for an integration
@@ -113,4 +112,5 @@ export abstract class IntegrationSupportService {
   abstract requestIntegrationActivityFeatureEnabled(): Observable<boolean>;
   abstract requestIntegrationActivity(id: string): Observable<Activity[]>;
 
+  abstract downloadSupportData(data: any[]): Observable<Blob>;
 }

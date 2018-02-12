@@ -12,9 +12,10 @@ import { saveAs } from 'file-saver';
 import { Restangular } from 'ngx-restangular';
 import { Notification, NotificationEvent } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
-import { ModalService } from '@syndesis/ui/common/modal/modal.service';
-import { NavigationService } from '@syndesis/ui/common/navigation.service';
-import { UserService, User } from '@syndesis/ui/platform';
+import { Store } from '@ngrx/store';
+import { UserService, User, PlatformActions, PlatformState } from '@syndesis/ui/platform';
+import { ModalService } from './common/modal/modal.service';
+import { NavigationService } from './common/navigation.service';
 import { ConfigService } from './config.service';
 import { log } from './logging';
 import { TestSupportService } from './store/test-support.service';
@@ -81,6 +82,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   showClose: boolean;
 
   constructor(
+    private store: Store<PlatformState>,
     private config: ConfigService,
     private userService: UserService,
     public testSupport: TestSupportService,
@@ -93,6 +95,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.store.dispatch(new PlatformActions.AppBootstrap());
+
     this.appName = this.config.getSettings('branding', 'appName', 'Syndesis');
     this.title.setTitle(this.appName);
     this.meta.updateTag({ content: this.appName }, 'id="appName"');

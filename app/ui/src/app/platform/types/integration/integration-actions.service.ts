@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
-import { Integration,
-  DRAFT,
-  PENDING,
-  PUBLISHED,
-  UNPUBLISHED,
-  Step } from '@syndesis/ui/platform';
+import { Integration, Step } from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class IntegrationActionsService {

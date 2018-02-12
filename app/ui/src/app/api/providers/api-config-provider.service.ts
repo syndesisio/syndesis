@@ -11,21 +11,20 @@ export class ApiConfigProviderService extends ApiConfigService {
   constructor(@Inject(API_ENDPOINTS) apiEndpoints: Endpoints, configService: ConfigService) {
     super();
 
-    const { apiBase, apiEndpoint } = configService.getSettings();
-    this.baseUrl = `${apiBase}${apiEndpoint}`;
+    configService.asyncSettings$.subscribe(({ apiBase, apiEndpoint }) => {
+      this.baseUrl = `${apiBase}${apiEndpoint}`;
+    });
 
     this.registerEndpoints(apiEndpoints);
   }
 
   registerEndpoints(apiEndpoints: Endpoints): void {
-    const initialEndpoints = this.endpoints || {};
-    this.endpoints = Object.keys(apiEndpoints).reduce((aggregatedEndpoints, endpointKey) => {
-      const newEndpoint = {};
-      newEndpoint[endpointKey] = apiEndpoints[endpointKey];
-      return {
-        ...aggregatedEndpoints,
-        ...newEndpoint
-      }[0];
-    }, initialEndpoints);
+    const initialEndpoints = this.endpoints && Array.isArray(this.endpoints) ? this.endpoints[0] : this.endpoints || {};
+    const newEndpoints = Array.isArray(apiEndpoints) ? apiEndpoints[0] : apiEndpoints;
+
+    this.endpoints = {
+      ...initialEndpoints,
+      ...newEndpoints
+    };
   }
 }

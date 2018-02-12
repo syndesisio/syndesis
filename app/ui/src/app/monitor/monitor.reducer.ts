@@ -1,6 +1,6 @@
 import { ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 
-import { BaseReducerModel, PlatformStore } from '@syndesis/ui/platform';
+import { PlatformState } from '@syndesis/ui/platform';
 import { MonitorState } from './monitor.models';
 import * as MonitorActions from './monitor.actions';
 
@@ -100,7 +100,7 @@ export function monitorReducer(state = initialState, action: any): MonitorState 
   }
 }
 
-export interface MonitorStore extends PlatformStore {
+export interface MonitorStore extends PlatformState {
   monitorState: MonitorState;
 }
 

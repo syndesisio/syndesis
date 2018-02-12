@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { FlowEvent, CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { IntegrationStore } from '@syndesis/ui/store';
-import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { log, getCategory } from '@syndesis/ui/logging';
+import { Integration } from '@syndesis/ui/platform';
 
 const category = getCategory('IntegrationsCreatePage');
-import { Integration } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-save-or-add-step',
@@ -19,7 +19,6 @@ export class IntegrationSaveOrAddStepComponent implements OnInit {
   constructor(
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
-    public store: IntegrationStore,
     public route: ActivatedRoute,
     public router: Router
   ) {

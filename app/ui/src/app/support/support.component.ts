@@ -1,17 +1,13 @@
 import { Component,  Input,  ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import * as fileSaver from 'file-saver';
 
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
-import { Http } from '@angular/http';
-
-import { Integrations, Integration } from '../platform/types/integration/integration.model';
-import { IntegrationStore } from '../store/integration/integration.store';
-import { IntegrationSupportProviderService } from '../integration/integration-support-provider.service';
-import { log, getCategory } from '../logging';
-import { Observable } from 'rxjs/Observable';
-
-import fileSaver = require('file-saver');
+import { Integrations, Integration, IntegrationSupportService } from '@syndesis/ui/platform';
+import { log, getCategory } from '@syndesis/ui/logging';
+import { IntegrationStore } from '@syndesis/ui/store';
 
 const ARCHIVE_FILE_NAME = 'syndesis.zip';
 
@@ -25,11 +21,11 @@ export class SupportComponent implements OnInit {
   allLogsSelected = true;
   loading = true;
 
-  filter: ObjectPropertyFilterConfig = {
+  filter = {
     filter: '',
     propertyName: 'name'
   };
-  sort: ObjectPropertySortConfig = {
+  sort = {
     sortField: 'name',
     descending: false
   };
@@ -84,29 +80,20 @@ export class SupportComponent implements OnInit {
 
   constructor(
     public store: IntegrationStore,
-    public integrationSupportService: IntegrationSupportProviderService,
-  ) {
-  }
+    public integrationSupportService: IntegrationSupportService,
+  ) {}
 
-  buildData(data: any = {}) {
+  buildData(data: any = {}): void {
     this.integrationSupportService
       .downloadSupportData(data)
-      .subscribe(response => {
-        fileSaver.saveAs(response, ARCHIVE_FILE_NAME);
-      },
-      error => {
-        /*
-        console.log('Error downloading the file.');
-        console.log(error);
-        */
-        // TODO properly report this
-      }
-    );
-    return {  };
+      .subscribe(
+        response => fileSaver.saveAs(response, ARCHIVE_FILE_NAME),
+        error => log.error('Error downloading file', error)
+      );
   }
 
   // Handles events when the user interacts with the toolbar filter
-  filterChanged($event) {
+  filterChanged($event): void {
     // TODO update our pipe to handle multiple filters
     if ($event.appliedFilters.length === 0) {
       this.filter.filter = '';
@@ -118,28 +105,29 @@ export class SupportComponent implements OnInit {
   }
 
   // Handles events when the user interacts with the toolbar sort
-  sortChanged($event) {
+  sortChanged($event): void {
     this.sort.sortField = $event.field.id;
     this.sort.descending = !$event.isAscending;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     let chosen = [];
     if (this.allLogsSelected) {
       chosen = this.items;
     } else {
       chosen = this.items.filter(x => x.selected === true);
     }
+
     const input = {};
     chosen.forEach(el => input[el.name] = true);
     this.buildData(input);
   }
 
-  deselectAll() {
+  deselectAll(): void {
     this.items.forEach(item => item.selected = false);
   }
 
-  handleSelectionChange(event) {
+  handleSelectionChange(event): void {
     this.allLogsSelected = false;
   }
 
@@ -152,9 +140,7 @@ export class SupportComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.store.list.subscribe(integration  => {
-      this.items = integration as Integration[];
-    });
+    this.store.list.subscribe(integrations => this.items = integrations);
     this.store.loadAll();
   }
 
