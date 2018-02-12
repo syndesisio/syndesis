@@ -10,7 +10,6 @@ import { Integration,
   Step,
   PUBLISHED,
   UNPUBLISHED,
-  DRAFT,
   IntegrationOverview,
   IntegrationActionsService,
   IntegrationSupportService,
@@ -65,6 +64,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   };
   deploymentListConfig: ListConfig;
   deploymentActionConfigs: { [id: string]: ActionConfig } = {};
+  draftConfig: ActionConfig;
   currentDeployment: IntegrationDeployment;
 
   constructor(
@@ -109,9 +109,10 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   }
 
   attributeUpdated(attr: string, value: string) {
-    this.integration[attr] = value;
+    const attributes = {};
+    attributes[attr] = value;
     this.store
-      .update(<any> this.integration)
+      .patch( <any> this.integration, attributes)
       .toPromise()
       .then((update: Integration) => {
         this.notificationService.popNotification({
@@ -129,35 +130,40 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  deploymentAction(event, deployment) {
+  draftAction(event) {
+    switch (event.id) {
+      case 'publish':
+        this.integrationActionsService.requestAction('publish', <any> this.integration);
+        break;
+      case 'edit':
+        this.integrationActionsService.requestAction('edit', <any> this.integration);
+        break;
+      default:
+        break;
+    }
+  }
+
+  deploymentAction(event, deployment: IntegrationDeployment) {
     switch (event.id) {
       case REPLACE_DRAFT:
-        {
-          /*
-          const integration = { ...this.integration };
-          integration.steps = deployment.spec.steps;
-          //integration.desiredStatus = DRAFT;
-          this.integrationActionsService.requestAction('replaceDraft', integration);
-          */
-        }
+        this.integrationActionsService.requestAction('replaceDraft', this.integration, deployment);
         break;
       case CREATE_DRAFT:
         // TODO doesn't this just mean edit?
         break;
       case STOP_INTEGRATION:
-        /*
-        this.integrationActionsService.requestAction('deactivate', this.integration);
-        */
+        this.integrationActionsService.requestAction('deactivate', <any> this.integration);
         break;
       case PUBLISH:
-        /*
         {
-          const integration = { ...this.integration };
-          integration.steps = deployment.spec.steps;
-          //this.integration.desiredStatus = PUBLISHED;
-          this.integrationActionsService.requestAction('publish', integration);
+          const integration = {
+            integrationVersion: this.integration.version,
+            id: this.integration.id,
+            name: this.integration.name,
+            version: deployment.version
+           };
+          this.integrationActionsService.requestAction('publish', <any> integration);
         }
-        */
         break;
       default:
     }
@@ -168,6 +174,17 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.draftConfig = {
+      primaryActions: [
+        {... publish, ...{ styleClass: 'btn btn-default primary-action' } },
+        {
+          id: 'edit',
+          title: 'Edit',
+          styleClass: 'btn btn-default primary-action',
+          tooltip: 'Edit this draft'
+        } as PFAction,
+      ]
+    } as ActionConfig;
     this.deploymentListConfig = {
       selectItems: false,
       showCheckbox: false,
@@ -184,6 +201,26 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         this.integrationSubscription = this.integration$.subscribe((integration: IntegrationOverview) => {
           this.loading = false;
           this.integration = integration;
+          this.deploymentActionConfigs = {};
+          for (const deployment of this.integration.deployments) {
+            const actionConfig = {
+              primaryActions: [],
+              moreActions: [],
+              moreActionsVisible: true,
+              moreActionsDisabled: false
+            } as ActionConfig;
+            actionConfig.moreActions.push(replaceDraft);
+            if (deployment.version === integration.deploymentVersion) {
+              if (integration.currentState === PUBLISHED) {
+                actionConfig.moreActions.push(stopIntegration);
+              } else {
+                actionConfig.moreActions.push(publish);
+              }
+            } else {
+              actionConfig.moreActions.push(publish);
+            }
+            this.deploymentActionConfigs[deployment.id] = actionConfig;
+          }
         });
       });
   }

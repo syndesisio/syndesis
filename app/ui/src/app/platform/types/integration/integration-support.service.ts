@@ -44,12 +44,6 @@ export abstract class IntegrationSupportService {
    */
   abstract watchOverviews(): Observable<IntegrationOverviews>;
 
-  /**
-   * Publish an existing integration
-   * @param integration
-   */
-  abstract publishIntegration(integration: Integration): Observable<any>;
-
   abstract deploy(integration: Integration): Observable<any>;
 
   abstract undeploy(integration: Integration): Observable<any>;
