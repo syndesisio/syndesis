@@ -222,11 +222,13 @@ export class FormFactoryProviderService extends FormFactoryService {
                          field: ConfiguredConfigurationProperty,
                          value: any
   ) {
+    // bandaid for rest service returning string 'true' instead of boolean true
+    let defaultValue = value || field.value || field.defaultValue;
     return new DynamicCheckboxModel({
       id: key,
       label: field.displayName || key,
       hint: field.description,
-      value: value || field.value || field.defaultValue
+      value: (defaultValue === 'true') ? true : defaultValue
     }, {
         element: {
           control: 'element-control checkbox'
