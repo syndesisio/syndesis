@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  * @since 28/03/2017
  */
 public class ComponentVerifier implements Verifier {
-
     private static final Logger LOG = LoggerFactory.getLogger(ComponentVerifier.class);
 
     private final Class<? extends ComponentVerifierExtension> verifierExtensionClass;

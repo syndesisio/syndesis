@@ -25,7 +25,7 @@ import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
 
-abstract class AbstractEndpointStepHandler implements IntegrationStepHandler {
+abstract class AbstractEndpointStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
 
     @SuppressWarnings("PMD")
     protected Optional<ProcessorDefinition> handleSplit(ConnectorDescriptor descriptor, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {

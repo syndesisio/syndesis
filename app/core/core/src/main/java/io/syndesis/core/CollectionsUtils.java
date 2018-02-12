@@ -16,7 +16,9 @@
 package io.syndesis.core;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -33,6 +35,18 @@ public final class CollectionsUtils {
             .flatMap(map -> map.entrySet().stream())
             .filter(entry -> entry.getValue() != null)
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public static <K, V> Map<K, V> removeNullValues(Map<K, V> source) {
+        return removeNullValues(source, HashMap::new);
+    }
+
+    public static <K, V> Map<K, V> removeNullValues(Map<K, V> source, Supplier<Map<K, V>> supplier) {
+        final Map<K, V> answer = supplier.get();
+        answer.putAll(source);
+        answer.values().removeIf(Objects::isNull);
+
+        return answer;
     }
 
     @SafeVarargs

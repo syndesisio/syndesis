@@ -18,12 +18,18 @@ package io.syndesis.verifier;
 
 import javax.servlet.Filter;
 
+import io.syndesis.verifier.api.MetadataRetrieval;
+import io.syndesis.verifier.api.Verifier;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.ExplicitCamelContextNameStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
@@ -34,9 +40,34 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
  */
 @SpringBootApplication
 public class Application {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
     public static void main(final String[] args) {
-        SpringApplication.run(Application.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+        for (String name: context.getBeanNamesForType(Verifier.class)) {
+            BeanDefinition definition = context.getBeanFactory().getBeanDefinition(name);
+
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Found Verifier: name={}, factory={}",
+                    name,
+                    definition.getBeanClassName() != null
+                        ? definition.getBeanClassName()
+                        : definition.getFactoryBeanName() + "::" + definition.getFactoryMethodName()
+                );
+            }
+        }
+        for (String name: context.getBeanNamesForType(MetadataRetrieval.class)) {
+            BeanDefinition definition = context.getBeanFactory().getBeanDefinition(name);
+
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Found MetaDataAdapter: name={}, factory={}",
+                    name,
+                    definition.getBeanClassName() != null
+                        ? definition.getBeanClassName()
+                        : definition.getFactoryBeanName() + "::" + definition.getFactoryMethodName()
+                );
+            }
+        }
     }
 
     /**

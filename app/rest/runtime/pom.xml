@@ -163,27 +163,6 @@
             <artifactId>connector-activemq-request</artifactId>
             <version>${project.version}</version>
           </dependency>
-          <!-- ==== SQL ==== -->
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-component</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-start</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-stored</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-sql-stored-start</artifactId>
-            <version>${project.version}</version>
-          </dependency>
           <!-- ==== REST Swagger ==== -->
           <dependency>
             <groupId>io.syndesis.connector</groupId>
