@@ -22,7 +22,7 @@ import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
 import { DataShape, IntegrationSupportService, Step } from '@syndesis/ui/platform';
 import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
-
+import { DATA_MAPPER } from '@syndesis/ui/store';
 /*
  * Example host component:
  *
@@ -91,35 +91,61 @@ export class DataMapperHostComponent implements OnInit {
     }
     this.cfg.mappings = new MappingDefinition();
 
-    for (const pair of this.currentFlowService.getPreviousStepsWithDataShape(this.position)) {
-      if (this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape)) {
+    const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(this.position);
+    if (!previousSteps || previousSteps.length === 0) {
+      this.cfg.errorService.error('No source data type was found', '');
+      return;
+    }
+
+    // Populate all supported DataShape from previous DataShape aware steps as source documents
+    for (const pair of previousSteps) {
+      const dataShapeToFetch = pair.step.action.descriptor.outputDataShape;
+      if (this.isSupportedDataShape(dataShapeToFetch)) {
         this.addInitializationTask();
         this.currentFlowService.fetchOutputDataShapeFor(pair.step).then(dataShape => {
           this.addSourceDocument(pair.step.id, pair.index, dataShape);
           this.removeInitializationTask();
         })
-        .catch(response => this.cfg.errorService.error(
-          'Failed to load source document: ' + pair.step.id, response));
+        .catch(response => {
+          this.cfg.errorService.error(
+            'Failed to load source data type for Step "' + pair.step.name + '": '
+            + ' Unsupported data type "' + dataShapeToFetch + '": ' + response, '');
+          this.removeInitializationTask();
+        });
       }
     }
 
-    // Single target document for now
-    let targetPair;
-    for (const pair of this.currentFlowService.getSubsequentStepsWithDataShape(this.position)) {
-      if (this.isSupportedDataShape(pair.step.action.descriptor.inputDataShape)) {
-        targetPair = pair;
-        break;
-      }
-    }
-    if (targetPair) {
-      this.addInitializationTask();
-      this.currentFlowService.fetchInputDataShapeFor(targetPair.step).then(dataShape => {
-        this.addTargetDocument(targetPair.step.id, targetPair.index, dataShape);
+    // Next DataShape aware step must have a supported input DataShape, which describes a target document
+    const targetPair = this.currentFlowService.getSubsequentStepsWithDataShape(this.position)[1];
+    this.addInitializationTask();
+    this.currentFlowService.fetchInputDataShapeFor(targetPair.step).then(dataShape => {
+      if (!this.addTargetDocument(targetPair.step.id, targetPair.index, dataShape)) {
+        this.cfg.errorService.error(
+          'Unsupported target data type for Step "' + targetPair.step.name + '": ' + dataShape, '');
         this.removeInitializationTask();
-      })
-      .catch(response => this.cfg.errorService.error(
-        'Failed to load target document: ' + targetPair.step.id, response));
-    }
+        return;
+      }
+      this.currentFlowService.events.emit({
+        kind: 'integration-set-action',
+        position: this.position,
+        stepKind: DATA_MAPPER,
+        action: {
+          actionType: 'step',
+          descriptor: {
+            inputDataShape: {
+              kind: 'any'
+            },
+            outputDataShape: dataShape
+          }
+        }
+      });
+      this.removeInitializationTask();
+    })
+    .catch(response => {
+      this.cfg.errorService.error(
+        'Failed to load target data type for Step "' + targetPair.step.name + '": ' + response, '');
+      this.removeInitializationTask();
+    });
 
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
