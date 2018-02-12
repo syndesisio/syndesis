@@ -1,6 +1,6 @@
 # The Platform Domain
 
-The `Platform` domain contains application-level structs that are meant to govern the way Syndesis operates. This domain is a single-entry point for all things that are use across the application, regardless what funcionality the components or pieces of UI that import them aim to accomplish, 
+The `Platform` domain contains application-level structures that are meant to govern the way Syndesis operates. This domain is a single-entry point for all things that are used across the application, regardless of what functionality the components or pieces of the UI that import them aim to accomplish.
 
 ## What can you find here and what you won't
 
@@ -10,11 +10,11 @@ In this domain you will find application-level types and models, Angular service
 import { StringMap } from '@syndesis/ui/platform';
 ```
 
-Some of the tokens available are custom TypeScript types, designed to conveniently wrap recurring schema patterns. Some others are TypeScript interfaces that model Syndesis entities that are meant to be used throughout the application and therefore are not bound to any piece of functionality or UI feature module in particular.
+Some of the tokens available are custom TypeScript types, designed to conveniently wrap recurring schema patterns. Some others are TypeScript interfaces that model Syndesis entities that are meant to be used throughout the application and therefore are not bound to any piece of functionality or the UI feature module in particular.
 
 Last but not least, we will want to define each entity's related service providers here, inside its corresponding folder along with its model file. 
 
-**What should you never save in this folder?** Basically any UI-related class or any type which is meant to be used specifically within a feature module. In summary:
+**What should you never save in this folder?** Any UI-related class or type which is meant to be used specifically within a feature module. In summary:
 
 - Angular modules
 - Components classes
@@ -27,9 +27,11 @@ Last but not least, we will want to define each entity's related service provide
 
 ### Angular Service as Abstract Classes
 
-As a rule of thumb, we will define service providers as abstract classes, implementing those later on right at `CoreModule` (usually by following the same naming convention by appending `ProviderService` instead of `Service` to the class name). The reason for it is to ensure that services are declared just once in the injector, no matter where are they imported from, preventing circular references and alowing for overriding provider implementations if required because of environment, device, etc.
+As a rule of thumb, we will define service providers as abstract classes, implementing them later on in the `CoreModule` (usually following the same naming convention, or appending `ProviderService` instead of `Service` to the class name).
 
-Developers will want to import the token from Platform and not from the implementation made at `CoreModule` though. 
+The reason for this is to ensure that services are declared just once in the injector, no matter where they are imported from. This prevents circular references and allows you to override provider implementations--if required--for varying factors, such as the environment, device, etc.
+
+**NOTE**: Developers will want to import the token from Platform and not from the implementation made at `CoreModule`. For instance:
 
 ```typescript
 // Wrong
@@ -45,39 +47,47 @@ Please refer to `CoreModule` (currently in progress).
 
 ## State Management in Syndesis
 
-Syndesis is currently being redesigned to become a state-driven application embracing an architectural pattern commonly known as REDUX. The rationale for this architectural choice is based on the fact that the product's business logic gravitates around several core entities, which need to get coupled together to add value to the user interaction yet also feature a high level of independence as standalone types, namely _Connections_, _Integrations_, _Connectors_ or _Extensions_, just to name the more relevant ones. 
+Syndesis is currently being redesigned to become a state-driven application embracing an architectural pattern commonly known as REDUX. The rationale for this architectural choice is based on the fact that the product's business logic gravitates around several core entities.
 
-These entities interact with each other and force state changes amongst them. Ideally, all types are meant to be immutable and components or service providers should never mutate or change these entities state. As Syndesis grows into hundreds of components and dozens of providers, allowing those to perform state changes will turn debugging undesired state chanegs and fixing bugs into an impossible mission.
+Each of these core entities need to be coupled together to add value to the user interaction, yet also feature a high level of independence as standalone types, namely _Connections_, _Integrations_, _Connectors_ or _Extensions_, just to name the more relevant ones. 
 
-The REDUX architecture prevents this from happening by forcing immutability in all platform objects and detaching state management from any piece of UI. Basically, UI endpoints (components, impure pipes, services) will subscribe to slices or fragments of state and will receive immutable objects through an Observable stream, rendering such information in their views, for instance. 
+These entities interact with each other and force state changes amongst them. Ideally, all types are meant to be immutable--and components or service providers should never mutate or change these entities state.
+
+As Syndesis grows into hundreds of components and dozens of providers, allowing the core entities to perform state changes will turn debugging undesired state changes and fixing bugs into an impossible mission.
+
+The REDUX architecture prevents this from happening by forcing immutability in all platform objects and detaching state management from any piece of the UI. Basically, the UI endpoints (components, impure pipes, services) will subscribe to slices, or fragments, of state and will receive immutable objects through an Observable stream, rendering such information in their views, for instance. 
 
 ![redux](https://user-images.githubusercontent.com/1104146/35936058-76933682-0c42-11e8-91e2-38ab6f025d61.png)
 
 
-Whenever a change in state is required for whatever reason (either as the by-product of an user interation or an event raised in some other end of the application), the UI endpoint involved will not want to alter the properties of such state snapshot, but will dispatch an action instead (picking an existing typed action from a pool of pre-defined applications actions). Said action will include sometimes some data in its paylaod, and some other times it won't.
+Whenever a change in state is required for whatever reason (either as the by-product of a user interaction or an event raised in some other end of the application), the UI endpoint involved will not want to alter the properties of such state snapshot, but will dispatch an action instead (picking an existing typed action from a pool of pre-defined applications actions). This action will sometimes include data in its payload, and other times it won't.
 
 The aforementioned actions will be intercepted by _Reducers_. The `Platform` context features several reducer classes, one for each type/context that features its own slice of top-level state. 
 
-> **Fractal state in Syndesis Feature Modules** <br> In addition to the above, some lazy-loaded feature models (eg. Custom API Connection create wizard) also feature their own actions/reducers combo, as a sort of fractal implementation, handling state in an siolated fashion for that feature only. 
+> **Fractal state in Syndesis Feature Modules** <br> In addition to the above, some lazy-loaded feature models (eg. Custom API Connection create wizard) also contain their own actions/reducers combo, as a sort of fractal implementation, handling state in an isolated fashion for that feature only. 
 
-These mentioned _Reducer_ files just inspect a property available in all _Action_ objects named `type`, which merely informs of the particular action request dispatched by the UI. The reducer operates as a basic `switch/case` flow. When a `case` matching the action `type` is found, the current state is cloned, changes are applied to this clone to fulfill the purpose of the action and then said clone is returned to replace the previously existing state snapshot.
+These _Reducer_ file simply inspects a property available in all _Action_ objects named `type`. It then informs of the particular action request dispatched by the UI. The reducer operates as a basic `switch/case` flow. When a `case` matching the action `type` is found, the current state is cloned, changes are applied to this clone to fulfill the purpose of the action and then the clone is returned to replace the previously existing state snapshot.
 
-If the action issued also features a _payload_ property, this will be fetched to help create the new state instance accordingly. Please bear in mind that both _Actions_ and _Reducers_ are meant to be _Pure_ functions. This is why they conduct deterministic and thus predictable updates in the state slices of the Syndesis store. Therefore, **actions or reducers are not meant to trigger or depend on Http requests**.
+If the action issued also features a _payload_ property, this will be fetched to help create the new state instance accordingly. Please bear in mind that both _Actions_ and _Reducers_ are meant to be [_Pure_ functions](https://hackernoon.com/functional-programming-concepts-pure-functions-cafa2983f757). This means that they conduct deterministic and, thus, predictable updates in the state slices of the Syndesis store. Therefore, **actions or reducers are not meant to trigger or depend on Http requests**.
 
-Last but not least, there is also a companion layer of business logic that _listens_ to fulfilled actions (this is, actions which have been achieved already) and can also dispatch new actions as the by-product of the former. We're talking about _Effects_, and usually they can be easily identified by the `.effects.ts` file suffix. These structs feature two major goals in Syndesis:
+Last but not least, there is also a business logic companion layer that _listens_ to fulfilled actions (that is, actions which have been achieved already), which can also dispatch new actions as the by-product of the former. These are called  _Effects_, and can usually be identified by the `.effects.ts` file suffix. These structures feature two major goals in Syndesis:
 
-- Trigger additional actions that are kind of related to the action just achieved, either consuming its already existing _payload_ or not. Eg: _Refresh integration metrics after conducting a state update on one particular Integration_.
-- Run (usually async) processes that require non-Redux logic, such as performing a HTTP call (usually wrapped by a Syndesis service provider method) to the REST API.
+1. Subsequently trigger additional actions that are somewhat relevant to the original action, either consuming its already existing _payload_ or not. Eg: _Refresh integration metrics after conducting a state update on one particular Integration_.
+2. Run (usually async) processes that require non-Redux logic, such as performing an HTTP call (usually wrapped by a Syndesis service provider method) to the REST API.
 
-The latter is the most common case scenario, although the former is quite used too. The purpose for the latter is to load information through AJAX.
+The latter is the most common case scenario, although the former is quite prevalent as well. The purpose for the latter is to load information through AJAX.
 
-> **A common example: Fetching Integrations** <br>  Let's figure out we want to fetch Integrations from the REST API. A `FETCH_INTEGRATIONS` action will be dispatched, setting the `IntegrationState` slice of the store as `onLoading: true` mode. An effect configured to listen to the `FETCH_INTEGRATIONS` action will be fired up once said action is accomplished, internally, it will submit an HTTP request to the REST API (by means of an injected instance our `ApiHttpService` client, also available from the `Platform` domain). Once the Http client returns the API response, it will use it as a payload for a new `FETCH_INTEGRATIONS_COMPLETE` action, that will udpate the state accordingly, most likely by reseting the `onLoading` property back to `false` and populating some internal `collection` property with the response obtained from the API. Should an Http error occurs, such effect can then fire up a `FETCH_INTEGRATIONS_FAIL` action instead, resetting the state accordingly so the application does not become unresponsive and we still can give feedback to the end user.
+> **A common example: Fetching Integrations** <br>  Let's figure out we want to fetch Integrations from the REST API. A `FETCH_INTEGRATIONS` action will be dispatched, setting the `IntegrationState` slice of the store to `onLoading: true` mode. An effect configured to listen to the `FETCH_INTEGRATIONS` action will be fired up once this action is accomplished. Internally, it will submit an HTTP request to the REST API (via an injected instance of our `ApiHttpService` client, also available from the `Platform` domain).
+>
+>Once the HTTP client returns the API response, it will use it as a payload for a new `FETCH_INTEGRATIONS_COMPLETE` action, which will then update the state accordingly. This is most likely accomplished by resetting the `onLoading` property back to `false` and by populating some internal `collection` property with the response obtained from the API.
+>
+>Should an HTTP error occurs, such effect can then fire up a `FETCH_INTEGRATIONS_FAIL` action instead, resetting the state accordingly. This prevents the application from becoming unresponsive so that we still can give feedback to the end user.
 
-## Actions, Reducers and Effects in Syndesis
+## Actions, Reducers, and Effects in Syndesis
 
-We will now put some basic examples of how to build your own slice of state within the Platform state store. We will use a very simple example where we will play around with a slice of state named `MetadataState`, which contains some basic application data: The application name ("_Syndesis_") and the application locale data (`en-gb`);
+We will now put some basic examples of how to build our own slice of state within the Platform state store. We will use a very simple example where we will play around with a slice of state named `MetadataState`, which contains some basic application data: The application name ("_Syndesis_") and the application locale data (`en-gb`);
 
-For your convenience, this actual example already exists in our codebase.
+For your convenience, this example already exists in our codebase.
 
 ### Creating the State class
 
@@ -92,7 +102,7 @@ export interface MetadataState extends BaseReducerModel {
 }
 ``` 
 
-### Creating actions
+### Creating Actions
 Actions are required to populate the Metadata upon bootstrapping the application:
 
 ```typescript
@@ -113,9 +123,9 @@ export class MetadataReset implements Action {
 }
 ```
 
-With the above we just need to dispatch the `UPDATE` action from within a component or service in order to get the `MetadataState` slice of the store updated as desired. The `RESET` is quite self-explanatory and we will see how we can take advantage of it later in our examples.
+With the above, we just need to dispatch the `UPDATE` action from within a component or service, and then we will obtain the `MetadataState` slice of the store updated desired. The `RESET` is quite self-explanatory, but we will see how we can take advantage of it later in our examples.
 
-Let's see how to do it from the main root `app.component.ts`, for argument's sake:
+Let's see how to do it from the main root `app.component.ts`:
 
 ```typescript
 import { Component, OnInit }             from '@angular/core';
@@ -142,10 +152,10 @@ export class AppComponent implements OnInit {
 }
 ```
 
-The above will dispatch an update action, but no state change has been performed yet.
+The above will dispatch an `UPDATE` action, but no state change has been performed yet.
 
-### Creating our own Reducer
-Our reducer will initialize the state so it is already defined from the very moent the Store is initialized altogether, and will define action handlers that will react to whatever action comes whose `type` proeprty matches the `switch/case` defined:
+### Creating Our Own Reducer
+Our reducer will initialize the state, meaning that it is already defined from the very moment the Store is initialized altogether. It will define action handlers that will respond to whatever action comes whose `type` property matches the `switch/case` defined:
 
 ```typescript
 import { MetadataState } from './metadata.models';
@@ -182,9 +192,11 @@ export function metadataReducer(state = initialState, action: any): MetadataStat
 }
 ```
 
-So we initialize the state in `loading` mode, and populate it as soon as the `UPDATE` action is fired up, which will populate teh already existing state with the payload received plus set the `loading` property to `false`.
+We initialize the state in `loading` mode, and populate it as soon as the `UPDATE` action is fired up, which will populate the already existing state with the payload received and set the `loading` property to `false`.
 
-With an interface modelling `MetadataState` and a reducer taking care of all the changes in its state, the only step left is to declare these two in order to make application aware of those. You just need to open `platform.reducer.ts` and add the interface definition to the platform state definition (the actual Store definition indeed), mapped to a state token and the reducer to the `platformReducer` object that maps state token names with its corresponding reducers
+With an interface modelling `MetadataState` and a reducer taking care of all the changes in its state, the only step left is to declare these two in order to make application aware of them.
+
+Open `platform.reducer.ts` and add the interface definition to the platform state definition (the actual Store definition indeed). We then map a state token and the reducer to the `platformReducer` object, which maps state token names with its corresponding reducers:
 
 ```typescript
 export interface PlatformState {
@@ -201,19 +213,21 @@ export const platformReducer: ActionReducerMap<PlatformState> = {
 
 ### Dispatching actions depending on other actions and running middleware operations in the interim
 
-The real magic on actions relies on the fact that we can make actions react to other actions,allowing for more complex business logics which can be handled in a lower level, not necessarilly depending on user interactions all the time.
+The real magic behind actions relies on the fact that we can make actions respond to other actions. This allows for more complex business logic to be handled at a lower level, without necessarily depending on user interactions every time.
 
 #### A real case scenario in Syndesis 
 
-A good example would be to have an _Fetch Connections_ action being triggered right after successfully processing a _Create Connection_ action, for argument's sake. So, initially an user will make to the Syndesis app, go to the connections page, which will fetch all connections in the Store that was populated upon bootstrappng the application (by means fo an action, obviously) and then proceed to create a brand new Connection. 
+A good example would be to have an _Fetch Connections_ action being triggered right after successfully processing a _Create Connection_ action, for argument's sake.
 
-Once this new connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created connection. Since that list is only loaded when landin on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable, not to mention that if we ever want to understand who are the triggers of data changes in our applicatione ecosystem, we'll want to track down each and every component. 
+Initially a user will navigate to the Syndesis app, go to the Connections page, which will fetch all Connections in the Store that was populated upon bootstrapping the application (by means of an action), and then proceed to create a brand new Connection. 
 
-Triggering actions from components is not wrong... All the way around! But here we're facing a different scenario: We need to trigger an action which does not depend on an user interactin, but on the accomplishment of another action previously executed. Luckily, we have _Effects_ for achieve that.
+Once this new Connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created Connection. Since that list is only loaded when landing on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable. Moreover, if we ever want to understand which are the triggers of data changes in our application ecosystem, we'll want to track down each and every component. 
+
+Triggering actions from components is not wrong, but here we're facing a different scenario--we need to trigger an action that does not depend on a user interaction, but on the accomplishment of another action previously executed. Luckily, we can leverage _Effects_ to achieve that.
 
 #### Effects in action with a code example
 
-We saw earlier that our `MetadataState` example featured an `UPDATE` action that populated the overall state of this entity. New actions will be introduced as time goes by and at some point we might need actions to report errors. An example would be:
+We saw earlier that our `MetadataState` example featured an `UPDATE` action that populated the overall state of this entity. New actions will be introduced as time goes by, and at some point we might need actions to report errors. An example would be:
 
 ```typescript
 // rest of metadata.actioons.ts removed for brevity sake
@@ -227,7 +241,7 @@ export class MetadataReportError implements Action {
 // rest of metadata.actions.ts continues below...
 ```
 
-Question: _what if we want to rollback the state of the metadata state to its original state whenever an error occurs?_ We can either dispatch the `MetadataReset` error along with each dispatching of the `MetadataReportError` action, or we can make the former depend on the latter. We can create a `metadata.effects.ts` fiel for that and populate it like this:
+Question: _What if we want to rollback the state of the metadata state to its original state whenever an error occurs?_ We can either dispatch the `MetadataReset` error along with each dispatching of the `MetadataReportError` action, or we can make the former depend on the latter. We can create a `metadata.effects.ts` field for that and populate it like this:
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -248,7 +262,7 @@ export class MonitorEffects {
 }
 ```
 
-This is a simple example, but the most common use for _Effects_ is to allocate Http calls to the Syndesis REST API. In other words, and for the sole exception of simple, stateless components that do not impact the application or feature state, we **NEVER run Http calls (either directly or through Angular services) from components**. We proceed to call the API and digest its responses through Effects instead, like this:
+This is a simple example, but the most common use for _Effects_ is to allocate HTTP calls to the Syndesis REST API. In other words, and for the sole exception of simple, stateless components that does not impact the application or feature state, we **NEVER run HTTP calls (either directly or through Angular services) from components**. Instead, we proceed to call the API and digest its responses through Effects, like this:
 
 ```typescript
 @Injectable()
@@ -276,12 +290,16 @@ export class MonitorEffects {
 }
 ```
 
-The example above involves the `UPDATE` action we already know, which is intercepted by the _Effect_ which will read its payload and will send a `PUT` request to the API (by means of an imaginary `metadataService` object whose `put()` method allegedly leverages `ApiHttpService` to send PUT requests). When the Http call is successfully processed, the observable stream allows us return another action (represented as a raw `{ type: MetadataActions.UPDATE_COMPLETE }` object literal - we could use `new MetadataActions.UpdateComplete()` instead) and we handle errors by also returning an `MetadataActions.ERROR` object literal. In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end. 
+The example above involves the `UPDATE` action we already know, which is intercepted by the _Effect_, which will read its payload and send a `PUT` request to the API (by means of an imaginary `metadataService` object whose `put()` method leverages the `ApiHttpService` to send PUT requests).
 
-In the example provided, remember that the `ERROR` acion also triggered a `RESET` action by means of the previously created `resetMedatataUponError$` effect class member.
+When the HTTP call is successfully processed, the observable stream allows us to return another action (represented as a raw `{ type: MetadataActions.UPDATE_COMPLETE }` object literal, though we could use `new MetadataActions.UpdateComplete()` instead). We handle errors by also returning an `MetadataActions.ERROR` object literal.
+
+In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end. 
+
+In the example provided, remember that the `ERROR` action also triggered a `RESET` action by means of the previously created `resetMedatataUponError$` effect class member.
 
 ### How to fetch observable state streams and subscribe to state changes
-Let's figure out that we have observed the guidelines above to create a slice of state in the platform store (namely `PlatformState`) that allows us to persist the existing integrations. Or perhaps we might want to subscribe to changes in all the slices of state (which is not recommended anyways, given the huge volatility fo the store). Then you could do the following from any component:
+Let's assume that we have observed the guidelines above to create a slice of state in the platform store (namely `PlatformState`), which allows us to persist the existing Integrations. Or perhaps we might want to subscribe to changes in all the slices of state (which is not recommended anyway, given the volatility of the store). You could, then, do the following from any component:
 
 ```typescript
 import { Component, OnInit } from '@angular/core';
@@ -323,6 +341,6 @@ export class StatefulComponent implements OnInit {
 The example above leverages custom selectors to select partial slices of state. Please refer to the [online docs](https://github.com/ngrx/platform/blob/master/docs/store/selectors.md) about custom selectors for reference.
 
 ### Bear in mind these global state triggers
-In `platform.actions.ts` you will find some top application-level actions that you can listen in your own effects shoudl you need to run something when something happens:
+In `platform.actions.ts` you will find some top application-level actions that you can listen in your own effects should you need to run something when something happens:
 
 - `APP_BOOTSTRAP`: This action is dispatched as soon as `AppComponent` is initialized in the Syndesis project.
