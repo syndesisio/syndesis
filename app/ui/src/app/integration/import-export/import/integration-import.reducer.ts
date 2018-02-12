@@ -1,4 +1,4 @@
-import { PlatformStore } from '@syndesis/ui/platform';
+import { PlatformState } from '@syndesis/ui/platform';
 import { ActionReducerMap } from '@ngrx/store';
 
 import {

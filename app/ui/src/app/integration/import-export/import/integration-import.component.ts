@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { PlatformStore } from '@syndesis/ui/platform';
+import { PlatformState } from '@syndesis/ui/platform';
 
 
 import {
@@ -9,11 +9,10 @@ import {
 
 @Component({
   selector: 'syndesis-import-integration-component',
-  templateUrl: './integration-import.component.html',
-  styleUrls: ['./integration-import.component.scss']
+  templateUrl: './integration-import.component.html'
 })
 export class IntegrationImportComponent implements OnInit {
-  constructor(private store: Store<PlatformStore>) { }
+  constructor(private store: Store<PlatformState>) { }
 
   ngOnInit() {
     /**
