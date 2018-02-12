@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public interface RawMetrics {
 
     String getIntegrationId();
-    Optional<String> getVersion();
+    String getVersion();
     String getPod();
 
     Long getMessages();
