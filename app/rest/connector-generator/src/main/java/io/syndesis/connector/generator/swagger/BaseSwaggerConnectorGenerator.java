@@ -39,6 +39,7 @@ import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.connector.generator.swagger.util.JsonSchemaHelper;
+import io.syndesis.connector.generator.swagger.util.OperationDescription;
 import io.syndesis.connector.generator.swagger.util.SwaggerHelper;
 import io.syndesis.connector.generator.util.ActionComparator;
 import io.syndesis.core.SyndesisServerException;
@@ -196,26 +197,12 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     .connectorId(connectorId)//
                     .build();
 
-                final String summary = trimToNull(operation.getSummary());
-                final String specifiedDescription = trimToNull(operation.getDescription());
-
-                final String name;
-                final String description;
-                if (summary == null && specifiedDescription == null) {
-                    name = entry.getKey() + " " + pathEntry.getKey();
-                    description = null;
-                } else if (specifiedDescription == null) {
-                    name = entry.getKey() + " " + pathEntry.getKey();
-                    description = summary;
-                } else {
-                    name = summary;
-                    description = specifiedDescription;
-                }
+                final OperationDescription description = SwaggerHelper.operationDescriptionOf(swagger, operation);
 
                 final ConnectorAction action = new ConnectorAction.Builder()//
                     .id(createActionId(connectorId, connectorGav, operation))//
-                    .name(name)//
-                    .description(description)//
+                    .name(description.name)//
+                    .description(description.description)//
                     .pattern(Action.Pattern.To)//
                     .descriptor(descriptor).tags(ofNullable(operation.getTags()).orElse(Collections.emptyList()))//
                     .build();
