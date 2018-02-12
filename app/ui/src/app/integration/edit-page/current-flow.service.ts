@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import {
   Connection,
+  Connections,
   createIntegration,
   createStep,
   createConnectionStep,
@@ -43,6 +44,38 @@ export class CurrentFlowService {
   isValid(): boolean {
     // TODO more validations on the integration
     return this.integration.name && this.integration.name.length > 0;
+  }
+
+  /**
+   * Returns the connections suitable for the given position in the integration flow
+   * @param connections
+   * @param position
+   */
+  filterConnectionsByPosition(connections: Connections, position: number) {
+    if (position === undefined) {
+      // safety net
+      return connections;
+    }
+    if (position === 0) {
+      return connections.filter( connection => {
+        if (!connection.connector) {
+          // safety net
+          return true;
+        }
+        return connection.connector.actions.some( action => {
+          return action.pattern === 'From';
+        });
+      });
+    }
+    return connections.filter( connection => {
+      if (!connection.connector) {
+        // safety net
+        return true;
+      }
+      return connection.connector.actions.some( action => {
+        return action.pattern === 'To';
+      });
+    });
   }
 
   /**
@@ -309,7 +342,8 @@ export class CurrentFlowService {
     if (!this.integration) {
       return true;
     }
-    return position >= this.steps.length;
+    // position is assumed to be 0 indexed
+    return (position + 1) >= this.steps.length;
   }
 
   handleEvent(event: FlowEvent): void {
