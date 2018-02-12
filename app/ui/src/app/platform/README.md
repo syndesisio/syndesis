@@ -252,7 +252,7 @@ import { Observable } from 'rxjs/Observable';
 import * as MetadataActions from './metadata.actions';
 
 @Injectable()
-export class MonitorEffects {
+export class MetadataEffects {
   @Effect()
   resetMedatataUponError$: Observable<Action> = this.actions$
     .ofType(MetadataActions.ERROR)
@@ -266,7 +266,7 @@ This is a simple example, but the most common use for _Effects_ is to allocate H
 
 ```typescript
 @Injectable()
-export class MonitorEffects {
+export class MetadataEffects {
   // Other effects hidden for brevity sake
   // ...
 
