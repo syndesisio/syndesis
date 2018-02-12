@@ -413,6 +413,7 @@
         <artifactId>duplicate-finder-maven-plugin</artifactId>
         <configuration>
           <ignoredClassPatterns>
+            <ignoredUnusedDeclaredDependency>com.fasterxml.jackson.datatype:jackson-datatype-jdk8</ignoredUnusedDeclaredDependency>
             <ignoredClassPattern>io.fabric8.kubernetes.client.*</ignoredClassPattern>
             <ignoredClassPattern>org.infinispan.*</ignoredClassPattern>
             <ignoredClassPattern>org.springframework.security.crypto.*</ignoredClassPattern>
