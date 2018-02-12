@@ -1,18 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
-import { log, getCategory } from '../logging';
-
+import { log, getCategory } from '@syndesis/ui/logging';
 import { Connection, Connections, Integrations, UserService } from '@syndesis/ui/platform';
-import { ConnectionStore } from '../store/connection/connection.store';
+import { ConnectionStore } from '@syndesis/ui/store/connection';
 
 const category = getCategory('Dashboard');
 
 @Component({
-  selector: 'syndesis-dashboard-empty-state',
-  templateUrl: './emptystate.component.html',
-  styleUrls: ['./emptystate.component.scss']
+  selector: 'syndesis-dashboard-empty',
+  templateUrl: './dashboard-empty.component.html',
+  styleUrls: ['./dashboard-empty.component.scss']
 })
 export class EmptyStateComponent implements OnInit {
   connections: Observable<Connections>;

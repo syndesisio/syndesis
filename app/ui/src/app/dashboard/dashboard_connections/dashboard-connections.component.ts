@@ -8,8 +8,8 @@ const category = getCategory('Dashboard');
 
 @Component({
   selector: 'syndesis-dashboard-connections',
-  templateUrl: './connections.component.html',
-  styleUrls: ['./connections.component.scss']
+  templateUrl: './dashboard-connections.component.html',
+  styleUrls: ['./dashboard-connections.component.scss']
 })
 export class DashboardConnectionsComponent implements OnInit {
   @Input() connections: Connections;

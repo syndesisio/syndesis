@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { Connections, Integrations, UserService } from '@syndesis/ui/platform';
-import { ConnectionStore } from '../store/connection/connection.store';
-import { IntegrationStore } from '../store/integration/integration.store';
+import { ConnectionStore, IntegrationStore } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-dashboard',
