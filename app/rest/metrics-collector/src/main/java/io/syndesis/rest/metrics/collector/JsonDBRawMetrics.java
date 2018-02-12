@@ -56,9 +56,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
 
         try {
             //persist the latest rawMetrics
-            String path = String.format("%s/integrations/%s/versions/%s/pods/%s",
-                RawMetrics.class.getSimpleName(),rawMetrics.getIntegrationId(),
-                    rawMetrics.getVersion(), rawMetrics.getPod());
+            String path = path(rawMetrics.getIntegrationId(), rawMetrics.getPod());
             String json = Json.writer().writeValueAsString(rawMetrics);
             if (jsonDB.exists(path)) {
                 //only update if not the same (don't cause unnecessary and expensive writes)
@@ -84,9 +82,10 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
      */
     @Override
     public Map<String,RawMetrics> getRawMetrics(String integrationId) throws IOException {
-        //try to obtain metrics in this integration
+        //try to obtain all raw metrics in this integration
         Map<String,RawMetrics> metrics = new HashMap<>();
-        String json = jsonDB.getAsString(path(integrationId));
+        String path = path(integrationId);
+        String json = jsonDB.getAsString(path);
         if (json != null) {
             metrics = Json.reader().forType(VALUE_TYPE_REF).readValue(json);
         }

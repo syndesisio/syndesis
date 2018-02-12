@@ -75,9 +75,10 @@ public class MetricsCollectorTest {
         }
         this.jsondb.createTables();
 
+        jsondbRM = new JsonDBRawMetrics(jsondb);
+
         load();
 
-        jsondbRM = new JsonDBRawMetrics(jsondb);
         CacheManager cacheManager = new LRUCacheManager(100);
         EncryptionComponent encryptionComponent = new EncryptionComponent(null);
         ResourceLoader resourceLoader = new DefaultResourceLoader();
@@ -87,12 +88,12 @@ public class MetricsCollectorTest {
     }
 
     private void load() throws IOException, ParseException {
-        jsondb.set(JsonDBRawMetrics.path("intId1","pod1"), Json.writer().writeValueAsString(raw("intId1","1","pod1",3L, "31-01-2018 10:20:56")));
-        jsondb.set(JsonDBRawMetrics.path("intId1","pod2"), Json.writer().writeValueAsString(raw("intId1","1","pod2",3L, "31-01-2018 10:22:56")));
-        jsondb.set(JsonDBRawMetrics.path("intId1","HISTORY1"), Json.writer().writeValueAsString(raw("intId1","1","HISTORY",3L, "22-01-2015 10:20:56")));
-        jsondb.set(JsonDBRawMetrics.path("intId2","pod3"), Json.writer().writeValueAsString(raw("intId2","1","pod3",3L, "31-01-2018 10:20:56")));
-        jsondb.set(JsonDBRawMetrics.path("intId3","pod4"), Json.writer().writeValueAsString(raw("intId3","1","pod4",3L, "31-01-2018 10:20:56")));
-        jsondb.set(JsonDBRawMetrics.path("intId3","pod5"), Json.writer().writeValueAsString(raw("intId3","1","pod5",3L, "31-01-2018 10:20:56")));
+        jsondbRM.persist(raw("intId1","1","pod1",3L, "31-01-2018 10:20:56"));
+        jsondbRM.persist(raw("intId1","1","pod2",3L, "31-01-2018 10:22:56"));
+        jsondbRM.persist(raw("intId1","1","HISTORY1",3L, "22-01-2015 10:20:56"));
+        jsondbRM.persist(raw("intId2","1","pod3",3L, "31-01-2018 10:20:56"));
+        jsondbRM.persist(raw("intId3","1","pod4",3L, "31-01-2018 10:20:56"));
+        jsondbRM.persist(raw("intId3","1","pod5",3L, "31-01-2018 10:20:56"));
     }
 
     private RawMetrics raw(String integrationId, String version, String podName, Long messages, String startDateString) throws ParseException {
