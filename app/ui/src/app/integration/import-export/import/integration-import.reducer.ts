@@ -1,6 +1,4 @@
-import {
-  IntegrationImportState
-} from './integration-import.models';
+import { IntegrationImportState } from './integration-import.models';
 
 import * as IntegrationImportActions from './integration-import.actions';
 
@@ -36,4 +34,3 @@ export function integrationImportReducer(state = initialState, action: any): Int
     }
   }
 }
-

@@ -1,10 +1,7 @@
-import { BaseEntity, ActionReducerError } from '@syndesis/ui/platform';
+import { ActionReducerError, Integration } from '@syndesis/ui/platform';
 import { Action } from '@ngrx/store';
 
-import {
-  IntegrationImportState
-} from './integration-import.models';
-import {Integration} from "@syndesis/ui/platform/types/integration/integration.models";
+import { IntegrationImportState } from './integration-import.models';
 
 export const UPLOAD_INTEGRATION = '[Integrations] Upload imported integration';
 export const UPLOAD_INTEGRATION_COMPLETE = '[Integrations] Uploaded imported integration';
@@ -13,7 +10,6 @@ export const UPLOAD_INTEGRATION_FAIL = '[Integrations] Upload integration failed
 export const EDIT_INTEGRATION = '[Integrations] Edit imported integration';
 export const EDIT_INTEGRATION_COMPLETE = '[Integrations] Edited imported integration';
 export const EDIT_INTEGRATION_FAIL = '[Integrations] Edit integration failed';
-
 
 export class IntegrationImportUpload implements Action {
   readonly type = UPLOAD_INTEGRATION;
@@ -26,7 +22,6 @@ export class IntegratImportUploadComplete implements Action {
 
   constructor(public payload: IntegrationImportState) {}
 }
-
 
 export class IntegratImportUploadFail implements Action {
   readonly type = UPLOAD_INTEGRATION_FAIL;
@@ -49,7 +44,3 @@ export class IntegrationImportEditFail implements Action {
 
   constructor(public payload: ActionReducerError) {}
 }
-
-
-
-

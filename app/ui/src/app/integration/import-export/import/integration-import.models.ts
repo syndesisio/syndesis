@@ -7,9 +7,6 @@ export interface IntegrationImportState extends BaseReducerModel {
     connections?: string[];
   };
   list?: IntegrationImportsState;
-
 }
 
 export type IntegrationImportsState = Array<IntegrationImportState>;
-
-

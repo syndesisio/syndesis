@@ -9,11 +9,11 @@ import { IntegrationImportComponent } from './import/integration-import.componen
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'integration-import',
     component: IntegrationImportExportComponent,
     children: [
       {
-        path: 'integration-import',
+        path: '',
         component: IntegrationImportComponent
       }
     ]
