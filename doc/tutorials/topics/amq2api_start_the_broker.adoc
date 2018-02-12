@@ -8,7 +8,7 @@ https://console.fuse-ignite.openshift.com/console/. Your installation of
 {prodname} runs on OpenShift Online. 
 
 . In the console, click the name of your {prodname} project, which is
-something like `prod123456`. 
+something like `proj123456`. 
 
 . In the *Overview* page, scroll down to *Other Resources* to 
 see the provided AMQ broker. 
