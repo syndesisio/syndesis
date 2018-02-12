@@ -103,6 +103,7 @@
     "patternfly-sass": "3.23.2",
     "prettier": "^1.5.2",
     "puppeteer": "^1.0.0",
+    "rxjs-tslint-rules": "^3.9.0",
     "sass-lint": "1.10.2",
     "sw-precache": "5.0.0",
     "swagger-js-codegen": "1.7.12",

@@ -5,7 +5,6 @@ import { ConfigService } from '../../config.service';
 import { Restangular } from 'ngx-restangular';
 import { log } from '../../logging';
 import { resolve } from 'url';
-import 'rxjs/add/operator/first';
 
 export class ChangeEvent {
   action: string;
