@@ -100,10 +100,15 @@ public class ComponentProxyComponent extends DefaultComponent {
 
         // create the uri of the base component, DO NOT log the computed delegate
         final Map<String, String> endpointOptions = buildEndpointOptions(remaining, options);
-        final String delegateUri = catalog.asEndpointUri(componentSchemeAlias.orElse(componentScheme), endpointOptions, false);
-        final Endpoint delegate = getCamelContext().getEndpoint(delegateUri);
+        final Endpoint delegate = createDelegateEndpoint(definition, endpointOptions);
 
-        LOGGER.info("Connector resolved: {} -> {}", URISupport.sanitizeUri(uri), URISupport.sanitizeUri(delegateUri));
+        LOGGER.info("Connector resolved: {} -> {}", URISupport.sanitizeUri(uri), URISupport.sanitizeUri(delegate.getEndpointUri()));
+
+        // remove options already set on the endpoint
+        options.keySet().removeIf(endpointOptions::containsKey);
+
+        // Configure the delegated endpoint
+        configureDelegateEndpoint(definition, delegate, options);
 
         final ComponentProxyEndpoint answer = new ComponentProxyEndpoint(uri, this, delegate);
         answer.setBeforeProducer(getBeforeProducer());
@@ -114,6 +119,8 @@ public class ComponentProxyComponent extends DefaultComponent {
         // clean-up parameters so that validation won't fail later on
         // in DefaultConnectorComponent.validateParameters()
         parameters.clear();
+
+        // remove temporary options
         this.remainingOptions.clear();
 
         return answer;
@@ -300,6 +307,19 @@ public class ComponentProxyComponent extends DefaultComponent {
                 }
             }
         }
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, Map<String, String> options) throws Exception {
+        // Build the delegate uri suing the catalog
+        final String uri = catalog.asEndpointUri(componentSchemeAlias.orElse(componentScheme), options, false);
+
+        return getCamelContext().getEndpoint(uri);
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) throws Exception {
+        // no-op
     }
 
     /**
