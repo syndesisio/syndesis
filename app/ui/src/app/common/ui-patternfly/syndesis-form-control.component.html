@@ -8,8 +8,8 @@
          [class.required-pf]="model.required"
          [ngClass]="[elementLabelClass, gridLabelClass]">
     {{ model.label }}
-    <div *ngIf="model.hint !== null"
-         [tooltip]="model.hint"
+    <div *ngIf="model.labelTooltip"
+         [tooltip]="model.labelTooltip"
          placement="right"
          class="hint-icon">
       <span class="glyphicon glyphicon-info-sign"></span>
@@ -43,8 +43,8 @@
         <span [innerHTML]="model.label"
               [ngClass]="[elementLabelClass, gridLabelClass]">
         </span>
-        <div *ngIf="model.hint !== null"
-             [tooltip]="model.hint"
+        <div *ngIf="model.labelTooltip"
+             [tooltip]="model.labelTooltip"
              placement="right"
              class="inline-block hint-icon">
           &nbsp;
@@ -154,7 +154,7 @@
                   [maxlength]="model.maxLength"
                   [minlength]="model.minLength"
                   [name]="model.name"
-                  [tooltip]="model.hint"
+                  [tooltip]="model.controlTooltip"
                   [ngClass]="elementControlClass"
                   [pattern]="model.pattern"
                   [placeholder]="model.placeholder"
@@ -219,7 +219,7 @@
               [dynamicId]="bindId && model.id"
               [formControlName]="model.id"
               [name]="model.name"
-              [tooltip]="model.hint"
+              [tooltip]="model.controlTooltip"
               [ngClass]="elementControlClass"
               [required]="model.required"
               (dfBlur)="onBlur($event)"
@@ -255,7 +255,7 @@
                 (dfFocus)="onFocus($event)"></textarea>
 
 
-      <!-- <span *ngIf="showHint" class="help-block" [innerHTML]="model.hint" [ngClass]="getClass('element', 'hint')"></span> -->
+      <span *ngIf="showHint" class="help-block" [innerHTML]="model.hint" [ngClass]="getClass('element', 'hint')"></span>
 
       <!-- TIMEPICKER -->
       <!-- <timepicker *ngSwitchCase="9"
