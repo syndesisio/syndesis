@@ -180,7 +180,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
-    private void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
+    protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
         openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
             .withName(name)
