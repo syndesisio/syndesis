@@ -17,19 +17,36 @@
     flex-direction: row;
   }
 
-  .wizard-main {
+  .main-panel {
     flex: 1 1 auto;
     position: relative;
     height: 100%;
     overflow: auto;
     padding: 20px;
-  }
 
-  .mapper-main {
-    flex: 1 1 auto;
-    position: relative;
-    height: 100%;
-    overflow: auto;
+    ::ng-deep .main-panel-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: visible;
+
+      .main-panel-body {
+      flex: 1 1 auto;
+      position: relative;
+      overflow-y: scroll;
+      margin-left: -20px;
+      padding-left: 20px;
+      margin-right: -20px;
+      padding-right: 20px;
+      margin-bottom: -20px;
+      padding-bottom: 20px;
+
+        &.mapper {
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+    }
   }
 
   .wizard-sidebar {
@@ -50,5 +67,46 @@
     border-right: 1px solid #d1d1d1;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+
+  ::ng-deep {
+    .toolbar {
+      flex: 0 0 auto;
+      margin: 0 -20px;
+  
+      .toolbar-pf {
+        background: none !important;
+        border-bottom: 1px #d9d9d9 solid;
+        box-shadow: none;
+        margin: 0;
+        padding: 0 0 10px 0;
+  
+        .breadcrumb {
+          padding: 0;
+          margin: 0;
+        }
+  
+        .search {
+          width: 50%;
+  
+          .input-group {
+            width: 80%;
+          }
+        }
+  
+        .toolbar-pf-actions {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .control-buttons {
+      margin-right: 15px;
+    
+      .btn {
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+    }
   }
 }
