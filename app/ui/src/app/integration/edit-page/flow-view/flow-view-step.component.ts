@@ -1,10 +1,10 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnChanges } from '@angular/core';
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { PopoverDirective } from 'ngx-bootstrap/popover';
 
-import { Action, Integration, Step } from '@syndesis/ui/platform';
+import { Action, Integration, Step, DataShape, DataShapeKinds } from '@syndesis/ui/platform';
 import { ModalService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { StepStore } from '@syndesis/ui/store';
@@ -17,7 +17,7 @@ const category = getCategory('IntegrationsCreatePage');
   templateUrl: './flow-view-step.component.html',
   styleUrls: ['./flow-view-step.component.scss']
 })
-export class FlowViewStepComponent {
+export class FlowViewStepComponent implements OnChanges {
   // the step object in the current flow
   @Input() step: Step;
 
@@ -31,6 +31,11 @@ export class FlowViewStepComponent {
   @Input() currentState: string;
 
   @ViewChild('pop') public pop: PopoverDirective;
+
+  inputDataShapeText: string;
+  outputDataShapeText: string;
+  previousStepShouldDefineDataShape = false;
+  shouldAddDatamapper = false;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -47,9 +52,13 @@ export class FlowViewStepComponent {
   }
 
   showTooltip() {
-    if (this.flowPageService.getCurrentStepKind(this.route) === 'mapper') {
+    // TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700
+    // for now showing everything as a tooltip
+    this.pop.show();
+
+    /* if (this.flowPageService.getCurrentStepKind(this.route) === 'mapper') {
       this.pop.show();
-    }
+    } */
   }
 
   hideTooltip() {
@@ -274,24 +283,25 @@ export class FlowViewStepComponent {
     if (!this.step) {
       return 'Set up this step';
     }
+    const prefix = 'Step ' + (this.getPosition() + 1) + ' - ';
     switch (this.step.stepKind) {
       case 'endpoint':
         if (this.step.action && this.step.action.name) {
-          return this.step.action.name;
+          return prefix + this.step.action.name;
         }
         if (this.step.connection) {
-          return this.step.connection.name;
+          return prefix + this.step.connection.name;
         }
         if (this.getPosition() === 0) {
-          return 'Start';
+          return prefix + 'Start';
         }
         if (this.getPosition() === this.currentFlowService.getLastPosition()) {
-          return 'Finish';
+          return prefix + 'Finish';
         }
         return 'Set up this connection';
       default:
         if (this.step.name) {
-          return this.step.name;
+          return prefix + this.step.name;
         }
         return 'Set up this step';
     }
@@ -299,6 +309,56 @@ export class FlowViewStepComponent {
 
   isCollapsed() {
     return this.getPosition() !== this.currentPosition;
+  }
+
+  ngOnChanges() {
+    this.previousStepShouldDefineDataShape = false;
+    this.shouldAddDatamapper = false;
+    if (!this.step || !this.step.action || !this.step.action.descriptor) {
+      return;
+    }
+
+    if (this.step !== this.currentFlowService.getStartStep()
+      && this.step.action.descriptor.inputDataShape) {
+      const inDataShape = this.step.action.descriptor.inputDataShape;
+      this.inputDataShapeText = this.getDataShapeText(inDataShape);
+      if ([DataShapeKinds.ANY, DataShapeKinds.NONE].indexOf(inDataShape.kind) === -1) {
+        const prev = this.currentFlowService.getPreviousStepWithDataShape(this.position);
+        const prevOutDataShape = prev.action.descriptor.outputDataShape;
+        if (DataShapeKinds.ANY === prevOutDataShape.kind) {
+          this.previousStepShouldDefineDataShape = true;
+        } else if (!this.isSameDataShape(inDataShape, prevOutDataShape)) {
+          this.shouldAddDatamapper = true;
+        }
+      }
+    }
+
+    if (this.step !== this.currentFlowService.getEndStep()
+      && this.step.action.descriptor.outputDataShape) {
+      this.outputDataShapeText = this.getDataShapeText(this.step.action.descriptor.outputDataShape);
+    }
+  }
+
+  private getDataShapeText(dataShape: DataShape) {
+    if (dataShape.name) {
+      return dataShape.name;
+    }
+    if (dataShape.kind) {
+      if (DataShapeKinds.ANY === dataShape.kind) {
+        return 'ANY';
+      } else if (DataShapeKinds.NONE === dataShape.kind) {
+        return undefined;
+      }
+    }
+    return dataShape.type;
+  }
+
+  private isSameDataShape(one: DataShape, other: DataShape): boolean {
+    if (!one || !other) {
+      return false;
+    }
+    return one.kind === other.kind && one.type === other.type
+      && one.specification === other.specification;
   }
 
   private thingIsEnabled(step: Step) {
