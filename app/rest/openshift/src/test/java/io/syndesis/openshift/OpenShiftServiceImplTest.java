@@ -24,21 +24,36 @@ import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.ImageStreamBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.server.mock.OpenShiftServer;
+import io.fabric8.openshift.client.server.mock.OpenShiftMockServer;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 public class OpenShiftServiceImplTest {
     @Rule
     public TestName testName = new TestName();
-    @Rule
-    public OpenShiftServer server = new OpenShiftServer();
+
+    private OpenShiftMockServer server;
+    private NamespacedOpenShiftClient client;
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+    }
+
+    @Before
+    public void setUp() {
+        this.server = new OpenShiftMockServer();
+        this.client = server.createOpenShiftClient();
+    }
 
     @Test
-    public void testCreateDeployment() {
+    public void testDeploy() {
         String name = "test-deployment";
-        NamespacedOpenShiftClient client = server.getOpenshiftClient();
         OpenShiftConfigurationProperties config = new OpenShiftConfigurationProperties();
         OpenShiftServiceImpl service = new OpenShiftServiceImpl(client, config);
 
