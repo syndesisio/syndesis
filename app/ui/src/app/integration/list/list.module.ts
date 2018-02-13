@@ -1,6 +1,6 @@
 import { NgModule, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationSupportModule } from '../integration-support.module';
 import { IntegrationStatusComponent } from './status.component';
@@ -13,7 +13,7 @@ const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
 @NgModule({
   imports: [
     CommonModule,
-    SyndesisVendorModule,
+    VendorModule,
     syndesisCommonModuleFwd,
     integrationSupportModuleFwd
   ],

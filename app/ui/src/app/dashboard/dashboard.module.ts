@@ -4,14 +4,15 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration';
 
 import { DashboardComponent } from './dashboard.component';
-import { EmptyStateComponent } from './dashboard_empty';
+import { DashboardEmptyComponent } from './dashboard_empty';
 import { DashboardConnectionsComponent } from './dashboard_connections';
 import { DashboardIntegrationsComponent } from './dashboard_integrations';
+import { DashboardMetricsComponent } from './dashboard_metrics';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }
@@ -22,7 +23,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SyndesisCommonModule,
-    SyndesisVendorModule,
+    VendorModule,
     ChartsModule,
     IntegrationListModule,
   ],
@@ -30,7 +31,8 @@ const routes: Routes = [
     DashboardComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
-    EmptyStateComponent
+    DashboardEmptyComponent,
+    DashboardMetricsComponent
   ]
 })
 export class DashboardModule {}

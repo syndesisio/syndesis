@@ -11,11 +11,10 @@ import { Action,
   IntegrationStatus,
   IntegrationSupportService,
   ApiHttpService,
-  UNPUBLISHED,
-  PUBLISHED
+  integrationEndpoints,
+  UNPUBLISHED
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
-import { integrationSupportEndpoints } from './integration-support.api';
 import { RequestMethod, ResponseContentType } from '@angular/http';
 
 @Injectable()
@@ -26,11 +25,11 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   getFilterOptions(dataShape: any): Observable<any> {
-    return this.apiHttpService.post(integrationSupportEndpoints.filterOptions, dataShape);
+    return this.apiHttpService.post(integrationEndpoints.filterOptions, dataShape);
   }
 
   getOverview(id: string): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.overview, { id }).get();
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overview, { id }).get();
   }
 
   watchOverview(id: string): Observable<IntegrationOverview> {
@@ -52,7 +51,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   getOverviews(): Observable<IntegrationOverviews> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.overviews).get().map((value: any) => value.items || []);
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overviews).get().map((value: any) => value.items || []);
   }
 
   watchOverviews(): Observable<IntegrationOverviews> {
@@ -65,27 +64,19 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   getDeployments(id: string): Observable<IntegrationDeployments> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployments, { id }).get();
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployments, { id }).get();
   }
 
-  deploy(integration: Integration | IntegrationDeployment): Observable<any> {
-    let url, state, method;
-    if ('integrationVersion' in integration) {
-      // it's an IntegrationDeployment
-      url = integrationSupportEndpoints.updateState;
-      state = { targetState: PUBLISHED };
-      method = 'post';
-    } else {
-      // it's an Integration
-      url = integrationSupportEndpoints.publish;
-      state = { };
-      method = 'put';
-    }
-    return this.apiHttpService.setEndpointUrl(url, { id: integration.id, version: integration.version })[method](state);
+  publishIntegration(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.publish, { id: integration.id }).post(integration);
+  }
+
+  deploy(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.publish, { id: integration.id }).put({});
   }
 
   undeploy(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.updateState, {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.updateState, {
       id: integration.id,
       version: integration.deploymentVersion,
     }).post({
@@ -94,7 +85,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   updateState(id: string, version: string | number, status: IntegrationStatus): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.updateState, { id, version }).post({
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.updateState, { id, version }).post({
       targetState: status
     });
   }
@@ -109,11 +100,11 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   getDeployment(id: string, version: string): Observable<IntegrationDeployment> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.deployment, { id, version }).get();
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployment, { id, version }).get();
   }
 
   requestPom(integration: Integration): Observable<any> {
-    return this.apiHttpService.post(integrationSupportEndpoints.pom, integration);
+    return this.apiHttpService.post(integrationEndpoints.pom, integration);
   }
 
   fetchMetadata(
@@ -121,7 +112,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     action: Action,
     configuredProperties: any
   ): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.metadata, {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.metadata, {
       connectionId: connection.id,
       actionId: action.id
     }).post(configuredProperties);
@@ -131,26 +122,26 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     connectorId: String,
     type: String
   ): Observable<Response> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.javaInspection, { connectorId, type }).get();
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.javaInspection, { connectorId, type }).get();
   }
 
   exportIntegration(...ids: string[]): Observable<Blob> {
-    const url = integrationSupportEndpoints.export + '?' + ids.map(id => 'id=' + id).join('&');
+    const url = integrationEndpoints.export + '?' + ids.map(id => 'id=' + id).join('&');
     return this.apiHttpService.get<Blob>(url, { responseType: 'blob' });
   }
 
   importIntegrationURL(): string {
-    return this.apiHttpService.getEndpointUrl(integrationSupportEndpoints.import);
+    return this.apiHttpService.getEndpointUrl(integrationEndpoints.import);
   }
 
   requestIntegrationActivityFeatureEnabled(): Observable<boolean> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.activityFeature).get().map(res => {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.activityFeature).get().map(res => {
       return res['enabled'];
     });
   }
 
   requestIntegrationActivity(id: string): Observable<Activity[]> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.activity, {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.activity, {
       integrationId: id,
     }).get().map(res => {
       const transactions = res as Activity[];
@@ -159,7 +150,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   downloadSupportData(data: any[]): Observable<Blob> {
-    return this.apiHttpService.setEndpointUrl(integrationSupportEndpoints.supportData)
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.supportData)
       .post<Blob>(data, { responseType: 'blob' });
   }
 

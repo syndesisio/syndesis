@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { SyndesisCommonModule } from '../common/common.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 
 import { SettingsRootComponent } from './settings-root.component';
 import { OAuthAppsComponent } from './oauth-apps/oauth-apps.component';
@@ -37,7 +37,7 @@ const routes: Routes = [
     DynamicFormsCoreModule,
     PatternflyUIModule,
     RouterModule.forChild(routes),
-    SyndesisVendorModule,
+    VendorModule,
     SyndesisCommonModule
   ],
   exports: [],

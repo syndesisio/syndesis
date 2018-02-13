@@ -1,7 +1,7 @@
 <syndesis-loading [loading]="loading">
   <div class="container-cards-pf syndesis-dashboard-connections">
     <!-- Empty State -->
-    <ng-container *ngIf="connections.length === 0">
+    <ng-container *ngIf="connections?.length === 0">
       <div class="blank-slate-pf">
         <div class="blank-slate-pf-icon">
           <span class="pficon pficon pficon-add-circle-o"></span>
@@ -13,7 +13,7 @@
     </ng-container>
 
     <!-- Not empty state -->
-    <ng-container *ngIf="connections.length > 0">
+    <ng-container *ngIf="connections?.length > 0">
       <div class="row row-cards-pf cards">
 
         <!-- Each Connection's Card Container -->

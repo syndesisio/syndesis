@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { TagInputModule } from 'ngx-chips';
 
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '../common/common.module';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { ConnectionsCreatePage } from './create-page/create-page.component';
@@ -33,7 +33,7 @@ import { ConnectionConfigurationValidationComponent } from './common/configurati
     RouterModule,
     SyndesisCommonModule,
     TagInputModule,
-    SyndesisVendorModule
+    VendorModule
   ],
   declarations: [
     ConnectionsCreatePage,
