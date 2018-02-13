@@ -3,7 +3,17 @@
 
   <ng-template #tooltipPopover>
     <span>
-      <strong [innerHtml]="getStepText()"></strong>
+
+      <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
+      <div *ngIf="previousStepShouldDefineDataShape"><p style="color:red"><b>Define a data type</b></p></div>
+      <div *ngIf="shouldAddDatamapper"><p style="color:red"><b>Add a datamapper step</b></p></div>
+
+      <strong [innerHtml]="getStepText()"></strong><br/>
+
+      <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
+      <div *ngIf="inputDataShapeText" >Input: {{ inputDataShapeText }}</div>
+      <div *ngIf="outputDataShapeText">Output: {{ outputDataShapeText }}</div>
+
     </span>
   </ng-template>
 
