@@ -1,3 +1,4 @@
+import { PatternflyUIModule } from '@syndesis/ui/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -17,11 +18,13 @@ const category = getCategory('Integrations');
   styleUrls: ['./connection-select.component.scss']
 })
 export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
+  routeSubscription: Subscription;
   flowSubscription: Subscription;
-  loading: Observable<boolean>;
-  connections: Observable<Connections>;
-  filteredConnections = new BehaviorSubject(<Connections>{});
+  loading$: Observable<boolean>;
+  connections$: Observable<Connections>;
+  filteredConnections$ = new BehaviorSubject(<Connections>{});
   position: number;
+  positionText: String;
 
   constructor(
     public store: ConnectionStore,
@@ -36,8 +39,10 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
         this.handleFlowEvent(event);
       }
     );
-    this.loading = store.loading;
-    this.connections = store.list;
+    this.loading$ = store.loading;
+    this.connections$ = store.list.map((connections: Connections) => {
+      return this.currentFlowService.filterConnectionsByPosition(connections, this.position);
+    });
   }
 
   gotoCreateConnection() {
@@ -67,16 +72,6 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
     const step = this.currentFlowService.getStep(this.position);
     step.connection = undefined;
     this.flowPageService.goBack(['save-or-add-step'], this.route);
-  }
-
-  positionText() {
-    if (this.position === 0) {
-      return 'start';
-    }
-    if (this.position === this.currentFlowService.getLastPosition()) {
-      return 'finish';
-    }
-    return '';
   }
 
   loadConnections() {
@@ -115,17 +110,31 @@ export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.route.paramMap
+    this.routeSubscription = this.route.paramMap
       .first(params => params.has('position'))
       .subscribe(params => {
-        this.position = +params.get('position');
+        const position = params.get('position');
+        this.position = +position;
         this.loadConnections();
+        this.positionText = this.getPositionText(this.position);
       });
   }
 
   ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
     if (this.flowSubscription) {
       this.flowSubscription.unsubscribe();
     }
   }
+
+  private getPositionText(position) {
+    if (position === 0) {
+      return 'start';
+    }
+    if (position === this.currentFlowService.getLastPosition()) {
+      return 'finish';
+    }
+    return '';
+  }
+
 }
