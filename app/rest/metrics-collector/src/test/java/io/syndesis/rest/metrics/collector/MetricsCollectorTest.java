@@ -114,7 +114,7 @@ public class MetricsCollectorTest {
         String json = jsondb.getAsString(JsonDBRawMetrics.path("intId1"), new GetOptions().prettyPrint(true));
         Map<String,RawMetrics> metrics = Json.reader().forType(new TypeReference<Map<String,RawMetrics>>() {}).readValue(json);
         assertThat(metrics.size()).isEqualTo(3);
-        //assertThat(metrics.keySet()).contains("HISTORY");
+        assertThat(metrics.keySet()).contains("HISTORY1");
     }
 
     @Test
