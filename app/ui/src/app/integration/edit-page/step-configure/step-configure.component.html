@@ -14,7 +14,7 @@
       </ng-container>
     </button>
   </ng-template>
-  <div class="step-configure"
+  <div class="main-panel-inner step-configure"
        *ngIf="step">
 
     <!-- Toolbar -->
@@ -53,50 +53,49 @@
       </div>
     </div>
     <!-- Page body -->
-    <syndesis-loading [loading]="loading">
+    <syndesis-loading class="main-panel-body {{ step.stepKind !== 'mapper' ? 'body' : 'body mapper' }}"
+                      [loading]="loading">
       <ng-container *ngIf="error">
         <div [class]="error.class"
              [innerHtml]="error.message">
         </div>
       </ng-container>
-      <div [class]="step.stepKind !== 'mapper' ? 'body' : 'body mapper'">
-        <div [ngSwitch]="step.stepKind">
-          <div *ngSwitchCase="'mapper'">
-            <div class="row">
-              <div class="col-md-12" *ngIf="step">
-                <syndesis-data-mapper-host [position]="position"></syndesis-data-mapper-host>
-              </div>
+      <div [ngSwitch]="step.stepKind">
+        <div *ngSwitchCase="'mapper'">
+          <div class="row">
+            <div class="col-md-12" *ngIf="step">
+              <syndesis-data-mapper-host [position]="position"></syndesis-data-mapper-host>
             </div>
           </div>
-          <div *ngSwitchCase="'ruleFilter'">
-            <div class="row">
-              <div class="col-md-12"
-                   *ngIf="step && dataShape">
-                <syndesis-basic-filter [(configuredProperties)]="customProperties"
-                                       [(valid)]="valid"
-                                       [dataShape]="dataShape"
-                                       [position]="position"></syndesis-basic-filter>
-                <div class="pull-right control-buttons">
-                  <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngSwitchDefault>
-            <div class="title">
-              <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
-            </div>
-            <p>Fill out the fields associated with the selected step.</p>
-            <div *ngIf="formGroup">
-              <form class="form-horizontal"
-                    [formGroup]="formGroup">
-                <syndesis-form-control *ngFor="let controlModel of formModel"
-                                       [group]="formGroup"
-                                       [model]="controlModel"></syndesis-form-control>
-              </form>
+        </div>
+        <div *ngSwitchCase="'ruleFilter'">
+          <div class="row">
+            <div class="col-md-12"
+                  *ngIf="step && dataShape">
+              <syndesis-basic-filter [(configuredProperties)]="customProperties"
+                                      [(valid)]="valid"
+                                      [dataShape]="dataShape"
+                                      [position]="position"></syndesis-basic-filter>
               <div class="pull-right control-buttons">
                 <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
               </div>
+            </div>
+          </div>
+        </div>
+        <div *ngSwitchDefault>
+          <div class="title">
+            <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
+          </div>
+          <p>Fill out the fields associated with the selected step.</p>
+          <div *ngIf="formGroup">
+            <form class="form-horizontal"
+                  [formGroup]="formGroup">
+              <syndesis-form-control *ngFor="let controlModel of formModel"
+                                      [group]="formGroup"
+                                      [model]="controlModel"></syndesis-form-control>
+            </form>
+            <div class="pull-right control-buttons">
+              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
             </div>
           </div>
         </div>
