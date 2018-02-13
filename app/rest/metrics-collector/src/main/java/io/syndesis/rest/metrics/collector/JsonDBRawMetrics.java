@@ -56,8 +56,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
 
         try {
             //persist the latest rawMetrics
-            String path = String.format("%s/integrations/%s/pods/%s",
-                RawMetrics.class.getSimpleName(),rawMetrics.getIntegrationId(), rawMetrics.getPod());
+            String path = path(rawMetrics.getIntegrationId(), rawMetrics.getPod());
             String json = Json.writer().writeValueAsString(rawMetrics);
             if (jsonDB.exists(path)) {
                 //only update if not the same (don't cause unnecessary and expensive writes)
@@ -83,9 +82,10 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
      */
     @Override
     public Map<String,RawMetrics> getRawMetrics(String integrationId) throws IOException {
-        //try to obtain metrics in this integration
+        //try to obtain all raw metrics in this integration
         Map<String,RawMetrics> metrics = new HashMap<>();
-        String json = jsonDB.getAsString(path(integrationId));
+        String path = path(integrationId);
+        String json = jsonDB.getAsString(path);
         if (json != null) {
             metrics = Json.reader().forType(VALUE_TYPE_REF).readValue(json);
         }
@@ -109,15 +109,17 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
             Set<String> livePodIds) throws IOException {
 
         for (Map.Entry<String, RawMetrics> entry : metrics.entrySet()) {
-            if (! entry.getKey().equals(HISTORY) && ! livePodIds.contains(entry.getKey())) { //dead pod check
-                if (metrics.containsKey(HISTORY)) {
+            String historyKey = HISTORY + entry.getValue().getVersion();
+            if (! entry.getKey().contains(historyKey) && ! livePodIds.contains(entry.getKey())) { //dead pod check
+                if (metrics.containsKey(historyKey)) {
                     //add to existing history
-                    RawMetrics history = metrics.get(HISTORY);
+                    RawMetrics history = metrics.get(historyKey);
                     RawMetrics dead = entry.getValue();
                     Date lastProcessed = history.getLastProcessed().orElse(new Date(0)).after(dead.getLastProcessed().orElse(new Date(0)))
                             ? history.getLastProcessed().orElse(null) : dead.getLastProcessed().orElse(null);
                     RawMetrics updatedHistoryMetrics = new RawMetrics.Builder()
                             .integrationId(integrationId)
+                            .version(dead.getVersion())
                             .pod(history.getIntegrationId() + ":" + dead.getPod())
                             .messages(history.getMessages() + dead.getMessages())
                             .errors(history.getErrors() + dead.getErrors())
@@ -126,11 +128,11 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
                             .lastProcessed(Optional.ofNullable(lastProcessed))
                             .build();
                     String json = Json.writer().writeValueAsString(updatedHistoryMetrics);
-                    jsonDB.update(path(integrationId,HISTORY), json);
+                    jsonDB.update(path(integrationId,historyKey), json);
                 } else {
                     //create history bucket, first time we find a dead pod for this integration
                     String json = Json.writer().writeValueAsString(metrics.get(entry.getKey()));
-                    jsonDB.set(path(integrationId,HISTORY), json);
+                    jsonDB.set(path(integrationId,historyKey), json);
                 }
                 //delete the dead pod metrics since it has been added to the history
                 jsonDB.delete(path(integrationId,entry.getKey()));
@@ -161,12 +163,14 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         }
     }
 
-    static String path(String integrationId, String podName) {
-        return String.format("%s/integrations/%s/pods/%s", RawMetrics.class.getSimpleName(), integrationId, podName);
+    static String path(String integrationId,String podName) {
+        return String.format("%s/integrations/%s/pods/%s", RawMetrics.class.getSimpleName(),
+                integrationId, podName);
     }
 
     static String path(String integrationId) {
-        return String.format("%s/integrations/%s/pods", RawMetrics.class.getSimpleName(), integrationId);
+        return String.format("%s/integrations/%s/pods", RawMetrics.class.getSimpleName(),
+                integrationId);
     }
 
     static String path() {

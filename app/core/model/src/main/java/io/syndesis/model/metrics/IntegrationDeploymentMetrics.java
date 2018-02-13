@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @SuppressWarnings("immutables")
 public interface IntegrationDeploymentMetrics extends Serializable{
 
+    String getVersion();
     /**
      * @return Number of successful messages
      */
