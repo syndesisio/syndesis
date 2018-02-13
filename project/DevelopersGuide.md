@@ -161,6 +161,14 @@ oc port-forward $(oc get pods | grep rest- | awk '{print $1}') 5005
 ```
 - and you can now use localhost:5005 as your remote debug endpoint in your IDE
 
+##### start a pod (even failing ones) manually, to manually run the jvm process:
+```
+# start the pod in debug mode:
+oc debug POD_NAME_HERE
+# now you are in a sh shell, with the jvm process representing the integration not started yet, so you can run it manually, adding any useful flag:
+JAVA_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" /usr/local/s2i/run --debug
+```
+
 ###### general debugging tips
 - for breakpoints suspend on  thread instead of global breakpoints (halts just the threads running that line of code, doesn't pause the whole jvm process. )
 
@@ -232,4 +240,12 @@ done
 # oc patch dc syndesis-rest --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/readinessProbe"}]
 # oc patch dc syndesis-ui --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/livenessProbe"}]
 # oc patch dc syndesis-ui --type json -p=[{"op": "remove", "path": "/spec/template/spec/containers/0/readinessProbe"}]
+```
+
+## Modify the limit of number of integrations deployed:
+Add this entry to `system-rest-config` `ConfigMap`
+```yaml
+controllers:
+    maxIntegrationsPerUser: 4
+    maxDeploymentsPerUser: 4
 ```
