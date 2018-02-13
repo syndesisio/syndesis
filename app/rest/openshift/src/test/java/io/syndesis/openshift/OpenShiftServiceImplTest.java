@@ -118,6 +118,7 @@ public class OpenShiftServiceImplTest {
                     .withType("ConfigChange")
                 .endTrigger()
             .endSpec()
+            .withNewStatus().withLatestVersion(1L).endStatus()
             .build();
 
         server.expect()
@@ -130,6 +131,10 @@ public class OpenShiftServiceImplTest {
             .always();
         server.expect()
             .withPath("/oapi/v1/namespaces/test/deploymentconfigs")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+        server.expect()
+            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/test-deployment")
             .andReturn(200, expectedDeploymentConfig)
             .always();
 
