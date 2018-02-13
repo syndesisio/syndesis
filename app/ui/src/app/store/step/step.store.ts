@@ -34,7 +34,7 @@ export class StepStore {
       connection: undefined,
       action: undefined,
       name: 'Data Mapper',
-      description: 'Map fields from the input type to the output type',
+      description: 'Map fields from the input type to the output type.',
       stepKind: DATA_MAPPER,
       visible: (
         position: number,

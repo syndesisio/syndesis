@@ -78,7 +78,7 @@
   "actions": [
     {
       "name": "Mention",
-      "description": "Search for tweets that mention you",
+      "description": "Search for tweets that mention you.",
       "id": "io.syndesis:twitter-mention-action",
       "pattern": "From",
       "actionType": "connector",
@@ -102,7 +102,7 @@
     },
     {
       "name": "Search",
-      "description": "Search tweets based one or more keywords",
+      "description": "Search for tweets that contain text that you specify.",
       "id": "io.syndesis:twitter-search-action",
       "pattern": "From",
       "actionType": "connector",

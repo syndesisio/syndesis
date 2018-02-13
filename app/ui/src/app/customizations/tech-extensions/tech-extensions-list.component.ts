@@ -47,7 +47,7 @@ export class TechExtensionsListComponent implements OnInit {
         iconStyleClass: 'pficon pficon-add-circle-o',
         title: 'Import Extension',
         info:
-          'There are no extensions available',
+          'There are no extensions available.',
         actions: {
           primaryActions: [
             {
