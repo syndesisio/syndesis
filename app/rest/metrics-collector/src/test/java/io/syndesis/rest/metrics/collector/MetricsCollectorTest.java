@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -96,7 +95,7 @@ public class MetricsCollectorTest {
         jsondbRM.persist(raw("intId3","1","pod5",3L, "31-01-2018 10:20:56"));
     }
 
-    private RawMetrics raw(String integrationId, String version, String podName, Long messages, String startDateString) throws ParseException {
+    private RawMetrics raw(String integrationId, String version, String podName, Long messages, String startDateString) throws ParseException { //NOPMD
         Date startDate = sdf.parse(startDateString);
         return new RawMetrics.Builder()
                 .integrationId(integrationId)
