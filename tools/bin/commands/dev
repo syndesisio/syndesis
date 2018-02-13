@@ -11,6 +11,8 @@ EOT
 }
 
 dev::run() {
+    source "$(basedir)/commands/util/openshift_funcs"
+
     if [ $(hasflag --debug) ]; then
         local name=$(readopt --debug)
         if [ -z "${name}" ]; then
