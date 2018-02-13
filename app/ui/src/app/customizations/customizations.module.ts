@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FileUploadModule } from 'ng2-file-upload';
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
 import { ApiConnectorListComponent, ApiConnectorLazyLoaderGuard } from './api-connector';
@@ -52,7 +52,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     SyndesisCommonModule,
-    SyndesisVendorModule,
+    VendorModule,
     PatternflyUIModule,
     FileUploadModule,
     ApiConnectorModule,

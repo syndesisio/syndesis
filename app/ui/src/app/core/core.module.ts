@@ -33,6 +33,11 @@ export class CoreModule {
         {
           provide: SYNDESIS_ABSTRACT_PROVIDERS.UserService,
           useClass: SYNDESIS_PROVIDERS.UserProviderService
+        },
+        SYNDESIS_PROVIDERS.IntegrationSupportProviderService,
+        {
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationSupportService,
+          useClass: SYNDESIS_PROVIDERS.IntegrationSupportProviderService
         }
       ]},
     ];

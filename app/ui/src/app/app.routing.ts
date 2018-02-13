@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
-    path: 'dashboard',
+    path: '',
     loadChildren: './dashboard/dashboard.module#DashboardModule'
   },
+  { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   {
     path: 'integrations',
     loadChildren: './integration/integration.module#IntegrationModule'

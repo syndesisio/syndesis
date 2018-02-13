@@ -30,8 +30,8 @@ export class EventsService {
   private retries = 0;
   private preferredProtocol = null;
 
-  constructor(private config: ConfigService, private restangular: Restangular) {
-    this.startConnection(this.retries % 2 === 0);
+  constructor(private configService: ConfigService, private restangular: Restangular) {
+    this.configService.asyncSettings$.subscribe(() => this.startConnection(this.retries % 2 === 0));
   }
 
   onFailure(event) {
@@ -84,7 +84,7 @@ export class EventsService {
         .first()
         .subscribe(
           response => {
-            const apiEndpoint = this.config.getSettings().apiEndpoint;
+            const apiEndpoint = this.configService.getSettings().apiEndpoint;
             const reservation = response.data;
             try {
               if (connectUsingWebSockets) {

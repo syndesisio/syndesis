@@ -18,9 +18,9 @@ import { StoreModule } from '@syndesis/ui/store';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
-import { EmptyStateComponent } from './emptystate.component';
-import { DashboardConnectionsComponent } from './connections.component';
-import { DashboardIntegrationsComponent } from './integrations.component';
+import { DashboardEmptyComponent } from './dashboard_empty';
+import { DashboardConnectionsComponent } from './dashboard_connections';
+import { DashboardIntegrationsComponent } from './dashboard_integrations';
 import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
 import { IntegrationStatusComponent } from '@syndesis/ui/integration/list/status.component';
 import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component';
@@ -56,7 +56,7 @@ describe('DashboardComponent', () => {
         ],
         declarations: [
           DashboardComponent,
-          EmptyStateComponent,
+          DashboardEmptyComponent,
           DashboardConnectionsComponent,
           DashboardIntegrationsComponent
         ],

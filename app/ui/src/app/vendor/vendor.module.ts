@@ -57,4 +57,4 @@ const _exports = [
   providers: [ComponentLoaderFactory],
   exports: _exports
 })
-export class SyndesisVendorModule {}
+export class VendorModule {}

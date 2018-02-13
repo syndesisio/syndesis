@@ -1,11 +1,14 @@
 import { Action } from '@ngrx/store';
 
 import { BaseEntity, ActionReducerError } from '@syndesis/ui/platform';
-import { Integration, Integrations, IntegrationMetrics } from './integration.models';
+import { Integration, Integrations, IntegrationMetrics, IntegrationOverviews } from './integration.models';
 
 export const FETCH_INTEGRATIONS            = '[Integrations] Fetch integrations request';
 export const FETCH_INTEGRATIONS_COMPLETE   = '[Integrations] Fetch integrations complete';
 export const FETCH_INTEGRATIONS_FAIL       = '[Integrations] Fetch integrations failed';
+
+export const REFRESH_OVERVIEWS             = '[Integrations] Fetch integration overviews';
+export const REFRESH_OVERVIEWS_FAIL        = '[Integrations] Fetch integrations overviews failed';
 
 export const UPDATE_INTEGRATION            = '[Integrations] Update integration';
 export const UPDATE_INTEGRATION_COMPLETE   = '[Integrations] Updated integration now synchronized';
@@ -35,6 +38,18 @@ export class IntegrationsFetchComplete implements Action {
 
 export class IntegrationsFetchFail implements Action {
   readonly type = FETCH_INTEGRATIONS_FAIL;
+
+  constructor(public payload: ActionReducerError) { }
+}
+
+export class IntegrationsRefreshOverviews implements Action {
+  readonly type = REFRESH_OVERVIEWS;
+
+  constructor(public payload: IntegrationOverviews) { }
+}
+
+export class IntegrationsRefreshOverviewsFail implements Action {
+  readonly type = REFRESH_OVERVIEWS_FAIL;
 
   constructor(public payload: ActionReducerError) { }
 }

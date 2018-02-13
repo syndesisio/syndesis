@@ -13,7 +13,7 @@ const category = getCategory('Dashboard');
   templateUrl: './dashboard-empty.component.html',
   styleUrls: ['./dashboard-empty.component.scss']
 })
-export class EmptyStateComponent implements OnInit {
+export class DashboardEmptyComponent implements OnInit {
   connections: Observable<Connections>;
   @Input() loading: boolean;
   @Input() integrations: Integrations;

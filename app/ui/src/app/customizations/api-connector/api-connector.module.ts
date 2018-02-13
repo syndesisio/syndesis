@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ApiModule } from '@syndesis/ui/api';
 
@@ -26,7 +26,7 @@ import { ApiConnectorService } from './api-connector.service';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    SyndesisVendorModule,
+    VendorModule,
     PatternflyUIModule,
     SyndesisCommonModule,
     ApiConnectorRoutingModule,

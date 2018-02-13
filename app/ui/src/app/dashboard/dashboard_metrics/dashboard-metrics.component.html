@@ -1,0 +1,97 @@
+<div class="syndesis-dashboard-metrics metrics">
+  <div class="row vertical-align metrics__header">
+    <div class="col-xs-12">
+      <h1 class="col-xs-8 metrics__header">System Metrics</h1>
+      <nav class="col-xs-4 metrics__nav" *ngIf="integrationState.collection?.length > 0">
+        <a routerLink="/integrations">View All Integrations</a>&nbsp;&nbsp;
+        <button class="btn btn-primary" routerLink="/integrations/create">
+          Create Integration
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container-fluid container-cards-pf metrics__cards">
+    <div class="row row-cards-pf">
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+            <span class="card-pf-aggregate-status-count">
+              {{ integrations.length | number }}
+            </span>
+            Integrations
+          </h2>
+          <div class="card-pf-body">
+              <p class="card-pf-aggregate-status-notifications">
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-ok"></span>
+                  {{ integrations.length - errorIntegrations | number }}
+                </span>
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-error-circle-o"></span>
+                  {{ errorIntegrations | number }}
+                </span>
+              </p>
+            </div>
+        </div>
+
+      </div>
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item metrics__cards-item--text-only">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+              <span class="card-pf-aggregate-status-count">
+                {{ connections.length | number }}
+              </span>
+              Connections
+          </h2>
+        </div>
+
+      </div>
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
+          <div class="card-pf card-pf-accented card-pf-aggregate-status">
+            <h2 class="card-pf-title">
+              <span class="card-pf-aggregate-status-count">
+                {{ integrationMetrics.messages | number }}
+              </span>
+              Total Messages
+            </h2>
+            <div class="card-pf-body">
+                <p class="card-pf-aggregate-status-notifications">
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-ok"></span>
+                    {{ integrationMetrics.messages - integrationMetrics.errors | number }}
+                  </span>
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-error-circle-o"></span>
+                    {{ integrationMetrics.errors | number }}
+                  </span>
+                </p>
+              </div>
+          </div>
+  
+        </div>
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <div class="card-pf-title">
+            <h3>
+              Uptime
+            </h3>
+            <h4>
+              since {{ uptimeStart }}
+            </h4>
+          </div>
+          <div class="card-pf-body">
+            <h2 class="card-pf-title">
+              {{ uptimeTimeSpan }}
+            </h2>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /container -->
+
+
+</div>

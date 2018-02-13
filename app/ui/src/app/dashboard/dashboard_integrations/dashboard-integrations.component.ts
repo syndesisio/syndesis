@@ -21,7 +21,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
   selectedId = undefined;
   truncateTrail = '…';
 
-  doughnutChartLabels: string[] = ['Published', 'Draft', 'Unpublished'];
+  doughnutChartLabels = ['Published', 'Draft', 'Unpublished'];
 
   get doughnutChartData() {
     return this.chartData;
@@ -60,7 +60,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
     const inactive = [];
     let total = 0;
     (this.integrations || []).forEach(integration => {
-      switch (integration.currentState) {
+      switch (integration.currentStatus) {
         case 'Published':
           total = total + 1;
           active.push(integration);

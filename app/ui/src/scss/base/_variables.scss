@@ -1,8 +1,9 @@
 /// Centralized set of Application SASS variables
 
 // Generic styles for pages
-$top-page-gutter: 30px;
-$top-nav-gutter: 20px;
+$gutter: 20px;
+$top-page-gutter: $gutter + 10px;
+$top-nav-gutter: $gutter;
 
 // Generic styles for wizard and card CTA buttons
 $button-top-gutter: .8em;

@@ -24,24 +24,34 @@ export const ERROR = 'Error';
 
 export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
-export interface Integration extends BaseEntity {
+export interface IntegrationOverview extends BaseEntity {
+  version?: number;
+  tags: Array<string>;
   description?: string;
+  draft: boolean;
+  deployments?: Array<DeploymentOverview>;
+  currentStatus: IntegrationStatus;
+  targetState: IntegrationStatus;
+  statusMessage?: string;
+}
+
+export type IntegrationOverviews = Array<IntegrationOverview>;
+
+export interface Integration extends IntegrationOverview {
   steps: Array<Step>;
   connections: Array<Connection>;
   userId: string;
   desiredStatus: IntegrationStatus;
-  currentStatus: IntegrationStatus;
   stepsDone: Array<string>;
   lastUpdated: string;
   createdDate: string;
   timesUsed: number;
-  tags: Array<string>;
   deploymentId?: number;
   updatedAt: number;
   createdAt: number;
   deploymentVersion?: number;
-  version?: number;
 }
+
 export type Integrations = Array<Integration>;
 
 export interface IntegrationDeploymentSpec {
@@ -59,7 +69,7 @@ export interface IntegrationDeployment extends BaseEntity {
   lastUpdated: number;
   integrationId: string;
   version: number;
-  currentState: IntegrationStatus;
+  currentStatus: IntegrationStatus;
   targetState: IntegrationStatus;
   currentMessage?: string;
   targetMessage?: string;
@@ -69,22 +79,9 @@ export interface IntegrationDeployment extends BaseEntity {
 }
 export type IntegrationDeployments = Array<IntegrationDeployment>;
 
-export interface IntegrationOverview extends BaseEntity {
-  version: number;
-  name: string;
-  tags: Array<string>;
-  description?: string;
-  draft: boolean;
-  deployments?: Array<DeploymentOverview>;
-  currentState: IntegrationStatus;
-  targetState: IntegrationStatus;
-  statusMessage?: string;
-}
-export type IntegrationOverviews = Array<IntegrationOverview>;
-
 export interface DeploymentOverview extends BaseEntity {
   version: number;
-  currentState: IntegrationStatus;
+  currentStatus: IntegrationStatus;
   targetState: IntegrationStatus;
   createdAt: number;
   integrationVersion: number;
@@ -142,10 +139,9 @@ export function createIntegration() {
 
 export interface IntegrationMetrics {
   id?: string;
-  numberOfProcessedMessages: number;
-  numberOfErrors: number;
-  lastProcessedTimestamp: number; // XXX: Might requrie timestamp parsing through MomentJS
-  uptimeInMilliSeconds: number;
+  messages: number;
+  errors: number;
+  start: number;
 }
 
 export interface IntegrationState extends BaseReducerCollectionModel<Integration> {

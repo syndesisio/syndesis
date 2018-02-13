@@ -1,4 +1,4 @@
-@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
+@import 'syndesis-sass';
 
 .syndesis-dashboard-integrations {
   color: #656565;
@@ -31,34 +31,6 @@
   .btn {
     margin: 10px 5px;
     padding: 2px 20px !important;
-  }
-
-  .page-header {
-    border-bottom: none;
-    padding: 10px 0;
-    margin: 0;
-
-    .actions {
-      justify-content: flex-end;
-      margin: 0;
-    }
-
-    [class^='col-'],
-    [class*=' col-'] {
-      padding: 0;
-
-      h1 {
-        margin: 0;
-      }
-    }
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // FIRST ROW
-  ////////////////////////////////////////////////////////////////////////////////
-
-  .first-row {
-    padding-top: 0;
   }
 
   ////////////////////////////////////////////////////////////////////////////////
