@@ -16,7 +16,9 @@
 package io.syndesis.verifier.api;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.syndesis.core.CollectionsUtils;
 import org.apache.camel.CamelContext;
@@ -25,9 +27,7 @@ import org.apache.camel.component.extension.MetaDataExtension;
 
 public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
     private final Class<? extends MetaDataExtension> metaDataExtensionClass;
-
-    @SuppressWarnings("PMD.AvoidUsingVolatile")
-    private volatile MetaDataExtension metaDataExtension;
+    private final Map<String, MetaDataExtension> metaDataExtensions;
 
     public ComponentMetadataRetrieval() {
         this(MetaDataExtension.class);
@@ -35,20 +35,17 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
 
     public ComponentMetadataRetrieval(Class<? extends MetaDataExtension> metaDataExtensionClass) {
         this.metaDataExtensionClass = metaDataExtensionClass;
+        this.metaDataExtensions = new ConcurrentHashMap<>();
     }
 
     @Override
     public SyndesisMetadata fetch(CamelContext context, String componentId, String actionId, Map<String, Object> properties) {
-        if (metaDataExtension == null) {
-            synchronized (this) {
-                if (metaDataExtension == null) {
-                    metaDataExtension = resolveMetaDataExtension(context, metaDataExtensionClass, componentId, actionId);
-                }
-            }
-        }
+        Objects.requireNonNull(componentId, "ComponentID must not be null");
+        Objects.requireNonNull(actionId, "ActionID must not be null");
 
-        final Map<String, Object> extensionOptions = CollectionsUtils.removeNullValues(properties);
-        final MetaDataExtension.MetaData metaData = fetchMetaData(metaDataExtension, extensionOptions);
+        MetaDataExtension extension = getOrCreateMetaDataExtension(context, componentId, actionId);
+        Map<String, Object> extensionOptions = CollectionsUtils.removeNullValues(properties);
+        MetaDataExtension.MetaData metaData = fetchMetaData(extension, extensionOptions);
 
         return adapt(context, componentId, actionId, properties, metaData);
     }
@@ -71,15 +68,29 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
             );
         }
 
-        MetaDataExtension extension = component.getExtension(metaDataExtensionClass).orElse(null);
-        if (extension == null) {
-            throw new IllegalArgumentException(
-                String.format("Component %s does not support meta-data extension for action %s", componentId, actionId)
-            );
-        }
-
-        return extension;
+        return component.getExtension(metaDataExtensionClass).orElse(null);
     }
 
     protected abstract SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata);
+
+    // ***************************
+    // Helpers
+    // ***************************
+
+    private MetaDataExtension getOrCreateMetaDataExtension(CamelContext context, String componentId, String actionId) {
+        return metaDataExtensions.computeIfAbsent(
+            componentId + ":" + actionId,
+            key -> {
+                MetaDataExtension answer = resolveMetaDataExtension(context, metaDataExtensionClass, componentId, actionId);
+
+                if (answer == null) {
+                    throw new IllegalArgumentException(
+                        String.format("Component %s does not support meta-data extension for action %s", componentId, actionId)
+                    );
+                }
+
+                return answer;
+            }
+        );
+    }
 }
