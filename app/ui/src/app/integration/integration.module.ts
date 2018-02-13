@@ -25,6 +25,7 @@ import {
   IntegrationSelectActionComponent,
   IntegrationSaveOrAddStepComponent,
   IntegrationStepSelectComponent,
+  IntegrationDescribeDataComponent,
   StepVisiblePipe,
   IntegrationStepConfigureComponent,
   DataMapperHostComponent,
@@ -67,9 +68,14 @@ const editIntegrationChildRoutes = [
     component: IntegrationConfigureActionComponent
   },
   {
-    path: 'step-select/:position',
-    component: IntegrationStepSelectComponent
+    path: 'describe-data/:position',
+    redirectTo: 'describe-data/:position/input'
   },
+  {
+    path: 'describe-data/:position/:direction',
+    component: IntegrationDescribeDataComponent
+  },
+  { path: 'step-select/:position', component: IntegrationStepSelectComponent },
   {
     path: 'step-configure/:position',
     component: IntegrationStepConfigureComponent
@@ -123,6 +129,7 @@ const routes: Routes = [
     IntegrationEditPage,
     IntegrationBasicsComponent,
     IntegrationDetailComponent,
+    IntegrationDescribeDataComponent,
     IntegrationSelectConnectionComponent,
     IntegrationSaveOrAddStepComponent,
     IntegrationStepSelectComponent,
