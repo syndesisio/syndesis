@@ -134,7 +134,7 @@
           "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
         ],
         "inputDataShape": {
-          "kind": " none"
+          "kind": "none"
         },
         "outputDataShape": {
           "kind": "json-schema"

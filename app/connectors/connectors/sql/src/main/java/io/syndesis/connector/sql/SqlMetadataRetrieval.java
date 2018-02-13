@@ -61,7 +61,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
     }
 
     @Override
-    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, String componentId, String actionId) {
+    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
         if (actionId.startsWith("sql-stored")) {
             return new SqlStoredConnectorMetaDataExtension(context);
         } else {
