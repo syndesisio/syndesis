@@ -105,7 +105,7 @@
         {
           "id": "io.syndesis.connector:connector-salesforce-create:latest",
           "name": "New record",
-          "description": "Create a new record like Account, Contact or Order on Salesforce.",
+          "description": "Create a new Salesforce record, such as an Account, Contact, or Order.",
           "tags": [
             "dynamic"
           ],
@@ -124,7 +124,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to create",
+                "description": "Specify the Salesforce object name of the record to create.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -167,7 +167,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to delete",
+                "description": "Specify the Salesforce object name of the record to delete.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -210,7 +210,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to delete",
+                "description": "Specify the Salesforce object name of the record to delete.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -230,7 +230,7 @@
               },
               {
                 "name": "External identifier field name",
-                "description": "Specify the field name of the external identifier",
+                "description": "Specify the field name of the external identifier.",
                 "properties": {
                   "sObjectIdName": {
                     "kind": "parameter",
@@ -273,7 +273,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to fetch",
+                "description": "Specify the Salesforce object name of the record to fetch.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -316,7 +316,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to fetch",
+                "description": "Specify the Salesforce object name of the record to fetch.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -336,7 +336,7 @@
               },
               {
                 "name": "External identifier field name",
-                "description": "Specify the field name of the external identifier",
+                "description": "Specify the field name of the external identifier.",
                 "properties": {
                   "sObjectIdName": {
                     "kind": "parameter",
@@ -378,7 +378,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to update",
+                "description": "Specify the Salesforce object name of the record to update.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -421,7 +421,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name of the record to create or update",
+                "description": "Specify the Salesforce object name of the record to create or update.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -441,7 +441,7 @@
               },
               {
                 "name": "Identifier field name",
-                "description": "Specify the field name that holds the identifying value",
+                "description": "Specify the field name that holds the identifying value.",
                 "properties": {
                   "sObjectIdName": {
                     "kind": "parameter",
@@ -465,7 +465,7 @@
         {
           "id": "io.syndesis.connector:connector-salesforce-on-create:latest",
           "name": "On create",
-          "description": "Get notified when an Salesforce record is created.",
+          "description": "Get notified when a Salesforce record is created.",
           "tags": [
             "dynamic"
           ],
@@ -483,7 +483,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name for which to receive notification when records are created",
+                "description": "Specify the Salesforce object name for which to receive notification when records are created.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -507,7 +507,7 @@
         {
           "id": "io.syndesis.connector:connector-salesforce-on-update:latest",
           "name": "On update",
-          "description": "Get notified when an Salesforce record is updated.",
+          "description": "Get notified when a Salesforce record is updated.",
           "tags": [
             "dynamic"
           ],
@@ -525,7 +525,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name for which to receive notification when records are updated",
+                "description": "Specify the Salesforce object name for which to receive notification when records are updated.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -549,7 +549,7 @@
         {
           "id": "io.syndesis.connector:connector-salesforce-on-delete:latest",
           "name": "On delete",
-          "description": "Get notified when an Salesforce record is deleted.",
+          "description": "Get notified when a Salesforce record is deleted.",
           "tags": [
             "dynamic"
           ],
@@ -568,7 +568,7 @@
             "propertyDefinitionSteps": [
               {
                 "name": "Name of the object",
-                "description": "Specify the Salesforce object name for which to receive notification when records are deleted",
+                "description": "Specify the Salesforce object name for which to receive notification when records are deleted.",
                 "properties": {
                   "sObjectName": {
                     "kind": "parameter",
@@ -1037,7 +1037,7 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true,
-          "description": "Upload the Swagger specification for your Custom API Client Connector. Custom API's are RESTful APIs and can be hosted anywhere, as long as a well-documented swagger is available and conforms to OpenAPI standards."
+          "description": "Provide a Swagger specification that describes a REST API. The API can be hosted anywhere. The Swagger specification must conform to the OpenAPI (the new name for Swagger) specification."
         },
         "host": {
           "kind": "property",

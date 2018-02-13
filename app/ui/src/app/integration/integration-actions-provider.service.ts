@@ -64,14 +64,14 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
             saveAs(value, integration.name + '-export.zip');
           });
       case 'replaceDraft':
-        header = 'Updating draft';
+        header = 'Updating draft.';
         message = 'Replacing the current draft of the integration';
         danger = 'Failed to update integration draft';
         reason = 'Error updating integration';
         request = this.requestReplaceDraft(integration, deployment);
         break;
       case 'publish':
-        header = 'Publishing deployment';
+        header = 'Publishing deployment.';
         message =
           'Please allow a moment for the integration to fully activate.';
         danger = 'Failed to publish integration deployment';
@@ -79,7 +79,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestPublish(integration);
         break;
       case 'activate':
-        header = 'Integration is activating';
+        header = 'Integration is activating.';
         message =
           'Please allow a moment for the integration to fully activate.';
         danger = 'Failed to activate integration';
@@ -87,7 +87,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestActivate(integration);
         break;
       case 'deactivate':
-        header = 'Integration is deactivating';
+        header = 'Integration is deactivating.';
         message =
           'Please allow a moment for the integration to be unpublished.';
         danger = 'Failed to deactivate integration';
@@ -95,7 +95,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestDeactivate(integration);
         break;
       case 'delete':
-        header = 'Delete Successful';
+        header = 'Delete Successful.';
         message = 'Integration successfully deleted.';
         danger = 'Failed to delete integration';
         reason = 'Error deleting integration';

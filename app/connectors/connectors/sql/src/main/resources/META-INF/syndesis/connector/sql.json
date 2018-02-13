@@ -1,7 +1,7 @@
 {
   "id": "sql",
   "name": "Database",
-  "description": "Invoke SQL or Stored Procedures",
+  "description": "Invoke SQL or stored procedures",
   "icon": "fa-database",
   "dependencies": [
     {
@@ -81,7 +81,7 @@
     {
       "id": "sql-connector",
       "name": "Invoke SQL",
-      "description": "Invoke SQL to get data in and/or out",
+      "description": "Invoke SQL to obtain, store, update, or delete data",
       "tags": [
         "dynamic"
       ],
@@ -100,19 +100,19 @@
         },
         "propertyDefinitionSteps": [
           {
-            "name": "SQL Statement",
-            "description": "Enter a SQL Statement starting with INSERT, SELECT, UPDATE or DELETE",
+            "name": "SQL statement",
+            "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
             "properties": {
               "query": {
                 "kind": "path",
-                "displayName": "SQL Statement",
+                "displayName": "SQL statement",
                 "group": "common",
                 "required": true,
                 "type": "string",
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "SQL Statement to be executed. Can contain input parameters prefixed by ':#' i.e. ':#MYPARAMNAME'"
+                "description": "SQL statement to be executed. Can contain input parameters prefixed by ':#' i.e. ':#MYPARAMNAME'"
               }
             }
           }
@@ -121,8 +121,8 @@
     },
     {
       "id": "sql-start-connector",
-      "name": "Periodic SQL Invocation",
-      "description": "Invoke SQL to periodically get data out",
+      "name": "Periodic SQL invocation",
+      "description": "Periodically invoke SQL to obtain, store, update, or delete data.",
       "tags": [
         "dynamic"
       ],
@@ -143,19 +143,19 @@
         },
         "propertyDefinitionSteps": [
           {
-            "name": "SQL Statement",
-            "description": "Enter a SQL Statement starting with SELECT",
+            "name": "SQL statement",
+            "description": "Enter a SQL statement that starts with SELECT.",
             "properties": {
               "query": {
                 "kind": "path",
-                "displayName": "SQL Statement",
+                "displayName": "SQL statement",
                 "group": "common",
                 "required": true,
                 "type": "string",
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "SQL Select Statement to be executed"
+                "description": "SQL SELECT statement to be executed"
               },
               "schedulerExpression": {
                 "kind": "parameter",
@@ -176,8 +176,8 @@
     },
     {
       "id": "sql-stored-connector",
-      "name": "Invoke Stored Procedure",
-      "description": "Invoke a Stored Procedure to get Data in and/or out",
+      "name": "Invoke stored procedure",
+      "description": "Periodically invoke a stored procedure.",
       "tags": [
         "dynamic"
       ],
@@ -196,13 +196,13 @@
         },
         "propertyDefinitionSteps": [
           {
-            "name": "Procedure Name",
-            "description": "Select the Stored Procedure",
+            "name": "Procedure name",
+            "description": "Select the stored procedure.",
             "properties": {
               "procedureName": {
                 "kind": "property",
                 "group": "common",
-                "displayName": "Procedure Name",
+                "displayName": "Procedure name",
                 "required": false,
                 "type": "string",
                 "javaType": "java.lang.String",
@@ -210,7 +210,7 @@
                 "deprecated": false,
                 "secret": true,
                 "componentProperty": true,
-                "description": "Name of the Store Procedure"
+                "description": "Name of the store procedure"
               },
               "template": {
                 "kind": "path",
@@ -233,8 +233,8 @@
     },
     {
       "id": "sql-stored-start-connector",
-      "name": "Periodic Stored Procedure Invocation",
-      "description": "Periodically Invoke a Stored Procedure to get Data out",
+      "name": "Periodic stored procedure invocation",
+      "description": "Periodically invoke a stored procedure.",
       "tags": [
         "dynamic"
       ],
@@ -253,12 +253,12 @@
         },
         "propertyDefinitionSteps": [
           {
-            "name": "Procedure Name",
-            "description": "Select the Stored Procedure",
+            "name": "Procedure name",
+            "description": "Select the stored procedure.",
             "properties": {
               "procedureName": {
                 "kind": "path",
-                "displayName": "Procedure Name",
+                "displayName": "Procedure name",
                 "group": "producer",
                 "required": true,
                 "type": "string",
@@ -267,7 +267,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": true,
-                "description": "Name of the Store Procedure"
+                "description": "Name of the store procedure"
               },
               "template": {
                 "kind": "path",
