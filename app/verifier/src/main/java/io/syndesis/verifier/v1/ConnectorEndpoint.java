@@ -77,6 +77,10 @@ public class ConnectorEndpoint {
             throw new IllegalStateException("Unable to find adapter for:" + connectorId);
         }
 
-        return adapter.fetch(camelContext, connectorId, actionId, properties);
+        try {
+            return adapter.fetch(camelContext, connectorId, actionId, properties);
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
+            throw new IllegalStateException("Unable to fetch and process metadata", e);
+        }
     }
 }

@@ -16,6 +16,7 @@
 package io.syndesis.verifier.api;
 
 import java.util.Map;
+import java.util.Optional;
 
 import io.syndesis.core.CollectionsUtils;
 import org.apache.camel.CamelContext;
@@ -28,7 +29,6 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
     @SuppressWarnings("PMD.AvoidUsingVolatile")
     private volatile MetaDataExtension metaDataExtension;
 
-
     public ComponentMetadataRetrieval() {
         this(MetaDataExtension.class);
     }
@@ -39,27 +39,31 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
 
     @Override
     public SyndesisMetadata fetch(CamelContext context, String componentId, String actionId, Map<String, Object> properties) {
-        try {
-            if (metaDataExtension == null) {
-                synchronized (this) {
-                    if (metaDataExtension == null) {
-                        metaDataExtension = resolveMetaDataExtension(context, componentId, actionId);
-                    }
+        if (metaDataExtension == null) {
+            synchronized (this) {
+                if (metaDataExtension == null) {
+                    metaDataExtension = resolveMetaDataExtension(context, metaDataExtensionClass, componentId, actionId);
                 }
             }
-
-            final Map<String, Object> extensionOptions = CollectionsUtils.removeNullValues(properties);
-            final MetaDataExtension.MetaData metaData = metaDataExtension.meta(extensionOptions)
-                .orElseThrow(() -> new IllegalArgumentException("No Metadata returned by the metadata extension"));
-
-            return adapt(context, componentId, actionId, properties, metaData);
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
-            throw new IllegalStateException("Unable to fetch and process metadata", e);
         }
+
+        final Map<String, Object> extensionOptions = CollectionsUtils.removeNullValues(properties);
+        final MetaDataExtension.MetaData metaData = fetchMetaData(metaDataExtension, extensionOptions);
+
+        return adapt(context, componentId, actionId, properties, metaData);
+    }
+
+    protected MetaDataExtension.MetaData fetchMetaData(MetaDataExtension extension, Map<String, Object> properties) {
+        Optional<MetaDataExtension.MetaData> meta = extension.meta(properties);
+        if (!meta.isPresent()) {
+            throw new IllegalArgumentException("No Metadata returned by the metadata extension");
+        }
+
+        return meta.get();
     }
 
     @SuppressWarnings("PMD.AvoidDeeplyNestedIfStmts")
-    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, String componentId, String actionId) {
+    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
         Component component = context.getComponent(componentId, true, false);
         if (component == null) {
             throw new IllegalArgumentException(
@@ -69,7 +73,7 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
 
         MetaDataExtension extension = component.getExtension(metaDataExtensionClass).orElse(null);
         if (extension == null) {
-            throw  new IllegalArgumentException(
+            throw new IllegalArgumentException(
                 String.format("Component %s does not support meta-data extension for action %s", componentId, actionId)
             );
         }
