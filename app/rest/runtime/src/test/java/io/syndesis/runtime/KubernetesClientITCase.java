@@ -25,7 +25,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { KubernetesClient.class })
+@SpringBootTest(
+    classes = {
+        KubernetesClient.class
+    },
+    properties = {
+        "spring.main.banner-mode = off"
+    }
+)
 public class KubernetesClientITCase {
 
 
