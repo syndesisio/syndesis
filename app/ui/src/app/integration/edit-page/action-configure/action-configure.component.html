@@ -21,10 +21,10 @@
             (click)="continue()"
             [disabled]="maybeDisableDone()">
       <ng-container *ngIf="page >= lastPage || !descriptor">
-        Done
+        Next
       </ng-container>
       <ng-container *ngIf="page < lastPage">
-        Next <i class="fa fa-chevron-right"></i>
+        Next
       </ng-container>
     </button>
   </ng-template>

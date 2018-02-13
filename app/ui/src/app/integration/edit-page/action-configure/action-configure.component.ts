@@ -65,13 +65,13 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       properties: data,
       onSave: () => {
         if (this.page === 0) {
-          /* All done... */
+          /* All done configuring this action... */
           this.router.navigate([ 'save-or-add-step' ], {
             queryParams: { validate: true },
             relativeTo: this.route.parent
           });
         } else {
-          /* Go to the next page... */
+          /* Go to the previous configuration page... */
           this.router.navigate(
             ['action-configure', this.position, this.page - 1],
             { relativeTo: this.route.parent }
@@ -86,8 +86,11 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   finishUp() {
-    this.router.navigate(['save-or-add-step'], {
-      queryParams: { validate: true },
+    let direction = 'output';
+    if (this.position > 0) {
+      direction = 'input';
+    }
+    this.router.navigate(['describe-data', this.position, direction], {
       relativeTo: this.route.parent
     });
   }
@@ -133,14 +136,13 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
                   }
                 });
               })
-              .catch(response => {
-                const body = JSON.parse(response._body);
+              .catch(error => {
                 this.error = {
                   class: 'alert alert-warning',
                   message:
-                    body.message ||
-                    body.userMsg ||
-                    body.developerMsg
+                    error.message ||
+                    error.userMsg ||
+                    error.developerMsg
                 };
               });
           } else {
