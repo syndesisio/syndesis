@@ -51,6 +51,7 @@ public class OpenShiftServiceImplTest {
         this.client = server.createOpenShiftClient();
     }
 
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.JUnitTestsShouldIncludeAssert"})
     @Test
     public void testDeploy() {
         String name = "test-deployment";
