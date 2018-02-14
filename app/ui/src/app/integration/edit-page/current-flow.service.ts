@@ -406,9 +406,10 @@ export class CurrentFlowService {
         const action = event['action'];
         const properties = this.stringifyValues(event['properties']);
         const step = this.steps[position] || createStep();
-        for (const key of Object.keys(properties)) {
-          if (properties[key] === 'null') {
-            delete properties[key];
+        // guard against null values becoming `"null"`
+        for (const _key of Object.keys(properties)) {
+          if (properties[_key] === 'null') {
+            delete properties[_key];
           }
         }
         step.configuredProperties = properties;
