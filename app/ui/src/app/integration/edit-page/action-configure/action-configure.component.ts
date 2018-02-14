@@ -5,7 +5,7 @@ import { DynamicFormControlModel, DynamicFormService } from '@ng-dynamic-forms/c
 import { Subscription } from 'rxjs/Subscription';
 
 import {
-  ActionDefinition,
+  ActionDescriptor,
   FormFactoryService,
   UserService,
   Action,
@@ -110,21 +110,28 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
             this.integrationSupport
               .fetchMetadata(this.step.connection, this.step.action, data)
               .toPromise()
-              .then(descriptor => {
-                for (const actionProperty of Object.keys(data)) {
-                  if (data[actionProperty] == null) {
-                    this.step.configuredProperties[
-                      actionProperty
-                    ] = descriptor.propertyDefinitionSteps.map(
-                      actionDefinitionStep => {
-                        return actionDefinitionStep.properties[actionProperty]
-                          .defaultValue;
+              .then( (descriptor: ActionDescriptor) => {
+                this.currentFlowService.events.emit({
+                  kind: 'integration-set-datashapes',
+                  position: this.position,
+                  descriptor,
+                  onSave: () => {
+                    for (const actionProperty of Object.keys(data)) {
+                      if (data[actionProperty] == null) {
+                        this.step.configuredProperties[
+                          actionProperty
+                        ] = descriptor.propertyDefinitionSteps.map(
+                          actionDefinitionStep => {
+                            return actionDefinitionStep.properties[actionProperty]
+                              .defaultValue;
+                          }
+                        )[0];
                       }
-                    )[0];
+                    }
+                    /* All done... */
+                    this.finishUp();
                   }
-                }
-                /* All done... */
-                this.finishUp();
+                });
               })
               .catch(response => {
                 const body = JSON.parse(response._body);
@@ -170,15 +177,22 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         this.configuredPropertiesForMetadataCall()
       )
       .toPromise()
-      .then(descriptor => {
-        this.initForm(position, page, descriptor);
+      .then( (descriptor: ActionDescriptor) => {
+        this.currentFlowService.events.emit({
+          kind: 'integration-set-datashapes',
+          position: this.position,
+          descriptor,
+          onSave: () => {
+            this.initForm(position, page, descriptor);
+          }
+        });
       })
       .catch(error => {
         this.initForm(position, page, undefined, error);
       });
   }
 
-  initForm(position: number, page: number, descriptor: ActionDefinition, error?: any) {
+  initForm(position: number, page: number, descriptor: ActionDescriptor, error?: any) {
     if (error) {
       this.error = error;
       this.error.message = error.message || error.userMsg || error.developerMsg;
@@ -227,7 +241,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     }, 30);
   }
 
-  hasActionPropertiesToDisplay(descriptor: ActionDefinition) {
+  hasActionPropertiesToDisplay(descriptor: ActionDescriptor) {
     return !descriptor || descriptor === undefined ||
       descriptor.propertyDefinitionSteps === undefined ||
       Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0;
