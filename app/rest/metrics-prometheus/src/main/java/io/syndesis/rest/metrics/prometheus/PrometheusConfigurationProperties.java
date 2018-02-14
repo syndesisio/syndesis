@@ -27,6 +27,9 @@ import org.springframework.context.annotation.Configuration;
 public class PrometheusConfigurationProperties {
 
     private String service = "syndesis-prometheus";
+    private String integrationIdLabel = "syndesis_io_integration_id";
+    private String deploymentVersionLabel = "syndesis_io_deployment_version";
+    private String metricsHistoryRange = "1d";
 
     public String getService() {
         return service;
@@ -34,5 +37,29 @@ public class PrometheusConfigurationProperties {
 
     public void setService(String service) {
         this.service = service;
+    }
+
+    public String getIntegrationIdLabel() {
+        return integrationIdLabel;
+    }
+
+    public void setIntegrationIdLabel(String integrationIdLabel) {
+        this.integrationIdLabel = integrationIdLabel;
+    }
+
+    public String getDeploymentVersionLabel() {
+        return deploymentVersionLabel;
+    }
+
+    public void setDeploymentVersionLabel(String deploymentVersionLabel) {
+        this.deploymentVersionLabel = deploymentVersionLabel;
+    }
+
+    public String getMetricsHistoryRange() {
+        return metricsHistoryRange;
+    }
+
+    public void setMetricsHistoryRange(String metricsHistoryRange) {
+        this.metricsHistoryRange = metricsHistoryRange;
     }
 }
