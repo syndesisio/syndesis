@@ -34,12 +34,12 @@ import io.syndesis.rest.metrics.MetricsProvider;
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
-    private final String serviceName;
-
     private final HttpClient httpClient = new HttpClient();
-    private String integrationIdLabel;
-    private String deploymentVersionLabel;
-    private String metricsHistoryRange;
+
+    private final String serviceName;
+    private final String integrationIdLabel;
+    private final String deploymentVersionLabel;
+    private final String metricsHistoryRange;
 
     protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config) {
         this.serviceName = config.getService();
