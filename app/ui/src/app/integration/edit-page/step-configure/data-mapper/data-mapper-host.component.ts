@@ -20,7 +20,7 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
-import { DataShape, IntegrationSupportService, Step } from '@syndesis/ui/platform';
+import { DataShapeKinds, DataShape, IntegrationSupportService, Step } from '@syndesis/ui/platform';
 import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { DATA_MAPPER } from '@syndesis/ui/store';
 /*
@@ -258,7 +258,8 @@ export class DataMapperHostComponent implements OnInit {
     if (!dataShape || !dataShape.kind) {
       return false;
     }
-    return ['java', 'json-instance', 'json-schema', 'xml-instance', 'xml-schema']
+    return [DataShapeKinds.JAVA, DataShapeKinds.JSON_INSTANCE, DataShapeKinds.JSON_SCHEMA,
+      DataShapeKinds.XML_INSTANCE, DataShapeKinds.XML_SCHEMA]
             .indexOf(dataShape.kind) > -1;
   }
 
@@ -283,28 +284,28 @@ export class DataMapperHostComponent implements OnInit {
 
     const initModel: DocumentInitializationModel = new DocumentInitializationModel();
     switch (dataShape.kind) {
-      case 'java':
+      case DataShapeKinds.JAVA:
         initModel.type = DocumentType.JAVA;
         initModel.inspectionType = InspectionType.JAVA_CLASS;
         initModel.inspectionSource = dataShape.type;
         initModel.inspectionResult = dataShape.specification;
         break;
-      case 'json-instance':
+      case DataShapeKinds.JSON_INSTANCE:
         initModel.type = DocumentType.JSON;
         initModel.inspectionType = InspectionType.INSTANCE;
         initModel.inspectionSource = dataShape.specification;
         break;
-      case 'json-schema':
+      case DataShapeKinds.JSON_SCHEMA:
         initModel.type = DocumentType.JSON;
         initModel.inspectionType = InspectionType.SCHEMA;
         initModel.inspectionSource = dataShape.specification;
         break;
-      case 'xml-instance':
+      case DataShapeKinds.XML_INSTANCE:
         initModel.type = DocumentType.XML;
         initModel.inspectionType = InspectionType.INSTANCE;
         initModel.inspectionSource = dataShape.specification;
         break;
-      case 'xml-schema':
+      case DataShapeKinds.XML_SCHEMA:
         initModel.type = DocumentType.XML;
         initModel.inspectionType = InspectionType.SCHEMA;
         initModel.inspectionSource = dataShape.specification;

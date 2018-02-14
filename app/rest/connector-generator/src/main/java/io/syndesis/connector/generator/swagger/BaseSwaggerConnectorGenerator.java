@@ -44,6 +44,7 @@ import io.syndesis.connector.generator.swagger.util.SwaggerHelper;
 import io.syndesis.connector.generator.util.ActionComparator;
 import io.syndesis.core.SyndesisServerException;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.action.ConnectorAction;
@@ -62,7 +63,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
-    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
+    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
     static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()//
         .kind("property")//

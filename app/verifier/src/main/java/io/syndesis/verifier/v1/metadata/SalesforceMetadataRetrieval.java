@@ -31,6 +31,7 @@ import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.SimpleTypeSchema;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
@@ -75,8 +76,16 @@ public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieva
 
                 return new SyndesisMetadata(
                     enrichedProperties,
-                    new DataShape.Builder().kind("json-schema").type(inputOutputSchema.getTitle()).specification(specification).build(),
-                    new DataShape.Builder().kind("json-schema").type(inputOutputSchema.getTitle()).specification(specification).build());
+                    new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
+                        .type(inputOutputSchema.getTitle())
+                        .name("Salesforce " + objectName)
+                        .description("Salesforce " + objectName)
+                        .specification(specification).build(),
+                    new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)
+                        .type(inputOutputSchema.getTitle())
+                        .name("Salesforce " + objectName)
+                        .description("Salesforce " + objectName)
+                        .specification(specification).build());
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException(e);
             }

@@ -21,6 +21,7 @@ import io.atlasmap.java.inspect.ClassInspectionService;
 import io.atlasmap.java.v2.JavaClass;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
@@ -149,7 +150,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
         final DataShape given = shape.get();
         DataShape ret = given;
 
-        if (StringUtils.equals("java", given.getKind()) && StringUtils.isNotEmpty(given.getType())) {
+        if (DataShapeKinds.JAVA == given.getKind() && StringUtils.isNotEmpty(given.getType())) {
             final String type = given.getType();
 
 

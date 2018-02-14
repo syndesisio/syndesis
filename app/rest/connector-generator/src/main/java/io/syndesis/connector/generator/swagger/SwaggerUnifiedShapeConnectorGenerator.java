@@ -37,6 +37,7 @@ import io.syndesis.connector.generator.swagger.util.DataShapeHelper;
 import io.syndesis.connector.generator.swagger.util.JsonSchemaHelper;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.ConnectorDescriptor;
 
 import org.apache.commons.lang3.ClassUtils;
@@ -149,7 +150,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
 
         if (unifiedProperties.size() == 0) {
             actionDescriptor.inputDataShape(new DataShape.Builder()//
-                .kind("none")//
+                .kind(DataShapeKinds.NONE)//
                 .build());
         } else {
             String schema;
@@ -160,7 +161,7 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
             }
 
             actionDescriptor.inputDataShape(new DataShape.Builder()//
-                .kind("json-schema")//
+                .kind(DataShapeKinds.JSON_SCHEMA)//
                 .specification(schema)//
                 .build());
         }
