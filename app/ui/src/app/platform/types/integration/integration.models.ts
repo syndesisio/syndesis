@@ -25,6 +25,7 @@ export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error
 
 export interface IntegrationOverview extends BaseEntity {
   version?: number;
+  deploymentVersion?: number;
   tags: Array<string>;
   description?: string;
   draft: boolean;
@@ -48,7 +49,6 @@ export interface Integration extends IntegrationOverview {
   deploymentId?: number;
   updatedAt: number;
   createdAt: number;
-  deploymentVersion?: number;
 }
 
 export type Integrations = Array<Integration>;

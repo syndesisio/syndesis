@@ -101,33 +101,38 @@ export class StepStore {
           displayName: 'Level',
           value: 'INFO',
           required: true,
-          enum: [{ value: 'INFO', label: 'INFO' }, { value: 'WARN', label: 'WARN' }, { value: 'ERROR', label: 'ERROR'}, {value: 'DEBUG', label: 'DEBUG'}, {value: 'TRACE', label: 'TRACE'}],
+          enum: [
+            { value: 'INFO', label: 'INFO' },
+            { value: 'WARN', label: 'WARN' },
+            { value: 'ERROR', label: 'ERROR'},
+            {value: 'DEBUG', label: 'DEBUG'},
+            {value: 'TRACE', label: 'TRACE'}],
         },
         */
-         propertyNames: {
-         type: 'textarea',
-         displayName: 'Exchange Property Names',
-         defaultValue: '',
-         value: '',
-         required: false,
-         rows: 10
-         },
-         inHeaderNames: {
-         type: 'textarea',
-         displayName: 'Input Message Header Names',
-         defaultValue: '',
-         value: '',
-         required: false,
-         rows: 10
-         },
-         outHeaderNames: {
-         type: 'textarea',
-         displayName: 'Output Message Header Names',
-         defaultValue: '',
-         value: '',
-         required: false,
-         rows: 10
-         },
+        propertyNames: {
+          type: 'textarea',
+          displayName: 'Exchange Property Names',
+          defaultValue: '',
+          value: '',
+          required: false,
+          rows: 10
+        },
+        inHeaderNames: {
+          type: 'textarea',
+          displayName: 'Input Message Header Names',
+          defaultValue: '',
+          value: '',
+          required: false,
+          rows: 10
+        },
+        outHeaderNames: {
+          type: 'textarea',
+          displayName: 'Output Message Header Names',
+          defaultValue: '',
+          value: '',
+          required: false,
+          rows: 10
+        },
       },
     },
     /*
