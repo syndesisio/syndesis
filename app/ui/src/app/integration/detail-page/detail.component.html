@@ -28,7 +28,7 @@
                                 [validationFn]="validateName"
                                 (onSave)="attributeUpdated('name', $event, integration)"></syndesis-editable-text>
       </h1>
-      <ng-container [ngSwitch]="integration.currentStatus">
+      <ng-container [ngSwitch]="integration.currentState">
         <ng-container *ngSwitchCase="'Pending'">
           <div class="spinner spinner-sm spinner-inline"></div> Publishing...
         </ng-container>

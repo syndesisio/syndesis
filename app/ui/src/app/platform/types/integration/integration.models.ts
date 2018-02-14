@@ -29,7 +29,7 @@ export interface IntegrationOverview extends BaseEntity {
   description?: string;
   draft: boolean;
   deployments?: Array<DeploymentOverview>;
-  currentStatus: IntegrationStatus;
+  currentState: IntegrationStatus;
   targetState: IntegrationStatus;
   statusMessage?: string;
 }
@@ -40,7 +40,7 @@ export interface Integration extends IntegrationOverview {
   steps: Array<Step>;
   connections: Array<Connection>;
   userId: string;
-  desiredStatus: IntegrationStatus;
+  desiredState: IntegrationStatus;
   stepsDone: Array<string>;
   lastUpdated: string;
   createdDate: string;
@@ -68,7 +68,7 @@ export interface IntegrationDeployment extends BaseEntity {
   lastUpdated: number;
   integrationId: string;
   version: number;
-  currentStatus: IntegrationStatus;
+  currentState: IntegrationStatus;
   targetState: IntegrationStatus;
   currentMessage?: string;
   targetMessage?: string;
@@ -80,7 +80,7 @@ export type IntegrationDeployments = Array<IntegrationDeployment>;
 
 export interface DeploymentOverview extends BaseEntity {
   version: number;
-  currentStatus: IntegrationStatus;
+  currentState: IntegrationStatus;
   targetState: IntegrationStatus;
   createdAt: number;
   integrationVersion: number;
