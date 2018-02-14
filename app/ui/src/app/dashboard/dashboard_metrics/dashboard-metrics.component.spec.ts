@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { IntegrationState } from '@syndesis/ui/platform';
+import { CoreModule } from '@syndesis/ui/core';
 import { DashboardMetricsComponent } from './dashboard-metrics.component';
 
 describe('DashboardMetricsComponent', () => {
@@ -8,7 +10,8 @@ describe('DashboardMetricsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardMetricsComponent ]
+      imports: [CoreModule.forRoot()],
+      declarations: [DashboardMetricsComponent]
     })
     .compileComponents();
   }));
@@ -16,6 +19,19 @@ describe('DashboardMetricsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DashboardMetricsComponent);
     component = fixture.componentInstance;
+
+    component.connections = [];
+    component.integrationState = {
+      collection: [],
+      metrics: {
+        summary: {
+          start: 0,
+          messages: 24,
+          errors: 13
+        }
+      }
+    } as IntegrationState;
+
     fixture.detectChanges();
   });
 

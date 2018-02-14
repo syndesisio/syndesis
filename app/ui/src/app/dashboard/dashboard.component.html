@@ -1,8 +1,7 @@
 <div class="syndesis-dashboard">
   <syndesis-dashboard-metrics
     [integrationState]="integrationState$ | async"
-    [connections]="connections$ | async"
-    (refresh)="onMetricsRefresh($event)">
+    [connections]="connections$ | async">
   </syndesis-dashboard-metrics>
   <syndesis-dashboard-integrations [integrations]="integrations | async"
                                    [integrationsLoading]="integrationsLoading | async"

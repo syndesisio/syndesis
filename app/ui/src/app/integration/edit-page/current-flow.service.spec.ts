@@ -13,6 +13,7 @@ import { Connection,
   Integration,
   Step,
   Steps } from '@syndesis/ui/platform';
+import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { ApiModule } from '@syndesis/ui/api';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
@@ -28,6 +29,7 @@ describe('CurrentFlow', () => {
         ApiModule.forRoot(),
         HttpClientModule,
         RestangularModule.forRoot(),
+        CoreModule.forRoot(),
         IntegrationSupportModule,
       ],
       providers: [

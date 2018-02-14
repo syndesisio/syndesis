@@ -28,11 +28,11 @@ const routes: Routes = [
     IntegrationListModule,
   ],
   declarations: [
-    DashboardComponent,
+    DashboardMetricsComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
     DashboardEmptyComponent,
-    DashboardMetricsComponent
+    DashboardComponent,
   ]
 })
 export class DashboardModule {}
