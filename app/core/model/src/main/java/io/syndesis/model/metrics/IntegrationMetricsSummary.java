@@ -36,6 +36,7 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     default Kind getKind() {
         return Kind.IntegrationMetricsSummary;
     }
+    String getMetricsProvider();
     /**
      * @return Number of successful messages
      */
