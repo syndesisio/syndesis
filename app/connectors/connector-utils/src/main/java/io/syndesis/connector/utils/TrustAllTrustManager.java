@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.jms;
+package io.syndesis.connector.utils;
 
 import java.net.Socket;
 import java.security.cert.CertificateException;
@@ -27,7 +27,7 @@ import javax.net.ssl.X509ExtendedTrustManager;
  * @author dhirajsb
  */
 @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
-class TrustAllTrustManager extends X509ExtendedTrustManager {
+public class TrustAllTrustManager extends X509ExtendedTrustManager {
     private static final X509Certificate[] NONE = new X509Certificate[0];
 
     @Override

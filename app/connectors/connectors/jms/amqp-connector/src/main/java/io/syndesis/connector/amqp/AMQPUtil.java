@@ -15,9 +15,12 @@
  */
 package io.syndesis.connector.amqp;
 
+import org.apache.camel.util.ObjectHelper;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.syndesis.connector.utils.KeyStoreHelper;
 
 /**
  * Utility class for creating AMQP ConnectionFactory.
@@ -35,26 +38,44 @@ public final class AMQPUtil {
     public static JmsConnectionFactory createConnectionFactory(ConnectionParameters connectionParameters) {
 
         final JmsConnectionFactory result;
-        if (!connectionParameters.getConnectionUri().contains("amqps:")) {
-            result = new JmsConnectionFactory(connectionParameters.getUsername(), connectionParameters.getPassword(), connectionParameters.getConnectionUri());
+        final String connectionUri = connectionParameters.getConnectionUri();
+        if (!connectionUri.contains("amqps:")) {
+            result = new JmsConnectionFactory(connectionParameters.getUsername(), connectionParameters.getPassword(), connectionUri);
         } else {
-            String newConnectionUri = connectionParameters.getConnectionUri();
+            StringBuilder newConnectionUri = new StringBuilder(connectionUri);
             if (connectionParameters.isSkipCertificateCheck()) {
-                if (!connectionParameters.getConnectionUri().contains("transport.trustAll")) {
-                    LOG.warn("Skipping Certificate check for AMQP Connection {}", connectionParameters
-                            .getConnectionUri());
-                    newConnectionUri = connectionParameters.getConnectionUri() +
-                            (connectionParameters.getConnectionUri().contains("?") ? "&" : "?") +
-                            "transport.trustAll=true&transport.verifyHost=false";
+                if (!connectionUri.contains("transport.trustAll")) {
+                    LOG.warn("Skipping Certificate check for AMQP Connection {}", connectionUri);
+                    newConnectionUri.append(connectionUri.contains("?") ? "&" : "?")
+                            .append("transport.trustAll=true&transport.verifyHost=false");
                 }
-                result = new JmsConnectionFactory(connectionParameters.getUsername(), connectionParameters.getPassword(), newConnectionUri);
             } else {
-                // TODO add amqps connection support, see CAMEL-11780
-                throw new IllegalArgumentException("SSL Not supported, yet!");
+                // add amqps connection certificates
+                final String clientCertificate = connectionParameters.getClientCertificate();
+                if (!ObjectHelper.isEmpty(clientCertificate)) {
+                    // copy client certificate to a keystore using a random key
+                    addKeyStoreParam(newConnectionUri, clientCertificate, "amqp-client", "key");
+                    newConnectionUri.append("&transport.keyAlias=amqp-client");
+                }
+                final String brokerCertificate = connectionParameters.getBrokerCertificate();
+                if (!ObjectHelper.isEmpty(brokerCertificate)) {
+                    // copy broker certificate to a keystore using a random key
+                    addKeyStoreParam(newConnectionUri, brokerCertificate, "amqp-broker", "trust");
+                    // possibly expose this property from connector in the future?
+                    newConnectionUri.append("&transport.verifyHost=false");
+                }
             }
+            result = new JmsConnectionFactory(connectionParameters.getUsername(), connectionParameters.getPassword(), newConnectionUri.toString());
         }
 
         return result;
+    }
+
+    private static void addKeyStoreParam(StringBuilder connectionUri, String certificate, String alias, String storePrefix) {
+        KeyStoreHelper keyStoreHelper = new KeyStoreHelper(certificate, alias).store();
+        connectionUri.append(connectionUri.indexOf("?") != -1 ? "&" : "?")
+                .append("transport.").append(storePrefix).append("StoreLocation=").append(keyStoreHelper.getKeyStorePath())
+                .append("&transport.").append(storePrefix).append("StorePassword=").append(keyStoreHelper.getPassword());
     }
 
     public static class ConnectionParameters {
@@ -99,4 +120,5 @@ public final class AMQPUtil {
             return skipCertificateCheck;
         }
     }
+
 }
