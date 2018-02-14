@@ -13,21 +13,25 @@ see that
 inserting `*todo-*` in front of the URL
 for your {prodname} installation. For example: 
 `\https://todo-proj7614.6a63.fuse-ignite.openshiftapps.com/`.
-. In the *To Do App* display, click *Send JMS Message* to send a message
-to the AMQ broker in your OpenShift project. The message
-contains the XML that is in the text box above the button.
+. In the To Do app display, click *Show JMS Form* to display an
+input box that contains an XML message. 
+. Click *Send JMS Message* to send that message
+to the AMQ broker in your OpenShift project. 
 +
 Successful execution returns a task from the To Do app client API. The task 
 identifies the ID of the damaged item and the contact information for its
 vendor. 
-. Edit the XML message to change the result of running the
-integration:
-.. Change the undamaged item to `damaged="true"` and send the
-updated message. The
-result contains IDs for two damaged items and contact information for 
-two vendors. 
-.. For an item that has `damaged="true"`, change the name of the
-vendor and send the updated message. 
-The To Do app accesses a database that has only two vendors.
-Specification of any other vendor results in a message that indicates
-a damaged item for which no contact information is available. 
+. Edit the XML message to specify two damaged items:
+.. Click *Show JMS Form* to display the message input box again. 
+.. In the XML message, change the entry for the undamaged item to 
+specify `damaged="true"`.
+.. Click *Send JMS Message*. The To Do app client API returns a new
+task that contains IDs for two damaged items and contact information for 
+the two vendors. 
+. Edit the XML message to specify an unknown vendor:
+.. Click *Show JMS Form*. 
+.. In the XML message, for an item that has `damaged="true"`, change the name 
+of the vendor.
+.. Click *Send JMS Message*. The To Do app client API returns a new
+task that indicates that there is no contact information for the vendor of
+a damaged item. The To Do app accesses a database that has only two vendors.
