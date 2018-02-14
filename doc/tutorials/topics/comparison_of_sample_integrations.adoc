@@ -18,7 +18,7 @@ and for {prodname} to start running the integration.
 |10 minutes if you already created the Twitter to Salesforce sample. Otherwise, 
 20 minutes, which includes the time needed to obtain a Salesforce account.
 This does not include waiting time.  
-|20 minutes. This does not include the time it takes {prodname} to 
+|25 minutes. This does not include the time it takes {prodname} to 
 start running the integration. 
 
 |Prerequisites
