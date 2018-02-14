@@ -211,7 +211,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
             } as ActionConfig;
             actionConfig.moreActions.push(replaceDraft);
             if (deployment.version === integration.deploymentVersion) {
-              if (integration.currentState === PUBLISHED) {
+              if (integration.currentStatus === PUBLISHED) {
                 actionConfig.moreActions.push(stopIntegration);
               } else {
                 actionConfig.moreActions.push(publish);
