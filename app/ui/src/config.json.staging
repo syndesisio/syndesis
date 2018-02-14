@@ -3,6 +3,7 @@
   "apiBase": "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com",
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
+  "metricsPollingInterval": 5000,
   "branding": {
     "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
     "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",

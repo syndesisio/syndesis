@@ -32,6 +32,22 @@
           }
         }
       }
+
+      &--uptime {
+        .card-pf-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .metrics__uptime-header {
+          margin-top: 0;
+        }
+
+        .metrics__uptime-kickoff {
+          font-size: 11px;
+        }
+      }
     }
 
   }
