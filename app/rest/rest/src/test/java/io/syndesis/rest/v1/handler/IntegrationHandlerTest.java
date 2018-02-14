@@ -55,7 +55,7 @@ public class IntegrationHandlerTest {
 
     @Test
     public void filterOptionsSimple() {
-        when(inspectors.getPaths(DataShapeKinds.JAVA, "twitter4j.Status", null, Optional.empty())).thenReturn(Arrays.asList("paramA", "paramB"));
+        when(inspectors.getPaths(DataShapeKinds.JAVA.toString(), "twitter4j.Status", null, Optional.empty())).thenReturn(Arrays.asList("paramA", "paramB"));
         DataShape dataShape = dataShape(DataShapeKinds.JAVA, "twitter4j.Status");
 
         FilterOptions options = handler.getFilterOptions(dataShape);
@@ -70,11 +70,11 @@ public class IntegrationHandlerTest {
         assertThat(options.getPaths()).isEmpty();
     }
 
-    private DataShape dataShape(String kind) {
+    private DataShape dataShape(DataShapeKinds kind) {
         return dataShape(kind, null);
     }
 
-    private DataShape dataShape(String kind, String type) {
+    private DataShape dataShape(DataShapeKinds kind, String type) {
         return new DataShape.Builder().kind(kind).type(type).build();
     }
 }

@@ -66,7 +66,19 @@ export interface BaseEntity {
   name?: string;
 }
 
-export interface DataShape extends BaseEntity {
+export enum DataShapeKinds {
+  ANY = 'any',
+  JAVA = 'java',
+  JSON_SCHEMA = 'json-schema',
+  JSON_INSTANCE = 'json-instance',
+  XML_SCHEMA = 'xml-schema',
+  XML_INSTANCE = 'xml-instance',
+  NONE = 'none'
+}
+
+export interface DataShape {
+  id?: string;
+  kind: DataShapeKinds;
   specification: string;
   exemplar: Array<string>;
   type: string;

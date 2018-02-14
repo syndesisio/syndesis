@@ -15,11 +15,39 @@
  */
 package io.syndesis.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  */
-public class DataShapeKinds {
-    public static final String ANY = "any";
-    public static final String JAVA = "java";
-    public static final String JSON_SCHEMA = "json-schema";
-    public static final String NONE = "none";
+public enum DataShapeKinds {
+    ANY("any"),
+    JAVA("java"),
+    JSON_SCHEMA("json-schema"),
+    JSON_INSTANCE("json-instance"),
+    XML_SCHEMA("xml-schema"),
+    XML_INSTANCE("xml-instance"),
+    NONE("none");
+
+    private final String string;
+
+    private DataShapeKinds(String string) {
+        this.string = string;
+    }
+
+    @JsonValue
+    @Override
+    public String toString() {
+        return this.string;
+    }
+
+    @JsonCreator
+    public static DataShapeKinds fromString(String string) {
+        for (DataShapeKinds k : values()) {
+            if (k.string.equals(string)) {
+                return k;
+            }
+        }
+        throw new IllegalArgumentException(String.format("There's no DataShapeKinds with string '%s'", string));
+    }
 }

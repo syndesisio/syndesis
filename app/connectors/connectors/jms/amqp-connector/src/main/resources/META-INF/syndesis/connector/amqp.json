@@ -127,7 +127,7 @@
       "actionType": "connector",
       "descriptor": {
         "inputDataShape": {
-          "kind": "*"
+          "kind": "any"
         },
         "outputDataShape": {
           "kind": "none"
@@ -205,7 +205,7 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "kind": "*"
+          "kind": "any"
         },
         "configuredProperties": {},
         "connectorFactory": "io.syndesis.connector.amqp.AMQPConnectorFactory",
@@ -289,10 +289,10 @@
       "actionType": "connector",
       "descriptor": {
         "inputDataShape": {
-          "kind": "*"
+          "kind": "any"
         },
         "outputDataShape": {
-          "kind": "*"
+          "kind": "any"
         },
         "connectorFactory": "io.syndesis.connector.amqp.AMQPConnectorFactory",
         "configuredProperties": {},
