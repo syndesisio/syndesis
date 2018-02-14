@@ -18,6 +18,7 @@ import {
   CardModule,
   ListModule,
   ToolbarModule,
+  PaginationModule,
 } from 'patternfly-ng';
 
 const imports = [
@@ -49,7 +50,8 @@ const _exports = [
   NotificationModule,
   CardModule,
   ListModule,
-  ToolbarModule
+  ToolbarModule,
+  PaginationModule
 ];
 
 @NgModule({

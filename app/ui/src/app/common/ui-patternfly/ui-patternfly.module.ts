@@ -17,7 +17,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
     ReactiveFormsModule,
     TextMaskModule,
     DynamicFormsCoreModule,
-    RouterModule,
+    RouterModule
   ],
   declarations: [
     SyndesisFormComponent,
