@@ -10,12 +10,12 @@ to Salesforce. In other words, you need to register {prodname}
 with Salesforce only once. 
 
 ifeval::["{context}" == "t2sf"]
-If you already registered Salesforce as a {prodname}
+If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to <<create-twitter-sf-integration>>.
 endif::[]
 
 ifeval::["{context}" == "sf2db"]
-If you already registered Salesforce as a {prodname}
+If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to  <<create-sf-db-integration>>.
 endif::[]
 

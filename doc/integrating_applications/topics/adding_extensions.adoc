@@ -12,9 +12,12 @@ available for use in integrations. The following topics provide details:
 * <<making-extensions-available>> 
 * <<managing-extensions>>
 
-Information about coding the extension and creating the `.jar` file are
+For an example of uploading and using an extension, see the
+link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/#amq-to-rest-api[AMQ to REST API sample integration tutorial].
+
+Information about coding the extension and creating the `.jar` file is
 in the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/[10.2 _JBoss Fuse Tooling Guide_]
+link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[10.2 _JBoss Fuse Tooling Guide_]
 
 include::how_tooling_items_map.adoc[leveloffset=+1]
 

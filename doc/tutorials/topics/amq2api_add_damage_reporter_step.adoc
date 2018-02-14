@@ -1,0 +1,11 @@
+[id='amq2api-add-damage-reporter-step']
+= Add a damage reporter step
+
+With the start and finish connections in place, you are ready to
+add the custom step that receives the messages from the AMQ broker
+and identifies any items that were damaged when they were received. 
+
+To add the custom damage reporter step:
+
+. In the center of the right panel, click *Add a Step*. 
+. On the *Choose a Step* page, click *Damage Reporter*. 

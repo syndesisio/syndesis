@@ -1,0 +1,21 @@
+[id='amq2api-start-the-broker']
+= Start the provided AMQ broker
+
+To start the AMQ broker:
+
+. In a browser, go to the OpenShift Web Console at 
+https://console.fuse-ignite.openshift.com/console/. Your installation of
+{prodname} runs on OpenShift Online. 
+
+. In the console, click the name of your {prodname} project, which is
+something like `proj123456`. 
+
+. In the *Overview* page, scroll down to *Other Resources* to 
+see the provided AMQ broker. 
+
+. To the left of *broker-amq, #1*, click the caret to display more 
+information. 
+
+. In the additional information, all the way to the right, 
+click the up caret to scale up to running 1 pod. This starts 
+the AMQ broker.

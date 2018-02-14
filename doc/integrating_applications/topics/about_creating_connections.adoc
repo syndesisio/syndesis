@@ -12,4 +12,4 @@ Optionally, you can specify a description of the connection.
 You can use the same connector to create any number of connections to that
 application. For example, you might use the Salesforce connector to create
 three different connections. Each connection to Salesforce could specify a 
-different user's Salesforce log-in credentials. 
+different user's Salesforce login credentials. 

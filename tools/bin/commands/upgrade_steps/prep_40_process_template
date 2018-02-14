@@ -1,0 +1,13 @@
+#!/bin/bash
+
+process_template::label() {
+  echo "Process new template to extract update resources"
+}
+
+process_template::run() {
+  sleep 3
+}
+
+process_template::rollback() {
+  sleep 1
+}

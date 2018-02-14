@@ -186,8 +186,8 @@
   "actions": [
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:updatePet",
-      "name": "PUT /pet",
-      "description": "Update an existing pet",
+      "name": "Update an existing pet",
+      "description": "Send PUT request to /pet",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -210,8 +210,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:addPet",
-      "name": "POST /pet",
-      "description": "Add a new pet to the store",
+      "name": "Add a new pet to the store",
+      "description": "Send POST request to /pet",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -309,8 +309,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:updatePetWithForm",
-      "name": "POST /pet/{petId}",
-      "description": "Updates a pet in the store with form data",
+      "name": "Updates a pet in the store with form data",
+      "description": "Send POST request to /pet/{petId}",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -333,8 +333,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:deletePet",
-      "name": "DELETE /pet/{petId}",
-      "description": "Deletes a pet",
+      "name": "Deletes a pet",
+      "description": "Send DELETE request to /pet/{petId}",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -357,8 +357,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:uploadFile",
-      "name": "POST /pet/{petId}/uploadImage",
-      "description": "uploads an image",
+      "name": "uploads an image",
+      "description": "Send POST request to /pet/{petId}/uploadImage",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -406,8 +406,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:placeOrder",
-      "name": "POST /store/order",
-      "description": "Place an order for a pet",
+      "name": "Place an order for a pet",
+      "description": "Send POST request to /store/order",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -504,8 +504,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:createUsersWithArrayInput",
-      "name": "POST /user/createWithArray",
-      "description": "Creates list of users with given input array",
+      "name": "Creates list of users with given input array",
+      "description": "Send POST request to /user/createWithArray",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -528,8 +528,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:createUsersWithListInput",
-      "name": "POST /user/createWithList",
-      "description": "Creates list of users with given input array",
+      "name": "Creates list of users with given input array",
+      "description": "Send POST request to /user/createWithList",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -552,8 +552,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:loginUser",
-      "name": "GET /user/login",
-      "description": "Logs user into the system",
+      "name": "Logs user into the system",
+      "description": "Send GET request to /user/login",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -576,8 +576,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:logoutUser",
-      "name": "GET /user/logout",
-      "description": "Logs out current logged in user session",
+      "name": "Logs out current logged in user session",
+      "description": "Send GET request to /user/logout",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",
@@ -599,8 +599,8 @@
     },
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:getUserByName",
-      "name": "GET /user/{username}",
-      "description": "Get user by user name",
+      "name": "Get user by user name",
+      "description": "Send GET request to /user/{username}",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
         "camelConnectorPrefix": "swagger-operation",

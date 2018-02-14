@@ -9,6 +9,7 @@ To implement a Twitter to Salesforce sample integration:
 This account must have Salesforce API access, which is available in a 
 Salesforce Enterprise account or a Salesforce Developer account. To obtain
 a free developer account, visit https://developer.salesforce.com/signup. 
+It takes less than two minutes to obtain a Salesforce account. 
 
 ////
 * Add the `TwitterScreenName` custom field to the Salesforce 

@@ -1,10 +1,12 @@
 import { ApplicationRef, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Integration,
+  IntegrationDeployment,
+  IntegrationOverview,
+  DeploymentOverview,
   IntegrationActionsService,
   IntegrationSupportService,
   Step,
-  DRAFT,
   PENDING,
   PUBLISHED,
   UNPUBLISHED } from '@syndesis/ui/platform';
@@ -17,8 +19,8 @@ import { saveAs } from 'file-saver';
 
 @Injectable()
 export class IntegrationActionsProviderService extends IntegrationActionsService {
-  currentAction: string = undefined;
-  selectedIntegration: Integration = undefined;
+  currentAction: string;
+  selectedIntegration: Integration | IntegrationOverview ;
   modalTitle: string;
   modalMessage: string;
 
@@ -34,19 +36,19 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     super();
   }
 
-  canActivate(integration: Integration) {
+  canActivate(integration: Integration | IntegrationOverview) {
     // TODO: false if integration.version == lastDeloyed.version && is active.
     return true; // integration.currentStatus === UNPUBLISHED || integration.currentStatus === DRAFT;
   }
 
-  canDeactivate(integration: Integration) {
+  canDeactivate(integration: Integration | IntegrationOverview) {
     // TODO: true if lastDeloyed is active.
     return true; //integration.currentStatus === PUBLISHED || integration.currentStatus === PENDING;
   }
 
   //----- Actions ------------------->>
 
-  requestAction(action: string, integration: Integration) {
+  requestAction(action: string, integration: Integration | IntegrationOverview, deployment?: IntegrationDeployment | DeploymentOverview) {
     let request, header, message, danger, reason;
     switch (action) {
       case 'createIntegration':
@@ -62,14 +64,14 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
             saveAs(value, integration.name + '-export.zip');
           });
       case 'replaceDraft':
-        header = 'Updating draft';
+        header = 'Updating draft.';
         message = 'Replacing the current draft of the integration';
         danger = 'Failed to update integration draft';
         reason = 'Error updating integration';
-        request = this.requestReplaceDraft(integration);
+        request = this.requestReplaceDraft(integration, deployment);
         break;
       case 'publish':
-        header = 'Publishing deployment';
+        header = 'Publishing deployment.';
         message =
           'Please allow a moment for the integration to fully activate.';
         danger = 'Failed to publish integration deployment';
@@ -77,7 +79,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestPublish(integration);
         break;
       case 'activate':
-        header = 'Integration is activating';
+        header = 'Integration is activating.';
         message =
           'Please allow a moment for the integration to fully activate.';
         danger = 'Failed to activate integration';
@@ -85,7 +87,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestActivate(integration);
         break;
       case 'deactivate':
-        header = 'Integration is deactivating';
+        header = 'Integration is deactivating.';
         message =
           'Please allow a moment for the integration to be unpublished.';
         danger = 'Failed to deactivate integration';
@@ -93,7 +95,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestDeactivate(integration);
         break;
       case 'delete':
-        header = 'Delete Successful';
+        header = 'Delete Successful.';
         message = 'Integration successfully deleted.';
         danger = 'Failed to delete integration';
         reason = 'Error deleting integration';
@@ -105,7 +107,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     return request.then(
       modal =>
         modal.result
-          ? this.doAction(action, integration)
+          ? this.doAction(action, integration, deployment)
               .then(_ =>
                 this.notificationService.popNotification({
                   type: NotificationType.SUCCESS,
@@ -133,10 +135,10 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     return this.modalMessage || '';
   }
 
-  doAction(action: string, integration: Integration) {
+  doAction(action: string, integration: Integration | IntegrationOverview, deployment?: IntegrationDeployment | DeploymentOverview) {
     switch (action) {
       case 'replaceDraft':
-        return this.replaceDraftAction(integration);
+        return this.replaceDraftAction(integration, deployment);
       case 'activate':
       case 'publish':
         return this.activateAction(integration);
@@ -150,19 +152,19 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   //-----  Activate/Deactivate ------------------->>
-  requestReplaceDraft(integration: Integration) {
+  requestReplaceDraft(integration: Integration | IntegrationOverview, deployment: IntegrationDeployment | DeploymentOverview) {
     this.selectedIntegration = integration;
     return this.showModal('replaceDraft');
   }
 
-  requestPublish(integration: Integration) {
+  requestPublish(integration: Integration | IntegrationOverview) {
     this.selectedIntegration = integration;
     return this.showModal('publish');
   }
 
   // TODO: Refactor into single method for both cases
   // Open modal to confirm activation
-  requestActivate(integration: Integration) {
+  requestActivate(integration: Integration | IntegrationOverview) {
     log.debugc(
       () =>
         'Selected integration for activation: ' +
@@ -173,7 +175,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   // Open modal to confirm deactivation
-  requestDeactivate(integration: Integration) {
+  requestDeactivate(integration: Integration | IntegrationOverview) {
     log.debugc(
       () =>
         'Selected integration for deactivation: ' +
@@ -184,7 +186,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   // Open modal to confirm delete
-  requestDelete(integration: Integration) {
+  requestDelete(integration: Integration | IntegrationOverview) {
     log.debugc(
       () =>
         'Selected integration for delete: ' + JSON.stringify(integration['id'])
@@ -195,39 +197,45 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   // TODO: Refactor into single method for both cases
   // Actual activate/deactivate action once the user confirms
-  activateAction(integration: Integration): Promise<any> {
+  activateAction(integration: Integration | IntegrationOverview): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for activation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.integrationSupportService.deploy(integration).toPromise();
+    return this.integrationSupportService.deploy(<any> integration).toPromise();
   }
 
   // Actual activate/deactivate action once the user confirms
-  deactivateAction(integration: Integration): Promise<any> {
+  deactivateAction(integration: Integration | IntegrationOverview): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for deactivation: ' +
         JSON.stringify(integration['id'])
     );
-    return this.integrationSupportService.undeploy(integration).toPromise();
+    return this.integrationSupportService.undeploy(<any> integration).toPromise();
   }
 
   // Actual delete action once the user confirms
-  deleteAction(integration: Integration): Promise<any> {
+  deleteAction(integration: Integration | IntegrationOverview): Promise<any> {
     log.debugc(
       () =>
         'Selected integration for delete: ' + JSON.stringify(integration['id'])
     );
     return this.store
-      .delete(integration)
+      .delete(<any> integration)
       .take(1)
       .toPromise();
   }
 
-  replaceDraftAction(integration: Integration): Promise<any> {
-    return this.store.update(integration, true).take(1).toPromise();
+  replaceDraftAction(integration: Integration | IntegrationOverview, deployment: IntegrationDeployment | DeploymentOverview): Promise<any> {
+      return this.integrationSupportService.getDeployment(integration.id, deployment.version.toString())
+        .map(_deployment => {
+          this.store.patch(<any>integration, {
+            steps: _deployment.spec.steps,
+            draft: true
+          });
+        }).toPromise();
   }
 
   //-----  Icons ------------------->>

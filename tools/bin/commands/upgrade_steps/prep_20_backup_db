@@ -1,0 +1,13 @@
+#!/bin/bash
+
+backup_db::label() {
+  echo "Backup database"
+}
+
+backup_db::run() {
+  sleep 2
+}
+
+backup_db::rollback() {
+  sleep 1
+}

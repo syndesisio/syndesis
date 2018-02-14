@@ -1,0 +1,12 @@
+[id='amq2api-choose-finish-connection']
+= Choose the finish connection
+
+To add the finish connection to the integration:
+
+. On the *Choose a Finish Connection* page, click the To Do app
+connection that you created. If you assigned the example name, you would
+click *Todo App API Client*.
+
+. On the *Choose an Action* page, click *Create new task*,
+which provides information about who to contact to address 
+a particular damaged item. 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import {
-  Action,
+import { Action,
   Connection,
   Activity,
   Integration,
@@ -13,7 +12,8 @@ import {
   IntegrationSupportService,
   ApiHttpService,
   integrationEndpoints,
-  UNPUBLISHED
+  UNPUBLISHED,
+  PUBLISHED
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { RequestMethod, ResponseContentType } from '@angular/http';
@@ -37,7 +37,16 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return Observable.merge(
       this.getOverview(id),
       this.eventsService.changeEvents
-        .filter(event => event.id === id)
+        .filter(event => {
+          switch (event.kind) {
+            case 'integration':
+              return event.id === id;
+            case 'integration-deployment':
+              return event.id.startsWith(id);
+            default:
+              return false;
+          }
+        })
         .flatMap(event => this.getOverview(id))
     );
   }
@@ -50,21 +59,25 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return Observable.merge(
       this.getOverviews(),
       this.eventsService.changeEvents
-        .filter(event => event.kind === 'integration')
+        .filter(event => event.kind === 'integration' || event.kind === 'integration-deployment')
         .flatMap(event => this.getOverviews())
     );
   }
 
-  getDeployments(id: string): Observable<IntegrationDeployments> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployments, { id }).get();
-  }
-
-  publishIntegration(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.publish, { id: integration.id }).post(integration);
-  }
-
-  deploy(integration: Integration): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.publish, { id: integration.id }).put({});
+  deploy(integration: Integration | IntegrationDeployment): Observable<any> {
+    let url, state, method;
+    if ('integrationVersion' in integration) {
+      // it's an IntegrationDeployment
+      url = integrationEndpoints.updateState;
+      state = { targetState: PUBLISHED };
+      method = 'post';
+    } else {
+      // it's an Integration
+      url = integrationEndpoints.publish;
+      state = { };
+      method = 'put';
+    }
+    return this.apiHttpService.setEndpointUrl(url, { id: integration.id, version: integration.version })[method](state);
   }
 
   undeploy(integration: Integration): Observable<any> {
@@ -82,6 +95,14 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     });
   }
 
+  getDeployment(id: string, version: string): Observable<IntegrationDeployment> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployment, { id, version }).get();
+  }
+
+  getDeployments(id: string): Observable<IntegrationDeployments> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployments, { id }).get();
+  }
+
   watchDeployments(id: string): Observable<any> {
     return Observable.merge(
       this.getDeployments(id),
@@ -89,10 +110,6 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
         .filter(event => event.kind === 'integration-deployment')
         // TODO it would obviously be better to just fetch one, not all of 'em
         .flatMap(event => this.getDeployments(id)));
-  }
-
-  getDeployment(id: string, version: string): Observable<IntegrationDeployment> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployment, { id, version }).get();
   }
 
   requestPom(integration: Integration): Observable<any> {

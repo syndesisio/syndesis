@@ -17,6 +17,7 @@ package io.syndesis.rest.metrics.prometheus;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,21 +48,21 @@ public interface QueryResult extends Serializable {
         });
     }
 
-    static <T> Optional<Map<String, T>> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz) {
+    static <T> Map<String, ? extends T> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz) {
         return response.getData().map(data ->
                 data.getResult().stream().collect(
                     Collectors.toMap(r -> r.getLabel(label), r -> r.getTypedValue(clazz).orElse(null))
                 )
-            );
+            ).orElse(Collections.emptyMap());
     }
 
-    static <T> Optional<Map<String, T>> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz,
-                                                    BinaryOperator<T> mergeFunction) {
+    static <T> Map<String, T> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz,
+                                          BinaryOperator<T> mergeFunction) {
         return response.getData().map(data ->
                 data.getResult().stream().collect(
                     Collectors.toMap(r -> r.getLabel(label), r -> r.getTypedValue(clazz).orElse(null), mergeFunction)
                 )
-            );
+            ).orElse(Collections.emptyMap());
     }
 
     class Builder extends ImmutableQueryResult.Builder {

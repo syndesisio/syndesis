@@ -180,7 +180,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
-    private void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
+    protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
         openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
             .withName(name)
@@ -210,8 +210,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .withNewSpec()
             .addNewContainer()
             .withImage(" ").withImagePullPolicy("Always").withName(name)
-            .withEnv(new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null))
-            .withEnv(new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null))
+            // don't chain withEnv as every invocation overrides the previous one, use var-args instead
+            .withEnv(
+                new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
+                new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null))
             .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
             .addNewVolumeMount()
                 .withName("secret-volume")

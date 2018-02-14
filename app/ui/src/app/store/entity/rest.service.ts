@@ -1,7 +1,7 @@
 import { Restangular } from 'ngx-restangular';
 import { Observable } from 'rxjs/Observable';
 
-import { BaseEntity, ApiHttpService } from '@syndesis/ui/platform';
+import { BaseEntity } from '@syndesis/ui/platform';
 
 export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   protected constructor(
@@ -27,5 +27,9 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
 
   delete(obj: T) {
     return this.restangularService.one(obj.id).remove();
+  }
+
+  patch(id: string, attributes: any) {
+    return this.restangularService.one(id).patch(attributes);
   }
 }

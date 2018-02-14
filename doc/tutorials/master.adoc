@@ -37,13 +37,19 @@ sample integrations:
 
 * <<twitter-to-salesforce>>
 * <<salesforce-to-db>>
+* <<amq-to-rest-api>>
+
 
 A 
 https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite//[user guide]
 for {prodname} is also available.
+
+include::topics/comparison_of_sample_integrations.adoc[leveloffset=+1]
 
 include::topics/shared/log_in.adoc[leveloffset=+1]
 
 include::topics/t2sf_intro.adoc[leveloffset=+1]
 
 include::topics/sf2db_intro.adoc[leveloffset=+1]
+
+include::topics/amq2api_intro.adoc[leveloffset=+1]

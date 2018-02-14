@@ -44,13 +44,7 @@ export abstract class IntegrationSupportService {
    */
   abstract watchOverviews(): Observable<IntegrationOverviews>;
 
-  /**
-   * Publish an existing integration
-   * @param integration
-   */
-  abstract publishIntegration(integration: Integration): Observable<any>;
-
-  abstract deploy(integration: Integration): Observable<any>;
+  abstract deploy(integration: Integration | IntegrationDeployment): Observable<any>;
 
   abstract undeploy(integration: Integration): Observable<any>;
 
@@ -60,17 +54,17 @@ export abstract class IntegrationSupportService {
   abstract updateState(id: string, version: string | number, status: IntegrationStatus): Observable<any>;
 
   /**
-   * Fetch all the deployments for an integration
-   * @param id
-   */
-  abstract getDeployments(id: string): Observable<IntegrationDeployments>;
-
-  /**
    * Fetch a single deployment version for an integration
    * @param id
    * @param version
    */
   abstract getDeployment(id: String, version: string): Observable<IntegrationDeployment>;
+
+  /**
+   * Fetch all the deployments for an integration
+   * @param id
+   */
+  abstract getDeployments(id: string): Observable<IntegrationDeployments>;
 
   /**
    * Fetch all the deployments for an integration and watch for changes

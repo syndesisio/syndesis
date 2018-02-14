@@ -16,7 +16,6 @@ export class Step implements BaseEntity {
 
 export type Steps = Array<Step>;
 
-export const DRAFT = 'Draft';
 export const PENDING = 'Pending';
 export const PUBLISHED = 'Published';
 export const UNPUBLISHED = 'Unpublished';
@@ -33,6 +32,7 @@ export interface IntegrationOverview extends BaseEntity {
   currentStatus: IntegrationStatus;
   targetState: IntegrationStatus;
   statusMessage?: string;
+  deploymentVersion?: number;
 }
 
 export type IntegrationOverviews = Array<IntegrationOverview>;
@@ -49,7 +49,6 @@ export interface Integration extends IntegrationOverview {
   deploymentId?: number;
   updatedAt: number;
   createdAt: number;
-  deploymentVersion?: number;
 }
 
 export type Integrations = Array<Integration>;

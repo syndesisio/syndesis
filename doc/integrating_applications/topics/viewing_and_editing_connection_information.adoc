@@ -19,11 +19,11 @@ connection icon to view that connection's details.
 On the *Connection Details* page, for the connection you want to edit, click 
 image:images/PencilForEditing.png[Edit] next to a field to edit that field. 
 Or, for some connections, below the configuration fields, click *Edit* to
-change configuration values. After you change a value, be sure to click
+change configuration values. If you change any values, be sure to click
 *Save*. 
 
 If you update a connection that is used in an integration that is running,
-{prodname} you must republishes the integration. To republish the
+you must republishes the integration. To republish the
 integration, stop it and restart it. 
 
 For connections to applications that use the OAuth protocol to authorize 
