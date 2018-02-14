@@ -8,6 +8,7 @@ export * from './flow-page.service';
 export * from './action-configure';
 export * from './action-select';
 export * from './common';
+export * from './describe-data';
 export * from './connection-select';
 export * from './flow-view';
 export * from './integration-basics';
