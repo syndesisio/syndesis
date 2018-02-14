@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@syndesis/ui/common';
 
@@ -6,7 +6,7 @@ import { ModalService } from '@syndesis/ui/common';
   selector: 'syndesis-integration-import-export',
   templateUrl: 'integration-import-export.component.html'
 })
-export class IntegrationImportExportComponent implements OnInit {
+export class IntegrationImportExportComponent implements OnInit, OnDestroy {
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
 
   private cancelModalId = 'create-cancellation-modal';
@@ -31,11 +31,11 @@ export class IntegrationImportExportComponent implements OnInit {
     });
   }
 
-  private redirectBack(): void {
-    this.router.navigate(['/integrations']);
-  }
-
   ngOnDestroy() {
     this.modalService.unregisterModal(this.cancelModalId);
+  }
+
+  private redirectBack(): void {
+    this.router.navigate(['/integrations']);
   }
 }
