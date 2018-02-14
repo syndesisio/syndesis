@@ -570,17 +570,12 @@ export class CurrentFlowService {
   }
 
   private hasDataShape(step: Step, isInput = false): boolean {
-      if (step.stepKind === ENDPOINT || step.stepKind === DATA_MAPPER) {
-        return true;
-      }
-      if (step.stepKind !== EXTENSION) {
-        return false;
-      }
-      // it's an extesion, we need to look at the action
-      const action = step.action;
-      const descriptor = action.descriptor;
-      const dataShape = isInput ? descriptor.inputDataShape : descriptor.outputDataShape;
-      return dataShape.kind !== DataShapeKinds.ANY && dataShape.kind !== DataShapeKinds.NONE;
+    if (!step.action || !step.action.descriptor) {
+      return false;
+    }
+    const descriptor = step.action.descriptor;
+    const dataShape = isInput ? descriptor.inputDataShape : descriptor.outputDataShape;
+    return dataShape && dataShape.kind !== DataShapeKinds.NONE;
   }
 
   private maybeDoAction(thing: any) {
