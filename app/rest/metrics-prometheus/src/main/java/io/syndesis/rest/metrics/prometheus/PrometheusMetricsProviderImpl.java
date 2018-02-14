@@ -70,7 +70,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Date[] startTime = { null };
         final Date[] lastProcessedTime = { null };
 
-        final List<IntegrationDeploymentMetrics> deploymentMetricsStream = totalMessagesMap.entrySet().stream().map(entry -> {
+        final List<IntegrationDeploymentMetrics> deploymentMetrics = totalMessagesMap.entrySet().stream().map(entry -> {
             final String version = entry.getKey();
             final Long messages = entry.getValue();
 
@@ -94,7 +94,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         }).sorted(Comparator.comparing(IntegrationDeploymentMetrics::getVersion)).collect(Collectors.toList());
 
         return new IntegrationMetricsSummary.Builder()
-                .integrationDeploymentMetrics(deploymentMetricsStream)
+                .integrationDeploymentMetrics(deploymentMetrics)
                 .start(Optional.ofNullable(startTime[0]))
                 .lastProcessed(Optional.ofNullable(lastProcessedTime[0]))
                 .messages(totalMessages[0])
