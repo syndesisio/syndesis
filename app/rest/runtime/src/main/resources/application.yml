@@ -104,7 +104,14 @@ logging:
     io.swagger.parser: WARN
 
 prometheus:
+  # prometheus service name
   service: syndesis-prometheus
+  # metrics label containing integration id
+  integrationIdLabel: syndesis_io_integration_id
+  # metrics label containing deployment version
+  deploymentVersionLabel: syndesis_io_deployment_version
+  # range for metrics history for past deployments
+  metricsHistoryRange: 15d
 
 metrics:
-  kind: sql
+  kind: prometheus
