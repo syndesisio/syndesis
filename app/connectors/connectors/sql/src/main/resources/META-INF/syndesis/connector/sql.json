@@ -1,7 +1,7 @@
 {
   "id": "sql",
   "name": "Database",
-  "description": "Invoke SQL or stored procedures",
+  "description": "Invoke SQL or stored procedures.",
   "icon": "fa-database",
   "dependencies": [
     {
@@ -27,7 +27,7 @@
       "secret": true,
       "componentProperty": true,
       "defaultValue": "jdbc:postgresql://syndesis-db:5432/sampledb",
-      "description": "JDBC URL of the database"
+      "description": "JDBC URL of the database."
     },
     "user": {
       "kind": "property",
@@ -42,7 +42,7 @@
       "secret": true,
       "componentProperty": true,
       "defaultValue": "sampledb",
-      "description": "Username for the database connection"
+      "description": "Username for the database connection."
     },
     "password": {
       "kind": "property",
@@ -56,7 +56,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "Password for the database connection"
+      "description": "Password for the database connection."
     },
     "schema": {
       "kind": "property",
@@ -71,7 +71,7 @@
       "secret": false,
       "componentProperty": true,
       "defaultValue": "sampledb",
-      "description": "Database schema"
+      "description": "Database schema."
     }
   },
   "connectorCustomizers": [
@@ -81,7 +81,7 @@
     {
       "id": "sql-connector",
       "name": "Invoke SQL",
-      "description": "Invoke SQL to obtain, store, update, or delete data",
+      "description": "Invoke SQL to obtain, store, update, or delete data.",
       "tags": [
         "dynamic"
       ],
@@ -112,7 +112,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "SQL statement to be executed. Can contain input parameters prefixed by ':#' i.e. ':#MYPARAMNAME'"
+                "description": "SQL statement to be executed. Can contain input parameters prefixed by ':#' (for example ':#MYPARAMNAME')."
               }
             }
           }
@@ -155,7 +155,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "SQL SELECT statement to be executed"
+                "description": "SQL SELECT statement to be executed."
               },
               "schedulerExpression": {
                 "kind": "parameter",
@@ -167,7 +167,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milli seconds between scheduling (executing)"
+                "description": "Delay in milli seconds between scheduling (executing)."
               }
             }
           }
@@ -210,7 +210,7 @@
                 "deprecated": false,
                 "secret": true,
                 "componentProperty": true,
-                "description": "Name of the store procedure"
+                "description": "Name of the stored procedure."
               },
               "template": {
                 "kind": "path",
@@ -224,7 +224,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "",
-                "description": "StoredProcedure template to perform"
+                "description": "StoredProcedure template to perform."
               }
             }
           }
@@ -267,7 +267,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": true,
-                "description": "Name of the store procedure"
+                "description": "Name of the stored procedure."
               },
               "template": {
                 "kind": "path",
@@ -281,7 +281,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "",
-                "description": "Stored Procedure template to perform"
+                "description": "Stored Procedure template to perform."
               },
               "schedulerExpression": {
                 "kind": "parameter",
@@ -293,7 +293,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milli seconds between scheduling (executing)"
+                "description": "Delay in milli seconds between scheduling (executing)."
               }
             }
           }
