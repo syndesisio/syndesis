@@ -25,8 +25,9 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
  * @author dhirajsb
  */
 public class KeyStoreHelperTest {
+
     @Test
-    public void store() throws Exception {
+    public void testStore() throws Exception {
         final KeyStoreHelper helper = new KeyStoreHelper(CertificateUtilTest.TEST_CERT, "test-cert");
         helper.store();
         assertThat(helper.getKeyStorePath()).isNotEmpty();

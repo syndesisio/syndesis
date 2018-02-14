@@ -29,17 +29,12 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Utility class for working with X.509 Certificates.
  *
  * @author dhirajsb
  */
 public final class CertificateUtil {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CertificateUtil.class);
 
     private CertificateUtil() {
         // utility class
