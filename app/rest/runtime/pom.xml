@@ -431,6 +431,7 @@
               <goal>verify</goal>
             </goals>
             <configuration>
+              <argLine>-Xmx1024m</argLine>
               <additionalClasspathElements>
                 <!-- workaround suggested in https://github.com/spring-projects/spring-boot/issues/6254 -->
                 <additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
