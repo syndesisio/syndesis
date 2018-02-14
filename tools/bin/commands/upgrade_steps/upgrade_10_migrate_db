@@ -1,0 +1,13 @@
+#!/bin/bash
+
+migrate_db::label() {
+  echo "Migrate database"
+}
+
+migrate_db::run() {
+  sleep 3
+}
+
+migrate_db::rollback() {
+  sleep 1
+}

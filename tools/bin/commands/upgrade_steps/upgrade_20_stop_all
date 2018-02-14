@@ -1,0 +1,13 @@
+#!/bin/bash
+
+stop_all::label() {
+  echo "Stop all deployments"
+}
+
+stop_all::run() {
+  sleep 3
+}
+
+stop_all::rollback() {
+  sleep 1
+}
