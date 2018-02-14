@@ -37,15 +37,6 @@ describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  const configServiceStub = {
-    metricsPollingInterval: 0,
-    getSettings: (settingName: string) => {
-      if (settingName == 'metricsPollingInterval') {
-        return configServiceStub.metricsPollingInterval;
-      }
-    }
-  };
-
   beforeEach(
     async(() => {
       const moduleConfig = {
@@ -77,10 +68,6 @@ describe('DashboardComponent', () => {
         ],
         providers: [
           ConfigService,
-          // {
-          //   provide: ConfigService,
-          //   useValue: configServiceStub
-          // },
           ModalService,
           MockBackend,
           Store,
