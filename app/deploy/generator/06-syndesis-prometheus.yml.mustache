@@ -48,6 +48,8 @@
             target_label: __address__
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_annotation_(syndesis.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
             target_label: kubernetes_namespace
