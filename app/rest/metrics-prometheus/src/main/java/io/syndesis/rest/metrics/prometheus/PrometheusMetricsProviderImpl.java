@@ -34,6 +34,11 @@ import io.syndesis.rest.metrics.MetricsProvider;
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
+    private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null ? aLong2 :
+        aLong2 == null ? aLong : aLong + aLong2;
+    private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null ? date2 :
+        date2 == null ? date1 : date1.compareTo(date2) > 0 ? date1 : date2;
+
     private final HttpClient httpClient = new HttpClient();
 
     private final String serviceName;
@@ -52,18 +57,25 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // aggregate values across versions
-        final BinaryOperator<Long> sumLongs = (aLong, aLong2) -> (aLong != null ? aLong : 0L) + (aLong2 != null ? aLong2 : 0L);
-        final BinaryOperator<Date> maxDate = (date1, date2) -> date1 == null ? date2 : date2 == null ? date1 : date1.compareTo(date2) > 0 ? date1 : date2;
 
         final Map<String, Long> totalMessagesMap = getMetricValues(integrationId,
-            "org_apache_camel_ExchangesTotal", deploymentVersionLabel, Long.class, sumLongs);
+            "org_apache_camel_ExchangesTotal", deploymentVersionLabel, Long.class, SUM_LONGS);
         final Map<String, Long> failedMessagesMap = getMetricValues(integrationId,
-            "org_apache_camel_ExchangesFailed", deploymentVersionLabel, Long.class, sumLongs);
+            "org_apache_camel_ExchangesFailed", deploymentVersionLabel, Long.class, SUM_LONGS);
 
         final Map<String, Date> startTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_StartTimestamp", deploymentVersionLabel, Date.class, maxDate);
+            "io_syndesis_camel_StartTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
         final Map<String, Date> lastProcessingTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_LastExchangeCompletedTimestamp", deploymentVersionLabel, Date.class, maxDate);
+            "io_syndesis_camel_LastExchangeCompletedTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
+
+        return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap, startTimeMap,
+            lastProcessingTimeMap);
+    }
+
+    private IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap,
+                                                                      Map<String, Long> failedMessagesMap,
+                                                                      Map<String, Date> startTimeMap,
+                                                                      Map<String, Date> lastProcessingTimeMap) {
 
         final long[] totalMessages = {0L};
         final long[] totalErrors = {0L};
@@ -79,10 +91,10 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             final Date lastProcessed = lastProcessingTimeMap.get(version);
 
             // aggregate values while we are at it
-            totalMessages[0] = sumLongs.apply(totalMessages[0], messages);
-            totalErrors[0] = sumLongs.apply(totalErrors[0], errors);
-            startTime[0] = maxDate.apply(startTime[0], start);
-            lastProcessedTime[0] = maxDate.apply(lastProcessedTime[0], lastProcessed);
+            totalMessages[0] = SUM_LONGS.apply(totalMessages[0], messages);
+            totalErrors[0] = SUM_LONGS.apply(totalErrors[0], errors);
+            startTime[0] = MAX_DATE.apply(startTime[0], start);
+            lastProcessedTime[0] = MAX_DATE.apply(lastProcessedTime[0], lastProcessed);
 
             return new IntegrationDeploymentMetrics.Builder()
                 .version(version)
