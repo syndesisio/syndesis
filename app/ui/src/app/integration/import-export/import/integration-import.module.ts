@@ -7,23 +7,15 @@ import { EffectsModule } from '@ngrx/effects';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 
 import { IntegrationImportComponent } from './integration-import.component';
-import { IntegrationImportRoutingModule } from './integration-import.routing';
 import { IntegrationImportEffects } from './integration-import.effects';
 import { integrationImportReducer } from './integration-import.reducer';
 import { IntegrationImportService } from './integration-import.service';
-
-const routes: Routes = [{
-  path: 'integration-import',
-  component: IntegrationImportComponent
-}];
 
 @NgModule({
   imports: [
     CommonModule,
     PatternflyUIModule,
-    RouterModule.forChild(routes),
     SyndesisCommonModule,
-    IntegrationImportRoutingModule,
     StoreModule.forFeature('integrationImportState', integrationImportReducer),
     EffectsModule.forFeature([IntegrationImportEffects]),
   ],

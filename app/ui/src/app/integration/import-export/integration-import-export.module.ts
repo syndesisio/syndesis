@@ -9,16 +9,18 @@ import { IntegrationImportComponent } from './import/integration-import.componen
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'import',
     component: IntegrationImportExportComponent,
     children: [
       {
-        path: 'import',
+        path: '',
         component: IntegrationImportComponent
       }
     ]
   }
 ];
+
+
 
 @NgModule({
   imports: [
@@ -26,7 +28,7 @@ const routes: Routes = [
     SyndesisCommonModule,
     PatternflyUIModule,
     IntegrationImportModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes)
   ],
   exports: [RouterModule],
   declarations: [
