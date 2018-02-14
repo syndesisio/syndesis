@@ -187,7 +187,8 @@
             "actionType": "connector",
             "descriptor": {
                 "inputDataShape": {
-                    "kind": "org.apache.camel.component.file.GenericFileMessage"
+                    "kind": "java",
+                    "type": "org.apache.camel.component.file.GenericFileMessage"
                 },
                 "outputDataShape": {
                     "kind": "none"
@@ -300,7 +301,8 @@
                     "kind": "none"
                 },
                 "outputDataShape": {
-                    "kind": "org.apache.camel.component.file.GenericFileMessage"
+                    "kind": "java",
+                    "type": "org.apache.camel.component.file.GenericFileMessage"
                 },
                 "configuredProperties": {
                     

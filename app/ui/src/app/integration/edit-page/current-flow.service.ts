@@ -8,6 +8,7 @@ import {
   createIntegration,
   createStep,
   createConnectionStep,
+  DataShapeKinds,
   DataShape,
   Integration,
   Step,
@@ -605,7 +606,7 @@ export class CurrentFlowService {
       const action = step.action;
       const descriptor = action.descriptor;
       const dataShape = isInput ? descriptor.inputDataShape : descriptor.outputDataShape;
-      return dataShape.kind !== 'any' && dataShape.kind !== 'none';
+      return dataShape.kind !== DataShapeKinds.ANY && dataShape.kind !== DataShapeKinds.NONE;
   }
 
   private maybeDoAction(thing: any) {

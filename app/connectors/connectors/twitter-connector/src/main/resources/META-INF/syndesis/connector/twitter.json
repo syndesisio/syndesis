@@ -88,8 +88,8 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "name": "Status",
-          "description": "Represent one single status of a user",
+          "name": "Twitter Mention",
+          "description": "Search result for tweets that mention you. The object represents one single status of a user",
           "kind": "java",
           "type": "twitter4j.Status"
         },
@@ -112,8 +112,8 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "name": "Status",
-          "description": "Represent one single status of a user",
+          "name": "Twitter Search",
+          "description": "Search result for tweets that contain text that you specify. The object represents one single status of a user",
           "kind": "java",
           "type": "twitter4j.Status"
         },

@@ -25,6 +25,7 @@ import java.util.UUID;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -80,8 +81,8 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
         .id(DynamicActionSalesforceITCase.CREATE_OR_UPDATE_ACTION_ID)//
         .addTag("dynamic")//
         .descriptor(new ConnectorDescriptor.Builder()//
-            .inputDataShape(new DataShape.Builder().kind("json-schema").build())//
-            .outputDataShape(new DataShape.Builder().kind("java")//
+            .inputDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())//
+            .outputDataShape(new DataShape.Builder().kind(DataShapeKinds.JAVA)//
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())//
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",//
                 b -> b.putProperty("sObjectName", _DEFAULT_SALESFORCE_OBJECT_NAME))//
@@ -168,8 +169,8 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
             ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         final ConnectorDescriptor firstEnrichment = new ConnectorDescriptor.Builder()//
-            .inputDataShape(new DataShape.Builder().kind("json-schema").build())
-            .outputDataShape(new DataShape.Builder().kind("java")
+            .inputDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())
+            .outputDataShape(new DataShape.Builder().kind(DataShapeKinds.JAVA)
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName", suggestedSalesforceObjectNames))
@@ -185,7 +186,7 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
             HttpStatus.OK);
 
         final ConnectorDescriptor secondEnrichment = new ConnectorDescriptor.Builder()//
-            .outputDataShape(new DataShape.Builder().kind("java")
+            .outputDataShape(new DataShape.Builder().kind(DataShapeKinds.JAVA)
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName", contactSalesforceObjectName))

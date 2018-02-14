@@ -237,7 +237,7 @@ public class IntegrationHandler extends BaseHandler
     public FilterOptions getFilterOptions(DataShape dataShape) {
         FilterOptions.Builder builder = new FilterOptions.Builder().addOp(Op.DEFAULT_OPTS);
 
-        final List<String> paths = inspectors.getPaths(dataShape.getKind(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
+        final List<String> paths = inspectors.getPaths(dataShape.getKind().toString(), dataShape.getType(), dataShape.getSpecification(), dataShape.getExemplar());
         builder.paths(paths);
         return builder.build();
     }

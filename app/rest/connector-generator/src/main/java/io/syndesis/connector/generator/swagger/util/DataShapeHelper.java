@@ -23,6 +23,7 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -30,7 +31,7 @@ import static io.syndesis.connector.generator.swagger.util.JsonSchemaHelper.dete
 
 public final class DataShapeHelper {
 
-    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind("none").build();
+    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
     private DataShapeHelper() {
         // utility class
@@ -47,7 +48,7 @@ public final class DataShapeHelper {
             try {
                 final String schemaString = Json.writer().writeValueAsString(schema);
 
-                return new DataShape.Builder().kind("json-schema").specification(schemaString).build();
+                return new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification(schemaString).build();
             } catch (final JsonProcessingException e) {
                 throw new IllegalStateException("Unable to serialize given JSON specification in response schema: " + schema, e);
             }
@@ -65,7 +66,7 @@ public final class DataShapeHelper {
     private static DataShape createShapeFromReference(final String specification, final String title, final String reference) {
         final String jsonSchema = JsonSchemaHelper.resolveSchemaForReference(specification, title, reference);
 
-        return new DataShape.Builder().kind("json-schema").specification(jsonSchema).build();
+        return new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification(jsonSchema).build();
     }
 
 }
