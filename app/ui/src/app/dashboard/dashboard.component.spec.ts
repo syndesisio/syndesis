@@ -5,6 +5,7 @@ import { MockBackend } from '@angular/http/testing';
 import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
 import { RestangularModule } from 'ngx-restangular';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule, Store } from '@ngrx/store';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -12,15 +13,16 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ActionModule, ListModule, NotificationModule } from 'patternfly-ng';
 
+import { platformReducer } from '@syndesis/ui/platform';
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
-import { StoreModule } from '@syndesis/ui/store';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration/list';
 import { DashboardComponent } from './dashboard.component';
-import { EmptyStateComponent } from './emptystate.component';
-import { DashboardConnectionsComponent } from './connections.component';
-import { DashboardIntegrationsComponent } from './integrations.component';
+import { DashboardEmptyComponent } from './dashboard_empty';
+import { DashboardConnectionsComponent } from './dashboard_connections';
+import { DashboardIntegrationsComponent } from './dashboard_integrations';
+import { DashboardMetricsComponent } from './dashboard_metrics';
 import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
 import { IntegrationStatusComponent } from '@syndesis/ui/integration/list/status.component';
 import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component';
@@ -29,6 +31,7 @@ import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.
 import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { IntegrationActionMenuComponent } from '@syndesis/ui/integration/list/action-menu.component.ts';
+import { StoreModule as LegacyStore } from '@syndesis/ui/store';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -38,12 +41,14 @@ describe('DashboardComponent', () => {
     async(() => {
       const moduleConfig = {
         imports: [
-          CoreModule.forRoot(),
           ApiModule.forRoot(),
+          CoreModule.forRoot(),
+          LegacyStore,
           HttpClientModule,
           ActionModule,
           ListModule,
           ChartsModule,
+          StoreModule.forRoot(platformReducer),
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
           BsDropdownModule.forRoot(),
@@ -55,8 +60,9 @@ describe('DashboardComponent', () => {
           SyndesisCommonModule
         ],
         declarations: [
+          DashboardMetricsComponent,
           DashboardComponent,
-          EmptyStateComponent,
+          DashboardEmptyComponent,
           DashboardConnectionsComponent,
           DashboardIntegrationsComponent
         ],
@@ -64,6 +70,7 @@ describe('DashboardComponent', () => {
           ConfigService,
           ModalService,
           MockBackend,
+          Store,
           { provide: RequestOptions, useClass: BaseRequestOptions },
           {
             provide: Http,

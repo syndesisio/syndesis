@@ -23,24 +23,34 @@ export const ERROR = 'Error';
 
 export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
-export interface Integration extends BaseEntity {
+export interface IntegrationOverview extends BaseEntity {
+  version?: number;
+  tags: Array<string>;
   description?: string;
+  draft: boolean;
+  deployments?: Array<DeploymentOverview>;
+  currentState: IntegrationStatus;
+  targetState: IntegrationStatus;
+  statusMessage?: string;
+  deploymentVersion?: number;
+}
+
+export type IntegrationOverviews = Array<IntegrationOverview>;
+
+export interface Integration extends IntegrationOverview {
   steps: Array<Step>;
   connections: Array<Connection>;
   userId: string;
-  desiredStatus: IntegrationStatus;
-  currentStatus: IntegrationStatus;
+  desiredState: IntegrationStatus;
   stepsDone: Array<string>;
   lastUpdated: string;
   createdDate: string;
   timesUsed: number;
-  tags: Array<string>;
   deploymentId?: number;
   updatedAt: number;
   createdAt: number;
-  deploymentVersion?: number;
-  version?: number;
 }
+
 export type Integrations = Array<Integration>;
 
 export interface IntegrationDeploymentSpec {
@@ -67,20 +77,6 @@ export interface IntegrationDeployment extends BaseEntity {
   [attr: string]: any;
 }
 export type IntegrationDeployments = Array<IntegrationDeployment>;
-
-export interface IntegrationOverview extends BaseEntity {
-  name: string;
-  tags: Array<string>;
-  description?: string;
-  draft: boolean;
-  deployments?: Array<DeploymentOverview>;
-  currentState: IntegrationStatus;
-  targetState: IntegrationStatus;
-  statusMessage?: string;
-  deploymentVersion: number;
-  version: number;
-}
-export type IntegrationOverviews = Array<IntegrationOverview>;
 
 export interface DeploymentOverview extends BaseEntity {
   version: number;
@@ -142,10 +138,9 @@ export function createIntegration() {
 
 export interface IntegrationMetrics {
   id?: string;
-  numberOfProcessedMessages: number;
-  numberOfErrors: number;
-  lastProcessedTimestamp: number; // XXX: Might requrie timestamp parsing through MomentJS
-  uptimeInMilliSeconds: number;
+  messages: number;
+  errors: number;
+  start: number;
 }
 
 export interface IntegrationState extends BaseReducerCollectionModel<Integration> {

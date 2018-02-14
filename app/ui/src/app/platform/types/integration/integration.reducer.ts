@@ -4,10 +4,9 @@ import { IntegrationState, IntegrationMetrics } from './integration.models';
 import * as IntegrationActions from './integration.actions';
 
 const initialIntegrationMetrics: IntegrationMetrics = {
-  numberOfProcessedMessages: 0,
-  numberOfErrors: 0,
-  lastProcessedTimestamp: 0,
-  uptimeInMilliSeconds: 0
+  messages: 0,
+  errors: 0,
+  start: 0
 };
 
 const initialState: IntegrationState = {
@@ -45,6 +44,22 @@ export function integrationReducer(state = initialState, action: any): Integrati
       };
     }
 
+    case IntegrationActions.REFRESH_OVERVIEWS: {
+      const overviews = (action as IntegrationActions.IntegrationsRefreshOverviews).payload;
+      const collection = [...state.collection].map(integration => {
+        const integrationOverview = overviews.find(overview => overview.id === integration.id);
+        return {...integration, ...integrationOverview };
+      });
+
+      return {
+        ...state,
+        ...{ collection },
+        loading: false,
+        loaded: true
+      };
+    }
+
+    case IntegrationActions.REFRESH_OVERVIEWS_FAIL:
     case IntegrationActions.FETCH_METRICS_FAIL:
     case IntegrationActions.FETCH_INTEGRATIONS_FAIL: {
       const error = (action as IntegrationActions.IntegrationsFetchFail).payload;

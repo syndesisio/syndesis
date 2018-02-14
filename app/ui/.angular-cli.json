@@ -46,7 +46,8 @@
         "../node_modules/bootstrap/dist/js/bootstrap.js",
         "../node_modules/patternfly/dist/js/patternfly.js",
         "../node_modules/chart.js/dist/Chart.js",
-        "../node_modules/patternfly-bootstrap-combobox/js/bootstrap-combobox.js"
+        "../node_modules/patternfly-bootstrap-combobox/js/bootstrap-combobox.js",
+        "../node_modules/moment/min/moment.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

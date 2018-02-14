@@ -4,15 +4,15 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
-import { SyndesisCommonModule } from '../common/common.module';
-import { IntegrationListModule } from '@syndesis/ui/integration/list';
+import { VendorModule } from '@syndesis/ui/vendor';
+import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { IntegrationListModule } from '@syndesis/ui/integration';
 
 import { DashboardComponent } from './dashboard.component';
-import { EmptyStateComponent } from './emptystate.component';
-
-import { DashboardConnectionsComponent } from './connections.component';
-import { DashboardIntegrationsComponent } from './integrations.component';
+import { DashboardEmptyComponent } from './dashboard_empty';
+import { DashboardConnectionsComponent } from './dashboard_connections';
+import { DashboardIntegrationsComponent } from './dashboard_integrations';
+import { DashboardMetricsComponent } from './dashboard_metrics';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }
@@ -23,15 +23,16 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SyndesisCommonModule,
-    SyndesisVendorModule,
+    VendorModule,
     ChartsModule,
     IntegrationListModule,
   ],
   declarations: [
-    DashboardComponent,
+    DashboardMetricsComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
-    EmptyStateComponent
+    DashboardEmptyComponent,
+    DashboardComponent,
   ]
 })
 export class DashboardModule {}

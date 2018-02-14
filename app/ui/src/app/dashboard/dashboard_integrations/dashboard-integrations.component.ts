@@ -9,8 +9,8 @@ const category = getCategory('Dashboard');
 
 @Component({
   selector: 'syndesis-dashboard-integrations',
-  templateUrl: './integrations.component.html',
-  styleUrls: ['./integrations.component.scss']
+  templateUrl: './dashboard-integrations.component.html',
+  styleUrls: ['./dashboard-integrations.component.scss']
 })
 export class DashboardIntegrationsComponent implements OnChanges {
   chartData: number[];
@@ -21,7 +21,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
   selectedId = undefined;
   truncateTrail = '…';
 
-  doughnutChartLabels: string[] = ['Published', 'Draft', 'Unpublished'];
+  doughnutChartLabels = ['Published', 'Draft', 'Unpublished'];
 
   get doughnutChartData() {
     return this.chartData;
@@ -101,7 +101,6 @@ export class DashboardIntegrationsComponent implements OnChanges {
   }
 
   chartClicked(e: any): void {
-    //log.debugc(() => 'Click event: ' + JSON.stringify(e));
     log.debugc(() => 'Click event: ' + e);
   }
 
@@ -112,10 +111,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
   //-----  Recent Updates Section ------------------->>
 
   getLabelClass(integration): string {
-    /* TODO - too noisy
-    log.debugc(() => 'Integration: ' + JSON.stringify(integration));
-    */
-    switch (integration.currentStatus) {
+    switch (integration.currentState) {
       case 'Published':
       default:
         return 'label-primary';

@@ -7,7 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DynamicFormsBootstrapUIModule } from '@ng-dynamic-forms/ui-bootstrap';
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { TagInputModule } from 'ngx-chips';
 import { Restangular, RestangularModule } from 'ngx-restangular';
 import { NotificationModule } from 'patternfly-ng';
@@ -23,12 +23,11 @@ import { appConfigInitializer, ConfigService } from './config.service';
 import { StoreModule as LegacyStoreModule } from './store/store.module';
 import { platformReducer, PlatformEffects, platformEndpoints, SYNDESIS_GUARDS } from './platform';
 
-export function restangularProviderConfigurer(
-  restangularProvider: any,
-  config: ConfigService
-) {
+export function restangularProviderConfigurer(restangularProvider: any, configService: ConfigService) {
   restangularProvider.setPlainByDefault(true);
-  restangularProvider.setBaseUrl(config.getSettings().apiEndpoint);
+  configService.asyncSettings$.first().subscribe(settings => {
+    restangularProvider.setBaseUrl(settings.apiEndpoint);
+  });
 
   restangularProvider.addResponseInterceptor((data: any, operation: string) => {
     switch (operation) {
@@ -51,10 +50,8 @@ export function restangularProviderConfigurer(
 export const RESTANGULAR_MAPPER = new InjectionToken<Restangular>(
   'restangularMapper'
 );
-export function mapperRestangularProvider(
-  restangular: Restangular,
-  config: ConfigService
-) {
+
+export function mapperRestangularProvider(restangular: Restangular, config: ConfigService) {
   return restangular.withConfig(restangularConfigurer => {
     const mapperEndpoint = config.getSettings().mapperEndpoint;
     restangularConfigurer.setBaseUrl(
@@ -74,8 +71,7 @@ export function mapperRestangularProvider(
     CoreModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
     DynamicFormsBootstrapUIModule,
-    RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
-    SyndesisVendorModule,
+    VendorModule,
     TagInputModule,
     AppRoutingModule,
     LegacyStoreModule,
@@ -84,10 +80,12 @@ export function mapperRestangularProvider(
     !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 25 }) : [],
     SyndesisCommonModule.forRoot(),
     DataMapperModule,
-    NotificationModule
+    NotificationModule,
+    RestangularModule.forRoot([ConfigService], restangularProviderConfigurer),
   ],
   providers: [
     ...SYNDESIS_GUARDS,
+    ConfigService,
     {
       provide: APP_INITIALIZER,
       useFactory: appConfigInitializer,
@@ -99,7 +97,6 @@ export function mapperRestangularProvider(
       useFactory: mapperRestangularProvider,
       deps: [Restangular, ConfigService]
     },
-    ConfigService
   ],
   bootstrap: [AppComponent]
 })

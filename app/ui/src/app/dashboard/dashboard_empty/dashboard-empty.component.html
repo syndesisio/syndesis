@@ -1,0 +1,26 @@
+<div *ngIf="!loading && (!integrations || !integrations.length)">
+  <div class="row text-center syndesis-dashboard-empty">
+
+    <div class="first-row">
+      <h1>No Integrations Available</h1>
+      <div class="row description">
+        <p>Integrations help you connect two or more web services.</p>
+      </div>
+      <div class="row">
+        <button type="button"
+                class="btn btn-primary"
+                [routerLink]="['/integrations/create']">Create Integration
+        </button>
+      </div>
+    </div>
+
+    <div class="second-row">
+      <h2>Suggested Connections</h2>
+
+      <syndesis-dashboard-connections [connections]="connections | async"
+                                      [loading]="loading"
+                                      (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
+    </div>
+  </div>
+</div>
+

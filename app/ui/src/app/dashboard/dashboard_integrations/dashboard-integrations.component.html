@@ -1,37 +1,15 @@
 <syndesis-loading [loading]="integrationsLoading">
   <div class="container-cards-pf syndesis-dashboard-integrations">
-
-    <!-- First Row: Page Header & Toolbar -->
-    <div class="row row-cards-pf first-row vertical-align">
-      <div class="page-header col-xs-12">
-        <div class="col-xs-8">
-          <h1>Dashboard: Integrations</h1>
-        </div>
-        <div class="col-xs-4 actions">
-          <div class="pull-right"
-               *ngIf="integrations.length > 0">
-            <a href="#"
-               [routerLink]="['/integrations']">View All Integrations</a>&nbsp;&nbsp;
-            <button class="btn btn-primary"
-                    [routerLink]="['/integrations/create']">Create Integration</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
     <!-- Second row empty State -->
-    <ng-container *ngIf="integrations.length === 0">
-      <div class="blank-slate-pf">
-        <div class="blank-slate-pf-icon">
-          <span class="pficon pficon pficon-add-circle-o"></span>
-        </div>
-        <h1>Create an Integration</h1>
-        <p>There are currently no integrations available. Please click on the button below to create one.</p>
-        <button class="btn btn-primary"
-                [routerLink]="['/integrations/create']">Create Integration</button>
+    <div class="blank-slate-pf" *ngIf="integrations.length === 0">
+      <div class="blank-slate-pf-icon">
+        <span class="pficon pficon pficon-add-circle-o"></span>
       </div>
-    </ng-container>
+      <h1>Create an Integration</h1>
+      <p>There are currently no integrations available. Please click on the button below to create one.</p>
+      <button class="btn btn-primary"
+              [routerLink]="['/integrations/create']">Create Integration</button>
+    </div>
 
     <!-- Second Row not empty state -->
     <ng-container *ngIf="integrations.length > 0">
@@ -142,7 +120,7 @@
         </div>
         <div class="col-xs-4 actions">
           <div class="pull-right"
-               *ngIf="connections.length">
+               *ngIf="connections?.length">
             <a href="#"
                [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
             <button class="btn btn-primary"

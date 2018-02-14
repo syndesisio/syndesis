@@ -5,7 +5,7 @@ import { SupportComponent } from './support.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IntegrationSupportModule } from '../integration/integration-support.module';
 
-import { SyndesisVendorModule } from '@syndesis/ui/vendor.module';
+import { VendorModule } from '@syndesis/ui/vendor';
 import { PatternflyUIModule } from '../common/ui-patternfly/ui-patternfly.module';
 import { SyndesisCommonModule } from '../common/common.module';
 
@@ -19,7 +19,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     PatternflyUIModule,
-    SyndesisVendorModule,
+    VendorModule,
     SyndesisCommonModule,
     IntegrationSupportModule,
     RouterModule.forChild(routes),

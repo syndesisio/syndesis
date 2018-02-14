@@ -38,12 +38,12 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
 
   canActivate(integration: Integration | IntegrationOverview) {
     // TODO: false if integration.version == lastDeloyed.version && is active.
-    return true; // integration.currentStatus === UNPUBLISHED || integration.currentStatus === DRAFT;
+    return true; // integration.currentState === UNPUBLISHED || integration.currentState === DRAFT;
   }
 
   canDeactivate(integration: Integration | IntegrationOverview) {
     // TODO: true if lastDeloyed is active.
-    return true; //integration.currentStatus === PUBLISHED || integration.currentStatus === PENDING;
+    return true; //integration.currentState === PUBLISHED || integration.currentState === PENDING;
   }
 
   //----- Actions ------------------->>
