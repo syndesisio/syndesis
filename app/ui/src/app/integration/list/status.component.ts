@@ -7,15 +7,15 @@ import { IntegrationOverview } from '@syndesis/ui/platform';
   template: `
     <div class="syndesis-integration-status">
       <!-- In Progress -->
-      <div class="status pending" *ngIf="integration.currentState === 'Pending'">
+      <div class="status pending" *ngIf="integration.currentStatus === 'Pending'">
         <div class="spinner spinner-sm spinner-inline"></div>
         In Progress
       </div>
       <!-- Status -->
-      <div *ngIf="integration.currentState !== 'Pending'"
+      <div *ngIf="integration.currentStatus !== 'Pending'"
             class="status not-pending">
-        <span class="label label-{{ getLabelClass(integration.currentState) }}">
-          {{ getStatusText(integration.currentState) }}
+        <span class="label label-{{ getLabelClass(integration.currentStatus) }}">
+          {{ getStatusText(integration.currentStatus) }}
         </span>
       </div>
     </div>
