@@ -197,7 +197,7 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
         final ConnectorDescriptor secondResponseBody = secondResponse.getBody();
         assertThat(secondResponseBody).isEqualToIgnoringGivenFields(secondEnrichment, "inputDataShape");
         assertThat(secondResponseBody.getInputDataShape()).hasValueSatisfying(input -> {
-            assertThat(input.getKind()).isEqualTo("json-schema");
+            assertThat(input.getKind()).isEqualTo(DataShapeKinds.JSON_SCHEMA);
             assertThat(input.getType()).isEqualTo("Contact");
             assertThat(input.getName()).isEqualTo("Contact");
             assertThat(input.getDescription()).isEqualTo("Salesforce Contact");
