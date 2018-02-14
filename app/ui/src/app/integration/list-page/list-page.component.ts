@@ -28,7 +28,7 @@ export class IntegrationListPage implements OnInit {
   filterFields: Array<FilterField> = [
     /*
     {
-      id: 'currentStatus',
+      id: 'currentState',
       title: 'State',
       type: 'select',
       placeholder: 'Filter by state...',

@@ -25,7 +25,7 @@ export class DashboardMetricsComponent implements OnInit {
 
   get errorIntegrations(): number {
     return this.integrations
-      .filter(integration => integration.currentStatus === 'Error')
+      .filter(integration => integration.currentState === 'Error')
       .length;
   }
 

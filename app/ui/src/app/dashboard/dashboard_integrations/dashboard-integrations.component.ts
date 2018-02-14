@@ -60,7 +60,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
     const inactive = [];
     let total = 0;
     (this.integrations || []).forEach(integration => {
-      switch (integration.currentStatus) {
+      switch (integration.currentState) {
         case 'Published':
           total = total + 1;
           active.push(integration);
@@ -111,7 +111,7 @@ export class DashboardIntegrationsComponent implements OnChanges {
   //-----  Recent Updates Section ------------------->>
 
   getLabelClass(integration): string {
-    switch (integration.currentStatus) {
+    switch (integration.currentState) {
       case 'Published':
       default:
         return 'label-primary';
