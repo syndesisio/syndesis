@@ -53,7 +53,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
         // aggregate values across versions
         final BinaryOperator<Long> sumLongs = (aLong, aLong2) -> (aLong != null ? aLong : 0L) + (aLong2 != null ? aLong2 : 0L);
-        final BinaryOperator<Date> maxDate = (date1, date2) -> (date1 == null ? date2 : (date2 == null ? date1 : (date1.compareTo(date2) > 0 ? date1 : date2)));
+        final BinaryOperator<Date> maxDate = (date1, date2) -> date1 == null ? date2 : (date2 == null ? date1 : (date1.compareTo(date2) > 0 ? date1 : date2));
 
         final Map<String, Long> totalMessagesMap = getMetricValues(integrationId,
             "org_apache_camel_ExchangesTotal", deploymentVersionLabel, Long.class, sumLongs);
