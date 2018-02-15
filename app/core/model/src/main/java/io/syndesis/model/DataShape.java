@@ -16,16 +16,18 @@
 package io.syndesis.model;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = DataShape.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
-public interface DataShape extends Serializable, WithName {
+public interface DataShape extends Serializable, WithName, WithMetadata {
 
     @Override
     String getName();
@@ -39,6 +41,9 @@ public interface DataShape extends Serializable, WithName {
     String getSpecification();
 
     Optional<byte[]> getExemplar();
+
+    @Override
+    Map<String, String> getMetadata();
 
     class Builder extends ImmutableDataShape.Builder {
     }
