@@ -25,7 +25,6 @@
     overflow-y: scroll;
     overflow-x: hidden;
     // Dock the scrollbar to the right
-    margin-right: -20px;
     padding-right: 20px;
   }
 
@@ -38,5 +37,10 @@
     ol {
       margin-bottom: 6px;
     }
+  }
+
+  .syn-tabs {
+    margin: 0;
+    padding-left: 0;
   }
 }

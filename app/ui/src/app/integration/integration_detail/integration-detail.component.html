@@ -72,9 +72,9 @@
     </div>
 
     <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'history'">
-      <syndesis-integration-history [integration]=integration>
+      <syndesis-integration-history [integration]="integration"
         [deploymentActionConfigs]="deploymentActionConfigs"
-        (deploymentAction)="deploymentAction($event)"
+        (deploymentAction)="deploymentAction($event)">
       </syndesis-integration-history>
     </div>
 
@@ -91,5 +91,3 @@
 
   </div>
 </syndesis-loading>
-
-<pre>{{ integration | json }}</pre>

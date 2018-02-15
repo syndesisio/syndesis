@@ -10,7 +10,7 @@ import { Integration, IntegrationDeployment } from '@syndesis/ui/platform';
 })
 export class IntegrationHistoryComponent {
   @Input() integration: Integration;
-  @Input() deploymentActionConfigs: { [id: string]: ActionConfig } = {};
+  @Input() deploymentActionConfigs = {};
   @Output() deploymentAction = new EventEmitter<{ id: string; deployment: IntegrationDeployment }>();
 
   deploymentListConfig: ListConfig = {
