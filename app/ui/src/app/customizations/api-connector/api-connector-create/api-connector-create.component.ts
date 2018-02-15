@@ -10,8 +10,7 @@ import {
   ApiConnectorActions,
   getApiConnectorState,
   CustomConnectorRequest,
-  CustomApiConnectorAuthSettings,
-  ApiConnectorData
+  CustomApiConnectorAuthSettings
 } from '@syndesis/ui/customizations/api-connector';
 
 enum WizardSteps {

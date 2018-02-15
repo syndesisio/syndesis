@@ -1,6 +1,4 @@
 import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
-import { ApiHttpService } from '@syndesis/ui/platform';
-import { Store } from '@ngrx/store';
 
 import {
   ApiConnectorState,
