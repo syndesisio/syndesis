@@ -16,6 +16,7 @@
 package io.syndesis.model;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -40,6 +41,9 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
     String getSpecification();
 
     Optional<byte[]> getExemplar();
+
+    @Override
+    Map<String, String> getMetadata();
 
     class Builder extends ImmutableDataShape.Builder {
     }
