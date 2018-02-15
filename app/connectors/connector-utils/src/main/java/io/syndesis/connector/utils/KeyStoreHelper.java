@@ -75,7 +75,7 @@ public class KeyStoreHelper {
 
     private static String generatePassword() {
         final int[] passwordChars = SECURE_RANDOM.ints(16, 'A', 'Z' + 1).toArray();
-        return new String(passwordChars, 0, 16);
+        return new String(passwordChars, 0, passwordChars.length);
     }
 
 }
