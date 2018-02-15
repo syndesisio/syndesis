@@ -1,19 +1,26 @@
 import { ApplicationRef, Component, OnInit, OnDestroy } from '@angular/core';
-
 import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { map, switchMap, combineLatest } from 'rxjs/operators';
 import { Action as PFAction, ActionConfig, ListConfig, NotificationType } from 'patternfly-ng';
 
 import { IntegrationStore, StepStore, EventsService } from '@syndesis/ui/store';
-import { Integration,
+import {
+  Integration,
   Step,
   PUBLISHED,
   UNPUBLISHED,
   IntegrationOverview,
   IntegrationActionsService,
   IntegrationSupportService,
-  IntegrationDeployment } from '@syndesis/ui/platform';
+  IntegrationDeployment,
+  IntegrationMetrics,
+  IntegrationState,
+  IntegrationActions,
+  PlatformState
+} from '@syndesis/ui/platform';
 import { ModalService, NotificationService } from '@syndesis/ui/common';
 import { ConfigService } from '@syndesis/ui/config.service';
 
@@ -43,32 +50,31 @@ const publish = {
   tooltip: 'Publish this version of the integration'
 } as PFAction;
 
+type TabType = 'description' | 'history' | 'logs' | 'metrics';
+
 @Component({
   selector: 'syndesis-integration-detail-page',
-  templateUrl: 'detail.component.html',
-  styleUrls: ['detail.component.scss']
+  templateUrl: 'integration-detail.component.html',
+  styleUrls: ['integration-detail.component.scss']
 })
 export class IntegrationDetailComponent implements OnInit, OnDestroy {
+  integrationMetrics$: Observable<IntegrationMetrics>;
   integration$: Observable<IntegrationOverview>;
-  integrationDeployments$: Observable<Array<IntegrationDeployment>>;
+  integrationDeployments$: Observable<IntegrationDeployment[]>;
   integrationSubscription: Subscription;
   eventsSubscription: Subscription;
   integration: IntegrationOverview;
   loading = true;
   routeSubscription: Subscription;
   loggingEnabled = false;
-  usesMapping: { [valueComparator: string]: string } = {
-    '=0': '0 Uses',
-    '=1': '1 Use',
-    'other': '# Uses'
-  };
-  deploymentListConfig: ListConfig;
   deploymentActionConfigs: { [id: string]: ActionConfig } = {};
   draftConfig: ActionConfig;
   currentDeployment: IntegrationDeployment;
 
+  selectedTabType: TabType = 'description';
+
   constructor(
-    public store: IntegrationStore,
+    public integrationStore: IntegrationStore,
     public stepStore: StepStore,
     public route: ActivatedRoute,
     public router: Router,
@@ -79,10 +85,8 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     public integrationActionsService: IntegrationActionsService,
     private config: ConfigService,
     private eventsService: EventsService,
-
-  ) {
-
-  }
+    private platformStore: Store<PlatformState>,
+  ) {}
 
   get modalTitle() {
     return this.integrationActionsService.getModalTitle();
@@ -92,67 +96,56 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     return this.integrationActionsService.getModalMessage();
   }
 
+  toggleTab(tabType: TabType): void {
+    this.selectedTabType = tabType;
+  }
+
   viewDetails(step: Step) {
     if (step && step.connection) {
       this.router.navigate(['/connections/', step.connection.id]);
     }
   }
 
-  getStepLineClass(index: number) {
-    if (index === 0) {
-      return 'start';
-    }
-    if (index === (<any>this.integration).steps.length - 1) {
-      return 'finish';
-    }
-    return '';
-  }
-
-  attributeUpdated(attr: string, value: string) {
-    const attributes = {};
-    attributes[attr] = value;
-    this.store
-      .patch( <any> this.integration, attributes)
+  attributeUpdated(updatedAttribute: { [key: string]: string }) {
+    this.integrationStore
+      .patch(<any>this.integration, updatedAttribute)
       .toPromise()
       .then((update: Integration) => {
         this.notificationService.popNotification({
           type: NotificationType.SUCCESS,
           header: 'Update Successful',
-          message: `Updated ${attr}`
+          message: `Updated ${updatedAttribute.key}`
         });
       })
       .catch(reason => {
         this.notificationService.popNotification({
           type: NotificationType.WARNING,
           header: 'Update Failed',
-          message: `Failed to update ${attr}: ${reason}`
+          message: `Failed to update ${updatedAttribute.key}: ${reason}`
         });
       });
   }
 
-  draftAction(event) {
-    switch (event.id) {
+  draftAction(eventId: string) {
+    switch (eventId) {
       case 'publish':
-        this.integrationActionsService.requestAction('publish', <any> this.integration);
+        this.integrationActionsService.requestAction('publish', <any>this.integration);
         break;
       case 'edit':
-        this.integrationActionsService.requestAction('edit', <any> this.integration);
+        this.integrationActionsService.requestAction('edit', <any>this.integration);
         break;
       default:
         break;
     }
   }
 
-  deploymentAction(event, deployment: IntegrationDeployment) {
+  deploymentAction(event: { id: string; deployment: IntegrationDeployment }) {
     switch (event.id) {
       case REPLACE_DRAFT:
-        this.integrationActionsService.requestAction('replaceDraft', this.integration, deployment);
-        break;
-      case CREATE_DRAFT:
-        // TODO doesn't this just mean edit?
+        this.integrationActionsService.requestAction('replaceDraft', this.integration, event.deployment);
         break;
       case STOP_INTEGRATION:
-        this.integrationActionsService.requestAction('deactivate', <any> this.integration);
+        this.integrationActionsService.requestAction('deactivate', <any>this.integration);
         break;
       case PUBLISH:
         {
@@ -160,23 +153,31 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
             integrationVersion: this.integration.version,
             id: this.integration.id,
             name: this.integration.name,
-            version: deployment.version
-           };
-          this.integrationActionsService.requestAction('publish', <any> integration);
+            version: event.deployment.version
+          };
+          this.integrationActionsService.requestAction('publish', <any>integration);
         }
         break;
+      case CREATE_DRAFT:
       default:
+        break;
     }
   }
 
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
   }
-
+  
   ngOnInit() {
+    this.integrationMetrics$ = this.platformStore.select('integrationState').pipe(
+      map(integrationState => integrationState.metrics.list),
+      combineLatest(this.route.paramMap.first(params => params.has('integrationId')).map(paramMap => paramMap.get('integrationId'))),
+      switchMap(([integrationMetrics, integrationId]) => Observable.of(integrationMetrics.find(metrics => metrics.id === integrationId)))
+    );
+
     this.draftConfig = {
       primaryActions: [
-        {... publish, ...{ styleClass: 'btn btn-default primary-action' } },
+        { ...publish, ...{ styleClass: 'btn btn-default primary-action' } },
         {
           id: 'edit',
           title: 'Edit',
@@ -185,19 +186,17 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         } as PFAction,
       ]
     } as ActionConfig;
-    this.deploymentListConfig = {
-      selectItems: false,
-      showCheckbox: false,
-      useExpandItems: true
-    } as ListConfig;
+
     this.loggingEnabled = this.config.getSettings('features', 'logging', false);
     this.routeSubscription = this.route.paramMap
-      .first( params => params.has('integrationId'))
+      .first(params => params.has('integrationId'))
       .subscribe(paramMap => {
         if (this.integrationSubscription) {
           this.integrationSubscription.unsubscribe();
         }
-        this.integration$ = this.integrationSupportService.watchOverview(paramMap.get('integrationId'));
+        const integrationId = paramMap.get('integrationId');
+        this.platformStore.dispatch(new IntegrationActions.FetchMetrics(integrationId));
+        this.integration$ = this.integrationSupportService.watchOverview(integrationId);
         this.integrationSubscription = this.integration$.subscribe((integration: IntegrationOverview) => {
           this.loading = false;
           this.integration = integration;
@@ -227,7 +226,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.integrationSubscription) {
-    this.integrationSubscription.unsubscribe();
+      this.integrationSubscription.unsubscribe();
     }
     this.routeSubscription.unsubscribe();
   }

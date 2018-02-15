@@ -4,11 +4,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 import { DataMapperModule } from '@atlasmap/atlasmap.data.mapper';
+import { FileUploadModule } from 'ng2-file-upload';
+
 import { VendorModule } from '@syndesis/ui/vendor';
-import { IntegrationListModule } from './list';
+import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
+import { ConnectionsModule } from '@syndesis/ui/connections';
+
 import { IntegrationSupportModule } from './integration-support.module';
-import { IntegrationDetailComponent } from './detail-page';
+import { IntegrationListModule } from './list';
 import { IntegrationListPage } from './list-page';
+import { IntegrationDetailComponent, INTEGRATION_DETAIL_DIRECTIVES } from './integration_detail';
+import { IntegrationLogsComponent } from './integration_logs';
 
 import {
   IntegrationEditPage,
@@ -30,18 +36,19 @@ import {
   FlowPageService,
 } from './edit-page';
 
-import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
-import { ConnectionsModule } from '@syndesis/ui/connections';
-import { FileUploadModule } from 'ng2-file-upload';
-import { IntegrationLogsComponent } from '@syndesis/ui/integration/components/logs.component';
-
 const syndesisCommonModuleFwd = forwardRef(() => SyndesisCommonModule);
 const integrationSupportModuleFwd = forwardRef(() => IntegrationSupportModule);
 const integrationListModuleFwd = forwardRef(() => IntegrationListModule);
 
 const editIntegrationChildRoutes = [
-  { path: 'save-or-add-step', component: IntegrationSaveOrAddStepComponent },
-  { path: 'integration-basics', component: IntegrationBasicsComponent },
+  {
+    path: 'save-or-add-step',
+    component: IntegrationSaveOrAddStepComponent
+  },
+  {
+    path: 'integration-basics',
+    component: IntegrationBasicsComponent
+  },
   {
     path: 'connection-select/:position',
     component: IntegrationSelectConnectionComponent
@@ -58,7 +65,10 @@ const editIntegrationChildRoutes = [
     path: 'action-configure/:position',
     component: IntegrationConfigureActionComponent
   },
-  { path: 'step-select/:position', component: IntegrationStepSelectComponent },
+  {
+    path: 'step-select/:position',
+    component: IntegrationStepSelectComponent
+  },
   {
     path: 'step-configure/:position',
     component: IntegrationStepConfigureComponent
@@ -66,7 +76,11 @@ const editIntegrationChildRoutes = [
 ];
 
 const routes: Routes = [
-  { path: '', component: IntegrationListPage, pathMatch: 'full' },
+  {
+    path: '',
+    component: IntegrationListPage,
+    pathMatch: 'full'
+  },
   {
     path: 'create',
     component: IntegrationEditPage,
@@ -100,6 +114,7 @@ const routes: Routes = [
     integrationListModuleFwd,
   ],
   declarations: [
+    ...INTEGRATION_DETAIL_DIRECTIVES,
     DataMapperHostComponent,
     BasicFilterComponent,
     IntegrationConfigureActionComponent,
