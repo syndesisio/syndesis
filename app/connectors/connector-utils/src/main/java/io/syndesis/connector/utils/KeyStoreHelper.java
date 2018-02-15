@@ -21,12 +21,9 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.util.stream.Collectors;
 
 /**
  * Helper class to create KeyStores from Certificates.
@@ -62,14 +59,14 @@ public class KeyStoreHelper {
 
             KeyStore keyStore = CertificateUtil.createKeyStore(certificate, alias);
 
-            tempFile = Files.createTempFile(alias, ".ks", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+            tempFile = Files.createTempFile(alias, ".ks", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------")));
             password = generatePassword();
 
             try (OutputStream stream = new FileOutputStream(tempFile.toFile())) {
                 keyStore.store(stream, password.toCharArray());
             }
 
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
+        } catch (GeneralSecurityException | IOException e) {
             throw new IllegalArgumentException(String.format("Error creating key store %s: %s", alias, e.getMessage()), e);
         }
 
@@ -77,7 +74,8 @@ public class KeyStoreHelper {
     }
 
     private static String generatePassword() {
-        return SECURE_RANDOM.ints(16, 'A', 'Z' + 1).mapToObj(i -> String.valueOf((char)i)).collect(Collectors.joining());
+        final int[] passwordChars = SECURE_RANDOM.ints(16, 'A', 'Z' + 1).toArray();
+        return new String(passwordChars, 0, 16);
     }
 
 }
