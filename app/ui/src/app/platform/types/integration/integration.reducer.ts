@@ -35,7 +35,7 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.FETCH_INTEGRATIONS_COMPLETE: {
-      const collection = (action as IntegrationActions.IntegrationsFetchComplete).payload;
+      const collection = (action as IntegrationActions.IntegrationsFetchComplete).payload || [];
       return {
         ...state,
         ...{ collection },
@@ -45,7 +45,7 @@ export function integrationReducer(state = initialState, action: any): Integrati
     }
 
     case IntegrationActions.REFRESH_OVERVIEWS: {
-      const overviews = (action as IntegrationActions.IntegrationsRefreshOverviews).payload;
+      const overviews = (action as IntegrationActions.IntegrationsRefreshOverviews).payload || [];
       const collection = [...state.collection].map(integration => {
         const integrationOverview = overviews.find(overview => overview.id === integration.id);
         return {...integration, ...integrationOverview };
