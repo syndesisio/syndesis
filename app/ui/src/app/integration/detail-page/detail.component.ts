@@ -202,6 +202,9 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
           this.loading = false;
           this.integration = integration;
           this.deploymentActionConfigs = {};
+          if (!this.integration.deployments) {
+            return;
+          }
           for (const deployment of this.integration.deployments) {
             const actionConfig = {
               primaryActions: [],

@@ -4,8 +4,8 @@ import { IntegrationConfigureActionComponent } from './action-configure.componen
 import { ApiEndpointsLazyLoaderService } from '../../../api/providers/api-endpoints-lazy-loader.service';
 import {
     ApiConfigService,
-    ActionDefinition,
-    ActionDefinitionStep,
+    ActionDescriptor,
+    ActionDescriptorStep,
     DataShape,
     UserService,
     FormFactoryService,
@@ -44,24 +44,6 @@ import { ApiModule } from '@syndesis/ui/api';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
 import { RestangularModule } from 'ngx-restangular';
-
-class DummyActionDefinition implements ActionDefinition {
-    constructor(
-        public camelConnectorGAV: string,
-        public camelConnectorPrefix: string,
-        public outputDataShape: DataShape,
-        public inputDataShape: DataShape,
-        public propertyDefinitionSteps: Array<ActionDefinitionStep>) { }
-
-}
-
-class DummyActionDefinitionStep implements ActionDefinitionStep {
-    constructor(
-        public description: string,
-        public properties: {},
-        public configuredProperties: {}
-    ) { }
-}
 
 describe('IntegrationConfigureActionComponent', () => {
     let component: IntegrationConfigureActionComponent;
@@ -106,10 +88,9 @@ describe('IntegrationConfigureActionComponent', () => {
 
     // aka oscerd's use case
     it('no properties found', () => {
-        const step: ActionDefinitionStep = new DummyActionDefinitionStep(null, null, {});
-        const arr: Array<ActionDefinitionStep> = [step];
-        const descriptor: ActionDefinition = new DummyActionDefinition(null, null, null, null, arr);
-
+        const step: ActionDescriptorStep = { configuredProperties: {} } as ActionDescriptorStep;
+        const propertyDefinitionSteps: Array<ActionDescriptorStep> = [step];
+        const descriptor: ActionDescriptor = { propertyDefinitionSteps } as ActionDescriptor;
         expect(component.hasActionPropertiesToDisplay(descriptor)).toBeFalsy();
     });
 
