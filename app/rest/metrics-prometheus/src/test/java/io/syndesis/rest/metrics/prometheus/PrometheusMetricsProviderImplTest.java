@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -34,10 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Ignore ("requires an instrumented pod and prometheus service name")
 public class PrometheusMetricsProviderImplTest {
 
-    private static PrometheusMetricsProviderImpl metricsProvider;
+    private PrometheusMetricsProviderImpl metricsProvider;
 
-    @BeforeClass
-    public static void setUp() {
+    @Before
+    public void setUp() {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
         metricsProvider = new PrometheusMetricsProviderImpl(config);
