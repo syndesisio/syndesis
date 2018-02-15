@@ -33,20 +33,6 @@ public class CertificateUtilTest {
 
     @Test
     public void testCreateKeyManagers() throws Exception {
-/*
-        StringBuffer sb = new StringBuffer();
-        Provider[] p = Security.getProviders();
-        for (int i = 0; i < p.length; i++) {
-            sb.append("\nProvider : " + p[i].toString() + "\n");
-            Set s = p[i].keySet();
-            Object[] o = s.toArray();
-            Arrays.sort(o);
-            for (int j = 1; j < o.length; j++) {
-                sb.append(o[j].toString() + ", ");
-            }
-        }
-        System.out.println(sb.toString());
-*/
         final KeyManager[] keyManagers = CertificateUtil.createKeyManagers(TEST_CERT, "test-cert");
         assertThat(keyManagers).isNotNull().isNotEmpty();
     }
