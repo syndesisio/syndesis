@@ -119,7 +119,7 @@ public class IntegrationHandler extends BaseHandler
             .getItems();
 
 
-        return new IntegrationOverview(integration, deployments.stream().findFirst()) {
+        return new IntegrationOverview(integration, deployments.stream().filter(d -> d.getVersion() == integration.getVersion()).findFirst()) {
             @Override
             public List<DeploymentOverview> getDeployments() {
                 return deployments.stream()
