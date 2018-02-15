@@ -19,12 +19,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import io.syndesis.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
-import io.syndesis.rest.metrics.MetricsProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +34,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Ignore ("requires an instrumented pod and prometheus service name")
 public class PrometheusMetricsProviderImplTest {
 
+    private static PrometheusMetricsProviderImpl metricsProvider;
+
+    @BeforeClass
+    public static void setup() {
+        final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
+        config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
+        metricsProvider = new PrometheusMetricsProviderImpl(config);
+    }
 
     @Test
     public void testDateConverter() throws Exception {
@@ -43,14 +51,19 @@ public class PrometheusMetricsProviderImplTest {
 
     @Test
     public void testGetIntegrationMetricsSummary() throws Exception {
-        final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
-        config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
-        MetricsProvider impl = new PrometheusMetricsProviderImpl(config);
-        final IntegrationMetricsSummary summary = impl.getIntegrationMetricsSummary("-L5GG_vIAGeewanMRweF");
+        final IntegrationMetricsSummary summary = metricsProvider.getIntegrationMetricsSummary("-L5GG_vIAGeewanMRweF");
         assertThat(summary.getMessages()).isNotNull();
         final Optional<List<IntegrationDeploymentMetrics>> deploymentMetrics = summary
             .getIntegrationDeploymentMetrics();
         assertThat(deploymentMetrics).isNotEmpty().map(List::isEmpty).hasValue(false);
     }
 
+    @Test
+    public void testGetTotalIntegrationMetricsSummary() throws Exception {
+        final IntegrationMetricsSummary summary = metricsProvider.getTotalIntegrationMetricsSummary();
+        assertThat(summary.getMessages()).isNotNull();
+        final Optional<List<IntegrationDeploymentMetrics>> deploymentMetrics = summary
+            .getIntegrationDeploymentMetrics();
+        assertThat(deploymentMetrics).isEmpty();
+    }
 }
