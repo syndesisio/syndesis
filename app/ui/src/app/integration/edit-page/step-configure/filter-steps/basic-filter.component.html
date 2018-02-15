@@ -1,44 +1,27 @@
-<div class="basic-filter">
-  <div class="">
-
-    <div class="title">
-      <h1>Configure Basic Filter Step</h1>
-    </div>
-
-    <p>Define one or more rules for evaluating data to determine whether the integration should continue.</p>
-
-    <div class="content-margin basic-filter-form-container"
-         *ngIf="formGroup">
-      <syndesis-loading [loading]="loading">
-
-        <form [formGroup]="formGroup"
-              class="basic-filter-form">
-
-          <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
-                                 [group]="formGroup"
-                                 [model]="controlModel"
-                                 (change)="onChange($event)">
-
-            <ng-template modelId="rulesFormArray"
-                         let-context="context"
-                         let-index="index">
-              <div class="pull-right rule-buttons">
-                <a *ngIf="index > 0"
-                   class="fa fa-trash-o"
-                   (click)="remove(context, index)">
-                </a>
-              </div>
-            </ng-template>
-
-          </syndesis-form-control>
-
-        </form>
-      </syndesis-loading>
-
-      <a (click)="add()"
-         class="add-rule">+ Add another rule
-      </a>
-
-    </div>
+<div *ngIf="formGroup">
+  <syndesis-loading [loading]="loading">
+    <form [formGroup]="formGroup"
+          class="basic-filter-form">
+      <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
+                              [group]="formGroup"
+                              [model]="controlModel"
+                              (change)="onChange($event)">
+        <ng-template modelId="rulesFormArray"
+                      let-context="context"
+                      let-index="index">
+          <div class="pull-right rule-buttons">
+            <a *ngIf="index > 0"
+                class="fa fa-trash-o"
+                (click)="remove(context, index)">
+            </a>
+          </div>
+        </ng-template>
+      </syndesis-form-control>
+    </form>
+  </syndesis-loading>
+  <div class="form-group">
+    <a (click)="add()"
+      class="add-rule">+ Add another rule
+    </a>
   </div>
 </div>

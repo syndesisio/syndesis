@@ -73,27 +73,27 @@
     .toolbar {
       flex: 0 0 auto;
       margin: 0 -20px;
-  
+
       .toolbar-pf {
         background: none !important;
         border-bottom: 1px #d9d9d9 solid;
         box-shadow: none;
         margin: 0;
         padding: 0 0 10px 0;
-  
+
         .breadcrumb {
           padding: 0;
           margin: 0;
         }
-  
+
         .search {
           width: 50%;
-  
+
           .input-group {
             width: 80%;
           }
         }
-  
+
         .toolbar-pf-actions {
           margin-bottom: 0;
         }
@@ -101,12 +101,7 @@
     }
 
     .control-buttons {
-      margin-right: 15px;
-    
-      .btn {
-        margin-top: 10px;
-        margin-left: 10px;
-      }
+      margin-bottom: 15px;
     }
   }
 }

@@ -72,12 +72,24 @@
           <div class="row">
             <div class="col-md-12"
                   *ngIf="step && dataShape">
-              <syndesis-basic-filter [(configuredProperties)]="customProperties"
-                                      [(valid)]="valid"
-                                      [dataShape]="dataShape"
-                                      [position]="position"></syndesis-basic-filter>
-              <div class="pull-right control-buttons">
-                <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+              <div class="basic-filter">
+                <div class="title">
+                  <h1>Configure Basic Filter Step</h1>
+                </div>
+                <p>Define one or more rules for evaluating data to determine whether the integration should continue.</p>
+                <div class="row row-cards-pf">
+                  <div class="card-pf">
+                    <div class="card-pf-body">
+                      <syndesis-basic-filter [(configuredProperties)]="customProperties"
+                                              [(valid)]="valid"
+                                              [dataShape]="dataShape"
+                                              [position]="position"></syndesis-basic-filter>
+                      <div class="control-buttons">
+                        <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -88,14 +100,22 @@
           </div>
           <p>Fill out the fields associated with the selected step.</p>
           <div *ngIf="formGroup">
-            <form class="form-horizontal"
-                  [formGroup]="formGroup">
-              <syndesis-form-control *ngFor="let controlModel of formModel"
-                                      [group]="formGroup"
-                                      [model]="controlModel"></syndesis-form-control>
-            </form>
-            <div class="pull-right control-buttons">
-              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+            <div class="row row-cards-pf">
+              <div class="card-pf">
+                <div class="card-pf-body">
+                  <form class="form-horizontal"
+                        [formGroup]="formGroup">
+                    <syndesis-form-control *ngFor="let controlModel of formModel"
+                                            [group]="formGroup"
+                                            [model]="controlModel"></syndesis-form-control>
+                  </form>
+                  <div class="row control-buttons">
+                    <div class="col-sm-9 col-sm-offset-3">
+                      <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
