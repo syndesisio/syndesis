@@ -7,7 +7,7 @@
     <div class="toolbar-pf-action-right">
         <button type="button"
                 class="btn btn-default"
-                (click)="showImportDialog()">
+                [routerLink]="['/integrations/import']">
                 Import
         </button>
         <button type="button"
@@ -19,7 +19,7 @@
   </ng-template>
 </syndesis-list-toolbar>
 
-<!-- Support importing by DND right into the integraiton list area. Very google drive like -->
+<!-- Support importing by DND right into the integration list area. Very google drive like -->
 <div ng2FileDrop class="max-height" [uploader]="uploader">
   <syndesis-loading [loading]="loading">
     <syndesis-integration-list [complete]="true"

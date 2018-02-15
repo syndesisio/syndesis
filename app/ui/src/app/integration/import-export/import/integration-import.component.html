@@ -1,0 +1,22 @@
+<h2>Integration Import Component</h2>
+
+<ng-template>
+  Select the integration file to import:
+  <form class="syn-form syn-form--integration-upload"
+        (ngSubmit)="onSubmit()"
+        novalidate>
+    <fieldset class="syn-form__body">
+      <div class="syn-form-row syn-form-row--upload-file">
+        <input type="file"
+               (change)="onSelectedFile($event)">
+      </div>
+    </fieldset>
+
+    <fieldset class="syn-form__buttons">
+      <syndesis-button type="submit"
+                       [loading]="integrationImportState.loading">
+        Done
+      </syndesis-button>
+    </fieldset>
+  </form>
+</ng-template>

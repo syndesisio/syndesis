@@ -1,0 +1,45 @@
+
+<!-- Toolbar & Breadcrumbs -->
+
+<nav class="row toolbar-pf toolbar">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-actions">
+      <div class="inline-block">
+        <ol class="breadcrumb no-bottom-margin">
+          <li>
+            <a routerLink="/">Home</a>
+          </li>
+          <li>
+            <a routerLink="/integrations">Integrations</a>
+          </li>
+          <li class="active">
+            <strong>Import Integration</strong>
+          </li>
+        </ol>
+      </div>
+      <div class="toolbar-pf-action-right">
+        <button class="btn btn-default"
+                (click)="showCancelModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<h1>Integration Import Export Component</h1>
+
+<router-outlet></router-outlet>
+
+
+<!-- Cancel Modal -->
+
+<ng-template #cancelModalTemplate>
+  <cancel-confirmation-modal (cancel)="onCancel($event)">
+    <h3>Do you really wish to cancel?</h3>
+    <p>
+      You have not completed the integration importing process.
+      If you leave now you will lose all the data you entered already.
+    </p>
+  </cancel-confirmation-modal>
+</ng-template>
