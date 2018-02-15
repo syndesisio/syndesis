@@ -81,14 +81,7 @@ public final class DatabaseMetaDataHelper {
         return tablesInSchema;
     }
 
-    @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
-    static ResultSet fetchTableColumns(final DatabaseMetaData meta, final String catalog,
-            final String schema, final String tableName, final String columnName) throws SQLException {
-
-        return meta.getColumns(catalog, schema, tableName, columnName);
-    }
-
-    static List<SqlParam> getJDBCInfoByColumnNames(final DatabaseMetaData meta, String catalog, 
+    static List<SqlParam> getJDBCInfoByColumnNames(final DatabaseMetaData meta, String catalog,
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         for (int i=0; i<params.size(); i++) {
