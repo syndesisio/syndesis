@@ -245,13 +245,18 @@ public class SupportUtil {
                     Request request = new Request.Builder()
                         .url(pod.getResourceUrl().toString() + "/log?pretty=false&timestamps=true")
                         .build();
-                    try (Response response = okHttpClient.newCall(request).execute()) {
+                    Response response = null;
+                    try {
+                        response = okHttpClient.newCall(request).execute();
                         if (!response.isSuccessful()) {
                             throw new IOException("Unexpected response from /log endpoint: " + response);
                         }
                         return Optional.of(new RegexBasedMasqueradeReader(new BufferedReader(response.body().charStream()), MASKING_REGEXP));
                     } catch (IOException e) { // NOPMD
                         LOG.error("Error downloading log file for integration {}" , integrationName, e );
+                        if (response != null){
+                           response.close();
+                        }
                     }
                 } catch (MalformedURLException e) {
                     LOG.error("Error downloading log file for integration {}" , integrationName, e );
