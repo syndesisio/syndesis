@@ -37,7 +37,7 @@ public class PrometheusMetricsProviderImplTest {
     private static PrometheusMetricsProviderImpl metricsProvider;
 
     @BeforeClass
-    public static void setup() {
+    public static void setUp() {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
         metricsProvider = new PrometheusMetricsProviderImpl(config);
