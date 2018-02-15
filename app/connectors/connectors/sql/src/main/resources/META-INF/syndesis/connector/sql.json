@@ -167,7 +167,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milli seconds between scheduling (executing)."
+                "description": "Delay in milliseconds between scheduling (executing)."
               }
             }
           }
@@ -224,7 +224,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "",
-                "description": "StoredProcedure template to perform."
+                "description": "Stored procedure template to perform."
               }
             }
           }
@@ -293,7 +293,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milli seconds between scheduling (executing)."
+                "description": "Delay in milliseconds between scheduling (executing)."
               }
             }
           }

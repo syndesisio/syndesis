@@ -32,7 +32,7 @@ public interface DataShape extends Serializable, WithName {
 
     String getDescription();
 
-    String getKind();
+    DataShapeKinds getKind();
 
     String getType();
 

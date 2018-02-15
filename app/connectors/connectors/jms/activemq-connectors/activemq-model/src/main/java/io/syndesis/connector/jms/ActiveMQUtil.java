@@ -15,26 +15,20 @@
  */
 package io.syndesis.connector.jms;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSslConnectionFactory;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.syndesis.connector.utils.CertificateUtil;
+import io.syndesis.connector.utils.TrustAllTrustManager;
 
 /**
  * Utility class for ActiveMQ Connection factory configuration.
@@ -47,33 +41,6 @@ public final class ActiveMQUtil {
 
     private ActiveMQUtil() {
         // utility class
-    }
-
-    public static KeyManager[] createKeyManagers(String clientCertificate) throws GeneralSecurityException, IOException {
-        final KeyStore clientKs = createKeyStore("amq-client", clientCertificate);
-
-        // create Key Manager
-        KeyManagerFactory kmFactory = KeyManagerFactory.getInstance("PKIX");
-        kmFactory.init(clientKs, null);
-        return kmFactory.getKeyManagers();
-    }
-
-    public static TrustManager[] createTrustManagers(String brokerCertificate) throws GeneralSecurityException,
-            IOException {
-        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("X509");
-        trustManagerFactory.init(createKeyStore("amq-server", brokerCertificate));
-        return trustManagerFactory.getTrustManagers();
-    }
-
-    private static KeyStore createKeyStore(String alias, String certificate) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        final KeyStore keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(null, null);
-        // create client key entry
-        CertificateFactory factory = CertificateFactory.getInstance("X.509");
-        final Certificate generated = factory.generateCertificate(new ByteArrayInputStream
-                (getMultilineCertificate(certificate).getBytes("UTF-8")));
-        keyStore.setCertificateEntry(alias, generated);
-        return keyStore;
     }
 
     @SuppressWarnings("PMD.CyclomaticComplexity")
@@ -95,7 +62,7 @@ public final class ActiveMQUtil {
                 if (ObjectHelper.isEmpty(clientCertificate)) {
                     keyManagers = null;
                 } else {
-                    keyManagers = createKeyManagers(clientCertificate);
+                    keyManagers = CertificateUtil.createKeyManagers(clientCertificate, "amq-client");
                 }
 
                 // create client trust manager
@@ -110,7 +77,7 @@ public final class ActiveMQUtil {
                         trustManagers = null;
                     }
                 } else {
-                    trustManagers = createTrustManagers(brokerCertificate);
+                    trustManagers = CertificateUtil.createTrustManagers(brokerCertificate, "amq-broker");
                 }
 
                 ((ActiveMQSslConnectionFactory)connectionFactory).setKeyAndTrustManagers(keyManagers, trustManagers, new SecureRandom());
@@ -124,16 +91,5 @@ public final class ActiveMQUtil {
 
         }
         return connectionFactory;
-    }
-
-    // X.509 PEM parser requires a newline after the header
-    private static String getMultilineCertificate(String certificate) {
-        // is this a multi line certificate?
-        if (certificate.indexOf('\n') != -1) {
-            return certificate;
-        } else {
-            // insert newline after header
-            return certificate.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n");
-        }
     }
 }

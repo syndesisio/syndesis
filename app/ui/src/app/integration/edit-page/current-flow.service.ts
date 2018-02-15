@@ -3,16 +3,19 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
+  Action,
   Connection,
   Connections,
   createIntegration,
   createStep,
   createConnectionStep,
+  DataShapeKinds,
   DataShape,
   Integration,
   Step,
   key,
-  IntegrationSupportService
+  IntegrationSupportService,
+  ActionDescriptor
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore,
@@ -432,6 +435,19 @@ export class CurrentFlowService {
         );
         break;
       }
+      case 'integration-set-datashapes': {
+        const position = +event['position'];
+        const descriptor = event['descriptor'] as ActionDescriptor;
+        const step = this.steps[position] || createStep();
+        if (!step.action) {
+          step.action = { actionType: 'step' } as Action;
+          step.action.descriptor = {} as ActionDescriptor;
+        }
+        step.action.descriptor.inputDataShape = descriptor.inputDataShape;
+        step.action.descriptor.outputDataShape = descriptor.outputDataShape;
+        this.maybeDoAction(event['onSave']);
+        break;
+      }
       case 'integration-set-connection': {
         const position = +event['position'];
         const connection = event['connection'];
@@ -517,42 +533,6 @@ export class CurrentFlowService {
     return JSON.parse(JSON.stringify(this.integration));
   }
 
-  fetchInputDataShapeFor(step: Step): Promise<any> {
-    return this.fetchDataShapeFor(step, false);
-  }
-
-  fetchOutputDataShapeFor(step: Step): Promise<any> {
-    return this.fetchDataShapeFor(step, true);
-  }
-
-  private fetchDataShapeFor(step: Step, output = true): Promise<any> {
-    return new Promise(resolve => {
-      // extension step must be always carrying full data shape
-      if (step.stepKind === EXTENSION || step.stepKind === DATA_MAPPER) {
-        if (output) {
-          resolve(step.action.descriptor.outputDataShape);
-        } else {
-          resolve(step.action.descriptor.inputDataShape);
-        }
-      } else {
-        this.integrationSupportService
-        .fetchMetadata(
-          step.connection,
-          step.action,
-          step.configuredProperties || {}
-        )
-        .toPromise()
-        .then(definition => {
-          if (output) {
-            resolve(definition.outputDataShape);
-          } else {
-            resolve(definition.inputDataShape);
-          }
-        });
-      }
-    });
-  }
-
   get loaded(): boolean {
     return this._loaded;
   }
@@ -600,7 +580,7 @@ export class CurrentFlowService {
       const action = step.action;
       const descriptor = action.descriptor;
       const dataShape = isInput ? descriptor.inputDataShape : descriptor.outputDataShape;
-      return dataShape.kind !== 'any' && dataShape.kind !== 'none';
+      return dataShape.kind !== DataShapeKinds.ANY && dataShape.kind !== DataShapeKinds.NONE;
   }
 
   private maybeDoAction(thing: any) {

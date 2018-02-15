@@ -719,7 +719,7 @@
             "camelConnectorGAV": "io.syndesis.connector:connector-activemq-publish:@syndesis-connectors.version@",
             "camelConnectorPrefix": "activemq-publish",
             "inputDataShape": {
-              "type": "*"
+              "kind": "any"
             },
             "outputDataShape": {
               "kind": "none"
@@ -798,7 +798,7 @@
               "kind": "none"
             },
             "outputDataShape": {
-              "type": "*"
+              "kind": "any"
             },
             "propertyDefinitionSteps": [
               {
@@ -883,10 +883,10 @@
             "camelConnectorGAV": "io.syndesis.connector:connector-activemq-request:@syndesis-connectors.version@",
             "camelConnectorPrefix": "activemq-request",
             "inputDataShape": {
-              "type": "*"
+              "kind": "any"
             },
             "outputDataShape": {
-              "type": "*"
+              "kind": "any"
             },
             "propertyDefinitionSteps": [
               {

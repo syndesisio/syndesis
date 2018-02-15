@@ -20,7 +20,7 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
-import { DataShape, IntegrationSupportService, Step } from '@syndesis/ui/platform';
+import { DataShapeKinds, DataShape, IntegrationSupportService, Step, ActionDescriptor } from '@syndesis/ui/platform';
 import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { DATA_MAPPER } from '@syndesis/ui/store';
 /*
@@ -99,54 +99,34 @@ export class DataMapperHostComponent implements OnInit {
 
     // Populate all supported DataShape from previous DataShape aware steps as source documents
     for (const pair of previousSteps) {
-      const dataShapeToFetch = pair.step.action.descriptor.outputDataShape;
-      if (this.isSupportedDataShape(dataShapeToFetch)) {
-        this.addInitializationTask();
-        this.currentFlowService.fetchOutputDataShapeFor(pair.step).then(dataShape => {
-          this.addSourceDocument(pair.step.id, pair.index, dataShape);
-          this.removeInitializationTask();
-        })
-        .catch(response => {
-          this.cfg.errorService.error(
-            'Failed to load source data type for Step "' + pair.step.name + '": '
-            + ' Unsupported data type "' + dataShapeToFetch + '": ' + response, '');
-          this.removeInitializationTask();
-        });
+      const outputDataShape = pair.step.action.descriptor.outputDataShape;
+      if (this.isSupportedDataShape(outputDataShape)) {
+        this.addSourceDocument(pair.step.id, pair.index, outputDataShape);
       }
     }
 
     // Next DataShape aware step must have a supported input DataShape, which describes a target document
     const targetPair = this.currentFlowService.getSubsequentStepsWithDataShape(this.position)[1];
-    this.addInitializationTask();
-    this.currentFlowService.fetchInputDataShapeFor(targetPair.step).then(dataShape => {
-      if (!this.addTargetDocument(targetPair.step.id, targetPair.index, dataShape)) {
-        this.cfg.errorService.error(
-          'Unsupported target data type for Step "' + targetPair.step.name + '": ' + dataShape, '');
-        this.removeInitializationTask();
-        return;
-      }
-      this.currentFlowService.events.emit({
-        kind: 'integration-set-action',
-        position: this.position,
-        stepKind: DATA_MAPPER,
-        action: {
-          actionType: 'step',
-          descriptor: {
-            inputDataShape: {
-              kind: 'any'
-            },
-            outputDataShape: dataShape
-          }
-        }
-      });
-      this.removeInitializationTask();
-    })
-    .catch(response => {
+    const inputDataShape = targetPair.step.action.descriptor.inputDataShape;
+    if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape)) {
       this.cfg.errorService.error(
-        'Failed to load target data type for Step "' + targetPair.step.name + '": ' + response, '');
-      this.removeInitializationTask();
+        'Unsupported target data type for Step "' + targetPair.step.name + '": ' + inputDataShape, '');
+      return;
+    }
+    this.addInitializationTask();
+    this.currentFlowService.events.emit({
+      kind: 'integration-set-datashapes',
+      position: this.position,
+      descriptor: {
+        inputDataShape: {
+          kind: 'any'
+        },
+        outputDataShape: inputDataShape
+      } as ActionDescriptor,
+      onSave: () => {
+        this.removeInitializationTask();
+      }
     });
-
     // TODO for now set a really long timeout
     this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
     if (mappings) {
@@ -258,7 +238,8 @@ export class DataMapperHostComponent implements OnInit {
     if (!dataShape || !dataShape.kind) {
       return false;
     }
-    return ['java', 'json-instance', 'json-schema', 'xml-instance', 'xml-schema']
+    return [DataShapeKinds.JAVA, DataShapeKinds.JSON_INSTANCE, DataShapeKinds.JSON_SCHEMA,
+      DataShapeKinds.XML_INSTANCE, DataShapeKinds.XML_SCHEMA]
             .indexOf(dataShape.kind) > -1;
   }
 
@@ -283,28 +264,28 @@ export class DataMapperHostComponent implements OnInit {
 
     const initModel: DocumentInitializationModel = new DocumentInitializationModel();
     switch (dataShape.kind) {
-      case 'java':
+      case DataShapeKinds.JAVA:
         initModel.type = DocumentType.JAVA;
         initModel.inspectionType = InspectionType.JAVA_CLASS;
         initModel.inspectionSource = dataShape.type;
         initModel.inspectionResult = dataShape.specification;
         break;
-      case 'json-instance':
+      case DataShapeKinds.JSON_INSTANCE:
         initModel.type = DocumentType.JSON;
         initModel.inspectionType = InspectionType.INSTANCE;
         initModel.inspectionSource = dataShape.specification;
         break;
-      case 'json-schema':
+      case DataShapeKinds.JSON_SCHEMA:
         initModel.type = DocumentType.JSON;
         initModel.inspectionType = InspectionType.SCHEMA;
         initModel.inspectionSource = dataShape.specification;
         break;
-      case 'xml-instance':
+      case DataShapeKinds.XML_INSTANCE:
         initModel.type = DocumentType.XML;
         initModel.inspectionType = InspectionType.INSTANCE;
         initModel.inspectionSource = dataShape.specification;
         break;
-      case 'xml-schema':
+      case DataShapeKinds.XML_SCHEMA:
         initModel.type = DocumentType.XML;
         initModel.inspectionType = InspectionType.SCHEMA;
         initModel.inspectionSource = dataShape.specification;

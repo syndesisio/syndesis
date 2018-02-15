@@ -37,7 +37,7 @@
     <syndesis.version>${project.version}</syndesis.version>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.33.1</atlasmap.version>
+    <atlasmap.version>1.33.3</atlasmap.version>
     <camel-atlasmap.version>${atlasmap.version}</camel-atlasmap.version>
 
     <!-- Image names -->
@@ -80,6 +80,7 @@
     <basepom.failsafe.reuse-vm>true</basepom.failsafe.reuse-vm>
         <!-- takes a really long time -->
     <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
+    <basepom.it.memory>1024m</basepom.it.memory>
 
     <!-- Plugin versions -->
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>

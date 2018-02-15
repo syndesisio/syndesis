@@ -66,7 +66,19 @@ export interface BaseEntity {
   name?: string;
 }
 
-export interface DataShape extends BaseEntity {
+export enum DataShapeKinds {
+  ANY = 'any',
+  JAVA = 'java',
+  JSON_SCHEMA = 'json-schema',
+  JSON_INSTANCE = 'json-instance',
+  XML_SCHEMA = 'xml-schema',
+  XML_INSTANCE = 'xml-instance',
+  NONE = 'none'
+}
+
+export interface DataShape {
+  id?: string;
+  kind: DataShapeKinds;
   specification: string;
   exemplar: Array<string>;
   type: string;
@@ -78,8 +90,7 @@ export type DataShapes = Array<DataShape>;
 export interface Action extends BaseEntity {
   actionType: string;
   pattern: 'From' | 'To';
-  // TODO migrate this to ActionDescriptor
-  descriptor: ActionDefinition;
+  descriptor: ActionDescriptor;
   connectorId: string;
   description: string;
   tags: Array<string>;
@@ -88,6 +99,8 @@ export interface Action extends BaseEntity {
 export type Actions = Array<Action>;
 
 export interface ActionDescriptor extends BaseEntity {
+  componentScheme: string;
+  configuredProperties: {};
   propertyDefinitionSteps: Array<ActionDescriptorStep>;
   inputDataShape: DataShape;
   outputDataShape: DataShape;
@@ -102,26 +115,6 @@ export interface ActionDescriptorStep extends BaseEntity {
 }
 
 export type ActionDescriptorSteps = Array<ActionDescriptorStep>;
-
-// TODO deprecate should be ActionDescriptor
-export interface ActionDefinition extends BaseEntity {
-  camelConnectorGAV: string;
-  camelConnectorPrefix: string;
-  outputDataShape: DataShape;
-  inputDataShape: DataShape;
-  propertyDefinitionSteps: Array<ActionDefinitionStep>;
-}
-
-export type ActionDefinitions = Array<ActionDefinition>;
-
-// TODO deprecate should be ActionDescriptorStep
-export interface ActionDefinitionStep extends BaseEntity {
-  description: string;
-  properties: {};
-  configuredProperties: {};
-}
-
-export type ActionDefinitionSteps = Array<ActionDefinitionStep>;
 
 export interface ListResultAction extends BaseEntity {
   items: Array<Action>;

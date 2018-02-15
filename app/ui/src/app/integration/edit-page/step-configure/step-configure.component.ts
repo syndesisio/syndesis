@@ -119,14 +119,6 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
     }
   }
 
-  postEvent() {
-    this.loading = false;
-    this.currentFlowService.events.emit({
-      kind: 'integration-action-configure',
-      position: this.position
-    });
-  }
-
   loadForm() {
     if (!this.currentFlowService.loaded || this.loading) {
       return;
@@ -142,11 +134,8 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
     }
 
     const prevStep = this.currentFlowService.getPreviousStepWithDataShape(this.position);
-    this.currentFlowService.fetchOutputDataShapeFor(prevStep).then(shape => {
-      this.dataShape = shape;
-    })
-    .catch(response => this.handleDataShapeError(prevStep, response))
-    .then(() => this.loadFormSetup(step));
+    this.dataShape = prevStep.action.descriptor.outputDataShape;
+    this.loadFormSetup(this.step);
   }
 
   loadFormSetup(step: Step) {
@@ -155,7 +144,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       this.customProperties = this.getConfiguredProperties(
         step.configuredProperties || {}
       );
-      this.postEvent();
+      this.loading = false;
       return;
     }
     this.formConfig = this.stepStore.getProperties(step);
@@ -164,12 +153,6 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       return;
     }
     const values: any = this.getConfiguredProperties(step.configuredProperties);
-    /*
-    log.info(
-      'Form config: ' + JSON.stringify(this.formConfig, undefined, 2),
-      category
-    );
-    */
     if (values) {
       // supress null values
       for (const key in values) {
@@ -181,7 +164,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
     // Call formService to build the form
     this.formModel = this.formFactory.createFormModel(this.formConfig, values);
     this.formGroup = this.formService.createFormGroup(this.formModel);
-    this.postEvent();
+    this.loading = false;
   }
 
   handleFlowEvent(event: FlowEvent) {
@@ -224,22 +207,4 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       this.routeSubscription.unsubscribe();
     }
   }
-
-  private handleDataShapeError(step: Step, response: any) {
-    this.loading = false;
-    const error = JSON.parse(response['_body']);
-    const errorMessage =
-      error ? error.message || error.userMsg || error.developerMsg : response;
-    this.error = {
-      class: 'alert alert-warning',
-      message: errorMessage
-    };
-    log.info(
-      'Error fetching data shape for ' +
-      JSON.stringify(step) +
-      ' : ' +
-      JSON.stringify(response)
-    );
-  }
-
 }

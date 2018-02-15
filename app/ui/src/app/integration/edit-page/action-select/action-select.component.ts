@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Actions, Action, Connector, UserService, Step } from '@syndesis/ui/platform';
+import { Actions, Action, Connector, UserService, Step, IntegrationSupportService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 import { ConnectorStore } from '@syndesis/ui/store';
@@ -19,10 +19,10 @@ const category = getCategory('Integrations');
 })
 export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;
-  actions: Observable<Actions> = Observable.empty();
-  filteredActions: Subject<Actions> = new BehaviorSubject(<Actions>{});
-  connector: Observable<Connector>;
-  loading: Observable<boolean>;
+  actions$: Observable<Actions> = Observable.empty();
+  filteredActions$: Subject<Actions> = new BehaviorSubject(<Actions>{});
+  connector$: Observable<Connector>;
+  loading$: Observable<boolean>;
   routeSubscription: Subscription;
   actionsSubscription: Subscription;
   position: number;
@@ -35,15 +35,16 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     public flowPageService: FlowPageService,
     public route: ActivatedRoute,
     public router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private integrationSupportService: IntegrationSupportService,
   ) {
     this.flowSubscription = currentFlowService.events.subscribe(
       (event: FlowEvent) => {
         this.handleFlowEvent(event);
       }
     );
-    this.connector = connectorStore.resource;
-    this.loading = connectorStore.loading;
+    this.connector$ = connectorStore.resource;
+    this.loading$ = connectorStore.loading;
     connectorStore.clear();
   }
 
@@ -106,19 +107,19 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
     this.currentStep = +this.route.snapshot.paramMap.get('position');
 
     if (this.currentStep === this.currentFlowService.getFirstPosition()) {
-      this.actions = this.connector
+      this.actions$ = this.connector$
         .filter(connector => connector !== undefined)
         .switchMap(connector => [connector.actions.filter(action => action.pattern === 'From')]);
     }
 
     if (this.currentStep > this.currentFlowService.getFirstPosition()
       && this.currentStep <= this.currentFlowService.getLastPosition()) {
-      this.actions = this.connector
+      this.actions$ = this.connector$
         .filter(connector => connector !== undefined)
         .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To')]);
     }
 
-    this.actionsSubscription = this.actions.subscribe(_ =>
+    this.actionsSubscription = this.actions$.subscribe(_ =>
       this.currentFlowService.events.emit({
         kind: 'integration-action-select',
         position: this.position

@@ -70,18 +70,24 @@
         </ng-container>
         <ng-container *ngIf="descriptor">
           <p>{{ descriptor.description }}</p>
-          <div>
-            <form class="form-horizontal"
-                  [formGroup]="formGroup">
-              <syndesis-form-control *ngFor="let controlModel of formModel"
-                                     [group]="formGroup"
-                                     [model]="controlModel"></syndesis-form-control>
-            </form>
+          <div class="row row-cards-pf">
+            <div class="card-pf">
+              <div class="card-pf-body">
+                <form class="form-horizontal"
+                      [formGroup]="formGroup">
+                  <syndesis-form-control *ngFor="let controlModel of formModel"
+                                      [group]="formGroup"
+                                      [model]="controlModel"></syndesis-form-control>
+                    <div class="row control-buttons">
+                      <div class="col-sm-9 col-sm-offset-3">
+                        <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                      </div>
+                    </div>
+                </form>
+              </div>
+            </div>
           </div>
         </ng-container>
-        <div class="pull-right control-buttons">
-          <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
-        </div>
       </syndesis-loading>
     </div>
   </div>

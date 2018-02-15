@@ -36,6 +36,7 @@ import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.verifier.api.PropertyPair;
 import io.syndesis.verifier.api.SyndesisMetadata;
@@ -69,7 +70,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
         }
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
     public SyndesisMetadata adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
@@ -97,18 +98,27 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
             }
 
             try {
-                return new SyndesisMetadata(
-                    enrichedProperties,
-                    new DataShape.Builder()
-                        .kind("json-schema")
-                        .type(builderIn.getTitle())
-                        .specification(Json.writer().writeValueAsString(builderIn))
-                        .build(),
-                    new DataShape.Builder()
-                        .kind("json-schema")
-                        .type(builderOut.getTitle())
-                        .specification(Json.writer().writeValueAsString(builderOut))
-                        .build());
+                DataShape.Builder inDataShapeBuilder = new DataShape.Builder().type(builderIn.getTitle());
+                if (builderIn.getProperties().isEmpty()) {
+                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else {
+                    inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                    .name("SQL Parameter")
+                    .description(String.format("Parameters of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
+                    .specification(Json.writer().writeValueAsString(builderIn));
+                }
+                DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type(builderOut.getTitle());
+                if (builderOut.getProperties().isEmpty()) {
+                    outDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else {
+                    outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                        .name("SQL Result")
+                    .description(String.format("Result of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
+                    .specification(Json.writer().writeValueAsString(builderOut));
+                }
+
+                return new SyndesisMetadata(enrichedProperties,
+                        inDataShapeBuilder.build(), outDataShapeBuilder.build());
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException(e);
             }
@@ -117,7 +127,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
         }
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
     public SyndesisMetadata adaptForStoredSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
@@ -154,18 +164,27 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
             }
 
             try {
-                return new SyndesisMetadata(
-                    enrichedProperties,
-                    new DataShape.Builder()
-                        .kind("json-schema")
-                        .type(builderIn.getTitle())
-                        .specification(Json.writer().writeValueAsString(builderIn))
-                        .build(),
-                    new DataShape.Builder()
-                        .kind("json-schema")
-                        .type(builderOut.getTitle())
-                        .specification(Json.writer().writeValueAsString(builderOut))
-                        .build());
+                DataShape.Builder inDataShapeBuilder = new DataShape.Builder().type(builderIn.getTitle());
+                if (builderIn.getProperties().isEmpty()) {
+                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else {
+                    inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                        .name(procedureName + " Parameter")
+                        .description(String.format("Parameters of Stored Procedure '%s'", procedureName))
+                        .specification(Json.writer().writeValueAsString(builderIn));
+                }
+                DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type(builderOut.getTitle());
+                if (builderOut.getProperties().isEmpty()) {
+                    outDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else {
+                    outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+                        .name(procedureName + " Return")
+                        .description(String.format("Return value of Stored Procedure '%s'", procedureName))
+                        .specification(Json.writer().writeValueAsString(builderOut));
+                }
+
+                return new SyndesisMetadata(enrichedProperties,
+                        inDataShapeBuilder.build(), outDataShapeBuilder.build());
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException(e);
             }

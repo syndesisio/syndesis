@@ -22,6 +22,6 @@ export interface PlatformState {
 
 export const platformReducer: ActionReducerMap<PlatformState> = {
   metadataState: metadataReducer,
-  integrationState: integrationReducer,
+  integrationState: integrationReducer
   // Add any new [tokenizedState: stateReducer] mapping below...
 };

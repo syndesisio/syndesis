@@ -10,6 +10,7 @@ import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule, PatternflyUIModule } from '@syndesis/ui/common';
 import { ConnectionsModule } from '@syndesis/ui/connections';
 
+import { IntegrationImportExportModule } from './import-export/integration-import-export.module';
 import { IntegrationSupportModule } from './integration-support.module';
 import { IntegrationListModule } from './list';
 import { IntegrationListPage } from './list-page';
@@ -112,6 +113,7 @@ const routes: Routes = [
     FileUploadModule,
     integrationSupportModuleFwd,
     integrationListModuleFwd,
+    IntegrationImportExportModule,
   ],
   declarations: [
     ...INTEGRATION_DETAIL_DIRECTIVES,

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Connection, Action, Extension, Extensions, Step, Steps } from '@syndesis/ui/platform';
+import { Connection, Action, Extension, Extensions, Step, Steps, DataShapeKinds } from '@syndesis/ui/platform';
 
 export interface StepKind extends Step {
   name: string;
@@ -230,7 +230,7 @@ export class StepStore {
         s =>
           s.action &&
           s.action.descriptor.outputDataShape &&
-          s.action.descriptor.outputDataShape.kind !== 'none'
+          s.action.descriptor.outputDataShape.kind !== DataShapeKinds.NONE
       ).length > 0
     );
   }
@@ -241,7 +241,7 @@ export class StepStore {
         s =>
           s.action &&
           s.action.descriptor.inputDataShape &&
-          s.action.descriptor.inputDataShape.kind !== 'none'
+          s.action.descriptor.inputDataShape.kind !== DataShapeKinds.NONE
       ).length > 0
     );
   }

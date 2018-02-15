@@ -26,6 +26,7 @@ import io.syndesis.core.Names;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.Action;
 import io.syndesis.model.action.ActionDescriptor;
 import io.syndesis.model.action.ConnectorAction;
@@ -264,13 +265,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
             }
 
             if (StringUtils.isNotEmpty(kind)) {
-                builder.kind(kind);
+                builder.kind(DataShapeKinds.fromString(kind));
             }
             if (StringUtils.isNotEmpty(type)) {
                 builder.type(type);
             }
         } else {
-            builder.kind("any");
+            builder.kind(DataShapeKinds.ANY);
         }
 
         if (StringUtils.isNotEmpty(dataShapeName)) {
@@ -527,10 +528,10 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private Optional<String> generateInspections(String actionId, String kind, String type) throws Exception {
+    private Optional<String> generateInspections(String actionId, DataShapeKinds kind, String type) throws Exception {
         Optional<String> specification = Optional.empty();
 
-        if (StringUtils.equals("java", kind)) {
+        if (DataShapeKinds.JAVA == kind) {
             final String name = Names.sanitize(actionId);
 
             File outputFile = new File(syndesisMetadataSourceDir, String.format("%s/%s/%s.json", inspectionsResourceDir, name, type));
