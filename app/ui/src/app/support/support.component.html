@@ -95,8 +95,14 @@
               </div>
             </div>
           </fieldset>
-          <div class="form-group">
-            <button (click)="onSubmit()" class="btn btn-primary syn-form__submit float-left">Download</button><span id="spinner" *ngIf="saving" class="float-left"><span class="spinner spinner-sm spinner-inline"></span>Creating archive...</span> 
+          <div class="row vertical-align">
+            <div class="col-xs-12 syn-form__submit">
+              <button (click)="onSubmit()" class="btn btn-primary">Download</button>
+              <div class="vertical-align" *ngIf="saving">
+                <span class="spinner spinner-sm spinner-inline"></span>
+                Creating archive...
+              </div>
+            </div>
           </div>
         </form>
       </div>
