@@ -24,7 +24,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.WithId;
@@ -41,8 +40,6 @@ public class PrometheusMetricsProviderImplTest {
 
     public static final String TEST_INTEGRATION_ID = "-L5SIZLIuUOBiQou7QTw";
     private PrometheusMetricsProviderImpl metricsProvider;
-    @Autowired
-    private DataManager dataManager;
 
     @Before
     public void setUp() {
