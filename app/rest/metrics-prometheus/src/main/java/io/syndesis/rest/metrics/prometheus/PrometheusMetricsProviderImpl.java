@@ -38,6 +38,18 @@ import io.syndesis.rest.metrics.MetricsProvider;
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
+    private static final String METRIC_TOTAL = "org_apache_camel_ExchangesTotal";
+    private static final String METRIC_FAILED = "org_apache_camel_ExchangesFailed";
+    private static final String METRIC_START_TIMESTAMP = "io_syndesis_camel_StartTimestamp";
+    private static final String METRIC_COMPLETED_TIMESTAMP = "io_syndesis_camel_LastExchangeCompletedTimestamp";
+    private static final String METRIC_FAILURE_TIMESTAMP = "io_syndesis_camel_LastExchangeFailureTimestamp";
+
+    private static final String FUNCTION_MAX_OVER_TIME = "max_over_time";
+    private static final String VALUE_CONTEXT = "context";
+    private static final String LABEL_TYPE = "type";
+    private static final String VALUE_INTEGRATION = "integration";
+    private static final String LABEL_COMPONENT = "component";
+
     private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null ? aLong2 :
         aLong2 == null ? aLong : aLong + aLong2;
     private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null ? date2 :
@@ -65,26 +77,23 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // aggregate values across versions
-        final Map<String, Long> totalMessagesMap = getMetricValues(integrationId,
-            "org_apache_camel_ExchangesTotal", deploymentVersionLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessagesMap = getMetricValues(integrationId,
-            "org_apache_camel_ExchangesFailed", deploymentVersionLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> totalMessagesMap = getMetricValues(integrationId, METRIC_TOTAL,
+            deploymentVersionLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> failedMessagesMap = getMetricValues(integrationId, METRIC_FAILED, deploymentVersionLabel, Long.class, SUM_LONGS);
 
-        final Map<String, Date> startTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_StartTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> startTimeMap = getMetricValues(integrationId, METRIC_START_TIMESTAMP,
+            deploymentVersionLabel, Date.class, MAX_DATE);
 
         // compute last processed time from lastCompleted and lastFailure times
-        final Map<String, Date> lastCompletedTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_LastExchangeCompletedTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastFailedTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_LastExchangeFailureTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> lastCompletedTimeMap = getMetricValues(integrationId, METRIC_COMPLETED_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> lastFailedTimeMap = getMetricValues(integrationId, METRIC_FAILURE_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
         final Map<String, Date> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, MAX_DATE));
 
-        final Optional<Date> startTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_StartTimestamp", Date.class, MIN_DATE);
+        final Optional<Date> startTime = getCurrentMetricValue(integrationId, METRIC_START_TIMESTAMP, Date.class, MIN_DATE);
 
-        final Optional<Date> lastCompletedTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
-        final Optional<Date> lastFailureTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
+        final Optional<Date> lastCompletedTime = getCurrentMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Date.class, MAX_DATE);
+        final Optional<Date> lastFailureTime = getCurrentMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Date.class, MAX_DATE);
         final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
@@ -133,14 +142,14 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         // get list of current integration ids, since Prometheus db has deleted integrations too
         final Set<String> currentIds = dataManager.fetchIds(Integration.class);
 
-        final Map<String, Long> totalMessagesMap = getMetricValues("org_apache_camel_ExchangesTotal", integrationIdLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessagesMap = getMetricValues("org_apache_camel_ExchangesFailed", integrationIdLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> totalMessagesMap = getMetricValues(METRIC_TOTAL, integrationIdLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> failedMessagesMap = getMetricValues(METRIC_FAILED, integrationIdLabel, Long.class, SUM_LONGS);
 
-        final Optional<Date> startTime = getCurrentMetricValue("io_syndesis_camel_StartTimestamp", Date.class, MIN_DATE);
+        final Optional<Date> startTime = getCurrentMetricValue(METRIC_START_TIMESTAMP, Date.class, MIN_DATE);
 
         // compute last processed time
-        final Optional<Date> lastCompletedTime = getCurrentMetricValue("io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
-        final Optional<Date> lastFailureTime = getCurrentMetricValue("io_syndesis_camel_LastExchangeFailureTimestamp", Date.class, MAX_DATE);
+        final Optional<Date> lastCompletedTime = getCurrentMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, MAX_DATE);
+        final Optional<Date> lastFailureTime = getCurrentMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, MAX_DATE);
         final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return new IntegrationMetricsSummary.Builder()
@@ -182,10 +191,10 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private HttpQuery createSummaryHttpQuery(String integrationId, String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
-                .function("max_over_time")
+                .function(FUNCTION_MAX_OVER_TIME)
                 .metric(metric)
                 .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId, this.integrationIdLabel))
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
                 .range(metricsHistoryRange)
                 .build();
     }
@@ -193,10 +202,10 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private HttpQuery createSummaryHttpQuery(String metric) {
         return new HttpQuery.Builder()
             .host(serviceName)
-            .function("max_over_time")
+            .function(FUNCTION_MAX_OVER_TIME)
             .metric(metric)
-            .addLabelValues(HttpQuery.LabelValue.Builder.of("integration", "component"))
-            .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
+            .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_INTEGRATION, LABEL_COMPONENT))
+            .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
             .range(metricsHistoryRange)
             .build();
     }
@@ -206,7 +215,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .host(serviceName)
                 .metric(metric)
                 .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId, this.integrationIdLabel))
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
                 .build();
     }
 
@@ -214,8 +223,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         return new HttpQuery.Builder()
                 .host(serviceName)
                 .metric(metric)
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("integration", "component"))
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_INTEGRATION, LABEL_COMPONENT))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
                 .build();
     }
 
