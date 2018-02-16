@@ -1,7 +1,7 @@
 {
   "id": "twitter",
   "name": "Twitter",
-  "description": "Direct and event-driven interaction with Twitter timelines, searches, and messages",
+  "description": "Direct and event-driven interaction with tweets, timelines, mentions, searches",
   "icon": "fa-twitter",
   "dependencies": [
     {
