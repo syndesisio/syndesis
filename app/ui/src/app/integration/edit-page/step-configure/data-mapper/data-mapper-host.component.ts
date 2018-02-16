@@ -93,20 +93,37 @@ export class DataMapperHostComponent implements OnInit {
 
     const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(this.position);
     if (!previousSteps || previousSteps.length === 0) {
-      this.cfg.errorService.error('No source data type was found', '');
+      this.cfg.errorService.error(
+        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
       return;
     }
 
     // Populate all supported DataShape from previous DataShape aware steps as source documents
+    let hasSource = false;
     for (const pair of previousSteps) {
       const outputDataShape = pair.step.action.descriptor.outputDataShape;
       if (this.isSupportedDataShape(outputDataShape)) {
-        this.addSourceDocument(pair.step.id, pair.index, outputDataShape);
+        if (this.addSourceDocument(pair.step.id, pair.index, outputDataShape)) {
+          hasSource = true;
+        }
       }
+    }
+    if (!hasSource) {
+      this.cfg.errorService.error(
+        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
+      return;
     }
 
     // Next DataShape aware step must have a supported input DataShape, which describes a target document
-    const targetPair = this.currentFlowService.getSubsequentStepsWithDataShape(this.position)[1];
+    const subsequents = this.currentFlowService.getSubsequentStepsWithDataShape(this.position);
+    // The first step could be this datamapper step itself if it's not the first visit,
+    // as DataShape is added by the following event
+    const targetPair = step.id === subsequents[0].step.id ? subsequents[1] : subsequents[0];
+    if (!targetPair) {
+      this.cfg.errorService.error(
+        'No target data type was found. Data Mapper step can only be added before data type aware step.', '');
+      return;
+    }
     const inputDataShape = targetPair.step.action.descriptor.inputDataShape;
     if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape)) {
       this.cfg.errorService.error(
@@ -119,9 +136,16 @@ export class DataMapperHostComponent implements OnInit {
       position: this.position,
       descriptor: {
         inputDataShape: {
-          kind: 'any'
+          kind: DataShapeKinds.ANY,
+          name: 'All preceding outputs'
         },
-        outputDataShape: inputDataShape
+        outputDataShape: {
+          kind: inputDataShape.kind,
+          type: inputDataShape.type,
+          name: 'Data Mapper (' + inputDataShape.name + ')',
+          description: inputDataShape.description,
+          specification: inputDataShape.specification
+        }
       } as ActionDescriptor,
       onSave: () => {
         this.removeInitializationTask();
