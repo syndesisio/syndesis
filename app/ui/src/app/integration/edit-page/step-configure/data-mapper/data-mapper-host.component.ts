@@ -93,7 +93,8 @@ export class DataMapperHostComponent implements OnInit {
 
     const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(this.position);
     if (!previousSteps || previousSteps.length === 0) {
-      this.cfg.errorService.error('No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
+      this.cfg.errorService.error(
+        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
       return;
     }
 
@@ -110,7 +111,7 @@ export class DataMapperHostComponent implements OnInit {
     if (!hasSource) {
       this.cfg.errorService.error(
         'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
-        return;
+      return;
     }
 
     // Next DataShape aware step must have a supported input DataShape, which describes a target document
@@ -121,7 +122,7 @@ export class DataMapperHostComponent implements OnInit {
     if (!targetPair) {
       this.cfg.errorService.error(
         'No target data type was found. Data Mapper step can only be added before data type aware step.', '');
-        return;
+      return;
     }
     const inputDataShape = targetPair.step.action.descriptor.inputDataShape;
     if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape)) {
@@ -136,7 +137,7 @@ export class DataMapperHostComponent implements OnInit {
       descriptor: {
         inputDataShape: {
           kind: DataShapeKinds.ANY,
-          name: "All preceding outputs"
+          name: 'All preceding outputs'
         },
         outputDataShape: {
           kind: inputDataShape.kind,
