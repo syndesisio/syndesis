@@ -1,7 +1,7 @@
 {
   "id": "sql",
   "name": "Database",
-  "description": "Invoke SQL or stored procedures.",
+  "description": "Invoke SQL or a stored procedure",
   "icon": "fa-database",
   "dependencies": [
     {
