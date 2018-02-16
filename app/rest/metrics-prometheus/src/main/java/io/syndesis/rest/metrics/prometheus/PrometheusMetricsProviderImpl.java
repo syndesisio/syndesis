@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,6 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // aggregate values across versions
-
         final Map<String, Long> totalMessagesMap = getMetricValues(integrationId,
             "org_apache_camel_ExchangesTotal", deploymentVersionLabel, Long.class, SUM_LONGS);
         final Map<String, Long> failedMessagesMap = getMetricValues(integrationId,
@@ -72,14 +72,23 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
         final Map<String, Date> startTimeMap = getMetricValues(integrationId,
             "io_syndesis_camel_StartTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastProcessingTimeMap = getMetricValues(integrationId,
+
+        // compute last processed time from lastCompleted and lastFailure times
+        final Map<String, Date> lastCompletedTimeMap = getMetricValues(integrationId,
             "io_syndesis_camel_LastExchangeCompletedTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> lastFailedTimeMap = getMetricValues(integrationId,
+            "io_syndesis_camel_LastExchangeFailureTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, MAX_DATE));
 
         final Optional<Date> startTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_StartTimestamp", Date.class, MIN_DATE);
-        final Optional<Date> lastProcessingTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
 
-        return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap, startTimeMap,
-            lastProcessingTimeMap, startTime, lastProcessingTime);
+        final Optional<Date> lastCompletedTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
+        final Optional<Date> lastFailureTime = getCurrentMetricValue(integrationId, "io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
+        final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
+
+        return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
+            startTimeMap, lastProcessedTimeMap, startTime,Optional.ofNullable(lastProcessedTime));
     }
 
     private IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap, Map<String, Long> failedMessagesMap,
@@ -124,17 +133,21 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         // get list of current integration ids, since Prometheus db has deleted integrations too
         final Set<String> currentIds = dataManager.fetchIds(Integration.class);
 
-        final Map<String, Long> totalMessages = getMetricValues("org_apache_camel_ExchangesTotal", integrationIdLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessages = getMetricValues("org_apache_camel_ExchangesFailed", integrationIdLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> totalMessagesMap = getMetricValues("org_apache_camel_ExchangesTotal", integrationIdLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> failedMessagesMap = getMetricValues("org_apache_camel_ExchangesFailed", integrationIdLabel, Long.class, SUM_LONGS);
 
         final Optional<Date> startTime = getCurrentMetricValue("io_syndesis_camel_StartTimestamp", Date.class, MIN_DATE);
-        final Optional<Date> lastProcessingTime = getCurrentMetricValue("io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
+
+        // compute last processed time
+        final Optional<Date> lastCompletedTime = getCurrentMetricValue("io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
+        final Optional<Date> lastFailureTime = getCurrentMetricValue("io_syndesis_camel_LastExchangeFailureTimestamp", Date.class, MAX_DATE);
+        final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return new IntegrationMetricsSummary.Builder()
             .start(startTime)
-            .lastProcessed(lastProcessingTime)
-            .messages(totalMessages.entrySet().stream().filter(entry -> currentIds.contains(entry.getKey())).mapToLong(Map.Entry::getValue).sum())
-            .errors(failedMessages.entrySet().stream().filter(entry -> currentIds.contains(entry.getKey())).mapToLong(Map.Entry::getValue).sum())
+            .lastProcessed(Optional.ofNullable(lastProcessedTime))
+            .messages(totalMessagesMap.entrySet().stream().filter(entry -> currentIds.contains(entry.getKey())).mapToLong(Map.Entry::getValue).sum())
+            .errors(failedMessagesMap.entrySet().stream().filter(entry -> currentIds.contains(entry.getKey())).mapToLong(Map.Entry::getValue).sum())
             .build();
     }
 
