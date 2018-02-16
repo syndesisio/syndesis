@@ -20,8 +20,6 @@ features:
       enabled: true
   dblogging:
     enabled: true
-  metricscollector:
-    enabled: true
 
 server:
   useForwardHeaders: true
@@ -114,4 +112,4 @@ prometheus:
   metricsHistoryRange: 15d
 
 metrics:
-  kind: prometheus
+  kind: sql

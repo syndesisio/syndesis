@@ -73,6 +73,7 @@ public class SQLMetricsProviderImpl implements MetricsProvider {
             }
         }
         return new IntegrationMetricsSummary.Builder()
+                .metricsProvider("sql")
                 .messages(totalMessages)
                 .errors(totalErrors)
                 .lastProcessed(totalLastProcessed)

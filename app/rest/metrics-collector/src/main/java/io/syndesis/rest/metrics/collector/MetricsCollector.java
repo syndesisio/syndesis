@@ -45,7 +45,7 @@ import io.syndesis.model.integration.Integration;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 @Service
-@ConditionalOnProperty(value = "features.metricscollector.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(value = "metrics.kind", havingValue = "sql")
 @SuppressWarnings("PMD.DoNotUseThreads")
 public class MetricsCollector implements Runnable, Closeable {
 
@@ -72,7 +72,7 @@ public class MetricsCollector implements Runnable, Closeable {
     @SuppressWarnings("FutureReturnValueIgnored")
     public void open() {
         LOGGER.info("Starting metrics collector.");
-        scheduler.scheduleAtFixedRate(this, 10, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this, 10, 10, TimeUnit.SECONDS);
     }
 
 
