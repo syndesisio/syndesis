@@ -75,8 +75,7 @@ export class StepStore {
         }
       },
       configuredProperties: undefined
-    }
-    /*
+    },
     {
       id: undefined,
       connection: undefined,
@@ -86,19 +85,57 @@ export class StepStore {
       description: "Sends a message to the integration's log",
       configuredProperties: undefined,
       properties: {
-        message: {
+        expression: {
           type: 'string',
           displayName: 'Log Message',
-          required: true,
+          required: false,
         },
+        bodyLoggingEnabled: {
+          type: 'boolean',
+          displayName: 'Body Logging Enabled',
+          required: false,
+        },
+        /*
         loggingLevel: {
-          type: 'hidden',
+          type: 'select',
           displayName: 'Level',
-          defaultValue: 'INFO',
+          value: 'INFO',
           required: true,
+          enum: [
+            { value: 'INFO', label: 'INFO' },
+            { value: 'WARN', label: 'WARN' },
+            { value: 'ERROR', label: 'ERROR'},
+            {value: 'DEBUG', label: 'DEBUG'},
+            {value: 'TRACE', label: 'TRACE'}],
+        },
+        */
+        propertyNames: {
+          type: 'textarea',
+          displayName: 'Exchange Property Names',
+          defaultValue: '',
+          value: '',
+          required: false,
+          rows: 10
+        },
+        inHeaderNames: {
+          type: 'textarea',
+          displayName: 'Input Message Header Names',
+          defaultValue: '',
+          value: '',
+          required: false,
+          rows: 10
+        },
+        outHeaderNames: {
+          type: 'textarea',
+          displayName: 'Output Message Header Names',
+          defaultValue: '',
+          value: '',
+          required: false,
+          rows: 10
         },
       },
     },
+    /*
     {
       id: undefined,
       connection: undefined,

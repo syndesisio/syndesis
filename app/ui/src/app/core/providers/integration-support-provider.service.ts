@@ -64,6 +64,10 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     );
   }
 
+  publishIntegration(integration: Integration): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.publish, { id: integration.id }).post(integration);
+  }
+
   deploy(integration: Integration | IntegrationDeployment): Observable<any> {
     let url, state, method;
     if ('integrationVersion' in integration) {
@@ -94,6 +98,7 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       targetState: status
     });
   }
+
 
   getDeployment(id: string, version: string): Observable<IntegrationDeployment> {
     return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployment, { id, version }).get();

@@ -20,6 +20,7 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
+
 import { DataShapeKinds, DataShape, IntegrationSupportService, Step, ActionDescriptor } from '@syndesis/ui/platform';
 import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { DATA_MAPPER } from '@syndesis/ui/store';
