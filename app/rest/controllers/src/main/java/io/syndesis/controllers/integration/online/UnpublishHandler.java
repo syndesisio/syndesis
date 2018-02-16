@@ -20,13 +20,18 @@ import java.util.Set;
 
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateUpdate;
+import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
 import io.syndesis.openshift.OpenShiftService;
 
 public class UnpublishHandler extends BaseHandler implements StateChangeHandler {
-    UnpublishHandler(OpenShiftService openShiftService) {
+
+    private final DataManager dataManager;
+
+    UnpublishHandler(OpenShiftService openShiftService, DataManager dataManager) {
         super(openShiftService);
+        this.dataManager = dataManager;
     }
 
     @Override
@@ -40,8 +45,12 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
             || openShiftService().delete(integrationDeployment.getSpec().getName())
             ? IntegrationDeploymentState.Unpublished
             : IntegrationDeploymentState.Pending;
-        logInfo(integrationDeployment,"Deleted");
 
+        if (currentState == IntegrationDeploymentState.Unpublished) {
+            logInfo(integrationDeployment,"Deleted");
+            IntegrationDeployment updated = new IntegrationDeployment.Builder().createFrom(integrationDeployment).addAllStepsDone(Collections.emptyList()).build();
+            dataManager.update(updated);
+        }
         return new StateUpdate(currentState);
     }
 

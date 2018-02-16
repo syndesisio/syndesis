@@ -97,6 +97,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         final Integration integration = integrationOf(integrationDeployment);
         try {
 
+            setVersion(integrationDeployment);
             deactivatePreviousDeployments(integrationDeployment);
 
             DeploymentData deploymentData = createDeploymentData(integration, integrationDeployment);
@@ -154,12 +155,17 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         logInfo(integration, "Deployment done");
     }
 
+    private void setVersion(IntegrationDeployment integrationDeployment) {
+        Integration integration = integrationDeployment.getIntegrationId().map(i -> dataManager.fetch(Integration.class, i)).orElseThrow(()-> new IllegalStateException("Integration not found!"));
+        dataManager.update(new Integration.Builder().createFrom(integration).version(integrationDeployment.getVersion()).build());
+    }
+
     private void deactivatePreviousDeployments(IntegrationDeployment integrationDeployment) {
-        dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integrationDeployment.getIntegrationId().get(), "currentState", "Active")
+        dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", integrationDeployment.getIntegrationId().get(), "targetState", IntegrationDeploymentState.Published.name())
             .stream()
             .map(id -> dataManager.fetch(IntegrationDeployment.class, id))
-            .filter(r -> r.getVersion() >= integrationDeployment.getVersion())
-            .map(r -> r.withCurrentState(IntegrationDeploymentState.Unpublished))
+            .filter(r -> r.getVersion() != integrationDeployment.getVersion())
+            .map(r -> r.withTargetState(IntegrationDeploymentState.Unpublished))
             .forEach(r -> dataManager.update(r));
     }
 
