@@ -1,4 +1,72 @@
-Select the integration file to import:
+
+<div class="row row-cards-pf second-row">
+  <div class="col-xs-12">
+
+    <div class="card-pf">
+      <div class="card-pf-heading">
+        <div class="card-pf-title">
+          <h1>Import Integration</h1>
+        </div>
+      </div>
+
+      <div class="card-pf-body">
+        
+        <p>Select the integration file to import:</p>
+
+        <input #fileSelect
+               type="file"
+               ng2FileSelect
+               [uploader]="uploader"
+               (onFileSelected)="fileSelect.value=''" />
+
+        <div ng2FileDrop
+             [uploader]="uploader"
+             class="well my-drop-zone">
+          Or drag and drop your integration files here
+        </div>
+
+        <div style="margin-bottom: 40px">
+          <h3>Upload queue</h3>
+
+          <table class="table">
+            <thead>
+            <tr>
+              <th width="50%">Name</th>
+              <th>Progress</th>
+              <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of uploader.queue">
+              <td>
+                <strong>{{ item?.file?.name }}</strong>
+              </td>
+              <td>
+                <div class="progress" style="margin-bottom: 0;">
+                  <div class="progress-bar"
+                       role="progressbar"
+                       [ngStyle]="{ 'width': item.progress + '%' }"></div>
+                </div>
+              </td>
+              <td nowrap>
+                <div *ngIf="!item.isUploaded">
+                  <button type="button"
+                          class="btn btn-warning btn-xs"
+                          (click)="item.cancel(); item.remove()">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!--
 <form class="syn-form syn-form--integration-upload"
       (ngSubmit)="onDone(importForm)"
@@ -19,53 +87,3 @@ Select the integration file to import:
   </fieldset>
 </form>
 -->
-
-<input #fileSelect
-       type="file"
-       ng2FileSelect
-       [uploader]="uploader"
-       (onFileSelected)="fileSelect.value=''" />
-
-<div ng2FileDrop
-     [uploader]="uploader"
-     class="well my-drop-zone">
-  Or drag and drop your integration files here
-</div>
-
-<div class="col-md-9"
-     style="margin-bottom: 40px">
-  <h3>Upload queue</h3>
-
-  <table class="table">
-    <thead>
-    <tr>
-      <th width="50%">Name</th>
-      <th>Progress</th>
-      <th>&nbsp;</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let item of uploader.queue">
-      <td>
-        <strong>{{ item?.file?.name }}</strong>
-      </td>
-      <td>
-        <div class="progress" style="margin-bottom: 0;">
-          <div class="progress-bar"
-               role="progressbar"
-               [ngStyle]="{ 'width': item.progress + '%' }"></div>
-        </div>
-      </td>
-      <td nowrap>
-        <div *ngIf="!item.isUploaded">
-          <button type="button"
-                  class="btn btn-warning btn-xs"
-                  (click)="item.cancel(); item.remove()">
-            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-          </button>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
