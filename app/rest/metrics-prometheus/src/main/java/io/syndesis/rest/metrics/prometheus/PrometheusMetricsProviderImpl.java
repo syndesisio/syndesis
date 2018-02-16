@@ -116,21 +116,17 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     @Override
     public IntegrationMetricsSummary getTotalIntegrationMetricsSummary() {
-        final Map<String, Long> totalMessagesMap = getMetricValues("org_apache_camel_ExchangesTotal",
-            integrationIdLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessagesMap = getMetricValues("org_apache_camel_ExchangesFailed",
-            integrationIdLabel, Long.class, SUM_LONGS);
+        final Optional<Long> totalMessages = getMetricValue("org_apache_camel_ExchangesTotal", Long.class, SUM_LONGS);
+        final Optional<Long> failedMessages = getMetricValue("org_apache_camel_ExchangesFailed", Long.class, SUM_LONGS);
 
-        final Map<String, Date> startTimeMap = getMetricValues("io_syndesis_camel_StartTimestamp",
-            integrationIdLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastProcessingTimeMap = getMetricValues("io_syndesis_camel_LastExchangeCompletedTimestamp",
-            integrationIdLabel, Date.class, MAX_DATE);
+        final Optional<Date> startTime = getMetricValue("io_syndesis_camel_StartTimestamp", Date.class, MAX_DATE);
+        final Optional<Date> lastProcessingTime = getMetricValue("io_syndesis_camel_LastExchangeCompletedTimestamp", Date.class, MAX_DATE);
 
         return new IntegrationMetricsSummary.Builder()
-            .start(startTimeMap.values().stream().max(Date::compareTo))
-            .lastProcessed(lastProcessingTimeMap.values().stream().max(Date::compareTo))
-            .messages(totalMessagesMap.values().stream().mapToLong(l -> l != null ? l : 0L).sum())
-            .errors(failedMessagesMap.values().stream().mapToLong(l -> l != null ? l : 0L).sum())
+            .start(startTime)
+            .lastProcessed(lastProcessingTime)
+            .messages(totalMessages.orElse(0L))
+            .errors(failedMessages.orElse(0L))
             .build();
     }
 
@@ -141,11 +137,11 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         return QueryResult.getValueMap(response, label, clazz, mergeFunction);
     }
 
-    private <T> Map<String, T> getMetricValues(String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
+    private <T> Optional<T> getMetricValue(String metric, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
         HttpQuery queryTotalMessages = createHttpQuery(metric);
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
-        return QueryResult.getValueMap(response, label, clazz, mergeFunction);
+        return QueryResult.getMergedValue(response, clazz, mergeFunction);
     }
 
     private HttpQuery createHttpQuery(String integrationId, String metric) {
@@ -162,11 +158,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private HttpQuery createHttpQuery(String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
-                .function("max_over_time")
                 .metric(metric)
                 .addLabelValues(HttpQuery.LabelValue.Builder.of("integration", "component"))
                 .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
-                .range(metricsHistoryRange)
                 .build();
     }
 
