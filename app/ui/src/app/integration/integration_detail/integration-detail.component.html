@@ -1,0 +1,93 @@
+<syndesis-modal [title]="modalTitle" [message]="modalMessage">
+</syndesis-modal>
+<syndesis-loading [loading]="loading">
+  <div *ngIf="integration" class="row integration-detail">
+    <div class="toolbar-pf toolbar integration-detail__breadcrumbs">
+      <div class="col-sm-12">
+        <div class="inline-block">
+          <ol class="breadcrumb">
+            <li>
+              <a [routerLink]="['/']">Home</a>
+            </li>
+            <li>
+              <a [routerLink]="['/integrations']">Integrations</a>
+            </li>
+            <li class="active">
+              <strong>Integration Summary</strong>
+            </li>
+          </ol>
+        </div>
+        <div class="toolbar-pf-action-right">
+          <syndesis-integration-action-menu [integration]="integration" [showPrimaryActions]="true" [showViewAction]="false">
+          </syndesis-integration-action-menu>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 details integration-detail__info">
+      <h1 class="inline-block">
+        <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="attributeUpdated('name', $event, integration)"></syndesis-editable-text>
+      </h1>
+
+      <ng-container [ngSwitch]="integration.currentState">
+        <ng-container *ngSwitchCase="'Pending'">
+          <div class="spinner spinner-sm spinner-inline"></div> Publishing...
+        </ng-container>
+        <ng-container *ngSwitchCase="'Published'">
+          <span class="pficon pficon-ok"></span> Published version {{ integration.deploymentVersion }}
+        </ng-container>
+        <ng-container *ngSwitchCase="'Unpublished'">
+          Not Published
+        </ng-container>
+        <ng-container *ngSwitchCase="'Error'">
+          <span class="pficon pficon-error"></span> Published version {{ integration.deploymentVersion }}
+        </ng-container>
+      </ng-container>
+
+    </div>
+
+    <ul class="syn-tabs row nav nav-tabs nav-tabs-pf toolbar-pf integration-detail__tabs">
+      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'description'">
+        <a (click)="toggleTab('description')">Description</a>
+      </li>
+      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'history'" *ngIf="integration.deployments">
+        <a (click)="toggleTab('history')">History</a>
+      </li>
+      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'logs'" *ngIf="loggingEnabled">
+        <a (click)="toggleTab('logs')">Logs</a>
+      </li>
+      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'metrics'">
+        <a (click)="toggleTab('metrics')">Metrics</a>
+      </li>
+    </ul>
+
+    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'description'">
+      <syndesis-integration-description
+        [integration]="integration"
+        [stepStore]="stepStore"
+        (viewDetails)="viewDetails($event)"
+        (attributeUpdated)="attributeUpdated($event)"
+        (draftAction)="draftAction($event)">
+      </syndesis-integration-description>
+    </div>
+
+    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'history'">
+      <syndesis-integration-history [integration]="integration"
+        [deploymentActionConfigs]="deploymentActionConfigs"
+        (deploymentAction)="deploymentAction($event)">
+      </syndesis-integration-history>
+    </div>
+
+    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'logs'">
+      <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
+    </div>
+    
+    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'metrics'">
+      <syndesis-integration-metrics 
+        [integration]=integration
+        [integrationMetrics]="integrationMetrics$ | async">
+      </syndesis-integration-metrics>
+    </div>
+
+  </div>
+</syndesis-loading>

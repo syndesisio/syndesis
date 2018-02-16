@@ -1,0 +1,82 @@
+<div class="syndesis-integration-metrics metrics">
+
+  <div class="container-fluid container-cards-pf metrics__cards">
+    <div class="row row-cards-pf">
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <p class="card-pf-aggregate-status-notifications">
+            <span class="card-pf-aggregate-status-notification">
+              <span class="pficon pficon-error-circle-o"></span>
+              {{ integrationMetrics.errors | number }}
+            </span>
+          </p>
+          <div class="card-pf-body">
+            <h2 class="card-pf-title">
+              Total Errors
+            </h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+            Last Processed
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification" *ngIf="integration?.lastUpdated; else lastUpdatedUnavailable">
+                {{ integration.lastUpdated | date:'short' }}
+              </span>
+              <ng-template #lastUpdatedUnavailable>
+                n/a
+              </ng-template>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+            <span class="card-pf-aggregate-status-count">
+              {{ integrationMetrics.messages | number }}
+            </span>
+            Total Messages
+          </h2>
+          <div class="card-pf-body">
+            <p class="card-pf-aggregate-status-notifications">
+              <span class="card-pf-aggregate-status-notification">
+                <span class="pficon pficon-ok"></span>
+                {{ integrationMetrics.messages - integrationMetrics.errors | number }}
+              </span>
+              <span class="card-pf-aggregate-status-notification">
+                <span class="pficon pficon-error-circle-o"></span>
+                {{ integrationMetrics.errors | number }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item metrics__cards-item--uptime">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <div class="card-pf-title">
+            <h3 class="metrics__uptime-header metrics__uptime-label">
+              Uptime
+            </h3>
+            <h3 class="metrics__uptime-header metrics__uptime-kickoff">
+              Since {{ uptimeStart }}
+            </h3>
+          </div>
+          <div class="card-pf-body">
+            <h4 class="metrics__uptime-legend">
+              {{ uptimeLegend$ | async }}
+            </h4>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
