@@ -48,6 +48,17 @@ public interface QueryResult extends Serializable {
         });
     }
 
+    static <T> Optional<T> getMergedValue(QueryResult response, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
+        if (response.getData().isPresent()) {
+            return response.getData().get().getResult()
+                .stream()
+                .<T>map(result -> result.getTypedValue(clazz).orElse(null))
+                .reduce(mergeFunction);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     static <T> Map<String, ? extends T> getValueMap(final QueryResult response, final String label, final Class<? extends T> clazz) {
         return response.getData().map(data ->
                 data.getResult().stream().collect(
