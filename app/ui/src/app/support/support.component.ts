@@ -257,12 +257,12 @@ export class SupportComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.store.list.subscribe(integrations => this.items = integrations);
+    this.store.list.subscribe(integrations => {
+      this.items = integrations;
+      this.paginationConfig = this.obtainPaginationConfig();
+      this.filterConfig = this.obtainFilterConfig();
+      this.updateItems();
+    });
     this.store.loadAll();
-
-    this.paginationConfig = this.obtainPaginationConfig();
-    this.filterConfig = this.obtainFilterConfig();
-
-    this.updateItems();
   }
 }
