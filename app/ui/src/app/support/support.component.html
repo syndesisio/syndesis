@@ -11,6 +11,13 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
+        <pfng-inline-notification
+          [header]="'Unable to download diagnostics.'"
+          [message]="'Try download again.'"
+          [dismissable]="true"
+          [type]="notificationType"
+          [hidden]="notificationHidden">
+      </pfng-inline-notification>
         <p>Select the integrations to capture diagnostics for:</p>
         <form novalidatef>
           <fieldset>
@@ -47,8 +54,8 @@
                     <div class="form-group">
                       <strong>{{ selectedItems() }}</strong> of <strong>{{ totalItems() }}</strong> Items
                     </div>
-                    <div class="form-group">
-                      <a role="button">Select All</a>
+                    <div class="form-group" *ngIf="filtersText">
+                      <a role="button" (click)="selectAllMatchingFiler(pfnglist)">Select All</a>
                     </div>
                   </div>
                 </ng-template>  
@@ -56,11 +63,17 @@
                 <div class="row">
                   <!-- List displayed here -->
                   <syndesis-loading >
-                    <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+                    <pfng-list [items]="itemsInPage"
                             [config]="listConfig"
                             [itemTemplate]="listItemMain"
-                            (onSelectionChange)="handleSelectionChange($event)">
+                            (onSelectionChange)="handleSelectionChange($event)"
+                            #pfnglist>
                     </pfng-list>
+                    <pfng-pagination
+                      [config]="paginationConfig"
+                      (onPageSizeChange)="handlePageSize($event)"
+                      (onPageNumberChange)="handlePageNumber($event)">
+                    </pfng-pagination>
                   </syndesis-loading>
                   <!-- One list item, main row -->
                   <ng-template #listItemMain
@@ -82,7 +95,9 @@
               </div>
             </div>
           </fieldset>
-          <button (click)="onSubmit()" class="btn btn-primary syn-form__submit">Download</button>
+          <div class="form-group">
+            <button (click)="onSubmit()" class="btn btn-primary syn-form__submit float-left">Download</button><span id="spinner" *ngIf="saving" class="float-left"><span class="spinner spinner-sm spinner-inline"></span>Creating archive...</span> 
+          </div>
         </form>
       </div>
     </div>
