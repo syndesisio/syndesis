@@ -597,7 +597,7 @@
     "data": {
       "id": "activemq",
       "name": "AMQ",
-      "description": "AMQ Message Broker",
+      "description": "AMQ message broker",
       "icon": "fa-puzzle-piece",
       "configuredProperties": {},
       "tags": [
