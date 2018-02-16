@@ -47,6 +47,7 @@ import org.apache.camel.util.function.Predicates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("PMD.GodClass")
 public class ComponentProxyComponent extends DefaultComponent {
     private static final Logger LOGGER = LoggerFactory.getLogger(ComponentProxyComponent.class);
 
@@ -100,7 +101,8 @@ public class ComponentProxyComponent extends DefaultComponent {
 
         // create the uri of the base component, DO NOT log the computed delegate
         final Map<String, String> endpointOptions = buildEndpointOptions(remaining, options);
-        final Endpoint delegate = createDelegateEndpoint(definition, endpointOptions);
+        final String endpointScheme = componentSchemeAlias.orElse(componentScheme);
+        final Endpoint delegate = createDelegateEndpoint(definition, endpointScheme, endpointOptions);
 
         LOGGER.info("Connector resolved: {} -> {}", URISupport.sanitizeUri(uri), URISupport.sanitizeUri(delegate.getEndpointUri()));
 
@@ -310,9 +312,9 @@ public class ComponentProxyComponent extends DefaultComponent {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, Map<String, String> options) throws Exception {
-        // Build the delegate uri suing the catalog
-        final String uri = catalog.asEndpointUri(componentSchemeAlias.orElse(componentScheme), options, false);
+    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+        // Build the delegate uri using the catalog
+        final String uri = catalog.asEndpointUri(scheme, options, false);
 
         return getCamelContext().getEndpoint(uri);
     }
@@ -364,6 +366,10 @@ public class ComponentProxyComponent extends DefaultComponent {
         if (val != null) {
             LOGGER.debug("Options {} overridden, old value was {}", name, val);
         }
+    }
+
+    protected CamelCatalog getCatalog() {
+        return catalog;
     }
 
     // ***************************************
