@@ -30,8 +30,8 @@ export class FormFactoryProviderService extends FormFactoryService {
       if (!properties.hasOwnProperty(key)) {
         continue;
       }
-      const field = properties[key] as ConfiguredConfigurationProperty;
-      const value = values[key];
+      const field = <ConfiguredConfigurationProperty>properties[key];
+      let value = values[key];
       let formField: any;
       const validators = field.required ? { required: null } : {};
       const errorMessages = field.required
@@ -41,7 +41,12 @@ export class FormFactoryProviderService extends FormFactoryService {
       // first normalize the type
       switch (type) {
         case 'boolean':
+        case 'checkbox':
           type = 'checkbox';
+          // massage string values as the form builder doesn't do this
+          if (typeof value !== 'boolean') {
+            value = value === 'true';
+          }
           break;
         case 'number':
         case 'integer':

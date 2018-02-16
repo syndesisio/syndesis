@@ -86,7 +86,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
     this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      properties: properties,
+      properties: data,
       onSave: () => {
         this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
