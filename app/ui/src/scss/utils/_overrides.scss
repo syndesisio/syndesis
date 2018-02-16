@@ -98,3 +98,12 @@ body.cards-pf {
   margin-top: 5px;
   position: relative;
 }
+
+// Create some space before the first label in the PatternFly toolbar
+.toolbar-pf {
+  .filter-pf {
+    .list-inline {
+      margin-left: -3px;
+    }
+  }
+}
