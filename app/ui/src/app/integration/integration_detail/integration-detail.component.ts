@@ -167,7 +167,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   validateName(name: string) {
     return name && name.length > 0 ? null : 'Name is required';
   }
-  
+
   ngOnInit() {
     this.integrationMetrics$ = this.platformStore.select('integrationState').pipe(
       map(integrationState => integrationState.metrics.list),
