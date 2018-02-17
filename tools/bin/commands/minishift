@@ -52,8 +52,8 @@ minishift::run() {
       start_minishift
     fi
 
-    # Ensure OC is in the bath
-    setup_oc
+    # Ensure OC is in the path
+    eval $(minishift oc-env)
 
     if [ $(hasflag --install) ]; then
 
