@@ -32,6 +32,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   formConfig: any;
   loading: boolean;
   error: any = undefined;
+  hasConfiguration = false;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -92,9 +93,9 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     });
   }
 
-  continue(data: any = undefined) {
+  continue() {
     this.error = undefined;
-    data = this.buildData(data);
+    const data = this.buildData({});
     this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
@@ -207,9 +208,6 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         class: 'alert alert-info',
         message: 'There are no properties to configure for this action'
       };
-      setTimeout(() => {
-        this.continue({});
-      }, 1500);
       return;
     }
     const lastPage = (this.lastPage =
@@ -223,10 +221,9 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       this.formConfig = {};
     }
     if (!Object.keys(this.formConfig).length) {
-      /* No configuration, store an empty value and move along to the next page... */
-      this.continue({});
       return;
     }
+    this.hasConfiguration = true;
     this.formModel = this.formFactory.createFormModel(
       this.formConfig,
       this.step.configuredProperties
@@ -270,6 +267,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.hasConfiguration = false;
     this.routeSubscription = this.route.paramMap.subscribe(
       (params: ParamMap) => {
         if (!params.has('page')) {

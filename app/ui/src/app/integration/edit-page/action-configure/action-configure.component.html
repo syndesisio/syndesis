@@ -20,7 +20,7 @@
             class="btn btn-primary"
             (click)="continue()"
             [disabled]="maybeDisableDone()">
-      <ng-container *ngIf="page >= lastPage || !descriptor">
+      <ng-container *ngIf="page >= lastPage || !hasConfiguration">
         Done
       </ng-container>
       <ng-container *ngIf="page < lastPage">
@@ -67,8 +67,13 @@
           <div [class]="error.class"
                [innerHtml]="error.message">
           </div>
+          <div *ngIf="!hasConfiguration" class="control-buttons">
+            <div class="pull-right">
+              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+            </div>
+          </div>
         </ng-container>
-        <ng-container *ngIf="descriptor">
+        <ng-container *ngIf="hasConfiguration">
           <p>{{ descriptor.description }}</p>
           <div class="row row-cards-pf">
             <div class="card-pf">
