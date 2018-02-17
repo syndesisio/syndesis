@@ -17,11 +17,14 @@ package io.syndesis.rest.v1.handler.integration.model;
 
 import static io.syndesis.model.integration.IntegrationDeploymentState.Unpublished;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+import io.syndesis.model.buletin.IntegrationBulletinBoard;
+import io.syndesis.model.buletin.LeveledMessage;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
@@ -29,10 +32,12 @@ import io.syndesis.model.integration.IntegrationDeploymentState;
 public class IntegrationOverview {
 
     private final Integration integration;
+    private final Optional<IntegrationBulletinBoard> bulletins;
     private final Optional<IntegrationDeployment> deployment;
 
-    public IntegrationOverview(Integration integration, Optional<IntegrationDeployment> deployment) {
+    public IntegrationOverview(Integration integration, Optional<IntegrationBulletinBoard> bulletins, Optional<IntegrationDeployment> deployment) {
         this.integration = integration;
+        this.bulletins = bulletins;
         this.deployment = deployment;
     }
 
@@ -82,6 +87,10 @@ public class IntegrationOverview {
 
     public Optional<String> getStatusMessage() {
         return deployment.flatMap(x -> x.getStatusMessage());
+    }
+
+    public List<LeveledMessage> getMessages() {
+        return bulletins.map(x->x.getMessages()).orElse(Collections.emptyList());
     }
 
 

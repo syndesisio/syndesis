@@ -69,6 +69,7 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.ModelData;
 import io.syndesis.model.ModelExport;
 import io.syndesis.model.Schema;
+import io.syndesis.model.buletin.IntegrationBulletinBoard;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
@@ -77,6 +78,7 @@ import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.Step;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
+import io.syndesis.rest.v1.handler.connection.ConnectionHandler;
 import io.syndesis.rest.v1.handler.integration.DeletedFilter;
 import io.syndesis.rest.v1.handler.integration.IntegrationHandler;
 import io.syndesis.rest.v1.handler.integration.model.IntegrationOverview;
@@ -96,6 +98,7 @@ public class IntegrationSupportHandler {
     private final DataManager dataManager;
     private final IntegrationResourceManager resourceManager;
     private final IntegrationHandler integrationHandler;
+    private final ConnectionHandler connectionHandler;
     private final ExtensionDataManager extensionDataManager;
 
     public IntegrationSupportHandler(
@@ -103,12 +106,14 @@ public class IntegrationSupportHandler {
         final DataManager dataManager,
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
+        final ConnectionHandler connectionHandler,
         final ExtensionDataManager extensionDataManager) {
 
         this.projectGenerator = projectGenerator;
         this.dataManager = dataManager;
         this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
+        this.connectionHandler = connectionHandler;
         this.extensionDataManager = extensionDataManager;
     }
 
@@ -129,12 +134,16 @@ public class IntegrationSupportHandler {
 
         return ListResult.of(stream.map(integration -> {
 
+            String id = integration.getId().get();
             List<IntegrationDeployment> deployments = getDataManager().fetchAll(IntegrationDeployment.class,
-                new IdPrefixFilter<>(integration.getId().get()+":"), ReverseFilter.getInstance())
+                new IdPrefixFilter<>(id +":"), ReverseFilter.getInstance())
                 .getItems();
 
+            Optional<IntegrationBulletinBoard> bulletins = Optional
+                .ofNullable(getDataManager().fetch(IntegrationBulletinBoard.class, id));
+
             // find the deployment we want published..
-            return new IntegrationOverview(integration, deployments.stream().findFirst());
+            return new IntegrationOverview(integration, bulletins, deployments.stream().findFirst());
         }).collect(Collectors.toList()));
     }
 
@@ -300,6 +309,7 @@ public class IntegrationSupportHandler {
                         integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
                         result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
                     }
+                    integrationHandler.updateBulletinBoard(id);
                     break;
                 }
                 case Connection: {
@@ -309,6 +319,7 @@ public class IntegrationSupportHandler {
                     String id = connection.getId().get();
                     if (dataManager.fetch(Connection.class, id) == null) {
                         dataManager.create(connection);
+                        connectionHandler.updateBulletinBoard(id);
                         result.add(ChangeEvent.of("created", connection.getKind().getModelName(), id));
                     }
 

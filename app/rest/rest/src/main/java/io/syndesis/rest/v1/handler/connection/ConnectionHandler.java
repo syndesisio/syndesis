@@ -15,12 +15,42 @@
  */
 package io.syndesis.rest.v1.handler.connection;
 
+import static io.syndesis.model.buletin.LeveledMessage.Level.ERROR;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+
+import org.springframework.stereotype.Component;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.credential.CredentialFlowState;
 import io.syndesis.credential.Credentials;
 import io.syndesis.dao.manager.DataManager;
+import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.Kind;
+import io.syndesis.model.buletin.ConnectionBulletinBoard;
+import io.syndesis.model.buletin.IntegrationBulletinBoard;
+import io.syndesis.model.buletin.LeveledMessage;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -33,24 +63,7 @@ import io.syndesis.rest.v1.operations.Lister;
 import io.syndesis.rest.v1.operations.Updater;
 import io.syndesis.rest.v1.operations.Validating;
 import io.syndesis.rest.v1.state.ClientSideState;
-import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.verifier.VerificationConfigurationProperties;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
 
 @Path("/connections")
 @Api(value = "connections")
@@ -165,8 +178,43 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
         return new ConnectionActionHandler(connection, config, encryptionComponent);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path(value = "/{id}/bulletins")
+    public ConnectionBulletinBoard getBulletins(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+        ConnectionBulletinBoard result = getDataManager().fetch(ConnectionBulletinBoard.class, id);
+        if( result == null ) {
+            result = new ConnectionBulletinBoard.Builder().build();
+        }
+        return result;
+    }
+
     @Override
     public Validator getValidator() {
         return validator;
+    }
+
+    /**
+     * Update the list of notices for a given connection
+     *
+     * @param id
+     */
+    public void updateBulletinBoard(String id) {
+        List<LeveledMessage> messages = new ArrayList<>();
+
+        Connection connection = get(id);
+        final Set<ConstraintViolation<Connection>> constraintViolations = getValidator().validate(connection, AllValidations.class);
+        for (ConstraintViolation<Connection> violation : constraintViolations) {
+            messages.add(LeveledMessage.of(ERROR, violation.getMessage()));
+        }
+
+        // We have a null value if it was an encrypted property that was imported into
+        // a different system.
+        Map<String, String> configuredProperties = encryptionComponent.decrypt(connection.getConfiguredProperties());
+        if( configuredProperties.values().contains(null)) {
+            messages.add(LeveledMessage.of(ERROR, "Configuration missing"));
+        }
+
+        getDataManager().set(ConnectionBulletinBoard.of(id, messages));
     }
 }
