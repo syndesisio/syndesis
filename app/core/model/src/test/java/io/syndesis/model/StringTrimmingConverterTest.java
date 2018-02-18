@@ -15,16 +15,15 @@
  */
 package io.syndesis.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.junit.Test;
-
 import io.syndesis.core.Json;
 import io.syndesis.model.integration.Integration;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests the StringTrimmingConverters
@@ -33,24 +32,22 @@ public class StringTrimmingConverterTest {
 
     @Test
     public void testTrimming() throws IOException {
-
         final SortedSet<String> tags = new TreeSet<>();
         tags.add("");
         tags.add(" tag");
         tags.add("\tTaggy McTagface\t");
 
         final Integration original = new Integration.Builder()
-                .id("test")
-                .name("  some-name\t").description("")
-                .tags(tags)
-                .build();
+            .id("test")
+            .name("  some-name\t").description("")
+            .tags(tags)
+            .build();
 
-        final Integration created = Json.reader().forType(Integration.class).readValue(Json.writer().writeValueAsBytes(original));
+        final String source = Json.writer().writeValueAsString(original);
+        final Integration created = Json.reader().forType(Integration.class).readValue(source);
 
         assertThat(created.getName()).isEqualTo("some-name");
         assertThat(created.getDescription()).isNotPresent();
         assertThat(created.getTags()).containsExactly("Taggy McTagface", "tag");
-
-
     }
 }

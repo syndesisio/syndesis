@@ -58,7 +58,8 @@ public class ActionProcessor extends AbstractProcessor {
     public static final String SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.ConfigurationProperty";
     public static final String SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.ConfigurationProperty$PropertyEnum";
     public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.extension.api.Step";
-    public static final String CAMEL_HANDLER_ANNOTATION_CLASS_NAME_ = "org.apache.camel.Handler";
+    public static final String CAMEL_HANDLER_ANNOTATION_CLASS_NAME = "org.apache.camel.Handler";
+    public static final String CAMEL_ROUTE_BUILDER_CLASS_NAME_ = "org.apache.camel.builder.RouteBuilder";
     public static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.context.annotation.Bean";
 
     private ObjectMapper mapper;
@@ -67,6 +68,7 @@ public class ActionProcessor extends AbstractProcessor {
     private Class<? extends Annotation> propertyEnumAnnotationClass;
     private Class<? extends Annotation> beanAnnotationClass;
     private Class<? extends Annotation> handlerAnnotationClass;
+    private Class<? extends Annotation> routeBuilderClass;
     private Class<?> stepClass;
 
     @Override
@@ -82,7 +84,8 @@ public class ActionProcessor extends AbstractProcessor {
         propertyEnumAnnotationClass = mandatoryFindClass(SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME);
         stepClass = findClass(SYNDESIS_STEP_CLASS_NAME);
         beanAnnotationClass = findClass(BEAN_ANNOTATION_CLASS_NAME);
-        handlerAnnotationClass = mandatoryFindClass(CAMEL_HANDLER_ANNOTATION_CLASS_NAME_);
+        handlerAnnotationClass = mandatoryFindClass(CAMEL_HANDLER_ANNOTATION_CLASS_NAME);
+        routeBuilderClass = mandatoryFindClass(CAMEL_ROUTE_BUILDER_CLASS_NAME_);
     }
 
     @Override
@@ -148,13 +151,14 @@ public class ActionProcessor extends AbstractProcessor {
      */
     private boolean augmentProperties(ObjectNode root, TypeElement element) throws InvocationTargetException, IllegalAccessException {
         final Elements elements = processingEnv.getElementUtils();
-        final TypeElement extensionTypeElement = elements.getTypeElement(stepClass.getName());
+        final TypeElement stepTypeElement = elements.getTypeElement(stepClass.getName());
+        final TypeElement routeBuilderTypeElement = elements.getTypeElement(routeBuilderClass.getName());
 
-        if (extensionTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), extensionTypeElement.asType())) {
+        if (stepTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), stepTypeElement.asType())) {
             root.put("kind", "STEP");
             root.put("entrypoint", element.getQualifiedName().toString());
 
-            // Let's search for fields annotated with SyndesisActionProperty
+            // Let's search for fields annotated with ConfigurationProperty
             for (Element field: element.getEnclosedElements()) {
                 if (field.getKind() == ElementKind.FIELD) {
                     addActionProperties(root, field);
@@ -162,6 +166,16 @@ public class ActionProcessor extends AbstractProcessor {
             }
 
             return true;
+        } else if (routeBuilderTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), routeBuilderTypeElement.asType())) {
+            root.put("kind", "ENDPOINT");
+            root.put("resource", "class:" + element.getQualifiedName().toString());
+
+            // Let's search for fields annotated with ConfigurationProperty
+            for (Element field: element.getEnclosedElements()) {
+                if (field.getKind() == ElementKind.FIELD) {
+                    addActionProperties(root, field);
+                }
+            }
         } else {
             root.put("kind", "BEAN");
             root.put("entrypoint", element.getQualifiedName().toString());
@@ -173,7 +187,7 @@ public class ActionProcessor extends AbstractProcessor {
                     addActionProperties(root, method);
 
                     // Found a method annotated with Handler, let's search for
-                    // fields annotated with SyndesisActionProperty
+                    // fields annotated with ConfigurationProperty
                     for (Element field: element.getEnclosedElements()) {
                         if (field.getKind() == ElementKind.FIELD) {
                             addActionProperties(root, field);

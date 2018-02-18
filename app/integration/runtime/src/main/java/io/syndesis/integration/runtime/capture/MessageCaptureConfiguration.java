@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.logging;
+package io.syndesis.integration.runtime.capture;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "syndesis.integration.runtime.logging")
-public class IntegrationLoggingConfiguration {
+@ConfigurationProperties(prefix = "syndesis.integration.runtime.capture")
+public class MessageCaptureConfiguration {
     /**
-     * Enable/Disable syndesis runtime logging.
+     * Enable/Disable message capture.
      */
     private boolean enabled = true;
 

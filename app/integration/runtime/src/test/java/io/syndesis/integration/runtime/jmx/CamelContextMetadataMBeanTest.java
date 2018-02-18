@@ -21,14 +21,10 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationRouteBuilderTest;
 import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
-import org.apache.camel.model.RoutesDefinition;
-import org.junit.Before;
+import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jmx.support.JmxUtils;
 import org.springframework.test.annotation.DirtiesContext;
@@ -39,43 +35,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-        classes = {
-                IntegrationRuntimeAutoConfiguration.class,
-                IntegrationRouteBuilderTest.TestConfiguration.class
-        },
-        properties = {
-                "debug = true",
-                "spring.main.banner-mode = off",
-                "logging.level.io.syndesis.integration.runtime = DEBUG"
-        }
+    classes = {
+        CamelAutoConfiguration.class,
+        IntegrationMetadataAutoConfiguration.class,
+        IntegrationRuntimeAutoConfiguration.class
+    },
+    properties = {
+        "debug = false",
+        "spring.main.banner-mode = off",
+        "logging.level.io.syndesis.integration.runtime = DEBUG"
+    }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class CamelContextMetadataMBeanTest {
 
-    private static final String[] ATTRIBUTES = {"StartTimestamp",
-            "LastExchangeCompletedTimestamp"};
-
-    @Autowired
-    private IntegrationRouteBuilder routeBuilder;
-
-    @Before
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void beforeTest() throws Exception {
-        // initialize routes
-        routeBuilder.configure();
-
-        RoutesDefinition routes = routeBuilder.getRouteCollection();
-
-        assertThat(routes.getRoutes()).hasSize(1);
-
-        routeBuilder.getContext().start();
-    }
+    private static final String[] ATTRIBUTES = {
+        "StartTimestamp",
+        "LastExchangeCompletedTimestamp"
+    };
 
     @Test
     public void testBuilder() throws Exception {
         final MBeanServer mBeanServer = JmxUtils.locateMBeanServer();
-        final Set<ObjectInstance> mBeans = mBeanServer.queryMBeans(
-                ObjectName.getInstance("io.syndesis.camel:*"), null);
+        final Set<ObjectInstance> mBeans = mBeanServer.queryMBeans(ObjectName.getInstance("io.syndesis.camel:*"), null);
         assertThat(mBeans).hasSize(1);
 
         final ObjectName objectName = mBeans.iterator().next().getObjectName();

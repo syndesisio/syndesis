@@ -213,11 +213,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
             return;
         }
 
-        String description = root.get("description").asText();
-        if(StringUtils.isNotEmpty(description)){
-            actionBuilder.description(description);
-        }
-
         ArrayNode tags = (ArrayNode)root.get("tags");
         if(tags != null){
             for(JsonNode tag: tags) {
@@ -229,10 +224,12 @@ public class GenerateMetadataMojo extends AbstractMojo {
             actionId,
             actionBuilder
                 .name(actionName)
+                .description(Optional.ofNullable(root.get("description")).map(JsonNode::asText).orElse(""))
                 .descriptor(
                     new StepDescriptor.Builder()
                         .kind(StepAction.Kind.valueOf(actionKind))
                         .entrypoint(actionEntry)
+                        .resource(Optional.ofNullable(root.get("resource")).map(JsonNode::asText).orElse(""))
                         .inputDataShape(buildDataShape(root.get("inputDataShape")))
                         .outputDataShape(buildDataShape(root.get("outputDataShape")))
                         .propertyDefinitionSteps(createPropertiesDefinitionSteps(root))
@@ -287,12 +284,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     protected List<ActionDescriptor.ActionDescriptorStep> createPropertiesDefinitionSteps(JsonNode root) {
-        ActionDescriptor.ActionDescriptorStep.Builder actionBuilder = new ActionDescriptor.ActionDescriptorStep.Builder();
-        actionBuilder.name("extension-properties");
-        actionBuilder.description("extension-properties");
 
         ArrayNode properties = (ArrayNode) root.get("properties");
         if (properties != null) {
+            ActionDescriptor.ActionDescriptorStep.Builder actionBuilder = new ActionDescriptor.ActionDescriptorStep.Builder();
+            actionBuilder.name("extension-properties");
+            actionBuilder.description("extension-properties");
+
             for (JsonNode node: properties) {
                 ConfigurationProperty.Builder confBuilder = new ConfigurationProperty.Builder();
 
@@ -332,9 +330,11 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
                 Optional.ofNullable(node.get("name")).ifPresent(n ->actionBuilder.putProperty(n.textValue(), confBuilder.build()));
             }
+
+            return Collections.singletonList(actionBuilder.build());
         }
 
-        return Collections.singletonList(actionBuilder.build());
+        return Collections.emptyList();
     }
 
     /**

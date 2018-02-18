@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.logging;
+package io.syndesis.integration.runtime.jmx;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "syndesis.integration.runtime.logging")
-public class IntegrationLoggingConfiguration {
+@ConfigurationProperties(prefix = "syndesis.integration.runtime.metadata")
+public class IntegrationMetadataConfiguration {
     /**
-     * Enable/Disable syndesis runtime logging.
+     * Enable/Disable syndesis runtime metadata.
      */
     private boolean enabled = true;
 
