@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.maven.annotation.processing;
+package io.syndesis.extensions.maven.annotation.processing;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -22,20 +22,23 @@ import javax.tools.StandardLocation;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
+import io.syndesis.extension.maven.annotation.processing.ActionProcessor;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
 
-public class SyndesisExtensionActionProcessorTest {
+@Ignore
+public class ActionProcessorTest {
     @Test
     public void test() throws URISyntaxException, MalformedURLException {
         Compilation compilation = Compiler.javac()
-            .withProcessors(new SyndesisExtensionActionProcessor())
+            .withProcessors(new ActionProcessor())
             .compile(JavaFileObjects.forSourceString(
                 "test.AnnotatedClassTest",
                 "package test;\n" +
                 "\n" +
-                "@io.syndesis.extension.api.SyndesisExtensionAction(\n" +
+                "@io.syndesis.extension.api.annotations.Action(\n" +
                 "    id = \"action-id\",\n" +
                 "    name = \"action-name\",\n" +
                 "    description = \"action-description\"\n" +
@@ -45,6 +48,6 @@ public class SyndesisExtensionActionProcessorTest {
             )
         );
 
-        assertTrue(compilation.generatedFile(StandardLocation.SOURCE_OUTPUT, "test/AnnotatedClassTest-action-id.properties").isPresent());
+        assertTrue(compilation.generatedFile(StandardLocation.SOURCE_OUTPUT, "test/AnnotatedClassTest-action-id.json").isPresent());
     }
 }

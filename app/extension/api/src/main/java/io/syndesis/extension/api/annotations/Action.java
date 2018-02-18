@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.api;
+package io.syndesis.extension.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface SyndesisExtensionAction {
+public @interface Action {
     /**
      * The action id;
      */
@@ -44,37 +44,17 @@ public @interface SyndesisExtensionAction {
     String[] tags() default {};
 
     /**
-     * The action input data shape name;
-     */
-    String inputDataShapeName() default "";
-
-    /**
-     * The action input data shape description;
-     */
-    String inputDataShapeDescription() default "";
-
-    /**
      * The action input data shape;
      */
-    String inputDataShape() default "any";
-
-    /**
-     * The action output data shape name;
-     */
-    String outputDataShapeName() default "";
-
-    /**
-     * The action output data shape description;
-     */
-    String outputDataShapeDescription() default "";
+    DataShape inputDataShape() default @DataShape();
 
     /**
      * The action output data shape;
      */
-    String outputDataShape() default "any";
+    DataShape outputDataShape() default @DataShape();
 
     /**
-     * The entrypoint;
+     * The action entry point;
      */
     String entrypoint() default "";
 }

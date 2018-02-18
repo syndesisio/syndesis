@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.api;
+package io.syndesis.extension.api.annotations;
 
-import org.apache.camel.model.RouteDefinition;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public final class SyndesisExtensionRoute {
-    private SyndesisExtensionRoute() {
-    }
-
-    public static RouteDefinition from(String uri) {
-        return new RouteDefinition().from(uri);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface ConfigurationProperties {
+    /**
+     * The list of properties.
+     */
+    ConfigurationProperty[] value();
 }

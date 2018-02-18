@@ -13,11 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.maven;
+package io.syndesis.extension.maven.plugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
 import io.atlasmap.java.v2.JavaClass;
@@ -49,30 +72,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
-
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -107,7 +106,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.groupId}:${project.artifactId}")
     private String extensionId;
 
-    @Parameter
+    @Parameter(defaultValue = "${project.version}")
     private String version;
 
     @Parameter(defaultValue = "${project.name}")
@@ -137,6 +136,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     protected Extension.Builder extensionBuilder = new Extension.Builder();
     protected Map<String, Action> actions = new HashMap<>();
 
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         tryImportingPartialJSON();
@@ -158,18 +158,17 @@ public class GenerateMetadataMojo extends AbstractMojo {
         if (Files.exists(dir)) {
             getLog().info("Looking in for annotated classes in: " + dir);
             try {
-                final Properties p = new Properties();
-                final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.properties");
+                final ObjectMapper mapper = new ObjectMapper();
+                final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.json");
                 final List<Path> paths = Files.find(dir, Integer.MAX_VALUE, (path, attr) -> matcher.matches(path)).sorted().collect(Collectors.toList());
 
                 for (Path path: paths) {
-                    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+                    try {
                         getLog().info("Loading annotations properties from: " + path);
 
-                        p.clear();
-                        p.load(reader);
+                        JsonNode root = mapper.readTree(path.toFile());
 
-                        assignProperties(p);
+                        assignProperties(root);
                     } catch (IOException e) {
                         getLog().error("Error reading file " + path);
                     }
@@ -183,85 +182,85 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     @SuppressWarnings({"PMD.PrematureDeclaration", "PMD.SignatureDeclareThrowsException"})
-    protected void assignProperties(Properties p) throws Exception {
+    protected void assignProperties(JsonNode root) throws Exception {
 
-        final String actionId = p.getProperty("id");
-        final String actionName = p.getProperty("name");
-        final String actionKind = p.getProperty("kind");
-        final String actionEntry = p.getProperty("entrypoint");
+        final String actionId = root.get("id").asText();
+        final String actionName = root.get("name").asText();
+        final String actionKind = root.get("kind").asText();
+        final String actionEntry = root.get("entrypoint").asText();
 
         if (StringUtils.isEmpty(actionId)) {
-            getLog().warn("Unable to define action, reason: 'id' is not set (properties: " + p + ")");
-            return;
-        }
-        if (StringUtils.isEmpty(actionName)) {
-            getLog().warn("Unable to define action, reason: 'name' is not set (properties: " + p + ")");
-            return;
-        }
-        if (StringUtils.isEmpty(actionKind)) {
-            getLog().warn("Unable to define action, reason: 'kind' is not set (properties: " + p + ")");
-            return;
-        }
-        if (StringUtils.isEmpty(actionEntry)) {
-            getLog().warn("Unable to define action, reason: 'entrypoint' is not set (properties: " + p + ")");
+            getLog().warn("Unable to define action, reason: 'id' is not set (" + root + ")");
             return;
         }
 
-        StepAction.Builder actionBuilder = new StepAction.Builder();
+        StepAction.Builder actionBuilder = new StepAction.Builder().id(actionId);
         if (actions.containsKey(actionId)) {
             // Create action from existing action if available in the partial json
             actionBuilder = actionBuilder.createFrom(actions.get(actionId));
         }
 
-        String description = p.getProperty("description");
+        if (StringUtils.isEmpty(actionName)) {
+            getLog().warn("Unable to define action, reason: 'name' is not set (" + root + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(actionKind)) {
+            getLog().warn("Unable to define action, reason: 'kind' is not set (" + root + ")");
+            return;
+        }
+        if (StringUtils.isEmpty(actionEntry)) {
+            getLog().warn("Unable to define action, reason: 'entrypoint' is not set (" + root + ")");
+            return;
+        }
+
+        String description = root.get("description").asText();
         if(StringUtils.isNotEmpty(description)){
             actionBuilder.description(description);
         }
 
-        String tags = p.getProperty("tags");
-        if(StringUtils.isNotEmpty(tags)){
-            for (String tag : tags.trim().split(",")) {
-                actionBuilder.addTag(tag);
+        ArrayNode tags = (ArrayNode)root.get("tags");
+        if(tags != null){
+            for(JsonNode tag: tags) {
+                actionBuilder.addTag(tag.asText());
             }
         }
 
-        List<ActionDescriptor.ActionDescriptorStep> propertyDefinitionSteps = createPropertiesDefinitionSteps(p);
-
         actions.put(
             actionId,
-            actionBuilder.id(actionId)
+            actionBuilder
                 .name(actionName)
                 .descriptor(
                     new StepDescriptor.Builder()
                         .kind(StepAction.Kind.valueOf(actionKind))
                         .entrypoint(actionEntry)
-                        .inputDataShape(buildDataShape(p, "input"))
-                        .outputDataShape(buildDataShape(p, "output"))
-                        .propertyDefinitionSteps(propertyDefinitionSteps)
+                        .inputDataShape(buildDataShape(root.get("inputDataShape")))
+                        .outputDataShape(buildDataShape(root.get("outputDataShape")))
+                        .propertyDefinitionSteps(createPropertiesDefinitionSteps(root))
                         .build())
                 .build()
         );
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected DataShape buildDataShape(Properties properties, String dataShapePrefix) throws Exception {
-        final String dataShape = properties.getProperty(dataShapePrefix + "DataShape");
-        final String dataShapeName = properties.getProperty(dataShapePrefix + "DataShapeName");
-        final String dataShapeDesc = properties.getProperty(dataShapePrefix + "DataShapeDescription");
+    protected Optional<DataShape> buildDataShape(JsonNode root) throws Exception {
 
-        final DataShape.Builder builder = new DataShape.Builder();
+        if (root == null) {
+            return Optional.empty();
+        }
 
-        if (StringUtils.isNotEmpty(dataShape)) {
-            int separator = dataShape.indexOf(':');
-            String kind;
-            String type = null;
+        DataShape.Builder builder = new DataShape.Builder();
+        String kind = Optional.ofNullable(root.get("kind")).map(JsonNode::asText).orElse("");
+        String type = Optional.ofNullable(root.get("type")).map(JsonNode::asText).orElse("");
+        String name = Optional.ofNullable(root.get("name")).map(JsonNode::asText).orElse("");
+        String desc = Optional.ofNullable(root.get("description")).map(JsonNode::asText).orElse("");
+        String spec = Optional.ofNullable(root.get("specification")).map(JsonNode::asText).orElse("");
 
-            if (separator == -1) {
-                kind = dataShape;
-            } else {
-                kind = dataShape.substring(0, separator);
-                type = dataShape.substring(separator + 1);
+        if (StringUtils.isNotEmpty(type)) {
+            int separator = type.indexOf(':');
 
+            if (separator != -1) {
+                kind = type.substring(0, separator);
+                type = type.substring(separator + 1);
             }
 
             if (StringUtils.isNotEmpty(kind)) {
@@ -274,80 +273,68 @@ public class GenerateMetadataMojo extends AbstractMojo {
             builder.kind(DataShapeKinds.ANY);
         }
 
-        if (StringUtils.isNotEmpty(dataShapeName)) {
-            builder.name(dataShapeName);
+        if (StringUtils.isNotEmpty(name)) {
+            builder.name(name);
         }
-        if (StringUtils.isNotEmpty(dataShapeDesc)) {
-            builder.description(dataShapeDesc);
+        if (StringUtils.isNotEmpty(desc)) {
+            builder.description(desc);
+        }
+        if (StringUtils.isNotEmpty(spec)) {
+            builder.specification(spec);
         }
 
-        return builder.build();
+        return Optional.of(builder.build());
     }
 
-    protected List<ActionDescriptor.ActionDescriptorStep> createPropertiesDefinitionSteps(Properties p) {
-        List<ActionDescriptor.ActionDescriptorStep> propertyDefinitionSteps = new ArrayList<>();
-        int idx = 0;
-        while (getPropertyValue(p, idx, "name") != null) {
-            String name = getPropertyValue(p, idx, "name");
-            String displayName = getPropertyValue(p, idx, "displayName");
-            String pDescription = getPropertyValue(p, idx, "description");
-            Boolean componentProperty = getBooleanPropertyValue(p, idx, "componentProperty");
-            String defaultValue = getPropertyValue(p, idx, "defaultValue");
-            Boolean deprecated = getBooleanPropertyValue(p, idx, "deprecated");
-            String group = getPropertyValue(p, idx, "group");
-            String javaType = getPropertyValue(p, idx, "javaType");
-            String kind = getPropertyValue(p, idx, "kind");
-            String label = getPropertyValue(p, idx, "label");
-            Boolean required = getBooleanPropertyValue(p, idx, "required");
-            Boolean secret = getBooleanPropertyValue(p, idx, "secret");
-            String type = getPropertyValue(p, idx, "type");
+    protected List<ActionDescriptor.ActionDescriptorStep> createPropertiesDefinitionSteps(JsonNode root) {
+        ActionDescriptor.ActionDescriptorStep.Builder actionBuilder = new ActionDescriptor.ActionDescriptorStep.Builder();
+        actionBuilder.name("extension-properties");
+        actionBuilder.description("extension-properties");
 
-            String pTags = getPropertyValue(p, idx, "tags");
-            List<String> propTagList = new ArrayList<>();
-            if(StringUtils.isNotEmpty(pTags)){
-                for (String tag : pTags.trim().split(",")) {
-                    propTagList.add(tag);
+        ArrayNode properties = (ArrayNode) root.get("properties");
+        if (properties != null) {
+            for (JsonNode node: properties) {
+                ConfigurationProperty.Builder confBuilder = new ConfigurationProperty.Builder();
+
+                Optional.ofNullable(node.get("description")).ifPresent(n -> confBuilder.displayName(n.textValue()));
+                Optional.ofNullable(node.get("componentProperty")).ifPresent(n -> confBuilder.componentProperty(n.booleanValue()));
+                Optional.ofNullable(node.get("defaultValue")).ifPresent(n -> confBuilder.defaultValue(n.textValue()));
+                Optional.ofNullable(node.get("deprecated")).ifPresent(n -> confBuilder.deprecated(n.booleanValue()));
+                Optional.ofNullable(node.get("group")).ifPresent(n -> confBuilder.group(n.textValue()));
+                Optional.ofNullable(node.get("javaType")).ifPresent(n -> confBuilder.javaType(n.textValue()));
+                Optional.ofNullable(node.get("kind")).ifPresent(n -> confBuilder.kind(n.textValue()));
+                Optional.ofNullable(node.get("label")).ifPresent(n -> confBuilder.label(n.textValue()));
+                Optional.ofNullable(node.get("required")).ifPresent(n -> confBuilder.required(n.booleanValue()));
+                Optional.ofNullable(node.get("secret")).ifPresent(n -> confBuilder.secret(n.booleanValue()));
+                Optional.ofNullable(node.get("raw")).ifPresent(n -> confBuilder.raw(n.booleanValue()));
+                Optional.ofNullable(node.get("type")).ifPresent(n -> confBuilder.type(n.textValue()));
+
+                ArrayNode tagArray = (ArrayNode)node.get("tags");
+                if (tags != null) {
+                    for (JsonNode tagNode : tagArray) {
+                        confBuilder.addTag(tagNode.asText().trim());
+                    }
                 }
+
+                ArrayNode enumArray = (ArrayNode)node.get("enums");
+                if (tags != null) {
+                    for (JsonNode enumNode : enumArray) {
+                        if (enumNode.has("value") && enumNode.has("label")) {
+                            confBuilder.addEnum(
+                                new ConfigurationProperty.PropertyValue.Builder()
+                                    .value(enumNode.get("value").textValue())
+                                    .label(enumNode.get("label").textValue())
+                                    .build()
+                            );
+                        }
+                    }
+                }
+
+                Optional.ofNullable(node.get("name")).ifPresent(n ->actionBuilder.putProperty(n.textValue(), confBuilder.build()));
             }
-
-            int idy = 0;
-            List<ConfigurationProperty.PropertyValue> propertyValues = new ArrayList<>();
-            while (getPropertyValue(p, idx, "enums", idy, "value") != null) {
-                String enumValue = getPropertyValue(p, idx, "enums", idy, "value");
-                String enumLabel = getPropertyValue(p, idx, "enums", idy, "label");
-                propertyValues.add(new ConfigurationProperty.PropertyValue.Builder()
-                    .value(enumValue)
-                    .label(enumLabel)
-                    .build());
-
-                idy++;
-            }
-
-            propertyDefinitionSteps.add(new ActionDescriptor.ActionDescriptorStep.Builder()
-                .name(name)
-                .description(pDescription)
-                .putProperty(name, new ConfigurationProperty.Builder()
-                    .displayName(displayName)
-                    .description(pDescription)
-                    .componentProperty(componentProperty)
-                    .defaultValue(defaultValue)
-                    .deprecated(deprecated)
-                    .group(group)
-                    .javaType(javaType)
-                    .kind(kind)
-                    .label(label)
-                    .required(required)
-                    .secret(secret)
-                    .type(type)
-                    .tags(propTagList)
-                    .addAllEnum(propertyValues)
-                    .build())
-                .build());
-
-            idx++;
         }
 
-        return propertyDefinitionSteps;
+        return Collections.singletonList(actionBuilder.build());
     }
 
     /**
@@ -370,11 +357,10 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 
                 actions.clear();
-                actions.putAll(
-                    extension.getActions().stream()
-                        .filter(a -> a.getId().isPresent())
-                        .collect(Collectors.toMap(a -> a.getId().get(), a -> a))
-                );
+
+                for (Action action: extension.getActions()) {
+                    action.getId().ifPresent(id -> actions.put(id, action));
+                }
 
                 extensionBuilder = extensionBuilder.createFrom(extension);
                 extensionBuilder.actions(Collections.emptySet());
@@ -387,16 +373,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
     protected void overrideConfigFromMavenPlugin() {
         getLog().info("Looking for configuration to override at Maven Plugin configuration level. ");
 
-        if(StringUtils.isBlank(extensionId)) {
-            extensionBuilder.extensionId(project.getGroupId() + ":" + project.getArtifactId());
-        } else {
+        if(StringUtils.isNotEmpty(extensionId)) {
             extensionBuilder.extensionId(extensionId);
         }
 
-        if(StringUtils.isBlank(version)){
-            version = project.getVersion();
+        if(StringUtils.isNotEmpty(version)){
+            extensionBuilder.version(version);
         }
-        extensionBuilder.version(version);
 
         if(StringUtils.isNotEmpty(name)) {
             extensionBuilder.name(name);
@@ -515,15 +498,26 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private Optional<DataShape> generateInspections(String actionId, Optional<DataShape> dataShape) throws Exception {
         if (dataShape.isPresent()) {
+
+            // don't compute inspections if already set
+            String spec = dataShape.get().getSpecification();
+            if (StringUtils.isNotEmpty(spec)) {
+                return dataShape;
+            }
+
             Optional<String> specs = generateInspections(actionId, dataShape.get().getKind(), dataShape.get().getType());
             if (specs.isPresent()) {
-                return Optional.of(new DataShape.Builder().createFrom(dataShape.get())
+                return Optional.of(
+                    new DataShape.Builder()
+                        .createFrom(dataShape.get())
                         .specification(specs.get())
-                        .build());
+                        .build()
+                );
             }
 
             return dataShape;
         }
+
         return Optional.empty();
     }
 

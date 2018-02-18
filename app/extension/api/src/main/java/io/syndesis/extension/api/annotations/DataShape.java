@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.api;
+package io.syndesis.extension.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,9 +22,29 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface SyndesisActionProperties {
+public @interface DataShape {
     /**
-     * The list of properties.
+     * The data shape name.
      */
-    SyndesisActionProperty[] value();
+    String name() default "";
+
+    /**
+     * The data shape description.
+     */
+    String description() default "";
+
+    /**
+     * The data shape kind.
+     */
+    String kind() default "any";
+
+    /**
+     * The data shape type.
+     */
+    String type() default "";
+
+    /**
+     * The data shape specification.
+     */
+    String specification() default "";
 }
