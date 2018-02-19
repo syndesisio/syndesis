@@ -265,8 +265,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .withIncremental(false)
                 // TODO: This environment setup needs to be externalized into application.properties
                 // https://github.com/syndesisio/syndesis-rest/issues/682
-                .withEnv(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null))
-                .withEnv(new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null))
+                .withEnv(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null), new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null))
               .endSourceStrategy()
             .endStrategy()
             .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(name + ":latest").endTo().endOutput()
