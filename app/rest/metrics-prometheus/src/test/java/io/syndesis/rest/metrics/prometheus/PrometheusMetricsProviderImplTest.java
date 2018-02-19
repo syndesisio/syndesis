@@ -16,13 +16,17 @@
 package io.syndesis.rest.metrics.prometheus;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.WithId;
 import io.syndesis.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
@@ -34,13 +38,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Ignore ("requires an instrumented pod and prometheus service name")
 public class PrometheusMetricsProviderImplTest {
 
+    public static final String TEST_INTEGRATION_ID = "-L5SIZLIuUOBiQou7QTw";
     private PrometheusMetricsProviderImpl metricsProvider;
 
     @Before
     public void setUp() {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
-        metricsProvider = new PrometheusMetricsProviderImpl(config);
+        metricsProvider = new PrometheusMetricsProviderImpl(config, new DataManager(null, null, null, null, null) {
+            @Override
+            public <T extends WithId<T>> Set<String> fetchIds(Class<T> model) {
+                final HashSet<String> result = new HashSet<>();
+                result.add(TEST_INTEGRATION_ID);
+                return result;
+            }
+        });
     }
 
     @Test
@@ -51,7 +63,7 @@ public class PrometheusMetricsProviderImplTest {
 
     @Test
     public void testGetIntegrationMetricsSummary() throws Exception {
-        final IntegrationMetricsSummary summary = metricsProvider.getIntegrationMetricsSummary("-L5GG_vIAGeewanMRweF");
+        final IntegrationMetricsSummary summary = metricsProvider.getIntegrationMetricsSummary(TEST_INTEGRATION_ID);
         assertThat(summary.getMessages()).isNotNull();
         final Optional<List<IntegrationDeploymentMetrics>> deploymentMetrics = summary
             .getIntegrationDeploymentMetrics();

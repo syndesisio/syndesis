@@ -20,12 +20,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.model.integration.Integration;
 import io.syndesis.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.rest.metrics.MetricsProvider;
@@ -34,53 +38,74 @@ import io.syndesis.rest.metrics.MetricsProvider;
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
 public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
+    private static final String METRIC_TOTAL = "org_apache_camel_ExchangesTotal";
+    private static final String METRIC_FAILED = "org_apache_camel_ExchangesFailed";
+    private static final String METRIC_START_TIMESTAMP = "io_syndesis_camel_StartTimestamp";
+    private static final String METRIC_COMPLETED_TIMESTAMP = "io_syndesis_camel_LastExchangeCompletedTimestamp";
+    private static final String METRIC_FAILURE_TIMESTAMP = "io_syndesis_camel_LastExchangeFailureTimestamp";
+
+    private static final String FUNCTION_MAX_OVER_TIME = "max_over_time";
+    private static final String VALUE_CONTEXT = "context";
+    private static final String LABEL_TYPE = "type";
+    private static final String VALUE_INTEGRATION = "integration";
+    private static final String LABEL_COMPONENT = "component";
+
     private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null ? aLong2 :
         aLong2 == null ? aLong : aLong + aLong2;
     private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null ? date2 :
         date2 == null ? date1 : date1.after(date2) ? date1 : date2;
+    private static final BinaryOperator<Date> MIN_DATE = (date1, date2) -> date1 == null ? date2 :
+        date2 == null ? date1 : date1.before(date2) ? date1 : date2;
 
     private final HttpClient httpClient = new HttpClient();
+    private final DataManager dataManager;
 
     private final String serviceName;
     private final String integrationIdLabel;
     private final String deploymentVersionLabel;
     private final String metricsHistoryRange;
 
-    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config) {
+    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config, DataManager dataManager) {
         this.serviceName = config.getService();
         this.integrationIdLabel = config.getIntegrationIdLabel();
         this.deploymentVersionLabel = config.getDeploymentVersionLabel();
         this.metricsHistoryRange = config.getMetricsHistoryRange();
+        this.dataManager = dataManager;
     }
 
     @Override
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // aggregate values across versions
+        final Map<String, Long> totalMessagesMap = getMetricValues(integrationId, METRIC_TOTAL,
+            deploymentVersionLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> failedMessagesMap = getMetricValues(integrationId, METRIC_FAILED, deploymentVersionLabel, Long.class, SUM_LONGS);
 
-        final Map<String, Long> totalMessagesMap = getMetricValues(integrationId,
-            "org_apache_camel_ExchangesTotal", deploymentVersionLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessagesMap = getMetricValues(integrationId,
-            "org_apache_camel_ExchangesFailed", deploymentVersionLabel, Long.class, SUM_LONGS);
+        final Map<String, Date> startTimeMap = getMetricValues(integrationId, METRIC_START_TIMESTAMP,
+            deploymentVersionLabel, Date.class, MAX_DATE);
 
-        final Map<String, Date> startTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_StartTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastProcessingTimeMap = getMetricValues(integrationId,
-            "io_syndesis_camel_LastExchangeCompletedTimestamp", deploymentVersionLabel, Date.class, MAX_DATE);
+        // compute last processed time from lastCompleted and lastFailure times
+        final Map<String, Date> lastCompletedTimeMap = getMetricValues(integrationId, METRIC_COMPLETED_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> lastFailedTimeMap = getMetricValues(integrationId, METRIC_FAILURE_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Date> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, MAX_DATE));
 
-        return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap, startTimeMap,
-            lastProcessingTimeMap);
+        final Optional<Date> startTime = getCurrentMetricValue(integrationId, METRIC_START_TIMESTAMP, Date.class, MIN_DATE);
+
+        final Optional<Date> lastCompletedTime = getCurrentMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Date.class, MAX_DATE);
+        final Optional<Date> lastFailureTime = getCurrentMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Date.class, MAX_DATE);
+        final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
+
+        return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
+            startTimeMap, lastProcessedTimeMap, startTime,Optional.ofNullable(lastProcessedTime));
     }
 
-    private IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap,
-                                                                      Map<String, Long> failedMessagesMap,
-                                                                      Map<String, Date> startTimeMap,
-                                                                      Map<String, Date> lastProcessingTimeMap) {
+    private IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap, Map<String, Long> failedMessagesMap,
+                                                                      Map<String, Date> startTimeMap, Map<String, Date> lastProcessingTimeMap,
+                                                                      Optional<Date> startTime, Optional<Date> lastProcessingTime) {
 
         final long[] totalMessages = {0L};
         final long[] totalErrors = {0L};
-        final Date[] startTime = { null };
-        final Date[] lastProcessedTime = { null };
 
         final List<IntegrationDeploymentMetrics> deploymentMetrics = totalMessagesMap.entrySet().stream().map(entry -> {
             final String version = entry.getKey();
@@ -93,8 +118,6 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             // aggregate values while we are at it
             totalMessages[0] = SUM_LONGS.apply(totalMessages[0], messages);
             totalErrors[0] = SUM_LONGS.apply(totalErrors[0], errors);
-            startTime[0] = MAX_DATE.apply(startTime[0], start);
-            lastProcessedTime[0] = MAX_DATE.apply(lastProcessedTime[0], lastProcessed);
 
             return new IntegrationDeploymentMetrics.Builder()
                 .version(version)
@@ -107,8 +130,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
         return new IntegrationMetricsSummary.Builder()
                 .integrationDeploymentMetrics(deploymentMetrics)
-                .start(Optional.ofNullable(startTime[0]))
-                .lastProcessed(Optional.ofNullable(lastProcessedTime[0]))
+                .start(startTime)
+                .lastProcessed(lastProcessingTime)
                 .messages(totalMessages[0])
                 .errors(totalErrors[0])
                 .build();
@@ -116,57 +139,92 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     @Override
     public IntegrationMetricsSummary getTotalIntegrationMetricsSummary() {
-        final Map<String, Long> totalMessagesMap = getMetricValues("org_apache_camel_ExchangesTotal",
-            integrationIdLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessagesMap = getMetricValues("org_apache_camel_ExchangesFailed",
-            integrationIdLabel, Long.class, SUM_LONGS);
+        // get list of current integration ids, since Prometheus db has deleted integrations too
+        final Set<String> currentIds = dataManager.fetchIds(Integration.class);
 
-        final Map<String, Date> startTimeMap = getMetricValues("io_syndesis_camel_StartTimestamp",
-            integrationIdLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastProcessingTimeMap = getMetricValues("io_syndesis_camel_LastExchangeCompletedTimestamp",
-            integrationIdLabel, Date.class, MAX_DATE);
+        final Map<String, Long> totalMessagesMap = getMetricValues(METRIC_TOTAL, integrationIdLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> failedMessagesMap = getMetricValues(METRIC_FAILED, integrationIdLabel, Long.class, SUM_LONGS);
+
+        final Optional<Date> startTime = getCurrentMetricValue(METRIC_START_TIMESTAMP, Date.class, MIN_DATE);
+
+        // compute last processed time
+        final Optional<Date> lastCompletedTime = getCurrentMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, MAX_DATE);
+        final Optional<Date> lastFailureTime = getCurrentMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, MAX_DATE);
+        final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return new IntegrationMetricsSummary.Builder()
-            .start(startTimeMap.values().stream().max(Date::compareTo))
-            .lastProcessed(lastProcessingTimeMap.values().stream().max(Date::compareTo))
-            .messages(totalMessagesMap.values().stream().mapToLong(l -> l != null ? l : 0L).sum())
-            .errors(failedMessagesMap.values().stream().mapToLong(l -> l != null ? l : 0L).sum())
+            .start(startTime)
+            .lastProcessed(Optional.ofNullable(lastProcessedTime))
+            .messages(totalMessagesMap.entrySet().stream().filter(entry -> currentIds.contains(entry.getKey())).mapToLong(Map.Entry::getValue).sum())
+            .errors(failedMessagesMap.entrySet().stream().filter(entry -> currentIds.contains(entry.getKey())).mapToLong(Map.Entry::getValue).sum())
             .build();
     }
 
     private <T> Map<String, T> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
-        HttpQuery queryTotalMessages = createHttpQuery(integrationId, metric);
+        HttpQuery queryTotalMessages = createSummaryHttpQuery(integrationId, metric);
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
         return QueryResult.getValueMap(response, label, clazz, mergeFunction);
     }
 
     private <T> Map<String, T> getMetricValues(String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
-        HttpQuery queryTotalMessages = createHttpQuery(metric);
+        HttpQuery queryTotalMessages = createSummaryHttpQuery(metric);
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
         return QueryResult.getValueMap(response, label, clazz, mergeFunction);
     }
 
-    private HttpQuery createHttpQuery(String integrationId, String metric) {
+    private <T> Optional<T> getCurrentMetricValue(String integrationId, String metric, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
+        HttpQuery queryTotalMessages = createInstantHttpQuery(integrationId, metric);
+        QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
+        validateResponse(response);
+        return QueryResult.getMergedValue(response, clazz, mergeFunction);
+    }
+
+    private <T> Optional<T> getCurrentMetricValue(String metric, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
+        HttpQuery queryTotalMessages = createInstantHttpQuery(metric);
+        QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
+        validateResponse(response);
+        return QueryResult.getMergedValue(response, clazz, mergeFunction);
+    }
+
+    private HttpQuery createSummaryHttpQuery(String integrationId, String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
-                .function("max_over_time")
+                .function(FUNCTION_MAX_OVER_TIME)
                 .metric(metric)
                 .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId, this.integrationIdLabel))
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
                 .range(metricsHistoryRange)
                 .build();
     }
 
-    private HttpQuery createHttpQuery(String metric) {
+    private HttpQuery createSummaryHttpQuery(String metric) {
+        return new HttpQuery.Builder()
+            .host(serviceName)
+            .function(FUNCTION_MAX_OVER_TIME)
+            .metric(metric)
+            .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_INTEGRATION, LABEL_COMPONENT))
+            .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
+            .range(metricsHistoryRange)
+            .build();
+    }
+
+    private HttpQuery createInstantHttpQuery(String integrationId, String metric) {
         return new HttpQuery.Builder()
                 .host(serviceName)
-                .function("max_over_time")
                 .metric(metric)
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("integration", "component"))
-                .addLabelValues(HttpQuery.LabelValue.Builder.of("context", "type"))
-                .range(metricsHistoryRange)
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(integrationId, this.integrationIdLabel))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
+                .build();
+    }
+
+    private HttpQuery createInstantHttpQuery(String metric) {
+        return new HttpQuery.Builder()
+                .host(serviceName)
+                .metric(metric)
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_INTEGRATION, LABEL_COMPONENT))
+                .addLabelValues(HttpQuery.LabelValue.Builder.of(VALUE_CONTEXT, LABEL_TYPE))
                 .build();
     }
 

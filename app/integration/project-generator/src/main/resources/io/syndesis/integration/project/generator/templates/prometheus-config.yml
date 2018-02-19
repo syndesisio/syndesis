@@ -26,6 +26,13 @@ rules:
     labels:
       context: $1
       type: context
+  - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>LastExchangeFailureTimestamp'
+    name: io.syndesis.camel.LastExchangeFailureTimestamp
+    help: Last Exchange Failure Timestamp
+    type: COUNTER
+    labels:
+      context: $1
+      type: context
   - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>StartTimestamp'
     name: io.syndesis.camel.StartTimestamp
     help: Start Timestamp

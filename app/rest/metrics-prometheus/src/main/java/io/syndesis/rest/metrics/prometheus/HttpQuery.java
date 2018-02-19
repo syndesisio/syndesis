@@ -16,6 +16,7 @@
 package io.syndesis.rest.metrics.prometheus;
 
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.UriBuilder;
 
 import org.immutables.value.Value;
@@ -52,19 +53,19 @@ public interface HttpQuery {
 
     String getHost();
 
-    String getFunction();
+    Optional<String> getFunction();
 
     String getMetric();
 
     List<LabelValue> getLabelValues();
 
-    String getRange();
+    Optional<String> getRange();
 
     default UriBuilder getUriBuilder() {
         StringBuilder queryExpression = new StringBuilder();
 
         // is there a query function?
-        final String function = getFunction();
+        final String function = getFunction().orElse(null);
         boolean closeFunction = false;
         if (function != null && !function.isEmpty()) {
             queryExpression.append(function).append('(');
@@ -87,7 +88,7 @@ public interface HttpQuery {
         }
 
         // is there a range?
-        final String range = getRange();
+        final String range = getRange().orElse(null);
         if (range != null && !range.isEmpty()) {
             queryExpression.append('[').append(range).append(']');
         }

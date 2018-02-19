@@ -45,9 +45,22 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
     }
 
     @ManagedAttribute
+    public Long getResetTimestamp() {
+        final Date resetTimestamp = camelContext.getManagedCamelContext().getResetTimestamp();
+        return resetTimestamp == null ? null : resetTimestamp.getTime();
+    }
+
+    @ManagedAttribute
     public Long getLastExchangeCompletedTimestamp() {
         final Date timestamp = camelContext.getManagedCamelContext()
                 .getLastExchangeCompletedTimestamp();
+        return timestamp == null ? null : timestamp.getTime();
+    }
+
+    @ManagedAttribute
+    public Long getLastExchangeFailureTimestamp() {
+        final Date timestamp = camelContext.getManagedCamelContext()
+                .getLastExchangeFailureTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
