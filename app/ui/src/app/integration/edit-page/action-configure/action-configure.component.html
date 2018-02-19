@@ -67,8 +67,18 @@
           <div class="row row-cards-pf">
             <div class="card-pf">
               <div class="card-pf-body">
-                <p [innerHtml]="error.message"></p>
-                <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <p [class]="error.class"
+                    [innerHtml]="error.message"></p>
+                  </div>
+                </div>
+                <div *ngIf="!hasConfiguration"
+                    class="row control-buttons">
+                  <div class="col-xs-12">
+                    <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
