@@ -206,7 +206,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       // TODO figure out how to get a link in here that works
       this.error = {
         class: 'alert alert-info',
-        message: 'There are no properties to configure for this action'
+        message: 'There are no properties to configure for this action.'
       };
       return;
     }

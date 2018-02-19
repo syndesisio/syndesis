@@ -64,12 +64,12 @@
       </div>
       <syndesis-loading [loading]="loading">
         <ng-container *ngIf="error">
-          <div [class]="error.class"
-               [innerHtml]="error.message">
-          </div>
-          <div *ngIf="!hasConfiguration" class="control-buttons">
-            <div class="pull-right">
-              <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+          <div class="row row-cards-pf">
+            <div class="card-pf">
+              <div class="card-pf-body">
+                <p [innerHtml]="error.message"></p>
+                <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+              </div>
             </div>
           </div>
         </ng-container>
