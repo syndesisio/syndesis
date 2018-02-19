@@ -45,6 +45,16 @@ public class OpenShiftConfigurationProperties {
 
     private String integrationDataPath = "${JAVA_DATA_DIR}/syndesis/loader";
 
+    private boolean debug;
+
+    public void setDebug(final boolean debug) {
+        this.debug = debug;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
