@@ -1,90 +1,90 @@
 <syndesis-loading [loading]="!currentFlowService.loaded">
-  <div class="main-panel-inner save-or-add-step">
-
+  <div class="save-or-add-step syn-scrollable">
     <!-- Toolbar -->
     <div class="toolbar">
       <!-- Toolbar: Breadcrumbs -->
-      <div class="row toolbar-pf">
-        <div class="col-sm-12">
-          <div class="toolbar-pf-actions">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']">Home</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
-                </li>
-                <li>
-                  <a *ngIf="flowPageService.integrationName"
-                     [routerLink]="['/integrations', currentFlowService.integration?.id]">{{ flowPageService.integrationName }}</a>
-                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
-                </li>
-                <li class="active">Save or Add Step</li>
-              </ol>
-            </div>
-            <div class="toolbar-pf-action-right">
-              <button class="btn btn-default"
-                      (click)="cancel()">Cancel
-            </button> &nbsp;
-              <button class="btn btn-default"
-                      (click)="save()"
-                      [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress"><span *ngIf="flowPageService.saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
-            </button>
-              <button type="button"
-                      class="btn btn-primary"
-                      (click)="publish()"
-                      [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress"><span *ngIf="flowPageService.publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
+      <div class="container-fluid">
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">Home</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">Integrations</a>
+                  </li>
+                  <li>
+                    <a *ngIf="flowPageService.integrationName"
+                      [routerLink]="['/integrations', currentFlowService.integration?.id]">{{ flowPageService.integrationName }}</a>
+                    <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                  </li>
+                  <li class="active">Save or Add Step</li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
+                <button class="btn btn-default"
+                        (click)="cancel()">Cancel
+              </button> &nbsp;
+                <button class="btn btn-default"
+                        (click)="save()"
+                        [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress"><span *ngIf="flowPageService.saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
+              </button>
+                <button type="button"
+                        class="btn btn-primary"
+                        (click)="publish()"
+                        [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress"><span *ngIf="flowPageService.publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- Content -->
-    <div class="main-panel-body wizard-pf-body clearfix">
-      <div *ngIf="errorMessage">
-        <div class="alert alert-danger">
-          <button type="button"
-                  class="close"
-                  (click)="errorMessage = undefined">
-                <span class="pficon pficon-close"></span>
-              </button>
-          <span class="pficon pficon-error-circle-o"></span>
-          <p>Error saving integration: </p>
-          <pre>{{ errorMessage }}</pre>
+    <div class="wizard-pf-body syn-scrollable--body">
+      <div class="container-fluid">
+        <div *ngIf="errorMessage">
+          <div class="alert alert-danger">
+            <button type="button"
+                    class="close"
+                    (click)="errorMessage = undefined">
+                  <span class="pficon pficon-close"></span>
+                </button>
+            <span class="pficon pficon-error-circle-o"></span>
+            <p>Error saving integration: </p>
+            <pre>{{ errorMessage }}</pre>
+          </div>
         </div>
-      </div>
-      <div class="blank-slate-pf">
-        <div class="blank-slate-pf-icon">
-          <span class="pficon pficon pficon-add-circle-o"></span>
-        </div>
-        <h1>
-          Add to Integration
-        </h1>
-        <p>Now you can add additional connections as well as steps to your integration.</p>
-        <p>You can interact with the left hand panel to continue adding steps and connections to your integration as well.</p>
-
-        <!-- First Step -->
-        <div class="blank-slate-pf-secondary-action first-step"
-             *ngIf="getMiddleSteps().length === 0">
-          <button type="button"
-                  (click)="addNew('step')"
-                  class="btn btn-default">Add a Step</button>&nbsp;&nbsp;&nbsp;
-          <button type="button"
-                  (click)="addNew('connection')"
-                  class="btn btn-default">Add a Connection</button>
-        </div>
-
-        <!-- Middle Steps -->
-        <div class="blank-slate-pf-secondary-action middle-steps"
-             *ngIf="getMiddleSteps().length !== 0">
-          <button type="button"
-                  (click)="showPopouts('step')"
-                  class="btn btn-default">Add a Step</button> &nbsp;&nbsp;&nbsp;
-          <button type="button"
-                  (click)="showPopouts('connection')"
-                  class="btn btn-default">Add a Connection</button>
+        <div class="blank-slate-pf">
+          <div class="blank-slate-pf-icon">
+            <span class="pficon pficon pficon-add-circle-o"></span>
+          </div>
+          <h1>
+            Add to Integration
+          </h1>
+          <p>Now you can add additional connections as well as steps to your integration.</p>
+          <p>You can interact with the left hand panel to continue adding steps and connections to your integration as well.</p>
+          <!-- First Step -->
+          <div class="blank-slate-pf-secondary-action first-step"
+              *ngIf="getMiddleSteps().length === 0">
+            <button type="button"
+                    (click)="addNew('step')"
+                    class="btn btn-default">Add a Step</button>&nbsp;&nbsp;&nbsp;
+            <button type="button"
+                    (click)="addNew('connection')"
+                    class="btn btn-default">Add a Connection</button>
+          </div>
+          <!-- Middle Steps -->
+          <div class="blank-slate-pf-secondary-action middle-steps"
+              *ngIf="getMiddleSteps().length !== 0">
+            <button type="button"
+                    (click)="showPopouts('step')"
+                    class="btn btn-default">Add a Step</button> &nbsp;&nbsp;&nbsp;
+            <button type="button"
+                    (click)="showPopouts('connection')"
+                    class="btn btn-default">Add a Connection</button>
+          </div>
         </div>
       </div>
     </div>

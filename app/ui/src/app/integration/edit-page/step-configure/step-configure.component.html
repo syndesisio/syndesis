@@ -14,78 +14,79 @@
       </ng-container>
     </button>
   </ng-template>
-  <div class="main-panel-inner step-configure"
+  <div class="step-configure syn-scrollable"
        *ngIf="step">
-
     <!-- Toolbar -->
     <div [class]="getToolbarClass()">
-
       <!-- Toolbar: Breadcrumbs -->
-      <div class="row toolbar-pf">
-        <div class="col-sm-12">
-          <div class="toolbar-pf-actions">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']">Home</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
-                </li>
-                <li>
-                  <a *ngIf="flowPageService.integrationName"
-                     [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
-                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
-                </li>
+      <div class="container-fluid">
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">Home</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">Integrations</a>
+                  </li>
+                  <li>
+                    <a *ngIf="flowPageService.integrationName"
+                      [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
+                    <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                  </li>
 
-                <li class="active">Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</li>
-              </ol>
-            </div>
-
-            <!-- Toolbar: Integration actions -->
-            <div class="toolbar-pf-action-right">
-              <ng-container *ngIf="step.stepKind === 'mapper'">
-                <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
-              </ng-container>
+                  <li class="active">Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</li>
+                </ol>
+              </div>
+              <!-- Toolbar: Integration actions -->
+              <div class="toolbar-pf-action-right">
+                <ng-container *ngIf="step.stepKind === 'mapper'">
+                  <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                </ng-container>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- Page body -->
-    <syndesis-loading class="main-panel-body {{ step.stepKind !== 'mapper' ? 'body' : 'body mapper' }}"
+    <syndesis-loading class="syn-scrollable--body {{ step.stepKind !== 'mapper' ? 'body' : 'body mapper' }}"
                       [loading]="loading">
-      <ng-container *ngIf="error">
-        <div [class]="error.class"
-             [innerHtml]="error.message">
-        </div>
-      </ng-container>
-      <div [ngSwitch]="step.stepKind">
-        <div *ngSwitchCase="'mapper'">
-          <div class="row">
-            <div class="col-md-12" *ngIf="step">
-              <syndesis-data-mapper-host [position]="position"></syndesis-data-mapper-host>
+      <div class="container-fluid">
+        <ng-container *ngIf="error">
+          <div [class]="error.class"
+              [innerHtml]="error.message">
+          </div>
+        </ng-container>
+        <div [ngSwitch]="step.stepKind">
+          <div *ngSwitchCase="'mapper'">
+            <div class="row">
+              <div class="col-md-12" *ngIf="step">
+                <syndesis-data-mapper-host [position]="position"></syndesis-data-mapper-host>
+              </div>
             </div>
           </div>
-        </div>
-        <div *ngSwitchCase="'ruleFilter'">
-          <div class="row">
-            <div class="col-md-12"
-                  *ngIf="step && dataShape">
-              <div class="basic-filter">
-                <div class="title">
-                  <h1>Configure Basic Filter Step</h1>
-                </div>
-                <p>Define one or more rules for evaluating data to determine whether the integration should continue.</p>
-                <div class="row row-cards-pf">
-                  <div class="card-pf">
-                    <div class="card-pf-body">
-                      <syndesis-basic-filter [(configuredProperties)]="customProperties"
-                                              [(valid)]="valid"
-                                              [dataShape]="dataShape"
-                                              [position]="position"></syndesis-basic-filter>
-                      <div class="control-buttons">
-                        <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+          <div *ngSwitchCase="'ruleFilter'">
+            <div class="row">
+              <div class="col-md-12"
+                    *ngIf="step && dataShape">
+                <div class="basic-filter">
+                  <div class="title">
+                    <h1>Configure Basic Filter Step</h1>
+                  </div>
+                  <p>Define one or more rules for evaluating data to determine whether the integration should continue.</p>
+                  <div class="row row-cards-pf">
+                    <div class="card-pf">
+                      <div class="card-pf-body">
+                        <syndesis-basic-filter [(configuredProperties)]="customProperties"
+                                                [(valid)]="valid"
+                                                [dataShape]="dataShape"
+                                                [position]="position"></syndesis-basic-filter>
+                        <div class="control-buttons">
+                          <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -93,25 +94,25 @@
               </div>
             </div>
           </div>
-        </div>
-        <div *ngSwitchDefault>
-          <div class="title">
-            <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
-          </div>
-          <p>Fill out the fields associated with the selected step.</p>
-          <div *ngIf="formGroup">
-            <div class="row row-cards-pf">
-              <div class="card-pf">
-                <div class="card-pf-body">
-                  <form class="form-horizontal"
-                        [formGroup]="formGroup">
-                    <syndesis-form-control *ngFor="let controlModel of formModel"
-                                            [group]="formGroup"
-                                            [model]="controlModel"></syndesis-form-control>
-                  </form>
-                  <div class="row control-buttons">
-                    <div class="col-sm-9 col-sm-offset-3">
-                      <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+          <div *ngSwitchDefault>
+            <div class="title">
+              <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
+            </div>
+            <p>Fill out the fields associated with the selected step.</p>
+            <div *ngIf="formGroup">
+              <div class="row row-cards-pf">
+                <div class="card-pf">
+                  <div class="card-pf-body">
+                    <form class="form-horizontal"
+                          [formGroup]="formGroup">
+                      <syndesis-form-control *ngFor="let controlModel of formModel"
+                                              [group]="formGroup"
+                                              [model]="controlModel"></syndesis-form-control>
+                    </form>
+                    <div class="row control-buttons">
+                      <div class="col-sm-9 col-sm-offset-3">
+                        <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                      </div>
                     </div>
                   </div>
                 </div>

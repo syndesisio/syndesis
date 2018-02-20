@@ -1,54 +1,52 @@
 <syndesis-loading [loading]="!currentFlowService.loaded">
-  <div class="main-panel-inner action-select">
-
+  <div class="action-select syn-scrollable">
     <!-- Toolbar -->
     <div class="toolbar">
-
-      <!-- Toolbar: Breadcrumbs -->
-      <div class="row toolbar-pf">
-        <div class="col-sm-12">
-          <div class="toolbar-pf-actions">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']">Home</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
-                </li>
-                <li>
-                  <a *ngIf="flowPageService.integrationName"
-                     [routerLink]="['/integrations', currentFlowService.integration.id]">{{ integrationName }}</a>
-                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
-                </li>
-                <li class="active">Choose Action</li>
-              </ol>
-            </div>
-            <div class="toolbar-pf-action-right">
-              <syndesis-cancel-add-step></syndesis-cancel-add-step>
+      <div class="container-fluid">
+        <!-- Toolbar: Breadcrumbs -->
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">Home</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">Integrations</a>
+                  </li>
+                  <li>
+                    <a *ngIf="flowPageService.integrationName"
+                      [routerLink]="['/integrations', currentFlowService.integration.id]">{{ integrationName }}</a>
+                    <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                  </li>
+                  <li class="active">Choose Action</li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
+                <syndesis-cancel-add-step></syndesis-cancel-add-step>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="main-panel-body wizard-pf-body clearfix">
-      <div class="title">
-        <h1>{{ step?.connection.name }} - Choose an Action</h1>
-      </div>
-
-      <!-- Actions -->
-      <div>
-        <p>Choose an action for the selected connection.</p>
-
-        <!-- Toolbar -->
-        <syndesis-list-toolbar [items]="actions$"
-                               [filteredItems]="filteredActions$"></syndesis-list-toolbar>
-
-        <!-- Action List -->
-        <syndesis-list-actions [actions]="filteredActions$ | async"
-                               [loading]="loading$ | async"
-                               (onSelected)="onSelected($event)"></syndesis-list-actions>
+    <div class="wizard-pf-body syn-scrollable--body">
+      <div class="container-fluid">
+        <div class="title">
+          <h1>{{ step?.connection.name }} - Choose an Action</h1>
+        </div>
+        <!-- Actions -->
+        <div>
+          <p>Choose an action for the selected connection.</p>
+          <!-- Toolbar -->
+          <syndesis-list-toolbar [items]="actions$"
+                                [filteredItems]="filteredActions$"></syndesis-list-toolbar>
+          <!-- Action List -->
+          <syndesis-list-actions [actions]="filteredActions$ | async"
+                                [loading]="loading$ | async"
+                                (onSelected)="onSelected($event)"></syndesis-list-actions>
+        </div>
       </div>
     </div>
   </div>

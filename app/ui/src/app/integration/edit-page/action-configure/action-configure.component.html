@@ -28,84 +28,88 @@
       </ng-container>
     </button>
   </ng-template>
-  <div class="main-panel-inner action-configure">
+  <div class="action-configure syn-scrollable">
     <!-- Toolbar -->
     <div class="toolbar">
       <!-- Toolbar: Breadcrumbs -->
-      <div class="row toolbar-pf">
-        <div class="col-sm-12">
-          <div class="toolbar-pf-actions">
-            <div class="inline-block">
-              <ol class="breadcrumb">
-                <li>
-                  <a [routerLink]="['/']">Home</a>
-                </li>
-                <li>
-                  <a [routerLink]="['/integrations']">Integrations</a>
-                </li>
-                <li>
-                  <a *ngIf="flowPageService.integrationName"
-                     [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
-                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
-                </li>
-                <li class="active">Configure {{ action?.name }}</li>
-              </ol>
-            </div>
-            <div class="toolbar-pf-action-right">
+      <div class="container-fluid">
+        <div class="row toolbar-pf">
+          <div class="col-sm-12">
+            <div class="toolbar-pf-actions">
+              <div class="inline-block">
+                <ol class="breadcrumb">
+                  <li>
+                    <a [routerLink]="['/']">Home</a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/integrations']">Integrations</a>
+                  </li>
+                  <li>
+                    <a *ngIf="flowPageService.integrationName"
+                      [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
+                    <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                  </li>
+                  <li class="active">Configure {{ action?.name }}</li>
+                </ol>
+              </div>
+              <div class="toolbar-pf-action-right">
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="main-panel-body wizard-pf-body clearfix">
-      <div class="title">
-        <h1>{{ step?.connection?.name }}</h1>
-        <h3>{{ action?.name }}</h3>
-      </div>
-      <syndesis-loading [loading]="loading">
-        <ng-container *ngIf="error">
-          <div class="row row-cards-pf">
-            <div class="card-pf">
-              <div class="card-pf-body">
-                <div class="row">
-                  <div class="col-xs-12">
-                    <p [class]="error.class">
-                      <span [class]="error.icon"></span>
-                      {{ error.message }}
-                    </p>
+    <div class="wizard-pf-body syn-scrollable--body">
+      <div class="container-fluid">
+        <div class="title">
+          <h1>{{ step?.connection?.name }}</h1>
+          <h3>{{ action?.name }}</h3>
+        </div>
+        <syndesis-loading [loading]="loading">
+          <ng-container *ngIf="error">
+            <div class="row row-cards-pf">
+              <div class="card-pf">
+                <div class="card-pf-body">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <p [class]="error.class">
+                        <span [class]="error.icon"></span>
+                        {{ error.message }}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div *ngIf="!hasConfiguration"
-                    class="row control-buttons">
-                  <div class="col-xs-12">
-                    <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                  <div *ngIf="!hasConfiguration"
+                      class="row control-buttons">
+                    <div class="col-xs-12">
+                      <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="hasConfiguration">
-          <p>{{ descriptor.description }}</p>
-          <div class="row row-cards-pf">
-            <div class="card-pf">
-              <div class="card-pf-body">
-                <form class="form-horizontal"
-                      [formGroup]="formGroup">
-                  <syndesis-form-control *ngFor="let controlModel of formModel"
-                                      [group]="formGroup"
-                                      [model]="controlModel"></syndesis-form-control>
+          </ng-container>
+          <ng-container *ngIf="hasConfiguration">
+            <p>{{ descriptor.description }}</p>
+            <div class="row row-cards-pf">
+              <div class="card-pf">
+                <div class="card-pf-body">
+                  <form class="form-horizontal"
+                        [formGroup]="formGroup">
+                    <syndesis-form-control *ngFor="let controlModel of formModel"
+                                        [group]="formGroup"
+                                        [model]="controlModel"></syndesis-form-control>
                     <div class="row control-buttons">
                       <div class="col-sm-9 col-sm-offset-3">
                         <ng-container *ngTemplateOutlet="controlButtons"></ng-container>
                       </div>
                     </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-        </ng-container>
-      </syndesis-loading>
+          </ng-container>
+        </syndesis-loading>
+      </div>
     </div>
   </div>
 </syndesis-loading>

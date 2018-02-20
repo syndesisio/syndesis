@@ -79,3 +79,11 @@
 .syn-icon-small {
   @include syn-icon-box(24px);
 }
+
+.syn-scrollable {
+  @include syn-scrollable-parent;
+
+  .syn-scrollable--body {
+    @include syn-scrollable-body;
+  }
+}
