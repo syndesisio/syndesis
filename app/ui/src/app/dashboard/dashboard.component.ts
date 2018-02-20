@@ -20,12 +20,9 @@ const DEFAULT_POLLING_INTERVAL = 5000;
 export class DashboardComponent implements OnInit, OnDestroy {
   integrationState$: Observable<IntegrationState>;
   connections$: Observable<Connections>;
-  integrations: Observable<Integrations>;
-  connectionsLoading: Observable<boolean>;
-  integrationsLoading: Observable<boolean>;
-  selectedId = undefined;
-  truncateLimit = 80;
-  truncateTrail = '…';
+  integrations$: Observable<Integrations>;
+  connectionsLoading$: Observable<boolean>;
+  integrationsLoading$: Observable<boolean>;
 
   private metricsRefreshInterval: any;
 
@@ -37,9 +34,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private configService: ConfigService
   ) {
     this.connections$ = this.connectionStore.list;
-    this.integrations = this.integrationStore.list;
-    this.connectionsLoading = this.connectionStore.loading;
-    this.integrationsLoading = this.integrationStore.loading;
+    this.integrations$ = this.integrationStore.list;
+    this.connectionsLoading$ = this.connectionStore.loading;
+    this.integrationsLoading$ = this.integrationStore.loading;
   }
 
   ngOnInit() {

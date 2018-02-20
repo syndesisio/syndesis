@@ -18,8 +18,6 @@ export class DashboardIntegrationsComponent implements OnChanges {
   @Input() connections: Connections;
   @Input() integrationsLoading: boolean;
   @Input() connectionsLoading: boolean;
-  selectedId = undefined;
-  truncateTrail = '…';
 
   doughnutChartLabels = ['Published', 'Draft', 'Unpublished'];
 

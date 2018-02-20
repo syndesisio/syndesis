@@ -15,9 +15,9 @@ import {
 })
 export class DashboardMetricsComponent implements OnInit {
   @Input() connections: Connections; // TODO: Replace by connectionState once the ngrx store supports it
+  @Input() integrations: Integrations; // TODO: Replace by integrationState.collection once the legacy Integrations store is phased out
   @Input() integrationState: IntegrationState;
 
-  integrations: Integrations;
   uptimeStart: string;
   uptimeLegend$: Observable<string>;
 
@@ -34,7 +34,6 @@ export class DashboardMetricsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.integrations = this.integrationState.collection;
     this.startDate = moment(this.integrationMetrics.start);
     this.uptimeStart = this.startDate.format('MMM Do HH:mm A'); // eg January 12nd 8:53 pm
 

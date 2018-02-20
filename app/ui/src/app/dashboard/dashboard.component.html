@@ -1,11 +1,12 @@
 <div class="syndesis-dashboard">
   <syndesis-dashboard-metrics
     [integrationState]="integrationState$ | async"
+    [integrations]="integrations$ | async"
     [connections]="connections$ | async">
   </syndesis-dashboard-metrics>
-  <syndesis-dashboard-integrations [integrations]="integrations | async"
-                                   [integrationsLoading]="integrationsLoading | async"
+  <syndesis-dashboard-integrations [integrations]="integrations$ | async"
+                                   [integrationsLoading]="integrationsLoading$ | async"
                                    [connections]="connections$ | async"
-                                   [connectionsLoading]="connectionsLoading | async"></syndesis-dashboard-integrations>
-
+                                   [connectionsLoading]="connectionsLoading$ | async">
+  </syndesis-dashboard-integrations>
 </div>

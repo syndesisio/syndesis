@@ -1,7 +1,7 @@
 <syndesis-loading [loading]="integrationsLoading">
   <div class="container-cards-pf syndesis-dashboard-integrations">
     <!-- Second row empty State -->
-    <div class="blank-slate-pf" *ngIf="integrations.length === 0">
+    <div class="blank-slate-pf" *ngIf="integrations?.length === 0">
       <div class="blank-slate-pf-icon">
         <span class="pficon pficon pficon-add-circle-o"></span>
       </div>
@@ -12,7 +12,7 @@
     </div>
 
     <!-- Second Row not empty state -->
-    <ng-container *ngIf="integrations.length > 0">
+    <ng-container *ngIf="integrations?.length > 0">
       <div class="row row-cards-pf second-row">
 
         <!-- Left: Integrations -->
