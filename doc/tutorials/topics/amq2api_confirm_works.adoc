@@ -4,10 +4,9 @@
 To confirm that the AMQ to REST API integration is working:
 
 . In the left panel, click *Integrations*.
-. If necessary, wait until your sample integration is the *Active* integration,
-which means that it is running. If you used the example name, you would 
-see that 
-*AMQ to REST API Sample Integration* is *Active*.
+. Confirm that your AMQ to REST API integration is *Active*, which means that 
+it is running. The integration must be *Active* before you continue with 
+these instructions.
 
 . In a new browser window, go to the To Do app display by 
 inserting `*todo-*` in front of the URL
