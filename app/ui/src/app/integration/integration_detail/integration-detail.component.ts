@@ -90,7 +90,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     private eventsService: EventsService,
     private platformStore: Store<PlatformState>,
     private configService: ConfigService
-  ) {}
+  ) { }
 
   get modalTitle() {
     return this.integrationActionsService.getModalTitle();
@@ -213,7 +213,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         }
 
         this.platformStore.dispatch(new IntegrationActions.FetchMetrics(integrationId));
-        
+
         const integration$ = this.integrationSupportService.watchOverview(integrationId);
         this.integrationSubscription = integration$.subscribe((integration: IntegrationOverview) => {
           this.loading = false;
