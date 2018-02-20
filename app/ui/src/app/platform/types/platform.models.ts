@@ -84,6 +84,7 @@ export interface DataShape {
   type: string;
   name: string;
   description: string;
+  metadata: StringMap<string>;
 }
 export type DataShapes = Array<DataShape>;
 

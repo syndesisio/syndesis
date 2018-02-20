@@ -72,7 +72,7 @@
             (click)="goto('action-select')">
           <span [class]="getTextClass('action-select')">Choose an action</span>
         </li>
-        <ng-container *ngIf="step.action">
+        <ng-container *ngIf="step.action && currentState === 'action-configure'">
           <ng-template ngFor
                        let-definition
                        [ngForOf]="getPropertyDefinitions(step.action)"
@@ -82,6 +82,11 @@
               <span [class]="getTextClass('action-configure', page)">{{ definition.name | capitalize }}</span>
             </li>
           </ng-template>
+        </ng-container>
+        <ng-container *ngIf="step.action && currentState === 'describe-data'">
+          <li [class]="getSubMenuActiveClass('describe-data')">
+            <span [class]="getTextClass('describe-data')">Specify Data Type</span>
+          </li>
         </ng-container>
       </ul>
 

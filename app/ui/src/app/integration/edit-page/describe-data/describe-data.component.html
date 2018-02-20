@@ -1,0 +1,62 @@
+<syndesis-loading [loading]="!currentFlowService.loaded">
+  <div class="main-panel-inner">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <!-- Toolbar: Breadcrumbs -->
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+          <div class="toolbar-pf-actions">
+            <div class="inline-block">
+              <ol class="breadcrumb">
+                <li>
+                  <a [routerLink]="['/']">Home</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/integrations']">Integrations</a>
+                </li>
+                <li>
+                  <a *ngIf="flowPageService.integrationName"
+                     [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
+                  <ng-container *ngIf="!flowPageService.integrationName">New Integration</ng-container>
+                </li>
+                <li class="active">Configure {{ actionName }}</li>
+              </ol>
+            </div>
+            <div class="toolbar-pf-action-right">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main-panel-body wizard-pf-body clearfix">
+      <div class="title">
+        <h1>{{ connectionName }}</h1>
+        <h3>Specify {{ direction | capitalize }} Data Type</h3>
+      </div>
+      <ng-container *ngIf="userDefined">
+        <div class="row">
+          <div class="col-md-12">
+            <p>This is a typeless connection. To use type-aware functionality, enter information that defines the data type</p>
+          </div>
+        </div>
+        <div class="row row-cards-pf">
+          <div class="card-pf">
+            <div class="card-pf-body">
+              <form class="form-horizontal"
+                    [formGroup]="formGroup">
+                <syndesis-form-control *ngFor="let controlModel of formModel"
+                                        [group]="formGroup"
+                                        [model]="controlModel"></syndesis-form-control>
+                <div class="row control-buttons">
+                  <div class="col-sm-9 col-sm-offset-3">
+                    <button class="btn btn-primary" type="button" (click)="continue()">Next</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</syndesis-loading>

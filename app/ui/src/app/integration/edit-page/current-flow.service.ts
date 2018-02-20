@@ -431,7 +431,10 @@ export class CurrentFlowService {
         const stepKind = event['stepKind'] || ENDPOINT;
         // TODO no step here should really raise an error
         const step = this.steps[position] || createStep();
-        step.action = action;
+        // only reset this object if the action is being changed
+        if (step.action && step.action.id !== action.id) {
+          step.action = action;
+        }
         step.stepKind = stepKind;
         this.steps[position] = step;
         this.maybeDoAction(event['onSave']);
@@ -449,8 +452,13 @@ export class CurrentFlowService {
           step.action = { actionType: 'step' } as Action;
           step.action.descriptor = {} as ActionDescriptor;
         }
-        step.action.descriptor.inputDataShape = descriptor.inputDataShape;
-        step.action.descriptor.outputDataShape = descriptor.outputDataShape;
+        // only reset the datashape if it isn't user defined
+        if (!this.isUserDefined(step.action.descriptor.inputDataShape)) {
+          step.action.descriptor.inputDataShape = descriptor.inputDataShape;
+        }
+        if (!this.isUserDefined(step.action.descriptor.outputDataShape)) {
+          step.action.descriptor.outputDataShape = descriptor.outputDataShape;
+        }
         this.maybeDoAction(event['onSave']);
         break;
       }
@@ -573,6 +581,10 @@ export class CurrentFlowService {
         integration: this.integration
       });
     }, 10);
+  }
+
+  private isUserDefined(dataShape: DataShape) {
+    return dataShape && dataShape.metadata && dataShape.metadata.userDefined === 'true';
   }
 
   private hasDataShape(step: Step, isInput = false): boolean {
