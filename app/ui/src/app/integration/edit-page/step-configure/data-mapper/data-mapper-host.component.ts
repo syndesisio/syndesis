@@ -20,7 +20,7 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { TypeFactory } from '@syndesis/ui/model';
-import { DataShapeKinds, DataShape, IntegrationSupportService, Step, ActionDescriptor } from '@syndesis/ui/platform';
+import { DataShapeKinds, DataShape, IntegrationSupportService, Step, ActionDescriptor, Action } from '@syndesis/ui/platform';
 import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { DATA_MAPPER } from '@syndesis/ui/store';
 /*
@@ -132,21 +132,25 @@ export class DataMapperHostComponent implements OnInit {
     }
     this.addInitializationTask();
     this.currentFlowService.events.emit({
-      kind: 'integration-set-datashapes',
+      kind: 'integration-set-action',
       position: this.position,
-      descriptor: {
-        inputDataShape: {
-          kind: DataShapeKinds.ANY,
-          name: 'All preceding outputs'
-        },
-        outputDataShape: {
-          kind: inputDataShape.kind,
-          type: inputDataShape.type,
-          name: 'Data Mapper (' + inputDataShape.name + ')',
-          description: inputDataShape.description,
-          specification: inputDataShape.specification
-        }
-      } as ActionDescriptor,
+      stepKind: 'mapper',
+      action: {
+        actionType: 'step',
+        descriptor: {
+          inputDataShape: {
+            kind: DataShapeKinds.ANY,
+            name: 'All preceding outputs'
+          },
+          outputDataShape: {
+            kind: inputDataShape.kind,
+            type: inputDataShape.type,
+            name: 'Data Mapper (' + inputDataShape.name + ')',
+            description: inputDataShape.description,
+            specification: inputDataShape.specification
+          }
+        } as ActionDescriptor
+      } as Action,
       onSave: () => {
         this.removeInitializationTask();
       }

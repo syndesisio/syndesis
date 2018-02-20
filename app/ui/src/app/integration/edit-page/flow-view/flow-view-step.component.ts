@@ -55,10 +55,6 @@ export class FlowViewStepComponent implements OnChanges {
     // TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700
     // for now showing everything as a tooltip
     this.pop.show();
-
-    /* if (this.flowPageService.getCurrentStepKind(this.route) === 'mapper') {
-      this.pop.show();
-    } */
   }
 
   hideTooltip() {
