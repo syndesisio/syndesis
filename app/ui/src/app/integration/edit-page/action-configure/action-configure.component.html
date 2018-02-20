@@ -69,8 +69,10 @@
               <div class="card-pf-body">
                 <div class="row">
                   <div class="col-xs-12">
-                    <p [class]="error.class"
-                    [innerHtml]="error.message"></p>
+                    <p [class]="error.class">
+                      <span [class]="error.icon"></span>
+                      {{ error.message }}
+                    </p>
                   </div>
                 </div>
                 <div *ngIf="!hasConfiguration"

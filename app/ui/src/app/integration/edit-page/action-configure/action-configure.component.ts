@@ -138,6 +138,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
                 const body = JSON.parse(response._body);
                 this.error = {
                   class: 'alert alert-warning',
+                  icon: 'pficon pficon-warning-triangle-o',
                   message:
                     body.message ||
                     body.userMsg ||
@@ -196,8 +197,9 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   initForm(position: number, page: number, descriptor: ActionDescriptor, error?: any) {
     if (error) {
       this.error = error;
-      this.error.message = error.message || error.userMsg || error.developerMsg;
       this.error.class = 'alert alert-warning';
+      this.error.icon = 'pficon pficon-warning-triangle-o';
+      this.error.message = error.message || error.userMsg || error.developerMsg;
       this.loading = false;
       return;
     }
@@ -206,6 +208,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       // TODO figure out how to get a link in here that works
       this.error = {
         class: 'alert alert-info',
+        icon: 'pficon pficon-info',
         message: 'There are no properties to configure for this action.'
       };
       return;
