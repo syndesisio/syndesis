@@ -21,6 +21,7 @@ describe('DashboardMetricsComponent', () => {
     component = fixture.componentInstance;
 
     component.connections = [];
+    component.integrations = [];
     component.integrationState = {
       collection: [],
       metrics: {
