@@ -1,5 +1,5 @@
 <syndesis-loading [loading]="!currentFlowService.loaded">
-  <div class="action-select syn-scrollable">
+  <div class="syn-scrollable">
     <!-- Toolbar -->
     <div class="toolbar">
       <div class="container-fluid">
@@ -41,11 +41,11 @@
           <p>Choose an action for the selected connection.</p>
           <!-- Toolbar -->
           <syndesis-list-toolbar [items]="actions$"
-                                [filteredItems]="filteredActions$"></syndesis-list-toolbar>
+            [filteredItems]="filteredActions$"></syndesis-list-toolbar>
           <!-- Action List -->
           <syndesis-list-actions [actions]="filteredActions$ | async"
-                                [loading]="loading$ | async"
-                                (onSelected)="onSelected($event)"></syndesis-list-actions>
+            [loading]="loading$ | async"
+            (onSelected)="onSelected($event)"></syndesis-list-actions>
         </div>
       </div>
     </div>

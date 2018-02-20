@@ -25,16 +25,23 @@
               </div>
               <div class="toolbar-pf-action-right">
                 <button class="btn btn-default"
-                        (click)="cancel()">Cancel
+                  (click)="cancel()">Cancel
               </button> &nbsp;
                 <button class="btn btn-default"
-                        (click)="save()"
-                        [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress"><span *ngIf="flowPageService.saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
-              </button>
+                  (click)="save()"
+                  [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
+                  <span *ngIf="flowPageService.saveInProgress"
+                    class="spinner spinner-sm spinner-inline"></span>
+                  Save as Draft
+                </button>
                 <button type="button"
-                        class="btn btn-primary"
-                        (click)="publish()"
-                        [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress"><span *ngIf="flowPageService.publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
+                  class="btn btn-primary"
+                  (click)="publish()"
+                  [disabled]="!flowPageService.canContinue() || flowPageService.saveInProgress || flowPageService.publishInProgress">
+                  <span *ngIf="flowPageService.publishInProgress"
+                    class="spinner spinner-sm spinner-inline"></span>
+                  Publish
+                </button>
               </div>
             </div>
           </div>
@@ -47,10 +54,10 @@
         <div *ngIf="errorMessage">
           <div class="alert alert-danger">
             <button type="button"
-                    class="close"
-                    (click)="errorMessage = undefined">
-                  <span class="pficon pficon-close"></span>
-                </button>
+              class="close"
+              (click)="errorMessage = undefined">
+              <span class="pficon pficon-close"></span>
+            </button>
             <span class="pficon pficon-error-circle-o"></span>
             <p>Error saving integration: </p>
             <pre>{{ errorMessage }}</pre>
@@ -69,21 +76,21 @@
           <div class="blank-slate-pf-secondary-action first-step"
               *ngIf="getMiddleSteps().length === 0">
             <button type="button"
-                    (click)="addNew('step')"
-                    class="btn btn-default">Add a Step</button>&nbsp;&nbsp;&nbsp;
+              (click)="addNew('step')"
+              class="btn btn-default">Add a Step</button>&nbsp;&nbsp;&nbsp;
             <button type="button"
-                    (click)="addNew('connection')"
-                    class="btn btn-default">Add a Connection</button>
+              (click)="addNew('connection')"
+              class="btn btn-default">Add a Connection</button>
           </div>
           <!-- Middle Steps -->
           <div class="blank-slate-pf-secondary-action middle-steps"
               *ngIf="getMiddleSteps().length !== 0">
             <button type="button"
-                    (click)="showPopouts('step')"
-                    class="btn btn-default">Add a Step</button> &nbsp;&nbsp;&nbsp;
+              (click)="showPopouts('step')"
+              class="btn btn-default">Add a Step</button> &nbsp;&nbsp;&nbsp;
             <button type="button"
-                    (click)="showPopouts('connection')"
-                    class="btn btn-default">Add a Connection</button>
+              (click)="showPopouts('connection')"
+              class="btn btn-default">Add a Connection</button>
           </div>
         </div>
       </div>

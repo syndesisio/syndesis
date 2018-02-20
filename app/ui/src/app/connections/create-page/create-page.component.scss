@@ -29,13 +29,13 @@
   syndesis-connections-connection-basics,
   syndesis-connections-configure-fields,
   syndesis-connections-review {
+    @include syn-scrollable-body;
     position: relative;
     flex: 1 1 auto;
     margin-left: -20px;
     padding-left: 20px;
     margin-right: -20px;
     padding-right: 20px;
-    @include syn-scrollable-body;
   }
 
   .connector-list {

@@ -82,8 +82,8 @@
 
 .syn-scrollable {
   @include syn-scrollable-parent;
+}
 
-  .syn-scrollable--body {
-    @include syn-scrollable-body;
-  }
+.syn-scrollable--body {
+  @include syn-scrollable-body;
 }
