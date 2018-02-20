@@ -7,5 +7,5 @@ and identifies any items that were damaged when they were received.
 
 To add the custom damage reporter step:
 
-. In the center of the right panel, click *Add a Step*. 
+. In the center, click *Add a Step*. 
 . On the *Choose a Step* page, click *Damage Reporter*. 
