@@ -52,6 +52,8 @@ const publish = {
 
 type TabType = 'description' | 'history' | 'logs' | 'metrics';
 
+const DEFAULT_POLLING_INTERVAL = 5000;
+
 @Component({
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'integration-detail.component.html',
@@ -59,7 +61,6 @@ type TabType = 'description' | 'history' | 'logs' | 'metrics';
 })
 export class IntegrationDetailComponent implements OnInit, OnDestroy {
   integrationMetrics$: Observable<IntegrationMetrics>;
-  integration$: Observable<IntegrationOverview>;
   integrationDeployments$: Observable<IntegrationDeployment[]>;
   integrationSubscription: Subscription;
   eventsSubscription: Subscription;
@@ -72,6 +73,8 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   currentDeployment: IntegrationDeployment;
 
   selectedTabType: TabType = 'description';
+
+  private metricsRefreshInterval: any;
 
   constructor(
     public integrationStore: IntegrationStore,
@@ -86,7 +89,8 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     private config: ConfigService,
     private eventsService: EventsService,
     private platformStore: Store<PlatformState>,
-  ) {}
+    private configService: ConfigService
+  ) { }
 
   get modalTitle() {
     return this.integrationActionsService.getModalTitle();
@@ -195,9 +199,23 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
           this.integrationSubscription.unsubscribe();
         }
         const integrationId = paramMap.get('integrationId');
+
+        let pollingInterval: number;
+
+        try {
+          pollingInterval = this.configService.getSettings('metricsPollingInterval');
+        } catch (error) {
+          pollingInterval = DEFAULT_POLLING_INTERVAL;
+        }
+
+        if (pollingInterval && !isNaN(pollingInterval) && pollingInterval > 0) {
+          this.metricsRefreshInterval = setInterval(() => this.refreshDashboard(), pollingInterval);
+        }
+
         this.platformStore.dispatch(new IntegrationActions.FetchMetrics(integrationId));
-        this.integration$ = this.integrationSupportService.watchOverview(integrationId);
-        this.integrationSubscription = this.integration$.subscribe((integration: IntegrationOverview) => {
+
+        const integration$ = this.integrationSupportService.watchOverview(integrationId);
+        this.integrationSubscription = integration$.subscribe((integration: IntegrationOverview) => {
           this.loading = false;
           this.integration = integration;
           this.deploymentActionConfigs = {};
@@ -228,10 +246,18 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.metricsRefreshInterval) {
+      clearInterval(this.metricsRefreshInterval);
+    }
+
     if (this.integrationSubscription) {
       this.integrationSubscription.unsubscribe();
     }
     this.routeSubscription.unsubscribe();
+  }
+
+  private refreshDashboard(): void {
+    this.platformStore.dispatch(new IntegrationActions.FetchMetrics());
   }
 
 }
