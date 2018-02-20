@@ -49,4 +49,13 @@ export abstract class FormFactoryService {
     values?: any,
     controls?: Array<string>
   ): DynamicFormControlModel[];
+
+  supressNullValues(data: object): object {
+    Object.keys(data).forEach(key => {
+      if (data[key] === null) {
+        delete data[key];
+      }
+    });
+    return data;
+  }
 }
