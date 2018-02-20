@@ -100,18 +100,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     });
   }
 
-  continue() {
-    const step = this.currentFlowService.getStep(this.position);
-    if (this.userDefined) {
-      const value = this.formGroup.value;
-      const dataShape = this.getDataShape(this.direction, step);
-      // normalize this to 'any'
-      dataShape.kind = value.kind;
-      dataShape.specification = value.specification || '';
-      dataShape.name = value.name || '';
-      dataShape.description = value.description || '';
-      dataShape.metadata = { ...dataShape.metadata, ...{ userDefined: 'true' }};
-    }
+  validateDataShapes() {
     if (this.direction === DataShapeDirection.INPUT) {
       this.inputSet = true;
     }
@@ -136,6 +125,31 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     // if we're in the middle, we need to check both
     const nextDirection = this.direction === DataShapeDirection.INPUT ? DataShapeDirection.OUTPUT : DataShapeDirection.INPUT;
     this.router.navigate(['describe-data', this.position, nextDirection], { relativeTo: this.route.parent });
+
+  }
+
+  continue() {
+    const step = this.currentFlowService.getStep(this.position);
+    if (this.userDefined) {
+      const value = this.formGroup.value;
+      const dataShape = this.getDataShape(this.direction, step);
+      // normalize this to 'any'
+      dataShape.kind = value.kind;
+      dataShape.specification = value.specification || '';
+      dataShape.name = value.name || '';
+      dataShape.description = value.description || '';
+      dataShape.metadata = { ...dataShape.metadata, ...{ userDefined: 'true' }};
+      this.currentFlowService.events.emit({
+        kind: 'integration-set-datashape',
+        isInput: this.direction === DataShapeDirection.INPUT,
+        dataShape,
+        onSave: () => {
+          this.validateDataShapes();
+        }
+      });
+    } else {
+      this.validateDataShapes();
+    }
   }
 
   initialize() {

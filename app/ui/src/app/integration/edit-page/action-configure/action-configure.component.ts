@@ -116,7 +116,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
               .toPromise()
               .then( (descriptor: ActionDescriptor) => {
                 this.currentFlowService.events.emit({
-                  kind: 'integration-set-datashapes',
+                  kind: 'integration-set-descriptor',
                   position: this.position,
                   descriptor,
                   onSave: () => {
@@ -177,12 +177,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       .fetchMetadata(
         this.step.connection,
         this.step.action,
-        this.configuredPropertiesForMetadataCall()
+        this.configuredPropertiesForMetadataCall(step.action)
       )
       .toPromise()
       .then( (descriptor: ActionDescriptor) => {
         this.currentFlowService.events.emit({
-          kind: 'integration-set-datashapes',
+          kind: 'integration-set-descriptor',
           position: this.position,
           descriptor,
           onSave: () => {
@@ -246,7 +246,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0;
   }
 
-  configuredPropertiesForMetadataCall() {
+  configuredPropertiesForMetadataCall(action: Action) {
     /**
      * Fetches all properties from 0..this.position-1 steps, this way
      * the backend does not fix a value and drills down into the detail
@@ -255,7 +255,10 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
      * value is selected by the user
      */
     const props = {};
-    const stepDefinitions = this.step.action.descriptor.propertyDefinitionSteps;
+    if (!action) {
+      return props;
+    }
+    const stepDefinitions = action.descriptor.propertyDefinitionSteps;
     for (let p = 0; p < this.page; p++) {
       for (const prop in stepDefinitions[ p ].properties) {
         /* We don't want null or undefined values here */
@@ -264,7 +267,6 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         }
       }
     }
-
     return props;
   }
 

@@ -432,7 +432,7 @@ export class CurrentFlowService {
         // TODO no step here should really raise an error
         const step = this.steps[position] || createStep();
         // only reset this object if the action is being changed
-        if (step.action && step.action.id !== action.id) {
+        if (!step.action || step.action.id !== action.id) {
           step.action = action;
         }
         step.stepKind = stepKind;
@@ -444,20 +444,41 @@ export class CurrentFlowService {
         );
         break;
       }
-      case 'integration-set-datashapes': {
+      case 'integration-set-descriptor': {
         const position = +event['position'];
         const descriptor = event['descriptor'] as ActionDescriptor;
         const step = this.steps[position] || createStep();
         if (!step.action) {
           step.action = { actionType: 'step' } as Action;
-          step.action.descriptor = {} as ActionDescriptor;
+          step.action.descriptor = descriptor;
+          return;
         }
-        // only reset the datashape if it isn't user defined
-        if (!this.isUserDefined(step.action.descriptor.inputDataShape)) {
-          step.action.descriptor.inputDataShape = descriptor.inputDataShape;
+        // set the descriptor but avoid overwriting data shapes if they're user set
+        const inputDataShape = step.action.descriptor.inputDataShape;
+        const outputDataShape = step.action.descriptor.outputDataShape;
+        step.action.descriptor = descriptor;
+        if (this.isUserDefined(inputDataShape)) {
+          step.action.descriptor.inputDataShape = inputDataShape;
         }
-        if (!this.isUserDefined(step.action.descriptor.outputDataShape)) {
-          step.action.descriptor.outputDataShape = descriptor.outputDataShape;
+        if (this.isUserDefined(outputDataShape)) {
+          step.action.descriptor.outputDataShape = outputDataShape;
+        }
+        this.maybeDoAction(event['onSave']);
+        break;
+      }
+      case 'integration-set-datashape': {
+        const position = +event['position'];
+        const dataShape = event['dataShape'] as DataShape;
+        const isInput = event['isInput'] || false;
+        const step = this.steps[position] || createStep();
+        if (!step.action) {
+          step.action = { } as Action;
+          step.action.descriptor = { } as ActionDescriptor;
+        }
+        if (isInput) {
+          step.action.descriptor.inputDataShape = dataShape;
+        } else {
+          step.action.descriptor.outputDataShape = dataShape;
         }
         this.maybeDoAction(event['onSave']);
         break;
@@ -513,6 +534,9 @@ export class CurrentFlowService {
         integration.tags = tags;
         const sub = this.integrationStore.updateOrCreate(integration).subscribe(
           (i: Integration) => {
+            if (!this._integration.id) {
+              this._integration.id = i.id;
+            }
             if (event.publish) {
               this.integrationSupportService.deploy(i).toPromise().then(() => {
                 finishUp(i, sub);
