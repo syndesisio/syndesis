@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -151,14 +150,6 @@ public class ConnectionActionHandler {
     }
 
     private static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape, final DataShape received) {
-        if (maybeExistingDataShape.isPresent() && received != null) {
-            final DataShape existingDataShape = maybeExistingDataShape.get();
-
-            // We should enrich the datashape if the existing connector data shape has the same kind of the
-            // computed one and if the existing one does not carry its own specification
-            return Objects.equals(existingDataShape.getKind(), received.getKind()) && Objects.isNull(existingDataShape.getSpecification());
-        }
-
-        return false;
+        return maybeExistingDataShape.isPresent() && received != null && received.getKind() != null;
     }
 }
