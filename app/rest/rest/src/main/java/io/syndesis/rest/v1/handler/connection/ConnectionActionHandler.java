@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -39,6 +40,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -150,6 +152,11 @@ public class ConnectionActionHandler {
     }
 
     private static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape, final DataShape received) {
-        return maybeExistingDataShape.isPresent() && received != null && received.getKind() != null;
+        return maybeExistingDataShape.isPresent() && isMaleable(maybeExistingDataShape.get().getKind()) && received != null
+            && received.getKind() != null;
+    }
+
+    private static boolean isMaleable(DataShapeKinds kind) {
+        return kind != DataShapeKinds.JAVA;
     }
 }
