@@ -1,6 +1,6 @@
 # Integration Design
 
-This is going to be a technical description of the idea concept of **Integration** and how its logical model is implemented.  
+This is going to be a technical description of the concept of **Integration** and how its logical model is implemented.  
 It's not a comprehensive definition of how Syndesis work. We are not going to describe system pods and their respective responsibilities.
 
 ## Data Model
@@ -11,7 +11,7 @@ The entry point for our model is the `Integration` [entity](https://github.com/s
 
 This object encapsulates 2 aspects:
 1. information about the **definition** of an `Integration`, i.e. *what it has to do*
-2. **runtime information** about a specific Integration instance, for example `getStatus()` that tells you if the Integration is *currently deployed and running*
+2. **runtime information** about a specific Integration instance, for example `getStatus()` tells you if the Integration is *currently deployed and running*
 
 The real definition of what an `Integration` does, is delegated to the following composing entities:
 
@@ -23,15 +23,16 @@ The real definition of what an `Integration` does, is delegated to the following
 ![Syndesis Model core concepts](img/syndesisModel-coreConcepts.svg)
 
 ##### Connector
-Is used to define a set of common properties the user can define on a `Connection` entity coupled with this `Connector`.  
+Is used to define a set of common properties the user can define on `Connection` entities related this `Connector`.  
 Think of `Connector` as a **configurable schema**, used to define the shape of a corresponding `Connection` entity.  
-Another responsibility of the `Connector` is to aggregate a list of `Actions`, that are "operations" available to the user.  
+Another responsibility of the `Connector` is to aggregate a list of `Actions`, that are "operations" available to the user. 
+
 An example of `Connector` could be a **Twitter** `Connector`, where you define some of the properties that are **required by all** the operations it will provide.  
-Properties could be for example `user`, `password`, `token` and so on. Just understand that **you are not setting the values for these keys** here. You are just declaring what are the fields that a specific instance of this item will ask to fill!  
-`Connector` is associated with set of Maven GAV coordinates, to being referred to.
+Properties could be for example `user`, `password`, `token` and so on. Just understand that **you are not setting the values for these keys** here. You are just declaring what are the fields that a specific instance of this item will be asked to fill!  
+`Connector` is also associated with set of Maven GAV coordinates, to be referred to.
 
 ##### Connection
-It can be seen as a specific instance of `Connector`.  
+It can be seen as a concrete instance of a `Connector`.  
 On the `Connector` entity you were just declaring the fields that the specific `Connector` supported, here you are passing the corresponding values for those fields.
 For example it's here that you specify that the value for the field `user` is `scott` and the value for the `password` field is `tiger`.
 
@@ -45,7 +46,7 @@ Role of an `Action` is also to define the link with physical java code library t
 
 
 ##### Step
-`Step` is a **generic entity**, that represents a pipeline operation in your `Integration`. It might be a transformation, a logging call or anything else.
+`Step` is a **generic entity**, that **represents a pipeline operation** in your `Integration`. It might be a transformation, a logging call or anything else.
 Due to all this flexibility `Step` is actually a semantically poor entity. Everything but its type is optional: it can have references to an `Action` or a `Connection` but it doesn't have to. That fact that it needs them or not depends on its `type`, that is its most important information.
 An important type of `Step` is `Endpoint`. Unluckily, an enum that lists these kinds does not exist; So the relationship is weak. You have to take care to use a type that the framework is able to understand, because there is no preemptive way to validate your choice.
 Steps are declared within an `Integration`.
@@ -57,15 +58,15 @@ The overall idea is that your `Integration` define 2 kind of information:
 
 To reinforce the idea you can see it as if:
 
-You define some (technology)`Connector`, where you declare all the properties you allow the developer to give a value to in a corresponding set of `Connection`s. You also link this `Connector` with a series of operations that are tied to this technology, represented by `Action`. In each `Action` you declare also eventual additional properties.  
+You define some (technology)`Connector`, where you declare all the properties you allow the developer to give a value to, in a corresponding set of `Connection`s. You also link this `Connector` with a series of operations that are tied to this technology, represented by `Action`. In each `Action` you declare also eventual additional properties.  
 At last, you detail how the data will flow across `Connections`, and with which eventual transformation, specifying a list of `Steps`.
 
-Notice that despite you define an ordered list of `Steps` to define the business behavior of your `Integration` there is no type checking of any sort, between those steps. It's up to you be sure that the output of a `Step` is coherent with the input of the following one.
+Notice that despite you define an ordered list of `Steps` to define the business behavior of your `Integration` there is no type checking of any sort between those steps. **It's up to you** being sure that the output of a `Step` is coherent with the input of the following one.
 
 
 ## Integration creation workflow
 
-The entities described and linked above are indeed what the code implementation will use to implement the required behavior. But the idea is that those elements are protected behind some layer of abstraction that allows you not to manipulate them directly.
+The entities described and linked above are indeed what the code implementation will use to implement the required behavior. But the idea is that those elements are protected behind some layer of abstraction that prevents you from manipulating them directly.
 
 From a UX point of view, the user is exposed to a graphical UI, dynamically built base on the above models.
 Interacting with a set of forms and UI elements, a user completes the definition of a logical integration.
@@ -82,7 +83,7 @@ This component is responsible of 3 main activities:
 
 
 ##### Build
-**Building** is actually delegated to an implementation of [`ProjectGenerator`](https://github.com/syndesisio/syndesis/blob/master/rest/project-generator/src/main/java/io/syndesis/project/converter/DefaultProjectGenerator.java) that is responsible of **build time code generation**.  
+**Building** is actually delegated to an implementation of [`ProjectGenerator`](https://github.com/syndesisio/syndesis/blob/master/rest/project-generator/src/main/java/io/syndesis/project/converter/DefaultProjectGenerator.java) that is responsible of **build-time code generation**.  
 With some introspection and templating, a full Java based Apache Maven project is generated. The idea is that this artifact could be built succesfully even outside Syndesis runtime platform, being a fully consistent project.  
 The `ActivateHandler`, uses the physical bytes generated by the `ProjectGenerator` to trigger a **build** invocation at **OpenShift** level.  
 This means that we leverage **OpenShift** "source to image (s2i)" capability, that accepts a reference to a source code project location, to build the project at source code level and produce also a corresponding **Docker** image including everything needed to spawn a runtime instance of our `Integration`.
@@ -107,7 +108,7 @@ The Camel DSL used to define Camel Routes is a custom one, based initially on th
 It uses a `.yaml` syntax.  
 A benefit from using this custom `.yaml` syntax, compared to the already present XML DSL is that it's easier to extend, from a development point of view( since you don't have to modify both and XSD and `CamelNamespaceHandler` classes). One thing that makes easy is for example adding a new `Step` kind.
 
-An important concept here is that the `.yaml` generated from the `Integration` might show a tree shape **similar but not necessarily identical** to the `.json` file that had been produced from the **Integration** conceptual model.  
+An important concept here is that the `.yaml` generated from the `Integration` might show a tree shape, **similar but not necessarily identical**, than the `.json` file that had been produced from the **Integration** conceptual model.  
 This is because some functionality, like for example **Technical Extensions** might need to create multiple **Steps** from a single definition, thus leading to a structure with a slightly different topology.  
 So the `.json` file can be consider a "design time" artifact, while the `.yaml` file can be considered a runtime artifact. At runtime there is only the `.yaml` file.
 
@@ -116,7 +117,7 @@ If you are familiar with Camel framework you can find a correspondence between t
 `Flow` --> `Camel Route`
 `Step` --> `Camel Processor` (endpoint, filter, map, etc)
 
-The component responsible to interpret, at Camel start time, the `.yaml` file is read by [`SyndesisRouteBuilder`](https://github.com/syndesisio/syndesis/blob/master/runtime/runtime/src/main/java/io/syndesis/integration/runtime/SyndesisRouteBuilder.java)
+The `.yaml` file is read, at Camel start-time by [`SyndesisRouteBuilder`](https://github.com/syndesisio/syndesis/blob/master/runtime/runtime/src/main/java/io/syndesis/integration/runtime/SyndesisRouteBuilder.java)
 
 
 ## Technical Extension
@@ -130,8 +131,8 @@ The `.jar` that is uploaded has to be built following a specific structure. To a
 
 This plugin has 2 main roles:
 
-- to identify the "kind" of extension and create a metadata descriptor according to its findings
-- to package the extension dependencies in the correct location while filtering out provided libs
+- to identify the "kind" of extension and **create a metadata descriptor** according to its findings
+- to **package** the extension dependencies in the correct location while **filtering out provided libs**
 
 You can see those 2 logical steps, being explicitly invoked in this sample configuration of `syndesis-maven-plugin`
 
@@ -164,7 +165,7 @@ You can see those 2 logical steps, being explicitly invoked in this sample confi
 
 An extension can be implemented following different approaches: from the simpler annotated POJO to the usage of Camel aware resources.
 
-Here a brief descriptions of the options a developer has:
+Here a brief description of the options a developer has:
 
 - **Annotated POJO**
 - **Implementing SyndesisStepExtension Interface**
