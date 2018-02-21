@@ -1,0 +1,211 @@
+{
+  "id": "http4",
+  "name": "HTTP",
+  "icon": "http",
+  "description": "Http Connector",
+  "dependencies": [
+    {
+      "type": "MAVEN",
+      "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    }
+  ],
+  "tags": [
+    "verifier"
+  ],
+  "properties": {
+    "baseUrl": {
+      "kind": "parameter",
+      "displayName": "Base URL",
+      "group": "common",
+      "required": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "deprecated": false,
+      "secret": false,
+      "description": "Base Http Endpoint URL (eg 'www.redhat.com')"
+    }
+  },
+  "componentScheme": "http4",
+  "actions": [
+    {
+      "name": "Invoke URL",
+      "description": "Invoke an http endpoint URL",
+      "id": "@project.groupId@:@project.artifactId@:http4-invoke-url",
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+        "connectorCustomizers": [
+          "io.syndesis.connector.http.HttpMethodCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "properties",
+            "description": "properties",
+            "properties": {
+              "path": {
+                "kind": "parameter",
+                "displayName": "URL Path",
+                "group": "common",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": false,
+                "description": "Endpoint Path (eg '/path/to/endpoint')"
+              },
+              "httpMethod": {
+                "kind": "parameter",
+                "displayName": "Http Method",
+                "group": "common",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "value": "GET",
+                    "label": "GET"
+                  },
+                  {
+                    "value": "PUT",
+                    "label": "PUT"
+                  },
+                  {
+                    "value": "POST",
+                    "label": "POST"
+                  },
+                  {
+                    "value": "DELETE",
+                    "label": "DELETE"
+                  },
+                  {
+                    "value": "HEAD",
+                    "label": "HEAD"
+                  },
+                  {
+                    "value": "OPTIONS",
+                    "label": "OPTIONS"
+                  },
+                  {
+                    "value": "TRACE",
+                    "label": "TRACE"
+                  },
+                  {
+                    "value": "PATCH",
+                    "label": "PATCH"
+                  }
+                ],
+                "deprecated": false,
+                "defaultValue": "GET",
+                "secret": false,
+                "description": "The specific http method to execute."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Periodic invoke URL",
+      "description": "Periodically invoke an http endpoint URL",
+      "id": "@project.groupId@:@project.artifactId@:http4-periodic-invoke-url",
+      "pattern": "From",
+      "actionType": "connector",
+      "descriptor": {
+        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+        "connectorCustomizers": [
+          "io.syndesis.connector.http.HttpMethodCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "properties",
+            "description": "properties",
+            "properties": {
+              "path": {
+                "kind": "parameter",
+                "displayName": "URL Path",
+                "group": "common",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "deprecated": false,
+                "secret": false,
+                "description": "Endpoint Path (eg '/path/to/endpoint')"
+              },
+              "httpMethod": {
+                "kind": "parameter",
+                "displayName": "Http Method",
+                "group": "common",
+                "required": false,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "enum": [
+                  {
+                    "value": "GET",
+                    "label": "GET"
+                  },
+                  {
+                    "value": "PUT",
+                    "label": "PUT"
+                  },
+                  {
+                    "value": "POST",
+                    "label": "POST"
+                  },
+                  {
+                    "value": "DELETE",
+                    "label": "DELETE"
+                  },
+                  {
+                    "value": "HEAD",
+                    "label": "HEAD"
+                  },
+                  {
+                    "value": "OPTIONS",
+                    "label": "OPTIONS"
+                  },
+                  {
+                    "value": "TRACE",
+                    "label": "TRACE"
+                  },
+                  {
+                    "value": "PATCH",
+                    "label": "PATCH"
+                  }
+                ],
+                "deprecated": false,
+                "defaultValue": "GET",
+                "secret": false,
+                "description": "The specific http method to execute."
+              },
+              "schedulerExpression": {
+                "kind": "parameter",
+                "displayName": "Period",
+                "group": "consumer",
+                "required": false,
+                "type": "duration",
+                "javaType": "long",
+                "deprecated": false,
+                "secret": false,
+                "defaultValue": 1000,
+                "description": "Delay in milliseconds between scheduling (executing)."
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

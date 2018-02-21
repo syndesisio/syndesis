@@ -853,7 +853,7 @@
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-http-get</artifactId>
+        <artifactId>connector-http</artifactId>
         <version>${project.version}</version>
       </dependency>
 
