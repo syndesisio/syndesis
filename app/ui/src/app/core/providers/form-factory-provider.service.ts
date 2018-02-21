@@ -222,7 +222,8 @@ export class FormFactoryProviderService extends FormFactoryService {
                          field: ConfiguredConfigurationProperty,
                          value: any
   ) {
-    const initialValue = value || field.value || field.defaultValue;
+    let initialValue = value || field.value || field.defaultValue;
+    initialValue = (initialValue === 'false') ? false : initialValue;
     return new DynamicCheckboxModel({
       id: key,
       label: field.displayName || key,

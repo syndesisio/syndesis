@@ -81,6 +81,8 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       data = this.formGroup ? this.formGroup.value : {};
     }
 
+    data = this.formFactory.supressNullValues(data);
+
     // set a copy in the integration
     const properties = JSON.parse(JSON.stringify(data));
     this.currentFlowService.events.emit({
@@ -153,14 +155,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
       return;
     }
     const values: any = this.getConfiguredProperties(step.configuredProperties);
-    if (values) {
-      // supress null values
-      for (const key in values) {
-        if (values[key] === 'null') {
-          values[key] = undefined;
-        }
-      }
-    }
+
     // Call formService to build the form
     this.formModel = this.formFactory.createFormModel(this.formConfig, values);
     this.formGroup = this.formService.createFormGroup(this.formModel);
