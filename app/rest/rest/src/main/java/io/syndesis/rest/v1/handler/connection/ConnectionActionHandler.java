@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -40,6 +40,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -151,14 +152,11 @@ public class ConnectionActionHandler {
     }
 
     private static boolean shouldEnrichDataShape(final Optional<DataShape> maybeExistingDataShape, final DataShape received) {
-        if (maybeExistingDataShape.isPresent() && received != null) {
-            final DataShape existingDataShape = maybeExistingDataShape.get();
+        return maybeExistingDataShape.isPresent() && isMaleable(maybeExistingDataShape.get().getKind()) && received != null
+            && received.getKind() != null;
+    }
 
-            // We should enrich the datashape if the existing connector data shape has the same kind of the
-            // computed one and if the existing one does not carry its own specification
-            return Objects.equals(existingDataShape.getKind(), received.getKind()) && Objects.isNull(existingDataShape.getSpecification());
-        }
-
-        return false;
+    private static boolean isMaleable(DataShapeKinds kind) {
+        return kind != DataShapeKinds.JAVA;
     }
 }
