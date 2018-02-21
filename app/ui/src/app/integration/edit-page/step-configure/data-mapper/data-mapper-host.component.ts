@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -57,8 +57,7 @@ const MAPPING_KEY = 'atlasmapping';
     DocumentManagementService
   ]
 })
-export class DataMapperHostComponent implements OnInit {
-  routeSubscription: Subscription;
+export class DataMapperHostComponent implements OnInit, OnDestroy {
   outstandingTasks = 1;
 
   sourceDocTypes = [];
@@ -70,6 +69,8 @@ export class DataMapperHostComponent implements OnInit {
   dataMapperComponent: DataMapperAppComponent;
 
   cfg: ConfigModel = new ConfigModel();
+
+  private saveMappingHandlerSubscription: Subscription;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -85,94 +86,65 @@ export class DataMapperHostComponent implements OnInit {
   initialize() {
     this.resetConfig();
     const step = this.currentFlowService.getStep(this.position);
-    let mappings = undefined;
-    if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
-      mappings = <string>step.configuredProperties[MAPPING_KEY];
-    }
-    this.cfg.mappings = new MappingDefinition();
 
-    const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(this.position);
-    if (!previousSteps || previousSteps.length === 0) {
-      this.cfg.errorService.error(
-        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
-      return;
+    let foundDocuments = false;
+    if (this.populateSourceDocuments()) {
+      foundDocuments = this.populateTargetDocument(step);
     }
 
-    // Populate all supported DataShape from previous DataShape aware steps as source documents
-    let hasSource = false;
-    for (const pair of previousSteps) {
-      const outputDataShape = pair.step.action.descriptor.outputDataShape;
-      if (this.isSupportedDataShape(outputDataShape)) {
-        if (this.addSourceDocument(pair.step.id, pair.index, outputDataShape)) {
-          hasSource = true;
-        }
-      }
-    }
-    if (!hasSource) {
-      this.cfg.errorService.error(
-        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
-      return;
+    let mappings = '';
+    let onSave = undefined;
+    if (foundDocuments) {
+      mappings = this.initializeMappingDefinition(step);
+      this.setupDebugKeys();
+      this.saveMappingHandlerSubscription = this.registerSaveMappingHandler();
+      onSave = () => {
+          this.initializeMapper();
+      };
+    } else {
+      this.cfg.sourceDocs = [];
+      this.cfg.targetDocs = [];
     }
 
-    // Next DataShape aware step must have a supported input DataShape, which describes a target document
-    const subsequents = this.currentFlowService.getSubsequentStepsWithDataShape(this.position);
-    // The first step could be this datamapper step itself if it's not the first visit,
-    // as DataShape is added by the following event
-    const targetPair = step.id === subsequents[0].step.id ? subsequents[1] : subsequents[0];
-    if (!targetPair) {
-      this.cfg.errorService.error(
-        'No target data type was found. Data Mapper step can only be added before data type aware step.', '');
-      return;
-    }
-    const inputDataShape = targetPair.step.action.descriptor.inputDataShape;
-    if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape)) {
-      this.cfg.errorService.error(
-        'Unsupported target data type for Step "' + targetPair.step.name + '": ' + inputDataShape, '');
-      return;
-    }
-    this.addInitializationTask();
+    // make sure the property is set on the integration
     this.currentFlowService.events.emit({
-      kind: 'integration-set-action',
+      kind: 'integration-set-properties',
       position: this.position,
-      stepKind: 'mapper',
-      action: {
-        actionType: 'step',
-        descriptor: {
-          inputDataShape: {
-            kind: DataShapeKinds.ANY,
-            name: 'All preceding outputs'
-          },
-          outputDataShape: {
-            kind: inputDataShape.kind,
-            type: inputDataShape.type,
-            name: 'Data Mapper (' + inputDataShape.name + ')',
-            description: inputDataShape.description,
-            specification: inputDataShape.specification
-          }
-        } as ActionDescriptor
-      } as Action,
-      onSave: () => {
-        this.removeInitializationTask();
-      }
+      properties: {
+        atlasmapping: mappings
+      },
+      onSave
     });
-    // TODO for now set a really long timeout
-    this.cfg.initCfg.classPathFetchTimeoutInMilliseconds = 3600000;
-    if (mappings) {
-      const mappingDefinition = new MappingDefinition();
-      // Existing mappings, load from the route
-      try {
-        MappingSerializer.deserializeMappingServiceJSON(
-          JSON.parse(mappings),
-          mappingDefinition,
-          this.cfg
-        );
-      } catch (err) {
-        // TODO popup or error alert?  At least catch this so we initialize
-        log.warn('Failed to deserialize mappings: ' + err, category);
-      }
-      this.cfg.mappings = mappingDefinition;
-    }
 
+    this.removeInitializationTask();
+  }
+
+  initializeMapper() {
+    if (this.outstandingTasks == 0 ) {
+      this.initializationService.initialize();
+    }
+  }
+
+  addInitializationTask() {
+    this.outstandingTasks += 1;
+  }
+
+  removeInitializationTask() {
+    this.outstandingTasks -= 1;
+    this.initializeMapper();
+  }
+
+  ngOnInit() {
+    this.initialize();
+  }
+
+  ngOnDestroy() {
+    if (this.saveMappingHandlerSubscription) {
+      this.saveMappingHandlerSubscription.unsubscribe();
+    }
+  }
+
+  private setupDebugKeys() {
     // enable debug / mock data flags for data mapper
     const debugConfigKeys: string[] = [
       'addMockJSONMappings',
@@ -209,9 +181,110 @@ export class DataMapperHostComponent implements OnInit {
       }
       this.cfg.initCfg[debugConfigKey] = debugKeyValue;
     }
+  }
 
+  private populateSourceDocuments(): boolean {
+    const previousSteps = this.currentFlowService.getPreviousStepsWithDataShape(this.position);
+    if (!previousSteps || previousSteps.length === 0) {
+      this.cfg.errorService.error(
+        'No source data type was found. Data Mapper requires at least one data type aware step prior to itself.', '');
+      return false;
+    }
+
+    // Populate all supported DataShape from previous DataShape aware steps as source documents
+    let hasSource = false;
+    for (const pair of previousSteps) {
+      const outputDataShape = pair.step.action.descriptor.outputDataShape;
+      if (this.isSupportedDataShape(outputDataShape)) {
+        if (this.addSourceDocument(pair.step.id, pair.index, outputDataShape)) {
+          hasSource = true;
+        }
+      }
+    }
+    if (!hasSource) {
+      this.cfg.errorService.error(
+        'No supported source data type was found. Data type needs to be configured before Data Mapper step is added.', '');
+      return false;
+    }
+    return true;
+  }
+
+  private populateTargetDocument(step: Step): boolean {
+    // Next DataShape aware step must have a supported input DataShape, which describes a target document
+    const subsequents = this.currentFlowService.getSubsequentStepsWithDataShape(this.position);
+    // The first step could be this datamapper step itself if it's not the first visit,
+    // as DataShape is added by the following event
+    const targetPair = step.id === subsequents[0].step.id ? subsequents[1] : subsequents[0];
+    if (!targetPair) {
+      this.cfg.errorService.error(
+        'No target data type was found. Data Mapper step can only be added before data type aware step.', '');
+      return false;
+    }
+    const inputDataShape = targetPair.step.action.descriptor.inputDataShape;
+    if (!inputDataShape.kind || !inputDataShape.specification) {
+      this.cfg.errorService.error('No data type specification was found for subsequent step', '');
+      return false;
+    }
+    if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape)) {
+      this.cfg.errorService.error('Unsupported data type was found for subsequent step', '');
+      return false;
+    }
+    this.addInitializationTask();
+    this.currentFlowService.events.emit({
+      kind: 'integration-set-action',
+      position: this.position,
+      stepKind: 'mapper',
+      action: {
+        actionType: 'step',
+        descriptor: {
+          inputDataShape: {
+            kind: DataShapeKinds.ANY,
+            name: 'All preceding outputs'
+          },
+          outputDataShape: {
+            kind: inputDataShape.kind,
+            type: inputDataShape.type,
+            name: 'Data Mapper (' + inputDataShape.name + ')',
+            description: inputDataShape.description,
+            specification: inputDataShape.specification
+          }
+        } as ActionDescriptor
+      } as Action,
+      onSave: () => {
+        this.removeInitializationTask();
+      }
+    });
+    return true;
+  }
+
+  private initializeMappingDefinition(step: Step): string {
+    this.cfg.mappings = new MappingDefinition();
+    let mappings = undefined;
+    if (step.configuredProperties && step.configuredProperties[MAPPING_KEY]) {
+      mappings = <string>step.configuredProperties[MAPPING_KEY];
+    }
+
+    if (mappings) {
+      const mappingDefinition = new MappingDefinition();
+      // Existing mappings, load from the route
+      try {
+        MappingSerializer.deserializeMappingServiceJSON(
+          JSON.parse(mappings),
+          mappingDefinition,
+          this.cfg
+        );
+      } catch (err) {
+        // TODO popup or error alert?  At least catch this so we initialize
+        this.cfg.errorService.error('Failed to deserialize mappings: ' + err, '');
+      }
+      this.cfg.mappings = mappingDefinition;
+    }
+    return mappings;
+  }
+
+  private registerSaveMappingHandler(): Subscription {
     //subscribe to mapping save callback from data mapper
-    this.cfg.mappingService.saveMappingOutput$.subscribe(
+    return this.cfg.mappingService.saveMappingOutput$.subscribe(
       (saveHandler: Function) => {
         const json = this.cfg.mappingService.serializeMappingsToJSON();
         const properties = {
@@ -228,38 +301,6 @@ export class DataMapperHostComponent implements OnInit {
         });
       }
     );
-
-    // make sure the property is set on the integration
-    this.currentFlowService.events.emit({
-      kind: 'integration-set-properties',
-      position: this.position,
-      properties: {
-        atlasmapping: mappings ? mappings : ''
-      },
-      onSave: () => {
-        this.initializeMapper();
-      }
-    });
-    this.removeInitializationTask();
-  }
-
-  initializeMapper() {
-    if ( this.outstandingTasks == 0 ) {
-      this.initializationService.initialize();
-    }
-  }
-
-  addInitializationTask() {
-    this.outstandingTasks += 1;
-  }
-
-  removeInitializationTask() {
-    this.outstandingTasks -= 1;
-    this.initializeMapper();
-  }
-
-  ngOnInit() {
-    this.initialize();
   }
 
   private isSupportedDataShape(dataShape: DataShape): boolean {
