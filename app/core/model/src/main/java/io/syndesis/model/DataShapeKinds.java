@@ -31,7 +31,7 @@ public enum DataShapeKinds {
 
     private final String string;
 
-    private DataShapeKinds(String string) {
+    DataShapeKinds(String string) {
         this.string = string;
     }
 

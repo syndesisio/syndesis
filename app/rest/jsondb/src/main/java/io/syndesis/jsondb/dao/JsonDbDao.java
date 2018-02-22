@@ -186,6 +186,17 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     }
 
     @Override
+    public void set(T entity) {
+        try {
+            String dbPath = getCollectionPath()+"/:"+entity.getId().get();
+            byte[] json = Json.writer().writeValueAsBytes(entity);
+            jsondb.set(dbPath, json);
+        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
+            throw SyndesisServerException.launderThrowable(e);
+        }
+    }
+
+    @Override
     public boolean delete(WithId<T> entity) {
         return this.delete(entity.getId().get());
     }

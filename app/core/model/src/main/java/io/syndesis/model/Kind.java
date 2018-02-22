@@ -50,7 +50,11 @@ public enum Kind {
 
     Permission(io.syndesis.model.user.Permission.class),
     Role(io.syndesis.model.user.Role.class),
-    User(io.syndesis.model.user.User.class)
+    User(io.syndesis.model.user.User.class),
+
+    ConnectionBulletinBoard(io.syndesis.model.buletin.ConnectionBulletinBoard.class),
+    IntegrationBulletinBoard(io.syndesis.model.buletin.IntegrationBulletinBoard.class),
+
     ;
 
     public final String modelName;

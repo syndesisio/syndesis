@@ -324,6 +324,21 @@ public class DataManager implements DataAccessObjectRegistry {
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
     }
 
+    public <T extends WithId<T>> void set(T entity) {
+        Optional<String> id = entity.getId();
+        if (!id.isPresent()) {
+            throw new EntityNotFoundException("Setting the id on the entity is required for set");
+        }
+
+        String idVal = id.get();
+
+        Kind kind = entity.getKind();
+        this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> { d.set(entity); return null;});
+        Map<String, T> cache = caches.getCache(kind.getModelName());
+        cache.put(idVal, entity);
+        broadcast("updated", kind.getModelName(), idVal);
+    }
+
 
     public <T extends WithId<T>> boolean delete(Class<T> model, String id) {
         if (id == null || id.equals("")) {
