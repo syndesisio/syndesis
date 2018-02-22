@@ -16,17 +16,13 @@
 package io.syndesis.rest.metrics.prometheus;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.model.WithId;
 import io.syndesis.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
@@ -45,14 +41,7 @@ public class PrometheusMetricsProviderImplTest {
     public void setUp() {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
-        metricsProvider = new PrometheusMetricsProviderImpl(config, new DataManager(null, null, null, null, null) {
-            @Override
-            public <T extends WithId<T>> Set<String> fetchIds(Class<T> model) {
-                final HashSet<String> result = new HashSet<>();
-                result.add(TEST_INTEGRATION_ID);
-                return result;
-            }
-        });
+        metricsProvider = new PrometheusMetricsProviderImpl(config);
     }
 
     @Test
