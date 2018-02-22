@@ -91,4 +91,6 @@ public interface StepDescriptor extends ActionDescriptor, Serializable {
     StepAction.Kind getKind();
 
     String getEntrypoint();
+
+    String getResource();
 }

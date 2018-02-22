@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.api;
+package io.syndesis.extension.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -21,10 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Repeatable(SyndesisActionProperties.class)
+@Repeatable(ConfigurationProperties.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
-public @interface SyndesisActionProperty {
+public @interface ConfigurationProperty {
     /**
      * The name of the property.
      */
@@ -84,6 +84,11 @@ public @interface SyndesisActionProperty {
      * Indicates if this property may contain sensitive data.
      */
     boolean secret() default false;
+
+    /**
+     * Indicates if this property should not be sanitized.
+     */
+    boolean raw() default false;
 
     /**
      * The type of property.

@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.logging;
+package io.syndesis.integration.runtime.jmx;
 
-import org.apache.camel.spi.InterceptStrategy;
-import org.apache.camel.spi.RoutePolicyFactory;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingConfiguration;
+import org.apache.camel.CamelContext;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
+import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,21 +32,30 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @AutoConfigureAfter(CamelAutoConfiguration.class)
 @ConditionalOnClass(CamelAutoConfiguration.class)
-@ConditionalOnProperty(prefix = "syndesis.integration.runtime.logging", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "syndesis.integration.runtime.metadata", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(IntegrationLoggingConfiguration.class)
-public class IntegrationLoggingAutoConfiguration {
-    @Bean
-    public CamelContextConfiguration integrationContextLoggingConfiguration() {
-        return new IntegrationLoggingContextConfiguration();
-    }
+public class IntegrationMetadataAutoConfiguration {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationMetadataAutoConfiguration.class);
 
     @Bean
-    public InterceptStrategy integrationLoggingInterceptStrategy() {
-        return new IntegrationLoggingInterceptStrategy();
-    }
+    public CamelContextConfiguration integrationContextMetadataConfiguration() {
+        return new CamelContextConfiguration() {
 
-    @Bean
-    public RoutePolicyFactory integrationLoggingRoutePolicyFactory() {
-        return new IntegrationLoggingRoutePolicyFactory();
+            @Override
+            public void beforeApplicationStart(CamelContext camelContext) {
+                try {
+                    // register custom mbean
+                    camelContext.addService(new CamelContextMetadataMBean());
+                    LOGGER.info("Added Syndesis MBean Service");
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                    ObjectHelper.wrapRuntimeCamelException(e);
+                }
+            }
+
+            @Override
+            public void afterApplicationStart(CamelContext camelContext) {
+                // nop
+            }
+        };
     }
 }

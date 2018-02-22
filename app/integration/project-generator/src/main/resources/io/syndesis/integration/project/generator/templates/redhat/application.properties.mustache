@@ -1,9 +1,13 @@
 # Logging
 logging.level.io.syndesis = DEBUG
+logging.level.org.apache.camel.spring.boot.RoutesCollector = DEBUG
 
 # Camel
 camel.springboot.name = {{name}}
 camel.springboot.streamCachingEnabled = true
+camel.springboot.xml-routes = false
+camel.springboot.xml-rests = false
+camel.springboot.java-routes-include-pattern = false
 
 # Binding health checks to an internal port
 management.port = 8081

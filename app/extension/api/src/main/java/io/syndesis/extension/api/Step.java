@@ -15,16 +15,14 @@
  */
 package io.syndesis.extension.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Map;
+import java.util.Optional;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface SyndesisActionProperties {
-    /**
-     * The list of properties.
-     */
-    SyndesisActionProperty[] value();
+import org.apache.camel.CamelContext;
+import org.apache.camel.model.ProcessorDefinition;
+
+@FunctionalInterface
+public interface Step {
+    @SuppressWarnings("rawtypes")
+    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
 }

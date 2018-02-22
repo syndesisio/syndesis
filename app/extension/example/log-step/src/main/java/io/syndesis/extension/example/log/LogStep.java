@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension;
+package io.syndesis.extension.example.log;
 
 import java.io.IOException;
 
 import com.github.lalyos.jfiglet.FigletFont;
-import io.syndesis.extension.api.SyndesisActionProperty;
-import io.syndesis.extension.api.SyndesisExtensionAction;
+import io.syndesis.extension.api.annotations.ConfigurationProperty;
+import io.syndesis.extension.api.annotations.Action;
 import org.apache.camel.Body;
 import org.apache.camel.Handler;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SyndesisExtensionAction(id = "log-body", name = "simple-log", description = "A simple POJO based logging extension")
-public class LogExtension {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogExtension.class);
+@Action(id = "log-body", name = "simple-log", description = "A simple POJO based logging extension")
+public class LogStep {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogStep.class);
 
     // ************************
     // Extension Properties
     // ************************
 
-    @SyndesisActionProperty(name = "ascii", displayName = "ascii", description = "Ascii")
+    @ConfigurationProperty(name = "ascii", displayName = "ascii", description = "Ascii")
     private boolean ascii;
 
-    @SyndesisActionProperty(name = "font", displayName = "font", description = "Font")
+    @ConfigurationProperty(name = "font", displayName = "font", description = "Font")
     private String font;
 
     // ************************

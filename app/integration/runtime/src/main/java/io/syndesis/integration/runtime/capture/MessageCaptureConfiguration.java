@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.api;
+package io.syndesis.integration.runtime.capture;
 
-import org.apache.camel.model.RouteDefinition;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-public final class SyndesisExtensionRoute {
-    private SyndesisExtensionRoute() {
+@ConfigurationProperties(prefix = "syndesis.integration.runtime.capture")
+public class MessageCaptureConfiguration {
+    /**
+     * Enable/Disable message capture.
+     */
+    private boolean enabled = true;
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public static RouteDefinition from(String uri) {
-        return new RouteDefinition().from(uri);
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

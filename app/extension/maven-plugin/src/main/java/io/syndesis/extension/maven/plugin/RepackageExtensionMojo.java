@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.maven;
+package io.syndesis.extension.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import org.jboss.shrinkwrap.resolver.impl.maven.MavenWorkingSessionContainer;
 import org.springframework.boot.maven.Exclude;
 import org.springframework.boot.maven.ExcludeFilter;
 
-import io.syndesis.maven.layouts.ModuleLayoutFactory;
+import io.syndesis.extension.maven.plugin.layout.ModuleLayoutFactory;
 
 /**
  * Helper Maven plugin

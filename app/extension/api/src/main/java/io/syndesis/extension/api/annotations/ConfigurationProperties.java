@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.logging;
+package io.syndesis.extension.api.annotations;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@ConfigurationProperties(prefix = "syndesis.integration.runtime.logging")
-public class IntegrationLoggingConfiguration {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface ConfigurationProperties {
     /**
-     * Enable/Disable syndesis runtime logging.
+     * The list of properties.
      */
-    private boolean enabled = true;
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    ConfigurationProperty[] value();
 }

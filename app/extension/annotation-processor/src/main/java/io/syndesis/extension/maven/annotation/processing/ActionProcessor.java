@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.maven.annotation.processing;
+package io.syndesis.extension.maven.annotation.processing;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -45,38 +41,51 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings("PMD")
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
-    SyndesisExtensionActionProcessor.SYNDESIS_ANNOTATION_CLASS_NAME
+    ActionProcessor.SYNDESIS_ANNOTATION_CLASS_NAME
 })
-public class SyndesisExtensionActionProcessor extends AbstractProcessor {
-    public static final String SYNDESIS_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.SyndesisExtensionAction";
-    public static final String SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.SyndesisActionProperty";
-    public static final String SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.SyndesisActionProperty$PropertyEnum";
-    public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.extension.api.SyndesisStepExtension";
-    public static final String CAMEL_HANDLER_ANNOTATION_CLASS_NAME_ = "org.apache.camel.Handler";
+public class ActionProcessor extends AbstractProcessor {
+    public static final String SYNDESIS_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.Action";
+    public static final String SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.ConfigurationProperty";
+    public static final String SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME = "io.syndesis.extension.api.annotations.ConfigurationProperty$PropertyEnum";
+    public static final String SYNDESIS_STEP_CLASS_NAME = "io.syndesis.extension.api.Step";
+    public static final String CAMEL_HANDLER_ANNOTATION_CLASS_NAME = "org.apache.camel.Handler";
+    public static final String CAMEL_ROUTE_BUILDER_CLASS_NAME_ = "org.apache.camel.builder.RouteBuilder";
     public static final String BEAN_ANNOTATION_CLASS_NAME = "org.springframework.context.annotation.Bean";
 
+    private ObjectMapper mapper;
     private Class<? extends Annotation> annotationClass;
     private Class<? extends Annotation> propertyAnnotationClass;
     private Class<? extends Annotation> propertyEnumAnnotationClass;
     private Class<? extends Annotation> beanAnnotationClass;
     private Class<? extends Annotation> handlerAnnotationClass;
+    private Class<? extends Annotation> routeBuilderClass;
     private Class<?> stepClass;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
 
+        mapper = new ObjectMapper()
+            .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);;
+
         annotationClass = mandatoryFindClass(SYNDESIS_ANNOTATION_CLASS_NAME);
         propertyAnnotationClass = mandatoryFindClass(SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME);
         propertyEnumAnnotationClass = mandatoryFindClass(SYNDESIS_PROPERTY_ENUM_ANNOTATION_CLASS_NAME);
         stepClass = findClass(SYNDESIS_STEP_CLASS_NAME);
         beanAnnotationClass = findClass(BEAN_ANNOTATION_CLASS_NAME);
-        handlerAnnotationClass = mandatoryFindClass(CAMEL_HANDLER_ANNOTATION_CLASS_NAME_);
+        handlerAnnotationClass = mandatoryFindClass(CAMEL_HANDLER_ANNOTATION_CLASS_NAME);
+        routeBuilderClass = mandatoryFindClass(CAMEL_ROUTE_BUILDER_CLASS_NAME_);
     }
 
     @Override
@@ -93,19 +102,33 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         for (Element annotatedElement : env.getElementsAnnotatedWith(annotationClass)) {
             if (annotatedElement.getKind() == ElementKind.CLASS) {
                 try {
-                    Properties props = gatherProperties(annotatedElement);
-                    claimed = augmentProperties((TypeElement) annotatedElement, props);
-                    addActionProperties(annotatedElement, props);
-                    persistToFile(annotatedElement, props);
+                    ObjectNode root = mapper.createObjectNode();
+
+                    gatherProperties(root, annotatedElement.getAnnotation(annotationClass));
+
+                    claimed = augmentProperties(root, (TypeElement) annotatedElement);
+                    addActionProperties(root, annotatedElement);
+
+                    File file = obtainResourceFile(annotatedElement);
+                    if (file != null) {
+                        mapper.writerWithDefaultPrettyPrinter().writeValue(file, root);
+                    }
                 } catch (IOException|InvocationTargetException|IllegalAccessException|NoSuchMethodException e){
                     claimed = false;
                 }
             } else if (annotatedElement.getKind() == ElementKind.METHOD) {
                 try {
-                    Properties props = gatherProperties(annotatedElement);
-                    augmentProperties((ExecutableElement) annotatedElement, props);
-                    addActionProperties(annotatedElement, props);
-                    persistToFile(annotatedElement, props);
+                    ObjectNode root = mapper.createObjectNode();
+
+                    gatherProperties(root, annotatedElement.getAnnotation(annotationClass));
+
+                    augmentProperties(root, (ExecutableElement) annotatedElement);
+                    addActionProperties(root, annotatedElement);
+
+                    File file = obtainResourceFile(annotatedElement);
+                    if (file != null) {
+                        mapper.writerWithDefaultPrettyPrinter().writeValue(file, root);
+                    }
                 } catch (IOException|InvocationTargetException|IllegalAccessException|NoSuchMethodException e){
                     claimed = false;
                 }
@@ -117,42 +140,57 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         return claimed;
     }
 
+    // *****************************************
+    // Annotation processing
+    // *****************************************
+
     /**
      * Explicitly add properties that elude reflection implicit strategy
      * @param element
-     * @param props
+     * @param root
      */
-    protected boolean augmentProperties(TypeElement element, Properties props) throws InvocationTargetException, IllegalAccessException {
+    private boolean augmentProperties(ObjectNode root, TypeElement element) throws InvocationTargetException, IllegalAccessException {
         final Elements elements = processingEnv.getElementUtils();
-        final TypeElement extensionTypeElement = elements.getTypeElement(stepClass.getName());
+        final TypeElement stepTypeElement = elements.getTypeElement(stepClass.getName());
+        final TypeElement routeBuilderTypeElement = elements.getTypeElement(routeBuilderClass.getName());
 
-        if (extensionTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), extensionTypeElement.asType())) {
-            props.put("kind", "STEP");
-            props.put("entrypoint", element.getQualifiedName().toString());
+        if (stepTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), stepTypeElement.asType())) {
+            root.put("kind", "STEP");
+            root.put("entrypoint", element.getQualifiedName().toString());
 
-            // Let's search for fields annotated with SyndesisActionProperty
+            // Let's search for fields annotated with ConfigurationProperty
             for (Element field: element.getEnclosedElements()) {
                 if (field.getKind() == ElementKind.FIELD) {
-                    addActionProperties(field, props);
+                    addActionProperties(root, field);
                 }
             }
 
             return true;
+        } else if (routeBuilderTypeElement != null && processingEnv.getTypeUtils().isAssignable(element.asType(), routeBuilderTypeElement.asType())) {
+            root.put("kind", "ENDPOINT");
+            root.put("resource", "class:" + element.getQualifiedName().toString());
+
+            // Let's search for fields annotated with ConfigurationProperty
+            for (Element field: element.getEnclosedElements()) {
+                if (field.getKind() == ElementKind.FIELD) {
+                    addActionProperties(root, field);
+                }
+            }
         } else {
-            props.put("kind", "BEAN");
-            props.put("entrypoint", element.getQualifiedName().toString());
+            root.put("kind", "BEAN");
+            root.put("entrypoint", element.getQualifiedName().toString());
 
             for (Element method: element.getEnclosedElements()) {
                 if (method.getAnnotation(handlerAnnotationClass) != null) {
                     // Process method
-                    augmentProperties((ExecutableElement)method, props);
-                    addActionProperties(method, props);
+                    augmentProperties(root, (ExecutableElement)method);
+                    addActionProperties(root, method);
 
                     // Found a method annotated with Handler, let's search for
-                    // fields annotated with SyndesisActionProperty
+                    // fields annotated with ConfigurationProperty
                     for (Element field: element.getEnclosedElements()) {
                         if (field.getKind() == ElementKind.FIELD) {
-                            addActionProperties(field, props);
+                            addActionProperties(root, field);
                         }
                     }
 
@@ -168,45 +206,34 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
 
     /**
      * Explicitly add properties that elude reflection implicit strategy
+     * @param root
      * @param element
-     * @param props
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
-    protected void augmentProperties(ExecutableElement element, Properties props) {
+    private void augmentProperties(ObjectNode root, ExecutableElement element) {
         final TypeElement typedElement = (TypeElement) element.getEnclosingElement();
 
         if (beanAnnotationClass != null && element.getAnnotation(beanAnnotationClass) != null) {
-            props.put("kind", "ENDPOINT");
+            root.put("kind", "ENDPOINT");
         } else {
-            props.put("kind", "BEAN");
-            props.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
+            root.put("kind", "BEAN");
+            root.put("entrypoint", typedElement.getQualifiedName().toString() + "::" + element.getSimpleName());
         }
     }
 
     /**
      * Add action properties to the global properties.
+     * @param root
      * @param element
-     * @param props
      */
-    protected void addActionProperties(Element element, Properties props) throws InvocationTargetException, IllegalAccessException {
-        int index = 0;
-
-        for (String key : props.stringPropertyNames()) {
-            String prefix = "property[" + index + "].";
-
-            if (key.startsWith(prefix)) {
-                index++;
-            }
-        }
+    private void addActionProperties(ObjectNode root, Element element) throws InvocationTargetException, IllegalAccessException {
 
         Annotation[] annotations = element.getAnnotationsByType(propertyAnnotationClass);
         for (int i = 0; i < annotations.length; i++) {
             Annotation annotation = annotations[i];
-            Properties propData = gatherProperties(annotation, propertyAnnotationClass);
+            ObjectNode propertyNode = mapper.createObjectNode();
 
-            for (String key : propData.stringPropertyNames()) {
-                writeIfNotEmpty(props, "property[" + (index + i) + "]." + key, propData.getProperty(key));
-            }
+            gatherProperties(propertyNode, annotation);
 
             if (element.getKind() == ElementKind.FIELD) {
                 VariableElement field = (VariableElement)element;
@@ -214,21 +241,25 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                 TypeMirror typeMirror = field.asType();
                 TypeElement typeElement = processingEnv.getElementUtils().getTypeElement(typeMirror.toString());
                 String javaType = typeMirror.toString();
-                String type = propData.getProperty("type");
+                String type = propertyNode.get("type").asText();
 
-                if (typeElement != null && typeElement.getKind() == ElementKind.ENUM) {
-                    int enumIndex = 0;
-                    for (Element enumElement: typeElement.getEnclosedElements()) {
-                        if (enumElement.getKind() == ElementKind.ENUM_CONSTANT) {
-                            writeIfNotEmpty(props, "property[" + (index + i) + "].enums[" + enumIndex + "].label" , enumElement.toString());
-                            writeIfNotEmpty(props, "property[" + (index + i) + "].enums[" + enumIndex + "].value" , enumElement.toString());
+                if (!propertyNode.has("enums")) {
+                    // don't auto detect enum if enums are set through annotations
+                    if (typeElement != null && typeElement.getKind() == ElementKind.ENUM) {
+                        for (Element enumElement : typeElement.getEnclosedElements()) {
+                            if (enumElement.getKind() == ElementKind.ENUM_CONSTANT) {
+                                ObjectNode enumNode = mapper.createObjectNode();
 
-                            enumIndex++;
+                                writeIfNotEmpty(enumNode, "label", enumElement.toString());
+                                writeIfNotEmpty(enumNode, "value", enumElement.toString());
+
+                                propertyNode.withArray("enums").add(enumNode);
+                            }
                         }
-                    }
 
-                    javaType = String.class.getName();
-                    type = String.class.getName();
+                        javaType = String.class.getName();
+                        type = String.class.getName();
+                    }
                 }
 
                 if (type == null || "".equals(type.trim())){
@@ -245,79 +276,65 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
                     }
                 }
 
-                writeIfNotEmpty(props, "property[" + (index + i) + "].javaType", javaType);
-                writeIfNotEmpty(props, "property[" + (index + i) + "].type", type);
+                writeIfNotEmpty(propertyNode, "javaType", javaType);
+                writeIfNotEmpty(propertyNode, "type", type);
             }
+
+            root.withArray("properties").add(propertyNode);
         }
     }
 
-    protected Properties gatherProperties(Element element) throws InvocationTargetException, IllegalAccessException {
-        Annotation annotation = element.getAnnotation(annotationClass);
-        return gatherProperties(annotation, annotationClass);
-    }
-
-    protected Properties gatherProperties(Annotation annotation, Class<? extends Annotation> clazz) throws InvocationTargetException, IllegalAccessException  {
-        Properties prop = new Properties();
-        Method[] methods = clazz.getDeclaredMethods();
+    private void gatherProperties(ObjectNode root, Annotation annotation) throws InvocationTargetException, IllegalAccessException  {
+        Method[] methods = annotation.annotationType().getDeclaredMethods();
         for (Method m : methods) {
-            writeIfNotEmpty(prop, m.getName(), m.invoke(annotation));
-        }
-        return prop;
-    }
+            if (m.getReturnType().isAnnotation()) {
+                ObjectNode node = root.putObject(m.getName());
 
-    protected void persistToFile(Element element, Properties props) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        File file = obtainResourceFile(element);
-        if (file != null) {
-            try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
-                props.store(writer, "Generated by Syndesis Annotation Processor");
+                gatherProperties(node, (Annotation)m.invoke(annotation));
+            } else {
+                writeIfNotEmpty(root, m.getName(), m.invoke(annotation));
             }
         }
     }
 
-
-    protected void writeIfNotEmpty(Properties prop, String key, Object value) throws InvocationTargetException, IllegalAccessException {
+    private void writeIfNotEmpty(ObjectNode root, String key, Object value) throws InvocationTargetException, IllegalAccessException {
         if(value != null && !"".equals(value.toString().trim())) {
             if(value instanceof String[]){
                 String[] arr = (String[])value;
-                if(arr.length > 0){
-                    prop.put(key, String.join(",", arr));
+
+                if(arr.length > 0) {
+                    ArrayNode arrayNode = root.putArray(key);
+                    for (String val: arr) {
+                        arrayNode.add(val);
+                    }
                 }
             } else if(Object[].class.isInstance(value)) {
                 Object[] array = (Object[]) value;
-                for (int i=0; i<array.length; i++) {
+                for (int i = 0; i < array.length; i++) {
                     if (propertyEnumAnnotationClass.isInstance(array[i])) {
-                        Annotation enumAnn = (Annotation) array[i];
-                        Properties props = gatherProperties(enumAnn, propertyEnumAnnotationClass);
-                        for (String propName : props.stringPropertyNames()) {
-                            prop.put(key + "[" + i + "]." + propName, props.getProperty(propName));
-                        }
+                        Annotation enumAnnotation = (Annotation) array[i];
+                        ObjectNode enumNode = mapper.createObjectNode();
+
+                        gatherProperties(enumNode, enumAnnotation);
+
+                        root.withArray(key).add(enumNode);
                     }
                 }
             } else {
-                prop.put(key, value.toString());
+                root.put(key, value.toString());
             }
         }
     }
 
-    /**
-     * Returns the canonical class name by removing any generic type information.
-     */
-    protected static String canonicalClassName(String className) {
-        // remove generics
-        int pos = className.indexOf('<');
-        if (pos != -1) {
-            return className.substring(0, pos);
-        } else {
-            return className;
-        }
-    }
-
+    // *****************************************
+    // Helpers
+    // *****************************************
 
     /**
      * Helper method to produce class output text file using the given handler
      */
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-    protected File obtainResourceFile(Element element) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private File obtainResourceFile(Element element) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         TypeElement classElement;
         if (element instanceof TypeElement) {
             classElement = (TypeElement)element;
@@ -341,7 +358,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
             .append(classElement.getSimpleName().toString())
             .append('-')
             .append(Names.sanitize(actionId))
-            .append(".properties")
+            .append(".json")
             .toString();
 
         File result = null;
@@ -368,16 +385,29 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
         return result;
     }
 
-    protected void info(String message) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, message);
+    /**
+     * Returns the canonical class name by removing any generic type information.
+     */
+    private static String canonicalClassName(String className) {
+        // remove generics
+        int pos = className.indexOf('<');
+        if (pos != -1) {
+            return className.substring(0, pos);
+        } else {
+            return className;
+        }
     }
 
-    protected void warning(String message) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message);
+    private void info(String format, Object... args) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format, args));
     }
 
-    protected void error(String message) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message);
+    private void warning(String format, Object... args) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, String.format(format, args));
+    }
+
+    private void error(String format, Object... args) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(format, args));
     }
 
     private Class<? extends Annotation> mandatoryFindClass(String name) {
@@ -405,7 +435,7 @@ public class SyndesisExtensionActionProcessor extends AbstractProcessor {
     }
 
     // From app/rest/core
-    public static final class Names {
+    private static final class Names {
         private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
         private static final String SPACE = " ";
         private static final String BLANK = "";

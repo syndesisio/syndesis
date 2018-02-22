@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.api;
+package io.syndesis.integration.runtime.jmx;
 
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.model.ProcessorDefinition;
+@ConfigurationProperties(prefix = "syndesis.integration.runtime.metadata")
+public class IntegrationMetadataConfiguration {
+    /**
+     * Enable/Disable syndesis runtime metadata.
+     */
+    private boolean enabled = true;
 
-@FunctionalInterface
-public interface SyndesisStepExtension {
-    @SuppressWarnings("rawtypes")
-    Optional<ProcessorDefinition> configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
