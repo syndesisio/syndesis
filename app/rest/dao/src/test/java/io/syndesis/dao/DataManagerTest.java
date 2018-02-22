@@ -58,7 +58,7 @@ public class DataManagerTest {
         EncryptionComponent encryptionComponent = new EncryptionComponent(null);
         ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-        //Create Data Manager
+        // Create Data Manager
         dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
         dataManager.init();
         dataManager.resetDeploymentData();
@@ -68,8 +68,9 @@ public class DataManagerTest {
     public void getConnectors() {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
-        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactlyInAnyOrder("gmail", "activemq", "amqp", "github", "ftp","sftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "aws-s3", "http", "trade-insight");
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder(
+                "gmail", "activemq", "amqp", "github", "ftp", "sftp", "dropbox", "facebook", "linkedin", "sql",
+                "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "aws-s3", "http", "trade-insight");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -79,7 +80,8 @@ public class DataManagerTest {
     public void getConnections() {
         @SuppressWarnings("unchecked")
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactlyInAnyOrder("1", "2", "3", "4", "5");
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get))
+                .containsExactlyInAnyOrder("1", "2", "3", "4", "5");
         Assert.assertEquals(5, connections.getTotalCount());
         Assert.assertEquals(5, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
@@ -88,18 +90,17 @@ public class DataManagerTest {
     @Test
     public void getConnectorsWithFilterFunction() {
         @SuppressWarnings("unchecked")
-        ListResult<Connector> connectors = dataManager.fetchAll(
-            Connector.class,
-            resultList -> new ListResult.Builder<Connector>()
-                .createFrom(resultList)
-                .items(resultList.getItems().stream()
-                    .filter(connector -> connector.getId().get().equals("gmail") || connector.getId().get().equals("activemq"))
-                    .collect(Collectors.toList()))
-                .build()
-        );
+        ListResult<Connector> connectors = dataManager.fetchAll(Connector.class,
+                resultList -> new ListResult.Builder<Connector>().createFrom(resultList)
+                        .items(resultList.getItems().stream()
+                                .filter(connector -> connector.getId().get().equals("gmail")
+                                        || connector.getId().get().equals("activemq"))
+                                .collect(Collectors.toList()))
+                        .build());
 
-        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("gmail", "activemq");
-        Assert.assertEquals(18, connectors.getTotalCount());
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
+                .containsExactlyInAnyOrder("gmail", "activemq");
+        Assert.assertEquals(19, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 
@@ -166,14 +167,14 @@ public class DataManagerTest {
         dataManager.registerDataAccessObject(extensionDao);
 
         when(extensionDao.fetchIdsByPropertyValue("prop1", "value1"))
-            .thenReturn(new HashSet<>(Arrays.asList("1", "2", "3")));
+                .thenReturn(new HashSet<>(Arrays.asList("1", "2", "3")));
         when(extensionDao.fetchIdsByPropertyValue("prop2", "value2"))
-            .thenReturn(new HashSet<>(Arrays.asList("2", "3")));
+                .thenReturn(new HashSet<>(Arrays.asList("2", "3")));
         when(extensionDao.fetchIdsByPropertyValue("prop3", "value3"))
-            .thenReturn(new HashSet<>(Arrays.asList("3", "4")));
+                .thenReturn(new HashSet<>(Arrays.asList("3", "4")));
 
-        assertThat(dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1",
-            "prop2", "value2", "prop3", "value3")).containsExactly("3");
+        assertThat(dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1", "prop2", "value2", "prop3",
+                "value3")).containsExactly("3");
     }
 
     @Test
@@ -183,13 +184,11 @@ public class DataManagerTest {
         when(extensionDao.getType()).thenReturn(Extension.class);
         dataManager.registerDataAccessObject(extensionDao);
 
-        when(extensionDao.fetchIdsByPropertyValue("prop1", "value1"))
-            .thenReturn(Collections.emptySet());
-        when(extensionDao.fetchIdsByPropertyValue("prop2", "value2"))
-            .thenThrow(new RuntimeException());
+        when(extensionDao.fetchIdsByPropertyValue("prop1", "value1")).thenReturn(Collections.emptySet());
+        when(extensionDao.fetchIdsByPropertyValue("prop2", "value2")).thenThrow(new RuntimeException());
 
-        assertThat(dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1",
-            "prop2", "value2")).isEmpty();
+        assertThat(dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1", "prop2", "value2"))
+                .isEmpty();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -199,7 +198,7 @@ public class DataManagerTest {
         when(extensionDao.getType()).thenReturn(Extension.class);
         dataManager.registerDataAccessObject(extensionDao);
 
-        dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1","prop2");
+        dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1", "prop2");
         fail("Should fail before getting here");
     }
 

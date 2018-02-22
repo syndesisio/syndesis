@@ -1,0 +1,209 @@
+{
+    "id": "dropbox",
+    "name": "DropBox",
+    "description": "File upload and download from Dropbox",
+    "icon": "fa-dropbox",
+    "dependencies": [
+        {
+            "type": "MAVEN",
+            "id": "@project.groupId@:@project.artifactId@:@project.version@"
+        }
+    ],
+    "componentScheme": "dropbox",
+    "configuredProperties": {
+        "tokenUrl": "https://api.dropboxapi.com/oauth2/token",
+        "authorizationUrl": "https://www.dropbox.com/oauth2/authorize",
+        "authenticationType": "oauth2"
+    },
+    "tags": [
+        "verifier"
+    ],
+    "properties": {
+        "accessToken": {
+            "kind": "parameter",
+            "displayName": "Access Token",
+            "group": "common,security",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [
+                "oauth-access-token"
+            ],
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "description": "dropbox.com User Name"
+        },
+        "clientIdentifier": {
+            "kind": "parameter",
+            "displayName": "Client identifier",
+            "group": "common,security",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [
+                "oauth-client-id"
+            ],
+            "deprecated": false,
+            "secret": false,
+            "componentProperty": true,
+            "description": "Access Token"
+        },
+        "clientSecret": {
+            "kind": "parameter",
+            "displayName": "Client Secret",
+            "group": "common,secret",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [
+                "oauth-client-secret"
+            ],
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "description": "Access Token"
+        },
+        "tokenUrl": {
+            "kind": "property",
+            "displayName": "Token URL",
+            "group": "security",
+            "label": "security",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [
+                "oauth-access-token-url"
+            ],
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "description": "The access token"
+        },
+        "authorizationUrl": {
+            "kind": "property",
+            "displayName": "Authorization URL",
+            "group": "security",
+            "label": "security",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [
+                "oauth-authorization-url"
+            ],
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "description": "Authorization URL"
+        },
+        "authenticationType": {
+            "kind": "property",
+            "displayName": "Authentication Type",
+            "group": "security",
+            "label": "security",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "tags": [
+                "authentication-type"
+            ],
+            "deprecated": false,
+            "secret": true,
+            "componentProperty": true,
+            "description": "Authentication Type"
+        }
+    },
+    "actions": [
+        {
+            "name": "upload",
+            "description": "Upload a file to dropbox.com",
+            "id": "io.syndesis:dropbox-upload-connector",
+            "pattern": "To",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme": "dropbox",
+                "inputDataShape": {
+                    "kind": "any"
+                },"outputDataShape":{"kind":"none"},
+                "configuredProperties": {
+                    "operation": "put"
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "name": "Upload to Drobbox",
+                        "description": "Upload to Drobbox",
+                        "properties": {
+                            "uploadMode": {
+                                "kind": "parameter",
+                                "displayName": "Upload mode",
+                                "group": "producer",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "enum": [
+                                    {
+                                        "value": "add",
+                                        "label": "Add"
+                                    },
+                                    {
+                                        "value": "force",
+                                        "label": "Force"
+                                    }
+                                ],
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "Upload mode"
+                            },
+                            "remotePath": {
+                                "kind": "Remote path",
+                                "displayName": "Remote path",
+                                "group": "producer",
+                                "required": false,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "Remote path"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "download",
+            "description": "Download from Dropbox",
+            "id": "io.syndesis:dropbox-download-connector",
+            "pattern": "From",
+            "actionType": "connector",
+            "descriptor": {
+                "component-scheme": "dropbox",
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                    "kind": "any"
+                },"configuredProperties":{"operation":"get"},
+                "propertyDefinitionSteps": [
+                    {
+                        "name": "Download  from Dropbox",
+                        "description": "Download  from Dropbox",
+                        "properties": {
+                            "remotePath": {
+                                "kind": "parameter",
+                                "displayName": "Folder of file name to download",
+                                "group": "consumer",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "Folder of file name to download"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

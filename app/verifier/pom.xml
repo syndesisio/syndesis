@@ -255,6 +255,13 @@
       <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-dropbox</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
