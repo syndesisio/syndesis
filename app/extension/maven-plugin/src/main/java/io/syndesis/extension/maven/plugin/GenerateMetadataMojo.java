@@ -308,14 +308,14 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 Optional.ofNullable(node.get("type")).ifPresent(n -> confBuilder.type(n.textValue()));
 
                 ArrayNode tagArray = (ArrayNode)node.get("tags");
-                if (tags != null) {
+                if (tagArray != null) {
                     for (JsonNode tagNode : tagArray) {
                         confBuilder.addTag(tagNode.asText().trim());
                     }
                 }
 
                 ArrayNode enumArray = (ArrayNode)node.get("enums");
-                if (tags != null) {
+                if (enumArray != null) {
                     for (JsonNode enumNode : enumArray) {
                         if (enumNode.has("value") && enumNode.has("label")) {
                             confBuilder.addEnum(
