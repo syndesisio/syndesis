@@ -17,7 +17,8 @@
                type="file"
                ng2FileSelect
                [uploader]="uploader"
-               (onFileSelected)="fileSelect.value=''" />
+               (onFileSelected)="fileSelect.value=''"
+               multiple/>
 
         <div ng2FileDrop
              [uploader]="uploader"
