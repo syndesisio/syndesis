@@ -1,8 +1,7 @@
+@import 'syndesis-sass';
+
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: visible;
+  @include syn-scrollable-parent;
 }
 
 .card-pf {
@@ -26,25 +25,24 @@
   flex: 0 0 auto;
 }
 
-/deep/ syndesis-connections-connection-basics,
-/deep/ syndesis-connections-configure-fields,
-/deep/ syndesis-connections-review {
-  position: relative;
-  flex: 1 1 auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin-left: -20px;
-  padding-left: 20px;
-  // Dock the scrollbar to the right
-  margin-right: -20px;
-  padding-right: 20px;
-  height: 100%;
-}
+::ng-deep {
+  syndesis-connections-connection-basics,
+  syndesis-connections-configure-fields,
+  syndesis-connections-review {
+    @include syn-scrollable-body;
+    position: relative;
+    flex: 1 1 auto;
+    margin-left: -20px;
+    padding-left: 20px;
+    margin-right: -20px;
+    padding-right: 20px;
+  }
 
-/deep/ .connector-list {
-  margin-top: -5px;
+  .connector-list {
+    margin-top: -5px;
 
-  .toolbar-pf {
-    margin: -20px -50px;
+    .toolbar-pf {
+      margin: -20px -50px;
+    }
   }
 }
