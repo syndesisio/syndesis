@@ -16,7 +16,7 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.file.IconDao;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -47,7 +47,7 @@ public class CustomConnectorHandlerTest {
 
     private final DataManager dataManager = mock(DataManager.class);
 
-    private final IconDataAccessObject iconDao = mock(IconDataAccessObject.class);
+    private final IconDao iconDao = mock(IconDao.class);
 
     @Test
     public void shouldCreateNewConnectorsBasedOnConnectorTemplates() {

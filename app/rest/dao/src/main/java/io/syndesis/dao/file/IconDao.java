@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao.icon;
+package io.syndesis.dao.file;
 
 import java.io.InputStream;
 
-public interface IconDataAccessObject {
-
-    void init();
+public interface IconDao {
 
     void write(String id, InputStream iconContents);
 

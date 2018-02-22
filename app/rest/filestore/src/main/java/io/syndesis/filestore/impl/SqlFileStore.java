@@ -33,8 +33,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.syndesis.dao.extension.ExtensionDataAccessObject;
-import io.syndesis.dao.extension.ExtensionDataAccessException;
 import org.apache.commons.io.IOUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.largeobject.LargeObject;
@@ -43,11 +41,13 @@ import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.exceptions.CallbackFailedException;
 
+import io.syndesis.dao.DaoException;
+
 /**
  * Implementation of a {@code ExtensionDataAccessObject} backed by a SQL database.
  */
 @SuppressWarnings("PMD.GodClass")
-public class SqlExtensionFileStore implements ExtensionDataAccessObject {
+public class SqlFileStore {
 
     enum DatabaseKind {
         PostgreSQL, H2, Apache_Derby
@@ -57,7 +57,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
 
     private DatabaseKind databaseKind;
 
-    public SqlExtensionFileStore(DBI dbi) {
+    public SqlFileStore(DBI dbi) {
         this.dbi = dbi;
 
         this.databaseKind = dbi.inTransaction((h, s) -> {
@@ -66,7 +66,6 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
         });
     }
 
-    @Override
     public void init() {
         boolean needsInitialization = !dbi.inTransaction((h, s) -> tableExists(h, "filestore"));
 
@@ -80,11 +79,11 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
                     } else if (databaseKind == DatabaseKind.Apache_Derby) {
                         h.execute("CREATE TABLE filestore (path VARCHAR(1000), data BLOB, PRIMARY KEY (path))");
                     } else {
-                        throw new ExtensionDataAccessException("Unsupported database kind: " + databaseKind);
+                        throw new DaoException("Unsupported database kind: " + databaseKind);
                     }
                 });
             } catch (CallbackFailedException ex) {
-                throw new ExtensionDataAccessException("Unable to initialize the filestore", ex);
+                throw new DaoException("Unable to initialize the filestore", ex);
             }
         }
     }
@@ -98,7 +97,6 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
         }
     }
 
-    @Override
     public void write(String path, InputStream file) {
         FileStoreSupport.checkValidPath(path);
         Objects.requireNonNull(file, "file cannot be null");
@@ -109,11 +107,10 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
                 return true;
             });
         } catch (CallbackFailedException ex) {
-            throw new ExtensionDataAccessException("Unable to write on path " + path, ex);
+            throw new DaoException("Unable to write on path " + path, ex);
         }
     }
 
-    @Override
     public String writeTemporaryFile(InputStream file) {
         Objects.requireNonNull(file, "file cannot be null");
 
@@ -124,11 +121,10 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
                 return path;
             });
         } catch (CallbackFailedException ex) {
-            throw new ExtensionDataAccessException("Unable to write on temporary path", ex);
+            throw new DaoException("Unable to write on temporary path", ex);
         }
     }
 
-    @Override
     public InputStream read(String path) {
         FileStoreSupport.checkValidPath(path);
 
@@ -141,22 +137,10 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
                 return dbi.inTransaction((h, status) -> doReadStandard(h, path));
             }
         } catch (CallbackFailedException ex) {
-            throw new ExtensionDataAccessException("Unable to read data from path " + path, ex);
+            throw new DaoException("Unable to read data from path " + path, ex);
         }
     }
 
-    @Override
-    public boolean delete(String path) {
-        FileStoreSupport.checkValidPath(path);
-
-        try {
-            return dbi.inTransaction((h, status) -> doDelete(h, path));
-        } catch (CallbackFailedException ex) {
-            throw new ExtensionDataAccessException("Unable to delete path " + path, ex);
-        }
-    }
-
-    @Override
     public boolean move(String fromPath, String toPath) {
         FileStoreSupport.checkValidPath(fromPath);
         FileStoreSupport.checkValidPath(toPath);
@@ -172,7 +156,17 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
                 return existed;
             });
         } catch (CallbackFailedException ex) {
-            throw new ExtensionDataAccessException("Unable to move file from path " + fromPath + " to path " + toPath, ex);
+            throw new DaoException("Unable to move file from path " + fromPath + " to path " + toPath, ex);
+        }
+    }
+
+    public boolean delete(String path) {
+        FileStoreSupport.checkValidPath(path);
+
+        try {
+            return dbi.inTransaction((h, status) -> doDelete(h, path));
+        } catch (CallbackFailedException ex) {
+            throw new DaoException("Unable to delete path " + path, ex);
         }
     }
 
@@ -205,7 +199,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
 
             h.insert("INSERT INTO filestore(path, data) values (?,?)", path, oid);
         } catch (IOException | SQLException ex) {
-            throw ExtensionDataAccessException.launderThrowable(ex);
+            throw DaoException.launderThrowable(ex);
         }
     }
 
@@ -219,7 +213,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
 
             h.insert("INSERT INTO filestore(path, data) values (?,?)", path, blob);
         } catch (IOException | SQLException ex) {
-            throw ExtensionDataAccessException.launderThrowable(ex);
+            throw DaoException.launderThrowable(ex);
         }
     }
 
@@ -235,7 +229,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
             try {
                 return blob.get().getBinaryStream();
             } catch (SQLException ex) {
-                throw new ExtensionDataAccessException("Unable to read from BLOB", ex);
+                throw new DaoException("Unable to read from BLOB", ex);
             }
         }
 
@@ -276,7 +270,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
             }
             IOUtils.closeQuietly(h);
 
-            throw ExtensionDataAccessException.launderThrowable(e);
+            throw DaoException.launderThrowable(e);
         }
     }
 
@@ -306,7 +300,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
 
         } catch (SQLException e) {
             IOUtils.closeQuietly(h);
-            throw ExtensionDataAccessException.launderThrowable(e);
+            throw DaoException.launderThrowable(e);
         }
     }
 
@@ -345,7 +339,7 @@ public class SqlExtensionFileStore implements ExtensionDataAccessObject {
             }
             return false;
         } catch (SQLException ex) {
-            throw ExtensionDataAccessException.launderThrowable("Cannot check if the table " + tableName + " already exists", ex);
+            throw DaoException.launderThrowable("Cannot check if the table " + tableName + " already exists", ex);
         }
     }
 

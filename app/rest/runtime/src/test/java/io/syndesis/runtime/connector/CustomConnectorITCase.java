@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
-import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.file.IconDao;
 import io.syndesis.model.action.ActionsSummary;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connector;
@@ -66,7 +66,7 @@ public class CustomConnectorITCase extends BaseITCase {
         .connectorGroup(new ConnectorGroup.Builder().id(SECOND_TEMPLATE_ID).name("second-connector-template-group").build()).build();
 
     @Autowired
-    private IconDataAccessObject iconDao;
+    private IconDao iconDao;
 
     private final Connector nonCustomConnector = new Connector.Builder().id("non-custom-connector").build();
 

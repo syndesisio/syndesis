@@ -36,8 +36,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.dao.extension.ExtensionDataManager;
-import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.file.FileDataManager;
+import io.syndesis.dao.file.IconDao;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.connection.Connector;
@@ -55,11 +55,11 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 public final class ConnectorIconHandler extends BaseHandler {
 
     private final Connector connector;
-    private final IconDataAccessObject iconDao;
-    private final ExtensionDataManager extensionDataManager;
+    private final IconDao iconDao;
+    private final FileDataManager extensionDataManager;
 
-    ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDataAccessObject iconDao,
-                                       final ExtensionDataManager extensionDataManager) {
+    ConnectorIconHandler(final DataManager dataMgr, final Connector connector, final IconDao iconDao,
+                                       final FileDataManager extensionDataManager) {
         super(dataMgr);
         this.connector = connector;
         this.iconDao = iconDao;

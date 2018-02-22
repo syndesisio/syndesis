@@ -39,8 +39,8 @@ import javax.ws.rs.core.UriInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.credential.Credentials;
-import io.syndesis.dao.extension.ExtensionDataManager;
-import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.file.FileDataManager;
+import io.syndesis.dao.file.IconDao;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.inspector.Inspectors;
@@ -70,8 +70,8 @@ import org.springframework.stereotype.Component;
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
     private final ApplicationContext applicationContext;
-    private final IconDataAccessObject iconDao;
-    private final ExtensionDataManager extensionDataManager;
+    private final IconDao iconDao;
+    private final FileDataManager extensionDataManager;
     private final Credentials credentials;
     private final EncryptionComponent encryptionComponent;
     private final Inspectors inspectors;
@@ -80,7 +80,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
                             final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
-                            final IconDataAccessObject iconDao, final ExtensionDataManager extensionDataManager) {
+                            final IconDao iconDao, final FileDataManager extensionDataManager) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;

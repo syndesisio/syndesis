@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao.extension;
+package io.syndesis.dao.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,8 +34,8 @@ public class ExtensionDataManagerTest {
     @Test
     public void shouldGetCorrectDataByExtensionId() throws IOException {
         final DataManager dataManager = mock(DataManager.class);
-        final ExtensionDataAccessObject extensionDataAccess = mock(ExtensionDataAccessObject.class);
-        final ExtensionDataManager extensionDataManager = new ExtensionDataManager(dataManager, extensionDataAccess);
+        final FileDAO extensionDataAccess = mock(FileDAO.class);
+        final FileDataManager extensionDataManager = new FileDataManager(dataManager, extensionDataAccess);
 
         String sampleBinaryData = "Hello";
         Extension sampleMetadata = new Extension.Builder()

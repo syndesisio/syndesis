@@ -56,7 +56,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
-import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.file.FileDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.operators.IdPrefixFilter;
 import io.syndesis.dao.manager.operators.ReverseFilter;
@@ -99,7 +99,7 @@ public class IntegrationSupportHandler {
     private final IntegrationResourceManager resourceManager;
     private final IntegrationHandler integrationHandler;
     private final ConnectionHandler connectionHandler;
-    private final ExtensionDataManager extensionDataManager;
+    private final FileDataManager extensionDataManager;
 
     public IntegrationSupportHandler(
         final IntegrationProjectGenerator projectGenerator,
@@ -107,7 +107,7 @@ public class IntegrationSupportHandler {
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
         final ConnectionHandler connectionHandler,
-        final ExtensionDataManager extensionDataManager) {
+        final FileDataManager extensionDataManager) {
 
         this.projectGenerator = projectGenerator;
         this.dataManager = dataManager;

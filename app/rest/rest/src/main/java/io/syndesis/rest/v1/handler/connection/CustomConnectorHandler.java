@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.file.IconDao;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
@@ -45,9 +45,9 @@ import java.net.URLConnection;
 @Api(tags = {"custom-connector", "connector-template"})
 public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {
 
-    private final IconDataAccessObject iconDao;
+    private final IconDao iconDao;
 
-    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDataAccessObject iconDao) {
+    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDao iconDao) {
         super(dataManager, applicationContext);
         this.iconDao = iconDao;
     }

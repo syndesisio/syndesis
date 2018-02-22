@@ -15,7 +15,7 @@
  */
 package io.syndesis.filestore.impl;
 
-import io.syndesis.dao.extension.ExtensionDataAccessException;
+import io.syndesis.dao.DaoException;
 
 import java.util.regex.Pattern;
 
@@ -45,11 +45,11 @@ public final class FileStoreSupport {
     /**
      * Checks if the path is valid and throws an exception if it's not.
      * @param path the path to check
-     * @throws ExtensionDataAccessException if the path is not valid
+     * @throws DaoException if the path is not valid
      */
-    public static void checkValidPath(String path) throws ExtensionDataAccessException {
+    public static void checkValidPath(String path) throws DaoException {
         if (!isValidPath(path)) {
-            throw new ExtensionDataAccessException("Invalid path: " + path);
+            throw new DaoException("Invalid path: " + path);
         }
     }
 
