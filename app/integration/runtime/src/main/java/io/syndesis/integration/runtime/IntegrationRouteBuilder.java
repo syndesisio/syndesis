@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import io.syndesis.core.Json;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
@@ -61,9 +63,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     private final String configurationUri;
     private final List<IntegrationStepHandler> stepHandlerList;
+    private final Set<String> resources;
 
     public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers) {
         this.configurationUri = configurationUri;
+        this.resources = new HashSet<>();
 
         this.stepHandlerList = new ArrayList<>();
         this.stepHandlerList.add(new ConnectorStepHandler());
@@ -190,31 +194,18 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
             final CamelContext context = getContext();
-            final String entrypoint = action.getDescriptor().getEntrypoint();
             final String resource = action.getDescriptor().getResource();
 
-            if (ObjectHelper.isNotEmpty(resource)) {
+            if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {
                 final Object instance = mandatoryçoadResource(context, resource);
                 final RoutesDefinition definitions = mandatoryConvertToRoutesDefinition(resource, instance);
 
                 LOGGER.debug("Resolved resource: {} as {}", resource, instance.getClass());
 
-                for (RouteDefinition def : definitions.getRoutes()) {
-                    // Don't load all the routes defined from the resource (xml,
-                    // class, etc) but only the one that matcher the 'entry point'
-                    if (entrypoint.equals(def.getInputs().get(0).getEndpointUri())) {
-                        try {
-                            LOGGER.info("Loading route: '{}' from: '{}'", entrypoint, resource);
-
-                            context.addRouteDefinition(def);
-
-                            // found a route definition matching the entry point,
-                            // stop processing routes.
-                            break;
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException(e);
-                        }
-                    }
+                try {
+                    context.addRouteDefinitions(definitions.getRoutes());
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
                 }
             }
         }
