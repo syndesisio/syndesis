@@ -49,7 +49,6 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.buletin.ConnectionBulletinBoard;
-import io.syndesis.model.buletin.IntegrationBulletinBoard;
 import io.syndesis.model.buletin.LeveledMessage;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
