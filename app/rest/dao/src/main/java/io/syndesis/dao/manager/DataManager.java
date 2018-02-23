@@ -71,9 +71,6 @@ public class DataManager implements DataAccessObjectRegistry {
     @Value("${deployment.file:io/syndesis/dao/deployment.json}")
     @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
     private String dataFileName = "io/syndesis/dao/deployment.json";
-    @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
-    @Value("${deployment.load-demo-data:true}")
-    private boolean loadDemoData = true;
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
     private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new ConcurrentHashMap<>();
@@ -106,9 +103,6 @@ public class DataManager implements DataAccessObjectRegistry {
 
         if (dataFileName != null) {
             loadData(this.dataFileName);
-        }
-        if( loadDemoData ) {
-            loadData("io/syndesis/dao/demo-data.json");
         }
     }
 
