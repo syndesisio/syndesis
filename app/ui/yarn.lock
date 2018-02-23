@@ -27,7 +27,7 @@
     "@ngtools/json-schema" "^1.1.0"
     rxjs "^5.5.6"
 
-"@angular/animations@^5.0.0", "@angular/animations@^5.2.0":
+"@angular/animations@^5.2.0":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-5.2.3.tgz#e0eb8d55f807e799df128af9150c075c9ab82adf"
   dependencies:
@@ -96,7 +96,7 @@
   optionalDependencies:
     node-sass "^4.7.2"
 
-"@angular/common@^5.0.0", "@angular/common@^5.2.0":
+"@angular/common@^5.2.0":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-5.2.3.tgz#f2a5c12ec44b73a248d8dcb2d37ac2749f091cf7"
   dependencies:
@@ -111,7 +111,7 @@
     reflect-metadata "^0.1.2"
     tsickle "^0.26.0"
 
-"@angular/compiler@^5.0.0", "@angular/compiler@^5.2.0":
+"@angular/compiler@^5.2.0":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-5.2.3.tgz#49167adb35bdb5e7e915cce912c432300fc16816"
   dependencies:
@@ -123,7 +123,7 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/forms@^5.0.0", "@angular/forms@^5.2.0":
+"@angular/forms@^5.2.0":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.2.3.tgz#4992419191a3800516085209be331fc0d63bd099"
   dependencies:
@@ -139,7 +139,7 @@
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-5.2.3.tgz#b858c1cd3740b29de145a6d60b2562eef391d3b3"
 
-"@angular/platform-browser-dynamic@^5.0.0", "@angular/platform-browser-dynamic@^5.2.0":
+"@angular/platform-browser-dynamic@^5.2.0":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-5.2.3.tgz#87d5172da2c102c3cf48da29d39e9b4b9414b419"
   dependencies:
@@ -151,34 +151,34 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/router@^5.0.0", "@angular/router@^5.2.0":
+"@angular/router@^5.2.0":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-5.2.3.tgz#c56bce42817c67aeb65291e5adf293300038069e"
   dependencies:
     tslib "^1.7.1"
 
-"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180221024510":
-  version "1.33.0-SNAPSHOT.20180221024510"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180221024510.tgz#5bfa450308c97195c87493b5adb01ff0f06dfa8f"
+"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180222211015":
+  version "1.33.0-SNAPSHOT.20180222211015"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180222211015.tgz#f813139f2cd169562338e59fcb4027dbc5ac291d"
   dependencies:
-    "@angular/animations" "^5.0.0"
-    "@angular/common" "^5.0.0"
-    "@angular/compiler" "^5.0.0"
-    "@angular/core" "^5.0.0"
-    "@angular/forms" "^5.0.0"
-    "@angular/http" "^5.0.0"
-    "@angular/platform-browser" "^5.0.0"
-    "@angular/platform-browser-dynamic" "^5.0.0"
-    "@angular/router" "^5.0.0"
+    "@angular/animations" "^5.2.0"
+    "@angular/common" "^5.2.0"
+    "@angular/compiler" "^5.2.0"
+    "@angular/core" "^5.2.0"
+    "@angular/forms" "^5.2.0"
+    "@angular/http" "^5.2.0"
+    "@angular/platform-browser" "^5.2.0"
+    "@angular/platform-browser-dynamic" "^5.2.0"
+    "@angular/router" "^5.2.0"
     bootstrap "^3.3.7"
     chart.js "^2.5.0"
     classlist.js "^1.1.20150312"
-    core-js "^2.4.1"
+    core-js "^2.5.1"
     font-awesome "4.7.0"
     jquery "3.1.1"
     jquery-match-height "^0.7.2"
     mkdirp "^0.5.1"
-    moment "^2.18.1"
+    moment "^2.20.1"
     ncp "^2.0.0"
     ngx-bootstrap "^2.0.2"
     opn-cli "^3.1.0"
@@ -1670,7 +1670,7 @@ copy-webpack-plugin@^4.1.1:
     pify "^3.0.0"
     serialize-javascript "^1.4.0"
 
-core-js@>=2.4.1, core-js@^2.2.0, core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.1:
+core-js@>=2.4.1, core-js@^2.2.0, core-js@^2.4.0, core-js@^2.5.1:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.3.tgz#8acc38345824f16d8365b7c9b4259168e8ed603e"
 
@@ -4855,7 +4855,7 @@ moment-timezone@^0.4.0, moment-timezone@^0.4.1:
   dependencies:
     moment ">= 2.6.0"
 
-moment@*, "moment@>= 2.6.0", moment@^2.10, moment@^2.18.1, moment@^2.19.1, moment@^2.20.1:
+moment@*, "moment@>= 2.6.0", moment@^2.10, moment@^2.19.1, moment@^2.20.1:
   version "2.20.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
 
