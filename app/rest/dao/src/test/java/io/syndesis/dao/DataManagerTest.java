@@ -20,12 +20,10 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -44,8 +42,6 @@ import io.syndesis.model.ListResult;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.metrics.IntegrationMetricsSummary;
 
 public class DataManagerTest {
     private CacheManager cacheManager;
@@ -69,7 +65,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactlyInAnyOrder("gmail", "activemq", "amqp", "github", "ftp","sftp", "facebook", "linkedin", "sql", "salesforce", "jms", "timer", "twitter", "day-trade", "servicenow", "aws-s3", "http", "trade-insight");
+            .containsExactlyInAnyOrder("activemq", "amqp", "ftp","sftp", "sql", "salesforce", "twitter", "aws-s3");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -77,11 +73,10 @@ public class DataManagerTest {
 
     @Test
     public void getConnections() {
-        @SuppressWarnings("unchecked")
         ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsExactlyInAnyOrder("1", "2", "3", "4", "5");
-        Assert.assertEquals(5, connections.getTotalCount());
-        Assert.assertEquals(5, connections.getItems().size());
+        assertThat(connections.getItems().stream().map(Connection::getId).map(Optional::get)).containsOnly("5");
+        Assert.assertEquals(1, connections.getTotalCount());
+        Assert.assertEquals(1, connections.getItems().size());
         Assert.assertEquals(connections.getTotalCount(), connections.getItems().size());
     }
 
@@ -93,13 +88,13 @@ public class DataManagerTest {
             resultList -> new ListResult.Builder<Connector>()
                 .createFrom(resultList)
                 .items(resultList.getItems().stream()
-                    .filter(connector -> connector.getId().get().equals("gmail") || connector.getId().get().equals("activemq"))
+                    .filter(connector -> connector.getId().get().equals("twitter") || connector.getId().get().equals("activemq"))
                     .collect(Collectors.toList()))
                 .build()
         );
 
-        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("gmail", "activemq");
-        Assert.assertEquals(18, connectors.getTotalCount());
+        assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("twitter", "activemq");
+        Assert.assertEquals(8, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 
@@ -115,14 +110,6 @@ public class DataManagerTest {
         Connector connector = dataManager.fetch(Connector.class, "salesforce");
         Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
         Assert.assertEquals(10, connector.getActions().size());
-    }
-
-    @Test
-    public void getIntegration() throws IOException {
-        Integration integration = dataManager.fetch(Integration.class, "1");
-        Assert.assertEquals("Example Integration", "Twitter to Salesforce Example", integration.getName());
-        Assert.assertEquals(4, integration.getSteps().size());
-        Assert.assertTrue(integration.getTags().contains("example"));
     }
 
     @Test
@@ -201,19 +188,6 @@ public class DataManagerTest {
 
         dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1","prop2");
         fail("Should fail before getting here");
-    }
-
-    @Test
-    public void metricsTest() {
-        ListResult<IntegrationMetricsSummary> list = dataManager.fetchAll(IntegrationMetricsSummary.class);
-        assertThat(list.getTotalCount()).isEqualTo(2);
-    }
-
-    @Test
-    public void getMetricsIdsTest() {
-        Set<String> metricsIds = dataManager.fetchIds(IntegrationMetricsSummary.class);
-        assertThat(metricsIds.size()).isEqualTo(2);
-        assertThat(metricsIds).contains("1");
     }
 
 }
