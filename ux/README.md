@@ -20,8 +20,9 @@ Access UX design resource and documentation for Syndesis.
 * ### [Salesforce Dynamic Object](designs/salesforceobjects/salesforceobjects.md)
 * ### [Import Export](designs/importexport/importexport.md)
 * ### [Integration Details Page](designs/integration_details/integration_details_page.md)
-* ### [Integration  Activity](designs/integrationactivity/iintegrationactivity.md)
+* ### [Integration  Activity](designs/integrationactivity/integrationactivity.md)
 * ### [Describe Data](designs/describe-data/describe-data.md)
+* ### [Data Buckets](designs/data-buckets/data-buckets.md)
 
 
 ## Create a Connection
