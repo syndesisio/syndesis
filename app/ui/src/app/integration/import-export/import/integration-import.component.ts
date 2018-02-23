@@ -18,15 +18,21 @@ import {
 
 @Component({
   selector: 'syndesis-import-integration-component',
-  templateUrl: './integration-import.component.html'
+  templateUrl: './integration-import.component.html',
+  styleUrls: ['./integration-import.component.scss']
 })
 export class IntegrationImportComponent implements OnInit {
   public uploader: FileUploader;
+  public hasBaseDropZoneOver = false;
 
   constructor(
     public notificationService: NotificationService,
     private integrationSupportService: IntegrationSupportService,
   ) {}
+
+  public fileOverBase(e) {
+    this.hasBaseDropZoneOver = e;
+  }
 
   ngOnInit() {
     this.uploader = new FileUploader({
@@ -35,6 +41,7 @@ export class IntegrationImportComponent implements OnInit {
       autoUpload: true
     });
 
+    /*
     this.uploader.onCompleteItem = (
       item: FileItem,
       response: string,
@@ -63,6 +70,7 @@ export class IntegrationImportComponent implements OnInit {
         });
       }
     };
+    */
   }
 
   /*

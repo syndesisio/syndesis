@@ -1,0 +1,17 @@
+@import 'syndesis-sass';
+
+.import-drop-zone {
+  border: 2px dashed $color-pf-black-300;
+  padding: $gutter;
+
+  &--hover {
+    border-color: $color-pf-blue-300;
+    background: $color-pf-black-100;
+  }
+
+  .import-file-select {
+    padding-top: $gutter;
+    padding-bottom: $gutter;
+    margin-bottom: 15px;
+  }
+}
