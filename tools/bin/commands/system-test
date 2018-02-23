@@ -330,6 +330,6 @@ test_build() {
     oc project $project
     local maven_args=$(maven_args $project)
     check_error $maven_args
-    maven_args="-Psystem-tests -Pimages -Dfabric8.mode=openshift $maven_args"
+    maven_args="-Psystem-tests,image,flash -Dfabric8.mode=openshift $maven_args"
     call_maven "$maven_args"
 }
