@@ -49,6 +49,10 @@ public final class CertificateUtil {
         return kmFactory.getKeyManagers();
     }
 
+    public static TrustManager[] createTrustAllTrustManagers() {
+        return new TrustManager[]{ new TrustAllTrustManager() };
+    }
+
     public static TrustManager[] createTrustManagers(String brokerCertificate, String alias) throws GeneralSecurityException,
             IOException {
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("X509");

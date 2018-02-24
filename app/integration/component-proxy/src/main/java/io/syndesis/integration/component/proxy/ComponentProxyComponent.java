@@ -83,10 +83,14 @@ public class ComponentProxyComponent extends DefaultComponent {
     public void setOptions(Map<String, Object> options) {
         this.configuredOptions.clear();
 
-        // Filter out null values
-        options.entrySet().stream()
-            .filter(e -> e.getValue() != null)
-            .forEach(e -> this.configuredOptions.put(e.getKey(), e.getValue()));
+        if (ObjectHelper.isNotEmpty(options)) {
+            for (Map.Entry<String, Object> entry : options.entrySet()) {
+                // Filter out null values
+                if (entry.getValue() != null) {
+                    this.configuredOptions.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -161,8 +165,12 @@ public class ComponentProxyComponent extends DefaultComponent {
             // remove old component if present
             getCamelContext().removeComponent(this.componentSchemeAlias.get());
 
-            // ensure component is started and stopped when Camel shutdown
-            getCamelContext().addService(component, true, true);
+            if (!getCamelContext().hasService(component.get())) {
+                // ensure component is started and stopped when Camel shutdown if
+                // not already added
+                getCamelContext().addService(component.get(), true, true);
+            }
+
             getCamelContext().addComponent(this.componentSchemeAlias.get(), component.get());
         } else {
             componentSchemeAlias = Optional.empty();
@@ -228,11 +236,6 @@ public class ComponentProxyComponent extends DefaultComponent {
     // Helpers
     // ***************************************
 
-    /**
-     * Create the endpoint instance which either happens with a new base component
-     * which has been pre-configured for this connector or we fallback and use
-     * the default component in the camel context
-     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
         final String componentClass = definition.getComponent().getJavaType();
