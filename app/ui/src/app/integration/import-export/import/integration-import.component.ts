@@ -23,14 +23,14 @@ import {
 })
 export class IntegrationImportComponent implements OnInit {
   public uploader: FileUploader;
-  public hasBaseDropZoneOver = false;
+  public hasBaseDropZoneOver: boolean;
 
   constructor(
     public notificationService: NotificationService,
     private integrationSupportService: IntegrationSupportService,
   ) {}
 
-  public fileOverBase(e) {
+  onFileOver(e) {
     this.hasBaseDropZoneOver = e;
   }
 

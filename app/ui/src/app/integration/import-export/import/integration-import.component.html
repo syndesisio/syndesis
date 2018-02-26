@@ -10,7 +10,7 @@
         ng2FileDrop
         [uploader]="uploader" 
         [ngClass]="{'import-drop-zone--hover': hasBaseDropZoneOver}"
-        (fileOver)="fileOverBase($event)" (onFileDrop)="fileDropBase($event)">
+        (fileOver)="onFileOver($event)">
         <p>Drag and drop your integration files here or</p>
         <div class="row import-file-select">
           <div class="col-md-3">
