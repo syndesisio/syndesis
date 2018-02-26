@@ -19,7 +19,7 @@
 
   <!-- Icon Progress Line -->
   <div class="col-md-3 progress-line">
-    <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
+    <div [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
        [popover]="tooltipPopover"
        #pop="bs-popover"
        placement="right"
@@ -32,7 +32,7 @@
       <img class="syn-icon-small"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
            [src]="step.connection | synIconPath">
-    </p>
+    </div>
   </div>
 
   <!-- Step Item Wrapper -->
