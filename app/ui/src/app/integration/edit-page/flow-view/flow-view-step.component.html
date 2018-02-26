@@ -1,33 +1,67 @@
 <div *ngIf="step"
      class="flow-view-step">
 
+  <ng-template #addDatamapper>
+    <div class="alert alert-warning">
+      <button type="button"
+        (click)="hideAddDatamapperInfo()"
+        class="close">
+        <span class="pficon pficon-close"></span>
+      </button>
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <p><strong>Data Type Mismatch:</strong> Add a data mapping step before this connection to resolve the difference.</p>
+    </div>
+  </ng-template>
+
   <ng-template #tooltipPopover>
-    <span>
+    <div>
+      <i class="fa fa-remove pull-right" (click)="hideInfoPopover()"></i>
 
       <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
+      <!--
       <div *ngIf="previousStepShouldDefineDataShape"><p style="color:red"><b>Define a data type</b></p></div>
       <div *ngIf="shouldAddDatamapper"><p style="color:red"><b>Add a datamapper step</b></p></div>
-
-      <strong [innerHtml]="getStepText()"></strong><br/>
-
-      <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
-      <div *ngIf="inputDataShapeText" >Input: {{ inputDataShapeText }}</div>
-      <div *ngIf="outputDataShapeText">Output: {{ outputDataShapeText }}</div>
-
-    </span>
+      -->
+        <dl class="dl-horizontal">
+          <dt>
+            Name
+          </dt>
+          <dd>
+            {{ step.connection?.name }}
+          </dd>
+        </dl>
+        <dl class="dl-horizontal">
+          <dt>
+            Action
+          </dt>
+          <dd>
+            {{ step.action?.name }}
+          </dd>
+        </dl>
+        <dl class="dl-horizontal" *ngIf="inputDataShapeText">
+          <dt>
+            Input Data Type
+          </dt>
+          <dd>
+            {{ inputDataShapeText }}
+          </dd>
+        </dl>
+        <dl class="dl-horizontal" *ngIf="outputDataShapeText">
+          <dt>
+            Output Data Type
+          </dt>
+          <dd>
+            {{ outputDataShapeText }}
+          </dd>
+        </dl>
+    </div>
   </ng-template>
 
   <!-- Icon Progress Line -->
   <div class="col-md-3 progress-line">
-    <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
-       [popover]="tooltipPopover"
-       #pop="bs-popover"
-       placement="right"
-       (mouseover)="showTooltip()"
-       (mouseleave)="hideTooltip()"
-       triggers=""
-       container="body">
-      <i [ngClass]="getIconClass()"
+    <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()">
+      <span>{{ stepIndex }}</span>
+      <i [class]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
@@ -44,19 +78,33 @@
     <div *ngSwitchCase="'endpoint'"
          [ngClass]="getParentActiveClass() + ' step-container'">
 
-      <!-- Delete Icon -->
-      <i *ngIf="showDelete()"
-         class="delete-icon fa fa-lg fa-trash"
-         title="Delete this connection"
-         (click)="deletePrompt()"></i>
-
-
       <!-- Connection Title -->
       <div [ngClass]="getParentClass()"
             (click)="goto('action-configure')">
-        <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
-        <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
-        {{ getStepText() }}
+        <span class="pficon pficon-warning-triangle-o"
+          *ngIf="shouldAddDatamapper"
+          [popover]="addDatamapper"
+          #datamapperInfoPop="bs-popover"
+          triggers=""
+          placement="right"
+          (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
+          container="body"></span>
+        {{ stepName }}
+
+        <!-- Delete Icon -->
+        <i *ngIf="showDelete()"
+          class="fa fa-lg fa-trash pull-right"
+          title="Delete this connection"
+          (click)="deletePrompt(); $event.stopPropagation();"></i>
+
+        <!-- Info icon -->
+        <i class="fa fa-lg fa-info-circle pull-right"
+          [popover]="tooltipPopover"
+          #connectionInfoPop="bs-popover"
+          placement="right"
+          (click)="toggleInfoPopover(); $event.stopPropagation();"
+          triggers=""
+          container="body"></i>
       </div>
 
       <!-- Connection Sub Pages -->
@@ -96,19 +144,17 @@
     <div *ngSwitchDefault
          [ngClass]="getParentActiveClass() + ' step-container'">
 
-      <!-- Delete Icon -->
-      <i *ngIf="showDelete()"
-         class="delete-icon fa fa-lg fa-trash"
-         title="Delete this step"
-         [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
-         (click)="deletePrompt()"></i>
-
       <!-- Step Heading -->
       <div [ngClass]="getParentClass()"
             (click)="goto('step-configure')">
-        <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
-        <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
-        {{ getStepText() }}
+        {{ stepName }}
+
+        <!-- Delete Icon -->
+        <i *ngIf="showDelete()"
+          class="fa fa-lg fa-trash pull-right"
+          title="Delete this step"
+          [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
+          (click)="deletePrompt(); $event.stopPropagation();"></i>
       </div>
 
       <!-- Step Sub Pages -->
