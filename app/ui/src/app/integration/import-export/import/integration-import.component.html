@@ -1,90 +1,55 @@
-
 <div class="row row-cards-pf second-row">
-  <div class="col-xs-12">
-
-    <div class="card-pf">
-      <div class="card-pf-heading">
-        <div class="card-pf-title">
-          <h1>Import Integration</h1>
-        </div>
+  <div class="card-pf">
+    <div class="card-pf-heading">
+      <div class="card-pf-title">
+        <h1>Import Integration</h1>
       </div>
-
-      <div class="card-pf-body">
-
-        <p>Select the integration file to import:</p>
-
-        <input #fileSelect
-               type="file"
-               ng2FileSelect
-               [uploader]="uploader"
-               (onFileSelected)="fileSelect.value=''"
-               multiple/>
-
-        <div ng2FileDrop
-             [uploader]="uploader"
-             class="well my-drop-zone">
-          Or drag and drop your integration files here
-        </div>
-
-        <div style="margin-bottom: 40px">
-          <h3>Upload queue</h3>
-
-          <table class="table">
-            <thead>
-            <tr>
-              <th width="50%">Name</th>
-              <th>Progress</th>
-              <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let item of uploader.queue">
-              <td>
-                <strong>{{ item?.file?.name }}</strong>
-              </td>
-              <td>
-                <div class="progress" style="margin-bottom: 0;">
-                  <div class="progress-bar"
-                       role="progressbar"
-                       [ngStyle]="{ 'width': item.progress + '%' }"></div>
+    </div>
+    <div class="card-pf-body">
+      <div class="import-drop-zone"
+        ng2FileDrop
+        [uploader]="uploader" 
+        [ngClass]="{'import-drop-zone--hover': hasBaseDropZoneOver}"
+        (fileOver)="onFileOver($event)">
+        <p>Drag and drop your integration files here or</p>
+        <div class="row import-file-select">
+          <div class="col-md-3">
+            <input #fileSelect type="file" 
+              ng2FileSelect
+              [uploader]="uploader" 
+              (onFileSelected)="fileSelect.value=''">
+          </div>
+          <div class="col-md-9">
+            <div *ngFor="let item of uploader.queue">
+              <div class="row">
+                <div class="col-xs-7">
+                  {{ item?.file?.name }}
                 </div>
-              </td>
-              <td nowrap>
-                <div *ngIf="!item.isUploaded">
-                  <button type="button"
-                          class="btn btn-warning btn-xs"
-                          (click)="item.cancel(); item.remove()">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                  </button>
+                <div class="col-xs-5">
+                  <div *ngIf="item.isUploading" class="text-muted">
+                    <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
+                    <em>Importing...</em>
+                  </div>
+                  <div *ngIf="item.isUploaded">
+                    <div *ngIf="item.isSuccess; else isError">
+                      <span class="pficon-ok"></span>
+                      Successfully imported.
+                    </div>
+                    <ng-template #isError>
+                      <span class="pficon-error-circle-o"></span>
+                      Unable to import this file.
+                    </ng-template>
+                  </div>
                 </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+              </div>
+            </div>
+          </div>
         </div>
+        <span class="text-muted">
+          <em>Note: The imported integration will be in the draft state. If you previously imported and this environment has
+            a draft version of the integration, then that draft is lost.</em>
+        </span>
       </div>
-
     </div>
   </div>
 </div>
-
-<!--
-<form class="syn-form syn-form--integration-upload"
-      (ngSubmit)="onDone(importForm)"
-      #importForm="ngForm"
-      novalidate>
-  <fieldset class="syn-form__body">
-    <div class="syn-form-row syn-form-row--upload-file">
-      <input type="file"
-             (change)="onSelectFile($event)">
-    </div>
-  </fieldset>
-
-  <fieldset class="syn-form__buttons">
-    <syndesis-button type="submit"
-                     [loading]="integrationImportState.loading">
-      Done
-    </syndesis-button>
-  </fieldset>
-</form>
--->
