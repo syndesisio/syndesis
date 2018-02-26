@@ -48,7 +48,7 @@
             </div>
           </ng-template>
           <ng-template #actionTemplate let-item="item" let-index="index">
-            <button type="button" (click)="onDelete(item.id)" [disabled]="item.uses > 0" class="foo btn btn-default">
+            <button *ngIf="!(item.connectorGroup)" type="button" (click)="onDelete(item.id)" [disabled]="item.uses > 0" class="foo btn btn-default">
               Delete
             </button>
           </ng-template>
@@ -67,3 +67,5 @@
     </p>
   </delete-confirmation-modal>
 </ng-template>
+
+<pre>{{ filteredApiConnectors$ | async | json }}</pre>
