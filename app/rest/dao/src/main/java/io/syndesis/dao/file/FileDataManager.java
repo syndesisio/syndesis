@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao.extension;
+package io.syndesis.dao.file;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -24,11 +24,11 @@ import io.syndesis.dao.manager.DataManager;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.model.extension.Extension;
 
-public class ExtensionDataManager {
+public class FileDataManager {
     private final DataManager dataManager;
-    private final ExtensionDataAccessObject extensionDataAccess;
+    private final FileDAO extensionDataAccess;
 
-    public ExtensionDataManager(DataManager dataManager, ExtensionDataAccessObject extensionDataAccess) {
+    public FileDataManager(DataManager dataManager, FileDAO extensionDataAccess) {
         this.dataManager = dataManager;
         this.extensionDataAccess = extensionDataAccess;
     }
@@ -75,7 +75,7 @@ public class ExtensionDataManager {
         return res;
     }
 
-    public ExtensionDataAccessObject getExtensionDataAccess() {
+    public FileDAO getExtensionDataAccess() {
         return extensionDataAccess;
     }
 }

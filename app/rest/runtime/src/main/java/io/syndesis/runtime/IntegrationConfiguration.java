@@ -19,7 +19,7 @@ package io.syndesis.runtime;
 import java.io.InputStream;
 import java.util.Optional;
 
-import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.file.FileDataManager;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -40,7 +40,7 @@ public class IntegrationConfiguration {
     public IntegrationResourceManager integrationResourceManager(
             DataManager dataManager,
             EncryptionComponent encryptionComponent,
-            ExtensionDataManager extensionDataManager) {
+            FileDataManager extensionDataManager) {
 
         return new IntegrationResourceManager() {
             @Override

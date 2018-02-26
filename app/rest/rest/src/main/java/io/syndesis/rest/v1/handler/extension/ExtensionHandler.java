@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.core.KeyGenerator;
 import io.syndesis.core.SyndesisServerException;
-import io.syndesis.dao.extension.ExtensionDataAccessObject;
+import io.syndesis.dao.file.FileDAO;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.model.Dependency;
@@ -81,17 +81,17 @@ import org.springframework.stereotype.Component;
 @Path("/extensions")
 @Api(value = "extensions")
 @Component
-@ConditionalOnBean(ExtensionDataAccessObject.class)
+@ConditionalOnBean(FileDAO.class)
 public class ExtensionHandler extends BaseHandler implements Lister<Extension>, Getter<Extension>, Deleter<Extension> {
 
-    private final ExtensionDataAccessObject fileStore;
+    private final FileDAO fileStore;
 
     private final ExtensionActivator extensionActivator;
 
     private final Validator validator;
 
     public ExtensionHandler(final DataManager dataMgr,
-                            final ExtensionDataAccessObject fileStore,
+                            final FileDAO fileStore,
                             final ExtensionActivator extensionActivator,
                             final Validator validator) {
         super(dataMgr);

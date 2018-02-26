@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao.icon;
+package io.syndesis.dao;
+
+import io.syndesis.dao.file.FileDAO;
 
 /**
- * These runtime exceptions are thrown by the methods of the {@link IconDataAccessObject}
+ * These runtime exceptions are thrown by the methods of the {@link FileDAO}
  */
-public class IconDataAccessException extends RuntimeException {
+public class DaoException extends RuntimeException {
 
-    public IconDataAccessException(String message) {
+    public DaoException(String message) {
         super(message);
     }
 
-    public IconDataAccessException(String message, Throwable cause) {
+    public DaoException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -38,7 +40,7 @@ public class IconDataAccessException extends RuntimeException {
         } else if (cause instanceof Error) {
             throw (Error) cause;
         } else {
-            throw new IconDataAccessException(message, cause);
+            throw new DaoException(message, cause);
         }
     }
 }

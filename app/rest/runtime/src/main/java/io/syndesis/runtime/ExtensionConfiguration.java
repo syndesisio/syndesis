@@ -16,8 +16,8 @@
 package io.syndesis.runtime;
 
 
-import io.syndesis.dao.extension.ExtensionDataAccessObject;
-import io.syndesis.dao.extension.ExtensionDataManager;
+import io.syndesis.dao.file.FileDAO;
+import io.syndesis.dao.file.FileDataManager;
 import io.syndesis.dao.manager.DataManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,10 +30,10 @@ import org.springframework.context.annotation.Configuration;
 public class ExtensionConfiguration {
     @Bean
     @Autowired
-    public ExtensionDataManager extensionDataManager(
+    public FileDataManager extensionDataManager(
             DataManager dataManager,
-            ExtensionDataAccessObject extensionDataAccess) {
+            FileDAO extensionDataAccess) {
 
-        return new ExtensionDataManager(dataManager, extensionDataAccess);
+        return new FileDataManager(dataManager, extensionDataAccess);
     }
 }

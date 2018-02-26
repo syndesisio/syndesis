@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.dao.extension;
+package io.syndesis.dao.file;
 
 import java.io.InputStream;
 
-public interface ExtensionDataAccessObject {
-    /**
-     * Initialize the file store.
-     */
-    void init();
+public interface FileDAO {
 
     /**
      * Write a file on a path.

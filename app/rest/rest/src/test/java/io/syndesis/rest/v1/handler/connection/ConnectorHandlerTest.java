@@ -39,8 +39,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
 import io.syndesis.credential.Credentials;
-import io.syndesis.dao.extension.ExtensionDataManager;
-import io.syndesis.dao.icon.IconDataAccessObject;
+import io.syndesis.dao.file.FileDataManager;
+import io.syndesis.dao.file.IconDao;
 import io.syndesis.dao.manager.DataManager;
 import io.syndesis.dao.manager.EncryptionComponent;
 import io.syndesis.inspector.Inspectors;
@@ -75,9 +75,9 @@ public class ConnectorHandlerTest {
 
     private final DataManager dataManager = mock(DataManager.class);
 
-    private final IconDataAccessObject NO_ICON_DAO = null;
+    private final IconDao NO_ICON_DAO = null;
 
-    private final ExtensionDataManager NO_EXTENSION_DATA_MANAGER = null;
+    private final FileDataManager NO_EXTENSION_DATA_MANAGER = null;
 
     private final ConnectorHandler handler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
         NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER);
