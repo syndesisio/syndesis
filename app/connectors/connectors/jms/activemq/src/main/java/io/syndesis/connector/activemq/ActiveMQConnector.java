@@ -126,32 +126,35 @@ class ActiveMQConnector extends ComponentProxyComponent {
     // Helpers
     // ************************************
 
+    @SuppressWarnings("PMD.AvoidDeeplyNestedIfStmts")
     private SjmsComponent lookupComponent() {
         final CamelContext context = getCamelContext();
         final List<String> names = context.getComponentNames();
 
-        if (ObjectHelper.isNotEmpty(names)) {
-            // Try to check if a component with same set-up has already been
-            // configured, if so reuse it.
-            for (String name: names) {
-                Component cmp = context.getComponent(name, false, false);
-                if (cmp instanceof SjmsComponent) {
-                    ConnectionFactory factory = ((SjmsComponent)cmp).getConnectionFactory();
-                    if (factory instanceof ActiveMQConnectionFactory) {
-                        ActiveMQConnectionFactory amqFactory = (ActiveMQConnectionFactory)factory;
+        if (ObjectHelper.isEmpty(names)) {
+            return null;
+        }
+            
+        // Try to check if a component with same set-up has already been
+        // configured, if so reuse it.
+        for (String name: names) {
+            Component cmp = context.getComponent(name, false, false);
+            if (cmp instanceof SjmsComponent) {
+                ConnectionFactory factory = ((SjmsComponent)cmp).getConnectionFactory();
+                if (factory instanceof ActiveMQConnectionFactory) {
+                    ActiveMQConnectionFactory amqFactory = (ActiveMQConnectionFactory)factory;
 
-                        if (!Objects.equals(brokerUrl, amqFactory.getBrokerURL())) {
-                            break;
-                        }
-                        if (!Objects.equals(username, amqFactory.getUserName())) {
-                            break;
-                        }
-                        if (!Objects.equals(password, amqFactory.getPassword())) {
-                            break;
-                        }
-
-                        return (SjmsComponent) cmp;
+                    if (!Objects.equals(brokerUrl, amqFactory.getBrokerURL())) {
+                        break;
                     }
+                    if (!Objects.equals(username, amqFactory.getUserName())) {
+                        break;
+                    }
+                    if (!Objects.equals(password, amqFactory.getPassword())) {
+                        break;
+                    }
+
+                    return (SjmsComponent) cmp;
                 }
             }
         }
