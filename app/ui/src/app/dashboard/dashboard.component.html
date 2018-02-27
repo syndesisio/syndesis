@@ -4,9 +4,7 @@
     [integrations]="integrations$ | async"
     [connections]="connections$ | async">
   </syndesis-dashboard-metrics>
-  <syndesis-dashboard-integrations [integrations]="integrations$ | async"
-                                   [integrationsLoading]="integrationsLoading$ | async"
-                                   [connections]="connections$ | async"
+  <syndesis-dashboard-integrations [connections]="connections$ | async"
                                    [connectionsLoading]="connectionsLoading$ | async">
   </syndesis-dashboard-integrations>
 </div>

@@ -1,4 +1,4 @@
-<syndesis-loading [loading]="integrationsLoading">
+<syndesis-loading [loading]="loading">
   <div class="container-cards-pf syndesis-dashboard-integrations">
     <!-- Second row empty State -->
     <div class="blank-slate-pf" *ngIf="integrations?.length === 0">
@@ -43,35 +43,9 @@
               </h2>
             </div>
             <div class="card-pf-body">
-              <div class="col-xs-8 chart"
+              <div class="col-xs-12"
                    *ngIf="!loading">
-                <canvas baseChart
-                        [data]="doughnutChartData"
-                        [labels]="doughnutChartLabels"
-                        [chartType]="doughnutChartType"
-                        [colors]="doughnutChartColors"
-                        [legend]="doughnutChartLegend"
-                        [options]="doughnutChartOptions"
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
-                <div class="total-count">
-                  <div class="number">{{ countTotalIntegrations() }}</div>
-                  <div class="text">integrations</div>
-                </div>
-              </div>
-              <div class="col-xs-4 legend">
-                <div class="col-xs-12">
-                  <div class="col-xs-1 colors active"></div>
-                  <div class="col-xs-10 text">Published: {{ countActiveIntegrations() || 0 }}</div>
-                </div>
-                <div class="col-xs-12">
-                  <div class="col-xs-1 colors draft"></div>
-                  <div class="col-xs-10 text">Draft: {{ countDraftIntegrations() || 0 }}</div>
-                </div>
-                <div class="col-xs-12">
-                  <div class="col-xs-1 colors inactive"></div>
-                  <div class="col-xs-10 text">Unpublished: {{ countInactiveIntegrations() || 0 }}</div>
-                </div>
+                <pfng-chart-donut [chartData]="integrationChartData" [config]="integrationsChartConfig"></pfng-chart-donut>
               </div>
             </div>
           </div>
