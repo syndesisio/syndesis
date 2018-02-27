@@ -14,7 +14,7 @@ export class IntegrationActivityComponent implements OnInit {
 
   constructor(private integrationSupportService: IntegrationSupportService) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.activities$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id);
   }
 }
