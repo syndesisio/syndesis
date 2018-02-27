@@ -1,6 +1,7 @@
-import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DonutComponent, DonutConfig } from 'patternfly-ng';
 
@@ -18,9 +19,9 @@ import {
   templateUrl: './dashboard-integrations.component.html',
   styleUrls: ['./dashboard-integrations.component.scss']
 })
-export class DashboardIntegrationsComponent implements OnInit {
+export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
 
-  integrationsObserver: Observable<IntegrationOverviews>;
+  integrationOverviews$: Observable<IntegrationOverviews>;
   integrations: Array<IntegrationOverview>;
   loading = true;
 
@@ -50,6 +51,8 @@ export class DashboardIntegrationsComponent implements OnInit {
     }
   };
 
+  private integrationOverviewsSubscription: Subscription;
+
   constructor(
     public route: ActivatedRoute,
     private router: Router,
@@ -58,8 +61,8 @@ export class DashboardIntegrationsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.integrationsObserver = this.integrationSupportService.watchOverviews();
-    this.integrationsObserver.subscribe(integrations => {
+    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
+    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.integrations = integrations;
       this.loading = false;
       this.integrationChartData = [
@@ -68,6 +71,12 @@ export class DashboardIntegrationsComponent implements OnInit {
         [`Unpublished`, this.countInactiveIntegrations()]
       ];
     });
+  }
+
+  ngOnDestroy() {
+    if (this.integrationOverviewsSubscription) {
+      this.integrationOverviewsSubscription.unsubscribe();
+    }
   }
 
   //-----  Integration Board Chart ------------------->>
