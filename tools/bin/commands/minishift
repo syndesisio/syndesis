@@ -108,7 +108,7 @@ delete_minishift() {
 
     minishift delete --clear-cache --force
     if [ $remove_all ] && [ -d ~/.minishift ]; then
-        rm -rf ~/.minishift
+        rm -rf ~/.minishift/*
     fi
 }
 
