@@ -71,6 +71,9 @@
       <li class="syn-tabs__tab" [class.active]="selectedTabType == 'history'" *ngIf="integration.deployments">
         <a (click)="toggleTab('history')">History</a>
       </li>
+      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'activity'">
+        <a (click)="toggleTab('activity')">Activity</a>
+      </li>
       <li class="syn-tabs__tab" [class.active]="selectedTabType == 'logs'" *ngIf="loggingEnabled">
         <a (click)="toggleTab('logs')">Logs</a>
       </li>
@@ -99,7 +102,11 @@
     <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'logs'">
       <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
     </div>
-
+    
+    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'activity'">
+      <syndesis-integration-activity [integration]=integration></syndesis-integration-activity>
+    </div>
+    
     <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'metrics'">
       <syndesis-integration-metrics
         [integration]=integration
