@@ -15,7 +15,8 @@ minishift::description() {
 minishift::usage() {
     cat <<EOT
     --install                 Install templates to a running Minishift.
--p  --project                 Install into this project. Delete this project if it already exists
+-p  --project                 Install into this project. Delete this project if it already exists.
+                              By default, install into the current project (without deleting)
 -c  --context                 Install into this context. Default is 'minishift'
     --reset                   Reset and initialize the minishift installation by
                               'minishift delete && minishift start'.
@@ -26,8 +27,6 @@ minishift::usage() {
     --disk-size <size>        How many disk space to use when doing a reset. Default: $DEFAULT_DISK_SIZE
     --show-logs               Show minishift logs during startup
     --openshift-version <ver> Set OpenShift version to use when reseting (default: $DEFAULT_OPENSHIFT_VERSION)
-                              already existing for --install.
-                              Default project: "syndesis"
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
@@ -35,6 +34,8 @@ minishift::usage() {
                               "openshift" for image streams (default: "openshift")
     --docker                  Shortcut for "--image-mode docker"
 -o  --open                    Open Syndesis in the browser
+-y  --yes                     Asume 'yes' automaticlaly when asking for deleting
+                              a given project.
 EOT
 }
 
