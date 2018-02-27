@@ -65,6 +65,35 @@ export interface BaseEntity {
   kind?: string;
   name?: string;
 }
+export interface ConfigurationProperty extends BaseEntity {
+  javaType: string;
+  type: string;
+  defaultValue: string;
+  displayName: string;
+  description: string;
+  group: string;
+  required: boolean;
+  secret: boolean;
+  label: string;
+  order: number;
+  enum: Array<PropertyValue>;
+  componentProperty: boolean;
+  deprecated: boolean;
+  tags: Array<string>;
+}
+export type ConfigurationProperties = Array<ConfigurationProperty>;
+
+export interface PropertyValue extends BaseEntity {
+  value: string;
+  label: string;
+}
+export type PropertyValues = Array<PropertyValue>;
+
+export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
+  value: any;
+  rows?: number;
+  cols?: number;
+}
 
 export enum DataShapeKinds {
   ANY = 'any',
@@ -101,7 +130,7 @@ export type Actions = Array<Action>;
 
 export interface ActionDescriptor extends BaseEntity {
   componentScheme: string;
-  configuredProperties: {};
+  configuredProperties: StringMap<string>;
   propertyDefinitionSteps: Array<ActionDescriptorStep>;
   inputDataShape: DataShape;
   outputDataShape: DataShape;
@@ -111,8 +140,8 @@ export type ActionDescriptors = Array<ActionDescriptor>;
 
 export interface ActionDescriptorStep extends BaseEntity {
   description: string;
-  configuredProperties: {};
-  properties: {};
+  configuredProperties: StringMap<string>;
+  properties: StringMap<ConfigurationProperty>;
 }
 
 export type ActionDescriptorSteps = Array<ActionDescriptorStep>;
