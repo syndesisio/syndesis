@@ -28,7 +28,8 @@
            (focus)="inputFocusTriggered($event)" />
   </div>
   <div class="input-group">
-    <select class="duration-input__select"
+    <select [attr.id]="'select-' + fieldId"
+            class="duration-input__select"
             [(ngModel)]="duration"
             [ngModelOptions]="{standalone: true}"
             (blur)="selectBlurTriggered($event)"
