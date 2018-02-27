@@ -193,12 +193,12 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
 
     // Populate all supported DataShape from previous DataShape aware steps as source documents
     let hasSource = false;
-    for (const pair of previousSteps) {
+    const dataShapeAwareSteps = previousSteps.filter(pair =>
+      this.isSupportedDataShape(pair.step.action.descriptor.outputDataShape));
+    for (const pair of dataShapeAwareSteps) {
       const outputDataShape = pair.step.action.descriptor.outputDataShape;
-      if (this.isSupportedDataShape(outputDataShape)) {
-        if (this.addSourceDocument(pair.step.id, pair.index, outputDataShape)) {
-          hasSource = true;
-        }
+      if (this.addSourceDocument(pair.step.id, pair.index, outputDataShape, dataShapeAwareSteps.length === 1)) {
+        hasSource = true;
       }
     }
     if (!hasSource) {
@@ -225,7 +225,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
       this.cfg.errorService.error('No data type specification was found for subsequent step', '');
       return false;
     }
-    if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape)) {
+    if (!this.addTargetDocument(targetPair.step.id, targetPair.index, inputDataShape, true)) {
       this.cfg.errorService.error('Unsupported data type was found for subsequent step', '');
       return false;
     }
@@ -312,19 +312,20 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
             .indexOf(dataShape.kind) > -1;
   }
 
-  private addSourceDocument(documentId: string, index: number, dataShape: DataShape): boolean {
-    return this.addDocument(documentId, index, dataShape, true);
+  private addSourceDocument(documentId: string, index: number, dataShape: DataShape, showFields: boolean): boolean {
+    return this.addDocument(documentId, index, dataShape, true, showFields);
   }
 
-  private addTargetDocument(documentId: string, index: number, dataShape: DataShape): boolean {
-    return this.addDocument(documentId, index, dataShape, false);
+  private addTargetDocument(documentId: string, index: number, dataShape: DataShape, showFields: boolean): boolean {
+    return this.addDocument(documentId, index, dataShape, false, showFields);
   }
 
   private addDocument(
     documentId: string,
     index: number,
     dataShape: DataShape,
-    isSource = false
+    isSource = false,
+    showFields = true
   ): boolean {
     if (!dataShape || !dataShape.kind || !dataShape.specification) {
       // skip
@@ -364,10 +365,11 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     }
 
     initModel.id = documentId;
-    initModel.name = 'Step ' + (index + 1) + ' - '
+    initModel.name = (index + 1) + ' - '
         + (dataShape.name ? dataShape.name : dataShape.type);
     initModel.description = dataShape.description;
     initModel.isSource = isSource;
+    initModel.showFields = showFields;
     this.cfg.addDocument(initModel);
     return true;
   }
