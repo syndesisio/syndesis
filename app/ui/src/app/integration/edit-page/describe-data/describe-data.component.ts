@@ -69,6 +69,7 @@ const DESCRIBE_DATA_FORM_CONFIG = {
 })
 export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
 
+  buttonText = 'Next';
   actionName: string;
   connectionName: string;
   formGroup: FormGroup;
@@ -98,6 +99,16 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       queryParams: { validate: true },
       relativeTo: this.route.parent
     });
+  }
+
+  showDone() {
+    if (this.position === 0) {
+      return true;
+    }
+    if (this.currentFlowService.atEnd(this.position)) {
+      return true;
+    }
+    return this.inputSet || this.outputSet;
   }
 
   validateDataShapes() {
@@ -168,6 +179,9 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
     }
     this.connectionName = step.connection.name;
     this.actionName = step.action.name;
+    if (this.showDone()) {
+      this.buttonText = 'Done';
+    }
     const dataShape = this.getDataShape(this.direction, step);
     if (dataShape.kind === DataShapeKinds.ANY || (dataShape.metadata && dataShape.metadata.userDefined === 'true')) {
       this.formValues = {

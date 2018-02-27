@@ -349,6 +349,15 @@ export class CurrentFlowService {
     return (position + 1) >= this.steps.length;
   }
 
+  isActionShapeless(descriptor: ActionDescriptor) {
+    if (!descriptor) {
+      return false;
+    }
+    const inputDataShape = descriptor.inputDataShape;
+    const outputDataShape = descriptor.outputDataShape;
+    return inputDataShape.kind === DataShapeKinds.ANY || outputDataShape.kind === DataShapeKinds.ANY;
+  }
+
   handleEvent(event: FlowEvent): void {
     switch (event.kind) {
       case 'integration-updated': {

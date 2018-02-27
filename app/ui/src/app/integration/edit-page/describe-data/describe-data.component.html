@@ -52,7 +52,7 @@
                                           [model]="controlModel"></syndesis-form-control>
                   <div class="row control-buttons">
                     <div class="col-sm-9 col-sm-offset-3">
-                      <button class="btn btn-primary" type="button" (click)="continue()">Next</button>
+                      <button class="btn btn-primary" type="button" (click)="continue()" [innerHtml]="buttonText"></button>
                     </div>
                   </div>
                 </form>
