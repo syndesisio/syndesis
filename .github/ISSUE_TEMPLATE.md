@@ -20,7 +20,7 @@ Briefly describe the issue you are experiencing (or the feature you want to see 
 
 ## Screenshot
 <!--
-For features/bugs entailing a presentation layer, drag and drop a screenshot depicting the issue or supporting the UX narrative for the new functionality.
+For features/bugs tackling with UI functionality, drag and drop a screenshot depicting the desired presentation layer or supporting the UX narrative for the new functionality.
 -->
 
 ## API Endpoints and Schemas
