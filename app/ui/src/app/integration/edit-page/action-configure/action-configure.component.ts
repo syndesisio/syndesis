@@ -20,6 +20,7 @@ import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/ed
   styleUrls: ['./action-configure.component.scss']
 })
 export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
+  isShapeless: boolean;
   routeSubscription: Subscription;
   position: number;
   page: number;
@@ -162,7 +163,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     });
   }
 
-  initialize(position: number, page: number) {
+  preInitialize(position: number, page: number) {
     this.error = undefined;
     const step = this.currentFlowService.getStep(this.position);
     if (!step) {
@@ -187,16 +188,16 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           position: this.position,
           descriptor,
           onSave: () => {
-            this.initForm(position, page, descriptor);
+            this.initialize(position, page, descriptor);
           }
         });
       })
       .catch(error => {
-        this.initForm(position, page, undefined, error);
+        this.initialize(position, page, undefined, error);
       });
   }
 
-  initForm(position: number, page: number, descriptor: ActionDescriptor, error?: any) {
+  initialize(position: number, page: number, descriptor: ActionDescriptor, error?: any) {
     if (error) {
       this.error = error;
       this.error.class = 'alert alert-warning';
@@ -205,6 +206,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       this.loading = false;
       return;
     }
+    this.isShapeless = this.currentFlowService.isActionShapeless(descriptor);
     if (this.hasActionPropertiesToDisplay(descriptor)) {
       this.loading = false;
       // TODO figure out how to get a link in here that works
@@ -286,7 +288,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
           params.get('position')
         ));
         this.loading = true;
-        this.initialize(position, page);
+        this.preInitialize(position, page);
       }
     );
   }
