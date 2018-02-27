@@ -20,12 +20,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.syndesis.extension.api.SyndesisStepExtension;
+import io.syndesis.extension.api.Step;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.util.StringHelpers;
 import io.syndesis.model.action.StepAction;
-import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.TypeConverter;
@@ -35,7 +34,7 @@ import org.apache.camel.util.ObjectHelper;
 
 public class ExtensionStepHandler implements IntegrationStepHandler{
     @Override
-    public boolean canHandle(Step step) {
+    public boolean canHandle(io.syndesis.model.integration.Step step) {
         if (StepKind.extension != step.getStepKind()) {
             return false;
         }
@@ -45,7 +44,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
 
     @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
+    public Optional<ProcessorDefinition> handle(io.syndesis.model.integration.Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         // Model
@@ -102,8 +101,8 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
 
             if (!ObjectHelper.isEmpty(target)) {
                 try {
-                    final Class<SyndesisStepExtension> clazz = context.getClassResolver().resolveMandatoryClass(target, SyndesisStepExtension.class);
-                    final SyndesisStepExtension stepExtension = context.getInjector().newInstance(clazz);
+                    final Class<Step> clazz = context.getClassResolver().resolveMandatoryClass(target, Step.class);
+                    final Step stepExtension = context.getInjector().newInstance(clazz);
                     final Map<String, Object> props = new HashMap<>(properties);
 
                     try {

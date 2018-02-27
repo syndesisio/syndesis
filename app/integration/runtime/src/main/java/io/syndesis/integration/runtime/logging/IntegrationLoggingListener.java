@@ -19,6 +19,7 @@ import io.syndesis.core.KeyGenerator;
 import org.apache.camel.Exchange;
 import org.apache.camel.spi.LogListener;
 import org.apache.camel.util.CamelLogger;
+import org.slf4j.Marker;
 
 import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
 
@@ -26,11 +27,15 @@ public class IntegrationLoggingListener implements LogListener {
     @SuppressWarnings("PMD.SystemPrintln")
     @Override
     public String onLog(Exchange exchange, CamelLogger camelLogger, String message) {
+        final Marker marker = camelLogger.getMarker();
+        final String step = marker != null ? marker.getName() : "null";
+
         System.out.println(toJsonObject(
             "exchange", exchange.getExchangeId(),
-            "step", camelLogger.getMarker().getName(),
+            "step", step,
             "id", KeyGenerator.createKey(),
-            "message", message));
+            "message", message)
+        );
 
         return message;
     }

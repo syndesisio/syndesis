@@ -6,9 +6,9 @@ upgrade::description() {
 
 upgrade::usage() {
     cat <<EOT
-    --tag <tag>               Syndesis version/tag to upgrade to. This options is mandatory
+    --tag <tag>               Syndesis version/tag to upgrade to. This option is mandatory
     --backup <dir>            Backup directory to use. The backup is kept after the upgrade
-    --local                   Use the local templates stored in this director instead of
+    --local                   Use the local templates stored in this directory instead of
                               fetching them directly from GitHub
 EOT
 }

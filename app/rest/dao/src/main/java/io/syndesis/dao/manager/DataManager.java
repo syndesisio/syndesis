@@ -71,9 +71,6 @@ public class DataManager implements DataAccessObjectRegistry {
     @Value("${deployment.file:io/syndesis/dao/deployment.json}")
     @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
     private String dataFileName = "io/syndesis/dao/deployment.json";
-    @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
-    @Value("${deployment.load-demo-data:true}")
-    private boolean loadDemoData = true;
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
     private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new ConcurrentHashMap<>();
@@ -106,9 +103,6 @@ public class DataManager implements DataAccessObjectRegistry {
 
         if (dataFileName != null) {
             loadData(this.dataFileName);
-        }
-        if( loadDemoData ) {
-            loadData("io/syndesis/dao/demo-data.json");
         }
     }
 
@@ -322,6 +316,21 @@ public class DataManager implements DataAccessObjectRegistry {
         broadcast("updated", kind.getModelName(), idVal);
 
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
+    }
+
+    public <T extends WithId<T>> void set(T entity) {
+        Optional<String> id = entity.getId();
+        if (!id.isPresent()) {
+            throw new EntityNotFoundException("Setting the id on the entity is required for set");
+        }
+
+        String idVal = id.get();
+
+        Kind kind = entity.getKind();
+        this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> { d.set(entity); return null;});
+        Map<String, T> cache = caches.getCache(kind.getModelName());
+        cache.put(idVal, entity);
+        broadcast("updated", kind.getModelName(), idVal);
     }
 
 

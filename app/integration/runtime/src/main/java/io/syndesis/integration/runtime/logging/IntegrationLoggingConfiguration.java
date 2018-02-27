@@ -19,4 +19,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "syndesis.integration.runtime.logging")
 public class IntegrationLoggingConfiguration {
+    /**
+     * Enable/Disable syndesis runtime logging.
+     */
+    private boolean enabled = true;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

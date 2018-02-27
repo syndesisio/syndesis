@@ -1,98 +1,102 @@
-<div class="main-panel-inner integration-basics">
+<div class="syn-scrollable">
   <!-- Toolbar -->
   <div class="toolbar">
     <!-- Toolbar: Breadcrumbs -->
-    <div class="row toolbar-pf">
-      <div class="col-xs-12">
-        <div class="toolbar-pf-actions">
-          <div class="inline-block">
-            <ol class="breadcrumb">
-              <li>
-                <a [routerLink]="['/']">Home</a>
-              </li>
-              <li>
-                <a [routerLink]="['/integrations']">Integrations</a>
-              </li>
-              <li>
-                <a *ngIf="name"
-                   [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
-                <ng-container *ngIf="!name">New Integration</ng-container>
-              </li>
-            </ol>
-          </div>
-          <div class="toolbar-pf-action-right">
-            <button class="btn btn-default"
-                    (click)="cancel()">Cancel
-            </button> &nbsp;
-            <button class="btn btn-default"
-                    (click)="save()"
-                    [disabled]="!canContinue() || saveInProgress || publishInProgress">
-              <span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
-            </button>
-            <button type="button"
-                    class="btn btn-primary"
-                    (click)="publish()"
-                    [disabled]="!canContinue() || saveInProgress || publishInProgress">
-              <span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
+    <div class="container-fluid">
+      <div class="row toolbar-pf">
+        <div class="col-xs-12">
+          <div class="toolbar-pf-actions">
+            <div class="inline-block">
+              <ol class="breadcrumb">
+                <li>
+                  <a [routerLink]="['/']">Home</a>
+                </li>
+                <li>
+                  <a [routerLink]="['/integrations']">Integrations</a>
+                </li>
+                <li>
+                  <a *ngIf="name"
+                    [routerLink]="['/integrations', currentFlowService.integration.id]">{{ flowPageService.integrationName }}</a>
+                  <ng-container *ngIf="!name">New Integration</ng-container>
+                </li>
+              </ol>
+            </div>
+            <div class="toolbar-pf-action-right">
+              <button class="btn btn-default"
+                      (click)="cancel()">Cancel
+              </button> &nbsp;
+              <button class="btn btn-default"
+                      (click)="save()"
+                      [disabled]="!canContinue() || saveInProgress || publishInProgress">
+                <span *ngIf="saveInProgress" class="spinner spinner-sm spinner-inline"></span>Save as Draft
+              </button>
+              <button type="button"
+                      class="btn btn-primary"
+                      (click)="publish()"
+                      [disabled]="!canContinue() || saveInProgress || publishInProgress">
+                <span *ngIf="publishInProgress" class="spinner spinner-sm spinner-inline"></span>Publish</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="main-panel-body wizard-pf-body clearfix">
-    <div *ngIf="errorMessage">
-      <div class="alert alert-danger">
-        <button type="button"
-                class="close"
-                (click)="errorMessage = undefined">
-                <span class="pficon pficon-close"></span>
-              </button>
-        <span class="pficon pficon-error-circle-o"></span>
-        <p>Error saving integration: </p>
-        <pre>{{ errorMessage }}</pre>
+  <div class="wizard-pf-body syn-scrollable--body">
+    <div class="container-fluid">
+      <div *ngIf="errorMessage">
+        <div class="alert alert-danger">
+          <button type="button"
+                  class="close"
+                  (click)="errorMessage = undefined">
+                  <span class="pficon pficon-close"></span>
+                </button>
+          <span class="pficon pficon-error-circle-o"></span>
+          <p>Error saving integration: </p>
+          <pre>{{ errorMessage }}</pre>
+        </div>
       </div>
-    </div>
-    <div class="title">
-      <h1>Create an integration</h1>
-    </div>
-    <p>Add details about this integration.</p>
-    <div class="row row-cards-pf">
-      <div class="card-pf">
-        <div class="card-pf-body">
-          <form class="form-horizontal">
-            <!-- replacing id with data-id to pass build errors -->
-            <div class="form-group required">
-              <label class="col-sm-3 control-label required-pf">
-                Integration Name
-              </label>
-              <div class="col-sm-9">
-                <input type="text"
-                      name="nameInput"
-                      data-id="nameInput"
-                      placeholder="{{ name }}"
-                      [(ngModel)]="name"
-                      class="form-control">
+      <div class="title">
+        <h1>Create an integration</h1>
+      </div>
+      <p>Add details about this integration.</p>
+      <div class="row row-cards-pf">
+        <div class="card-pf">
+          <div class="card-pf-body">
+            <form class="form-horizontal">
+              <!-- replacing id with data-id to pass build errors -->
+              <div class="form-group required">
+                <label class="col-sm-3 control-label required-pf">
+                  Integration Name
+                </label>
+                <div class="col-sm-9">
+                  <input type="text"
+                        name="nameInput"
+                        data-id="nameInput"
+                        placeholder="{{ name }}"
+                        [(ngModel)]="name"
+                        class="form-control">
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-3 control-label">Description</label>
-              <div class="col-sm-9">
-                <textarea data-id="descriptionInput"
-                          name="descriptionInput"
-                          class="form-control"
-                          [(ngModel)]="description"
-                          rows="2"></textarea>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">Description</label>
+                <div class="col-sm-9">
+                  <textarea data-id="descriptionInput"
+                            name="descriptionInput"
+                            class="form-control"
+                            [(ngModel)]="description"
+                            rows="2"></textarea>
+                </div>
               </div>
-            </div>
-            <!--
-            <div class="form-group required">
-              <label class="col-xs-4 control-label">Tag(s)</label>
-              <div class="col-xs-8">
-                <input type="text" name="tagsInput" data-id="tagsInput" [(ngModel)]="tags" class="form-control">
+              <!--
+              <div class="form-group required">
+                <label class="col-xs-4 control-label">Tag(s)</label>
+                <div class="col-xs-8">
+                  <input type="text" name="tagsInput" data-id="tagsInput" [(ngModel)]="tags" class="form-control">
+                </div>
               </div>
-            </div>
-            -->
-          </form>
+              -->
+            </form>
+          </div>
         </div>
       </div>
     </div>

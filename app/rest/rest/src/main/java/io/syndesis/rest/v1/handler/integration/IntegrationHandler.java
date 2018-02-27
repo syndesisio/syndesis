@@ -15,8 +15,12 @@
  */
 package io.syndesis.rest.v1.handler.integration;
 
+import static io.syndesis.model.buletin.LeveledMessage.Level.ERROR;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,6 +29,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
@@ -53,6 +58,8 @@ import io.syndesis.inspector.Inspectors;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
+import io.syndesis.model.buletin.IntegrationBulletinBoard;
+import io.syndesis.model.buletin.LeveledMessage;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
@@ -118,8 +125,10 @@ public class IntegrationHandler extends BaseHandler
             new IdPrefixFilter<>(id+":"), ReverseFilter.getInstance())
             .getItems();
 
+        Optional<IntegrationBulletinBoard> bulletins = Optional
+            .ofNullable(getDataManager().fetch(IntegrationBulletinBoard.class, id));
 
-        return new IntegrationOverview(integration, deployments.stream().filter(d -> d.getVersion() == integration.getVersion()).findFirst()) {
+        return new IntegrationOverview(integration, bulletins, deployments.stream().filter(d -> d.getVersion() == integration.getVersion()).findFirst()) {
             @Override
             public List<DeploymentOverview> getDeployments() {
                 return deployments.stream()
@@ -313,4 +322,23 @@ public class IntegrationHandler extends BaseHandler
                 .addAllItems(filtered).build();
         }
     }
+
+    /**
+     * Update the list of notices for a given integration
+     *
+     * @param id
+     */
+    public void updateBulletinBoard(String id) {
+        List<LeveledMessage> messages = new ArrayList<>();
+
+        // TODO: run any validation here and collect it's messages
+        Integration integration = get(id);
+        final Set<ConstraintViolation<Integration>> constraintViolations = getValidator().validate(integration, AllValidations.class);
+        for (ConstraintViolation<Integration> violation : constraintViolations) {
+            messages.add(LeveledMessage.of(ERROR, violation.getMessage()));
+        }
+
+        getDataManager().set(IntegrationBulletinBoard.of(id, messages));
+    }
+
 }

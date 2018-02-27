@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(IntegrationLoggingConfiguration.class)
 public class IntegrationLoggingAutoConfiguration {
     @Bean
-    public CamelContextConfiguration integrationContextConfiguration() {
+    public CamelContextConfiguration integrationContextLoggingConfiguration() {
         return new IntegrationLoggingContextConfiguration();
     }
 

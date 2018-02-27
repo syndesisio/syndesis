@@ -15,14 +15,16 @@
  */
 package io.syndesis.runtime;
 
-import io.syndesis.dao.extension.ExtensionDataAccessObject;
-import io.syndesis.dao.icon.IconDataAccessObject;
-import io.syndesis.filestore.impl.SqlExtensionFileStore;
-import io.syndesis.filestore.impl.SqlIconFileStore;
+import java.io.InputStream;
+
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.syndesis.dao.file.FileDAO;
+import io.syndesis.dao.file.IconDao;
+import io.syndesis.filestore.impl.SqlFileStore;
 
 /**
  * Creates and configures the file store
@@ -30,15 +32,65 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FileStoreConfiguration {
 
-    @Bean(initMethod = "init")
-    @Autowired
-    public ExtensionDataAccessObject extensionFileStore(DBI dbi) {
-        return new SqlExtensionFileStore(dbi);
-    }
+    public static final String ICON_FILE_STORE_PATH = "/icon/";
 
     @Bean(initMethod = "init")
     @Autowired
-    public IconDataAccessObject iconFileStore(DBI dbi) {
-        return new SqlIconFileStore(dbi);
+    public SqlFileStore sqlFileStore(final DBI dbi) {
+        return new SqlFileStore(dbi);
+    }
+
+    @Bean()
+    @Autowired
+    public FileDAO extensionFileStore(final SqlFileStore fileStore) {
+        return new FileDAO(){
+            @Override
+            public void write(String path, InputStream file) {
+                fileStore.write(path, file);
+            }
+
+            @Override
+            public String writeTemporaryFile(InputStream file) {
+                return  fileStore.writeTemporaryFile(file);
+            }
+
+            @Override
+            public InputStream read(String path) {
+                return  fileStore.read(path);
+            }
+
+            @Override
+            public boolean delete(String path) {
+                return fileStore.delete(path);
+            }
+
+            @Override
+            public boolean move(String fromPath, String toPath) {
+                return fileStore.move(fromPath, toPath);
+            }
+        };
+
+    }
+
+    @Bean()
+    @Autowired
+    public IconDao iconFileStore(final SqlFileStore fileStore) {
+        return new IconDao() {
+
+            @Override
+            public void write(String id, InputStream iconContents) {
+                fileStore.write(ICON_FILE_STORE_PATH + id, iconContents);
+            }
+
+            @Override
+            public InputStream read(String id) {
+                return fileStore.read(ICON_FILE_STORE_PATH + id);
+            }
+
+            @Override
+            public boolean delete(String id) {
+                return fileStore.delete(ICON_FILE_STORE_PATH + id);
+            }
+        };
     }
 }

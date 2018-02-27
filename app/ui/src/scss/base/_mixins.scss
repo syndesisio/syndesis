@@ -29,3 +29,14 @@
   max-height: $size;
   max-width: $size;
 }
+
+@mixin syn-scrollable-parent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@mixin syn-scrollable-body {
+  flex: 1 1 auto;
+  overflow: auto;
+}

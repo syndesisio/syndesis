@@ -17,6 +17,7 @@ package io.syndesis.rest.metrics.prometheus;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.UriBuilder;
 
 import org.immutables.value.Value;
@@ -30,6 +31,11 @@ public interface HttpQuery {
 
     class Builder extends ImmutableHttpQuery.Builder {
         // make ImmutableHttpQuery.Builder accessible
+
+        public Builder addLabelValues(String value, String label) {
+            addLabelValues(LabelValue.Builder.of(value, label));
+            return this;
+        }
     }
 
     @Value.Immutable
@@ -55,14 +61,29 @@ public interface HttpQuery {
 
     Optional<String> getFunction();
 
+    Optional<String> getAggregationOperator();
+
     String getMetric();
 
     List<LabelValue> getLabelValues();
 
     Optional<String> getRange();
 
+    List<String> getWithoutLabels();
+
+    List<String> getByLabels();
+
+    @SuppressWarnings("PMD.NPathComplexity")
     default UriBuilder getUriBuilder() {
         StringBuilder queryExpression = new StringBuilder();
+
+        // is there an aggregation operator?
+        boolean closeAggregation = false;
+        final String aggregationOperator = getAggregationOperator().orElse(null);
+        if (aggregationOperator != null && !aggregationOperator.isEmpty()) {
+            queryExpression.append(aggregationOperator).append('(');
+            closeAggregation = true;
+        }
 
         // is there a query function?
         final String function = getFunction().orElse(null);
@@ -96,6 +117,21 @@ public interface HttpQuery {
         // close function?
         if (closeFunction) {
             queryExpression.append(')');
+        }
+
+        // close aggregation operator?
+        if (closeAggregation) {
+
+            queryExpression.append(')');
+
+            final String withoutLabels = getWithoutLabels().stream().collect(Collectors.joining(","));
+            if (!withoutLabels.isEmpty()) {
+                queryExpression.append(" without (").append(withoutLabels).append(')');
+            }
+            final String byLabels = getByLabels().stream().collect(Collectors.joining(","));
+            if (!byLabels.isEmpty()) {
+                queryExpression.append(" by (").append(byLabels).append(')');
+            }
         }
 
         return UriBuilder.fromPath(String.format("http://%s/api/v1/query", getHost()))

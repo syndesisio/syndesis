@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.logging;
 
+import java.util.Map;
+
 import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultUuidGenerator;
@@ -43,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         IntegrationRuntimeAutoConfiguration.class,
     },
     properties = {
+        "debug = false",
         "spring.main.banner-mode = off",
         "logging.level.io.syndesis.integration.runtime = DEBUG",
         "syndesis.integration.runtime.logging.enabled = false"
@@ -56,7 +59,12 @@ public class IntegrationLoggingDisabledTest {
 
     @Test
     public void testDisabledContextConfiguration() {
-        assertThat(applicationContext.getBeansOfType(CamelContextConfiguration.class)).isNullOrEmpty();
+        assertThat(applicationContext.getBeansOfType(CamelContextConfiguration.class)).is(new Condition<Map<String, CamelContextConfiguration>>() {
+            @Override
+            public boolean matches(Map<String, CamelContextConfiguration> value) {
+                return value.size() == 1 && value.containsKey("integrationContextRuntimeConfiguration");
+            }
+        });
         assertThat(camelContext.getLogListeners()).have(new Condition<LogListener>() {
             @Override
             public boolean matches(LogListener value) {

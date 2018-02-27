@@ -15,13 +15,14 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.util.Collections;
+
 import org.apache.camel.model.FromDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
@@ -33,8 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = {
-        IntegrationRuntimeAutoConfiguration.class,
-        IntegrationRouteBuilderTest.TestConfiguration.class
+        IntegrationRouteBuilderTest.TestConfiguration.class,
     },
     properties = {
         "debug = true",
@@ -44,11 +44,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
-    @Autowired
-    private IntegrationRouteBuilder routeBuilder;
-
     @Test
     public void testBuilder() throws Exception {
+        IntegrationRuntimeConfiguration configuration = new IntegrationRuntimeConfiguration();
+        IntegrationRouteBuilder routeBuilder = new IntegrationRouteBuilder(configuration.getConfigurationLocation(), Collections.emptyList());
+
         // initialize routes
         routeBuilder.configure();
 

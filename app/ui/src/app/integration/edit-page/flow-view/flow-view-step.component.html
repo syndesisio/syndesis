@@ -19,7 +19,7 @@
 
   <!-- Icon Progress Line -->
   <div class="col-md-3 progress-line">
-    <p [class]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
+    <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
        [popover]="tooltipPopover"
        #pop="bs-popover"
        placement="right"
@@ -27,12 +27,12 @@
        (mouseleave)="hideTooltip()"
        triggers=""
        container="body">
-      <i [class]="getIconClass()"
+      <i [ngClass]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
            [src]="step.connection | synIconPath">
-    </p>
+    </div>
   </div>
 
   <!-- Step Item Wrapper -->
@@ -42,7 +42,7 @@
 
     <!-- Connection Steps -->
     <div *ngSwitchCase="'endpoint'"
-         [class]="getParentActiveClass() + ' step-container'">
+         [ngClass]="getParentActiveClass() + ' step-container'">
 
       <!-- Delete Icon -->
       <i *ngIf="showDelete()"
@@ -52,7 +52,7 @@
 
 
       <!-- Connection Title -->
-      <div [class]="getParentClass()"
+      <div [ngClass]="getParentClass()"
             (click)="goto('action-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
@@ -63,29 +63,29 @@
       <ul [collapse]="isCollapsed()"
           class="sub-steps">
         <li *ngIf="!step.connection"
-            [class]="getSubMenuActiveClass('connection-select')"
+            [ngClass]="getSubMenuActiveClass('connection-select')"
             (click)="goto('connection-select')">
-          <span [class]="getTextClass('connection-select')">Choose a connection</span>
+          <span [ngClass]="getTextClass('connection-select')">Choose a connection</span>
         </li>
         <li *ngIf="step.connection && !step.action"
-            [class]="getSubMenuActiveClass('action-select')"
+            [ngClass]="getSubMenuActiveClass('action-select')"
             (click)="goto('action-select')">
-          <span [class]="getTextClass('action-select')">Choose an action</span>
+          <span [ngClass]="getTextClass('action-select')">Choose an action</span>
         </li>
         <ng-container *ngIf="step.action && currentState === 'action-configure'">
           <ng-template ngFor
                        let-definition
                        [ngForOf]="getPropertyDefinitions(step.action)"
                        let-page="index">
-            <li [class]="getSubMenuActiveClass('action-configure', page)"
+            <li [ngClass]="getSubMenuActiveClass('action-configure', page)"
                 (click)="goto('action-configure', page)">
-              <span [class]="getTextClass('action-configure', page)">{{ definition.name | capitalize }}</span>
+              <span [ngClass]="getTextClass('action-configure', page)">{{ definition.name | capitalize }}</span>
             </li>
           </ng-template>
         </ng-container>
         <ng-container *ngIf="step.action && currentState === 'describe-data'">
-          <li [class]="getSubMenuActiveClass('describe-data')">
-            <span [class]="getTextClass('describe-data')">Specify Data Type</span>
+          <li [ngClass]="getSubMenuActiveClass('describe-data')">
+            <span [ngClass]="getTextClass('describe-data')">Specify Data Type</span>
           </li>
         </ng-container>
       </ul>
@@ -94,7 +94,7 @@
 
     <!-- Default Steps -->
     <div *ngSwitchDefault
-         [class]="getParentActiveClass() + ' step-container'">
+         [ngClass]="getParentActiveClass() + ' step-container'">
 
       <!-- Delete Icon -->
       <i *ngIf="showDelete()"
@@ -104,7 +104,7 @@
          (click)="deletePrompt()"></i>
 
       <!-- Step Heading -->
-      <div [class]="getParentClass()"
+      <div [ngClass]="getParentClass()"
             (click)="goto('step-configure')">
         <i *ngIf="!isCollapsed()" class="fa fa-chevron-down"></i>
         <i *ngIf="isCollapsed()" class="fa fa-chevron-right"></i>
@@ -115,19 +115,19 @@
       <ul [collapse]="isCollapsed()"
           class="sub-steps">
         <li *ngIf="!step.stepKind"
-            [class]="getSubMenuActiveClass('step-select')"
+            [ngClass]="getSubMenuActiveClass('step-select')"
             (click)="goto('step-select')">
-          <span [class]="getTextClass('step-select')">Choose a step</span>
+          <span [ngClass]="getTextClass('step-select')">Choose a step</span>
         </li>
         <li *ngIf="step.stepKind && !step.configuredProperties"
-            [class]="getSubMenuActiveClass('step-configure')"
+            [ngClass]="getSubMenuActiveClass('step-configure')"
             (click)="goto('step-configure')">
-          <span [class]="getTextClass('step-configure')">Configure the step</span>
+          <span [ngClass]="getTextClass('step-configure')">Configure the step</span>
         </li>
         <li *ngIf="step.configuredProperties"
-            [class]="getSubMenuActiveClass('step-configure')"
+            [ngClass]="getSubMenuActiveClass('step-configure')"
             (click)="goto('step-configure')">
-          <span [class]="getTextClass('step-configure')">Configuration</span>
+          <span [ngClass]="getTextClass('step-configure')">Configuration</span>
         </li>
       </ul>
     </div>

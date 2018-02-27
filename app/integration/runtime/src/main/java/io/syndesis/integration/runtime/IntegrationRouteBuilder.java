@@ -15,6 +15,19 @@
  */
 package io.syndesis.integration.runtime;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import io.syndesis.core.Json;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
@@ -25,28 +38,22 @@ import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
-import io.syndesis.integration.runtime.jmx.CamelContextMetadataMBean;
+import io.syndesis.model.action.StepAction;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Scheduler;
 import io.syndesis.model.integration.Step;
+import io.syndesis.model.integration.StepKind;
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
@@ -56,9 +63,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     private final String configurationUri;
     private final List<IntegrationStepHandler> stepHandlerList;
+    private final Set<String> resources;
 
     public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers) {
         this.configurationUri = configurationUri;
+        this.resources = new HashSet<>();
 
         this.stepHandlerList = new ArrayList<>();
         this.stepHandlerList.add(new ConnectorStepHandler());
@@ -79,7 +88,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
             if (is != null) {
                 LOGGER.info("Loading integration from: {}", configurationUri);
-                        integration = Json.reader().forType(Integration.class).readValue(is);
+                integration = Json.reader().forType(Integration.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
             }
@@ -107,6 +116,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 throw new IllegalStateException("The handler for step kind " + step.getKind() + " is not a consumer");
             }
 
+            // Load route fragments eventually defined by extensions.
+            loadFragments(step);
+
             final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, Integer.toString(i + 1));
 
             if (route == null && definition.isPresent()) {
@@ -126,10 +138,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 }).orElse(route);
             }
         }
-
-        // register custom mbean
-        getContext().addService(new CamelContextMetadataMBean());
-        LOGGER.info("Added Syndesis MBean Service");
     }
 
     // Visibility changed for test purpose.
@@ -174,5 +182,82 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
 
         return null;
+    }
+
+    @SuppressWarnings("PMD")
+    private void loadFragments(Step step) {
+        if (StepKind.extension != step.getStepKind()) {
+            return;
+        }
+
+        final StepAction action = step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).get();
+
+        if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
+            final CamelContext context = getContext();
+            final String resource = action.getDescriptor().getResource();
+
+            if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {
+                final Object instance = mandatoryçoadResource(context, resource);
+                final RoutesDefinition definitions = mandatoryConvertToRoutesDefinition(resource, instance);
+
+                LOGGER.debug("Resolved resource: {} as {}", resource, instance.getClass());
+
+                try {
+                    context.addRouteDefinitions(definitions.getRoutes());
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("PMD")
+    private Object mandatoryçoadResource(CamelContext context, String resource) {
+        Object instance = null;
+
+        if (resource.startsWith("classpath:")) {
+            try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(context, resource)) {
+                instance = ModelHelper.loadRoutesDefinition(context, is);
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        } else if (resource.startsWith("class:")) {
+            Class<?> type = context.getClassResolver().resolveClass(resource.substring("class:".length()));
+            instance = context.getInjector().newInstance(type);
+        } else if (resource.startsWith("bean:")) {
+            instance = context.getRegistry().lookupByName(resource.substring("bean:".length()));
+        }
+
+        if (instance == null) {
+            throw new IllegalArgumentException("Unable to resolve resource: " + resource);
+        }
+
+        return instance;
+    }
+
+    @SuppressWarnings("PMD")
+    private RoutesDefinition mandatoryConvertToRoutesDefinition(String resource, Object instance)  {
+        final RoutesDefinition definitions;
+
+        if (instance instanceof RoutesDefinition) {
+            definitions = (RoutesDefinition)instance;
+        } else if (instance instanceof RouteDefinition) {
+            definitions = new RoutesDefinition();
+            definitions.route((RouteDefinition)instance);
+        } else if (instance instanceof RouteBuilder) {
+            RouteBuilder builder = (RouteBuilder)instance;
+            try {
+                builder.configure();
+                definitions = builder.getRouteCollection();
+            } catch (Exception e) {
+                LOGGER.warn("Unable to configure resource: " + resource, e);
+
+                throw ObjectHelper.wrapRuntimeCamelException(e);
+            }
+        } else {
+            throw new IllegalArgumentException("Unable to convert instance: " + instance);
+        }
+
+        return definitions;
     }
 }

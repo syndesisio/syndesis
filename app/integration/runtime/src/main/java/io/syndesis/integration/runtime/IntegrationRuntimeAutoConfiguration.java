@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.spi.InterceptStrategy;
+import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -40,32 +40,38 @@ public class IntegrationRuntimeAutoConfiguration {
     @Autowired(required = false)
     private List<IntegrationStepHandler> integrationStepHandlers = Collections.emptyList();
 
-    /**
-     * To automatic add IntegrationRouteBuilder which loads syndesis integration
-     * from classpath.
-     */
     @Bean
-    @ConditionalOnMissingBean(IntegrationRouteBuilder.class)
-    public RouteBuilder integrationRouteBuilder() {
-        final String location = configuration.getConfigurationLocation();
-        final List<IntegrationStepHandler> handlers = new ArrayList<>();
+    public CamelContextConfiguration integrationContextRuntimeConfiguration() {
+        return new CamelContextConfiguration() {
+            @Override
+            public void beforeApplicationStart(CamelContext camelContext) {
+                final String location = configuration.getConfigurationLocation();
+                final List<IntegrationStepHandler> handlers = new ArrayList<>();
 
-        // register handlers discovered from application context
-        handlers.addAll(integrationStepHandlers);
+                // register handlers discovered from application context
+                handlers.addAll(integrationStepHandlers);
 
-        // register handlers discovered using service loader
-        for (IntegrationStepHandler handler : ServiceLoader.load(IntegrationStepHandler.class, Thread.currentThread().getContextClassLoader())) {
-            handlers.add(handler);
-        }
+                // register handlers discovered using service loader
+                for (IntegrationStepHandler handler : ServiceLoader.load(IntegrationStepHandler.class, Thread.currentThread().getContextClassLoader())) {
+                    handlers.add(handler);
+                }
 
-        // IntegrationRouteBuilder automatically add known handlers to the list
-        // of provided ones, know handlers have priority
-        return new IntegrationRouteBuilder(location, handlers);
-    }
+                // IntegrationRouteBuilder automatically add known handlers to
+                // the list of provided ones, know handlers have priority
+                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers);
 
-    @Bean
-    @ConditionalOnProperty(prefix = "syndesis.integration.runtime.capture", name = "enabled", matchIfMissing = true)
-    public InterceptStrategy createOutMessageCaptureInterceptStrategy() {
-        return new OutMessageCaptureInterceptStrategy();
+                try {
+                    // Register routes to the camel context
+                    camelContext.addRoutes(routeBuilder);
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+
+            @Override
+            public void afterApplicationStart(CamelContext camelContext) {
+                // noop
+            }
+        };
     }
 }
