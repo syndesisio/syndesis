@@ -46,23 +46,35 @@
   ////////////////////////////////////////////////////////////////////////////////
   .progress-line {
     padding: 0;
-    text-align: center;
+    height: 55px;
 
     .fa {
       color: $color-pf-black-300;
       font-size: x-large;
     }
 
+    .step-index,
     .icon {
-      -moz-border-radius: 100px;
-      border-radius: 100px;
-      border-style: solid;
-      border-width: 3px;
-      border-color: $color-pf-black-300;
+      position: absolute;
+    }
+
+    .step-index {
+      left: 0;
+      top: 50%;
+      transform: translate(-20px, -50%);
+      width: 35px;
+      background: #d6eefa;
+      padding-left: 7px;
+    }
+
+    .icon {
+      border-radius: 50%;
+      border: 3px solid $color-pf-black-300;
       padding: 11px;
       width: 55px;
-      height: 55px;
+      height: 100%;
       background-color: #ffffff;
+      text-align: center;
 
       &.not-connection {
         background-color: #ffffff;
@@ -101,6 +113,7 @@
       &.incomplete {
         .fa {
           color: #d1d1d1;
+          line-height: 1.15;
         }
       }
     }
@@ -118,7 +131,7 @@
     position: relative;
     padding-left: 0;
     padding-right: 0;
-    padding-top: 8px;
+    padding-top: 9px;
 
     //----- Sidebar: Menu & Parent Step Container ----------------->>
     .step-container {
@@ -138,13 +151,43 @@
 
       //----- Sidebar: Menu: Parent Step ----------------->>
       .parent-step {
-        text-overflow: ellipsis;
-        overflow-x: hidden;
         background-color: $color-pf-black-300;
         cursor: pointer;
-        padding: 8px 18px 8px 8px;
-        text-transform: uppercase;
-        white-space: nowrap;
+        padding: 8px 18px 8px 8px;        
+        position: relative;
+
+        .data-mismatch {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          background: #ec7a08;
+          display: flex;
+          align-items: center;
+          transform: translateX(-100%);
+          padding: 0 5px;
+
+          &::before {
+            color: #ffffff;
+          }
+        }
+
+        .step-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .step-name {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+            text-transform: uppercase;
+          }
+
+          .step-icons {
+            flex-shrink: 0;
+          }
+        }
 
         &.disabled {
           cursor: default;

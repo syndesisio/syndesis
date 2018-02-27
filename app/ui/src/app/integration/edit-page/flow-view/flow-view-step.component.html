@@ -59,8 +59,8 @@
 
   <!-- Icon Progress Line -->
   <div class="col-md-3 progress-line">
+    <span class="step-index">{{ stepIndex }}</span>
     <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()">
-      <span>{{ stepIndex }}</span>
       <i [class]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
@@ -81,7 +81,7 @@
       <!-- Connection Title -->
       <div [ngClass]="getParentClass()"
             (click)="goto('action-configure')">
-        <span class="pficon pficon-warning-triangle-o"
+        <span class="pficon pficon-warning-triangle-o data-mismatch"
           *ngIf="shouldAddDatamapper"
           [popover]="addDatamapper"
           #datamapperInfoPop="bs-popover"
@@ -89,22 +89,28 @@
           placement="right"
           (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
           container="body"></span>
-        {{ stepName }}
-
-        <!-- Delete Icon -->
-        <i *ngIf="showDelete()"
-          class="fa fa-lg fa-trash pull-right"
-          title="Delete this connection"
-          (click)="deletePrompt(); $event.stopPropagation();"></i>
-
-        <!-- Info icon -->
-        <i class="fa fa-lg fa-info-circle pull-right"
-          [popover]="tooltipPopover"
-          #connectionInfoPop="bs-popover"
-          placement="right"
-          (click)="toggleInfoPopover(); $event.stopPropagation();"
-          triggers=""
-          container="body"></i>
+        
+        <div class="step-content">
+          <div class="step-name">
+            {{ stepName }}
+          </div>  
+        
+          <div class="step-icons">
+            <!-- Delete Icon -->
+            <i *ngIf="showDelete()"
+              class="fa fa-lg fa-trash pull-right"
+              title="Delete this connection"
+              (click)="deletePrompt(); $event.stopPropagation();"></i>
+            <!-- Info icon -->
+            <i class="fa fa-lg fa-info-circle pull-right"
+              [popover]="tooltipPopover"
+              #connectionInfoPop="bs-popover"
+              placement="right"
+              (click)="toggleInfoPopover(); $event.stopPropagation();"
+              triggers=""
+              container="body"></i>
+          </div>        
+        </div>
       </div>
 
       <!-- Connection Sub Pages -->
