@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<d:SchemaSet xmlns:d="http://atlasmap.io/xml/schemaset/v2" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:schema elementFormDefault="qualified" targetNamespace="http://syndesis.io/v1/swagger-connector-template/request">
+    <xsd:element name="request">
+      <xsd:complexType>
+        <xsd:sequence>
+          <xsd:element xmlns:p="http://syndesis.io/v1/swagger-connector-template/parameters" ref="p:parameters" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <d:AdditionalSchemas>
+    <xsd:schema targetNamespace="http://syndesis.io/v1/swagger-connector-template/parameters">
+      <xsd:element name="parameters">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="petId" type="xsd:integer" />
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="status" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </d:AdditionalSchemas>
+</d:SchemaSet>

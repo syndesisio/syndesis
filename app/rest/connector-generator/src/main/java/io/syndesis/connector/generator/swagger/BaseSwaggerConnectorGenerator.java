@@ -128,7 +128,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    abstract ConnectorDescriptor.Builder createDescriptor(String specification, Operation operation);
+    abstract ConnectorDescriptor.Builder createDescriptor(String specification, Swagger swagger, Operation operation);
 
     protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
@@ -192,7 +192,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     operation.operationId("operation-" + idx++);
                 }
 
-                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedSpecification(), operation)//
+                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedSpecification(), swagger, operation)//
                     .camelConnectorGAV(connectorGav)//
                     .camelConnectorPrefix(connectorScheme)//
                     .connectorId(connectorId)//
@@ -240,7 +240,12 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected final String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
+        final SwaggerModelInfo modelInfo = parseSpecification(connectorSettings, false);
+        if (!modelInfo.getErrors().isEmpty()) {
+            throw new IllegalArgumentException("Given Swagger specification contains errors: " + modelInfo);
+        }
+
+        final Swagger swagger = modelInfo.getModel();
 
         final Info info = swagger.getInfo();
         if (info == null) {

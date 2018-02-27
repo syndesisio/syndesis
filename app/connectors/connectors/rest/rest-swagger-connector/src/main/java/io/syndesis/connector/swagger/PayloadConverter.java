@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.swagger;
 
+import java.io.IOException;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -35,6 +37,10 @@ public final class PayloadConverter implements Processor {
     public void process(final Exchange exchange) throws Exception {
         final Message in = exchange.getIn();
 
+        convertAsJson(in);
+    }
+
+    private void convertAsJson(final Message in) throws IOException, JsonProcessingException {
         final String body = in.getBody(String.class);
         if (body == null) {
             return;

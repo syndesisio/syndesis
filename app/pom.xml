@@ -63,7 +63,7 @@
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
 
-    <swagger.version>1.5.16</swagger.version>
+    <swagger.version>1.5.19-SNAPSHOT</swagger.version>
 
     <activemq.version>5.15.2</activemq.version>
 
@@ -631,7 +631,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
              <!-- Fix "There was a timeout or other error in the fork" errors -->
-             <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
+            <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
           </configuration>
         </plugin>
       </plugins>

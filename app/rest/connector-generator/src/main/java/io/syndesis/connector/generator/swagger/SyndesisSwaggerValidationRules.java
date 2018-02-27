@@ -24,13 +24,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
+import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
+import io.swagger.models.properties.Property;
 import io.syndesis.model.Violation;
 
 /**
@@ -100,7 +103,8 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
                         continue;
                     }
                     final BodyParameter bodyParameter = (BodyParameter) parameter;
-                    if (bodyParameter.getSchema() == null) {
+                    final Model schema = bodyParameter.getSchema();
+                    if (schemaIsNotSpecified(schema)) {
                         final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getKey()
                             + " does not provide a schema for the body parameter";
 
@@ -148,6 +152,24 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
 
     private static <K, V> Map<K, V> notNull(final Map<K, V> value) {
         return value != null ? value : Collections.emptyMap();
+    }
+
+    private static boolean schemaIsNotSpecified(final Model schema) {
+        if (schema == null) {
+            return true;
+        }
+
+        if (schema instanceof ArrayModel) {
+            return ((ArrayModel) schema).getItems() == null;
+        }
+
+        final Map<String, Property> properties = schema.getProperties();
+
+        final boolean noProperties = properties == null || properties.isEmpty();
+
+        final boolean noReference = schema.getReference() == null;
+
+        return noProperties && noReference;
     }
 
 }
