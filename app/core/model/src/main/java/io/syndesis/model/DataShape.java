@@ -23,6 +23,8 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import io.syndesis.core.json.StringTrimmingConverter;
+
 @Value.Immutable
 @JsonDeserialize(builder = DataShape.Builder.class)
 // Immutables generates code that fails these checks
@@ -34,8 +36,10 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
     String getDescription();
 
+    @JsonDeserialize(converter = StringTrimmingConverter.class)
     DataShapeKinds getKind();
 
+    @JsonDeserialize(converter = StringTrimmingConverter.class)
     String getType();
 
     String getSpecification();
