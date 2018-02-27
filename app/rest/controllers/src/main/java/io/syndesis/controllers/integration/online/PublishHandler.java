@@ -104,7 +104,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             stepPerformer.perform("build", this::build, deploymentData);
             stepPerformer.perform("deploy", this::deploy, deploymentData);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            logError(integrationDeployment, "[ERROR] Activation failure");
+            logError(integrationDeployment, "[ERROR] Activation failure", e);
             // Setting a message to update means implicitly thats in an error state (for the UI)
             return new StateUpdate(IntegrationDeploymentState.Pending, e.getMessage());
         }
