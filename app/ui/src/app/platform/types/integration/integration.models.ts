@@ -23,6 +23,17 @@ export const ERROR = 'Error';
 
 export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
+export enum MessageLevel {
+  INFO = 'INFO',
+  WARN = 'WARN',
+  ERROR = 'ERROR'
+}
+
+export interface IntegrationMessage {
+  level: MessageLevel;
+  message: string;
+}
+
 export interface IntegrationOverview extends BaseEntity {
   version?: number;
   tags: Array<string>;
@@ -33,6 +44,7 @@ export interface IntegrationOverview extends BaseEntity {
   targetState: IntegrationStatus;
   statusMessage?: string;
   deploymentVersion?: number;
+  messages: Array<IntegrationMessage>;
 }
 
 export type IntegrationOverviews = Array<IntegrationOverview>;
