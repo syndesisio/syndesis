@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.model.Ordered;
 import io.syndesis.model.WithTags;
 import io.syndesis.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
 import org.immutables.value.Value;
@@ -28,7 +29,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = ConfigurationProperty.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConfigurationProperty extends WithTags, Serializable {
+public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     class Builder extends ImmutableConfigurationProperty.Builder {
         // make ImmutableConfigurationProperty.Builder accessible
