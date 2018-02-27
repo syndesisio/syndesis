@@ -2,12 +2,14 @@
      class="flow-view-step">
 
   <ng-template #addDatamapper>
-    <div class="alert alert-warning">
+    <div class="alert alert-warning no-bottom-margin">
+      <!--
       <button type="button"
         (click)="hideAddDatamapperInfo()"
         class="close">
         <span class="pficon pficon-close"></span>
       </button>
+      -->
       <span class="pficon pficon-warning-triangle-o"></span>
       <p><strong>Data Type Mismatch:</strong> Add a data mapping step before this connection to resolve the difference.</p>
     </div>
@@ -15,9 +17,13 @@
 
   <ng-template #tooltipPopover>
     <div class="info-popover container-fluid">
-      <div class="row">
-          <i class="fa fa-remove pull-right" (click)="hideInfoPopover()" role="button"></i>
-      </div>
+      <!--
+      <button type="button"
+        (click)="hideInfoPopover()"
+        class="pull-right close">
+        <span class="pficon pficon-close"></span>
+      </button>
+      -->
       <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
       <!--
       <div *ngIf="previousStepShouldDefineDataShape"><p style="color:red"><b>Define a data type</b></p></div>
@@ -86,7 +92,9 @@
           [popover]="addDatamapper"
           #datamapperInfoPop="bs-popover"
           triggers=""
+          containerClass="flow-view-popover"
           placement="right"
+          outsideClick="true"
           (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
           container="body"></span>
 
@@ -103,6 +111,9 @@
               placement="right"
               (click)="toggleInfoPopover(); $event.stopPropagation();"
               triggers=""
+              containerClass="flow-view-popover"
+              popoverTitle="Connection Properties"
+              outsideClick="true"
               container="body"></i>
             <!-- Delete Icon -->
             <i *ngIf="showDelete()"

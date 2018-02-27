@@ -153,7 +153,7 @@
       .parent-step {
         background-color: $color-pf-black-300;
         cursor: pointer;
-        padding: 8px 18px 8px 8px;        
+        padding: 8px 18px 8px 8px;
         position: relative;
 
         .data-mismatch {
@@ -258,7 +258,12 @@
   }
 }
 
+::ng-deep .flow-view-popover {
+  max-width: inherit;
+}
+
 .info-popover {
+  min-width: 350px;
   dl {
     dt,
     dd {
