@@ -14,15 +14,19 @@
   </ng-template>
 
   <ng-template #tooltipPopover>
-    <div>
-      <i class="fa fa-remove pull-right" (click)="hideInfoPopover()"></i>
-
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <button class="pull-right close" type="button" (click)="hideInfoPopover()">
+          <span class="pficon pficon-close"></span>
+        </button>
+        <h3 class="panel-title">Connection Properties</h3>
+      </div>
+      <div class="panel-body">
       <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
       <!--
       <div *ngIf="previousStepShouldDefineDataShape"><p style="color:red"><b>Define a data type</b></p></div>
-      <div *ngIf="shouldAddDatamapper"><p style="color:red"><b>Add a datamapper step</b></p></div>
       -->
-        <dl class="dl-horizontal">
+        <dl>
           <dt>
             Name
           </dt>
@@ -30,7 +34,7 @@
             {{ step.connection?.name }}
           </dd>
         </dl>
-        <dl class="dl-horizontal">
+        <dl>
           <dt>
             Action
           </dt>
@@ -38,7 +42,7 @@
             {{ step.action?.name }}
           </dd>
         </dl>
-        <dl class="dl-horizontal" *ngIf="inputDataShapeText">
+        <dl *ngIf="inputDataShapeText && inputDataShapeText !== ''">
           <dt>
             Input Data Type
           </dt>
@@ -46,7 +50,7 @@
             {{ inputDataShapeText }}
           </dd>
         </dl>
-        <dl class="dl-horizontal" *ngIf="outputDataShapeText">
+        <dl *ngIf="outputDataShapeText">
           <dt>
             Output Data Type
           </dt>
@@ -54,6 +58,7 @@
             {{ outputDataShapeText }}
           </dd>
         </dl>
+      </div>
     </div>
   </ng-template>
 
@@ -89,12 +94,12 @@
           placement="right"
           (click)="toggleAddDatamapperInfo(); $event.stopPropagation();"
           container="body"></span>
-        
+
         <div class="step-content">
           <div class="step-name">
             {{ stepName }}
-          </div>  
-        
+          </div>
+
           <div class="step-icons">
             <!-- Delete Icon -->
             <i *ngIf="showDelete()"
@@ -109,7 +114,7 @@
               (click)="toggleInfoPopover(); $event.stopPropagation();"
               triggers=""
               container="body"></i>
-          </div>        
+          </div>
         </div>
       </div>
 
