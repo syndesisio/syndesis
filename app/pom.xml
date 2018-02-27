@@ -1187,6 +1187,24 @@
     </repository>
   </distributionManagement>
 
+  <repositories>
+    <repository>
+      <!--
+           we need a SNAPSHOT version of io.swagger:* artefacts, remove
+           this when 1.5.19 is released
+           see https://github.com/swagger-api/swagger-core/issues/2316
+      -->
+      <id>oss-sonatype-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
   <issueManagement>
     <system>github</system>
     <url>https://github.com/syndesisio/syndesis.io/issues</url>
