@@ -48,6 +48,11 @@
 
     <dependency>
       <groupId>io.syndesis.rest</groupId>
+      <artifactId>rest-jsondb</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.rest</groupId>
       <artifactId>rest-openshift</artifactId>
     </dependency>
 

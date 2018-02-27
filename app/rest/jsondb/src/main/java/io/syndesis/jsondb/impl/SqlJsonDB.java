@@ -81,7 +81,8 @@ public class SqlJsonDB implements JsonDB {
 
     private final DBI dbi;
     private final EventBus bus;
-    private final Set<String> indexes = new HashSet<>();
+    private final Collection<Index> indexes;
+    private final Set<String> indexPaths = new HashSet<>();
 
     // These values are used to compute a seq key
     private DatabaseKind databaseKind = DatabaseKind.PostgreSQL;
@@ -93,9 +94,10 @@ public class SqlJsonDB implements JsonDB {
     public SqlJsonDB(DBI dbi, EventBus bus, Collection<Index> indexes) {
         this.dbi = dbi;
         this.bus = bus;
+        this.indexes = indexes;
 
         for (Index index : indexes) {
-            this.indexes.add(index.getPath()+"/#"+index.getField());
+            this.indexPaths.add(index.getPath()+"/#"+index.getField());
         }
 
         // Lets find out the type of DB we are working with.
@@ -323,7 +325,7 @@ public class SqlJsonDB implements JsonDB {
         String path = prefix(trimSuffix(collectionPath, "/"), "/");
 
         String idx = path+"/#"+property;
-        if( !indexes.contains(idx) ) {
+        if( !indexPaths.contains(idx) ) {
             String message = "Index not defined for:  collectionPath: " + path + ", property: " + property;
             LOG.warn("fetchIdsByPropertyValue not optimzed !!!: {}", message);
             return fetchIdsByPropertyValueFullTableScan(collectionPath, property, value);
@@ -432,7 +434,7 @@ public class SqlJsonDB implements JsonDB {
             String baseDBPath = JsonRecordSupport.convertToDBPath(path);
             mb.deleteRecordsForSet(baseDBPath);
             try {
-                JsonRecordSupport.jsonStreamToRecords(indexes, baseDBPath, body, mb.createSetConsumer());
+                JsonRecordSupport.jsonStreamToRecords(indexPaths, baseDBPath, body, mb.createSetConsumer());
             } catch (IOException e) {
                 throw new JsonDBException(e);
             }
@@ -472,7 +474,7 @@ public class SqlJsonDB implements JsonDB {
                         mb.deleteRecordsForSet(baseDBPath);
 
                         try {
-                            JsonRecordSupport.jsonStreamToRecords(indexes, jp, baseDBPath, mb.createSetConsumer());
+                            JsonRecordSupport.jsonStreamToRecords(indexPaths, jp, baseDBPath, mb.createSetConsumer());
                         } catch (IOException e) {
                             throw new JsonDBException(e);
                         }
@@ -554,8 +556,12 @@ public class SqlJsonDB implements JsonDB {
         }
     }
 
-    public Set<String> getIndexes() {
+    public Collection<Index> getIndexes() {
         return indexes;
+    }
+
+    public Set<String> getIndexPaths() {
+        return indexPaths;
     }
 
     public DatabaseKind getDatabaseKind() {

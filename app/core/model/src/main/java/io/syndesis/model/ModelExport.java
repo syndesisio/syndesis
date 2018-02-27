@@ -15,11 +15,9 @@
  */
 package io.syndesis.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.core.immutable.SkipNulls;
 import org.immutables.value.Value;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * A ModelExport is used to hold an list of models and information about their version.
@@ -31,11 +29,8 @@ public interface ModelExport {
 
     String schemaVersion();
 
-    @SkipNulls
-    List<ModelData<?>> models();
-
-    static ModelExport of(String version, List<ModelData<?>> models) {
-        return ImmutableModelExport.builder().schemaVersion(version).models(models).build();
+    static ModelExport of(String version) {
+        return ImmutableModelExport.builder().schemaVersion(version).build();
     }
 
 }

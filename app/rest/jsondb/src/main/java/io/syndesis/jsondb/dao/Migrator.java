@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.jsondb.dao;
+
+import io.syndesis.jsondb.JsonDB;
 
 /**
- * This class is used to track the current model schema version.
+ * Handles migrating the schema of a JsonDB store to a given schema of the model
  */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final String VERSION = "26";
+public interface Migrator {
+    void migrate(JsonDB jsondb, int schema);
 }
