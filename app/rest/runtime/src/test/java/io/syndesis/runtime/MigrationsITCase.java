@@ -65,7 +65,7 @@ public class MigrationsITCase {
     protected StoredSettings storedSettings;
 
     private Migrations createMigrations(String prefix, String target) {
-        return new Migrations(dbi, jsondb, manager, storedSettings) {
+        return new Migrations(jsondb, manager, storedSettings) {
             @Override
             public String getTargetVersion() {
                 return target;

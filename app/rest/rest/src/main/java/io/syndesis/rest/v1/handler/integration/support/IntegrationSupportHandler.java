@@ -16,15 +16,14 @@
 package io.syndesis.rest.v1.handler.integration.support;
 
 import static io.syndesis.rest.v1.handler.integration.IntegrationHandler.addEntry;
+import static org.springframework.util.StreamUtils.nonClosing;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,13 +61,19 @@ import io.syndesis.dao.manager.operators.IdPrefixFilter;
 import io.syndesis.dao.manager.operators.ReverseFilter;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.jsondb.CloseableJsonDB;
+import io.syndesis.jsondb.JsonDB;
+import io.syndesis.jsondb.dao.JsonDbDao;
+import io.syndesis.jsondb.dao.Migrator;
+import io.syndesis.jsondb.impl.MemorySqlJsonDB;
+import io.syndesis.jsondb.impl.SqlJsonDB;
 import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Dependency;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
-import io.syndesis.model.ModelData;
 import io.syndesis.model.ModelExport;
 import io.syndesis.model.Schema;
+import io.syndesis.model.WithId;
 import io.syndesis.model.buletin.IntegrationBulletinBoard;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
@@ -91,9 +96,12 @@ import io.syndesis.rest.v1.operations.SortOptionsFromQueryParams;
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.CyclomaticComplexity" })
 public class IntegrationSupportHandler {
 
+    public static final String EXPORT_MODEL_INFO_FILE_NAME = "model-info.json";
     public static final String EXPORT_MODEL_FILE_NAME = "model.json";
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationSupportHandler.class);
 
+    private final Migrator migrator;
+    private final SqlJsonDB jsonDB;
     private final IntegrationProjectGenerator projectGenerator;
     private final DataManager dataManager;
     private final IntegrationResourceManager resourceManager;
@@ -102,12 +110,16 @@ public class IntegrationSupportHandler {
     private final FileDataManager extensionDataManager;
 
     public IntegrationSupportHandler(
+        final Migrator migrator,
+        final SqlJsonDB jsonDB,
         final IntegrationProjectGenerator projectGenerator,
         final DataManager dataManager,
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
         final ConnectionHandler connectionHandler,
         final FileDataManager extensionDataManager) {
+        this.migrator = migrator;
+        this.jsonDB = jsonDB;
 
         this.projectGenerator = projectGenerator;
         this.dataManager = dataManager;
@@ -158,16 +170,15 @@ public class IntegrationSupportHandler {
     @GET
     @Path("/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> requestedIds) {
+    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> requestedIds) throws IOException {
 
         List<String> ids = requestedIds;
         if ( ids ==null || ids.isEmpty() ) {
             throw new ClientErrorException("No 'integration' query parameter specified.", Response.Status.BAD_REQUEST);
         }
 
-        LinkedHashMap<String, ModelData<?>> export = new LinkedHashMap<>();
         LinkedHashSet<String> extensions = new LinkedHashSet<>();
-
+        CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsonDB.getIndexes());
         if( ids.contains("all") ) {
             ids = new ArrayList<>();
             for (Integration integration : dataManager.fetchAll(Integration.class).getItems()) {
@@ -176,20 +187,20 @@ public class IntegrationSupportHandler {
         }
         for (String id : ids) {
             Integration integration = integrationHandler.get(id);
-            addToExport(export, integration);
+            addToExport(memJsonDB, integration);
             resourceManager.collectDependencies(integration.getSteps()).stream()
                 .filter(Dependency::isExtension)
                 .map(Dependency::getId)
                 .forEach(extensions::add);
         }
-
         LOG.debug("Extensions: {}", extensions);
 
-        ArrayList<ModelData<?>> models = new ArrayList<>(export.values());
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
-                ModelExport exportObject = ModelExport.of(Schema.VERSION, models);
-                addEntry(tos, EXPORT_MODEL_FILE_NAME, Json.writer().writeValueAsBytes(exportObject));
+                ModelExport exportObject = ModelExport.of(Schema.VERSION);
+                addEntry(tos, EXPORT_MODEL_INFO_FILE_NAME, Json.writer().writeValueAsBytes(exportObject));
+                addEntry(tos, EXPORT_MODEL_FILE_NAME, memJsonDB.getAsByteArray("/"));
+                memJsonDB.close();
                 for (String extensionId : extensions) {
                     addEntry(tos, "extensions/" + Names.sanitize(extensionId) + ".jar", IOUtils.toByteArray(
                         extensionDataManager.getExtensionBinaryFile(extensionId)
@@ -197,38 +208,37 @@ public class IntegrationSupportHandler {
                 }
             }
         };
+
     }
 
-    private void addToExport(Map<String, ModelData<?>> export, Integration integration) {
-        addToExport(export, new ModelData<>(Kind.Integration, integration));
+    private void addToExport(JsonDB export, Integration integration) {
+        addModelToExport(export, integration);
         for (Step step : integration.getSteps()) {
             Optional<Connection> c = step.getConnection();
             if (c.isPresent()) {
                 Connection connection = c.get();
-                addToExport(export, new ModelData<>(Kind.Connection, connection));
+                addModelToExport(export, connection);
                 Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
                 if (connector != null) {
-                    addToExport(export, new ModelData<>(Kind.Connector, connector));
+                    addModelToExport(export, connector);
                 }
             }
             Optional<Extension> e = step.getExtension();
             if (e.isPresent()) {
                 Extension extension = e.get();
-                addToExport(export, new ModelData<>(Kind.Extension, extension));
+                addModelToExport(export, extension);
             }
         }
     }
 
-    private static void addToExport(Map<String, ModelData<?>> export, ModelData<?> model) {
-        try {
-            String key = model.getKind().getModelName()+":"+model.getData().getId();
-            if ( !export.containsKey(key) )  {
-                export.put(key, model);
+    private static <T extends WithId<T>> void addModelToExport(JsonDB export, T model) {
+        JsonDbDao<T> dao = new JsonDbDao<T>(export) {
+            @Override
+            public Class<T> getType() {
+                return model.getKind().getModelClass();
             }
-        } catch (IOException e) {
-            // This should not no occur since the model does not need to be deserialized
-            throw new IllegalStateException(e);
-        }
+        };
+        dao.set(model);
     }
 
     @POST
@@ -238,14 +248,22 @@ public class IntegrationSupportHandler {
         try (ZipInputStream zis = new ZipInputStream(is)) {
             HashSet<String> extensionIds = new HashSet<>();
             ArrayList<ChangeEvent> changeEvents = new ArrayList<>();
+            ModelExport modelExport = null;
             while (true) {
                 ZipEntry entry = zis.getNextEntry();
                 if( entry == null ) {
                     break;
                 }
+
+                if (EXPORT_MODEL_INFO_FILE_NAME.equals(entry.getName())) {
+                    modelExport = Json.reader().forType(ModelExport.class).readValue(zis);
+                }
+
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    ModelExport models = Json.reader().forType(ModelExport.class).readValue(zis);
-                    changeEvents.addAll(importModels(sec, models));
+                    CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsonDB.getIndexes());
+                    memJsonDB.set("/", nonClosing(zis));
+                    changeEvents.addAll(importModels(sec, modelExport, memJsonDB));
+                    memJsonDB.close();
                     for (ChangeEvent changeEvent : changeEvents) {
                         if( changeEvent.getKind().get().equals("extension") ) {
                             extensionIds.add(changeEvent.getId().get());
@@ -283,98 +301,93 @@ public class IntegrationSupportHandler {
         }
     }
 
-    public List<ChangeEvent> importModels(SecurityContext sec, ModelExport export) throws IOException {
-        ArrayList<ChangeEvent> result = new ArrayList<>();
-        validateForImport(export);
+    public List<ChangeEvent> importModels(SecurityContext sec, ModelExport export, JsonDB jsondb) throws IOException {
 
-        // Now do the actual import.
-        for (ModelData<?> model : export.models()) {
-            switch (model.getKind()) {
-                case Integration: {
-                    Integration integration = (Integration) model.getData();
-                    Integration.Builder builder = new Integration.Builder()
-                        .createFrom(integration)
-                        .isDeleted(false)
-                        .updatedAt(System.currentTimeMillis());
+        // Apply per version migrations to get the schema upgraded on the import.
+        int from = Integer.parseInt(export.schemaVersion());
+        int to = Integer.parseInt(Schema.VERSION);
 
-                    // Do we need to create it?
-                    String id = integration.getId().get();
-                    Integration previous = dataManager.fetch(Integration.class, id);
-                    if (previous == null) {
-                        LOG.info("Creating integration: {}", integration.getName());
-                        integrationHandler.create(sec, builder.build());
-                        result.add(ChangeEvent.of("created", integration.getKind().getModelName(), id));
-                    } else {
-                        LOG.info("Updating integration: {}", integration.getName());
-                        integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
-                        result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
-                    }
-                    integrationHandler.updateBulletinBoard(id);
-                    break;
-                }
-                case Connection: {
-
-                    // We only create connections, never update.
-                    Connection connection = (Connection) model.getData();
-                    String id = connection.getId().get();
-                    if (dataManager.fetch(Connection.class, id) == null) {
-                        dataManager.create(connection);
-                        connectionHandler.updateBulletinBoard(id);
-                        result.add(ChangeEvent.of("created", connection.getKind().getModelName(), id));
-                    }
-
-                    break;
-                }
-                case Connector: {
-
-                    // We only create connectors, never update.
-                    Connector connector = (Connector) model.getData();
-                    String id = connector.getId().get();
-                    if (dataManager.fetch(Connector.class, id) == null) {
-                        dataManager.create(connector);
-                        result.add(ChangeEvent.of("created", connector.getKind().getModelName(), id));
-                    }
-                    break;
-                }
-                case Extension: {
-
-                    // We only create extensions, never update.
-                    Extension extension = (Extension) model.getData();
-                    String id = extension.getId().get();
-                    if (dataManager.fetch(Extension.class, id) == null) {
-                        dataManager.create(extension);
-                        result.add(ChangeEvent.of("created", extension.getKind().getModelName(), id));
-                    }
-                    break;
-                }
-                default: {
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("Cannot import unsupported model kind: " + model.getKind());
-                    }
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-
-    public void validateForImport(ModelExport export) throws IOException {
-        // First do some validation of the models..
-        if (!Schema.VERSION.equals(export.schemaVersion())) {
+        if( from > to ) {
             throw new IOException("Cannot import an export at schema version level: " + export.schemaVersion());
         }
 
-        for (ModelData<?> model : export.models()) {
-            switch (model.getKind()) {
-                case Integration:
-                case Connection:
-                case Connector:
-                case Extension:
-                    break;
-                default:
-                    throw new IOException("Cannot import unsupported model kind: " + model.getKind());
+        for (int i = from; i < to; i++) {
+            int version = i + 1;
+            migrator.migrate(jsondb, version);
+        }
 
+        ArrayList<ChangeEvent> result = new ArrayList<>();
+        // Import the extensions..
+        importModels(new JsonDbDao<Extension>(jsondb) {
+            @Override
+            public Class<Extension> getType() {
+                return Extension.class;
+            }
+        }, result);
+
+        importModels(new JsonDbDao<Connector>(jsondb) {
+            @Override
+            public Class<Connector> getType() {
+                return Connector.class;
+            }
+        }, result);
+
+        importModels(new JsonDbDao<Connection>(jsondb) {
+            @Override
+            public Class<Connection> getType() {
+                return Connection.class;
+            }
+        }, result);
+
+        importIntegrations(sec, new JsonDbDao<Integration>(jsondb) {
+            @Override
+            public Class<Integration> getType() {
+                return Integration.class;
+            }
+        }, result);
+
+
+        return result;
+    }
+
+    private  void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, ArrayList<ChangeEvent> result) {
+        for (Integration integration : export.fetchAll().getItems()) {
+            Integration.Builder builder = new Integration.Builder()
+                .createFrom(integration)
+                .isDeleted(false)
+                .updatedAt(System.currentTimeMillis());
+
+            // Do we need to create it?
+            String id = integration.getId().get();
+            Integration previous = dataManager.fetch(Integration.class, id);
+            if (previous == null) {
+                LOG.info("Creating integration: {}", integration.getName());
+                integrationHandler.create(sec, builder.build());
+                result.add(ChangeEvent.of("created", integration.getKind().getModelName(), id));
+            } else {
+                LOG.info("Updating integration: {}", integration.getName());
+                integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
+                result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
+            }
+            integrationHandler.updateBulletinBoard(id);
+            break;
+        }
+    }
+
+    private <T extends WithId<T>> void importModels(JsonDbDao<T> export, ArrayList<ChangeEvent> result) {
+        for (T item : export.fetchAll().getItems()) {
+            Kind kind = item.getKind();
+            String id = item.getId().get();
+            if (dataManager.fetch(export.getType(), id) == null) {
+                dataManager.create(item);
+
+                if( kind == Kind.Connection ) {
+                    connectionHandler.updateBulletinBoard(id);
+                }
+
+                result.add(ChangeEvent.of("created", kind.getModelName(), id));
             }
         }
     }
+
 }

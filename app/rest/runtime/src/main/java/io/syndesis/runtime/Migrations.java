@@ -17,38 +17,37 @@ package io.syndesis.runtime;
 
 import static io.syndesis.core.Json.map;
 
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.core.util.Resources;
-import io.syndesis.dao.manager.DataManager;
-import io.syndesis.jsondb.impl.SqlJsonDB;
-import io.syndesis.model.Schema;
-
-import org.skife.jdbi.v2.DBI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import io.syndesis.core.SyndesisServerException;
+import io.syndesis.core.util.Resources;
+import io.syndesis.dao.manager.DataManager;
+import io.syndesis.jsondb.JsonDB;
+import io.syndesis.jsondb.dao.Migrator;
+import io.syndesis.jsondb.impl.SqlJsonDB;
+import io.syndesis.model.Schema;
 
 /**
  *
  */
 @Service
-public class Migrations {
+public class Migrations implements Migrator {
     private static final Logger LOG = LoggerFactory.getLogger(Migrations.class);
 
-    private final DBI dbi;
     private final SqlJsonDB jsondb;
     private final DataManager manager;
     private final StoredSettings storedSettings;
 
-    Migrations(DBI dbi, SqlJsonDB jsondb, DataManager manager, StoredSettings storedSettings) {
-        this.dbi = dbi;
+    Migrations(SqlJsonDB jsondb, DataManager manager, StoredSettings storedSettings) {
         this.jsondb = jsondb;
         this.manager = manager;
         this.storedSettings = storedSettings;
@@ -73,7 +72,7 @@ public class Migrations {
             // Apply per version migration scripts.
             for (int i = from; i < to; i++) {
                 int version = i + 1;
-                migrateTo(version);
+                migrate(jsondb, version);
                 storedSettings.set("model_schema_version", Integer.toString(version));
             }
         } else {
@@ -86,21 +85,18 @@ public class Migrations {
         return Schema.VERSION;
     }
 
-    private void migrateTo(int version) {
+    @Override
+    public void migrate(JsonDB jsondb, int toVersion) {
         try {
-            String file = migrationsScriptPrefix() + version + ".js";
+            String file = migrationsScriptPrefix() + toVersion + ".js";
             String migrationScript = Resources.getResourceAsText(file);
             if( migrationScript == null ) {
-                LOG.info("No migration needed for schema: {}", version);
                 return;
             }
-            LOG.info("Migrating to schema: {}", version);
+            LOG.info("Migrating to schema: {}", toVersion);
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
             engine.put("internal",  map(
-                "dbi", dbi,
-                "jsondb", jsondb,
-                "manager", manager,
-                "settings", storedSettings
+                "jsondb", jsondb
             ));
 
             engine.eval(Resources.getResourceAsText("migrations/common.js"));

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.model;
+package io.syndesis.jsondb;
+
+import java.io.Closeable;
 
 /**
- * This class is used to track the current model schema version.
+ * Implemented by JsonDB interfaces that should be closed to free up related resources.
  */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final String VERSION = "26";
+public interface CloseableJsonDB extends JsonDB, Closeable {
 }

@@ -52,7 +52,7 @@ public abstract class SqlExpressionBuilder {
 
     public static SqlExpressionBuilder create(SqlJsonDB db, ChildFilter filter, String path) {
         String idx = path+"#"+filter.field();
-        if( !db.getIndexes().contains(idx) ) {
+        if( !db.getIndexPaths().contains(idx) ) {
             throw new JsonDBException("You can only filter on fields that are indexed.");
         }
         PropertySqlExpressionBuilder left = new PropertySqlExpressionBuilder(idx);
