@@ -257,3 +257,17 @@
     }
   }
 }
+
+.info-popover {
+  dl {
+    dt,
+    dd {
+      padding-left: 0;
+      word-break: break-word;
+    }
+
+    dt {
+      padding-right: 1em;
+    }
+  }
+}
