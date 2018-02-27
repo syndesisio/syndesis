@@ -1,4 +1,12 @@
 #!/bin/bash
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+DEFAULT_OPENSHIFT_VERSION="v3.7.1"
+DEFAULT_CPUS="2"
+DEFAULT_DISK_SIZE="20GB"
+DEFAULT_RAM="4912"
+
+set -x
 
 minishift::description() {
     echo "Initialize and manage a Minishift developer environment"
@@ -12,12 +20,12 @@ minishift::usage() {
     --reset                   Reset and initialize the minishift installation by
                               'minishift delete && minishift start'.
     --full-reset              Full reset and initialie by
-                              'minishift stop && rm -rf ~/.minishift && minishift start'
-    --memory <mem>            How much memory to use when doing a reset. Default: 4GB
-    --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
-    --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+                              'minishift stop && rm -rf ~/.minishift/* && minishift start'
+    --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
+    --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
+    --disk-size <size>        How many disk space to use when doing a reset. Default: $DEFAULT_DISK_SIZE
     --show-logs               Show minishift logs during startup
-    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.6.0)
+    --openshift-version <ver> Set OpenShift version to use when reseting (default: $DEFAULT_OPENSHIFT_VERSION)
                               already existing for --install.
                               Default project: "syndesis"
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
@@ -94,7 +102,7 @@ is_minishift_running() {
     minishift status 2>&1 | grep -q "Running"
     local stat=$?
     set -e
-    if [ $? -eq 0 ]; then
+    if [ $stat -eq 0 ]; then
       echo "true"
     fi
 }
@@ -122,5 +130,5 @@ start_minishift() {
         show_logs_args="--show-libmachine-logs=true "
     fi
     echo "Starting minishift ...."
-    minishift start ${show_logs_arg:-}--memory ${memory:-4912} --cpus ${cpus:-2} --disk-size ${disksize:-20GB} --openshift-version ${openshift_version:-v3.6.0}
+    minishift start ${show_logs_arg:-}--memory ${memory:-$DEFAULT_RAM} --cpus ${cpus:-$DEFAULT_CPUS} --disk-size ${disksize:-$DEFAULT_DISK_SIZE} --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
 }
