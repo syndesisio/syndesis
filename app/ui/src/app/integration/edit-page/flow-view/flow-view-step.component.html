@@ -66,7 +66,17 @@
   <!-- Icon Progress Line -->
   <div class="col-md-3 progress-line">
     <span class="step-index">{{ stepIndex }}</span>
-    <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()">
+    <div [ngClass]="'icon ' + getParentActiveClass() + ' ' + getMenuCompleteClass() + ' ' + getConnectionClass()"
+      [popover]="tooltipPopover"
+      #connectionImgPop="bs-popover"
+      placement="right"
+      (mouseover)="showInfoPopoverCollapsed()"
+      (mouseout)="hideInfoPopoverCollapsed()"
+      triggers=""
+      containerClass="flow-view-popover"
+      popoverTitle="Connection Properties"
+      outsideClick="true"
+      container="body">
       <i [class]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
