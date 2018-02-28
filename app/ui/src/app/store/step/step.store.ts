@@ -257,7 +257,10 @@ export class StepStore {
     return step.stepKind === BASIC_FILTER || step.stepKind === DATA_MAPPER;
   }
 
-  private getStepConfig(stepKind: String) {
+  getStepConfig(stepKind: String) {
+    if (!stepKind) {
+      return undefined;
+    }
     return this.steps.find(step => step.stepKind === stepKind);
   }
 
