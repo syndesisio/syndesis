@@ -15,20 +15,6 @@
  */
 package io.syndesis.controllers.integration;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import io.syndesis.controllers.StateChangeHandler;
 import io.syndesis.controllers.StateChangeHandlerProvider;
 import io.syndesis.core.EventBus;
@@ -39,11 +25,22 @@ import io.syndesis.model.ChangeEvent;
 import io.syndesis.model.Kind;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -53,14 +50,16 @@ import org.springframework.stereotype.Service;
 public class IntegrationController {
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationController.class);
 
+    private static final String EVENT_BUS_ID = "integration-deployment-controller";
+    private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
+
     private final DataManager dataManager;
     private final EventBus eventBus;
     private final ConcurrentHashMap<IntegrationDeploymentState, StateChangeHandler> handlers = new ConcurrentHashMap<>();
-    private final Set<String> scheduledChecks = new HashSet<>();
-    ExecutorService executor;
-    ScheduledExecutorService scheduler;
+    private final Set<String> scheduledChecks = ConcurrentHashMap.newKeySet();
 
-    private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
+    private ExecutorService executor;
+    private ScheduledExecutorService scheduler;
 
     @Autowired
     public IntegrationController(DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory) {
@@ -79,7 +78,15 @@ public class IntegrationController {
         scheduler = Executors.newScheduledThreadPool(1, threadFactory("Integration Controller Scheduler"));
         scanIntegrationsForWork();
 
-        eventBus.subscribe("integration-deployment-controller", getChangeEventSubscription());
+        eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
+    }
+
+    @PreDestroy
+    public void stop() {
+        eventBus.unsubscribe(EVENT_BUS_ID);
+
+        scheduler.shutdownNow();
+        executor.shutdownNow();
     }
 
     @SuppressWarnings("PMD.DoNotUseThreads")
@@ -113,21 +120,20 @@ public class IntegrationController {
     private void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
         executor.execute(() -> {
             IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, id);
-            if( integrationDeployment!=null ) {
+            if( integrationDeployment != null) {
                 String scheduledKey = getIntegrationMarkerKey(integrationDeployment);
+
+                LOG.debug("Check if IntegrationStatus {} is already in progress for key: {} (keys: {})", id, scheduledKey, scheduledChecks);
                 // Don't start check is already a check is running
                 if (!scheduledChecks.contains(scheduledKey)) {
                     checkIntegrationStatus(integrationDeployment);
+                } else {
+                    LOG.debug("A check for IntegrationDeployment {} is already configured with key {}", id, scheduledKey);
                 }
+            } else {
+                LOG.debug("No IntegrationDeployment with id: {}", id);
             }
         });
-    }
-
-    @PreDestroy
-    public void stop() {
-        eventBus.unsubscribe("integration-controller");
-        scheduler.shutdownNow();
-        executor.shutdownNow();
     }
 
     private void scanIntegrationsForWork() {
@@ -216,10 +222,15 @@ public class IntegrationController {
 
     @SuppressWarnings("FutureReturnValueIgnored")
     private void reschedule(String integrationId) {
+        LOG.debug("Reschedule IntegrationDeployment check, id:{}, keys: {}", integrationId, scheduledChecks);
         scheduler.schedule(() -> {
-            IntegrationDeployment i = dataManager.fetch(IntegrationDeployment.class, integrationId);
-            checkIntegrationStatus(i);
-        }, SCHEDULE_INTERVAL_IN_SECONDS, TimeUnit.SECONDS);
+                IntegrationDeployment i = dataManager.fetch(IntegrationDeployment.class, integrationId);
+                LOG.debug("Trigger checkIntegrationStatus, id:{}", integrationId);
+                checkIntegrationStatus(i);
+            },
+            SCHEDULE_INTERVAL_IN_SECONDS,
+            TimeUnit.SECONDS
+        );
     }
 
     private String getIntegrationMarkerKey(IntegrationDeployment integrationDeployment) {

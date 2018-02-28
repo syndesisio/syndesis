@@ -15,24 +15,26 @@
  */
 package io.syndesis.openshift;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
-import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.core.Names;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention"})
 public class OpenShiftServiceImpl implements OpenShiftService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -44,7 +46,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public void build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws IOException {
-        String sName = Names.sanitize(name);
+        final String sName = Names.sanitize(name);
+
         ensureImageStreams(sName);
         ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
         openShiftClient.buildConfigs().withName(sName)
@@ -54,37 +57,15 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public void deploy(String name, DeploymentData deploymentData) {
-        String sName = Names.sanitize(name);
+        final String sName = Names.sanitize(name);
+
+        LOGGER.debug("Deploy {}", sName);
+
         ensureDeploymentConfig(sName, deploymentData);
-        updateImageName(sName);
+        //updateImageName(sName);
         ensureSecret(sName, deploymentData);
 
-        openShiftClient.deploymentConfigs().withName(sName).deployLatest();
-    }
-
-    // Only required temporarily while image triggers do not work
-    // We are updating the image name with the latest image reference before increasing
-    // the latestVersion number
-    private void updateImageName(String sName) {
-        ImageStream is = openShiftClient.imageStreams().withName(sName).get();
-        if (is != null) {
-            is.getStatus().getTags()
-              .stream()
-              .filter(t -> "latest".equals(t.getTag()))
-              .findFirst().ifPresent(t -> {
-                String image = t.getItems().get(0).getDockerImageReference();
-                updateImageNameInDeployment(sName, image);
-            });
-        }
-    }
-
-    private void updateImageNameInDeployment(String name, String image) {
-        openShiftClient.deploymentConfigs()
-                       .withName(name)
-                       .edit().editOrNewSpec().editOrNewTemplate().editOrNewSpec().editFirstContainer()
-                       .withImage(image)
-                       .endContainer().endSpec().endTemplate().endSpec()
-                       .done();
+        //openShiftClient.deploymentConfigs().withName(sName).deployLatest();
     }
 
     @Override
@@ -95,7 +76,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public boolean delete(String name) {
-        String sName = Names.sanitize(name);
+        final String sName = Names.sanitize(name);
+
+        LOGGER.debug("Delete {}", sName);
+
         return
             removeImageStreams(sName) &&
             removeDeploymentConfig(sName) &&
@@ -111,7 +95,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public void scale(String name, int desiredReplicas) {
-        String sName = Names.sanitize(name);
+        final String sName = Names.sanitize(name);
+
+        LOGGER.debug("Scale {}", sName);
+
         openShiftClient.deploymentConfigs().withName(sName).edit()
                        .editSpec()
                        .withReplicas(desiredReplicas)
@@ -169,75 +156,92 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return nr != null ? nr : 0;
     }
 
-//==================================================================================================
+    // ***********************
+    // Image Stream
+    // ***********************
 
     private void ensureImageStreams(String name) {
+        LOGGER.debug("Create or Replace ImageStream {}", name);
+
         openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
-                       .withNewMetadata().withName(name).endMetadata().done();
+            .withNewMetadata()
+                .withName(name)
+            .endMetadata()
+            .done();
     }
 
     private boolean removeImageStreams(String name) {
+        LOGGER.debug("Remove ImageStream {}", name);
+
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
     protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
         openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
-            .withName(name)
-            .addToAnnotations(deploymentData.getAnnotations())
-            .addToLabels(deploymentData.getLabels())
+                .withName(name)
+                .addToAnnotations(deploymentData.getAnnotations())
+                .addToLabels(deploymentData.getLabels())
             .endMetadata()
             .withNewSpec()
-            .withReplicas(1)
-            .addToSelector("integration", name)
-            .withNewStrategy()
-                .withType("Recreate")
-                .withNewResources()
+                .withReplicas(1)
+                .addToSelector("integration", name)
+                .withNewStrategy()
+                    .withType("Recreate")
+                    .withNewResources()
                        .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi()  + "Mi"))
                        .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
-                .endResources()
-            .endStrategy()
-            .withRevisionHistoryLimit(0)
-            .withNewTemplate()
-            .withNewMetadata()
-                .addToLabels("integration", name)
-                .addToLabels(COMPONENT_LABEL, "integration")
-                .addToLabels(deploymentData.getLabels())
-                .addToAnnotations(deploymentData.getAnnotations())
-                .addToAnnotations("prometheus.io/scrape", "true")
-                .addToAnnotations("prometheus.io/port", "9779")
-            .endMetadata()
-            .withNewSpec()
-            .addNewContainer()
-            .withImage(" ").withImagePullPolicy("Always").withName(name)
-            // don't chain withEnv as every invocation overrides the previous one, use var-args instead
-            .withEnv(
-                new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
-                new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null))
-            .addNewPort().withName("jolokia").withContainerPort(8778).endPort()
-            .addNewVolumeMount()
-                .withName("secret-volume")
-                .withMountPath("/deployments/config")
-                .withReadOnly(false)
-            .endVolumeMount()
-            .endContainer()
-            .addNewVolume()
-                .withName("secret-volume")
-                .withNewSecret()
-                    .withSecretName(name)
-                .endSecret()
-            .endVolume()
-            .endSpec()
-            .endTemplate()
-            .addNewTrigger().withType("ConfigChange").endTrigger()
-// Disabled for now since we trigger the deployment directly
-//            .addNewTrigger().withType("ImageChange")
-//            .withNewImageChangeParams()
-//            // set automatic to 'true' when not performing the deployments on our own
-//            .withAutomatic(false).addToContainerNames(name)
-//            .withNewFrom().withKind("ImageStreamTag").withName(name + ":latest").endFrom()
-//            .endImageChangeParams()
-//            .endTrigger()
+                    .endResources()
+                .endStrategy()
+                .withRevisionHistoryLimit(0)
+                .withNewTemplate()
+                    .withNewMetadata()
+                        .addToLabels("integration", name)
+                        .addToLabels(COMPONENT_LABEL, "integration")
+                        .addToLabels(deploymentData.getLabels())
+                        .addToAnnotations(deploymentData.getAnnotations())
+                        .addToAnnotations("prometheus.io/scrape", "true")
+                        .addToAnnotations("prometheus.io/port", "9779")
+                    .endMetadata()
+                    .withNewSpec()
+                        .addNewContainer()
+                        .withImage(" ")
+                        .withImagePullPolicy("Always")
+                        .withName(name)
+                        // don't chain withEnv as every invocation overrides the previous one, use var-args instead
+                        .withEnv(
+                            new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
+                            new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null))
+                        .addNewPort()
+                            .withName("jolokia")
+                            .withContainerPort(8778)
+                        .endPort()
+                        .addNewVolumeMount()
+                            .withName("secret-volume")
+                            .withMountPath("/deployments/config")
+                            .withReadOnly(false)
+                        .endVolumeMount()
+                        .endContainer()
+                        .addNewVolume()
+                            .withName("secret-volume")
+                            .withNewSecret()
+                                .withSecretName(name)
+                            .endSecret()
+                        .endVolume()
+                    .endSpec()
+                .endTemplate()
+                .addNewTrigger()
+                    .withType("ImageChange")
+                    .withNewImageChangeParams()
+                        // set automatic to 'true' when not performing the deployments on our own
+                        .withAutomatic(true)
+                        .addToContainerNames(name)
+                        .withNewFrom()
+                            .withKind("ImageStreamTag")
+                            .withName(name + ":latest")
+                        .endFrom()
+                    .endImageChangeParams()
+                .endTrigger()
             .endSpec()
             .done();
     }
@@ -256,21 +260,35 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .addToLabels(deploymentData.getLabels())
             .endMetadata()
             .withNewSpec()
-            .withRunPolicy("SerialLatestOnly")
-            .withNewSource().withType("Binary").endSource()
-            .withNewStrategy()
-              .withType("Source")
-              .withNewSourceStrategy()
-                .withNewFrom().withKind("ImageStreamTag").withName(builderStreamTag).withNamespace(imageStreamNamespace).endFrom()
-                .withIncremental(false)
-                // TODO: This environment setup needs to be externalized into application.properties
-                // https://github.com/syndesisio/syndesis-rest/issues/682
-                .withEnv(new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null), new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null))
-              .endSourceStrategy()
-            .endStrategy()
-            .withNewOutput().withNewTo().withKind("ImageStreamTag").withName(name + ":latest").endTo().endOutput()
+                .withRunPolicy("SerialLatestOnly")
+                .withNewSource()
+                    .withType("Binary")
+                .endSource()
+                .withNewStrategy()
+                  .withType("Source")
+                  .withNewSourceStrategy()
+                    .withNewFrom()
+                        .withKind("ImageStreamTag")
+                        .withName(builderStreamTag)
+                        .withNamespace(imageStreamNamespace)
+                    .endFrom()
+                    .withIncremental(false)
+                    // TODO: This environment setup needs to be externalized into application.properties
+                    // https://github.com/syndesisio/syndesis-rest/issues/682
+                    .withEnv(
+                        new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null),
+                        new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null)
+                    )
+                  .endSourceStrategy()
+                .endStrategy()
+                .withNewOutput()
+                    .withNewTo()
+                    .withKind("ImageStreamTag")
+                    .withName(name + ":latest")
+                    .endTo()
+                .endOutput()
             .endSpec()
-            .done();
+         .done();
     }
 
     private boolean removeBuildConfig(String projectName) {
