@@ -638,14 +638,14 @@ export class CurrentFlowService {
   }
 
   private insertStepBefore(position: number, stepKind?: string) {
-    const stepConfig = this.stepStore.getStepConfig(stepKind);
+    const stepConfig = this.stepStore.getDefaultStepDefinition(stepKind);
     const step = { ...createStep(), ...stepConfig };
     this.steps.splice(position, 0, step);
   }
 
   private insertStepAfter(position: number, stepKind?: string) {
     const target = position + 1;
-    const stepConfig = this.stepStore.getStepConfig(stepKind);
+    const stepConfig = this.stepStore.getDefaultStepDefinition(stepKind);
     const step = { ...createStep(), ...stepConfig };
     this.steps.splice(target, 0, step);
   }
