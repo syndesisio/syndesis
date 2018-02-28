@@ -351,7 +351,7 @@ objects:
         echo "Waiting for Postgres server..."
         sleep 1
       done
-      echo "----- creating sampledb"
+      echo "***** creating sampledb"
       psql <<EOF
         CREATE DATABASE sampledb;
         CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
@@ -383,7 +383,7 @@ objects:
         $BODY$;
       EOF
 
-      echo "----- sampledb created"
+      echo "***** sampledb created"
     postStart.sh: |
       #!/bin/bash
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
