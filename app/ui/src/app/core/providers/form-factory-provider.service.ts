@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormFactoryService, ConfigurationProperty, ConfiguredConfigurationProperty } from '@syndesis/ui/platform';
+import { FormFactoryService, ConfigurationProperty, ConfiguredConfigurationProperty, StringMap } from '@syndesis/ui/platform';
 import { DurationInputModel } from '@syndesis/ui/common/ui-patternfly/duration-form-control.model';
 import {
   DynamicFormControlModel,
@@ -18,9 +18,9 @@ export class FormFactoryProviderService extends FormFactoryService {
 
   createFormModel(
     properties:
-      | Map<string, ConfiguredConfigurationProperty>
-      | Map<string, ConfigurationProperty>
-      | Map<string, any>
+      | StringMap<ConfiguredConfigurationProperty>
+      | StringMap<ConfigurationProperty>
+      | StringMap<any>
       | {},
     values: any = {},
     controls: Array<string> = ['*']
@@ -90,6 +90,7 @@ export class FormFactoryProviderService extends FormFactoryService {
     if (controls.find(val => val === '*') === undefined) {
       controls.push('*');
     }
+    // TODO we can deprecate and remove this once connectors specify the order property
     // sort the form based on the controls array
     const wildcardIndex = controls.findIndex(val => val === '*');
     answer.sort((a, b) => {
@@ -102,6 +103,14 @@ export class FormFactoryProviderService extends FormFactoryService {
         bIndex = wildcardIndex;
       }
       return aIndex - bIndex;
+    });
+    // sort the form based on the 'order' property
+    answer.sort((a, b) => {
+      const aProp = properties[a.id];
+      const bProp = properties[b.id];
+      const aOrder = aProp.order || 0;
+      const bOrder = bProp.order || 0;
+      return bOrder - aOrder;
     });
     return answer;
   }

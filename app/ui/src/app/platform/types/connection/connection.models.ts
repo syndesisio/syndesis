@@ -1,4 +1,4 @@
-import { BaseEntity, User, Action } from '@syndesis/ui/platform';
+import { BaseEntity, User, Action, StringMap, ConfigurationProperty } from '@syndesis/ui/platform';
 
 // these are related to oauth enabled connections
 export interface AcquisitionMethod extends BaseEntity {
@@ -26,10 +26,10 @@ export type Results = Array<Result>;
 
 export interface Connector extends BaseEntity {
   icon: string;
-  properties: {};
+  properties: StringMap<ConfigurationProperty>;
   actions: Array<Action>;
   connectorGroupId: string;
-  configuredProperties: {};
+  configuredProperties: StringMap<string>;
   description: string;
   connectorGroup: BaseEntity;
   tags: Array<string>;
@@ -45,7 +45,7 @@ export type Organizations = Array<Organization>;
 export interface Connection extends BaseEntity {
   icon: string;
   organization: Organization;
-  configuredProperties: {};
+  configuredProperties: StringMap<string>;
   organizationId: string;
   connectorId: string;
   options: {};

@@ -1,36 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
-import { BaseEntity } from '@syndesis/ui/platform';
-
-export interface ConfigurationProperty extends BaseEntity {
-  javaType: string;
-  type: string;
-  defaultValue: string;
-  displayName: string;
-  description: string;
-  group: string;
-  required: boolean;
-  secret: boolean;
-  label: string;
-  enum: Array<PropertyValue>;
-  componentProperty: boolean;
-  deprecated: boolean;
-  tags: Array<string>;
-}
-export type ConfigurationProperties = Array<ConfigurationProperty>;
-
-export interface PropertyValue extends BaseEntity {
-  value: string;
-  label: string;
-}
-
-export type PropertyValues = Array<PropertyValue>;
-
-export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
-  value: any;
-  rows?: number;
-  cols?: number;
-}
+import { ConfigurationProperty, ConfiguredConfigurationProperty, StringMap } from '@syndesis/ui/platform';
 
 @Injectable()
 export abstract class FormFactoryService {
@@ -42,9 +12,9 @@ export abstract class FormFactoryService {
    */
   abstract createFormModel(
     properties?:
-      | Map<string, ConfiguredConfigurationProperty>
-      | Map<string, ConfigurationProperty>
-      | Map<string, any>
+      | StringMap<ConfiguredConfigurationProperty>
+      | StringMap<ConfigurationProperty>
+      | StringMap<any>
       | any,
     values?: any,
     controls?: Array<string>

@@ -91,10 +91,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
         target.push('connection-basics');
         break;
       case 'review':
-        if (
-          !this.current.connection.connector.properties ||
-          this.current.connection.connector.properties === ''
-        ) {
+        if (!this.current.connection.connector.properties) {
           target.push('connection-basics');
         } else {
           target.push('configure-fields');
@@ -116,10 +113,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
     const target = [];
     switch (page) {
       case 'connection-basics':
-        if (
-          !this.current.connection.connector.properties ||
-          this.current.connection.connector.properties === ''
-        ) {
+        if (!this.current.connection.connector.properties) {
           target.push('review');
         } else {
           target.push('configure-fields');
