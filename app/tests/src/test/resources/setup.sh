@@ -20,7 +20,7 @@ if [ -z "${DEMO_DATA_ENABLED}" ]; then
     DEMO_DATA_ENABLED=false
 fi
 
-SYNDESIS_TEMPLATE_TYPE="syndesis-restricted"
+SYNDESIS_TEMPLATE_TYPE="syndesis"
 SYNDESIS_TEMPLATE_URL="${WORKSPACE}/deploy/${SYNDESIS_TEMPLATE_TYPE}.yml"
 SYNDESIS_OAUTHCLIENT_URL="${WORKSPACE}/deploy/support/serviceaccount-as-oauthclient-restricted.yml"
 
