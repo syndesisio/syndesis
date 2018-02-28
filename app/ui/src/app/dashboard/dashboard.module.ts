@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { ChartModule } from 'patternfly-ng';
 
 import { VendorModule } from '@syndesis/ui/vendor';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
@@ -24,7 +24,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SyndesisCommonModule,
     VendorModule,
-    ChartsModule,
+    ChartModule,
     IntegrationListModule,
   ],
   declarations: [

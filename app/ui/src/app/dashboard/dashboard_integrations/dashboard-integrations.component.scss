@@ -46,38 +46,6 @@
     .integration-board {
       .card-pf-body {
         overflow: auto;
-
-        .chart {
-          flex-grow: 1;
-          display: flex;
-          justify-content: center;
-          flex-direction: column;
-          position: relative;
-          max-width: 180px;
-
-          canvas {
-            width: 80% !important;
-            height: 80% !important;
-            z-index: 50;
-          }
-
-          .total-count {
-            top: 20px;
-            position: absolute;
-            width: 62%;
-            text-align: center;
-
-            .number {
-              font-size: 22px;
-            }
-
-            @media (max-width: 1020px) {
-              .text {
-                display: none;
-              }
-            }
-          }
-        }
       }
 
       .legend {
