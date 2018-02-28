@@ -15,11 +15,10 @@ import { CoreModule } from '@syndesis/ui/core';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { FlowViewComponent } from './flow-view.component';
 import { FlowViewStepComponent } from './flow-view-step.component';
-import { IntegrationStore } from '../../../store/integration/integration.store';
+import { EventsService, IntegrationStore, StepStore } from '@syndesis/ui/store';
 import { IntegrationService } from '../../../store/integration/integration.service';
 import { SyndesisCommonModule } from '../../../common/common.module';
 import { ConnectionsModule } from '../../../connections/connections.module';
-import { EventsService } from '../../../store/entity/events.service';
 import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 describe('FlowViewComponent', () => {
@@ -64,7 +63,8 @@ describe('FlowViewComponent', () => {
           FlowPageService,
           IntegrationStore,
           IntegrationService,
-          EventsService
+          EventsService,
+          StepStore
         ]
       }).compileComponents();
     })

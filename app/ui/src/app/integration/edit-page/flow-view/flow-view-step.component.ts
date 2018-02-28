@@ -306,6 +306,21 @@ export class FlowViewStepComponent implements OnChanges {
     return this.getPosition() !== this.currentPosition;
   }
 
+  addDataMapper() {
+    const position = this.getPosition();
+    this.currentFlowService.events.emit({
+      kind: 'integration-insert-datamapper',
+      position: position,
+      onSave: () => {
+        setTimeout(() => {
+          this.router.navigate(['step-configure', position], {
+            relativeTo: this.route
+          });
+        }, 10);
+      }
+    });
+  }
+
   ngOnChanges() {
     this.stepIndex = this.getStepIndex();
     this.stepName = this.getStepName(this.step);

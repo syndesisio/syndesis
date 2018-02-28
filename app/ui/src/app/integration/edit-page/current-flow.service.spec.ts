@@ -18,7 +18,7 @@ import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { ApiModule } from '@syndesis/ui/api';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { TypeFactory } from '@syndesis/ui/model';
-import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
+import { EventsService, IntegrationStore, IntegrationService, StepStore } from '@syndesis/ui/store';
 import { CurrentFlowService, FlowEvent } from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
 
@@ -38,6 +38,7 @@ describe('CurrentFlow', () => {
         IntegrationService,
         EventsService,
         ConfigService,
+        StepStore,
         MockBackend,
         { provide: RequestOptions, useClass: BaseRequestOptions },
         {

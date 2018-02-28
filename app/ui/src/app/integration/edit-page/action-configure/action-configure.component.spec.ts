@@ -42,7 +42,7 @@ import {
 } from '@ng-dynamic-forms/core';
 import { ApiModule } from '@syndesis/ui/api';
 import { ConfigService } from '@syndesis/ui/config.service';
-import { EventsService, IntegrationStore, IntegrationService } from '@syndesis/ui/store';
+import { EventsService, IntegrationStore, IntegrationService, StepStore } from '@syndesis/ui/store';
 import { RestangularModule } from 'ngx-restangular';
 
 describe('IntegrationConfigureActionComponent', () => {
@@ -69,7 +69,8 @@ describe('IntegrationConfigureActionComponent', () => {
                     CurrentFlowService,
                     IntegrationStore,
                     IntegrationService,
-                    EventsService
+                    EventsService,
+                    StepStore
                 ],
                 schemas: [CUSTOM_ELEMENTS_SCHEMA]
             }).compileComponents();

@@ -22,7 +22,8 @@ import { IntegrationStore,
   ENDPOINT,
   DATA_MAPPER,
   EXTENSION,
-  BASIC_FILTER } from '@syndesis/ui/store';
+  BASIC_FILTER,
+  StepStore } from '@syndesis/ui/store';
 import { FlowEvent } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('CurrentFlow');
@@ -37,6 +38,7 @@ export class CurrentFlowService {
 
   constructor(
     private integrationStore: IntegrationStore,
+    private stepStore: StepStore,
     private integrationSupportService: IntegrationSupportService
   ) {
     this.subscription = this.events.subscribe((event: FlowEvent) =>
@@ -377,6 +379,12 @@ export class CurrentFlowService {
         this.maybeDoAction(event['onSave']);
         break;
       }
+      case 'integration-insert-datamapper': {
+        const position = +event['position'];
+        this.insertStepBefore(position, DATA_MAPPER);
+        this.maybeDoAction(event['onSave']);
+        break;
+      }
       case 'integration-insert-connection': {
         const position = +event['position'];
         this.insertConnectionAfter(position);
@@ -629,10 +637,16 @@ export class CurrentFlowService {
     }
   }
 
-  private insertStepAfter(position: number) {
+  private insertStepBefore(position: number, stepKind?: string) {
+    const stepConfig = this.stepStore.getDefaultStepDefinition(stepKind);
+    const step = { ...createStep(), ...stepConfig };
+    this.steps.splice(position, 0, step);
+  }
+
+  private insertStepAfter(position: number, stepKind?: string) {
     const target = position + 1;
-    const step = createStep();
-    step.stepKind = undefined;
+    const stepConfig = this.stepStore.getDefaultStepDefinition(stepKind);
+    const step = { ...createStep(), ...stepConfig };
     this.steps.splice(target, 0, step);
   }
 

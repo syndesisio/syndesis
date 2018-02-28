@@ -257,7 +257,19 @@ export class StepStore {
     return step.stepKind === BASIC_FILTER || step.stepKind === DATA_MAPPER;
   }
 
+  getDefaultStepDefinition(stepKind: String): Step {
+    if (!stepKind) {
+      return undefined;
+    }
+    // pull out attributes that aren't in the backend model
+    const { description, visible, ...step } = this.getStepConfig(stepKind);
+    return step;
+  }
+
   private getStepConfig(stepKind: String) {
+    if (!stepKind) {
+      return undefined;
+    }
     return this.steps.find(step => step.stepKind === stepKind);
   }
 
