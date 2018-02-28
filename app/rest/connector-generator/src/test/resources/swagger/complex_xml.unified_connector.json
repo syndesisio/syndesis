@@ -1,0 +1,115 @@
+{
+  "connectorGroup": {
+    "id": "swagger-connector-template"
+  },
+  "connectorGroupId": "swagger-connector-template",
+  "name": "Complex XML",
+  "description": "unspecified",
+  "actions": [
+    {
+      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:complexOperation",
+      "name": "POST /complex/{pathParam}",
+      "description": "Send POST request to /complex/{pathParam}",
+      "descriptor": {
+        "connectorId": "_id_",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "inputDataShape": {
+          "name": "Request",
+          "description": "API request payload",
+          "kind": "xml-schema",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/request\" elementFormDefault=\"qualified\"><xsd:element name=\"request\"><xsd:complexType><xsd:sequence><xsd:element xmlns:p=\"http://syndesis.io/v1/swagger-connector-template/parameters\" ref=\"p:parameters\"></xsd:element><xsd:element name=\"body\"><xsd:complexType><xsd:sequence><xsd:element xmlns:b=\"http://example.com/Complex\" ref=\"b:complex\"></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><d:AdditionalSchemas><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/parameters\"><xsd:element name=\"parameters\"><xsd:complexType><xsd:sequence><xsd:element name=\"pathParam\" type=\"xsd:string\"/><xsd:element name=\"queryParam\" type=\"xsd:integer\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><xsd:schema targetNamespace=\"http://example.com/Complex\"><xsd:element name=\"complex\"><xsd:complexType><xsd:sequence><xsd:element name=\"date\" type=\"xsd:string\"/><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"children\"><xsd:complexType><xsd:sequence><xsd:element xmlns:p0=\"http://example.com/Child\" ref=\"p0:child\" maxOccurs=\"unbounded\" minOccurs=\"0\"></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"complete\" type=\"xsd:boolean\"/></xsd:sequence><xsd:attribute name=\"id\" type=\"xsd:integer\"/></xsd:complexType></xsd:element></xsd:schema><xsd:schema targetNamespace=\"http://example.com/Child\"><xsd:element name=\"child\"><xsd:complexType><xsd:sequence><xsd:element name=\"description\" type=\"xsd:string\"/></xsd:sequence><xsd:attribute name=\"name\" type=\"xsd:string\"/></xsd:complexType></xsd:element></xsd:schema></d:AdditionalSchemas></d:SchemaSet>"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {
+          "operationId": "complexOperation"
+        }
+      },
+      "actionType": "connector",
+      "dependencies": [
+        {
+          "type": "MAVEN",
+          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+        }
+      ],
+      "pattern": "To"
+    }
+  ],
+  "properties": {
+    "authenticationType": {
+      "kind": "property",
+      "displayName": "Authentication Type",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "authentication-type"
+      ],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "defaultValue": "none",
+      "enum": [
+        {
+          "value": "none",
+          "label": "No Security"
+        }
+      ],
+      "description": "Type of authentication used to connect to the API"
+    },
+    "host": {
+      "componentProperty": true,
+      "defaultValue": "http://example.com",
+      "deprecated": false,
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration.",
+      "displayName": "Host",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "basePath": {
+      "componentProperty": true,
+      "defaultValue": "/api",
+      "deprecated": false,
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification.",
+      "displayName": "Base path",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "specification": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Swagger specification of the service",
+      "displayName": "Specification",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": false,
+      "secret": false,
+      "type": "hidden",
+      "tags": [
+        "upload",
+        "url"
+      ]
+    }
+  },
+  "configuredProperties": {
+    "specification": "{ \"basePath\" : \"/api\", \"definitions\" : { \"Child\" : { \"properties\" : { \"description\" : { \"type\" : \"string\" }, \"name\" : { \"minLength\" : 1, \"type\" : \"string\", \"xml\" : { \"attribute\" : true } } }, \"type\" : \"object\", \"xml\" : { \"name\" : \"child\", \"namespace\" : \"http://example.com/Child\" } }, \"Complex\" : { \"properties\" : { \"children\" : {\"items\" : {\"$ref\" : \"#/definitions/Child\"},\"type\" : \"array\",\"xml\" : {\"wrapped\" : true}}, \"complete\" : { \"default\" : false, \"type\" : \"boolean\" }, \"date\" : { \"format\" : \"date-time\", \"type\" : \"string\", \"xml\" : { \"name\" : \"date-time\" } }, \"id\" : { \"minimum\" : 0, \"type\" : \"integer\", \"xml\" : { \"attribute\" : true } }, \"status\" : { \"default\" : \"value2\", \"enum\" : [ \"value1\", \"value2\", \"value3\" ], \"type\" : \"string\" } }, \"type\" : \"object\", \"xml\" : { \"name\" : \"complex\", \"namespace\" : \"http://example.com/Complex\" } } }, \"host\" : \"example.com\", \"info\" : { \"title\" : \"Complex XML\", \"version\" : \"1.0\" }, \"paths\" : { \"/complex/{pathParam}\" : { \"post\" : { \"consumes\" : [ \"application/xml\" ], \"operationId\" : \"complexOperation\", \"parameters\" : [ { \"in\" : \"path\", \"name\" : \"pathParam\", \"required\" : true, \"type\" : \"string\" }, { \"in\" : \"query\", \"name\" : \"queryParam\", \"required\" : false, \"type\" : \"integer\" }, { \"in\" : \"body\", \"name\" : \"body\", \"required\" : true, \"schema\" : { \"$ref\" : \"#/definitions/Complex\" } } ], \"produces\" : [ \"application/xml\" ], \"responses\" : { \"default\" : { \"description\" : \"OK\" } } } } }, \"schemes\" : [ \"http\" ], \"swagger\" : \"2.0\"}",
+    "host": "http://example.com",
+    "basePath": "/api"
+  }
+}

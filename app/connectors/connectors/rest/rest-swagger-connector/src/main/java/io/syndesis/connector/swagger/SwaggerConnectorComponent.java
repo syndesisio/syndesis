@@ -15,16 +15,6 @@
  */
 package io.syndesis.connector.swagger;
 
-import org.apache.camel.Endpoint;
-import org.apache.camel.Processor;
-import org.apache.camel.component.connector.DefaultConnectorComponent;
-import org.apache.camel.component.connector.DefaultConnectorEndpoint;
-import org.apache.camel.component.rest.swagger.RestSwaggerEndpoint;
-import org.apache.camel.processor.Pipeline;
-import org.apache.camel.util.IntrospectionSupport;
-import org.apache.camel.util.IntrospectionSupport.ClassInfo;
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -40,6 +30,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.camel.Endpoint;
+import org.apache.camel.Processor;
+import org.apache.camel.component.connector.DefaultConnectorComponent;
+import org.apache.camel.component.connector.DefaultConnectorEndpoint;
+import org.apache.camel.component.rest.swagger.RestSwaggerEndpoint;
+import org.apache.camel.processor.Pipeline;
+import org.apache.camel.util.IntrospectionSupport;
+import org.apache.camel.util.IntrospectionSupport.ClassInfo;
+import org.apache.commons.io.IOUtils;
 
 public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
 

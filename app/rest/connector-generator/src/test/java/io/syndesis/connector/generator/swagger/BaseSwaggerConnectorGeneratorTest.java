@@ -39,7 +39,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
     private final BaseSwaggerConnectorGenerator generator = new BaseSwaggerConnectorGenerator() {
         @Override
-        ConnectorDescriptor.Builder createDescriptor(final String specification, final Operation operation) {
+        ConnectorDescriptor.Builder createDescriptor(final String specification, final Swagger swagger, final Operation operation) {
             return new ConnectorDescriptor.Builder();
         }
     };

@@ -63,7 +63,7 @@
     <spring.version>4.3.12.RELEASE</spring.version>
     <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
 
-    <swagger.version>1.5.16</swagger.version>
+    <swagger.version>1.5.19-SNAPSHOT</swagger.version>
 
     <activemq.version>5.15.2</activemq.version>
 
@@ -95,7 +95,7 @@
     <maven-shared-utils.version>3.1.0</maven-shared-utils.version>
 
     <!-- Common dependencies -->
-    <assertj-core.version>3.6.2</assertj-core.version>
+    <assertj-core.version>3.9.1</assertj-core.version>
     <shrinkwrap.version>2.2.6</shrinkwrap.version>
 
     <mailapi.version>1.4.3</mailapi.version>
@@ -631,7 +631,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
              <!-- Fix "There was a timeout or other error in the fork" errors -->
-             <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
+            <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
           </configuration>
         </plugin>
       </plugins>
@@ -1047,6 +1047,13 @@
         <version>${json-patch.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj-core.version}</version>
+        <scope>test</scope>
+      </dependency>
+
       <!-- ========================================== -->
 
       <!-- === Atlasmap -->
@@ -1186,6 +1193,24 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
   </distributionManagement>
+
+  <repositories>
+    <repository>
+      <!--
+           we need a SNAPSHOT version of io.swagger:* artefacts, remove
+           this when 1.5.19 is released
+           see https://github.com/swagger-api/swagger-core/issues/2316
+      -->
+      <id>oss-sonatype-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
 
   <issueManagement>
     <system>github</system>

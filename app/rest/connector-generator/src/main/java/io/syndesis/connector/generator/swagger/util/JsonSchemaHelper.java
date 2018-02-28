@@ -85,7 +85,7 @@ public final class JsonSchemaHelper {
         return serializeJson(schemaNode);
     }
 
-    public static String serializeJson(final ObjectNode schemaNode) {
+    public static String serializeJson(final JsonNode schemaNode) {
         try {
             return Json.writer().writeValueAsString(schemaNode);
         } catch (final JsonProcessingException e) {

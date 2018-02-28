@@ -15,17 +15,38 @@
  */
 package io.syndesis.connector.generator.swagger;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.xml.crypto.NodeSetData;
+import javax.xml.crypto.OctetStreamData;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.TransformException;
+import javax.xml.crypto.dsig.TransformService;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import io.syndesis.connector.generator.ConnectorGenerator;
 import io.syndesis.core.Json;
 import io.syndesis.model.DataShape;
+import io.syndesis.model.DataShapeKinds;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.connection.ConnectorSettings;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import static io.syndesis.connector.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.connector.generator.swagger.TestHelper.resource;
@@ -34,13 +55,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorTest {
 
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+
     private final Connector expected;
 
     private final String specification;
 
     public BaseSwaggerGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
         specification = resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
-        expected = Json.reader().forType(Connector.class).readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));
+        expected = Json.reader().forType(Connector.class)
+            .readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));
     }
 
     @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
@@ -90,23 +114,71 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
                     .as("Generated and expected input data shape for action with id: " + actionId + " differs")
                     .isEqualToIgnoringGivenFields(expectedInputDataShape, "specification");
 
-                assertThat(reformatJson(generatedInputDataShape.getSpecification()))
-                    .as("Input data shape specification for action with id: " + actionId + " differ")
-                    .isEqualTo(reformatJson(expectedInputDataShape.getSpecification()));
+                if (generatedInputDataShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
+                    assertThat(reformatJson(generatedInputDataShape.getSpecification()))
+                        .as("Input data shape specification for action with id: " + actionId + " differ")
+                        .isEqualTo(reformatJson(expectedInputDataShape.getSpecification()));
+                } else {
+                    assertThat(c14Xml(generatedInputDataShape.getSpecification()))
+                        .as("Input data shape specification for action with id: " + actionId + " differ")
+                        .isEqualTo(c14Xml(expectedInputDataShape.getSpecification()));
+                }
             }
 
             if (expectedAction.getDescriptor().getOutputDataShape().isPresent()) {
                 final DataShape generatedOutputDataShape = generatedAction.getDescriptor().getOutputDataShape().get();
                 final DataShape expectedOutputDataShape = expectedAction.getDescriptor().getOutputDataShape().get();
-                assertThat(generatedOutputDataShape).isEqualToIgnoringGivenFields(expectedOutputDataShape, "specification");
+                assertThat(generatedOutputDataShape)
+                    .as("Generated and expected output data shape for action with id: " + actionId + " differs")
+                    .isEqualToIgnoringGivenFields(expectedOutputDataShape, "specification");
 
-                assertThat(reformatJson(generatedOutputDataShape.getSpecification()))
-                    .isEqualTo(reformatJson(expectedOutputDataShape.getSpecification()));
+                if (generatedOutputDataShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
+                    assertThat(reformatJson(generatedOutputDataShape.getSpecification()))
+                        .as("Output data shape specification for action with id: " + actionId + " differ")
+                        .isEqualTo(reformatJson(expectedOutputDataShape.getSpecification()));
+                } else {
+                    assertThat(c14Xml(generatedOutputDataShape.getSpecification()))
+                        .as("Output data shape specification for action with id: " + actionId + " differ")
+                        .isEqualTo(c14Xml(expectedOutputDataShape.getSpecification()));
+                }
             }
         }
     }
 
     abstract ConnectorGenerator generator();
+
+    private static String c14Xml(final String xml) {
+        if (xml == null) {
+            return null;
+        }
+
+        try {
+            final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+            final Document document = documentBuilder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+
+            final TransformService transformation = TransformService.getInstance(CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS, "DOM");
+
+            transformation.init(null);
+
+            final NodeList allElements = document.getElementsByTagName("*");
+            final List<Node> elements = new ArrayList<>();
+            for (int i = 0; i < allElements.getLength(); i++) {
+                elements.add(allElements.item(i));
+            }
+
+            final OctetStreamData data = (OctetStreamData) transformation.transform((NodeSetData) elements::iterator, null);
+
+            try (final InputStream stream = data.getOctetStream()) {
+
+                final byte[] buffy = new byte[stream.available()];
+                stream.read(buffy);
+
+                return new String(buffy, StandardCharsets.UTF_8);
+            }
+        } catch (GeneralSecurityException | TransformException | SAXException | IOException | ParserConfigurationException e) {
+            throw new AssertionError(e);
+        }
+    }
 
     private static Map<String, String> without(final Map<String, String> map, final String key) {
         final Map<String, String> ret = new HashMap<>(map);

@@ -43,6 +43,11 @@
 
     <dependency>
       <groupId>io.swagger</groupId>
+      <artifactId>swagger-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.swagger</groupId>
       <artifactId>swagger-parser</artifactId>
     </dependency>
 
@@ -92,6 +97,11 @@
     </dependency>
 
     <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
     </dependency>
@@ -119,6 +129,17 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -172,6 +193,12 @@
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.xmlunit</groupId>
+      <artifactId>xmlunit-core</artifactId>
       <scope>test</scope>
     </dependency>
 

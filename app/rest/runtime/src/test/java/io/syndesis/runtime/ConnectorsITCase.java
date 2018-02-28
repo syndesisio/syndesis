@@ -110,8 +110,8 @@ public class ConnectorsITCase extends BaseITCase {
                 try {
                     reader.setInput(iis);
                     final Dimension dimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-                    assertThat(dimensions.getHeight()).isEqualTo(106d).as("Wrong image height");
-                    assertThat(dimensions.getWidth()).isEqualTo(106d).as("Wrong image width");
+                    assertThat(dimensions.getHeight()).as("Wrong image height").isEqualTo(106d);
+                    assertThat(dimensions.getWidth()).as("Wrong image width").isEqualTo(106d);
                 } finally {
                     reader.dispose();
                 }
@@ -175,8 +175,8 @@ public class ConnectorsITCase extends BaseITCase {
                 try {
                     reader.setInput(iis);
                     final Dimension dimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-                    assertThat(dimensions.getHeight()).isEqualTo(106d).as("Wrong image height");
-                    assertThat(dimensions.getWidth()).isEqualTo(106d).as("Wrong image width");
+                    assertThat(dimensions.getHeight()).as("Wrong image height").isEqualTo(106d);
+                    assertThat(dimensions.getWidth()).as("Wrong image width").isEqualTo(106d);
                 } finally {
                     reader.dispose();
                 }

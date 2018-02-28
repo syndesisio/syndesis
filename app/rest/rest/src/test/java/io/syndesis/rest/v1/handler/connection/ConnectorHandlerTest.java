@@ -98,9 +98,9 @@ public class ConnectorHandlerTest {
 
             final Response response = handler.getConnectorIcon("connector-id").get();
 
-            assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK).as("Wrong status code");
-            assertThat(response.getHeaderString(CONTENT_TYPE)).isEqualTo("image/png").as("Wrong content type");
-            assertThat(response.getHeaderString(CONTENT_LENGTH)).isEqualTo("2018").as("Wrong content length");
+            assertThat(response.getStatusInfo()).as("Wrong status code").isEqualTo(Response.Status.OK);
+            assertThat(response.getHeaderString(CONTENT_TYPE)).as("Wrong content type").isEqualTo("image/png");
+            assertThat(response.getHeaderString(CONTENT_LENGTH)).as("Wrong content length").isEqualTo("2018");
 
             final StreamingOutput so = (StreamingOutput) response.getEntity();
             final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -114,8 +114,8 @@ public class ConnectorHandlerTest {
                     try {
                         reader.setInput(iis);
                         final Dimension dimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-                        assertThat(dimensions.getHeight()).isEqualTo(106d).as("Wrong image height");
-                        assertThat(dimensions.getWidth()).isEqualTo(106d).as("Wrong image width");
+                        assertThat(dimensions.getHeight()).as("Wrong image height").isEqualTo(106d);
+                        assertThat(dimensions.getWidth()).as("Wrong image width").isEqualTo(106d);
                     } finally {
                         reader.dispose();
                     }
