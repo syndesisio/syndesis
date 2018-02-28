@@ -208,7 +208,7 @@
                 "javaType": "java.lang.String",
                 "tags": [],
                 "deprecated": false,
-                "secret": true,
+                "secret": false,
                 "componentProperty": true,
                 "description": "Name of the stored procedure."
               },
