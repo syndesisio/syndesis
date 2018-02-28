@@ -18,6 +18,8 @@ const category = getCategory('IntegrationsCreatePage');
   styleUrls: ['./flow-view-step.component.scss']
 })
 export class FlowViewStepComponent implements OnChanges {
+  stepIndex: number;
+  stepName: string;
   // the step object in the current flow
   @Input() step: Step;
 
@@ -30,7 +32,8 @@ export class FlowViewStepComponent implements OnChanges {
   // the current state/page of the current step
   @Input() currentState: string;
 
-  @ViewChild('pop') public pop: PopoverDirective;
+  @ViewChild('connectionInfoPop') connectionInfoPop: PopoverDirective;
+  @ViewChild('datamapperInfoPop') datamapperInfoPop: PopoverDirective;
 
   inputDataShapeText: string;
   outputDataShapeText: string;
@@ -51,14 +54,24 @@ export class FlowViewStepComponent implements OnChanges {
     return this.flowPageService.getCurrentStepKind(this.route);
   }
 
-  showTooltip() {
-    // TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700
-    // for now showing everything as a tooltip
-    this.pop.show();
+  showInfoPopover() {
+    this.connectionInfoPop.show();
   }
 
-  hideTooltip() {
-    this.pop.hide();
+  hideInfoPopover() {
+    this.connectionInfoPop.hide();
+  }
+
+  toggleInfoPopover() {
+    this.connectionInfoPop.toggle();
+  }
+
+  toggleAddDatamapperInfo() {
+    this.datamapperInfoPop.toggle();
+  }
+
+  hideAddDatamapperInfo() {
+    this.datamapperInfoPop.hide();
   }
 
   getStepKind(step) {
@@ -275,39 +288,13 @@ export class FlowViewStepComponent implements OnChanges {
     });
   }
 
-  getStepText() {
-    if (!this.step) {
-      return 'Set up this step';
-    }
-    const prefix = 'Step ' + (this.getPosition() + 1) + ' - ';
-    switch (this.step.stepKind) {
-      case 'endpoint':
-        if (this.step.action && this.step.action.name) {
-          return prefix + this.step.action.name;
-        }
-        if (this.step.connection) {
-          return prefix + this.step.connection.name;
-        }
-        if (this.getPosition() === 0) {
-          return prefix + 'Start';
-        }
-        if (this.getPosition() === this.currentFlowService.getLastPosition()) {
-          return prefix + 'Finish';
-        }
-        return 'Set up this connection';
-      default:
-        if (this.step.name) {
-          return prefix + this.step.name;
-        }
-        return 'Set up this step';
-    }
-  }
-
   isCollapsed() {
     return this.getPosition() !== this.currentPosition;
   }
 
   ngOnChanges() {
+    this.stepIndex = this.getStepIndex();
+    this.stepName = this.getStepName(this.step);
     this.previousStepShouldDefineDataShape = false;
     this.shouldAddDatamapper = false;
     if (!this.step || !this.step.action || !this.step.action.descriptor) {
@@ -332,6 +319,37 @@ export class FlowViewStepComponent implements OnChanges {
     if (this.step !== this.currentFlowService.getEndStep()
       && this.step.action.descriptor.outputDataShape) {
       this.outputDataShapeText = this.getDataShapeText(this.step.action.descriptor.outputDataShape);
+    }
+  }
+
+  private getStepIndex() {
+    return this.getPosition() + 1;
+  }
+
+  private getStepName(step: Step) {
+    if (!step) {
+      return 'Set up this step';
+    }
+    switch (step.stepKind) {
+      case 'endpoint':
+        if (step.action && step.action.name) {
+          return step.action.name;
+        }
+        if (step.connection) {
+          return step.connection.name;
+        }
+        if (this.getPosition() === 0) {
+          return 'Start';
+        }
+        if (this.getPosition() === this.currentFlowService.getLastPosition()) {
+          return 'Finish';
+        }
+        return 'Set up this connection';
+      default:
+        if (step.name) {
+          return step.name;
+        }
+        return 'Set up this step';
     }
   }
 
