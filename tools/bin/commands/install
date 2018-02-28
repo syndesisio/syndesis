@@ -8,18 +8,18 @@ install::usage() {
     cat <<EOT
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
-    --route                   Route to use (mandatory host name)
+    --route                   Route to use. If not given, the route is trying to be detected from the currently
+                              connected cluster.
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
                               Syndesis images are picked up properly (implies --watch)
 -w  --watch                   Wait until cluster is up
--i  --image-mode <mode>       Which templates to install: "docker" for plain images,
-                              "openshift" for image streams (default: "openshift")
-    --docker                  Shortcut for "--image-mode docker"
     --local                   install from local Git repo when using. By default the resource descriptor is
                               downloaded from GitHub remotely.
 -o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
+-y  --yes                     Asume 'yes' automaticlaly when asking for deleting
+                              a given project.
 EOT
 }
 
@@ -47,13 +47,13 @@ install::run() {
     create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
     # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$(select_template)" "$(readopt --tag)" "$(hasflag --local)"
+    create_and_apply_template "$route" "$(select_template $(hasflag --dev))" "$(readopt --tag)" "$(hasflag --local)"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_syndesis_to_be_ready
     fi
 
-    if [ $(hasflag --dev) ] && [ $(is_docker_mode) = "false" ]; then
+    if [ $(hasflag --dev) ]; then
         patch_imagestreams_for_initial_image
     fi
 

@@ -1,17 +1,3 @@
-{{^Restricted}}
-- apiVersion: v1
-  kind: OAuthClient
-  metadata:
-    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
-    labels:
-      app: syndesis
-      component: syndesis-ui
-  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
-  redirectURIs:
-  - https://${ROUTE_HOSTNAME}/
-  grantMethod: prompt
-{{/Restricted}}
-
 - apiVersion: v1
   kind: RoleBinding
   metadata:

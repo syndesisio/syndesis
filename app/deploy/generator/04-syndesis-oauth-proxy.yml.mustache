@@ -65,7 +65,7 @@
           image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
           args:
             - --provider=openshift
-            - --client-id={{#Restricted}}system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client{{/Restricted}}{{^Restricted}}${OPENSHIFT_OAUTH_CLIENT_ID}{{/Restricted}}
+            - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
             - --upstream=http://syndesis-rest/api/
             - --upstream=http://syndesis-rest/mapper/
@@ -81,10 +81,8 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-{{#Restricted}}
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin
-{{/Restricted}}
           env:
           - name: OAUTH_COOKIE_SECRET
             valueFrom:
@@ -95,7 +93,6 @@
           - containerPort: 8443
             name: public
             protocol: TCP
-{{^Probeless}}
           readinessProbe:
             httpGet:
               port: 8443
@@ -110,7 +107,6 @@
               scheme: HTTPS
             initialDelaySeconds: 15
             timeoutSeconds: 10
-{{/Probeless}}
           volumeMounts:
           - mountPath: /etc/tls/private
             name: syndesis-oauthproxy-tls
@@ -119,9 +115,7 @@
               memory: 200Mi
             requests:
               memory: 20Mi
-{{#Restricted}}
         serviceAccountName: syndesis-oauth-client
-{{/Restricted}}
         volumes:
         - name: syndesis-oauthproxy-tls
           secret:

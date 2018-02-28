@@ -7,11 +7,9 @@ metadata:
 #
 # Allow localhost refs: {{AllowLocalHost}}
 # Use docker images: {{WithDockerImages}}
-# Without Probes: {{Probeless}}
 # Atlasmap Tag: {{Tags.Atlasmap}}
 # Syndesis Tag: {{Tags.Syndesis}}
 # Prometheus Tag: {{Tags.Prometheus}}
-# Restricted environment: {{Restricted}}
 #
   labels:
     app: syndesis
@@ -24,27 +22,16 @@ parameters:
 - name: OPENSHIFT_MASTER
   description: Public OpenShift master address
   value: https://localhost:8443
-  required: true{{#Restricted}}
-
+  required: true
 - name: OPENSHIFT_PROJECT
   description: The name of the OpenShift project Syndesis is being deployed into.
   displayName: OpenShift project to deploy into
-  required: true{{/Restricted}}{{^Restricted}}
-
-- name: OPENSHIFT_OAUTH_CLIENT_ID
-  description: OpenShift OAuth client ID
-  value: syndesis
-  required: true{{/Restricted}}
+  required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   generate: expression
   from: "[a-zA-Z0-9]{64}"
-  required: true{{^Restricted}}
-
-- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
-  description: OpenShift OAuth default scopes
-  value: "user:full"
-  required: true{{/Restricted}}
+  required: true
 - description: Maximum amount of memory the PostgreSQL container can use.
   displayName: Memory Limit
   name: POSTGRESQL_MEMORY_LIMIT

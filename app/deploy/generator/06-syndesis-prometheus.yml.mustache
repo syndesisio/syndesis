@@ -124,7 +124,6 @@
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
             - '--storage.tsdb.retention=1h'
-{{^Probeless}}
           livenessProbe:
             httpGet:
               port: 9090
@@ -132,7 +131,7 @@
           - containerPort: 9090
           readinessProbe:
             httpGet:
-              port: 9090{{/Probeless}}
+              port: 9090
           # DB QoS class is "Guaranteed" (requests == limits)
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:

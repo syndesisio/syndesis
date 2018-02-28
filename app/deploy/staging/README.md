@@ -7,13 +7,13 @@ Here are the instructions how to re-create our staging enviroment, including re-
 oc new-project syndesis-staging
 
 # Create new SA as OAuthClient
-oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/support/serviceaccount-as-oauthclient-restricted.yml
+oc create -f support/serviceaccount-as-oauthclient-restricted.yml
 
 # Create template
-oc create -f https://raw.githubusercontent.com/syndesisio/syndesis-openshift-templates/master/syndesis-restricted.yml
+oc create -f syndesis.yml
 
 # Instantiate application
-oc new-app syndesis-restricted \
+oc new-app syndesis \
     -p ROUTE_HOSTNAME=$(oc project -q).b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \

@@ -10,11 +10,9 @@ metadata:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Without Probes: false
 # Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.0.0
-# Restricted environment: false
 #
   labels:
     app: syndesis
@@ -28,18 +26,14 @@ parameters:
   description: Public OpenShift master address
   value: https://localhost:8443
   required: true
-- name: OPENSHIFT_OAUTH_CLIENT_ID
-  description: OpenShift OAuth client ID
-  value: syndesis
+- name: OPENSHIFT_PROJECT
+  description: The name of the OpenShift project Syndesis is being deployed into.
+  displayName: OpenShift project to deploy into
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   generate: expression
   from: "[a-zA-Z0-9]{64}"
-  required: true
-- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
-  description: OpenShift OAuth default scopes
-  value: "user:full"
   required: true
 - description: Maximum amount of memory the PostgreSQL container can use.
   displayName: Memory Limit
@@ -357,7 +351,7 @@ objects:
         echo "Waiting for Postgres server..."
         sleep 1
       done
-      echo "----- creating sampledb"
+      echo "***** creating sampledb"
       psql <<EOF
         CREATE DATABASE sampledb;
         CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
@@ -389,7 +383,7 @@ objects:
         $BODY$;
       EOF
 
-      echo "----- sampledb created"
+      echo "***** sampledb created"
     postStart.sh: |
       #!/bin/bash
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
@@ -585,7 +579,7 @@ objects:
           image: ' '
           args:
             - --provider=openshift
-            - --client-id=${OPENSHIFT_OAUTH_CLIENT_ID}
+            - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
             - --upstream=http://syndesis-rest/api/
             - --upstream=http://syndesis-rest/mapper/
@@ -601,7 +595,8 @@ objects:
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-
+            # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
+            # can be given by a cluster-admin
           env:
           - name: OAUTH_COOKIE_SECRET
             valueFrom:
@@ -626,7 +621,6 @@ objects:
               scheme: HTTPS
             initialDelaySeconds: 15
             timeoutSeconds: 10
-
           volumeMounts:
           - mountPath: /etc/tls/private
             name: syndesis-oauthproxy-tls
@@ -635,7 +629,7 @@ objects:
               memory: 200Mi
             requests:
               memory: 20Mi
-
+        serviceAccountName: syndesis-oauth-client
         volumes:
         - name: syndesis-oauthproxy-tls
           secret:
@@ -1102,19 +1096,6 @@ objects:
             name: todo:latest
         type: ImageChange
 - apiVersion: v1
-  kind: OAuthClient
-  metadata:
-    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
-    labels:
-      app: syndesis
-      component: syndesis-ui
-  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
-  redirectURIs:
-  - https://${ROUTE_HOSTNAME}/
-  grantMethod: prompt
-
-
-- apiVersion: v1
   kind: RoleBinding
   metadata:
     name: syndesis:editors
@@ -1187,6 +1168,8 @@ objects:
             target_label: __address__
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_annotation_(syndesis.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
             target_label: kubernetes_namespace

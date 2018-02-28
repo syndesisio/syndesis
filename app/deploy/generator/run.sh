@@ -21,13 +21,6 @@ echo "$MESSAGE" > ${targetdir}/syndesis.yml
 go run syndesis-template.go $* --name=syndesis >> ${targetdir}/syndesis.yml
 
 echo "$MESSAGE" > ${targetdir}/syndesis-dev.yml
-go run syndesis-template.go $* --name=syndesis-dev --with-docker-images --allow-localhost --debug >> ${targetdir}/syndesis-dev.yml
+go run syndesis-template.go $* --name=syndesis-dev --allow-localhost --debug >> ${targetdir}/syndesis-dev.yml
 
-echo "$MESSAGE" > ${targetdir}/syndesis-restricted.yml
-go run syndesis-template.go $* --name=syndesis-restricted --restricted >> ${targetdir}/syndesis-restricted.yml
-
-echo "$MESSAGE" > ${targetdir}/syndesis-dev-restricted.yml
-go run syndesis-template.go $* --name=syndesis-dev-restricted --restricted --with-docker-images --allow-localhost --debug >> ${targetdir}/syndesis-dev-restricted.yml
-
-echo "$MESSAGE" > ${targetdir}/syndesis-ci.yml
-go run syndesis-template.go $* --name=syndesis-ci --probeless >> ${targetdir}/syndesis-ci.yml
+# For re-enabling plain Docker images, use --with-docker-images when generating the template

@@ -1,6 +1,6 @@
 # Build Scripts for Minishift
 
-If you have a build environment based on minishift and created as described in the [Quickstart instructions](https://syndesis.io/quickstart/) with the OpenShift template `syndesis-dev-restricted`, then you can use these scripts to update your installations with the latest code available on GitHub.
+If you have a build environment based on minishift and created as described in the [Quickstart instructions](https://syndesis.io/quickstart/) with the OpenShift template `syndesis-dev`, then you can use these scripts to update your installations with the latest code available on GitHub.
 
 These scripts assume the following setup:
 

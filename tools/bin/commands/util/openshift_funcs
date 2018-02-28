@@ -63,19 +63,12 @@ recreate_project() {
     oc project "${project}"
 }
 
-is_docker_mode() {
-    if [ "$(readopt --image-mode -i)" = "docker" ] || [ $(hasflag --docker) ]; then
-        echo "true";
-    else
-        echo "false";
-    fi
-}
-
 select_template() {
-    if [ $(is_docker_mode) == "true" ]; then
-        echo "syndesis-dev-restricted"
+    local is_dev=${1:-false}
+    if [ ${is_dev} == "true" ]; then
+        echo "syndesis-dev"
     else
-        echo "syndesis-restricted"
+        echo "syndesis"
     fi
 }
 
@@ -89,18 +82,9 @@ create_oauthclient() {
         "$use_local_resource"
 }
 
-# Add system:auth-delegator to oauth proxie's service account
-# Not that you need to have system:admin access
-add_auth_delegator_role() {
-    local currentUser=$(oc whoami)
-    oc login -u system:admin
-    oc adm policy add-cluster-role-to-user system:auth-delegator -z syndesis-oauth-client
-    oc login -u $currentUser
-}
-
 create_and_apply_template() {
     local route=$1
-    local template=${2:-syndesis-restricted}
+    local template=${2:-syndesis}
     local tag=${3:-}
     local use_local_resource=${4:-}
     if [ -z "$route" ]; then
@@ -113,7 +97,13 @@ create_and_apply_template() {
         "$tag" \
         "$use_local_resource"
 
-    oc new-app $(get_template_name $template $tag) \
+    local template_name=$(get_template_name $template $tag)
+    # Use '-restricted' template for tag <= 1.2
+    if [ -n "$tag" ] && [[ $tag =~ 1\.[12] ]]; then
+        template_name="${template_name}-restricted"
+    fi
+
+    oc new-app ${template_name} \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
@@ -132,6 +122,8 @@ get_template_name() {
           return
         fi
     fi
+
+
     echo $template
 }
 
@@ -139,6 +131,17 @@ create_openshift_resource() {
     local resource=${1:-}
     local tag=${2:-}
     local use_local_resource=${3:-}
+
+
+    # Adapt to old names if tag is smaller than 1.3. Remove this when going to
+    # GA
+    if [ -n "$tag" ]; then
+        if [[ $tag =~ 1\.[12] ]] && [[ ! $resource =~ restricted ]]; then
+          local base=$(basename $resource .yml)
+          local dir=$(dirname $resource)
+          resource="$dir/${base}-restricted.yml"
+        fi
+    fi
 
     if [ -n "$use_local_resource" ]; then
         if [ -n "$tag" ]; then

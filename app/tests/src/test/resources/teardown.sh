@@ -2,11 +2,11 @@
 #   External Environment Variables
 #
 #1. KUBERNETES_NAMESPACE:                   The target namespace.
-#2. SYNDESIS_TEMPLATE_TYPE:                 The template type to use (e.g. syndesis, syndesis-restricted, syndesis-ephemeral-restricted.
+#2. SYNDESIS_TEMPLATE_TYPE:                 The template type to use (e.g. syndesis or syndesis-dev.
 
 #Configure the SYNDESIS_TEMPLATE_TYPE
 if [ -z "${SYNDESIS_TEMPLATE_TYPE}" ]; then
-    SYNDESIS_TEMPLATE_TYPE="syndesis-restricted"
+    SYNDESIS_TEMPLATE_TYPE="syndesis"
 fi
 
 echo "Remove Syndesis from ${KUBERNETES_NAMESPACE}"
