@@ -11,7 +11,8 @@ import {
 @Component({
   selector: 'syndesis-dashboard-metrics',
   templateUrl: './dashboard-metrics.component.html',
-  styleUrls: ['./dashboard-metrics.component.scss']
+  styleUrls: ['../dashboard.component.scss',
+    './dashboard-metrics.component.scss']
 })
 export class DashboardMetricsComponent implements OnInit {
   @Input() connections: Connections; // TODO: Replace by connectionState once the ngrx store supports it

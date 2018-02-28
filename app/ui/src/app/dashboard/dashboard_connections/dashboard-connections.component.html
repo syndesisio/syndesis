@@ -1,5 +1,16 @@
+<!-- Connections Header & Toolbar -->
+<div class="container-fluid">
+  <div class="row vertical-align syndesis-dashboard__header">
+      <h1 class="col-xs-6 syndesis-dashboard__title">Connections</h1>
+      <div class="col-xs-6 syndesis-dashboard__actions" *ngIf="connections?.length">
+        <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
+        <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
+      </div>
+  </div>
+</div>
+
 <syndesis-loading [loading]="loading">
-  <div class="container-cards-pf syndesis-dashboard-connections">
+  <div class="syndesis-dashboard-connections">
     <!-- Empty State -->
     <ng-container *ngIf="connections?.length === 0">
       <div class="blank-slate-pf">
@@ -14,37 +25,32 @@
 
     <!-- Not empty state -->
     <ng-container *ngIf="connections?.length > 0">
-      <div class="row row-cards-pf cards">
+      <div class="row row-cards-pf">
 
         <!-- Each Connection's Card Container -->
-
         <div class="col-xs-12 col-sm-3 col-md-2 card"
              *ngFor="let connection of connections; let i = index">
 
           <!-- Connection Card -->
-
           <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
                *ngIf="i<8"
                (click)="onSelect(connection)">
             <div class="card-pf-body">
 
               <!-- Card Icon -->
-
               <div class="card-pf-top-element">
                 <span class="card-pf-icon-large image-icon">
-                <img class="syn-icon-medium" [src]="connection | synIconPath">
-              </span>
+                  <img class="syn-icon-medium" [src]="connection | synIconPath">
+                </span>
               </div>
 
               <!-- Card Name -->
-
               <h2 class="card-pf-title text-center"
                   title="{{ connection.name }}">
                 {{ connection.name | truncate : '20' : truncateTrail }}
               </h2>
 
               <!-- Card Description / Item Overview -->
-
               <p class="card-pf-info text-center">
                 {{ connection.description | truncate : '100' : truncateTrail }}
               </p>

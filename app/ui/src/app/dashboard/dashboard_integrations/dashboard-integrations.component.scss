@@ -1,140 +1,84 @@
 @import 'syndesis-sass';
 
-.syndesis-dashboard-integrations {
-  color: #656565;
-  cursor: default;
-  margin: 15px;
+//----- Integration Board ----------------->>
+.integration-board {
+  .card-pf-body {
+    overflow: auto;
+  }
 
-  a,
-  a:visited {
-    color: $color-pf-blue-400;
-    cursor: pointer;
+  .legend {
+    padding: 0;
 
-    &.btn {
-      color: #ffffff;
+    .col-xs-12 {
+      padding: 0;
+
+      .colors {
+        height: 10px;
+        padding: 9px;
+
+        &.active {
+          background: $color-pf-blue-400;
+        }
+
+        &.draft {
+          background: $color-pf-orange-400;
+        }
+
+        &.inactive {
+          background: $color-pf-black-300;
+        }
+      }
+
+      .text {
+        padding: 0 0 0 13px;
+      }
     }
+  }
+}
+
+//----- Recent Updates ----------------->>
+.recent-updates {
+  .update {
+    border-bottom: 1px solid $color-pf-black-200;
+    cursor: pointer;
+    padding: 10px 0;
 
     &:hover {
+      background: rgba(214, 238, 250, 0.36);
+    }
+
+    a:hover {
       text-decoration: none;
     }
   }
 
-  h1 {
-    font-size: 22px;
+  .update:last-child {
+    border-bottom: none;
+  }
+}
+
+//----- Top 5 Integrations ----------------->>
+.top-integrations {
+  .card-pf-heading-details {
+    float: right;
+    font-size: 12px;
+    margin-bottom: 0;
   }
 
-  h2 {
-    font-size: 20px;
-    font-weight: 500;
-  }
+  ::ng-deep .integrations.list {
+    margin-left: -20px;
+    margin-right: -20px;
 
-  .btn {
-    margin: 10px 5px;
-    padding: 2px 20px !important;
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // SECOND ROW
-  ////////////////////////////////////////////////////////////////////////////////
-
-  .second-row {
-    margin: 10px 0;
-    padding: 0;
-
-    //----- Integration Board ----------------->>
-
-    .integration-board {
-      .card-pf-body {
-        overflow: auto;
-      }
-
-      .legend {
-        padding: 0;
-
-        .col-xs-12 {
-          padding: 0;
-
-          .colors {
-            height: 10px;
-            padding: 9px;
-
-            &.active {
-              background: $color-pf-blue-400;
-            }
-
-            &.draft {
-              background: $color-pf-orange-400;
-            }
-
-            &.inactive {
-              background: $color-pf-black-300;
-            }
-          }
-
-          .text {
-            padding: 0 0 0 13px;
-          }
-        }
-      }
+    .list-pf {
+      border-bottom: none;
     }
 
-    //----- Recent Updates ----------------->>
-
-    .recent-updates {
-      .update {
-        border-bottom: 1px solid $color-pf-black-200;
-        cursor: pointer;
-        padding: 10px 0;
-
-        &:hover {
-          background: rgba(214, 238, 250, 0.36);
-        }
-
-        a:hover {
-          text-decoration: none;
-        }
-      }
-
-      .update:last-child {
-        border-bottom: none;
-      }
+    .list-pf-item {
+      border-style: none;
     }
 
-    //----- Top 5 Integrations ----------------->>
-
-    .top-integrations {
-      .card-pf-heading-details {
-        float: right;
-        font-size: 12px;
-        margin-bottom: 0;
-      }
-
-      /deep/ .integrations.list {
-        margin-left: -20px;
-        margin-right: -20px;
-
-        .list-pf {
-          border-bottom: none;
-        }
-
-        .list-pf-item {
-          border-style: none;
-        }
-
-        .list-pf-actions {
-          margin-left: 0;
-        }
-      }
-    }
-  }
-
-  ////////////////////////////////////////////////////////////////////////////////
-  // THIRD ROW
-  ////////////////////////////////////////////////////////////////////////////////
-
-  .third-row {
-    .actions {
-      margin-top: -10px;
+    .list-pf-actions {
+      margin-left: 0;
     }
   }
 }

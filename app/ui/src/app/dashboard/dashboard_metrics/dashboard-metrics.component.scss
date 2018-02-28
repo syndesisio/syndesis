@@ -1,21 +1,7 @@
 @import 'syndesis-sass';
 
 .metrics {
-  &__header {
-    margin: $gutter 0;
-    padding: 0;
-  }
-
-  &__nav {
-    justify-content: flex-end;
-    padding: 0;
-  }
-
   &__cards {
-    > * {
-      padding: 0 5px;
-    }
-
     &-item {
       > .card-pf {
         min-height: 100px;
@@ -37,7 +23,7 @@
         .card-pf-title {
           display: flex;
           justify-content: space-between;
-          align-items: center;
+          align-items: baseline;
         }
 
         .metrics__uptime-header {
@@ -49,6 +35,5 @@
         }
       }
     }
-
   }
 }

@@ -1,6 +1,6 @@
 <syndesis-loading [loading]="loading">
-  <div class="container-cards-pf syndesis-dashboard-integrations">
-    <!-- Second row empty State -->
+  <div class="syndesis-dashboard-integrations">
+    <!-- Integrations row empty State -->
     <div class="blank-slate-pf" *ngIf="integrations?.length === 0">
       <div class="blank-slate-pf-icon">
         <span class="pficon pficon pficon-add-circle-o"></span>
@@ -11,16 +11,15 @@
               [routerLink]="['/integrations/create']">Create Integration</button>
     </div>
 
-    <!-- Second Row not empty state -->
+    <!-- Integrations Row not empty state -->
     <ng-container *ngIf="integrations?.length > 0">
-      <div class="row row-cards-pf second-row">
+      <div class="row row-cards-pf syndesis-dashboard__row">
 
-        <!-- Left: Integrations -->
+        <!-- Top Integrations -->
         <div class="col-xs-7 top-integrations">
           <div class="card-pf">
             <div class="card-pf-heading">
               <p class="card-pf-heading-details">Last 30 days</p>
-
               <h2 class="card-pf-title">
                 Top 5 Integrations
               </h2>
@@ -31,11 +30,8 @@
           </div>
         </div>
 
-
-        <!-- Right -->
         <div class="col-xs-5">
-
-          <!-- Right: Integration Board -->
+          <!-- Integration Board -->
           <div class="card-pf integration-board">
             <div class="card-pf-heading">
               <h2 class="card-pf-title">
@@ -50,7 +46,7 @@
             </div>
           </div>
 
-          <!-- Right: Recent Updates -->
+          <!-- Recent Updates -->
           <div class="card-pf recent-updates">
             <div class="card-pf-heading">
               <h2 class="card-pf-title">
@@ -69,7 +65,7 @@
                 </a>
                   </div>
                   <div class="col-xs-3">
-                    <span [class]="'label ' + getLabelClass(integration)">
+                    <span [ngClass]="'label ' + getLabelClass(integration)">
                   {{ integration.currentState }}
                 </span>
                   </div>
@@ -84,34 +80,10 @@
 
       </div>
     </ng-container>
-
-
-    <!-- Third Row: Connections Header & Toolbar -->
-    <div class="row row-cards-pf third-row vertical-align">
-      <div class="page-header col-xs-12">
-        <div class="col-xs-8">
-          <h1>Dashboard: Connections</h1>
-        </div>
-        <div class="col-xs-4 actions">
-          <div class="pull-right"
-               *ngIf="connections?.length">
-            <a href="#"
-               [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
-            <button class="btn btn-primary"
-                    [routerLink]="['/connections/create']">Create Connection</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- Fourth Row: Connections -->
-    <div class="row row-cards-pf fourth-row">
-
-      <syndesis-dashboard-connections [connections]="connections"
-                                      [loading]="connectionsLoading"
-                                      (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
-
-    </div>
   </div>
+
+  <!-- Connections -->
+  <syndesis-dashboard-connections [connections]="connections"
+  [loading]="connectionsLoading"
+  (selectedConnection)="selectedConnection($event)"></syndesis-dashboard-connections>
 </syndesis-loading>

@@ -1,17 +1,17 @@
 <div class="syndesis-dashboard-metrics metrics">
-  <div class="row vertical-align metrics__header">
-    <div class="col-xs-12">
-      <h1 class="col-xs-8 metrics__header">System Metrics</h1>
-      <nav class="col-xs-4 metrics__nav" *ngIf="integrationState.collection?.length > 0">
+  <div class="container-fluid">
+    <div class="row vertical-align syndesis-dashboard__header">
+      <h1 class="col-xs-6 syndesis-dashboard__title">System Metrics</h1>
+      <div class="col-xs-6 syndesis-dashboard__actions" *ngIf="integrationState.collection?.length > 0">
         <a routerLink="/integrations">View All Integrations</a>&nbsp;&nbsp;
         <button class="btn btn-primary" routerLink="/integrations/create">
           Create Integration
         </button>
-      </nav>
+      </div>
     </div>
   </div>
 
-  <div class="container-fluid container-cards-pf metrics__cards">
+  <div class="metrics__cards">
     <div class="row row-cards-pf">
       <div class="col-xs-6 col-sm-3 col-md-3 metrics__cards-item">
         <div class="card-pf card-pf-accented card-pf-aggregate-status">
@@ -86,7 +86,6 @@
             </h4>
           </div>
         </div>
-
       </div>
     </div>
   </div>

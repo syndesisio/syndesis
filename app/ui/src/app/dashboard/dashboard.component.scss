@@ -1,0 +1,21 @@
+@import 'syndesis-sass';
+
+.syndesis-dashboard {
+  &__header {
+    padding-top: $gutter;
+    margin-top: $gutter;
+    margin-bottom: $gutter;
+  }
+
+  &__actions {
+    justify-content: flex-end;
+
+    .btn {
+      margin-left: 10px;
+    }
+  }
+
+  &__title {
+    margin: 0;
+  }
+}
