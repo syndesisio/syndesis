@@ -110,7 +110,7 @@ export class FormFactoryProviderService extends FormFactoryService {
       const bProp = properties[b.id];
       const aOrder = aProp.order || 0;
       const bOrder = bProp.order || 0;
-      return bOrder - aOrder;
+      return aOrder - bOrder;
     });
     return answer;
   }
