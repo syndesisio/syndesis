@@ -273,7 +273,7 @@ objects:
         echo "Waiting for Postgres server..."
         sleep 1
       done
-      echo "----- creating sampledb"
+      echo "***** creating sampledb"
       psql <<EOF
         CREATE DATABASE sampledb;
         CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
@@ -305,7 +305,7 @@ objects:
         $BODY$;
       EOF
 
-      echo "----- sampledb created"
+      echo "***** sampledb created"
     postStart.sh: |
       #!/bin/bash
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
@@ -1080,6 +1080,8 @@ objects:
             target_label: __address__
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_annotation_(syndesis.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
             target_label: kubernetes_namespace
