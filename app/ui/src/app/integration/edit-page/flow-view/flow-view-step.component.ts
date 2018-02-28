@@ -7,7 +7,7 @@ import { PopoverDirective } from 'ngx-bootstrap/popover';
 import { Action, Integration, Step, DataShape, DataShapeKinds } from '@syndesis/ui/platform';
 import { ModalService } from '@syndesis/ui/common';
 import { log, getCategory } from '@syndesis/ui/logging';
-import { StepStore } from '@syndesis/ui/store';
+import { StepStore, DATA_MAPPER, ENDPOINT } from '@syndesis/ui/store';
 import { CurrentFlowService, FlowEvent, FlowPageService } from '@syndesis/ui/integration/edit-page';
 
 const category = getCategory('IntegrationsCreatePage');
@@ -33,6 +33,7 @@ export class FlowViewStepComponent implements OnChanges {
   @Input() currentState: string;
 
   @ViewChild('connectionInfoPop') connectionInfoPop: PopoverDirective;
+  @ViewChild('connectionImgPop') connectionImgPop: PopoverDirective;
   @ViewChild('datamapperInfoPop') datamapperInfoPop: PopoverDirective;
 
   inputDataShapeText: string;
@@ -56,6 +57,19 @@ export class FlowViewStepComponent implements OnChanges {
 
   showInfoPopover() {
     this.connectionInfoPop.show();
+  }
+
+  showInfoPopoverCollapsed() {
+    if (this.step.stepKind !== ENDPOINT) {
+      return;
+    }
+    if (this.currentFlowService.getStep(this.currentPosition).stepKind === DATA_MAPPER) {
+      this.connectionImgPop.show();
+    }
+  }
+
+  hideInfoPopoverCollapsed() {
+    this.connectionImgPop.hide();
   }
 
   hideInfoPopover() {
