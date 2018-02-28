@@ -20,7 +20,7 @@ To finish the integration:
 * What are the data fields of interest?
 * What credentials does {prodname} use to access this application?
 
-In between the start and finish applications:
+Between the start and finish applications:
 
 * Do you need to access any other applications? For any other
 applications the integration accesses:
@@ -30,7 +30,7 @@ applications the integration accesses:
 ** What are the data fields of interest?
 ** What credentials should the integration use to connect to this application?
 
-* Between connections, does the integration need to operate on the data?
+* Does the integration need to operate on the data between connections?
 For example:
 +
 ** Should the integration filter the data it operates on?

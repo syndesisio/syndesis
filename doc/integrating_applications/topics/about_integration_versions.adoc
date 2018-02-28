@@ -1,9 +1,19 @@
-[id='about-integration-versions']
-= About integration versions
+[id='about-integration-lifecycle-handling']
+= About integration lifecycle handling
 
-For a given integration:
+After you create and publish an integration, you  might want to update
+what the integration does. You can edit a draft of the published integration 
+and then replace the initial running version with the updated version. 
+To facilitate this, for each integration, {prodname} maintains multiple  
+versions as well as each version's state. The following topics provide
+an understanding of the bahavior to help you manage your integrations. 
 
-* There can be exactly one draft version. 
-* There can be exactly one active version. An active version is running. 
+* <<understanding-integration-versions>>
+* <<understanding-integration-states>>
+* <<viewing-integration-history>>
 
-More information to be added. 
+include::understanding_integration_versions.adoc[leveloffset=+1]
+
+include::understanding_integration_states.adoc[leveloffset=+1]
+
+include::viewing_integration_history.adoc[leveloffset=+1]

@@ -1,8 +1,9 @@
 [id='adding-extensions']
 = Adding extensions
 
-{prodname} provides a number of built-in steps for operating on 
-integration data. If {prodname} does not provide a step that you need,
+{prodname} provides a number of steps for operating on 
+integration data between connections. If {prodname} does not provide a 
+step that you need,
 a developer can code an extension that defines one or more
 custom steps. The developer gives you a `.jar` file that contains the extension.
 You then upload the extension in {prodname} to make the custom step(s)
@@ -12,9 +13,12 @@ available for use in integrations. The following topics provide details:
 * <<making-extensions-available>> 
 * <<managing-extensions>>
 
+<<<<<<< HEAD
 For an example of uploading and using an extension, see the
 link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/#amq-to-rest-api[AMQ to REST API sample integration tutorial].
 
+=======
+>>>>>>> 1623 initial content for TP4
 Information about coding the extension and creating the `.jar` file is
 in the
 link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[10.2 _JBoss Fuse Tooling Guide_]

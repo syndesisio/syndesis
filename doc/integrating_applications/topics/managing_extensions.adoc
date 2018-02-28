@@ -45,5 +45,5 @@ you can delete the extension as follows:
                             
 . At the top, click the *Extensions* tab.                         
                             
-* In the list of extensions, find the entry for the extension that 
+. In the list of extensions, find the entry for the extension that 
 you want to delete and click *Delete*. 

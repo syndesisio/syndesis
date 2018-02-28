@@ -19,11 +19,6 @@ is, you can update one version of an integration at a time.
 of an integration can be running. That is, only one 
 version at a time can be in the *Active* state. 
 
-|*Inactive*
-|An *Inactive* version has suspended execution. It is still deployed but
-it is not running. Activating an *Inactive* integration is faster than 
-publishing a *Draft* or *Undeployed* integration. 
-
 |*Error*
 |An integration version that is in the *Error* state 
 encountered an error while being published or while running. The error
@@ -32,9 +27,10 @@ republishing an earlier integration version that ran correctly.
 Alternatively, you  can contact technical support for help. 
 
 |*Undeployed*
-|An *Undeployed* version is no longer deployed. You can republish
-an undeployed version to redeploy it. The version number does not
-change when you republish an undelployed version. 
-
+|An *Undeployed* version is no longer running. If not version of this
+integration is in the *Active* state, then you can republish
+an undeployed version to run it again. The version number does not
+change when you republish an undelployed version. See
+<<republishing-older-integration-versions>>. 
 
 |===

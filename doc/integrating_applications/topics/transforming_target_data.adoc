@@ -1,16 +1,19 @@
-[id=transforming-target-data]
+[id='transforming-target-data']
 = Transforming target data
 
-Adding a transformation to the target data defines how the data will be stored at the target.
-Transformations often require a parameter to specify a format or other detail required to enable the transformation to take place.
+After you define a mapping, you can transform the data in the target
+field to define how you want to store the date. For example, you
+could specify the *Capitalize* transformation to ensure that the first
+letter of a data value is uppercase. 
 
-To add a transformation to your data mapping:
+To transform a target field:
 
-. Click *Transformation* on the Target panel.
+. Create the mapping whose target you want to transform. 
+. In that mapping, click the target field you want to transform.
+. In the *Mapping Details* panel, click *Add Transformation*. 
+. Click the down caret to display the list of transformations.
+. Click the transformation you want to perform.
+. If the transformation requires any input parameters, specify them 
+in the appropriate input fields. 
 
-. Select the type of transformation you want from the dropdown menu.
-
-. Add any parameters required into the boxes provided.
-
-
-See <<available-transformations>> for a list of available transformations and the parameters they require.
+See <<available-transformations>>.

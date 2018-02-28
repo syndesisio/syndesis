@@ -4,8 +4,10 @@
 The following topics provide information to help you manage your 
 integrations:
 
-* <<about-integration-versions>>
+* <<about-integration-lifecycle-handling>>
 * <<publishing-integrations>>
+* <<republishing-older-integration-versions>>
+* <<viewing-log-information>>
 * <<testing-integrations>>
 * <<updating-integrations>>
 * <<copying-integrations-to-other-environments>>
@@ -15,6 +17,10 @@ integrations:
 include::about_integration_versions.adoc[leveloffset=+1]
 
 include::publishing_integrations.adoc[leveloffset=+1]
+
+include::republishing_older_integration_versions.adoc[leveloffset=+1]
+
+include::viewing_log_information.adoc[leveloffset=+1]
 
 include::testing_integrations.adoc[leveloffset=+1]
 

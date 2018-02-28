@@ -15,5 +15,6 @@ this connection to connect to Twitter.
 After 
 connecting to Twitter, the integration monitors Twitter for mentions
 that include your Twitter screen name. A match triggers the
-first step in the integration. However, before you add steps to the integration,
+next step in the integration. However, before you add steps that operate
+on data between connections, 
 you choose the connection that the integration uses to finish its work. 

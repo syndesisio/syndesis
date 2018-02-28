@@ -1,14 +1,14 @@
 [id='updating-api-connectors']
-= Updating API connectors
+= Updating API client connectors
 
-You cannot update an API connector. If there is
+You cannot update an API client connector. If there is
 an update to the API's Swagger specification, then you must upload an updated
-Swagger file and create a new API connector. 
+Swagger file and create a new API client connector. 
 
 To update integrations to use connections based on the updated Swagger
 specification:
 
-. Create a new API connector based on the updated Swagger specification. 
+. Create a new API client connector based on the updated Swagger specification. 
 . Create a new connection from the new connector.
 . Edit the integration to remove the old connection and add the new connection.
-. Republish the integration. 
+. Publish the updated integration. 

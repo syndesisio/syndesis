@@ -10,7 +10,7 @@ integration and publish the updated integration.
 
 The initial integration that was running 
 is version 1. The updated integration that is now running is
-version 2. If you edit either version 1 or version 2, for example to
+version 2. If you edit version 2, for example to
 use a different account to connect to Salesforce, and you publish that
 version then it becomes version 3 of the integration. 
 

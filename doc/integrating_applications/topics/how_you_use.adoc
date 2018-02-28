@@ -1,11 +1,11 @@
 [id='how-you-use']
 = How you use {prodname} 
 
-The best way to learn about how to use Ignite is to create the sample
+The best way to learn about how to use {prodname} is to create the sample
 integrations by following the instructions in the 
-https://access.qa.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/[sample integration tutorials]. 
-Following is an abbreviated description one of the samples--to provide 
-an overview of how you use {prodname}. These steps leave out details so 
+https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/[sample integration tutorials]. 
+Following is an abbreviated description of one of the samples to provide 
+an overview of how you use {prodname}. These steps omit details so 
 you should not try to follow them.
 
 NOTE: If you already created a sample integration then you can skip this section.
@@ -37,10 +37,10 @@ the integration.
 In the sample integration, you choose *add_lead* as the procedure
 you want to invoke. This is a provided stored procedure that runs in 
 the sample database. This procedure determines the requirements
-for which Salesforce fields need to be mapped to which database fields. 
+for mapping Salesforce data fields to database fields. 
 
 . Add a step between the Salesforce connection and the database connection. 
-This step maps Salesforce fields to database fields. 
+This step maps Salesforce data fields to database fields. 
 
 . Give the integration a name. Optionally, enter a description of what
 the integration does. 

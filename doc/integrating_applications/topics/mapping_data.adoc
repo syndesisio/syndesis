@@ -1,33 +1,39 @@
-[id="mapping-data"]
-= Mapping data
+[id='mapping-data']
+= Mapping data to fields for the next connection
 
-To add a data mapper step:
+In most integrations, you need to map data fields that have 
+been obtained or processed to data fields that the next connection can process. 
+{prodname} provides a data mapper to simplify doing this. In an integration,
+at each point where you need to map data fields, add a data mapper step.
+Details for mapping data fields are in the following topics:
 
-. In the left panel, where you want to add a data mapper step, 
-hover over the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
-. In the popup that appears, click *Data Mapper*.
-  
-The data mapping page presents you with two lists of data fields - the *Sources* list and the *Target* list.
+* <<about-mapping-data>> 
+* <<finding-the-field-you-want-to-map>>
+* <<identifying-where-data-mapping-is-needed>>
+* <<map-one-source-field-to-one-target-field>>
+* <<combine-multiple-source-fields-into-one-target-field>>
+* <<separate-one-source-field-into-multiple-target-fields>>
+* <<transforming-target-data>>
+* <<available-transformations>>
+* <<viewing-mappings-in-a-step>>
+* <<adding-data-in-mapping-step>>
 
-To map data, you create a link between the *Sources* data item and the *Target* data item.
+include::about_mapping_data.adoc[leveloffset=+1]
 
-There are three different types of mapping:
+include::finding_data_field_you_want_to_map.adoc[leveloffset=+1]
 
-.Data mapping types
+include::identifying_where_data_mapping_is_needed.adoc[leveloffset=+1]
 
-|===
-|Mapping type  |What does it do?
+include::map_one_source_field_to_one_target_field.adoc[leveloffset=+1]
 
-|Combine
-|The combine action allows you to combine a number of source fields into one target field. For example, day, month and year fields can be combined into a date field.
+include::combine_multiple_source_fields_into_one_target_field.adoc[leveloffset=+1]
 
-|Map
-|The map action just maps the source field directly to the target field, with no manipulation. This is the default action.
+include::separate_one_source_field_into_multiple_target_fields.adoc[leveloffset=+1]
 
-|Separate
-|The separate action allows you to separate a source field into a number of target fields. For example, a date field can be separated into day, month, year fields. 
+include::transforming_target_data.adoc[leveloffset=+1]
 
-|===
+include::available_transformations.adoc[leveloffset=+1]
 
-On the *Target* data field, you can specify a *Transformation*, which 
-specifies how the data in the target field is stored. 
+include::viewing_mappings_in_a_step.adoc[leveloffset=+1]
+
+include::adding_data_in_mapping_step.adoc[leveloffset=+1]

@@ -2,18 +2,21 @@
 = Publishing integrations
 
 Publishing an integration builds and deploys the integration runtime. 
-The integration is active and running. An integration can have 
-exactly one version that is currently published. 
+The integration is active and running. Exactly one version of an integration
+can be running at one time. 
 
-There are several ways to publish an integration:
+To publish an integration, do one of the following:
 
-* Create an integration and as the last step, click the *Publish*
-button that appears in the upper right corner.
+* At the end of the procedure in which you create or edit the integration, 
+in the upper right, click *Publish*.
 
-* If there are no currently running versions of an integration that you
-want to publish:
+* Publish the draft version or an undeployed version of an integration:
 +
 . In the left {prodname} panel, click *Integrations*. 
 . In the list of integrations, click the entry for an integration
-whose status is *Draft* or *Inactive*. 
-. On the integration's summary page , click *Start Integration*. 
+whose status is *Draft* or *Undeployed*. 
+. On the integration's summary page , identify the integration
+version that you want to publish. 
+. On the right of that entry, click 
+image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+select *Publish*. 

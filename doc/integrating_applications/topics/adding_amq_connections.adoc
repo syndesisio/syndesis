@@ -1,19 +1,13 @@
 [id='adding-amq-connections']
-= Adding an AMQ connection to an integration
+= Adding an AMQ or AMQP connection to an integration
 
-You must create an AMQ connection before you can add an
-AMQ connection to an
-integration. If you did not already create an AMQ connection, 
+You must create an AMQ or AMQP connection before you can add an
+AMQ or AMQP connection to an
+integration. If you did not already create an AMQ or AMQP connection, 
 see <<create-amq-connection>>. 
 
-In this release, connections to AMQ are shapeless. That is, they do not 
-define input/output types. Consequently, while AMQ connections can route 
-messages to and from queues and topics, an integration cannot have a data 
-mapper step before or after an AMQ connection, This limitation is expected 
-to be removed in a future release. 
-
-The procedure for adding an AMQ connection to an integration varies
-according to whether you are adding an AMQ connection as the
+The procedure for adding an AMQ or AMQP connection to an integration varies
+according to whether you are adding the connection as the
 start connection, the finish connection, or a middle connection.
 See the following topics:
 

@@ -8,13 +8,27 @@
 
 This guide provides information and instructions for using 
 {prodname}'s web interface to integrate applications. 
-The content is organized as follows:
+
+[IMPORTANT]
+====
+{prodname} is a Technology Preview feature only. Technology Preview features
+are not supported with Red Hat production service level agreements (SLAs), might
+not be functionally complete, and Red Hat does not recommend to use them for
+production. These features provide early access to upcoming product features,
+enabling customers to test functionality and provide feedback during the
+development process.
+For more information on Red Hat Technology Preview features support scope, 
+see https://access.redhat.com/support/offerings/techpreview/. 
+====
+
+The content in this guide is organized as follows:
 
 * <<understanding>>
 * <<logging-in-and-out>>
 * <<connecting-to-applications>>
-* <<adding-customizations>>
 * <<creating-integrations>>
+* <<mapping-data>>
+* <<adding-customizations>>
 * <<managing-integrations>>
 
 To learn how to use {prodname} by creating sample integrations, see the
@@ -26,7 +40,7 @@ Fuse Ignite as interchangeable.
 In this Technology Preview, only one integration at a time can 
 be running. If you have a running (active) integration and you create a new 
 integration and try to publish it, the new integration is automatically 
-inactive. You must deactivate the running integration before you can 
+in the *Undeployed* state. You must stop the running integration before you can 
 start the new integration.
 
 include::topics/understanding.adoc[leveloffset=+1]
@@ -35,8 +49,10 @@ include::topics/shared/log_in.adoc[leveloffset=+1]
 
 include::topics/connecting_to_applications.adoc[leveloffset=+1]
 
-include::topics/adding_customizations.adoc[leveloffset=+1]
-
 include::topics/creating_integrations.adoc[leveloffset=+1]
+
+include::topics/mapping_data.adoc[leveloffset=+1]
+
+include::topics/adding_customizations.adoc[leveloffset=+1]
 
 include::topics/managing_integrations.adoc[leveloffset=+1]

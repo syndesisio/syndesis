@@ -2,7 +2,8 @@
 = Adding and managing customizations
 
 {prodname} lets you add  API client connectors and custom steps
-to integrations. See the following topics for details:
+to integrations. A custom step operates on integration data between
+connections. See the following topics for details:
 
 * <<adding-api-connectors>>
 * <<adding-extensions>>

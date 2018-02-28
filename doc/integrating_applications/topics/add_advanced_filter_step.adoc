@@ -3,13 +3,13 @@
 
 In a filter step, {prodname} inspects the
 data and continues the integration only if the content meets
-criteria that you define. The advanced filter step lets you specify
-a filter expression if the basic filter step does not let you 
-define the exact filter you need. 
+criteria that you define. 
+If the basic filter step does not let you 
+define the exact filter you need, then add an advanced filter step.
 
-Add all connections to your integration before you add any steps. When you 
+Add all connections to your integration before you add additional steps. When you 
 add a step, {prodname} operates on the data it receives from the
-previous connection or the previous step. 
+previous connections and any additional step(s). 
 
 When you add a step you might be creating a new integration or editing
 an integration. The flow of the integration appears in the left panel. 
@@ -23,8 +23,9 @@ and in the popup that appears, click *Add a Step*.
 
 . Select *Advanced Filter*.
 
-. In the edit box, use the Camel Simple language to specify a filter
-expression. To learn about the Camel Simple language,
-see http://camel.apache.org/simple.html.
+. In the edit box, use the 
+http://camel.apache.org/simple.html[Camel Simple Expression] language 
+to specify a filter
+expression. 
 
 . Click *Done*.

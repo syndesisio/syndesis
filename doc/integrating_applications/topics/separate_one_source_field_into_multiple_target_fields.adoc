@@ -1,14 +1,34 @@
-[id=separate-one-source-field-into-multiple-target-fields]
-= Separate one source field into multiple target fields
+[id='separate-one-source-field-into-multiple-target-fields']
+= Separating one source field into multiple target fields
 
-You can separate more than one source field into multiple target fields using a *Separate* mapping.
+To separate and map the content in one source field to multiple target fields:
 
-When you use a *Separate* mapping, you will be asked to specify a *Separator*. The software will split the Source field at the separator.
+. In the *Sources* panel, click the field you want to map. 
+. If the *Mapping Details* panel is not already visible to the right of the
+*Target* panel, click (add icon image)
+to display it. 
+. In the *Mapping Details* panel, under *Action*, click 
+the down caret and select *Separate*. 
+. Below that, under *Targets*, click in *`[None]`* and start to type
+the name of the first target data field. 
+. When the name of the first target data field appears, click it. 
+The data mapper displays a line from the source field to the first
+target field.
+. For each additional target field:
+.. In the lower right, click *Add Target*. 
+.. In the new target, click in *`[None]`* and start to type
+the name of the next target field.
+.. When the name of the next target data field appears, click it. 
+The data mapper displays another line from the same source field,
+but this time it goes to this target data field. 
+. In the *Mapping Details* panel, in the *Separator* field, accept or 
+select the character that indicates where to separate the source data
+field value. The default is a space. 
 
-To add a *Separate* mapping 
+In the data mapper, blue lines indicates the current focus. 
 
-. Select the Source field that you want to separate into multiple fields in the target.
-
-.  In the *Data Mapping* panel, select *Separate* and a separator. Place the cursor in the *Target* box. Start overtyping *[none]* with the name of the target field. As you type the field name will be offered up in a dropdown. Select the field name.
-
-.  To add another field click *Add Target*. 
+To confirm that the mapping is correctly defined, click
+image:shared/images/grid.png[Grid] to display the mappings defined in 
+this step. A mapping that separates the value of a source field into
+multiple target fields looks like this:
+(add image).

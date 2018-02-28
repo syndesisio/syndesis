@@ -28,7 +28,9 @@ revise the Swagger file, and upload the updated file.
 +
 If the specification is valid and complete, {prodname} displays a summary of 
 the actions that the connector will provide. This might include errors and 
-warnings about the action specifications. To revise the Swagger file, 
+warnings about the action specifications. 
+
+. To revise the Swagger file, 
 click *Cancel*, revise the Swagger file, and upload the updated file. 
 +
 If you are satisfied with the action summary, click *Next*.
@@ -55,7 +57,7 @@ concatenates the host and base URL values to define the endpoint for
 the connection. For example, if the host is `https://example.com` and
 the base URL is `/api/v1` then the connection endpoint is
 `https://example.com/api/v1`.
-** (prodname) applies  the schema specified in the Swagger file to data 
+** {prodname} applies  the schema specified in the Swagger file to data 
 mapping steps. If the Swagger file supports more than one schema then {prodname} 
 uses the TLS (HTTPS) schema. 
 . Review the connector details and optionally upload an icon for the connector.

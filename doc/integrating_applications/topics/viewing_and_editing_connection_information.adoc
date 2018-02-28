@@ -23,7 +23,11 @@ change configuration values. If you change any values, be sure to click
 *Save*. 
 
 If you update a connection that is used in an integration that is running,
+<<<<<<< HEAD
 you must republishes the integration. To republish the
+=======
+you must republishe the integration. To republish the
+>>>>>>> 1623 initial content for TP4
 integration, stop it and restart it. 
 
 For connections to applications that use the OAuth protocol to authorize 

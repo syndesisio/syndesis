@@ -9,12 +9,12 @@ integrations in your environment.
 
 In the page that appears, the *History* section lists the versions
 of the integration. The 
-image:images/GreenCircleCheckmark.png[Current Version] icon 
+image:shared/images/GreenCircleCheckmark.png[Current Version] icon 
 identifies the current version, which is the most recently,
 successfully published version. 
 For each version, you can also see the date on which it was last published.
 
 To edit or publish a particular version, click the 
-image:images/ThreeVerticalDotsKebab.png[Kebab] to the right of the
+image:shared/images/ThreeVerticalDotsKebab.png[Kebab] to the right of the
 version's entry. Select the operation you want to perform. 
  
