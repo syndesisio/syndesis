@@ -1,0 +1,108 @@
+{
+    "id": "mqtt",
+    "name": "MQTT",
+    "description": "Publish and Subscribe Messages to a MQTT broker.",
+    "icon": "paho",
+    "dependencies": [
+        {
+            "type": "MAVEN",
+            "id": "@project.groupId@:@project.artifactId@:@project.version@"
+        }
+    ],
+    "componentScheme": "paho",
+    "configuredProperties": {
+        
+    },
+    "tags": [
+        "verifier"
+    ],
+    "properties": {
+        "brokerUrl": {
+            "kind": "parameter",
+            "displayName": "MQTT broker URL",
+            "group": "common",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "description": "MQTT broker URL (eg 'tcp://localhost:1833')"
+        }
+    },
+    "actions": [
+        {
+            "name": "Publish",
+            "description": "Publish a message to a MQTT Broker",
+            "id": "io.syndesis:paho-publish-connector",
+            "pattern": "To",
+            "actionType": "connector",
+            "descriptor": {
+                "inputDataShape": {
+                    "kind": "java",
+                    "type": "java.lang.String"
+                },
+                "outputDataShape": {
+                    "kind": "none"
+                },
+                "configuredProperties": {
+                },
+                "propertyDefinitionSteps": [
+                   {
+                        "name":"Publish",
+                        "description":"Publish a message from MQTT Broker",
+                        "properties":{
+                            "topic": {
+                                "kind": "path",
+                                "displayName": "MQTT queue/topic name",
+                                "group": "common",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "MQTT queue/topic name"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Subscribe",
+            "description": "Receive a message from MQTT Broker",
+            "id": "io.syndesis:mqtt-subscribe-connector",
+            "pattern": "From",
+            "actionType": "connector",
+            "descriptor": {
+                "inputDataShape": {
+                    "kind": "none"
+                },
+                "outputDataShape": {
+                    "kind": "java",
+                    "type": "java.lang.String"
+                },
+                "configuredProperties": {
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "name":"Subscribe",
+                        "description":"Receive a message from MQTT Broker",
+                        "properties":{
+                            "topic": {
+                                "kind": "path",
+                                "displayName": "MQTT queue/topic name",
+                                "group": "common",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "MQTT queue/topic name"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
