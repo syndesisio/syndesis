@@ -23,12 +23,7 @@ change configuration values. If you change any values, be sure to click
 *Save*. 
 
 If you update a connection that is used in an integration that is running,
-<<<<<<< HEAD
-you must republishes the integration. To republish the
-=======
-you must republishe the integration. To republish the
->>>>>>> 1623 initial content for TP4
-integration, stop it and restart it. 
+you must republish the integration by stopping it and publishing it again. 
 
 For connections to applications that use the OAuth protocol to authorize 
 access, you cannot change the login credentials that the connection uses.

@@ -2,7 +2,7 @@
 = Republishing older integration versions
 
 You might publish an integration that does not work the way you want it to.
-In this situation, you can deactivate (stop) the incorrect version
+In this situation, you can stop the incorrect version
 and replace it with a version that you published previously and that
 runs correctly.
 
@@ -10,12 +10,23 @@ To republish an older integration version:
 
 . In the left panel, click *Integrations* to display a list of the 
 the integrations in this environment. 
-. Click the entry for the *Active* integration that is not working correctly. 
-. In the integration's summary page, click *Stop Integration*. 
-. When this version is in the *Undeployed* state, in the *History* section, 
-click the 
-image:shared/images/ThreeVerticalDotsKebab.png[Kebab] to the right of the
-version you want to republish. 
-. In the popup menu, click *Publish*. {prodname} builds and deploys
+. Click the entry for the integration that is not working correctly.
+. On the *Integration Summary* page, click *History* to display
+the versions of this integration. 
+. In the entry for the version that is running, at the far right, click 
+image:shared/images/ThreeVerticalDotsKebab.png[Kebab] and select 
+*Unpublish*.
+. Click *OK* to confirm that you want to stop running this version. 
+. Wait for *Unpublished* to appear to the right of the integration name near
+the top of the page.
+. In the entry for the integration version that you want to start
+running again, at the far right, click
+image:shared/images/ThreeVerticalDotsKebab.png[Kebab]
+and select *Publish*. 
+. Click *OK* to confirm that you want to publish this version of the
+integration. 
+
+{prodname} publishes
 this version, which takes a few minutes. When the republished version
-is running, then its state is *Active*. 
+is running, then *Published version _n_* appears to the right
+of the integration's name. 

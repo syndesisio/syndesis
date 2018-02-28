@@ -1,6 +1,11 @@
 [id='understanding-integration-states']
 = Understanding integration states
 
+For a given integration:
+
+* There can be exactly one draft version.
+* There can be exactly one published version. A published version is running.
+
 Each version of an integration is always in one of the following states:
 
 [cols="2*"]
@@ -13,24 +18,29 @@ Each version of an integration is always in one of the following states:
 Only one version of an integration can be in the *Draft* state. That 
 is, you can update one version of an integration at a time.  
 
-|*Active*
-|An *Active* version is running. When you publish an integration, 
+|*In Progress*
+|The integration state is transitioning to *Published* or 
+*Unpublished*. 
+
+|*Published*
+|A *Published* version is running. When you publish an integration, 
 {prodname} builds the integration and starts running it. Only one version 
 of an integration can be running. That is, only one 
-version at a time can be in the *Active* state. 
+version at a time can be in the *Published* state. 
+
+|*Unpublished*
+|An *Unpublished* version is not running. It might have been 
+published and then unpublished, but it also might never have been
+published. If no version of this
+integration is in the *Published* state, then you can publish
+an unpublished version to run it. The version number does not
+change when you publish an unpublished version. 
 
 |*Error*
 |An integration version that is in the *Error* state 
 encountered an error while being published or while running. The error
-suspended publication or execution.  If this happens, try activating or 
-republishing an earlier integration version that ran correctly. 
+suspended publication or execution.  If this happens, try 
+publishing an earlier integration version that ran correctly. 
 Alternatively, you  can contact technical support for help. 
-
-|*Undeployed*
-|An *Undeployed* version is no longer running. If not version of this
-integration is in the *Active* state, then you can republish
-an undeployed version to run it again. The version number does not
-change when you republish an undelployed version. See
-<<republishing-older-integration-versions>>. 
 
 |===

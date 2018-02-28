@@ -1,0 +1,26 @@
+[id='finding-the-field-you-want-to-map']
+= Finding the data field you want to map
+
+In an integration that has a few steps or that operates on a small set
+of data, it is probably easy to find
+the data field you want to map. But in an integration that has many steps, 
+or that has a step that accesses a large set of data, the list of data fields 
+might be very long. To quickly find the data field you
+want to map, you can:
+
+* Search for it. The *Sources* panel and the *Target* panel each have
+a search field at the top. If the search field is not visible, click 
+image:shared/images/magnifying-glass.png[Magnifying Glaass] at the top
+right of the *Sources* or *Target* panel. 
+
+* Expand and collapse folders to limit the visible fields. 
++
+As you add steps to an integration, {prodname} numbers and renumbers them to
+indicate the order in which the integration processes the steps. 
+When you are creating or editing an integration, these numbers are visible
+in the integration visualization panel on the left. When you add a data
+mapping step, the step numbers appear in the folder labels in the
+*Sources* panel and in the *Target* panel. 
++
+To view the data fields available from a particular step, expand the 
+folder for that step. 

@@ -27,5 +27,4 @@ finish connection.
 . Click *Publish* to start running the integration.  
 
 The {prodname} dashboard lets you monitor and manage integrations. You can 
-see which integrations are running, start and stop integrations, and edit and 
-deactivate integrations.
+see which integrations are running, start, stop, and edit integrations.
