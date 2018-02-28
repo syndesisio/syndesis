@@ -31,6 +31,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
@@ -81,6 +82,15 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, descriptor);
         final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
         final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
+        final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
+
+        // Add ConfigurationProperty's default value to the available properties.
+        // Workaround for https://github.com/syndesisio/syndesis/issues/1713
+        for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
+            if (ObjectHelper.isNotEmpty(entry.getValue().getDefaultValue())) {
+                properties.putIfAbsent(entry.getKey(), entry.getValue().getDefaultValue());
+            }
+        }
 
         // if the option is marked as secret use property placeholder as the
         // value is added to the integration secret.

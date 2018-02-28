@@ -26,7 +26,6 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "defaultValue": "jdbc:postgresql://syndesis-db:5432/sampledb",
       "description": "JDBC URL of the database."
     },
     "user": {
@@ -41,7 +40,6 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "defaultValue": "sampledb",
       "description": "Username for the database connection."
     },
     "password": {
@@ -70,7 +68,6 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "defaultValue": "sampledb",
       "description": "Database schema."
     }
   },
@@ -223,7 +220,6 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "defaultValue": "",
                 "description": "Stored procedure template to perform."
               }
             }
@@ -280,7 +276,6 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "defaultValue": "",
                 "description": "Stored Procedure template to perform."
               },
               "schedulerExpression": {
