@@ -26,24 +26,7 @@
       targetPort: 8080
     selector:
       app: syndesis
-      component: syndesis-rest{{#Probeless}}
-
-- apiVersion: v1
-  kind: Route
-  metadata:
-    labels:
-      app: syndesis
       component: syndesis-rest
-    name: syndesis-rest
-  spec:
-    host: rest-${ROUTE_HOSTNAME}
-    path: /api
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
-    to:
-      kind: Service
-      name: syndesis-rest{{/Probeless}}
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -102,7 +85,6 @@
           image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
-{{^Probeless}}
           livenessProbe:
             httpGet:
               port: 8080
@@ -112,7 +94,7 @@
             httpGet:
               path: "/health"
               port: 8181
-            initialDelaySeconds: 10{{/Probeless}}
+            initialDelaySeconds: 10
           ports:
           - containerPort: 8080
             name: http

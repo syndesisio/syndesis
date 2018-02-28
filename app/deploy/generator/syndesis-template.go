@@ -69,8 +69,6 @@ type Context struct {
 	Name             string
 	AllowLocalHost   bool
 	WithDockerImages bool
-	Restricted       bool
-	Probeless        bool
 	Productized      bool
 	Tag              string
 	Registry         string
@@ -139,8 +137,6 @@ func init() {
 	flags.StringVar(&context.Name, "name", "syndesis", "Name of the template")
 	flags.BoolVar(&context.AllowLocalHost, "allow-localhost", false, "Allow localhost")
 	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
-	flags.BoolVar(&context.Restricted, "restricted", false, "Restricted mode?")
-	flags.BoolVar(&context.Probeless, "probeless", false, "Without probes")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
 	flags.BoolVar(&context.Productized, "product", false, "Generate product templates?")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")

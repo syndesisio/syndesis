@@ -30,9 +30,6 @@ minishift::usage() {
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
--i  --image-mode <mode>       Which templates to install: "docker" for plain images,
-                              "openshift" for image streams (default: "openshift")
-    --docker                  Shortcut for "--image-mode docker"
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Asume 'yes' automaticlaly when asking for deleting
                               a given project.
@@ -85,12 +82,10 @@ minishift::run() {
 
         create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
-        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template)" "$(readopt --tag)" "$(hasflag --local)"
+        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template true)" "$(readopt --tag)" "$(hasflag --local)"
 
-        if [ $(is_docker_mode) = "false" ]; then
-          wait_for_syndesis_to_be_ready
-          patch_imagestreams_for_initial_image
-        fi
+        wait_for_syndesis_to_be_ready
+        patch_imagestreams_for_initial_image
     fi
 
     if [ $(hasflag --open -o) ]; then

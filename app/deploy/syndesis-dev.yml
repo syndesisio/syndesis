@@ -9,12 +9,10 @@ metadata:
 # Template flavor:
 #
 # Allow localhost refs: true
-# Use docker images: true
-# Without Probes: false
+# Use docker images: false
 # Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.0.0
-# Restricted environment: false
 #
   labels:
     app: syndesis
@@ -28,18 +26,14 @@ parameters:
   description: Public OpenShift master address
   value: https://localhost:8443
   required: true
-- name: OPENSHIFT_OAUTH_CLIENT_ID
-  description: OpenShift OAuth client ID
-  value: syndesis
+- name: OPENSHIFT_PROJECT
+  description: The name of the OpenShift project Syndesis is being deployed into.
+  displayName: OpenShift project to deploy into
   required: true
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   generate: expression
   from: "[a-zA-Z0-9]{64}"
-  required: true
-- name: OPENSHIFT_OAUTH_DEFAULT_SCOPES
-  description: OpenShift OAuth default scopes
-  value: "user:full"
   required: true
 - description: Maximum amount of memory the PostgreSQL container can use.
   displayName: Memory Limit
@@ -119,6 +113,81 @@ parameters:
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-rest
+    labels:
+      app: syndesis
+      component: syndesis-rest
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-ui
+    labels:
+      app: syndesis
+      component: syndesis-ui
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-verifier
+    labels:
+      app: syndesis
+      component: syndesis-verifier
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: oauth-proxy
+    labels:
+      app: syndesis
+      component: syndesis-oauthproxy
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
+      importPolicy:
+        scheduled: true
+      name: "v1.1.0"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: prometheus
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/prom/prometheus:v2.0.0
+      importPolicy:
+        scheduled: true
+      name: "v2.0.0"
 
 - apiVersion: v1
   kind: ImageStream
@@ -194,7 +263,7 @@ objects:
       spec:
         containers:
         - name: syndesis-ui
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+          image: ' '
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -223,6 +292,15 @@ objects:
             name: syndesis-ui-config
           name: config-volume
     triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-ui
+        from:
+          kind: ImageStreamTag
+          name: syndesis-ui:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
 
     - type: ConfigChange
 - apiVersion: v1
@@ -498,10 +576,10 @@ objects:
       spec:
         containers:
         - name: syndesis-oauthproxy
-          image: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
+          image: ' '
           args:
             - --provider=openshift
-            - --client-id=${OPENSHIFT_OAUTH_CLIENT_ID}
+            - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
             - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
             - --upstream=http://syndesis-rest/api/
             - --upstream=http://syndesis-rest/mapper/
@@ -517,7 +595,8 @@ objects:
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-
+            # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
+            # can be given by a cluster-admin
           env:
           - name: OAUTH_COOKIE_SECRET
             valueFrom:
@@ -542,7 +621,6 @@ objects:
               scheme: HTTPS
             initialDelaySeconds: 15
             timeoutSeconds: 10
-
           volumeMounts:
           - mountPath: /etc/tls/private
             name: syndesis-oauthproxy-tls
@@ -551,12 +629,21 @@ objects:
               memory: 200Mi
             requests:
               memory: 20Mi
-
+        serviceAccountName: syndesis-oauth-client
         volumes:
         - name: syndesis-oauthproxy-tls
           secret:
             secretName: syndesis-oauthproxy-tls
     triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-oauthproxy
+        from:
+          kind: ImageStreamTag
+          name: oauth-proxy:v1.1.0
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
 
     - type: ConfigChange
 - apiVersion: v1
@@ -639,7 +726,7 @@ objects:
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
           - name: JAVA_DEBUG
             value: "true"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+          image: ' '
 
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -676,6 +763,15 @@ objects:
           configMap:
             name: syndesis-rest-config
     triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-rest
+        from:
+          kind: ImageStreamTag
+          name: syndesis-rest:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
 
     - type: ConfigChange
 
@@ -782,7 +878,7 @@ objects:
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           - name: JAVA_DEBUG
             value: "true"
-          image: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+          image: ' '
 
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -822,6 +918,15 @@ objects:
           configMap:
             name: syndesis-verifier-config
     triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-verifier
+        from:
+          kind: ImageStreamTag
+          name: syndesis-verifier:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
 
     - type: ConfigChange
 
@@ -995,19 +1100,6 @@ objects:
             name: todo:latest
         type: ImageChange
 - apiVersion: v1
-  kind: OAuthClient
-  metadata:
-    name: ${OPENSHIFT_OAUTH_CLIENT_ID}
-    labels:
-      app: syndesis
-      component: syndesis-ui
-  secret: ${OPENSHIFT_OAUTH_CLIENT_SECRET}
-  redirectURIs:
-  - https://${ROUTE_HOSTNAME}/
-  grantMethod: prompt
-
-
-- apiVersion: v1
   kind: RoleBinding
   metadata:
     name: syndesis:editors
@@ -1080,6 +1172,8 @@ objects:
             target_label: __address__
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_annotation_(syndesis.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
             target_label: kubernetes_namespace
@@ -1145,7 +1239,7 @@ objects:
         serviceAccountName: syndesis-prometheus
         containers:
         - name: prometheus
-          image: ${SYNDESIS_REGISTRY}/prom/prometheus:v2.0.0
+          image: ' '
 
           imagePullPolicy: IfNotPresent
           args:
@@ -1179,5 +1273,14 @@ objects:
           configMap:
             name: syndesis-prometheus-config
     triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - prometheus
+        from:
+          kind: ImageStreamTag
+          name: prometheus:v2.0.0
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
 
     - type: ConfigChange

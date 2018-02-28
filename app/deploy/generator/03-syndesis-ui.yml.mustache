@@ -54,7 +54,6 @@
           image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
-{{^Probeless}}
           livenessProbe:
             httpGet:
               path: "/"
@@ -64,7 +63,7 @@
             httpGet:
               path: "/"
               port: 8080
-            initialDelaySeconds: 1{{/Probeless}}
+            initialDelaySeconds: 1
           ports:
           - containerPort: 8080
           volumeMounts:
