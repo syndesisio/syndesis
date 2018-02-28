@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.handler.connection;
 
 import static io.syndesis.model.buletin.LeveledMessage.Level.ERROR;
+import static io.syndesis.model.buletin.LeveledMessage.Level.WARN;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -155,7 +156,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
         @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
 
         // Lets make sure we store encrypt secrets.
-        Map<String, String> configuredProperties =connection.getConfiguredProperties();
+        Map<String, String> configuredProperties = connection.getConfiguredProperties();
         if( connection.getConnectorId().isPresent() ) {
             Map<String, ConfigurationProperty> connectorProperties = getConnectorProperties(connection.getConnectorId().get());
             configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connectorProperties);
@@ -198,7 +199,10 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
      *
      * @param id
      */
-    public void updateBulletinBoard(String id) {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/update-bulletins")
+    public ConnectionBulletinBoard updateBulletinBoard(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
         List<LeveledMessage> messages = new ArrayList<>();
 
         Connection connection = get(id);
@@ -207,13 +211,22 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
             messages.add(LeveledMessage.of(ERROR, violation.getMessage()));
         }
 
+        connection.getConnector().ifPresent(connector -> {
+            Connector current = getDataManager().fetch(Connector.class, connector.getId().get());
+            if (current == null) {
+                messages.add(LeveledMessage.of(WARN, String.format("Connector '%s' has been deleted.", connector.getName())));
+            }
+        });
+
         // We have a null value if it was an encrypted property that was imported into
         // a different system.
         Map<String, String> configuredProperties = encryptionComponent.decrypt(connection.getConfiguredProperties());
-        if( configuredProperties.values().contains(null)) {
+        if (configuredProperties.values().contains(null)) {
             messages.add(LeveledMessage.of(ERROR, "Configuration missing"));
         }
 
-        getDataManager().set(ConnectionBulletinBoard.of(id, messages));
+        ConnectionBulletinBoard bulletinBoard = ConnectionBulletinBoard.of(id, messages);
+        getDataManager().set(bulletinBoard);
+        return bulletinBoard;
     }
 }

@@ -20,9 +20,12 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.syndesis.model.Kind;
+import io.syndesis.model.ToJson;
 import io.syndesis.model.WithConfiguredProperties;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithName;
@@ -30,8 +33,6 @@ import io.syndesis.model.WithTags;
 import io.syndesis.model.environment.Organization;
 import io.syndesis.model.validation.UniqueProperty;
 import io.syndesis.model.validation.UniquenessRequired;
-
-import org.immutables.value.Value;
 
 /**
  * A connection is basically a Camel endpoint configuration (parameters) and
@@ -41,7 +42,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Connection.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface Connection extends WithId<Connection>, WithTags, WithName, WithConfiguredProperties, Serializable {
+public interface Connection extends WithId<Connection>, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
 
     @Override
     default Kind getKind() {
