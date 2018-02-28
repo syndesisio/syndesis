@@ -123,14 +123,14 @@ public final class ProjectGeneratorHelper {
         }
     }
 
-    public static String mandatoryDecrypt(IntegrationResourceManager manager, Map.Entry<String, String> entry) {
-        String answer = entry.getValue();
+    public static String mandatoryDecrypt(IntegrationResourceManager manager, String propertyKey, String propertyVal) {
+        String answer = propertyKey;
 
-        if (entry.getValue() != null) {
+        if (propertyVal != null) {
 
-            answer = manager.decrypt(entry.getValue());
+            answer = manager.decrypt(propertyVal);
             if (answer == null) {
-                throw new IllegalArgumentException("Unable to decrypt key:" + entry.getKey());
+                throw new IllegalArgumentException("Unable to decrypt key:" + propertyKey);
             }
         }
 

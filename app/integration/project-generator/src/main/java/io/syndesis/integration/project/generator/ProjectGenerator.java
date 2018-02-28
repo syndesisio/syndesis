@@ -35,12 +35,11 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import io.syndesis.core.CollectionsUtils;
 import io.syndesis.core.Json;
 import io.syndesis.core.Names;
 import io.syndesis.core.Optionals;
@@ -53,15 +52,17 @@ import io.syndesis.model.Dependency;
 import io.syndesis.model.WithConfiguredProperties;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
+import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.connection.Connection;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
@@ -103,6 +104,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         return is;
     }
 
+    @SuppressWarnings("PMD")
     @Override
     public Properties generateApplicationProperties(final Integration integrationDefinition) {
         final Integration integration = sanitize(integrationDefinition, resourceManager);
@@ -124,26 +126,33 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
                 final ConnectorDescriptor descriptor = action.getDescriptor();
                 final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
-                        () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId().get())
+                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId().get())
                 );
 
                 if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {
                     // Grab the component scheme from the component descriptor or
                     // from the connector
                     final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
+                    final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
 
-                    Stream.of(connector, connection, step)
-                            .filter(WithConfiguredProperties.class::isInstance)
-                            .map(WithConfiguredProperties.class::cast)
-                            .map(WithConfiguredProperties::getConfiguredProperties)
-                            .flatMap(map -> map.entrySet().stream())
-                            .filter(Predicates.or(connector::isSecret, action::isSecret))
-                            .distinct()
-                            .forEach(
-                                    e -> {
-                                        addDecryptedKeyProperty(properties, index, componentScheme, e);
-                                    }
-                            );
+                    // Workaround for https://github.com/syndesisio/syndesis/issues/1713
+                    for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
+                        if (entry.getValue() != null && entry.getValue().getDefaultValue() != null && !entry.getValue().getDefaultValue().isEmpty()) {
+                            if (connector.isSecret(entry.getKey()) || action.isSecret(entry.getKey())) {
+                                addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue().getDefaultValue());
+                            }
+                        }
+                    }
+                    for (Map.Entry<String, String> entry: connection.getConfiguredProperties().entrySet()) {
+                        if (connector.isSecret(entry) || action.isSecret(entry)) {
+                            addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
+                        }
+                    }
+                    for (Map.Entry<String, String> entry: step.getConfiguredProperties().entrySet()) {
+                        if (connector.isSecret(entry) || action.isSecret(entry)) {
+                            addDecryptedKeyProperty(properties, index, componentScheme, entry.getKey(), entry.getValue());
+                        }
+                    }
                 } else {
                     // The component scheme is defined as camel connector prefix
                     // for 'old' style connectors.
@@ -151,34 +160,32 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                     // endpoint secrets
                     Stream.of(connector, connection, step)
-                            .filter(WithConfiguredProperties.class::isInstance)
-                            .map(WithConfiguredProperties.class::cast)
-                            .map(WithConfiguredProperties::getConfiguredProperties)
-                            .flatMap(map -> map.entrySet().stream())
-                            .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
-                            .filter(Predicates.or(connector::isSecret, action::isSecret))
-                            .distinct()
-                            .forEach(
-                                    e -> {
-                                        addDecryptedKeyProperty(properties, index, componentScheme, e);
-                                    }
-                            );
+                        .filter(WithConfiguredProperties.class::isInstance)
+                        .map(WithConfiguredProperties.class::cast)
+                        .map(WithConfiguredProperties::getConfiguredProperties)
+                        .flatMap(map -> map.entrySet().stream())
+                        .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
+                        .filter(Predicates.or(connector::isSecret, action::isSecret))
+                        .forEach(
+                            e -> {
+                                addDecryptedKeyProperty(properties, index, componentScheme, e.getKey(), e.getValue());
+                            }
+                        );
 
                     // Component properties triggers connectors aliasing so we
                     // can have multiple instances of the same connectors
                     Stream.of(connector, connection, step)
-                            .filter(WithConfiguredProperties.class::isInstance)
-                            .map(WithConfiguredProperties.class::cast)
-                            .map(WithConfiguredProperties::getConfiguredProperties)
-                            .flatMap(map -> map.entrySet().stream())
-                            .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
-                            .distinct()
-                            .forEach(
-                                    e -> {
-                                        String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
-                                        addDecryptedKeyProperty(properties, index, propKeyPrefix, e);
-                                    }
-                            );
+                        .filter(WithConfiguredProperties.class::isInstance)
+                        .map(WithConfiguredProperties.class::cast)
+                        .map(WithConfiguredProperties::getConfiguredProperties)
+                        .flatMap(map -> map.entrySet().stream())
+                        .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
+                        .forEach(
+                            e -> {
+                                String propKeyPrefix = String.format("%s.configurations.%s", componentScheme, componentScheme);
+                                addDecryptedKeyProperty(properties, index, propKeyPrefix, e.getKey(), e.getValue());
+                            }
+                        );
 
                 }
             }
@@ -207,9 +214,9 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         );
     }
 
-    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, Map.Entry<String, String> e) {
-        String key = String.format("%s-%s.%s", propKeyPrefix, index, e.getKey());
-        String val = mandatoryDecrypt(resourceManager, e);
+    private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, String propertyKey, String propertyVal) {
+        String key = String.format("%s-%s.%s", propKeyPrefix, index, propertyKey);
+        String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);
 
         properties.put(key, val);
     }

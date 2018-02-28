@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 import io.syndesis.connector.sql.common.SqlConnectionRule;
 import io.syndesis.connector.test.ConnectorTestSupport;
 import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.Connector;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
@@ -48,6 +49,28 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
                 .build());
 
         consumer.accept(builder);
+
+        return builder.build();
+    }
+
+    protected Step newSqlEndpointStep(String actionId, Consumer<Step.Builder> stepConsumer, Consumer<ConnectorDescriptor.Builder> descriptorConsumer) {
+        final Connector connector = getResourceManager().mandatoryLoadConnector("sql");
+        final ConnectorAction action = getResourceManager().mandatoryLookupAction(connector, actionId);
+        final ConnectorDescriptor.Builder descriptorBuilder = new ConnectorDescriptor.Builder().createFrom(action.getDescriptor());
+
+        descriptorConsumer.accept(descriptorBuilder);
+
+        final Step.Builder builder = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder().createFrom(action).descriptor(descriptorBuilder.build()).build())
+            .connection(new io.syndesis.model.connection.Connection.Builder()
+                .connector(connector)
+                .putConfiguredProperty("user", db.properties.getProperty("sql-connector.user"))
+                .putConfiguredProperty("password", db.properties.getProperty("sql-connector.password"))
+                .putConfiguredProperty("url", db.properties.getProperty("sql-connector.url"))
+                .build());
+
+        stepConsumer.accept(builder);
 
         return builder.build();
     }
