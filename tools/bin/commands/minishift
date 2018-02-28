@@ -6,8 +6,6 @@ DEFAULT_CPUS="2"
 DEFAULT_DISK_SIZE="20GB"
 DEFAULT_RAM="4912"
 
-set -x
-
 minishift::description() {
     echo "Initialize and manage a Minishift developer environment"
 }
