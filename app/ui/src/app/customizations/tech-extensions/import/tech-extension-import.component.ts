@@ -23,8 +23,10 @@ interface FileError {
 @Component({
   selector: 'syndesis-tech-extentions-import',
   templateUrl: 'tech-extension-import.component.html',
-  styleUrls: ['../tech-extension-common.scss',
-              'tech-extension-import.component.scss']
+  styleUrls: [
+    '../tech-extension-common.scss',
+    'tech-extension-import.component.scss'
+  ]
 })
 export class TechExtensionImportComponent implements OnInit {
 

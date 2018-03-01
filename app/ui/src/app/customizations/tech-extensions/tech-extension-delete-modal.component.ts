@@ -9,8 +9,10 @@ import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notificat
 @Component({
   selector: 'syndesis-tech-extension-delete-modal',
   templateUrl: 'tech-extension-delete-modal.component.html',
-  styleUrls: ['tech-extension-common.scss',
-              'tech-extension-delete-modal.component.scss']
+  styleUrls: [
+    'tech-extension-common.scss',
+    'tech-extension-delete-modal.component.scss'
+  ]
 })
 export class TechExtensionDeleteModalComponent implements OnInit, OnDestroy {
   id = 'tech-extension-delete-modal';
