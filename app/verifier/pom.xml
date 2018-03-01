@@ -293,6 +293,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-mqtt</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
