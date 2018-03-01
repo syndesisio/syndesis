@@ -307,6 +307,13 @@ export class FlowViewStepComponent implements OnChanges {
     return this.getPosition() !== this.currentPosition;
   }
 
+  visitPreviousStepDescribeData() {
+    const index = this.currentFlowService.getPreviousStepIndexWithDataShape(this.position);
+    this.router.navigate(['describe-data', index, 'output'], {
+      relativeTo: this.route
+    });
+  }
+
   addDataMapper() {
     const position = this.getPosition();
     this.currentFlowService.events.emit({
@@ -392,6 +399,8 @@ export class FlowViewStepComponent implements OnChanges {
         return 'ANY';
       } else if (DataShapeKinds.NONE === dataShape.kind) {
         return undefined;
+      } else if (!dataShape.type) {
+        return dataShape.kind;
       }
     }
     return dataShape.type;

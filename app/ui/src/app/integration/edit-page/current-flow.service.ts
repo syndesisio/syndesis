@@ -267,6 +267,11 @@ export class CurrentFlowService {
     return connections[0];
   }
 
+  getPreviousStepIndexWithDataShape(position): number {
+    const steps = this.getPreviousStepsWithDataShape(position).reverse();
+    return steps[0].index;
+  }
+
   getPreviousStepWithDataShape(position): Step {
     const steps = this.getPreviousStepsWithDataShape(position).reverse();
     return steps[0].step;
