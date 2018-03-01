@@ -15,15 +15,11 @@ enum DataShapeDirection {
 const DESCRIBE_DATA_FORM_CONFIG = {
   kind: {
     type: 'select',
-    displayName: 'Select Schema Type',
-    defaultValue: 'json-schema',
+    displayName: 'Select Type',
+    defaultValue: DataShapeKinds.ANY,
     enum: [
       {
-        label: 'No Type',
-        value: DataShapeKinds.NONE
-      },
-      {
-        label: 'Any Type',
+        label: 'Don\'t specify type',
         value: DataShapeKinds.ANY
       },
       {
@@ -41,16 +37,12 @@ const DESCRIBE_DATA_FORM_CONFIG = {
       {
         label: 'XML Instance',
         value: DataShapeKinds.XML_INSTANCE
-      },
-      {
-        label: 'Java',
-        value: DataShapeKinds.JAVA
       }
     ]
   },
   specification: {
     type: 'textarea',
-    displayName: 'Schema',
+    displayName: 'Definition',
     rows: 10
   },
   name: {
