@@ -25,6 +25,29 @@
             - targets:
               - localhost:9090
 
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: go_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: http_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: net_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: process_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: prometheus_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: scrape_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: tsdb_(.+)
+            action: drop
+
         - job_name: integration-pods
 
           kubernetes_sd_configs:
@@ -56,6 +79,21 @@
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
+
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: jmx_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: jvm_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: process_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: scrape_(.+)
+            action: drop
+
 - apiVersion: v1
   kind: Service
   metadata:
