@@ -71,6 +71,10 @@ export class FlowPageService {
         }
         const target = i.id ? ['/integrations', i.id] : ['/integrations'];
         this.router.navigate(target);
+      },
+      error: reason => {
+        this.errorMessage = reason;
+        this.saveInProgress = false;
       }
     });
   }
