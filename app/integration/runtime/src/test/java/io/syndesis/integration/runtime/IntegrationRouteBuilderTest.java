@@ -18,9 +18,12 @@ package io.syndesis.integration.runtime;
 import java.util.Collections;
 
 import org.apache.camel.model.FromDefinition;
+import org.apache.camel.model.ProcessDefinition;
+import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.model.SplitDefinition;
+import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,12 +59,19 @@ public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
 
         assertThat(routes.getRoutes()).hasSize(1);
 
-        RouteDefinition definition = routes.getRoutes().get(0);
+        RouteDefinition routeDefinition = routes.getRoutes().get(0);
         
-        assertThat(definition.getInputs()).hasSize(1);
-        assertThat(definition.getInputs().get(0)).isInstanceOf(FromDefinition.class);
-        assertThat(definition.getOutputs()).hasSize(1);
-        assertThat(definition.getOutputs().get(0)).isInstanceOf(SplitDefinition.class);
+        assertThat(routeDefinition.getInputs()).hasSize(1);
+        assertThat(routeDefinition.getInputs().get(0)).isInstanceOf(FromDefinition.class);
+        assertThat(routeDefinition.getOutputs()).hasSize(2);
+        assertThat(routeDefinition.getOutputs().get(0)).isInstanceOf(ProcessDefinition.class);
+        assertThat(routeDefinition.getOutputs().get(1)).isInstanceOf(SplitDefinition.class);
+
+        ProcessorDefinition<?> processDefinition = routeDefinition.getOutputs().get(1);
+        assertThat(processDefinition.getOutputs()).hasSize(3);
+        assertThat(processDefinition.getOutputs().get(0)).isInstanceOf(ProcessDefinition.class);
+        assertThat(processDefinition.getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+        assertThat(processDefinition.getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
     }
 
     // ***************************

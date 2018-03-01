@@ -17,7 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.List;
 
-import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -107,12 +107,12 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
 
             List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
 
-            assertThat(processors).hasSize(2);
-            assertThat(processors.get(0)).isInstanceOf(ToDefinition.class);
-            assertThat(ToDefinition.class.cast(processors.get(0)).getUri())
-                .isEqualTo("atlas:mapping-step-2.json?sourceMapName=" +
-                        OutMessageCaptureInterceptStrategy.CAPTURED_OUT_MESSAGES_MAP);
+            assertThat(processors).hasSize(5);
             assertThat(processors.get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(processors.get(1)).hasFieldOrPropertyWithValue(
+                "uri",
+                "atlas:mapping-step-2.json?sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP
+            );
         } finally {
             context.stop();
         }

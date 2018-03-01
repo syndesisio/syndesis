@@ -97,10 +97,10 @@ public class StepWithIdTest extends IntegrationTestSupport {
 
             assertThat(routeDefinition.getInputs()).hasSize(1);
             assertThat(routeDefinition.getInputs().get(0)).hasFieldOrPropertyWithValue("id", "endpoint-1");
-            assertThat(routeDefinition.getOutputs()).hasSize(1);
-            assertThat(routeDefinition.getOutputs().get(0)).hasFieldOrPropertyWithValue("id", "split-1");
-            assertThat(routeDefinition.getOutputs().get(0).getOutputs()).hasSize(1);
-            assertThat(routeDefinition.getOutputs().get(0).getOutputs().get(0)).hasFieldOrPropertyWithValue("id", "endpoint-2");
+            assertThat(routeDefinition.getOutputs()).hasSize(2);
+            assertThat(routeDefinition.getOutputs().get(1)).hasFieldOrPropertyWithValue("id", "split-1");
+            assertThat(routeDefinition.getOutputs().get(1).getOutputs()).hasSize(3);
+            assertThat(routeDefinition.getOutputs().get(1).getOutputs().get(1)).hasFieldOrPropertyWithValue("id", "endpoint-2");
         } finally {
             context.stop();
         }

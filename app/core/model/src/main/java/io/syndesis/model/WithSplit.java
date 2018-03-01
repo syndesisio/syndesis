@@ -13,22 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime.capture;
+package io.syndesis.model;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import java.util.Optional;
 
-@ConfigurationProperties(prefix = "syndesis.integration.runtime.capture")
-public class MessageCaptureConfiguration {
-    /**
-     * Enable/Disable message capture.
-     */
-    private boolean enabled = true;
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+public interface WithSplit {
+    Optional<Split> getSplit();
 }

@@ -28,8 +28,8 @@ import io.syndesis.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ProcessDefinition;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.ToDefinition;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -111,13 +111,17 @@ public class IntegrationSchedulerTest extends IntegrationTestSupport {
             assertThat(routeDefinition).hasFieldOrPropertyWithValue("id", "test-integration");
             assertThat(routeDefinition.getInputs()).hasSize(1);
             assertThat(routeDefinition.getInputs().get(0).getEndpointUri()).isEqualTo("timer:integration?period=1s");
-            assertThat(routeDefinition.getOutputs()).hasSize(2);
-            assertThat(ToDefinition.class.cast(routeDefinition.getOutputs().get(0)).getEndpointUri()).isEqualTo("log:timer");
-            assertThat(ToDefinition.class.cast(routeDefinition.getOutputs().get(1)).getEndpointUri()).isEqualTo("mock:timer");
+            assertThat(routeDefinition.getOutputs()).hasSize(4);
+            assertThat(routeDefinition.getOutputs().get(0)).hasFieldOrPropertyWithValue("endpointUri", "log:timer");
+            assertThat(routeDefinition.getOutputs().get(1)).isInstanceOf(ProcessDefinition.class);
+            assertThat(routeDefinition.getOutputs().get(2)).hasFieldOrPropertyWithValue("endpointUri", "mock:timer");
+            assertThat(routeDefinition.getOutputs().get(3)).isInstanceOf(ProcessDefinition.class);
 
             assertThat(routeDefinition.getInputs().get(0)).hasFieldOrPropertyWithValue("id", "integration-scheduler");
             assertThat(routeDefinition.getOutputs().get(0)).hasFieldOrPropertyWithValue("id", "step-1");
-            assertThat(routeDefinition.getOutputs().get(1)).hasFieldOrPropertyWithValue("id", "step-2");
+            assertThat(routeDefinition.getOutputs().get(1)).hasFieldOrPropertyWithValue("id", "step-1-capture");
+            assertThat(routeDefinition.getOutputs().get(2)).hasFieldOrPropertyWithValue("id", "step-2");
+            assertThat(routeDefinition.getOutputs().get(3)).hasFieldOrPropertyWithValue("id", "step-2-capture");
         } finally {
             context.stop();
         }

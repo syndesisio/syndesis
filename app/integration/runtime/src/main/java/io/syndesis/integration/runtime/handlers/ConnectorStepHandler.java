@@ -29,6 +29,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.connection.ConfigurationProperty;
@@ -43,7 +44,7 @@ import org.apache.camel.util.IntrospectionSupport;
 import org.apache.camel.util.ObjectHelper;
 
 @SuppressWarnings("PMD.ExcessiveImports")
-public class ConnectorStepHandler extends AbstractEndpointStepHandler {
+public class ConnectorStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
     @Override
     public boolean canHandle(Step step) {
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
@@ -159,8 +160,7 @@ public class ConnectorStepHandler extends AbstractEndpointStepHandler {
             throw new RuntimeException(e);
         }
 
-        // Handle split
-        return handleSplit(descriptor, route, builder, index);
+        return Optional.ofNullable(route);
     }
 
     // *************************
