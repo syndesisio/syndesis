@@ -215,6 +215,7 @@ public class IntegrationHandler extends BaseHandler
             .build();
 
         getDataManager().update(updatedIntegration);
+        updateBulletinBoard(id);
     }
 
 
