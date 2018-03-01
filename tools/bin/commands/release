@@ -99,7 +99,7 @@ release::run() {
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
-        drop_staging_repo "$appdir"
+        drop_staging_repo "$appdir" "$maven_opts"
 
         echo "==== Dry run finished, nothing has been committed"
         echo "==== Use 'git reset --hard' to cleanup"
@@ -343,10 +343,11 @@ do_product_templates() {
 
 drop_staging_repo() {
     local appdir="$1"
+    local maven_opts="$2"
 
     echo "==== Dropping Sonatype staging repo"
     cd $appdir
-    ./mvnw nexus-staging:drop -Prelease -DstagingDescription="Dropping repo"
+    ./mvnw ${maven_opts} nexus-staging:drop -Prelease -DstagingDescription="Dropping repo"
 }
 
 # =======================================================================
