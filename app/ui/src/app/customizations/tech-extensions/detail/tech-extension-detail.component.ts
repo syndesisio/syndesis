@@ -8,7 +8,8 @@ import { TechExtensionDeleteModalComponent } from '@syndesis/ui/customizations/t
 @Component({
   selector: 'syndesis-tech-extension-detail',
   templateUrl: 'tech-extension-detail.component.html',
-  styleUrls: ['tech-extension-detail.component.scss']
+  styleUrls: ['../tech-extension-common.scss',
+    'tech-extension-detail.component.scss']
 
 })
 export class TechExtensionDetailComponent implements OnInit {

@@ -24,88 +24,86 @@
   </div>
 </div>
 <syndesis-loading [loading]="loading$ | async">
-  <div class="row" *ngIf="extension$ | async; let extension">
+  <div class="row row-cards-pf" *ngIf="extension$ | async; let extension">
     <div class="col-xs-12">
       <syndesis-tech-extension-delete-modal></syndesis-tech-extension-delete-modal>
-      <p></p>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h1 class="panel-title inline-block">
-            {{ extension.name }}
-            <small>(ID: {{ extension.extensionId }})</small>
-          </h1>
-          <div class="pull-right">
-            <button type="button"
-                    class="btn btn-primary"
-                    [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
-            <button type="button"
-                    class="btn btn-default"
-                    (click)="deleteModal.prompt(extension)">Delete</button>
+      <div class="card-pf">
+        <div class="card-pf-heading">
+          <div class="card-pf-title">
+            <div class="row">
+              <h1 class="col-xs-8 extension__title">
+                {{ extension.name }}
+                <span class="extension__title__id">(ID: {{ extension.extensionId }})</span>
+              </h1>
+              <div class="col-xs-4 text-right">
+                <button type="button"
+                        class="btn btn-primary"
+                        [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">Update</button>
+                <button type="button"
+                        class="btn btn-default"
+                        (click)="deleteModal.prompt(extension)">Delete</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="panel-body">
-          <h2 class="section-heading">Overview</h2>
-          <dl class="dl-horizontal">
-            <dt>
-              Name
-            </dt>
-            <dd>
-              {{ extension.name }}
-            </dd>
-          </dl>
-          <dl class="dl-horizontal">
-            <dt>
-              Description
-            </dt>
-            <dd>
-              {{ extension.description }}
-            </dd>
-          </dl>
-          <dl class="dl-horizontal">
-            <dt>
-              Type
-            </dt>
-            <dd>
-              <ng-container *ngIf="extension.extensionType == 'Steps'; else typeDescConnector">
-                Step Extension
-              </ng-container>
-              <ng-template #typeDescConnector>
-                Connector Extension
-              </ng-template>
-            </dd>
-          </dl>
-          <dl class="dl-horizontal">
-            <dt>
-              Last Update
-            </dt>
-            <dd>
-              {{ extension.lastUpdated | date : 'medium' }}
-            </dd>
-          </dl>
-          <ng-container *ngIf="extension.extensionType == 'Steps'; else supportedTypeConnector">
-            <h2 class="section-heading intermediate">Supported Steps</h2>
-          </ng-container>
-          <ng-template #supportedTypeConnector>
-            <h2 class="section-heading intermediate">Supported Actions</h2>
-          </ng-template>
-          <div class="row">
-            <div class="col-xs-1">
-            </div>
-            <div class="col-xs-11">
-              <div *ngFor="let action of extension.actions">
-                <strong>
-                  {{ action.name }}
-                </strong>
-                - {{ action.description }}
+        <div class="card-pf-body">
+          <div class="extension__group">
+            <h3>Overview</h3>
+            <dl class="dl-horizontal">
+              <dt>
+                Name
+              </dt>
+              <dd>
+                {{ extension.name }}
+              </dd>
+              <dt>
+                Description
+              </dt>
+              <dd>
+                {{ extension.description }}
+              </dd>
+              <dt>
+                Type
+              </dt>
+              <dd>
+                <ng-container *ngIf="extension.extensionType == 'Steps'; else typeDescConnector">
+                  Step Extension
+                </ng-container>
+                <ng-template #typeDescConnector>
+                  Connector Extension
+                </ng-template>
+              </dd>
+              <dt>
+                Last Update
+              </dt>
+              <dd>
+                {{ extension.lastUpdated | date : 'medium' }}
+              </dd>
+            </dl>
+          </div>
+          <div class="extension__group">
+            <ng-container *ngIf="extension.extensionType == 'Steps'; else supportedTypeConnector">
+              <h3>Supported Steps</h3>
+            </ng-container>
+            <ng-template #supportedTypeConnector>
+              <h3>Supported Actions</h3>
+            </ng-template>
+            <div class="row">
+              <div class="col-xs-offset-1 col-xs-11">
+                <div *ngFor="let action of extension.actions">
+                  <strong>
+                    {{ action.name }}
+                  </strong>
+                  - {{ action.description }}
+                </div>
               </div>
             </div>
           </div>
           <ng-container *ngIf="integrations$ | async; let integrations">
-              <h2 class="section-heading intermediate">Usage</h2>
+            <div class="extension__group">
+              <h3 class="section-heading intermediate">Usage</h3>
               <div class="row">
-                <div class="col-xs-1">
-                </div>
-                <div class="col-xs-11">
+                <div class="col-xs-offset-1 col-xs-11">
                   <p *ngIf="integrations"
                      [innerHtml]="integrations.length | i18nPlural: integrationLengthMapping"></p>
                   <table class="table"
@@ -133,6 +131,7 @@
                   </table>
                 </div>
               </div>
+            </div>
           </ng-container>
         </div>
       </div>
