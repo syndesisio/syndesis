@@ -107,6 +107,11 @@ parameters:
   name: PROMETHEUS_VOLUME_CAPACITY
   required: true
   value: 1Gi
+- description: Volume space available for Verifier data, e.g. 512Mi, 2Gi.
+  displayName: Verifier Volume Capacity
+  name: VERIFIER_VOLUME_CAPACITY
+  required: true
+  value: 256Mi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:

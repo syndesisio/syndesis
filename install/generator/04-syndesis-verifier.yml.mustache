@@ -14,6 +14,19 @@
       app: syndesis
       component: syndesis-meta
 - apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: syndesis-verifier
+    labels:
+      app: syndesis
+      component: syndesis-verifier
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VERIFIER_VOLUME_CAPACITY}
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -46,6 +59,8 @@
           env:
           - name: JAVA_APP_DIR
             value: /deployments
+          - name: LOADER_PATH
+            value: /deployments/ext
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
 {{#Debug}}
@@ -91,7 +106,12 @@
           volumeMounts:
           - name: config-volume
             mountPath: /deployments/config
+          - name: ext-volume
+            mountPath: /deployments/ext
         volumes:
+        - name: ext-volume
+          persistentVolumeClaim:
+            claimName: syndesis-verifier
         - name: config-volume
           configMap:
             name: syndesis-meta-config

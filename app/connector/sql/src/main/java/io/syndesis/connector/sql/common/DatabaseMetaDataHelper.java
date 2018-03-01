@@ -39,7 +39,7 @@ public final class DatabaseMetaDataHelper {
         String defaultSchema = null;
         // Oracle uses the username as schema
         if (databaseProductName.equalsIgnoreCase(DatabaseProduct.ORACLE.name())) {
-            defaultSchema = dbUser;
+            defaultSchema = dbUser.toUpperCase(Locale.US);
         } else if (databaseProductName.equalsIgnoreCase(DatabaseProduct.POSTGRESQL.name())) {
             defaultSchema = "public";
         } else if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {

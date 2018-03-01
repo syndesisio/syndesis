@@ -316,6 +316,7 @@
         <version>${spring-boot.version}</version>
         <configuration>
           <jvmArguments>-server -Xms256m -Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000</jvmArguments>
+          <layout>ZIP</layout>
         </configuration>
         <executions>
           <execution>
