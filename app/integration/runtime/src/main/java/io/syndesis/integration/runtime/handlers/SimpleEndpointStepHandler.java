@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.integration.Step;
@@ -31,7 +32,7 @@ import org.apache.camel.util.ObjectHelper;
 /**
  * This is needed until connectors are migrated to the new architecture.
  */
-public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
+public class SimpleEndpointStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
     @Override
     public boolean canHandle(Step step) {
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
@@ -94,7 +95,6 @@ public class SimpleEndpointStepHandler extends AbstractEndpointStepHandler {
             throw ObjectHelper.wrapRuntimeCamelException(e);
         }
 
-        // Handle split
-        return handleSplit(descriptor, route, builder, index);
+        return Optional.ofNullable(route);
     }
 }

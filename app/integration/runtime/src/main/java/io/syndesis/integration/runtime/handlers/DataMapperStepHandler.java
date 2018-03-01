@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.OutMessageCaptureInterceptStrategy;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.model.integration.Step;
 import io.syndesis.model.integration.StepKind;
 import org.apache.camel.model.ProcessorDefinition;
@@ -36,7 +36,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler{
         ObjectHelper.notNull(route, "route");
 
         return Optional.of(
-            route.toF("atlas:mapping-step-%s.json?sourceMapName=" + OutMessageCaptureInterceptStrategy.CAPTURED_OUT_MESSAGES_MAP, stepIndex)
+            route.toF("atlas:mapping-step-%s.json?sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, stepIndex)
         );
     }
 }

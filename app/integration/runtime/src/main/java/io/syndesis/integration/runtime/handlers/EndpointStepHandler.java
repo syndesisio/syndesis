@@ -24,6 +24,7 @@ import io.syndesis.core.CollectionsUtils;
 import io.syndesis.core.Optionals;
 import io.syndesis.core.Predicates;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.model.WithConfigurationProperties;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
@@ -38,7 +39,7 @@ import org.apache.camel.util.URISupport;
 /**
  * This is needed until connectors are migrated to the new architecture.
  */
-public class EndpointStepHandler extends AbstractEndpointStepHandler {
+public class EndpointStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
     @Override
     public boolean canHandle(Step step) {
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
@@ -110,8 +111,7 @@ public class EndpointStepHandler extends AbstractEndpointStepHandler {
             route = route.to(uri);
         }
 
-        // Handle split
-        return handleSplit(descriptor, route, builder, stepIndex);
+        return Optional.ofNullable(route);
     }
 
     // *************************

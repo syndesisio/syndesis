@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import io.syndesis.core.Json;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
@@ -38,6 +39,9 @@ import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
+import io.syndesis.model.Split;
+import io.syndesis.model.action.ConnectorAction;
+import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.Scheduler;
@@ -108,7 +112,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
         ProcessorDefinition route = configureRouteScheduler(integration);
 
-        for (int i = 0; i< steps.size(); i++) {
+        for (int i = 0; i < steps.size(); i++) {
             final Step step = steps.get(i);
             final IntegrationStepHandler handler = findHandler(step);
 
@@ -119,7 +123,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             // Load route fragments eventually defined by extensions.
             loadFragments(step);
 
-            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, Integer.toString(i + 1));
+            final String index = Integer.toString(i + 1);
+            final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, index);
 
             if (route == null && definition.isPresent()) {
                 definition.filter(RouteDefinition.class::isInstance)
@@ -136,6 +141,18 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     step.getId().ifPresent(rd::id);
                     return rd;
                 }).orElse(route);
+            }
+
+            route = handleConnectorSplit(step, route, index).map(rd -> {
+                step.getId().ifPresent(id -> rd.id(id + "-split"));
+                return rd;
+            }).orElse(route);
+
+            if (route != null) {
+                route = route.process(new OutMessageCaptureProcessor(step));
+                if (step.getId().isPresent()) {
+                    route.id(step.getId().get() + "-capture");
+                }
             }
         }
     }
@@ -185,6 +202,29 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return null;
     }
 
+    private Optional<ProcessorDefinition> handleConnectorSplit(Step step, ProcessorDefinition route, String index) {
+        if (step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
+            final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
+            final ConnectorDescriptor descriptor = action.getDescriptor();
+
+            if (descriptor.getSplit().isPresent()) {
+                final Split split = descriptor.getSplit().get();
+                final Step.Builder splitBuilder = new Step.Builder().stepKind(StepKind.split);
+
+                split.getLanguage().ifPresent(s -> splitBuilder.putConfiguredProperty("language", s));
+                split.getExpression().ifPresent(s -> splitBuilder.putConfiguredProperty("expression", s));
+
+                return new SplitStepHandler().handle(
+                    splitBuilder.build(),
+                    route,
+                    this,
+                    index);
+            }
+        }
+
+        return Optional.empty();
+    }
+
     @SuppressWarnings("PMD")
     private void loadFragments(Step step) {
         if (StepKind.extension != step.getStepKind()) {
@@ -198,7 +238,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {
-                final Object instance = mandatoryçoadResource(context, resource);
+                final Object instance = mandatoryloadResource(context, resource);
                 final RoutesDefinition definitions = mandatoryConvertToRoutesDefinition(resource, instance);
 
                 LOGGER.debug("Resolved resource: {} as {}", resource, instance.getClass());
@@ -213,7 +253,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     }
 
     @SuppressWarnings("PMD")
-    private Object mandatoryçoadResource(CamelContext context, String resource) {
+    private Object mandatoryloadResource(CamelContext context, String resource) {
         Object instance = null;
 
         if (resource.startsWith("classpath:")) {

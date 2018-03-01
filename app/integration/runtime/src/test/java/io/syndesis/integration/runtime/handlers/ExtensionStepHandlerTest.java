@@ -133,14 +133,13 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
             List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
 
-            assertThat(processors).hasSize(4);
-            assertThat(processors.get(0)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(0)).getHeaderName()).isEqualTo("Property-1");
+            assertThat(processors).hasSize(7);
             assertThat(processors.get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getHeaderName()).isEqualTo("Property-2");
-            assertThat(processors.get(2)).isInstanceOf(ToDefinition.class);
-            assertThat(ToDefinition.class.cast(processors.get(2)).getUri()).isEqualTo("log:myLog");
-
+            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getHeaderName()).isEqualTo("Property-1");
+            assertThat(processors.get(2)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getHeaderName()).isEqualTo("Property-2");
+            assertThat(processors.get(3)).isInstanceOf(ToDefinition.class);
+            assertThat(ToDefinition.class.cast(processors.get(3)).getUri()).isEqualTo("log:myLog");
         } finally {
             context.stop();
         }
@@ -197,9 +196,10 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
             List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
 
-            assertThat(processors).hasSize(2);
-            assertThat(processors.get(0)).isInstanceOf(ToDefinition.class);
-            assertThat(ToDefinition.class.cast(processors.get(0)).getUri()).isEqualTo(
+            assertThat(processors).hasSize(5);
+            assertThat(processors.get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(processors.get(1)).hasFieldOrPropertyWithValue(
+                "uri",
                 "class:io.syndesis.integration.runtime.handlers.ExtensionStepHandlerTest$MyExtension?method=action&bean.param1=Val-1&bean.param2=Val-2"
             );
         } finally {
@@ -259,15 +259,15 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
             List<ProcessorDefinition<?>> processors = routeDefinition.getOutputs();
 
-            assertThat(processors).hasSize(3);
-            assertThat(processors.get(0)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(0)).getHeaderName()).isEqualTo("param1");
-            assertThat(SetHeaderDefinition.class.cast(processors.get(0)).getExpression()).isInstanceOf(ConstantExpression.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(0)).getExpression().getExpression()).isEqualTo("Val-1");
+            assertThat(processors).hasSize(6);
             assertThat(processors.get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getHeaderName()).isEqualTo("param2");
+            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getHeaderName()).isEqualTo("param1");
             assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getExpression()).isInstanceOf(ConstantExpression.class);
-            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getExpression().getExpression()).isEqualTo("Val-2");
+            assertThat(SetHeaderDefinition.class.cast(processors.get(1)).getExpression().getExpression()).isEqualTo("Val-1");
+            assertThat(processors.get(2)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getHeaderName()).isEqualTo("param2");
+            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getExpression()).isInstanceOf(ConstantExpression.class);
+            assertThat(SetHeaderDefinition.class.cast(processors.get(2)).getExpression().getExpression()).isEqualTo("Val-2");
 
         } finally {
             context.stop();

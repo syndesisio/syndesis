@@ -24,15 +24,15 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.model.Split;
 import io.syndesis.model.WithConfiguredProperties;
+import io.syndesis.model.WithSplit;
 import io.syndesis.model.connection.ConfigurationProperty;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorDescriptor.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredProperties, Serializable {
+public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredProperties, WithSplit, Serializable {
 
     final class Builder extends ImmutableConnectorDescriptor.Builder {
 
@@ -107,6 +107,4 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
     default List<String> getConnectorCustomizers() {
         return Collections.emptyList();
     }
-
-    Optional<Split> getSplit();
 }

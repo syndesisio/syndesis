@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.runtime;
+package io.syndesis.integration.runtime.capture;
 
 import java.util.Map;
 
+import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
+import io.syndesis.model.Split;
 import io.syndesis.model.action.ConnectorAction;
 import io.syndesis.model.action.ConnectorDescriptor;
 import io.syndesis.model.action.StepAction;
@@ -57,14 +60,14 @@ import static org.assertj.core.api.Assertions.assertThat;
     }
 )
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class OutMessageCaptureInterceptStrategyTest extends IntegrationTestSupport {
+public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
     @Autowired
     private ApplicationContext applicationContext;
 
     @Test
     public void testCapture() throws Exception {
         final CamelContext context = new SpringCamelContext(applicationContext);
-        context.addInterceptStrategy(new OutMessageCaptureInterceptStrategy());
+
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
                 new Step.Builder()
@@ -124,7 +127,82 @@ public class OutMessageCaptureInterceptStrategyTest extends IntegrationTestSuppo
             result.assertIsSatisfied();
 
             Exchange exchange1 = result.getExchanges().get(0);
-            Map<String, Message> messages = OutMessageCaptureInterceptStrategy.getCapturedMessageMap(exchange1);
+            Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
+            assertThat(messages.get("s1").getBody()).isEqualTo("World");
+            assertThat(messages.get("s2").getBody()).isEqualTo("Hello World");
+            assertThat(messages.get("s3").getBody()).isEqualTo(-862545276);
+            assertThat(messages.get("s4").getBody()).isEqualTo(-862545276);
+
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void testCaptureWithSplit() throws Exception {
+        final CamelContext context = new SpringCamelContext(applicationContext);
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(
+                new Step.Builder()
+                    .id("s1")
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("direct")
+                            .putConfiguredProperty("name", "expression")
+                            .split(new Split.Builder().build())
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .id("s2")
+                    .stepKind(StepKind.extension)
+                    .action(new StepAction.Builder()
+                        .descriptor(new StepDescriptor.Builder()
+                            .kind(StepAction.Kind.BEAN)
+                            .entrypoint(Bean1.class.getName())
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .id("s3")
+                    .stepKind(StepKind.extension)
+                    .action(new StepAction.Builder()
+                        .descriptor(new StepDescriptor.Builder()
+                            .kind(StepAction.Kind.BEAN)
+                            .entrypoint(Bean2.class.getName())
+                            .build())
+                        .build())
+                    .build(),
+                new Step.Builder()
+                    .id("s4")
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("mock")
+                            .putConfiguredProperty("name", "expression")
+                            .build())
+                        .build())
+                    .build()
+            );
+
+            // Set up the camel context
+            context.addRoutes(routes);
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+
+            result.expectedBodiesReceived("-862545276");
+            template.sendBody("direct:expression", "World");
+            result.assertIsSatisfied();
+
+            Exchange exchange1 = result.getExchanges().get(0);
+            Map<String, Message> messages = OutMessageCaptureProcessor.getCapturedMessageMap(exchange1);
             assertThat(messages.get("s1").getBody()).isEqualTo("World");
             assertThat(messages.get("s2").getBody()).isEqualTo("Hello World");
             assertThat(messages.get("s3").getBody()).isEqualTo(-862545276);
