@@ -138,9 +138,15 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
       const dataShape = this.getDataShape(this.direction, step);
       // normalize this to 'any'
       dataShape.kind = value.kind;
-      dataShape.specification = value.specification || '';
-      dataShape.name = value.name || '';
-      dataShape.description = value.description || '';
+      if (dataShape.kind !== DataShapeKinds.ANY) {
+        dataShape.specification = value.specification || '';
+        dataShape.name = value.name || 'Custom';
+        dataShape.description = value.description || 'A user specified data type';
+      } else {
+        delete dataShape.specification;
+        delete dataShape.name;
+        delete dataShape.description;
+      }
       dataShape.metadata = { ...dataShape.metadata, ...{ userDefined: 'true' }};
       this.currentFlowService.events.emit({
         kind: 'integration-set-datashape',

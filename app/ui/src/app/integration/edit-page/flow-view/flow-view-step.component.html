@@ -2,32 +2,24 @@
      class="flow-view-step">
 
   <ng-template #addDatamapper>
-    <div class="alert alert-warning no-bottom-margin">
-      <!--
-      <button type="button"
-        (click)="hideAddDatamapperInfo()"
-        class="close">
-        <span class="pficon pficon-close"></span>
-      </button>
-      -->
-      <span class="pficon pficon-warning-triangle-o"></span>
-      <p><strong>Data Type Mismatch:</strong> <a [routerLink]="" (click)="addDataMapper()">Add a data mapping step</a> before this connection to resolve the difference.</p>
+    <div>
+      <div class="alert alert-warning no-bottom-margin"
+        *ngIf="previousStepShouldDefineDataShape">
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <p><strong>Typeless Previous Step:</strong> <a href="javascript: null" (click)="visitPreviousStepDescribeData()">Define the data type</a> for the previous step to resolve this warning.</p>
+      </div>
+
+      <div class="alert alert-warning no-bottom-margin"
+        *ngIf="shouldAddDatamapper">
+        <span class="pficon pficon-warning-triangle-o"></span>
+        <p><strong>Data Type Mismatch:</strong> <a href="javascript: null" (click)="addDataMapper()">Add a data mapping step</a> before this connection to resolve the difference.</p>
+      </div>
+
     </div>
   </ng-template>
 
   <ng-template #tooltipPopover>
     <div class="info-popover container-fluid">
-      <!--
-      <button type="button"
-        (click)="hideInfoPopover()"
-        class="pull-right close">
-        <span class="pficon pficon-close"></span>
-      </button>
-      -->
-      <!-- TODO Apply UXD outcome - https://github.com/syndesisio/syndesis/issues/700 -->
-      <!--
-      <div *ngIf="previousStepShouldDefineDataShape"><p style="color:red"><b>Define a data type</b></p></div>
-      -->
       <dl class="row">
         <dt class="col-xs-6 text-right">
           Name
@@ -98,7 +90,7 @@
       <div [ngClass]="getParentClass()"
             (click)="goto('action-configure')">
         <span class="pficon pficon-warning-triangle-o data-mismatch"
-          *ngIf="shouldAddDatamapper"
+          *ngIf="shouldAddDatamapper || previousStepShouldDefineDataShape"
           [popover]="addDatamapper"
           #datamapperInfoPop="bs-popover"
           triggers=""
