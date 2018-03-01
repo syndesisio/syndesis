@@ -76,14 +76,14 @@
             (fileOver)="onFileOver($event)">
             <p>Drag and drop your extension file here or</p>
             <div class="row syn-drop-zone__file-select">
-              <div class="col-xs-3">
+              <div class="col-xs-4">
                 <input #fileSelect
                   type="file"
                   ng2FileSelect
                   [uploader]="uploader"
                   (onFileSelected)="fileSelect.value=''">
               </div>
-              <div class="col-xs-5">
+              <div class="col-xs-4">
                 {{ item?.file?.name }}
               </div>
               <div class="col-xs-4">
@@ -91,14 +91,16 @@
                   <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
                   <em>Importing...</em>
                 </div>
-                <div *ngIf="item.isSuccess; else isError">
-                  <span class="pficon-ok"></span>
-                  Successfully imported.
-                </div>
-                <ng-template #isError>
+                <div *ngIf="item.isUploaded">
+                  <div *ngIf="item.isSuccess; else isError">
+                    <span class="pficon-ok"></span>
+                    Successfully imported.
+                  </div>
+                  <ng-template #isError>
                     <span class="pficon-error-circle-o"></span>
                     Unable to import this file.
                   </ng-template>
+                </div>
               </div>
             </div>
             <p class="help-block"><em>Accepted file type: .jar</em></p>
