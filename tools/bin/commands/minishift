@@ -1,5 +1,4 @@
 #!/bin/bash
-export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 DEFAULT_OPENSHIFT_VERSION="v3.7.1"
 DEFAULT_CPUS="2"
