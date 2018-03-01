@@ -60,10 +60,11 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   showInfoPopoverCollapsed() {
-    if (this.step.stepKind !== ENDPOINT) {
+    if (!this.step || this.step.stepKind !== ENDPOINT) {
       return;
     }
-    if (this.currentFlowService.getStep(this.currentPosition).stepKind === DATA_MAPPER) {
+    const currentStep = this.currentFlowService.getStep(this.currentPosition);
+    if (currentStep && currentStep.kind === DATA_MAPPER) {
       this.connectionImgPop.show();
     }
   }
