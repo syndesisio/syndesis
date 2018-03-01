@@ -172,7 +172,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 final RuntimeCamelCatalog catalog = getContext().getRuntimeCamelCatalog();
                 final String uri = catalog.asEndpointUri("timer", properties, false);
 
-                ProcessorDefinition route = this.from(uri);
+                RouteDefinition route = this.from(uri);
+                route.getInputs().get(0).setId("integration-scheduler");
                 integration.getId().ifPresent(route::setId);
 
                 return route;
