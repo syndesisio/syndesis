@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.core.json.OptionalStringTrimmingConverter;
 import io.syndesis.model.Kind;
 import io.syndesis.model.ResourceIdentifier;
+import io.syndesis.model.ToJson;
 import io.syndesis.model.WithId;
 import io.syndesis.model.WithModificationTimestamps;
 import io.syndesis.model.WithName;
@@ -46,7 +47,7 @@ import io.syndesis.model.validation.UniquenessRequired;
 @JsonDeserialize(builder = Integration.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface Integration extends WithId<Integration>, WithVersion, WithModificationTimestamps, WithTags, WithName, Serializable {
+public interface Integration extends WithId<Integration>, WithVersion, WithModificationTimestamps, WithTags, WithName, ToJson, Serializable {
 
     @Override
     default Kind getKind() {

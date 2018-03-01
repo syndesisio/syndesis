@@ -16,6 +16,7 @@
 package io.syndesis.rest.v1.handler.integration;
 
 import static io.syndesis.model.buletin.LeveledMessage.Level.ERROR;
+import static io.syndesis.model.buletin.LeveledMessage.Level.WARN;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,11 +61,14 @@ import io.syndesis.model.Kind;
 import io.syndesis.model.ListResult;
 import io.syndesis.model.buletin.IntegrationBulletinBoard;
 import io.syndesis.model.buletin.LeveledMessage;
+import io.syndesis.model.connection.Connection;
+import io.syndesis.model.connection.Connector;
 import io.syndesis.model.filter.FilterOptions;
 import io.syndesis.model.filter.Op;
 import io.syndesis.model.integration.Integration;
 import io.syndesis.model.integration.IntegrationDeployment;
 import io.syndesis.model.integration.IntegrationDeploymentState;
+import io.syndesis.model.integration.Step;
 import io.syndesis.model.validation.AllValidations;
 import io.syndesis.rest.util.PaginationFilter;
 import io.syndesis.rest.util.ReflectiveSorter;
@@ -113,7 +117,37 @@ public class IntegrationHandler extends BaseHandler
             throw new EntityNotFoundException(String.format("Integration %s has been deleted", integration.getId()));
         }
 
-        return integration;
+        // Get the latest connection configs.
+        List<Connection> connections = integration.getConnections().stream()
+            .map(this::toCurrentConnection)
+            .collect(Collectors.toList());
+
+        List<Step> steps = integration.getSteps().stream()
+            .map(this::toCurrentSteps)
+            .collect(Collectors.toList());
+
+        return new Integration.Builder()
+            .createFrom(integration)
+            .connections(connections)
+            .steps(steps)
+            .build();
+    }
+
+    public Connection toCurrentConnection(Connection c) {
+        Connection connection = getDataManager().fetch(Connection.class, c.getId().get());
+        if (connection.getConnectorId().isPresent()) {
+            final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
+            connection = new Connection.Builder().createFrom(connection).connector(connector).build();
+        }
+        return connection;
+    }
+
+    public Step toCurrentSteps(Step step) {
+        Step.Builder from = new Step.Builder().createFrom(step);
+        step.getConnection().ifPresent(c->{
+            from.connection(toCurrentConnection(c));
+        });
+        return from.build();
     }
 
     @GET
@@ -181,6 +215,7 @@ public class IntegrationHandler extends BaseHandler
             .build();
 
         getDataManager().update(updatedIntegration);
+        updateBulletinBoard(id);
     }
 
 
@@ -328,17 +363,30 @@ public class IntegrationHandler extends BaseHandler
      *
      * @param id
      */
-    public void updateBulletinBoard(String id) {
-        List<LeveledMessage> messages = new ArrayList<>();
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}/update-bulletins")
+    public IntegrationBulletinBoard updateBulletinBoard(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
 
-        // TODO: run any validation here and collect it's messages
-        Integration integration = get(id);
-        final Set<ConstraintViolation<Integration>> constraintViolations = getValidator().validate(integration, AllValidations.class);
+        Integration savedIntegration = getDataManager().fetch(Integration.class, id);
+        if( savedIntegration == null ) {
+            throw new EntityNotFoundException();
+        }
+        Integration integrationWithUpdatedConnections = get(id);
+
+        List<LeveledMessage> messages = new ArrayList<>();
+        final Set<ConstraintViolation<Integration>> constraintViolations = getValidator().validate(integrationWithUpdatedConnections, AllValidations.class);
         for (ConstraintViolation<Integration> violation : constraintViolations) {
             messages.add(LeveledMessage.of(ERROR, violation.getMessage()));
         }
 
-        getDataManager().set(IntegrationBulletinBoard.of(id, messages));
+        if( !savedIntegration.toJson().equals(integrationWithUpdatedConnections.toJson()) ) {
+            messages.add(LeveledMessage.of(WARN, "Connections updated."));
+        }
+
+        IntegrationBulletinBoard bulletinBoard = IntegrationBulletinBoard.of(id, messages);
+        getDataManager().set(bulletinBoard);
+        return bulletinBoard;
     }
 
 }
