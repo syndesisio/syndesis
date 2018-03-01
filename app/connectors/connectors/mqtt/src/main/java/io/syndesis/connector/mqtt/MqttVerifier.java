@@ -21,13 +21,8 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import io.syndesis.verifier.api.ComponentVerifier;
 
 public class MqttVerifier extends ComponentVerifier {
-
-    public MqttVerifier() {
-        super("paho", MqttVerifierExtension.class);
-    }
-
     @Override
     protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new MqttVerifierExtension(scheme, context);
+        return new MqttVerifierExtension("paho", context);
     }
 }

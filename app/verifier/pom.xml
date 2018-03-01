@@ -241,14 +241,14 @@
       <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-ftp</artifactId>
       <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-sftp</artifactId>
@@ -296,8 +296,7 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-mqtt</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
