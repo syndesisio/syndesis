@@ -71,8 +71,15 @@ release::run() {
     # Verify that there are no modified file in git repo
     check_git_clean "$appdir"
 
+    # Temporary local repository to guarantee a clean build
+    local local_maven_repo=$(readopt --local-maven-repo)
+    if [ -z "$local_maven_repo" ]; then
+        local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
+        trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
+    fi
+
     # Calculate common maven options
-    local maven_opts="$(extract_maven_opts)"
+    local maven_opts="$(extract_maven_opts $local_maven_repo)"
 
     # Set pom.xml version to the given release_version
     update_pom_versions "$appdir" "$release_version" "$maven_opts"
@@ -346,13 +353,7 @@ drop_staging_repo() {
 # Helper
 
 extract_maven_opts() {
-    # Temporary local repository to guarantee a clean build
-    local local_maven_repo=$(readopt --local-maven-repo)
-    if [ -z "$local_maven_repo" ]; then
-        local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
-        trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
-    fi
-    local maven_opts="-Dmaven.repo.local=$local_maven_repo --batch-mode"
+    local maven_opts="-Dmaven.repo.local=$1 --batch-mode"
 
     local settings_xml=$(readopt --settings-xml --settings)
     if [ -n "${settings_xml}" ]; then
