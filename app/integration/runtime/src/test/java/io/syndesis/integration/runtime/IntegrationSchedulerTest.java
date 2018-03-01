@@ -69,6 +69,7 @@ public class IntegrationSchedulerTest extends IntegrationTestSupport {
                 protected Integration loadIntegration() throws IOException {
                     Integration integration = newIntegration(
                         new Step.Builder()
+                            .id("step-1")
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                 .descriptor(new ConnectorDescriptor.Builder()
@@ -78,6 +79,7 @@ public class IntegrationSchedulerTest extends IntegrationTestSupport {
                                 .build())
                             .build(),
                         new Step.Builder()
+                            .id("step-2")
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                 .descriptor(new ConnectorDescriptor.Builder()
@@ -112,6 +114,10 @@ public class IntegrationSchedulerTest extends IntegrationTestSupport {
             assertThat(routeDefinition.getOutputs()).hasSize(2);
             assertThat(ToDefinition.class.cast(routeDefinition.getOutputs().get(0)).getEndpointUri()).isEqualTo("log:timer");
             assertThat(ToDefinition.class.cast(routeDefinition.getOutputs().get(1)).getEndpointUri()).isEqualTo("mock:timer");
+
+            assertThat(routeDefinition.getInputs().get(0)).hasFieldOrPropertyWithValue("id", "integration-scheduler");
+            assertThat(routeDefinition.getOutputs().get(0)).hasFieldOrPropertyWithValue("id", "step-1");
+            assertThat(routeDefinition.getOutputs().get(1)).hasFieldOrPropertyWithValue("id", "step-2");
         } finally {
             context.stop();
         }
