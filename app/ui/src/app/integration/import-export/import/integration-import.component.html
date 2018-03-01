@@ -6,13 +6,13 @@
       </div>
     </div>
     <div class="card-pf-body">
-      <div class="import-drop-zone"
+      <div class="syn-drop-zone"
         ng2FileDrop
         [uploader]="uploader" 
-        [ngClass]="{'import-drop-zone--hover': hasBaseDropZoneOver}"
+        [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
         (fileOver)="onFileOver($event)">
         <p>Drag and drop your integration files here or</p>
-        <div class="row import-file-select">
+        <div class="row syn-drop-zone__file-select">
           <div class="col-md-3">
             <input #fileSelect type="file" 
               ng2FileSelect
@@ -45,10 +45,10 @@
             </div>
           </div>
         </div>
-        <span class="text-muted">
+        <p class="help-block">
           <em>Note: The imported integration will be in the draft state. If you previously imported and this environment has
             a draft version of the integration, then that draft is lost.</em>
-        </span>
+        </p>
       </div>
     </div>
   </div>
