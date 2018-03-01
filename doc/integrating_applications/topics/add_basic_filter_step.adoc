@@ -8,11 +8,11 @@ criteria that you define. For example, in an integration that
 obtains data from Twitter, you can specify that you want to
 continue the integration by operating only on tweets that contain "Red Hat".
 
-Add all connections to your integration before you add any steps. When you 
+Add all connections to your integration before you add additional steps. When you 
 add a step, {prodname} operates on the data it receives from the
-previous connection or the previous step. 
+previous connection(s) and any other previous step(s). 
 
-If you cannot definte the filter you need in a basic filter step,
+If you cannot define the filter you need in a basic filter step,
 see <<add-advanced-filter-step>>. 
 
 You can add a step when you are creating an integration or editing

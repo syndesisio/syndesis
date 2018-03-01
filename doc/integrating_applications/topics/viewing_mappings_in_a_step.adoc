@@ -1,0 +1,33 @@
+[id='viewing-mappings-in-a-step']
+= Viewing the mappings in a step
+
+While you are adding or editing a data mapper step, you can view the mappings
+already defined in this step. This lets you check whether the
+correct mappings are in place. 
+
+To view mappings when you are already in the data mapper, 
+in the upper right, click 
+image:shared/images/grid.png[title="Grid"].
+
+To dismiss the list of mappings and redisplay the source and
+target fields, click image:shared/images/grid.png[title="Grid"] again.
+
+To view mappings when you are editing an integration but you 
+are not adding or editing a data mapper step:
+
+. In the integration visualization panel on the left, click the
+data mapper step for which you want view the defined mappings.
+. In the data mapper,  in the upper right, click 
+image:shared/images/grid.png[title="Grid"].
+
+To view mappings when you are not editing a data mapper step:
+
+. In the left panel, click *Integrations*. 
+. In the entry for the integration whose
+data mappings you want to view, on the right, click the 
+image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots].
+. In the popup menu, click *Edit*.
+. In the integration visualization panel on the left, click the
+data mapper step for which you want view the defined mappings.
+. In the data mapper,  in the upper right, click 
+image:shared/images/grid.png[title="Grid"].

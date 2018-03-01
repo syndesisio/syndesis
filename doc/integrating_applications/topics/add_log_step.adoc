@@ -1,0 +1,36 @@
+[id='add-log-step']
+= Add a log step
+
+{prodname} provides log information for each integration version that
+it executes. To learn what information is automatically logged, 
+see <<viewing-log-information>>.
+
+To log additional information between any two steps, add a log step to the
+integration. For each message that it receives, a log step can provide
+one or more of the following:
+
+* The message's header
+* The message's body
+* Text that you specify
+
+To add a log step, you must be creating a new integration or
+editing the draft of an integration. The integration must already have 
+its start and finish connections. 
+
+To add a log step:
+
+. In the integration visualization panel on the left, hover over the
+image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
+at the location where you want to add a log step. 
+. In the popup, click *Add a Step*. 
+. On the *Choose a Step* page, click *Log*. 
+. On the *Configure Log Step* page, select the content that you want
+to log. If you select *Custom text*, then enter the text that you
+want to log in the text input field. 
+. When log step configuration is complete, in the upper right, click *Next*. 
+. When the integration is complete, publish it to start seeing output
+from the new log step. 
+
+After an integration that has a log step has been executed, output from 
+its log step appears in the integration's *Activity* tab. See
+<<viewing-log-information>>. 

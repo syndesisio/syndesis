@@ -27,10 +27,10 @@ In this Technology Preview, consider the names Red Hat Fuse Online and
 Fuse Ignite as interchangeable. 
 
 In this Technology Preview, only one integration at a time can 
-be running. If you have a running (active) integration and you create a new 
+be running. If you have a running (published) integration and you create a new 
 integration and try to publish it, the new integration is automatically 
-inactive. You must deactivate the running integration before you can 
-start the new integration.
+in the *Unpublished* state. You must stop the running integration before you can 
+publish (start) the new integration.
 
 Explore the {prodname} Technology Preview by creating these
 sample integrations: 

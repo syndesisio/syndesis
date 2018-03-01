@@ -1,22 +1,33 @@
 [id='about-steps']
 = About steps
 
-In some integrations, obtaining data from one application and 
-using it in another application is all you want to do. But in other
-integrations, you might want to operate on data after obtaining it from
-one application and before sending it to another application. 
-To operate on data, you add a step. {prodname} provides steps for:
+An integration is a set of ordered steps. Each step operates on data.
+Some steps operate on data while connected to an application or service 
+outside {prodname}. These steps are connections. Between connections, there can
+be other steps that operate on data in {prodname}.
+Typically, an integraton includes a step that maps data fields used 
+in a connection to data fields used in the next connection. 
+Except for the start connection, each step operates on data it receives from 
+the previous steps.
+
+To operate on data between connections, {prodname} provides steps for:
+
+* Mapping data fields in one application to data fields in another
+application. 
 
 * Filtering data so that the integration continues only when it meets 
 criteria that you define. 
  
-* Mapping data fields in one application to data fields in another
-application. 
-
-* Describing the data type for requests and responses when connecting
-to a REST API. 
+* Logging information in addition to the default logging that {prodname}
+automatically provides. 
 
 For details, see <<add-steps>>. 
+
+To operate on data between connections in a way that is not built into 
+{prodname}, you can upload an extension that provides a custom step. 
+See <<adding-extensions>>.
+
+
 
 
  

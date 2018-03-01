@@ -4,24 +4,30 @@
 The following topics provide information to help you manage your 
 integrations:
 
-* <<about-integration-versions>>
+* <<about-integration-lifecycle-handling>>
 * <<publishing-integrations>>
+* <<unpublishing-integrations>>
+* <<republishing-older-integration-versions>>
+* <<viewing-log-information>>
 * <<testing-integrations>>
 * <<updating-integrations>>
 * <<copying-integrations-to-other-environments>>
-* <<deactivating-integrations>>
 * <<deleting-integrations>>
 
 include::about_integration_versions.adoc[leveloffset=+1]
 
 include::publishing_integrations.adoc[leveloffset=+1]
 
+include::unpublishing_integrations.adoc[leveloffset=+1]
+
+include::republishing_older_integration_versions.adoc[leveloffset=+1]
+
+include::viewing_log_information.adoc[leveloffset=+1]
+
 include::testing_integrations.adoc[leveloffset=+1]
 
 include::updating_integrations.adoc[leveloffset=+1]
 
 include::copying_integrations_to_other_environments.adoc[leveloffset=+1]
-
-include::deactivating_integrations.adoc[leveloffset=+1]
 
 include::deleting_integrations.adoc[leveloffset=+1]

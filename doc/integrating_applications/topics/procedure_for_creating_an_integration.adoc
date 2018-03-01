@@ -37,15 +37,16 @@ to perform. The available actions vary for each connection.
 the finish connections. For each connection, choose its action and enter
 any required configuration details. 
 
-. Optionally, add one or more data operation steps between connections. See
+. Optionally, add one or more steps that operate on integration
+data between connections. See
 <<add-steps>>. 
 
-. When the integration contains the needed connections and steps, 
+. When the integration contains all needed steps, 
 click *Save as Draft* or *Publish* according to whether you want
 to start running the integration.
 
 .. In the *Integration Name* field, enter a name that distinguishes this
-integration from any other integration. 
+integration from any other integrations. 
 
 .. In the *Description* field, enter a description, for example, you can
 indicate what this integration does.

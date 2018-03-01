@@ -1,0 +1,14 @@
+[id='about-testing']
+= About testing
+
+Just some notes here.
+
+Developers should unit test an extension independently.  
+
+It is expected that you have multiple 
+integration environments, including at least a development
+environment and a production environment. Do your testing in the
+development environment. 
+
+Export the integration from the testing
+environment and import it into the development environment. 

@@ -14,8 +14,8 @@ which passes data to a stored procedure.
 
 . In the *Procedure Name* field, click and select *add_lead*, which is the
 provided stored procedure to run in the sample database. 
-The selected procedure determines the requirements for 
-steps in the integration, for example, which Salesforce fields
+The selected procedure determines the requirements for additional 
+steps in the integration, for example, which Salesforce data fields
 need to be mapped to which database fields. 
 
 . Click *Done* to add the finish connection to the integration. 

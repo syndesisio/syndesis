@@ -1,6 +1,7 @@
 [id='adding-amq-connection-middle']
 = Adding an AMQ connection as a middle connection
 
+:context: middle
 In an integration, to add an AMQ connection between the start and 
 finish connections:
 
@@ -36,4 +37,5 @@ a connection fails.
 connection waits for a 
 response message before throwing a runtime exception. 
 
-. Click *Done*. 
+. Click *Next*. 
+include::add_describe_data_step.adoc[]

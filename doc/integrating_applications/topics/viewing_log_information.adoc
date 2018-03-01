@@ -1,0 +1,35 @@
+[id='viewing-log-information']
+= Viewing integration log information
+
+{prodname} provides log information for each integration version that
+it executes. To see this information:
+
+. In the left panel, click *Integrations*. 
+. Click the entry for the integration for which you want to view log
+information. 
+. In the integration's summary page, click the *Activity* tab. 
+. Optionally, enter date and/or keyword filters to limit the versions
+listed.
+. Click the integration version for which you want to view log information. 
+
+For each integration step, {prodname} provides:
+
+* The date and time that the step was executed
+* How long it took to execute the step
+* Whether execution was successful
+* The error message if execution was not successful
+
+To log additional information between any two steps, you can 
+add a log step to the
+integration. A log step provides information about each message it
+receives and can provide custom text that you specify. 
+If you add a log step, then it appears as one of the integration's
+steps when you expand the integration version that you want to view log
+information for.  
+
+To add a log step, see <<add-log-step>>. 
+
+You can also view log information for an integration in the 
+OpenShift console. At the top of the *Activity* tab, click
+*View Log in OpenShift* to view the log of the last pod that ran the
+integration. 

@@ -2,16 +2,19 @@
 = About integrations
 
 To set up data integration between applications, you create an integration. 
-An integration includes:
+An integration is set of ordered steps. This set includes:
 
-* A connection to the application that is the
+* A step that connects to the application that is the
 source of the data. 
 
-* A connection to the application that receives the data. 
+* A step that connects to the application that receives the data and
+finishes the integration. 
 
-* Optional additional connections between the start and finish
+* Optional additional steps that connect to applications 
+between the start and finish
 connections. An additional connection can obtain other data. 
 
-* Optional steps that operate on data between connections. Typically,
-there is a step that maps data fields from the source connection to the
-target connection. 
+* Optional steps that operate on data between connections to
+applications. Typically,
+there is a step that maps data fields from the previous connection to 
+data fields that the next connection uses. 

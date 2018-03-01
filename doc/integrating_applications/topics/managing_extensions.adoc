@@ -14,8 +14,9 @@ use the custom step(s) defined in the extension.
 It is up to you to 
 know exactly what is required to update each integration that uses a 
 custom step from the updated extension.  At the very least, you must
-deactivate and republish each integration that uses one of the custom 
-steps. See <<deactivating-integrations>>. 
+stop (click *Unpublish*) and restart (click *Publish*) each 
+integration that uses one of the custom 
+steps. See <<unpublishing-integrations>>. 
 
 In some cases, you might need to edit the integration to change
 or add configuration details for the custom steps(s). You must communicate
@@ -45,5 +46,5 @@ you can delete the extension as follows:
                             
 . At the top, click the *Extensions* tab.                         
                             
-* In the list of extensions, find the entry for the extension that 
+. In the list of extensions, find the entry for the extension that 
 you want to delete and click *Delete*. 

@@ -1,6 +1,7 @@
 [id='adding-amq-connection-start']
 = Adding an AMQ connection as the start connection
 
+:context: start
 In an integration, to add an AMQ connection as the start connection: 
 
 . In the {prodname} panel on the left, click *Integrations*. 
@@ -17,4 +18,5 @@ data that satisfies a particular condition, enter a filter expression.
 . In the *Durability Subscription ID* field, to allow connections to 
 close and reopen without missing messages, enter the durability 
 subscription ID. The destination type must be a topic. 
-. Click *Done*. 
+. Click *Next*. 
+include::add_describe_data_step.adoc[]

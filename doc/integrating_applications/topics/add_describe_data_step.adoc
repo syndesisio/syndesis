@@ -1,43 +1,43 @@
-[id='add-describe-data-step']
-= Add a step to describe data
+[id='specify-data-type_{context}']
+ifeval::["{context}" == "start"]
+. On the *Specify Data Type* page, define the data type for the output
+from the connection action. 
+endif::[]
 
-In an integration, some connections do not declare data types. 
-To be able to map data fields from or to connections that do not
-declare data types, {prodname} provides the *Describe Data* 
-step, which lets you specify a schema for the
-current integration data. For example, in an
-integration, you 
-might need to add a *Describe Data* step: 
+ifeval::["{context}" == "finish"]
+. On the *Specify Data Type* page, define the data type for the input
+to the connection action. 
+endif::[]
 
-* Between an API connection and a data mapping step.
-* Between an AMQ connection and a data mapping step.
-
-To add a step that specifies a data schema, start to create your 
-integration. Add the connections to the applications you want to 
-integrate, then:
-
-. In the left panel, between the connections that require specification
-of a data schema, hover over the plus sign and in the popup, click
-*Add a Step*. 
-. On the *Add a Step* page, click *Describe Data*. 
-. To configure the *Describe Data* step:
+ifeval::["{context}" == "middle"]
+. On the *Specify Data Type* page, define the data type for the input to and/or
+the output from the connection action. 
+endif::[]
 +
-.. Select one of the following as the schema type:
+* If the data type does not need to be known, select *No data type* 
+and then click *Done*. You do not need to follow the rest of these
+instructions. 
+* Otherwise, select one of the following as the schema type:
 +
-* JSON schema
-* JSON instance document
-* XML schema
-* XML instance document
+** JSON schema
+** JSON instance document
+** XML schema
+** XML instance document
 
-.. To import the schema, choose a file or specify a URL for the schema. 
-If you are using a JSON file, the file extension must be `.json`.
-If you are using an XML schema, the file extension must be `.xsd`.
-If you are using an XML document, the file extension must be `.xml`. 
+. To import the schema, select *Upload a file*, *Use a URL*, or *Copy and paste*. 
++
+* If you are importing a JSON file, the file extension must be `.json`.
+* If you are importing an XML schema, the file extension must be `.xsd`.
+* If you are importing an XML document, the file extension must be `.xml`. 
 
-.. If you are importing a schema, identify the root element. 
+. According to your selection in the previous step, drop the file that contains
+the schema, paste the URL for the schema, or paste the schema or instance
+document itself. 
+. If you are importing a schema, identify the root element. 
 +
 {prodname} immediately tries to upload the specified file or obtain the 
 schema from the URL. If there is an error, {prodname} displays a 
-message about the problem. Correct the error and try again. 
+message about the problem. Correct the error and try importing the 
+schema again. 
 
 . When {prodname} has a valid schema, click *Done*. 

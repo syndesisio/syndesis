@@ -1,0 +1,22 @@
+[id='about-mapping-data']
+= About mapping data
+
+The data mapper displays:
+
+* *Sources* - a list of the data fields that are obtained or 
+processed in each previous step
+* *Target* - a list of the data fields that are processed in the next connection
+
+According to the needs of your integration, you can:
+
+* Map one source field to one target field. This is the default
+mapping behavior. For example, map the `Name` 
+field to the `CustomerName` field.
+* Combine multiple source fields into one target field. For example, 
+map the `FirstName` and `LastName` fields to the `CustomerName` field.
+* Separate a source field into multiple target fields. For  example, 
+map the `Name` field to the `FirstName` and `LastName` fields.
+* Transform the target field to specify how {prodname} stores it. 
+For example, pad or trim the source field value, capitalize the first letter 
+in a string, or create a timestamp. 
+* Add a field and specify its value in either a source or the target. 

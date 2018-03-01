@@ -1,6 +1,7 @@
 [id='adding-s3-connection-start']
 = Adding an Amazon S3 connection as the start connection
 
+:context: start
 In an integration, to add an Amazon S3 connection as the start connection: 
 
 . In the {prodname} panel on the left, click *Integrations*. 
@@ -40,5 +41,6 @@ only when its name starts with that string.
 .. In the *Delay* field, enter the number of milliseconds that elapse between
 polls. The default is 500 milliseconds. 
 Alternatively, you can enter something like `3s`, `5m 30s`, or `2h` to
-indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respecitively.
-. Click *Done*. 
+indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respectively.
+. Click *Next*. 
+include::add_describe_data_step.adoc[]
