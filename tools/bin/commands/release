@@ -207,6 +207,7 @@ docker_login() {
     if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-user)" ]; then
         echo "==== Login to Docker Hub"
         docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-user)"
+        trap "docker logout" "EXIT"
     fi
 }
 
