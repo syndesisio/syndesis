@@ -109,7 +109,7 @@ prometheus:
   # metrics label containing deployment version
   deploymentVersionLabel: syndesis_io_deployment_version
   # range for metrics history for past deployments
-  metricsHistoryRange: 15d
+  metricsHistoryRange: 30d
 
 metrics:
   kind: sql

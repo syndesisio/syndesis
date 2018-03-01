@@ -130,8 +130,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     @Override
     public IntegrationMetricsSummary getTotalIntegrationMetricsSummary() {
-        final Optional<Long> totalMessages = getAggregateMetricValue(METRIC_TOTAL, Long.class, "sum");
-        final Optional<Long> failedMessages = getAggregateMetricValue(METRIC_FAILED, Long.class, "sum");
+        final Optional<Long> totalMessages = getSummaryMetricValue(METRIC_TOTAL, Long.class, "sum");
+        final Optional<Long> failedMessages = getSummaryMetricValue(METRIC_FAILED, Long.class, "sum");
 
         final Optional<Date> startTime = getAggregateMetricValue(METRIC_START_TIMESTAMP, Date.class, "min");
 
@@ -149,10 +149,17 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     }
 
     private <T> Map<String, T> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
-        HttpQuery queryTotalMessages = createSummaryHttpQuery(integrationId, metric);
+        HttpQuery queryTotalMessages = createSummaryHttpQuery(integrationId, metric, null);
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
         return QueryResult.getValueMap(response, label, clazz, mergeFunction);
+    }
+
+    private <T> Optional<T> getSummaryMetricValue(String metric, Class<? extends T> clazz, String aggregationOperator) {
+        HttpQuery queryTotalMessages = createSummaryHttpQuery(metric, aggregationOperator);
+        QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
+        validateResponse(response);
+        return QueryResult.getFirstValue(response, clazz);
     }
 
     private <T> Optional<T> getAggregateMetricValue(String metric, Class<? extends T> clazz, String aggregationOperator) {
@@ -169,8 +176,15 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         return QueryResult.getFirstValue(response, clazz);
     }
 
-    private HttpQuery createSummaryHttpQuery(String integrationId, String metric) {
-        return new HttpQuery.Builder().from(createInstantHttpQuery(integrationId, metric, null))
+    private HttpQuery createSummaryHttpQuery(String integrationId, String metric, String aggregationOperator) {
+        return new HttpQuery.Builder().from(createInstantHttpQuery(integrationId, metric, aggregationOperator))
+                .function(FUNCTION_MAX_OVER_TIME)
+                .range(metricsHistoryRange)
+                .build();
+    }
+
+    private HttpQuery createSummaryHttpQuery(String metric, String aggregationOperator) {
+        return new HttpQuery.Builder().from(createInstantHttpQuery(metric, aggregationOperator))
                 .function(FUNCTION_MAX_OVER_TIME)
                 .range(metricsHistoryRange)
                 .build();
