@@ -1,0 +1,145 @@
+{
+    "id": "slack",
+    "name": "slack",
+    "description": "Send messages to Slack",
+    "icon": "slack",
+    "dependencies": [
+        {
+            "type": "MAVEN",
+            "id": "@project.groupId@:@project.artifactId@:@project.version@"
+        }
+    ],
+    "componentScheme": "slack",
+    "configuredProperties": {
+        
+    },
+    "tags": [
+        ""
+    ],
+    "properties": {
+        "webhookUrl": {
+            "kind": "parameter",
+            "displayName": "Slack webhook URL",
+            "group": "common",
+            "required": true,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "description": "The webhook URL used to send messages to"
+        },
+        "sendingUsername": {
+            "kind": "parameter",
+            "displayName": "Sending Username for messages",
+            "group": "common",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "description": "This is the username that the bot will have when sending messages to a channel or user"
+        },
+        "iconUrl": {
+            "kind": "parameter",
+            "displayName": "Message avatar icon URL",
+            "group": "common",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "description": "The avatar that the component will use when sending message to a channel or user"
+        },
+        "iconEmoji": {
+            "kind": "parameter",
+            "displayName": "Message avatar emoji",
+            "group": "common",
+            "required": false,
+            "type": "string",
+            "javaType": "java.lang.String",
+            "deprecated": false,
+            "secret": false,
+            "description": "The Slack emogi that will be used for the message avatar"
+        }
+    },
+    "actions": [
+        {
+            "name": "Username",
+            "description": "Publish a message to specific username",
+            "id": "io.syndesis:slack-username-connector",
+            "pattern": "To",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme":"slack",
+                "inputDataShape": {
+                    "kind": "java",
+                    "type": "java.lang.String"
+                },
+                "outputDataShape": {
+                    "kind": "none"
+                },
+                "configuredProperties": {
+                },
+                "propertyDefinitionSteps": [
+                   {
+                        "name":"Username",
+                        "description":"Send a message to specific username",
+                        "properties":{
+                            "username": {
+                                "kind": "parameter",
+                                "displayName": "Username",
+                                "group": "common",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "The username to send the message to"
+                            }
+                        }
+                    }
+                ],
+                "connectorFactory":"io.syndesis.connector.slack.SlackConnectorFactory"
+            }
+        },
+        {
+            "name": "Channel",
+            "description": "Publish a message to specific channel",
+            "id": "io.syndesis:slack-channel-connector",
+            "pattern": "To",
+            "actionType": "connector",
+            "descriptor": {
+                "componentScheme":"slack",
+                "inputDataShape": {
+                    "kind": "java",
+                    "type": "java.lang.String"
+                },
+                "outputDataShape": {
+                     "kind": "none"
+                },
+                "configuredProperties": {
+                },
+                "propertyDefinitionSteps": [
+                    {
+                        "name":"Channel",
+                        "description":"Send a message to specific channel",
+                        "properties":{
+                            "channel": {
+                                "kind": "parameter",
+                                "displayName": "Channel",
+                                "group": "common",
+                                "required": true,
+                                "type": "string",
+                                "javaType": "java.lang.String",
+                                "deprecated": false,
+                                "secret": false,
+                                "description": "The channel to send the message to"
+                            }
+                        }
+                    }
+                ],
+                "connectorFactory":"io.syndesis.connector.slack.SlackConnectorFactory"
+            }
+        }
+    ]
+}

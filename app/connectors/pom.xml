@@ -78,6 +78,7 @@
     <module>connectors/jms/amqp-connector</module>
     <module>connectors/odata</module>
 	<module>connectors/ftp</module>
+    <module>connectors/slack</module>
   </modules>
 
   <dependencyManagement>
