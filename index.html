@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-5601-g00dc17367,</span>
+<span id="revnumber">version 1.1.3-5603-g45d3baf4b,</span>
 <span id="revdate">2018-03-01</span>
 </div>
 <div id="toc" class="toc2">
@@ -849,7 +849,26 @@ Remember a command must be the first argument, but there are additional possibil
 </div>
 <div class="paragraph">
 <p>The next sections describe the commands in detail.
-To add a new command, just drop a script file into</p>
+To add a new command, just drop a script file into <code>$SYNDESIS_DIR/tools/bin/commands</code> directory with following structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">#!/bin/bash
+
+yourscriptname::description() {
+    echo &quot;Describe the command&quot;
+}
+
+yourscriptname::usage() {
+    cat &lt;&lt;EOT
+    Describe the usage of the command
+EOT
+}
+
+yourscriptname::run() {
+    Do your stuff
+}</code></pre>
+</div>
 </div>
 <div class="sect2">
 <h3 id="syndesis-build">2.1. syndesis build</h3>
@@ -1262,9 +1281,9 @@ syndesis minishift -o</code></pre>
 Options for system-test:
     --project &lt;project&gt;       The test project to use
     --token &lt;token&gt;           Token for connecting to the server
-    --server &lt;url&gt;            OpenShift aerver url to use for the tests.
+    --server &lt;url&gt;            OpenShift server url to use for the tests.
                               If not given, use the currently connected server
-    --pool &lt;project&gt;          If no project is given use, a pooling mechanism.
+    --pool &lt;project&gt;          If no project is given, use a pooling mechanism.
                               This pool has to be created before with --create-pool
     --test-id &lt;id&gt;            Id to identify the test run
     --create-pool &lt;prefix&gt;    Create project pool for system-tests with
@@ -1348,7 +1367,7 @@ But it is not the case for the Minishift exposed Docker daemon, as this daemon i
 <div class="sect3">
 <h4 id="syndesis-doc-output">2.6.2. Output</h4>
 <div class="paragraph">
-<p>Impit and output has sane defaults but can be changed with the following options</p>
+<p>Input and output has the same defaults but can be changed with the following options</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -1364,8 +1383,8 @@ But it is not the case for the Minishift exposed Docker daemon, as this daemon i
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--output &lt;dir&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-o &lt;dir&gt;</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Output director, default id <code>$SYNDESIS_DIR/doc/sdh/output</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-o &lt;dir&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output directory, default is <code>$SYNDESIS_DIR/doc/sdh/output</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -2991,8 +3010,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-5601-g00dc17367<br>
-Last updated 2018-03-01 10:56:11 UTC
+Version 1.1.3-5603-g45d3baf4b<br>
+Last updated 2018-03-01 11:06:12 UTC
 </div>
 </div>
 </body>
