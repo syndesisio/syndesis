@@ -16,11 +16,8 @@
 package io.syndesis.connector.sql.common;
 
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -148,22 +145,6 @@ public class SqlParserTest {
         Assert.assertEquals("ID", info.getInParams().get(1).getColumn());
     }
 
-    @AfterClass
-    public static void afterClass() throws SQLException {
-        try (Statement stmt = db.connection.createStatement()) {
-            stmt.execute("DROP table NAME0");
-            stmt.execute("DROP table ADDRESS0");
-        }
-    }
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws SQLException {
-        try (Statement stmt = db.connection.createStatement()) {
-            stmt.executeUpdate("CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");
-            stmt.executeUpdate("CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + "lastName VARCHAR(255))");
-        }
-    }
-    
     @Test
     public void parseInsertWithConstantAndColumnNames() throws SQLException {
         SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,
