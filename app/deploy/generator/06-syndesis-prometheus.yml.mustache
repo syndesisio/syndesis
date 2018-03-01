@@ -42,9 +42,6 @@
             regex: prometheus_(.+)
             action: drop
           - source_labels: [__name__]
-            regex: scrape_(.+)
-            action: drop
-          - source_labels: [__name__]
             regex: tsdb_(.+)
             action: drop
 
@@ -90,8 +87,14 @@
           - source_labels: [__name__]
             regex: process_(.+)
             action: drop
-          - source_labels: [__name__]
-            regex: scrape_(.+)
+          - source_labels: [type]
+            regex: processors
+            action: drop
+          - source_labels: [type]
+            regex: routes
+            action: drop
+          - source_labels: [type]
+            regex: services
             action: drop
 
 - apiVersion: v1
