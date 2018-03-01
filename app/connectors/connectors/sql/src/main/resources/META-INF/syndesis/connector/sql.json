@@ -24,7 +24,7 @@
       "javaType": "java.lang.String",
       "tags": [],
       "deprecated": false,
-      "secret": true,
+      "secret": false,
       "componentProperty": true,
       "description": "JDBC URL of the database."
     },
@@ -38,7 +38,7 @@
       "javaType": "java.lang.String",
       "tags": [],
       "deprecated": false,
-      "secret": true,
+      "secret": false,
       "componentProperty": true,
       "description": "Username for the database connection."
     },
