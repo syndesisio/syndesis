@@ -138,7 +138,27 @@ Remember a command must be the first argument, but there are additional possibil
 * A `--mode command` can be used, too (e.g. `--mode sytem-test`)
 
 The next sections describe the commands in detail.
-To add a new command, just drop a script file into
+To add a new command, just drop a script file into `$SYNDESIS_DIR/tools/bin/commands` directory with following structure:
+
+[source,bash]
+----
+#!/bin/bash
+
+yourscriptname::description() {
+    echo "Describe the command"
+}
+
+yourscriptname::usage() {
+    cat <<EOT
+    Describe the usage of the command
+EOT
+}
+
+yourscriptname::run() {
+    Do your stuff
+}
+
+----
 
 include::cmd_build.adoc[]
 include::cmd_ui.adoc[]
