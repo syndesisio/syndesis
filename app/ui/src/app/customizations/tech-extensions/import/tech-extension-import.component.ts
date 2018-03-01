@@ -39,6 +39,7 @@ export class TechExtensionImportComponent implements OnInit {
   extension$: Observable<Extension>;
   extensionUpdate = false;
   hasBaseDropZoneOver: boolean;
+  item = {};
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -94,6 +95,7 @@ export class TechExtensionImportComponent implements OnInit {
       url: uploadUrl,
       disableMultipart: false,
       autoUpload: true,
+      removeAfterUpload: true,
       filters: [
         {
           name: 'filename filter',
@@ -112,6 +114,7 @@ export class TechExtensionImportComponent implements OnInit {
       this.uploader.clearQueue();
     };
     this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
+      this.item = item;
       this.error = undefined;
       this.response = undefined;
       let resp: any = {};

@@ -83,24 +83,22 @@
                   [uploader]="uploader"
                   (onFileSelected)="fileSelect.value=''">
               </div>
-              <div class="col-xs-9">
-                <div *ngFor="let item of uploader.queue">
-                  <div class="row">
-                    <div class="col-xs-7">
-                      {{ item?.file?.name }}
-                    </div>
-                    <div class="col-xs-5">
-                      <div *ngIf="item.isUploading" class="text-muted">
-                        <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
-                        <em>Importing...</em>
-                      </div>
-                      <div *ngIf="item.isSuccess">
-                        <span class="pficon-ok"></span>
-                        Successfully imported.
-                      </div>
-                    </div>
-                  </div>
+              <div class="col-xs-5">
+                {{ item?.file?.name }}
+              </div>
+              <div class="col-xs-4">
+                <div *ngIf="item.isUploading" class="text-muted">
+                  <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
+                  <em>Importing...</em>
                 </div>
+                <div *ngIf="item.isSuccess; else isError">
+                  <span class="pficon-ok"></span>
+                  Successfully imported.
+                </div>
+                <ng-template #isError>
+                    <span class="pficon-error-circle-o"></span>
+                    Unable to import this file.
+                  </ng-template>
               </div>
             </div>
             <p class="help-block"><em>Accepted file type: .jar</em></p>
