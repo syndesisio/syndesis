@@ -204,9 +204,9 @@ stage_artefacts() {
 }
 
 docker_login() {
-    if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-user)" ]; then
+    if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-password)" ]; then
         echo "==== Login to Docker Hub"
-        docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-user)"
+        docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-password)"
         trap "docker logout" "EXIT"
     fi
 }
