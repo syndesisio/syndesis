@@ -36,9 +36,6 @@ export class ConnectionConfigurationService {
       case 'activemq':
         controls = ['brokerUrl', 'username', 'password', 'clientId', 'skipCertificateCheck', 'brokerCertificate', 'clientCertificate'];
         break;
-      case 'aws-s3':
-        controls = ['accessKey', 'secretKey', 'region', 'bucketNameOrArn'];
-        break;
       default:
     }
     const formModel = this.formFactory.createFormModel(config, undefined, controls);
