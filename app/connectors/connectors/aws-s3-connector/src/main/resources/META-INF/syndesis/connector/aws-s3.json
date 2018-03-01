@@ -151,8 +151,7 @@
           "descriptor": {
             "componentScheme": "aws-s3",
             "inputDataShape": {
-              "kind": "java",
-              "type": "java.io.File"
+              "kind": "any"
             },
             "outputDataShape": {
               "kind": "none"
