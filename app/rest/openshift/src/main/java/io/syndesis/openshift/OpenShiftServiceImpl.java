@@ -62,10 +62,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         LOGGER.debug("Deploy {}", sName);
 
         ensureDeploymentConfig(sName, deploymentData);
-        //updateImageName(sName);
         ensureSecret(sName, deploymentData);
-
-        //openShiftClient.deploymentConfigs().withName(sName).deployLatest();
     }
 
     @Override
