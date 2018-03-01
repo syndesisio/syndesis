@@ -22,60 +22,60 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
+import org.apache.camel.util.ObjectHelper;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
 
-    protected MqttVerifierExtension(String defaultScheme, CamelContext context) {
-        super(defaultScheme, context);
+    protected MqttVerifierExtension(String scheme, CamelContext context) {
+        super(scheme, context);
     }
 
     // *********************************
     // Parameters validation
-    //
+    // *********************************
+
+    @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
-        ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-                .error(ResultErrorHelper.requiresOption("brokerUrl", parameters));
-        if (builder.build().getErrors().isEmpty()) {
-            verifyCredentials(builder, parameters);
-        }
-        return builder.build();
+        return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
+            .error(ResultErrorHelper.requiresOption("brokerUrl", parameters))
+            .build();
     }
 
     // *********************************
     // Connectivity validation
     // *********************************
+
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials).build();
+            .error(parameters, this::verifyCredentials)
+            .build();
     }
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-
         String brokerUrl = (String) parameters.get("brokerUrl");
 
-        if (brokerUrl != null && brokerUrl.length() > 0) {
-            MqttClient client;
+        if (ObjectHelper.isNotEmpty(brokerUrl)) {
             try {
                 // Create MQTT client
-                client = new MqttClient(brokerUrl, MqttClient.generateClientId());
+                MqttClient client = new MqttClient(brokerUrl, MqttClient.generateClientId());
                 client.connect();
                 client.disconnect();
             } catch (MqttException e) {
-                builder.error(ResultErrorBuilder
-                        .withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE,
-                                "Unable to connect to MQTT broker ")
-                        .parameterKey("brokerUrl").build());
-            } finally {
-                client = null;
+                builder.error(
+                    ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Unable to connect to MQTT broker")
+                        .parameterKey("brokerUrl")
+                        .build()
+                );
             }
-
         } else {
             builder.error(
-                    ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE,
-                            "Invalid blank MQTT brokerUrl ").parameterKey("brokerUrl").build());
+                ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid blank MQTT brokerUrl ")
+                    .parameterKey("brokerUrl")
+                    .build()
+            );
         }
     }
 }
