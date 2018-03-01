@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 import org.junit.rules.ExternalResource;
@@ -33,7 +34,9 @@ public final class SqlConnectionRule extends ExternalResource {
     @Override
     protected void after() {
         if (connection != null) {
-            try {
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("DROP table NAME0");
+                stmt.execute("DROP table ADDRESS0");
                 connection.close();
             } catch (final SQLException e) {
                 throw new AssertionError("Exception during database cleanup.", e);
@@ -55,6 +58,10 @@ public final class SqlConnectionRule extends ExternalResource {
 
         try {
             connection = DriverManager.getConnection(url, user, password);
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate("CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");
+                stmt.executeUpdate("CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + "lastName VARCHAR(255))");
+            }
         } catch (final SQLException e) {
             throw new AssertionError("Exception during database startup.", e);
         }
