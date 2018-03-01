@@ -32,7 +32,7 @@ You can always run `asciidoctor` locally with the `--local` (short: `-l`) option
 [[syndesis-doc-output]]
 ### Output
 
-Impit and output has sane defaults but can be changed with the following options
+Input and output has the same defaults but can be changed with the following options
 
 [cols="4,3,15"]
 |===
@@ -42,8 +42,8 @@ Impit and output has sane defaults but can be changed with the following options
 
 
 | `--output <dir>`
-| `-o <dir>`)
-| Output director, default id `$SYNDESIS_DIR/doc/sdh/output`
+| `-o <dir>`
+| Output directory, default is `$SYNDESIS_DIR/doc/sdh/output`
 |===
 
 By default `syndesis doc` creates the documentation in HTML format, but more formats are supported:

@@ -13,9 +13,9 @@ Usage: syndesis system-test [... options ...]
 Options for system-test:
     --project <project>       The test project to use
     --token <token>           Token for connecting to the server
-    --server <url>            OpenShift aerver url to use for the tests.
+    --server <url>            OpenShift server url to use for the tests.
                               If not given, use the currently connected server
-    --pool <project>          If no project is given use, a pooling mechanism.
+    --pool <project>          If no project is given, use a pooling mechanism.
                               This pool has to be created before with --create-pool
     --test-id <id>            Id to identify the test run
     --create-pool <prefix>    Create project pool for system-tests with
