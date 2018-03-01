@@ -50,7 +50,7 @@ export class TechExtensionImportComponent implements OnInit {
   getGenericError() {
     return {
         level: 'alert alert-danger',
-        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file'
+        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file.'
       };
   }
 
@@ -69,14 +69,14 @@ export class TechExtensionImportComponent implements OnInit {
       this.notificationService.popNotification({
         type: NotificationType.SUCCESS,
         header: 'Imported!',
-        message: 'Your extension has been imported'
+        message: 'Your extension has been imported.'
       });
       const id = this.response.id || this.extensionId;
       this.router.navigate(['/customizations/extensions', id], { relativeTo: this.route });
     }).catch((reason: any) => {
       this.error = {
         level: 'alert alert-danger',
-        message: reason.userMsg || 'An unknown error has occurred'
+        message: reason.userMsg || 'An unknown error has occurred.'
       };
     });
   }
@@ -125,7 +125,7 @@ export class TechExtensionImportComponent implements OnInit {
       }
       this.error = {
         level: 'alert alert-danger',
-        message: resp.userMsg || 'An unknown error has occurred'
+        message: resp.userMsg || 'An unknown error has occurred.'
       };
     };
   }
