@@ -1,0 +1,1 @@
+class=io.syndesis.connector.http4.Http4Verifier

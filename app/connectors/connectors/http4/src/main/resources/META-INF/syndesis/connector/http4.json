@@ -1,0 +1,119 @@
+{
+    "id":"http4",
+    "name":"HTTP4",
+    "icon":"http4",
+    "description":"Http4 Connector",
+    "dependencies":[
+        {
+            "type":"MAVEN",
+            "id":"@project.groupId@:@project.artifactId@:@project.version@"
+        }
+    ],
+    "tags":[
+        "verifier"
+    ],
+    "properties":{
+        "httpUri":{
+            "kind":"parameter",
+            "displayName":"Base URL",
+            "group":"common",
+            "required":true,
+            "type":"string",
+            "javaType":"java.lang.String",
+            "deprecated":false,
+            "secret":false,
+            "description":"Base Http Endpoint URL (eg 'http://www.redhat.com')"
+        }
+    },
+    "actions":[
+        {
+            "name":"Invoke URL",
+            "description":"Invoke an http endpoint URL",
+            "id":"io.syndesis:http4-connector",
+            "pattern":"To",
+            "actionType":"connector",
+            "descriptor":{
+                "componentScheme":"http4",
+                "connectorCustomizers":[
+                    "io.syndesis.connector.http4.Http4ConnectorCustomizer"
+                ],
+                "inputDataShape":{
+                    "kind":"any"
+                },
+                "outputDataShape":{
+                    "kind":"any"
+                },
+                "propertyDefinitionSteps":[
+                    {
+                        "name":"Invoke URL",
+                        "description":"Invoke an http endpoint URL",
+                        "properties":{
+                            "path":{
+                                "kind":"parameter",
+                                "displayName":"URL Path",
+                                "group":"common",
+                                "required":false,
+                                "type":"string",
+                                "javaType":"java.lang.String",
+                                "deprecated":false,
+                                "secret":false,
+                                "description":"Endpoint Path (eg '/path/to/endpoint"
+                            },
+                            "httpMethod":{
+                                "kind":"parameter",
+                                "displayName":"Http Method",
+                                "group":"common",
+                                "required":false,
+                                "type":"string",
+                                "javaType":"java.lang.String",
+                                "enum":[
+                                    {
+                                        "value":"DEFAULT",
+                                        "label":"DEFAULT"
+                                    },
+                                    {
+                                        "value":"GET",
+                                        "label":"GET"
+                                    },
+                                    {
+                                        "value":"PUT",
+                                        "label":"PUT"
+                                    },
+                                    {
+                                        "value":"POST",
+                                        "label":"POST"
+                                    },
+                                    {
+                                        "value":"DELETE",
+                                        "label":"DELETE"
+                                    },
+                                    {
+                                        "value":"HEAD",
+                                        "label":"HEAD"
+                                    },
+                                    {
+                                        "value":"OPTIONS",
+                                        "label":"OPTIONS"
+                                    },
+                                    {
+                                        "value":"TRACE",
+                                        "label":"TRACE"
+                                    },
+                                    {
+                                        "value":"PATCH",
+                                        "label":"PATCH"
+                                    }
+                                ],
+                                "deprecated":false,
+                                "defaultValue":"DEFAULT",
+                                "secret":false,
+                                "description":"The specific http method to execute."
+                            }
+                        }
+                    }
+                ],
+                "connectorFactory":"io.syndesis.connector.http4.Http4ConnectorFactory"
+            }
+        }
+    ]
+}

@@ -69,6 +69,7 @@
 
     <module>connectors/aws-s3-connector</module>
     <module>connectors/http</module>
+    <module>connectors/http4</module>
     <module>connectors/timer/timer-connector</module>
     <module>connectors/twitter-connector</module>
     <module>connectors/salesforce</module>
