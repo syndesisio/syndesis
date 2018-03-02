@@ -22,6 +22,7 @@ minishift::usage() {
     --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
     --disk-size <size>        How many disk space to use when doing a reset. Default: $DEFAULT_DISK_SIZE
+    --vm-driver <driver>      Which virtual machine driver to use (depends on OS)
     --show-logs               Show minishift logs during startup
     --openshift-version <ver> Set OpenShift version to use when reseting (default: $DEFAULT_OPENSHIFT_VERSION)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
@@ -118,10 +119,14 @@ start_minishift() {
     local cpus=$(readopt --cpus)
     local disksize=$(readopt --disk-size)
     local openshift_version=$(readopt --openshift-version)
-    local show_logs_arg=""
+    local extra_args=""
     if [ $(hasflag --show-logs --show-log) ]; then
-        show_logs_args="--show-libmachine-logs=true "
+        extra_args="--show-libmachine-logs=true "
+    fi
+    local vmdriver=$(readopt --vm-driver --vmdriver)
+    if [ -n "${vmdriver}" ]; then
+        extra_args="${extra_args}--vm-driver ${vmdriver} "
     fi
     echo "Starting minishift ...."
-    minishift start ${show_logs_arg:-}--memory ${memory:-$DEFAULT_RAM} --cpus ${cpus:-$DEFAULT_CPUS} --disk-size ${disksize:-$DEFAULT_DISK_SIZE} --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
+    minishift start ${extra_args:-}--memory ${memory:-$DEFAULT_RAM} --cpus ${cpus:-$DEFAULT_CPUS} --disk-size ${disksize:-$DEFAULT_DISK_SIZE} --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
 }
