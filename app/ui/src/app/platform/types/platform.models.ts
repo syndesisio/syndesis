@@ -1,3 +1,4 @@
+import { DynamicFormControlRelationGroup } from '@ng-dynamic-forms/core';
 /**
  * StringMap allows to model unboundered hash objects
  */
@@ -75,6 +76,7 @@ export interface ConfigurationProperty extends BaseEntity {
   required: boolean;
   secret: boolean;
   label: string;
+  relation: DynamicFormControlRelationGroup[];
   order: number;
   enum: Array<PropertyValue>;
   componentProperty: boolean;

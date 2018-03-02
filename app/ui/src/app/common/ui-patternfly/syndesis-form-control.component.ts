@@ -69,7 +69,7 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
   /* tslint:enable */
 
   @Input() asBootstrapFormGroup = true;
-  @Input() bindId = false;
+  @Input() bindId = true;
   @Input() hasErrorMessaging = false;
   @Input() context: DynamicFormArrayGroupModel | null = null;
   @Input() group: FormGroup;
@@ -84,7 +84,6 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
   /* tslint:enable */
 
   type: SyndesisFormControlType | null;
-  fieldHash: string;
 
   constructor(
     protected detector: ChangeDetectorRef,
@@ -92,7 +91,6 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
     protected validationService: DynamicFormValidationService
   ) {
     super(detector, layoutService, validationService);
-    this.fieldHash = Math.random().toString(36).substr(2, 16);
   }
 
   static getFormControlType(model: DynamicFormControlModel): SyndesisFormControlType {

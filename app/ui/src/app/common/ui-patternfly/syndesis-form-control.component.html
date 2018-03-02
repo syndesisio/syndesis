@@ -4,7 +4,7 @@
      [ngClass]="[elementContainerClass, gridContainerClass]">
 
   <label *ngIf="type !== 2 && model.label !== null"
-         [attr.for]="fieldHash"
+         [attr.for]="model.id"
          [class.required-pf]="model.required"
          [ngClass]="[elementLabelClass, gridLabelClass]">
     {{ model.label }}
@@ -30,7 +30,6 @@
 
         <input type="checkbox"
                [attr.tabindex]="model.tabIndex"
-               [attr.id]="fieldHash"
                [checked]="model.checked"
                [dynamicId]="bindId && model.id"
                [formControlName]="model.id"
@@ -98,7 +97,6 @@
       <!-- FORM GROUP -->
       <fieldset *ngSwitchCase="4"
                 [dynamicId]="bindId && model.id"
-                [attr.id]="fieldHash"
                 [formGroupName]="model.id"
                 [name]="model.name"
                 [ngClass]="elementControlClass">
@@ -128,7 +126,7 @@
           <ng-container *ngSwitchCase="'duration'">
             <syndesis-duration-control [group]="group"
                                        [model]="model"
-                                       [fieldId]="fieldHash"
+                                       [fieldId]="model.id"
                                        [bindId]="bindId"
                                        (dfBlur)="onBlur($event)"
                                        (dfChange)="onValueChange($event)"
@@ -150,7 +148,6 @@
                   [attr.multiple]="model.multiple"
                   [attr.step]="model.step"
                   [attr.tabindex]="model.tabIndex"
-                  [attr.id]="fieldHash"
                   [autofocus]="model.autoFocus"
                   [dynamicId]="bindId && model.id"
                   [formControlName]="model.id"
@@ -191,7 +188,6 @@
       <fieldset *ngSwitchCase="6"
                 role="radiogroup"
                 [attr.tabindex]="model.tabIndex"
-                [attr.id]="fieldHash"
                 [dynamicId]="bindId && model.id"
                 [name]="model.name"
                 [ngClass]="elementControlClass"
@@ -220,7 +216,6 @@
       <select *ngSwitchCase="7"
               class="form-control"
               [attr.tabindex]="model.tabIndex"
-              [attr.id]="fieldHash"
               [dynamicId]="bindId && model.id"
               [formControlName]="model.id"
               [name]="model.name"
@@ -242,7 +237,6 @@
       <textarea *ngSwitchCase="8"
                 class="form-control"
                 [attr.tabindex]="model.tabIndex"
-                [attr.id]="fieldHash"
                 [dynamicId]="bindId && model.id"
                 [cols]="model.cols"
                 [formControlName]="model.id"
