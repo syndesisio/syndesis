@@ -1,0 +1,43 @@
+<div class="integration-activity__toolbar">
+  <p class="integration-activity__toolbar-text">Last refresh today at {{ lastRefresh | date: 'mediumTime' }}</p>
+  <syndesis-button theme="default" (click)="fetchActivities()" type="button" [loading]="onRefresh" class="is-margin-reset">
+    Refresh
+  </syndesis-button>
+</div>
+<pfng-list [items]="activities" [config]="{ useExpandItems: false }" [itemTemplate]="itemTemplate" [expandTemplate]="expandTemplate"
+  [actionTemplate]="actionTemplate">
+  <ng-template #itemTemplate let-activity="item" let-index="index">
+    <div class="list-pf-content-wrapper">
+      <div class="list-pf-main-content">
+        <div class="list-pf-title">
+          {{ activity.at | date: 'M/d/yy' }}
+        </div>
+        <div class="list-pf-description text-overflow-pf">
+          {{ activity.at | date: 'shortTime' }}
+        </div>
+        <div class="list-pf-description text-overflow-pf">
+          Version {{ activity.ver || 'unknown' }}
+        </div>
+        <div class="list-pf-description text-overflow-pf" *ngIf="activity.failed; else notFailed">
+          <i class="pficon pficon-error-circle-o"></i> Errors found
+        </div>
+        <ng-template #notFailed>
+          <div class="list-pf-description text-overflow-pf">
+            <i class="pficon pficon-ok"></i> No errors
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #expandTemplate let-activity="item" let-index="index">
+
+  </ng-template>
+  <ng-template #actionTemplate let-activity="item" let-index="index">
+
+  </ng-template>
+</pfng-list>
+
+<pfng-pagination class="integration-activity__pagination" [config]="paginationConfig"
+  (onPageNumberChange)="renderActivitiesByPage($event)"
+  (onPageSizeChange)="renderActivitiesByPage($event)">
+</pfng-pagination>
