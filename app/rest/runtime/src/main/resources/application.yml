@@ -112,4 +112,4 @@ prometheus:
   metricsHistoryRange: 30d
 
 metrics:
-  kind: sql
+  kind: prometheus
