@@ -29,6 +29,9 @@ release::usage() {
     --docker-password <pwd>   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
     --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
+    --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
+                              to the git remote to which the currenlty checked out branch is attached to.
+                              Works only when on a branch, not when checked out directly.
     --log <log-file>          Write full log to <log-file>, only print progress to screen
 EOT
 }
@@ -292,11 +295,14 @@ git_push() {
     cd $appdir
 
     if [ ! $(hasflag --no-git-push) ] && [ ! $(hasflag --dry-run -n) ]; then
-        # Push to the remote attached to the local checkout branch
-        local remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed -e 's/\([^\/]*\)\/.*/\1/')
+        local remote=$(getopt --git-remote)
         if [ -z "${remote}" ]; then
-          echo "ERROR: Cannot find remote repository to git push to"
-          exit 1
+            # Push to the remote attached to the local checkout branch
+            remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed -e 's/\([^\/]*\)\/.*/\1/')
+            if [ -z "${remote}" ]; then
+              echo "ERROR: Cannot find remote repository to git push to"
+              exit 1
+            fi
         fi
 
         echo "==== Pushing to GitHub"
