@@ -39,7 +39,7 @@ export class TechExtensionImportComponent implements OnInit {
   extension$: Observable<Extension>;
   extensionUpdate = false;
   hasBaseDropZoneOver: boolean;
-  item = {};
+  item = { } as FileItem;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
