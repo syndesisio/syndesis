@@ -12,6 +12,16 @@ enum DataShapeDirection {
   INPUT = 'input',
   OUTPUT = 'output'
 }
+
+const PROPERTY_RELATION = [{
+  action: 'DISABLE',
+  connective: 'OR',
+  when: [
+    { id: 'kind', value: DataShapeKinds.ANY },
+    { id: 'kind', value: DataShapeKinds.NONE }
+  ]
+}];
+
 const DESCRIBE_DATA_FORM_CONFIG = {
   kind: {
     type: 'select',
@@ -43,15 +53,18 @@ const DESCRIBE_DATA_FORM_CONFIG = {
   specification: {
     type: 'textarea',
     displayName: 'Definition',
-    rows: 10
+    rows: 10,
+    relation: PROPERTY_RELATION
   },
   name: {
     type: 'string',
-    displayName: 'Data Type Name'
+    displayName: 'Data Type Name',
+    relation: PROPERTY_RELATION
   },
   description: {
     type: 'string',
-    displayName: 'Data Type Description'
+    displayName: 'Data Type Description',
+    relation: PROPERTY_RELATION
   }
 };
 
@@ -147,7 +160,7 @@ export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
         delete dataShape.name;
         delete dataShape.description;
       }
-      dataShape.metadata = { ...dataShape.metadata, ...{ userDefined: 'true' }};
+      dataShape.metadata = { ...dataShape.metadata, ...{ userDefined: 'true' } };
       this.currentFlowService.events.emit({
         kind: 'integration-set-datashape',
         isInput: this.direction === DataShapeDirection.INPUT,
