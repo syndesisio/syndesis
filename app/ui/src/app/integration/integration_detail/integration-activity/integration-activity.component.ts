@@ -31,7 +31,7 @@ export class IntegrationActivityComponent implements OnInit {
 
   fetchActivities(): void {
     this.onRefresh = true;
-    this.onError = true;
+    this.onError = false;
     this.integrationSupportService
       .requestIntegrationActivity(this.integration.id)
       .subscribe(
