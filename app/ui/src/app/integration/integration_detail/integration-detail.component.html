@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="col-md-12 details integration-detail__info">
+    <div class="integration-detail__info">
       <h1 class="inline-block">
         <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="attributeUpdated('name', $event, integration)"></syndesis-editable-text>
       </h1>
@@ -68,8 +68,8 @@
       <li class="syn-tabs__tab" [class.active]="selectedTabType == 'description'">
         <a (click)="toggleTab('description')">Description</a>
       </li>
-      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'history'" *ngIf="integration.deployments">
-        <a (click)="toggleTab('history')">History</a>
+      <li class="syn-tabs__tab" [class.active]="selectedTabType == 'activity'">
+        <a (click)="toggleTab('activity')">Activity</a>
       </li>
       <li class="syn-tabs__tab" [class.active]="selectedTabType == 'logs'" *ngIf="loggingEnabled">
         <a (click)="toggleTab('logs')">Logs</a>
@@ -89,17 +89,14 @@
       </syndesis-integration-description>
     </div>
 
-    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'history'">
-      <syndesis-integration-history [integration]="integration"
-        [deploymentActionConfigs]="deploymentActionConfigs"
-        (deploymentAction)="deploymentAction($event)">
-      </syndesis-integration-history>
-    </div>
-
     <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'logs'">
       <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
     </div>
-
+    
+    <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'activity'">
+      <syndesis-integration-activity [integration]=integration></syndesis-integration-activity>
+    </div>
+    
     <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'metrics'">
       <syndesis-integration-metrics
         [integration]=integration

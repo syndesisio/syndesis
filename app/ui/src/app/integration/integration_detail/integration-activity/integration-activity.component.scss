@@ -1,0 +1,21 @@
+@import 'syndesis-sass';
+
+.integration-activity {
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 0 $gutter;
+
+    &-text {
+      color: $color-pf-black-400;
+      margin: 0 $gutter;
+    }
+  }
+
+  &__pagination::ng-deep .content-view-pf-pagination {
+    background: none;
+    border: 0;
+    margin: $gutter 0;
+  }
+}

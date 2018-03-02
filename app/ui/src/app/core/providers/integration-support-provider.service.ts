@@ -144,18 +144,15 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   requestIntegrationActivityFeatureEnabled(): Observable<boolean> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.activityFeature).get().map(res => {
-      return res['enabled'];
-    });
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.activityFeature).get<{ enabled?: string }>()
+      .map(response => !!response.enabled);
   }
 
-  requestIntegrationActivity(id: string): Observable<Activity[]> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.activity, {
-      integrationId: id,
-    }).get().map(res => {
-      const transactions = res as Activity[];
-      return transactions;
-    });
+  requestIntegrationActivity(integrationId: string): Observable<Activity[]> {
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.activity, { integrationId })
+      .get<Activity[]>();
   }
 
   downloadSupportData(data: any[]): Observable<Blob> {

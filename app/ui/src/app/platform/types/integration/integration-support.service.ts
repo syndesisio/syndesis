@@ -104,7 +104,7 @@ export abstract class IntegrationSupportService {
    */
   abstract importIntegrationURL(): string;
   abstract requestIntegrationActivityFeatureEnabled(): Observable<boolean>;
-  abstract requestIntegrationActivity(id: string): Observable<Activity[]>;
+  abstract requestIntegrationActivity(integrationId: string): Observable<Activity[]>;
 
   abstract downloadSupportData(data: any[]): Observable<Blob>;
 }
