@@ -25,6 +25,7 @@ Options for minishift:
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
     --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
     --show-logs               Show minishift logs during startup
+    --vm-driver <driver>      Which virtual machine driver to use (depends on OS)
     --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.6.0)
                               already existing for --install.
                               Default project: "syndesis"
@@ -81,9 +82,13 @@ There are several options which influence the re-creation of the VM:
 | Whether to show OpenShift logs during startup.
 | false
 
+|`--vm-driver`
+| Which virtual machine driver to use. For OS X this can be 'virtualbox', 'xhyve' or 'vmwarefusion' (if insalled).
+|
+
 |`--openshift-version`
 | OpenShift version to use
-| 3.6.0
+| 3.7.1
 |===
 
 ### Example
