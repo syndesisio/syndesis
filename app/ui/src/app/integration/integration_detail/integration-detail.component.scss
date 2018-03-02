@@ -10,7 +10,7 @@
     flex-grow: 0;
     padding-bottom: $gutter;
   }
-  
+
   &__outlet {
     flex: 2;
     background: white;
@@ -21,19 +21,13 @@
     flex: 0 0 auto;
   }
 
-  .details {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    // Dock the scrollbar to the right
-    padding-right: 20px;
-  }
-
   ::ng-deep syndesis-editable .fa {
     font-size: 14px;
   }
 
   .toolbar-pf {
     background: inherit;
+
     ol {
       margin-bottom: 6px;
     }
