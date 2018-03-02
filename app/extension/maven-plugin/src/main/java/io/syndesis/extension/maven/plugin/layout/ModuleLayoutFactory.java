@@ -24,13 +24,19 @@ import org.springframework.boot.loader.tools.Layout;
 import org.springframework.boot.loader.tools.LayoutFactory;
 import org.springframework.boot.loader.tools.LibraryScope;
 
-    public class ModuleLayoutFactory implements LayoutFactory {
+public class ModuleLayoutFactory implements LayoutFactory {
     private static final Set<LibraryScope> LIB_DESTINATION_SCOPES = new HashSet<>(
         Arrays.asList(
             LibraryScope.COMPILE,
             LibraryScope.RUNTIME,
             LibraryScope.CUSTOM)
     );
+
+    private boolean filterDestinationScopes;
+
+    public ModuleLayoutFactory(boolean filterDestinationScopes) {
+        this.filterDestinationScopes = filterDestinationScopes;
+    }
 
     @Override
     public Layout getLayout(File file) {
@@ -42,7 +48,7 @@ import org.springframework.boot.loader.tools.LibraryScope;
 
             @Override
             public String getLibraryDestination(String libraryName, LibraryScope scope) {
-                if (LIB_DESTINATION_SCOPES.contains(scope)) {
+                if (!filterDestinationScopes || LIB_DESTINATION_SCOPES.contains(scope)) {
                     return "lib/";
                 }
 

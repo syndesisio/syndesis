@@ -66,12 +66,12 @@
                 Type
               </dt>
               <dd>
-                <ng-container *ngIf="extension.extensionType == 'Steps'; else typeDescConnector">
-                  Step Extension
+                <ng-container [ngSwitch]="extension.extensionType">
+                  <span *ngSwitchCase="'Steps'">Step Extension</span>
+                  <span *ngSwitchCase="'Connectors'">Connector Extension</span>
+                  <span *ngSwitchCase="'Libraries'">Library Extension</span>
+                  <span *ngSwitchDefault>Unknown Extension</span>
                 </ng-container>
-                <ng-template #typeDescConnector>
-                  Connector Extension
-                </ng-template>
               </dd>
               <dt>
                 Last Update
@@ -82,12 +82,10 @@
             </dl>
           </div>
           <div class="extension__group">
-            <ng-container *ngIf="extension.extensionType == 'Steps'; else supportedTypeConnector">
-              <h3>Supported Steps</h3>
+            <ng-container [ngSwitch]="extension.extensionType">
+              <h3 *ngSwitchCase="'Steps'">Supported Steps</h3>
+              <h3 *ngSwitchCase="'Connectors'">Supported Actions</h3>
             </ng-container>
-            <ng-template #supportedTypeConnector>
-              <h3>Supported Actions</h3>
-            </ng-template>
             <div class="row">
               <div class="col-xs-offset-1 col-xs-11">
                 <div *ngFor="let action of extension.actions">

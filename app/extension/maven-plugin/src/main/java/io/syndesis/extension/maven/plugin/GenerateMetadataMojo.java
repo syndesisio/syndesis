@@ -50,12 +50,7 @@ import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.model.DataShape;
 import io.syndesis.model.DataShapeKinds;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
+import io.syndesis.model.action.*;
 import io.syndesis.model.connection.ConfigurationProperty;
 import io.syndesis.model.extension.Extension;
 import org.apache.maven.artifact.Artifact;
@@ -577,13 +572,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
         long connectors = actions.values().stream().filter(ConnectorAction.class::isInstance).count();
 
         if (steps == 0 && connectors == 0) {
-            getLog().warn("No steps or connectors found: extensionType cannot be detected");
+            extensionBuilder.extensionType(Extension.Type.Libraries);
         } else if (steps > 0 && connectors == 0) {
             extensionBuilder.extensionType(Extension.Type.Steps);
         } else if (steps == 0 && connectors > 0) {
             extensionBuilder.extensionType(Extension.Type.Connectors);
         } else {
-            throw new MojoFailureException("Extension contains " + steps + " steps and " + connectors + " connectors. Mixed extensions are not allowed, you should use only one type of actions.");
+            throw new MojoFailureException("Extension contains " + steps + " steps and " + connectors + " connectors. Mixed extensions are not allowed, you should use only one type of actions (or none).");
         }
 
     }

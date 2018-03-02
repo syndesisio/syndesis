@@ -17,6 +17,8 @@ package io.syndesis.extension.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,8 +27,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.syndesis.core.Json;
+import io.syndesis.extension.converter.ExtensionConverter;
+import io.syndesis.model.extension.Extension;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -85,11 +92,27 @@ public class RepackageExtensionMojo extends SupportMojo {
     @Parameter(readonly = true, defaultValue = "${project.remotePluginRepositories}")
     private List<RemoteRepository> remoteRepos;
 
+    @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/syndesis-extension-definition.json")
+    private String metadataDestination;
+
     protected List<String> bomsUsed = new ArrayList<>();
+
+    protected Extension extensionDescriptor;
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        loadExtensionDescriptor();
+        super.execute();
+    }
 
     @Override
     protected void writeAdditionalPrivateFields() throws NoSuchFieldException, IllegalAccessException {
-        writeFieldViaReflection("layoutFactory", new ModuleLayoutFactory());
+        boolean filter = true;
+        if (extensionDescriptor != null && Extension.Type.Libraries.equals(extensionDescriptor.getExtensionType())) {
+            filter = false;
+            this.includeSystemScope = true;
+        }
+        writeFieldViaReflection("layoutFactory", new ModuleLayoutFactory(filter));
     }
 
     @Override
@@ -229,6 +252,23 @@ public class RepackageExtensionMojo extends SupportMojo {
             return result;
         } catch ( ArtifactResolutionException e ) {
             throw new MojoExecutionException( e.getMessage(), e );
+        }
+    }
+
+    protected void loadExtensionDescriptor() throws MojoExecutionException {
+        if (metadataDestination == null) {
+            return;
+        }
+        File metadata = new File(metadataDestination);
+        if (!metadata.exists()) {
+            return;
+        }
+
+        try {
+            JsonNode tree = Json.reader().readTree(Files.newBufferedReader(metadata.toPath(), StandardCharsets.UTF_8));
+            this.extensionDescriptor = ExtensionConverter.getDefault().toInternalExtension(tree);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Error while loading the extension metadata", e);
         }
     }
 

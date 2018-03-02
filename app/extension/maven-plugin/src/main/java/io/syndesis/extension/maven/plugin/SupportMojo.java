@@ -102,7 +102,7 @@ public abstract class SupportMojo extends RepackageMojo {
     }
 
     /**
-     * Defines the defualt set of artifacts to exclude from the repackaged module
+     * Defines the default set of artifacts to exclude from the repackaged module
      * @return
      */
     protected Collection<ArtifactsFilter> getAdditionalFilters() {
