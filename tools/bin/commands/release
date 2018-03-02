@@ -295,7 +295,7 @@ git_push() {
     cd $appdir
 
     if [ ! $(hasflag --no-git-push) ] && [ ! $(hasflag --dry-run -n) ]; then
-        local remote=$(getopt --git-remote)
+        local remote=$(readopt --git-remote)
         if [ -z "${remote}" ]; then
             # Push to the remote attached to the local checkout branch
             remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed -e 's/\([^\/]*\)\/.*/\1/')
