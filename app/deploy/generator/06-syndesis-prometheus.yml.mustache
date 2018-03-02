@@ -89,7 +89,7 @@
             action: drop
           - source_labels: [type, __name__]
             separator: ':'
-            regex: context:org_apache_camel_Exchanges(Failed|Total)
+            regex: context:(io_syndesis_camel_(.+))|(org_apache_camel_Exchanges(Failed|Total))
             action: keep
 
 - apiVersion: v1
