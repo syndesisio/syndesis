@@ -22,7 +22,7 @@ export class IntegrationActivityComponent implements OnInit {
   };
 
   private allActivities: Activity[] = [];
-  
+
   constructor(private integrationSupportService: IntegrationSupportService) { }
 
   ngOnInit() {
