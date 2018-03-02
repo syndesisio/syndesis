@@ -50,7 +50,7 @@ const publish = {
   tooltip: 'Publish this version of the integration'
 } as PFAction;
 
-type TabType = 'description' | 'history' | 'activity' | 'logs' | 'metrics';
+type TabType = 'description' | 'activity' | 'logs' | 'metrics';
 
 const DEFAULT_POLLING_INTERVAL = 5000;
 
