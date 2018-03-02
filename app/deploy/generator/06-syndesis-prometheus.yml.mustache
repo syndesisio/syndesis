@@ -160,7 +160,6 @@
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
             - '--storage.tsdb.retention=30d'
-{{^Probeless}}
           livenessProbe:
             httpGet:
               port: 9090

@@ -68,7 +68,9 @@
               path: /health
               port: 8181
               scheme: HTTP
-            initialDelaySeconds: 180
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            failureThreshold: 5
           ports:
           - containerPort: 8080
             name: http
