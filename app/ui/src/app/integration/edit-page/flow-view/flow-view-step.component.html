@@ -69,7 +69,7 @@
       popoverTitle="Connection Properties"
       outsideClick="true"
       container="body">
-      <i [class]="getIconClass()"
+      <i [ngClass]="getIconClass()"
          *ngIf="step.stepKind === 'endpoint' && !step.connection"></i>
       <img class="syn-icon-small"
            *ngIf="step.stepKind === 'endpoint' && step.connection"
@@ -101,7 +101,7 @@
           container="body"></span>
 
         <div class="step-content">
-          <div class="step-name">
+          <div class="step-name" title="{{ stepName }}">
             {{ stepName }}
           </div>
 
@@ -162,18 +162,22 @@
     <!-- Default Steps -->
     <div *ngSwitchDefault
          [ngClass]="getParentActiveClass() + ' step-container'">
-
       <!-- Step Heading -->
       <div [ngClass]="getParentClass()"
-            (click)="goto('step-configure')">
-        {{ stepName }}
-
-        <!-- Delete Icon -->
-        <i *ngIf="showDelete()"
-          class="fa fa-lg fa-trash pull-right"
-          title="Delete this step"
-          [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
-          (click)="deletePrompt(); $event.stopPropagation();"></i>
+        (click)="goto('step-configure')"> 
+        <div class="step-content">
+          <div class="step-name" title="{{ stepName }}">
+            {{ stepName }}
+          </div>
+          <div class="step-icons">
+            <!-- Delete Icon -->
+            <i *ngIf="showDelete()"
+              class="fa fa-lg fa-trash pull-right"
+              title="Delete this step"
+              [class.add-step-or-connection]="step.stepKind !== 'endpoint'"
+              (click)="deletePrompt(); $event.stopPropagation();"></i>
+          </div>
+        </div>
       </div>
 
       <!-- Step Sub Pages -->
@@ -196,6 +200,5 @@
         </li>
       </ul>
     </div>
-
   </div>
 </div>
