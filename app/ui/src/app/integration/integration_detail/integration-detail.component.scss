@@ -1,11 +1,6 @@
 @import 'syndesis-sass';
 
 .integration-detail {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: visible;
-
   &__info {
     flex-grow: 0;
     padding: 0 0 $gutter $gutter;
@@ -17,20 +12,8 @@
     padding: $gutter;
   }
 
-  .toolbar {
-    flex: 0 0 auto;
-  }
-
   ::ng-deep syndesis-editable .fa {
     font-size: 14px;
-  }
-
-  .toolbar-pf {
-    background: inherit;
-
-    ol {
-      margin-bottom: 6px;
-    }
   }
 
   .syn-tabs {

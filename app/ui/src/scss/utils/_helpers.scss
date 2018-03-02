@@ -106,3 +106,9 @@
     margin-bottom: 35px;
   }
 }
+
+.syn-toolbar--inverted {
+  .toolbar-pf {
+    @include toolbar();
+  }
+}

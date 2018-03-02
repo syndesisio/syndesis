@@ -15,7 +15,10 @@ const category = getCategory('Integrations');
 @Component({
   selector: 'syndesis-integration-connection-select',
   templateUrl: 'connection-select.component.html',
-  styleUrls: ['./connection-select.component.scss']
+  styleUrls: [
+    '../../integration-common-toolbar.scss',
+    './connection-select.component.scss'
+  ]
 })
 export class IntegrationSelectConnectionComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;

@@ -11,7 +11,10 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integration-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
-  styleUrls: ['./save-or-add-step.component.scss']
+  styleUrls: [
+    '../../integration-common-toolbar.scss',
+    './save-or-add-step.component.scss'
+  ]
 })
 export class IntegrationSaveOrAddStepComponent implements OnInit {
   integration: Integration;

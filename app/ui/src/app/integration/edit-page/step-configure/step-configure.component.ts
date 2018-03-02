@@ -15,7 +15,10 @@ const category = getCategory('IntegrationsCreatePage');
 @Component({
   selector: 'syndesis-integration-step-configure',
   templateUrl: './step-configure.component.html',
-  styleUrls: ['./step-configure.component.scss']
+  styleUrls: [
+    '../../integration-common-toolbar.scss',
+    './step-configure.component.scss'
+  ]
 })
 export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, AfterViewInit {
   flowSubscription: Subscription;

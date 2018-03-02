@@ -5,7 +5,10 @@ import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/ed
 @Component({
   selector: 'syndesis-integration-integration-basics',
   templateUrl: 'integration-basics.component.html',
-  styleUrls: ['./integration-basics.component.scss']
+  styleUrls: [
+    '../../integration-common-toolbar.scss',
+    './integration-basics.component.scss'
+  ]
 })
 export class IntegrationBasicsComponent implements OnInit {
   constructor(

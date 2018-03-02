@@ -57,7 +57,10 @@ const DEFAULT_POLLING_INTERVAL = 5000;
 @Component({
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'integration-detail.component.html',
-  styleUrls: ['integration-detail.component.scss']
+  styleUrls: [
+    '../integration-common-toolbar.scss',
+    'integration-detail.component.scss'
+  ]
 })
 export class IntegrationDetailComponent implements OnInit, OnDestroy {
   integrationMetrics$: Observable<IntegrationMetrics>;
