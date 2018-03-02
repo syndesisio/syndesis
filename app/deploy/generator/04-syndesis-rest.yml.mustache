@@ -89,7 +89,9 @@
             httpGet:
               port: 8080
               path: /api/v1/version
-            initialDelaySeconds: 180
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: "/health"

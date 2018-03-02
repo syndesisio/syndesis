@@ -731,7 +731,9 @@ objects:
             httpGet:
               port: 8080
               path: /api/v1/version
-            initialDelaySeconds: 180
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: "/health"
@@ -888,7 +890,9 @@ objects:
               path: /health
               port: 8181
               scheme: HTTP
-            initialDelaySeconds: 180
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            failureThreshold: 5
           ports:
           - containerPort: 8080
             name: http
@@ -1145,6 +1149,26 @@ objects:
             - targets:
               - localhost:9090
 
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: go_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: http_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: net_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: process_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: prometheus_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: tsdb_(.+)
+            action: drop
+
         - job_name: integration-pods
 
           kubernetes_sd_configs:
@@ -1176,6 +1200,22 @@ objects:
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
+
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: jmx_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: jvm_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: process_(.+)
+            action: drop
+          - source_labels: [type, __name__]
+            separator: ':'
+            regex: context:(org_apache_camel_ExchangesTotal|org_apache_camel_ExchangesFailed|io_syndesis_camel_StartTimestamp|io_syndesis_camel_LastExchangeCompletedTimestamp|io_syndesis_camel_LastExchangeFailureTimestamp)
+            action: keep
+
 - apiVersion: v1
   kind: Service
   metadata:
@@ -1240,7 +1280,7 @@ objects:
           imagePullPolicy: IfNotPresent
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
-            - '--storage.tsdb.retention=1h'
+            - '--storage.tsdb.retention=30d'
           livenessProbe:
             httpGet:
               port: 9090
