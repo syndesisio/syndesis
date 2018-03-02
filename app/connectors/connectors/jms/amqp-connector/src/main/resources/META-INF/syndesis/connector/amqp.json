@@ -26,7 +26,8 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Location to send data to or obtain data from."
+      "description": "Location to send data to or obtain data from.",
+      "order": "1"
     },
     "username": {
       "kind": "property",
@@ -39,7 +40,8 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Access the broker with this user’s authorization credentials."
+      "description": "Access the broker with this user’s authorization credentials.",
+      "order": "2"
     },
     "password": {
       "kind": "property",
@@ -52,7 +54,8 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": true,
-      "description": "Password for the specified user account."
+      "description": "Password for the specified user account.",
+      "order": "3"
     },
     "clientID" : {
       "kind" : "property",
@@ -65,7 +68,8 @@
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "description" : "Required for connections to close and reopen without missing messages. Connection destination must be a topic."
+      "description" : "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+      "order": "4"
     },
     "skipCertificateCheck" : {
       "kind" : "property",
@@ -89,7 +93,8 @@
       "defaultValue" : "false",
       "deprecated" : false,
       "secret" : false,
-      "description" : "For convenience in only development environments. Do not set for secure production environments."
+      "description" : "For convenience in only development environments. Do not set for secure production environments.",
+      "order": "5"
     },
     "brokerCertificate" : {
       "kind" : "property",
@@ -102,7 +107,8 @@
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "description" : "AMQ Broker X.509 PEM Certificate"
+      "description" : "AMQ Broker X.509 PEM Certificate",
+      "order": "6"
     },
     "clientCertificate" : {
       "kind" : "property",
@@ -115,7 +121,8 @@
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "description" : "AMQ Client X.509 PEM Certificate"
+      "description" : "AMQ Client X.509 PEM Certificate",
+      "order": "7"
     }
   },
   "actions": [
@@ -150,7 +157,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Name of the queue or topic to send data to."
+                "description": "Name of the queue or topic to send data to.",
+                "order": "1"
               },
               "destinationType": {
                 "kind": "path",
@@ -173,7 +181,8 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "queue",
-                "description": "By default, the destination is a Queue."
+                "description": "By default, the destination is a Queue.",
+                "order": "2"
               },
               "deliveryPersistent": {
                 "kind": "parameter",
@@ -187,7 +196,8 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": true,
-                "description": "Message delivery is guaranteed when Persistent is selected."
+                "description": "Message delivery is guaranteed when Persistent is selected.",
+                "order": "3"
               }
             }
           }
@@ -225,7 +235,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Name of the queue or topic to receive data from."
+                "description": "Name of the queue or topic to receive data from.",
+                "order": "1"
               },
               "destinationType": {
                 "kind": "path",
@@ -248,7 +259,8 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "queue",
-                "description": "By default, the destination is a Queue."
+                "description": "By default, the destination is a Queue.",
+                "order": "2"
               },
               "durableSubscriptionId": {
                 "kind": "parameter",
@@ -261,7 +273,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic."
+                "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "order": "3"
               },
               "messageSelector": {
                 "kind": "parameter",
@@ -274,7 +287,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Specify a filter expression to receive only data that meets certain criteria."
+                "description": "Specify a filter expression to receive only data that meets certain criteria.",
+                "order": "4"
               }
             }
           }
@@ -312,7 +326,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Name of the queue or topic to receive data from."
+                "description": "Name of the queue or topic to receive data from.",
+                "order": "1"
               },
               "destinationType": {
                 "kind": "path",
@@ -335,7 +350,8 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "queue",
-                "description": "By default, the destination is a Queue."
+                "description": "By default, the destination is a Queue.",
+                "order": "2"
               },
               "durableSubscriptionId": {
                 "kind": "parameter",
@@ -348,7 +364,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic."
+                "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "order": "3"
               },
               "messageSelector": {
                 "kind": "parameter",
@@ -361,7 +378,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Specify a filter expression to receive only data that meets certain criteria."
+                "description": "Specify a filter expression to receive only data that meets certain criteria.",
+                "order": "4"
               }
             }
           }
