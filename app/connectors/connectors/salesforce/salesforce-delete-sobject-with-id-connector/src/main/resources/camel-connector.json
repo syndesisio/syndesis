@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceDeleteSObjectWithIdComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-salesforce-delete-with-id",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.0-20180304",
   "description" : "Delete Salesforce SObject With External ID",
   "labels" : [ "salesforce" ],
   "pattern" : "To",

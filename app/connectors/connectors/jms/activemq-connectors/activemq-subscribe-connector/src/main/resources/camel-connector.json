@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.jms.ActiveMQSubscribeComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-activemq-subscribe",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.0-20180304",
   "description" : "Subscribe for one-way JMS Messages",
   "labels" : [ "jms" ],
   "pattern" : "From",

@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.http.HttpGetComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-http-get",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.0-20180304",
   "description" : "Call a service that is internal (within your company) or external (on the internet) by specifying the service's URL.",
   "labels" : [ "http" ],
   "pattern" : "To",
