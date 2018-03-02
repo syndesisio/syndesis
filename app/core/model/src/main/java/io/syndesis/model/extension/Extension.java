@@ -62,7 +62,8 @@ public interface Extension extends WithId<Extension>, WithActions<Action>, WithN
 
     enum Type {
         Steps,
-        Connectors
+        Connectors,
+        Libraries
     }
 
     @Override

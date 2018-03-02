@@ -577,13 +577,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
         long connectors = actions.values().stream().filter(ConnectorAction.class::isInstance).count();
 
         if (steps == 0 && connectors == 0) {
-            getLog().warn("No steps or connectors found: extensionType cannot be detected");
+            extensionBuilder.extensionType(Extension.Type.Libraries);
         } else if (steps > 0 && connectors == 0) {
             extensionBuilder.extensionType(Extension.Type.Steps);
         } else if (steps == 0 && connectors > 0) {
             extensionBuilder.extensionType(Extension.Type.Connectors);
         } else {
-            throw new MojoFailureException("Extension contains " + steps + " steps and " + connectors + " connectors. Mixed extensions are not allowed, you should use only one type of actions.");
+            throw new MojoFailureException("Extension contains " + steps + " steps and " + connectors + " connectors. Mixed extensions are not allowed, you should use only one type of actions (or none).");
         }
 
     }
