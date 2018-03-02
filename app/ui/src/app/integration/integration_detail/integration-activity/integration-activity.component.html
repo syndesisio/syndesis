@@ -4,6 +4,11 @@
     Refresh
   </syndesis-button>
 </div>
+
+<syndesis-validation-error *ngIf="onError">
+  Error: the activity logs could not be refreshed. Please try again by clicking on 'Refresh'.
+</syndesis-validation-error>
+
 <pfng-list [items]="activities" [config]="{ useExpandItems: false }" [itemTemplate]="itemTemplate" [expandTemplate]="expandTemplate"
   [actionTemplate]="actionTemplate">
   <ng-template #itemTemplate let-activity="item" let-index="index">
