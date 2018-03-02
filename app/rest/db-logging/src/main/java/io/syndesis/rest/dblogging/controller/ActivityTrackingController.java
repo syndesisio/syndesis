@@ -285,7 +285,7 @@ public class ActivityTrackingController implements Closeable {
 
                     // Write the batch..
                     jsonDB.update("/activity", Json.writer().writeValueAsBytes(batch));
-                    LOG.info("Batch ingested {} log events", eventCounter);
+                    LOG.debug("Batch ingested {} log events", eventCounter);
 
                 } catch (IOException e) {
                     LOG.error("Unexpected Error", e);
