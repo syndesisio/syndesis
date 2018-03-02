@@ -36,6 +36,8 @@ import java.util.Map;
 public class OpenShiftServiceImpl implements OpenShiftService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
+    private static final String OPENSHIFT_PREFIX = "i-";
+
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
 
@@ -46,7 +48,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public void build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws IOException {
-        final String sName = Names.sanitize(name);
+        final String sName = openshiftName(name);
 
         ensureImageStreams(sName);
         ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
@@ -57,7 +59,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public void deploy(String name, DeploymentData deploymentData) {
-        final String sName = Names.sanitize(name);
+        final String sName = openshiftName(name);
 
         LOGGER.debug("Deploy {}", sName);
 
@@ -67,13 +69,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public boolean isDeploymentReady(String name) {
-        String sName = Names.sanitize(name);
+        String sName = openshiftName(name);
         return openShiftClient.deploymentConfigs().withName(sName).isReady();
     }
 
     @Override
     public boolean delete(String name) {
-        final String sName = Names.sanitize(name);
+        final String sName = openshiftName(name);
 
         LOGGER.debug("Delete {}", sName);
 
@@ -86,13 +88,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public boolean exists(String name) {
-        String sName = Names.sanitize(name);
+        String sName = openshiftName(name);
         return openShiftClient.deploymentConfigs().withName(sName).get() != null;
     }
 
     @Override
     public void scale(String name, int desiredReplicas) {
-        final String sName = Names.sanitize(name);
+        final String sName = openshiftName(name);
 
         LOGGER.debug("Scale {}", sName);
 
@@ -106,7 +108,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public boolean isScaled(String name, int desiredReplicas) {
-        String sName = Names.sanitize(name);
+        String sName = openshiftName(name);
         DeploymentConfig dc = openShiftClient.deploymentConfigs().withName(sName).get();
 
         int allReplicas = 0;
@@ -130,7 +132,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     protected boolean checkBuildStatus(String name, String status){
-        String sName = Names.sanitize(name);
+        String sName = openshiftName(name);
         return !openShiftClient.builds()
             .withLabel("openshift.io/build-config.name", sName)
             .withField("status", status)
@@ -306,6 +308,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private boolean removeSecret(String projectName) {
        return openShiftClient.secrets().withName(projectName).delete();
+    }
+
+    private static String openshiftName(String name) {
+        return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
 
 }
