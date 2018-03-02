@@ -10,24 +10,29 @@
   </div>
   <div class="modal-body">
     <syndesis-loading [loading]="loading">
-      <ng-container *ngIf="!integrations || !integrations.length">
-        Are you sure you want to delete the extension "{{ extension?.name }}"?
-      </ng-container>
       <ng-container *ngIf="integrations && integrations.length > 0">
-        <div class="row">
-          <div class="col-xs-1">
-            <span class="pficon pficon-warning-triangle-o"></span>
+        <div class="row extension__group">
+          <div class="col-xs-2 text-center">
+            <span class="pficon pficon-warning-triangle-o delete-extension-icon"></span>
           </div>
-          <div class="col-xs-11">
+          <div class="col-xs-10">
             <p>There are integrations that use the steps defined in this extension.  If you delete this extension, the consequences are unpredictable.</p>
-            <ul>
+            <ul class="delete-extension-list">
               <li *ngFor="let integration of integrations">
-                <strong>{{ integration.name }}</strong> - {{ integration.description }}
+                <strong>{{ integration.name }}</strong>
+                <span *ngIf="integration.description">
+                  {{ integration.description }}
+                </span>
               </li>
             </ul>
           </div>
         </div>
       </ng-container>
+      <div class="row">
+        <div class="col-xs-offset-2 col-xs-10">
+          <strong>Are you sure you want to delete the extension "{{ extension?.name }}"?</strong>
+        </div>
+      </div>
     </syndesis-loading>
   </div>
   <div class="modal-footer">

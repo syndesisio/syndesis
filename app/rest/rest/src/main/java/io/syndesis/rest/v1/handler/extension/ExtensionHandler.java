@@ -140,7 +140,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
                 if (!ids.isEmpty()) {
                     String message = "An extension with the same extensionId (" + embeddedExtension.getExtensionId() +
-                        ") is already installed. Please update the existing extension instead of importing a new one";
+                        ") is already installed. Please update the existing extension instead of importing a new one.";
                     throw new SyndesisRestException(message, message, null, Response.Status.BAD_REQUEST.getStatusCode());
                 }
 

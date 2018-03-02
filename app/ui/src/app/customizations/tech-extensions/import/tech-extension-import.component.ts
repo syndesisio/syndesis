@@ -23,7 +23,10 @@ interface FileError {
 @Component({
   selector: 'syndesis-tech-extentions-import',
   templateUrl: 'tech-extension-import.component.html',
-  styleUrls: ['tech-extension-import.component.scss']
+  styleUrls: [
+    '../tech-extension-common.scss',
+    'tech-extension-import.component.scss'
+  ]
 })
 export class TechExtensionImportComponent implements OnInit {
 
@@ -35,6 +38,8 @@ export class TechExtensionImportComponent implements OnInit {
   extensionName: string;
   extension$: Observable<Extension>;
   extensionUpdate = false;
+  hasBaseDropZoneOver: boolean;
+  item = { } as FileItem;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -48,8 +53,12 @@ export class TechExtensionImportComponent implements OnInit {
   getGenericError() {
     return {
         level: 'alert alert-danger',
-        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file'
+        message: '<strong>This is not a valid file type.</strong> Try again and specify a .jar file.'
       };
+  }
+
+  onFileOver(e) {
+    this.hasBaseDropZoneOver = e;
   }
 
   doImport() {
@@ -63,14 +72,14 @@ export class TechExtensionImportComponent implements OnInit {
       this.notificationService.popNotification({
         type: NotificationType.SUCCESS,
         header: 'Imported!',
-        message: 'Your extension has been imported'
+        message: 'Your extension has been imported.'
       });
       const id = this.response.id || this.extensionId;
       this.router.navigate(['/customizations/extensions', id], { relativeTo: this.route });
     }).catch((reason: any) => {
       this.error = {
         level: 'alert alert-danger',
-        message: reason.userMsg || 'An unknown error has occurred'
+        message: reason.userMsg || 'An unknown error has occurred.'
       };
     });
   }
@@ -86,6 +95,7 @@ export class TechExtensionImportComponent implements OnInit {
       url: uploadUrl,
       disableMultipart: false,
       autoUpload: true,
+      removeAfterUpload: true,
       filters: [
         {
           name: 'filename filter',
@@ -104,6 +114,7 @@ export class TechExtensionImportComponent implements OnInit {
       this.uploader.clearQueue();
     };
     this.uploader.onCompleteItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
+      this.item = item;
       this.error = undefined;
       this.response = undefined;
       let resp: any = {};
@@ -119,7 +130,7 @@ export class TechExtensionImportComponent implements OnInit {
       }
       this.error = {
         level: 'alert alert-danger',
-        message: resp.userMsg || 'An unknown error has occurred'
+        message: resp.userMsg || 'An unknown error has occurred.'
       };
     };
   }
