@@ -11,7 +11,7 @@ metadata:
 # Allow localhost refs: false
 # Use docker images: false
 # Atlasmap Tag: 
-# Syndesis Tag: latest
+# Syndesis Tag: 1.3.0-20180304
 # Prometheus Tag: v2.0.0
 #
   labels:
@@ -124,10 +124,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-rest:1.3.0-20180304
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180304"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -139,10 +139,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:1.3.0-20180304
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180304"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -154,10 +154,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-verifier:1.3.0-20180304
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180304"
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -200,10 +200,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:1.3.0-20180304
       importPolicy:
         scheduled: true
-      name: "latest"
+      name: "1.3.0-20180304"
 
 - apiVersion: v1
   kind: Secret
@@ -298,7 +298,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: syndesis-ui:latest
+          name: syndesis-ui:1.3.0-20180304
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -767,7 +767,7 @@ objects:
         - syndesis-rest
         from:
           kind: ImageStreamTag
-          name: syndesis-rest:latest
+          name: syndesis-rest:1.3.0-20180304
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -818,7 +818,7 @@ objects:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: syndesis-s2i:latest
+        builderImageStreamTag: syndesis-s2i:1.3.0-20180304
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -920,7 +920,7 @@ objects:
         - syndesis-verifier
         from:
           kind: ImageStreamTag
-          name: syndesis-verifier:latest
+          name: syndesis-verifier:1.3.0-20180304
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1118,165 +1118,4 @@ objects:
   - kind: ServiceAccount
     name: syndesis-prometheus
 
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: syndesis-prometheus
-    labels:
-      app: syndesis
-      component: syndesis-prometheus
-
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-prometheus
-    name: syndesis-prometheus-config
-  data:
-    prometheus.yml: |-
-      global:
-        scrape_interval:     5s
-        evaluation_interval: 5s
-
-      scrape_configs:
-        - job_name: prometheus
-          static_configs:
-            - targets:
-              - localhost:9090
-
-        - job_name: integration-pods
-
-          kubernetes_sd_configs:
-          - role: pod
-            namespaces:
-              names:
-                - ${OPENSHIFT_PROJECT}
-
-          relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-            action: keep
-            regex: true
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-            action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-            action: replace
-            regex: ([^:]+)(?::\d+)?;(\d+)
-            replacement: $1:$2
-            target_label: __address__
-          - action: labelmap
-            regex: __meta_kubernetes_pod_label_(.+)
-          - action: labelmap
-            regex: __meta_kubernetes_pod_annotation_(syndesis.+)
-          - source_labels: [__meta_kubernetes_namespace]
-            action: replace
-            target_label: kubernetes_namespace
-          - source_labels: [__meta_kubernetes_pod_name]
-            action: replace
-            target_label: kubernetes_pod_name
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: syndesis-prometheus
-    labels:
-      app: syndesis
-      component: syndesis-prometheus
-  spec:
-    ports:
-    - name: prometheus
-      port: 80
-      protocol: TCP
-      targetPort: 9090
-    selector:
-      app: syndesis
-      component: syndesis-prometheus
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: syndesis-prometheus
-    labels:
-      app: syndesis
-      component: syndesis-prometheus
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${PROMETHEUS_VOLUME_CAPACITY}
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    name: syndesis-prometheus
-    labels:
-      app: syndesis
-      component: syndesis-prometheus
-  spec:
-    replicas: 1
-    selector:
-      app: syndesis
-      component: syndesis-prometheus
-    strategy:
-      type: Recreate
-      resources:
-        limits:
-          memory: "256Mi"
-        requests:
-          memory: "20Mi"
-    template:
-      metadata:
-        labels:
-          app: syndesis
-          component: syndesis-prometheus
-      spec:
-        serviceAccountName: syndesis-prometheus
-        containers:
-        - name: prometheus
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          args:
-            - '--config.file=/etc/prometheus/prometheus.yml'
-            - '--storage.tsdb.retention=1h'
-          livenessProbe:
-            httpGet:
-              port: 9090
-          ports:
-          - containerPort: 9090
-          readinessProbe:
-            httpGet:
-              port: 9090
-          # DB QoS class is "Guaranteed" (requests == limits)
-          # Note: On OSO there is no Guaranteed class, its always burstable
-          resources:
-            limits:
-              memory: ${PROMETHEUS_MEMORY_LIMIT}
-            requests:
-              memory: ${PROMETHEUS_MEMORY_LIMIT}
-          volumeMounts:
-          - name: syndesis-prometheus-data
-            mountPath: /prometheus
-          - name: syndesis-prometheus-config
-            mountPath: /etc/prometheus
-        volumes:
-        - name: syndesis-prometheus-data
-          persistentVolumeClaim:
-            claimName: syndesis-prometheus
-        - name: syndesis-prometheus-config
-          configMap:
-            name: syndesis-prometheus-config
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - prometheus
-        from:
-          kind: ImageStreamTag
-          name: prometheus:v2.0.0
-          namespace: ${IMAGE_STREAM_NAMESPACE}
-      type: ImageChange
-
-    - type: ConfigChange
+line 161: Section Probeless has no closing tag
