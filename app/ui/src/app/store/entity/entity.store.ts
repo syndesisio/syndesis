@@ -269,8 +269,12 @@ export abstract class AbstractStore<
     let errorMessage: any;
     switch (typeof error) {
       case 'object':
-      errorMessage = error;
-      break;
+        if (error['data']) {
+          errorMessage = error['data'].map(e => e.message).join(' ');
+        } else {
+          errorMessage = error;
+        }
+        break;
       case 'string':
         try {
           errorMessage = JSON.parse(error);
