@@ -6,13 +6,13 @@
       <div class="alert alert-warning no-bottom-margin"
         *ngIf="previousStepShouldDefineDataShape">
         <span class="pficon pficon-warning-triangle-o"></span>
-        <p><strong>Typeless Previous Step:</strong> <a href="javascript: null" (click)="visitPreviousStepDescribeData()">Define the data type</a> for the previous step to resolve this warning.</p>
+        <p><strong>Typeless Previous Step:</strong> <a [routerLink]="" (click)="visitPreviousStepDescribeData()">Define the data type</a> for the previous step to resolve this warning.</p>
       </div>
 
       <div class="alert alert-warning no-bottom-margin"
         *ngIf="shouldAddDatamapper">
         <span class="pficon pficon-warning-triangle-o"></span>
-        <p><strong>Data Type Mismatch:</strong> <a href="javascript: null" (click)="addDataMapper()">Add a data mapping step</a> before this connection to resolve the difference.</p>
+        <p><strong>Data Type Mismatch:</strong> <a [routerLink]="" (click)="addDataMapper()">Add a data mapping step</a> before this connection to resolve the difference.</p>
       </div>
 
     </div>

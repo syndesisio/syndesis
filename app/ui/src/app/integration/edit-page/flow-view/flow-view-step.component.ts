@@ -308,6 +308,7 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   visitPreviousStepDescribeData() {
+    this.datamapperInfoPop.hide();
     const index = this.currentFlowService.getPreviousStepIndexWithDataShape(this.position);
     this.router.navigate(['describe-data', index, 'output'], {
       relativeTo: this.route
@@ -315,6 +316,7 @@ export class FlowViewStepComponent implements OnChanges {
   }
 
   addDataMapper() {
+    this.datamapperInfoPop.hide();
     const position = this.getPosition();
     this.currentFlowService.events.emit({
       kind: 'integration-insert-datamapper',
