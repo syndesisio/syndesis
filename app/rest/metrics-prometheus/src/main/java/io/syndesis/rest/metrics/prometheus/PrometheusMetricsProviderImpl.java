@@ -120,6 +120,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         }).sorted(Comparator.comparing(IntegrationDeploymentMetrics::getVersion)).collect(Collectors.toList());
 
         return new IntegrationMetricsSummary.Builder()
+                .metricsProvider("prometheus")
                 .integrationDeploymentMetrics(deploymentMetrics)
                 .start(startTime)
                 .lastProcessed(lastProcessedTime)
@@ -141,6 +142,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return new IntegrationMetricsSummary.Builder()
+            .metricsProvider("prometheus")
             .start(startTime)
             .lastProcessed(Optional.ofNullable(lastProcessedTime))
             .messages(totalMessages.orElse(0L))
