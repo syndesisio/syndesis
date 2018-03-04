@@ -20,7 +20,7 @@ import java.util.Optional;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.util.JsonSimplePredicate;
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Predicate;
 import org.apache.camel.model.FilterDefinition;

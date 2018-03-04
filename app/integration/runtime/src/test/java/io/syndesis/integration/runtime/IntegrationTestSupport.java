@@ -27,8 +27,8 @@ import org.apache.camel.model.RouteDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
 
 public class IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);

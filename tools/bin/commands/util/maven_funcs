@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # All modules, in the right build order
-ALL_MODULES="core extension integration connectors verifier rest s2i ui tests"
-POD_MODULES="verifier rest ui"
+ALL_MODULES="common extension integration connector meta server s2i ui test"
+POD_MODULES="meta server ui"
 MODULES=(
   "ui"
-  "core"
-  "extension:core"
-  "integration:core extension"
-  "connectors:core extension integration"
-  "verifier:core extension integration connectors"
-  "rest:core extension integration connectors"
-  "s2i:core extension integration connectors rest"
-  "tests:core extension integration connectors rest s2i"
+  "common"
+  "extension:common"
+  "integration:common extension"
+  "connector:common extension integration"
+  "meta:common extension integration connector"
+  "server:common extension integration connector"
+  "s2i:common extension integration connector server"
+  "test:common extension integration connector server s2i"
 )
 
 
@@ -50,11 +50,11 @@ extract_modules() {
     local modules=""
 
     if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules core extension integration connectors rest verifier"
+        modules="$modules common extension integration connector server meta"
     fi
 
     if [ "$(hasflag --images)" ]; then
-        modules="$modules ui rest verifier s2i"
+        modules="$modules ui server meta s2i"
     fi
 
     local arg_modules=$(readopt --module -m);

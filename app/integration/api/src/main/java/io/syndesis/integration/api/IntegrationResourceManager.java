@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import io.syndesis.model.Dependency;
-import io.syndesis.model.WithDependencies;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.WithDependencies;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
 
 public interface IntegrationResourceManager {
 

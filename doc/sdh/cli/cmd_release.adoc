@@ -133,12 +133,12 @@ The script will abort if this is the case.
 * Update the versions of all `pom.xml` files below `app/` to the version given with `--release-version`.
 If no `--release-version` is given, then the script aborts.
 * Run an `mvn clean install` to verify that the build is not broken and all tests succeed.
-* Re-generate the OpenShift templates in `app/deploy` so that the image streams included in these templates refer to Docker images with the new version.
+* Re-generate the OpenShift templates in `install` so that the image streams included in these templates refer to Docker images with the new version.
 * Now run an `mvn -Prelease clean deploy` to deploy all artefacts to a new staging repository on oss.sonatype.org, the platform for release artefacts on Maven central.
 The staging repository on this Sonatype Nexus is validated and closed.
 * If `--docker-user` and `--docker-password` is given, then a `docker login` is performed.
 Otherwise, it is assumed that the user is already logged in.
-* The Docker images are created with `mvn -Prelease,image package` in the `rest`, `verifier`, `ui` and `s2i` modules.
+* The Docker images are created with `mvn -Prelease,image package` in the `server`, `meta`, `ui` and `s2i` modules.
 
 If the option `--dry-run` (short: `-n`) is provided, the script drops the staging repository at Sonatype and stops.
 You should examine the generated files and before starting a real build, reset the repository (`git reset --hard`).
@@ -161,7 +161,7 @@ It will take a bit, but the artefact should then be downloadable from https://se
 
 The next steps are for creating templates for the minor version:
 
-* In `app/deploy` create new templates which contain image streams that reference images with the minor version (e.g. `syndesis/syndesis-rest:1.2` for a release version of 1.2.8).
+* In `install` create new templates which contain image streams that reference images with the minor version (e.g. `syndesis/syndesis-server:1.3` for a release version of 1.3.8).
 * Commit those generated templates
 * Tag it with the minor version (e.g. `1.2`), overwriting an already existing minor version tag
 

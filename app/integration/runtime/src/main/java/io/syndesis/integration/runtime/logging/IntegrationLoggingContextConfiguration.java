@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import io.syndesis.core.KeyGenerator;
+import io.syndesis.common.util.KeyGenerator;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 

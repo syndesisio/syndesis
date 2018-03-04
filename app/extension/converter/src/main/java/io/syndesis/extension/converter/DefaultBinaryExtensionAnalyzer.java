@@ -26,9 +26,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.core.Json;
-import io.syndesis.core.SyndesisServerException;
-import io.syndesis.model.extension.Extension;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.model.extension.Extension;
 
 /**
  * Tools to analyze binary extensions.

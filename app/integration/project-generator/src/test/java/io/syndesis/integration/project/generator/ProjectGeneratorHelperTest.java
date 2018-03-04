@@ -15,11 +15,11 @@
  */
 package io.syndesis.integration.project.generator;
 
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Scheduler;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

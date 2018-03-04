@@ -77,7 +77,7 @@ create_oauthclient() {
     local use_local_resource=${2:-}
 
     create_openshift_resource \
-        "app/deploy/support/serviceaccount-as-oauthclient-restricted.yml" \
+        "install/support/serviceaccount-as-oauthclient-restricted.yml" \
         "$tag" \
         "$use_local_resource"
 }
@@ -93,7 +93,7 @@ create_and_apply_template() {
     fi
 
     create_openshift_resource \
-        "app/deploy/${template}.yml" \
+        "install/${template}.yml" \
         "$tag" \
         "$use_local_resource"
 
@@ -139,7 +139,7 @@ create_openshift_resource() {
         if [[ $tag =~ 1\.[12] ]] && [[ ! $resource =~ restricted ]]; then
           local base=$(basename $resource .yml)
           local dir=$(dirname $resource)
-          resource="$dir/${base}-restricted.yml"
+          resource="$dir/../app/deploy/${base}-restricted.yml"
         fi
     fi
 
@@ -162,7 +162,7 @@ wait_for_syndesis_to_be_ready() {
     # Patch imagestreams from "DockerImage" to "ImageStreamTag"
     oc get pods -w &
     watch_pid=$!
-    for dc in "syndesis-rest" "syndesis-ui" "syndesis-verifier"; do
+    for dc in "syndesis-server" "syndesis-ui" "syndesis-meta"; do
         echo "Waiting for $dc to be started"
         local replicas="$(oc get dc $dc -o jsonpath='{.status.availableReplicas}')"
         while [ "$replicas" -lt 1 ]; do
@@ -175,7 +175,7 @@ wait_for_syndesis_to_be_ready() {
 }
 
 patch_imagestreams_for_initial_image() {
-    for is in "syndesis-rest" "syndesis-ui" "syndesis-verifier" "syndesis-s2i"; do
+    for is in "syndesis-server" "syndesis-ui" "syndesis-meta" "syndesis-s2i"; do
         echo "Patching imagestream $is"
         local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'
         local replace_name="{\"op\": \"replace\", \"path\": \"/spec/tags/0/from/name\", \"value\": \"$is:latest\"}"

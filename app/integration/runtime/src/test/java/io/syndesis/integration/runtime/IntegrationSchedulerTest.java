@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Scheduler;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;

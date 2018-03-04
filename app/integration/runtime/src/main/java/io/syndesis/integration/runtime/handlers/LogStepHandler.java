@@ -17,8 +17,8 @@ package io.syndesis.integration.runtime.handlers;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.ProcessorDefinition;
 

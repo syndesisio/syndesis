@@ -78,7 +78,7 @@ node OpenShift {
 
    package Infrastructure as infra #thistle {
      rectangle "syndesis-ui" <<Pod>> as ui
-     rectangle "syndesis-rest" <<Pod>> as rest
+     rectangle "syndesis-server" <<Pod>> as rest
      rectangle "syndesis-db" <<Pod>> as db
 
      rectangle "syndesis-meta" <<Pod>> as meta
@@ -87,7 +87,7 @@ node OpenShift {
      syndesis-ui-config
      syndesis-sampledb-config
      syndesis-ui-config
-     syndesis-verifier-config
+     syndesis-meta-config
      ]
      database "JsonDB Volume" <<State>> as pv
    }
@@ -114,7 +114,7 @@ The upgrade itself is a multi-step process.
 Each step is explained in detail in separate sections.
 In summary, the following steps are suggested for a complete Syndesis infrastructure strategy:
 
-* <<step-stop,Stop `syndesis-rest`>> so that nothing can change the current state anymore.
+* <<step-stop,Stop `syndesis-server`>> so that nothing can change the current state anymore.
 
 * <<step-backup-db,Backup database>> by creating a full database from `syndesis-db` dump to disk.
 
@@ -144,16 +144,16 @@ A rollback is typically not required, except maybe for cleaning up locally gener
 But this could happen at the end of a run in one sweep, too.
 
 [[step-stop]]
-==== Stop `syndesis-rest`
+==== Stop `syndesis-server`
 
 The first step to perform is to stop all pods which can change the backend state of Syndesis so that there are no race conditions during the upgrade.
-For the time being the only pod with access to backend state is `syndesis-rest`, accessed by the UI.
+For the time being the only pod with access to backend state is `syndesis-server`, accessed by the UI.
 Stopping should be performed by scaling down to 0 replicas for these pods and wait until they have been shut down in a controlled manner.
 Ideally, the UI will show a maintenance screen when in upgrade mode.
-(But the UI should show a global error anyway when the backend `syndesis-rest` is not available).
+(But the UI should show a global error anyway when the backend `syndesis-server` is not available).
 
 .Rollback
-The compensation action for this step is to scale up `syndesis-rest` to 1 and wait until it is entirely up.
+The compensation action for this step is to scale up `syndesis-server` to 1 and wait until it is entirely up.
 
 [[step-backup-db]]
 ==== Backup database
@@ -178,10 +178,10 @@ The next step is to backup _stateful resources_, i.e. `ConfigMap` used by the Sy
 The `ConfigMaps` to backupe are curently:
 
 *  `syndesis-atlasmap-config`
-*  `syndesis-rest-config`
+*  `syndesis-server-config`
 *  `syndesis-sampledb-config`
 *  `syndesis-ui-config`
-*  `syndesis-verifier-config`
+*  `syndesis-meta-config`
 
 At the time being, there are no `Secrets` required to upgrade.
 
@@ -225,7 +225,7 @@ However, there should also be an option to keep the backup files, so that a late
 If the database schema has changed for the new version to apply, then migration is required.
 Since our internal homegrown database JsonDB only supports a Java-based access, this migration needs to be performed with Java.
 
-A Java CLI tool, which is stored in the `syndesis-rest` Docker image and which can be started with `/deployments/migrate-jsondb.sh` takes the following command line arguments:
+A Java CLI tool, which is stored in the `syndesis-server` Docker image and which can be started with `/deployments/migrate-jsondb.sh` takes the following command line arguments:
 
 * Connection parameters to the Postgresql database (URL, user, password)
 * A directory holding the migration scripts written in JavaScript
@@ -257,18 +257,18 @@ function upgrade(jsondb) {
 
 with `jsondb` a still to defined context object for accessing, querying and updating JsonDB
 
-These scripts can be part of the `syndesis-rest` Docker image so that an outside CLI tool just needs to call
+These scripts can be part of the `syndesis-server` Docker image so that an outside CLI tool just needs to call
 
 .Starting the migration
 ```bash
 oc port-forward $(pod syndesis-db) 5432:5432
-docker run syndesis/syndesis-rest --net=host \
+docker run syndesis/syndesis-server --net=host \
      /deployment/migrate-jsondb.sh \
          --url jdbc://localhost:5432 --user admin --password admin \
          --target-schema 23
 ```
 
-NOTE: The upgrade script and mechanism could also be used internally by the syndesis-rest application to perform an upgrade during startup. However, this is recommended only for a development setup as there is no easy way to rollback if things go wrong.
+NOTE: The upgrade script and mechanism could also be used internally by the syndesis-server application to perform an upgrade during startup. However, this is recommended only for a development setup as there is no easy way to rollback if things go wrong.
 
 .Rollback
 If any of the upgrade scripts fail with an error, a DB rollback needs to be performed.

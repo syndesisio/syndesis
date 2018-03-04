@@ -7,10 +7,10 @@ build::description() {
 
 build::usage() {
     cat <<EOT
--b  --backend                 Build only backend modules (core, extension, integration, connectors, rest, verifier)
-    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
+    --images                  Build only modules with Docker images (ui, server, meta, s2i)
 -m  --module <m1>,<m2>, ..    Build modules
-                              Modules: ui, rest, connectors, s2i, verifier, integration, extension, core
+                              Modules: ui, server, connector, s2i, meta, integration, extension, common
 -d  --dependencies            Build also all project the specified module depends on
     --skip-tests              Skip unit and system test execution
     --skip-checks             Disable all checks

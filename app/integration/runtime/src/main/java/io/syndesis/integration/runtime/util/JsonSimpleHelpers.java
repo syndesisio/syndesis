@@ -17,7 +17,7 @@ package io.syndesis.integration.runtime.util;
 
 import java.util.Objects;
 
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.integration.Step;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Expression;
 import org.apache.camel.Predicate;

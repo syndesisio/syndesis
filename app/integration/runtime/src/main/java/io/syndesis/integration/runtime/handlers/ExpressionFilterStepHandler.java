@@ -15,8 +15,8 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 
 public class ExpressionFilterStepHandler extends AbstractFilterStepHandler {
     @Override

@@ -21,11 +21,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.syndesis.core.Json;
-import io.syndesis.model.filter.FilterPredicate;
-import io.syndesis.model.filter.FilterRule;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.model.filter.FilterPredicate;
+import io.syndesis.common.model.filter.FilterRule;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 
 public class RuleFilterStepHandler extends AbstractFilterStepHandler {
     @Override

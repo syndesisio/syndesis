@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.logging;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import io.syndesis.core.KeyGenerator;
+import io.syndesis.common.util.KeyGenerator;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

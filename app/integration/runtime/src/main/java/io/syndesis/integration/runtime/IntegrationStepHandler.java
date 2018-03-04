@@ -17,7 +17,7 @@ package io.syndesis.integration.runtime;
 
 import java.util.Optional;
 
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.integration.Step;
 import org.apache.camel.model.ProcessorDefinition;
 
 public interface IntegrationStepHandler {

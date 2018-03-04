@@ -44,20 +44,20 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
 import io.atlasmap.java.v2.JavaClass;
-import io.syndesis.core.Json;
-import io.syndesis.core.Names;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.Names;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.DataShape;
-import io.syndesis.model.DataShapeKinds;
-import io.syndesis.model.action.Action;
-import io.syndesis.model.action.ActionDescriptor;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.extension.Extension;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.action.Action;
+import io.syndesis.common.model.action.ActionDescriptor;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.extension.Extension;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -413,7 +413,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         artifacts.map(Artifact::getId)
             .sorted()
-            .map(io.syndesis.model.Dependency::maven)
+            .map(io.syndesis.common.model.Dependency::maven)
             .forEachOrdered(extensionBuilder::addDependency);
     }
 

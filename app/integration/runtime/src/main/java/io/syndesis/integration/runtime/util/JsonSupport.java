@@ -17,7 +17,7 @@ package io.syndesis.integration.runtime.util;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import io.syndesis.core.SyndesisServerException;
+import io.syndesis.common.util.SyndesisServerException;
 
 import java.io.StringWriter;
 

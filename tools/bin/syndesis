@@ -52,7 +52,7 @@ Examples:
 * Build only backend modules, fast               syndesis --backend --flash
 * Build only UI                                  syndesis -m ui
 * Build only images with OpenShift S2I, fast     syndesis --images --s2i -f
-* Build only the rest and verifier image         syndesis --module rest,verifier --s2i
+* Build only the server and meta image           syndesis --module server,meta --s2i
 * Build for system test                          syndesis system-test
 * Start Minishift afresh                         syndesis minishift --full-reset --install
 * Setup debug port forward for rest pod          syndesis dev --debug rest
@@ -97,8 +97,9 @@ basedir() {
 }
 
 appdir() {
+  local subdir="${1:-app}"
   local dir=$(basedir)
-  local full_dir=$(cd "$dir/../../app" && pwd)
+  local full_dir=$(cd "$dir/../../${subdir}" && pwd)
   echo ${full_dir}
 }
 

@@ -17,7 +17,7 @@ Steps:
 
         $ docker run -d --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=syndesis postgres
 
- 2. Start Syndesis backend (I run io.syndesis.runtime.Application from IDE), with JVM options:
+ 2. Start Syndesis backend (I run io.syndesis.server.runtime.Application from IDE), with JVM options:
 
          -Dendpoints.test_support.enabled=true -Ddeployment.load-demo-data=false -Dencrypt.key=hello
 

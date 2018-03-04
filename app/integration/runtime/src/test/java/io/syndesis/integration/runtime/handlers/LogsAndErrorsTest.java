@@ -21,11 +21,11 @@ import java.util.Optional;
 
 import io.syndesis.extension.api.Step;
 import io.syndesis.integration.runtime.IntegrationTestSupport;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.LoggingLevel;
@@ -70,7 +70,7 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .id("s1")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
@@ -80,7 +80,7 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
                             .build())
                         .build())
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .id("s2")
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
@@ -90,7 +90,7 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
                             .build())
                         .build())
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .id("s3")
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
@@ -100,7 +100,7 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
                             .build())
                         .build())
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .id("s4")
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()

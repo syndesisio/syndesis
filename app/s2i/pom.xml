@@ -49,8 +49,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.syndesis.rest</groupId>
-      <artifactId>rest-builder-image-generator</artifactId>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-builder-image-generator</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -73,8 +73,8 @@
           <skip>false</skip>
           <artifactItems>
             <artifactItem>
-              <groupId>io.syndesis.rest</groupId>
-              <artifactId>rest-builder-image-generator</artifactId>
+              <groupId>io.syndesis.server</groupId>
+              <artifactId>server-builder-image-generator</artifactId>
               <version>${project.version}</version>
               <type>jar</type>
               <outputDirectory>${project.build.directory}</outputDirectory>
