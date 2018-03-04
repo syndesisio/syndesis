@@ -6,7 +6,7 @@ import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/ed
   selector: 'syndesis-integration-integration-basics',
   templateUrl: 'integration-basics.component.html',
   styleUrls: [
-    '../../integration-common-toolbar.scss',
+    '../../integration-common.scss',
     './integration-basics.component.scss'
   ]
 })

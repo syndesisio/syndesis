@@ -16,7 +16,7 @@ const category = getCategory('Integrations');
   selector: 'syndesis-integration-connection-select',
   templateUrl: 'connection-select.component.html',
   styleUrls: [
-    '../../integration-common-toolbar.scss',
+    '../../integration-common.scss',
     './connection-select.component.scss'
   ]
 })

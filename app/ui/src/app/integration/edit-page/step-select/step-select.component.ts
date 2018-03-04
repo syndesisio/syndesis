@@ -29,7 +29,7 @@ import { log, getCategory } from '@syndesis/ui/logging';
   selector: 'syndesis-integration-step-select',
   templateUrl: './step-select.component.html',
   styleUrls: [
-    '../../integration-common-toolbar.scss',
+    '../../integration-common.scss',
     './step-select.component.scss'
   ]
 })

@@ -16,7 +16,7 @@ const category = getCategory('IntegrationsCreatePage');
   selector: 'syndesis-integration-step-configure',
   templateUrl: './step-configure.component.html',
   styleUrls: [
-    '../../integration-common-toolbar.scss',
+    '../../integration-common.scss',
     './step-configure.component.scss'
   ]
 })

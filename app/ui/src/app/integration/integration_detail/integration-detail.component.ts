@@ -58,7 +58,7 @@ const DEFAULT_POLLING_INTERVAL = 5000;
   selector: 'syndesis-integration-detail-page',
   templateUrl: 'integration-detail.component.html',
   styleUrls: [
-    '../integration-common-toolbar.scss',
+    '../integration-common.scss',
     'integration-detail.component.scss'
   ]
 })

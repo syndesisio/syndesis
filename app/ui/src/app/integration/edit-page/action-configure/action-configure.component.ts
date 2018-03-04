@@ -18,7 +18,7 @@ import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/ed
   selector: 'syndesis-integration-action-configure',
   templateUrl: 'action-configure.component.html',
   styleUrls: [
-    '../../integration-common-toolbar.scss',
+    '../../integration-common.scss',
     './action-configure.component.scss'
   ]
 })

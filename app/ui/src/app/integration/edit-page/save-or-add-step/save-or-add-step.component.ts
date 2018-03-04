@@ -12,7 +12,7 @@ const category = getCategory('IntegrationsCreatePage');
   selector: 'syndesis-integration-save-or-add-step',
   templateUrl: 'save-or-add-step.component.html',
   styleUrls: [
-    '../../integration-common-toolbar.scss',
+    '../../integration-common.scss',
     './save-or-add-step.component.scss'
   ]
 })
