@@ -17,7 +17,10 @@ import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/ed
 @Component({
   selector: 'syndesis-integration-action-configure',
   templateUrl: 'action-configure.component.html',
-  styleUrls: ['./action-configure.component.scss']
+  styleUrls: [
+    '../../integration-common.scss',
+    './action-configure.component.scss'
+  ]
 })
 export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   isShapeless: boolean;

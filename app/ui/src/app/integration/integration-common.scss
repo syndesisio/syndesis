@@ -1,0 +1,16 @@
+.syn-toolbar--inverted.toolbar {
+  padding: 0;
+
+  .breadcrumb {
+    padding: 0;
+    margin: 0;
+  }
+
+  .search {
+    width: 50%;
+
+    .input-group {
+      width: 80%;
+    }
+  }
+}

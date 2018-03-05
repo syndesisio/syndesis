@@ -28,7 +28,10 @@ import { log, getCategory } from '@syndesis/ui/logging';
 @Component({
   selector: 'syndesis-integration-step-select',
   templateUrl: './step-select.component.html',
-  styleUrls: ['./step-select.component.scss']
+  styleUrls: [
+    '../../integration-common.scss',
+    './step-select.component.scss'
+  ]
 })
 export class IntegrationStepSelectComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;

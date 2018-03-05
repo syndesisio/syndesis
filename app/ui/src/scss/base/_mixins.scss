@@ -40,3 +40,9 @@
   flex: 1 1 auto;
   overflow: auto;
 }
+
+@mixin toolbar($border-bottom: 1px solid #d9d9d9, $background: none, $box-shadow: none) {
+  background: $background;
+  box-shadow: $box-shadow;
+  border-bottom: $border-bottom;
+}

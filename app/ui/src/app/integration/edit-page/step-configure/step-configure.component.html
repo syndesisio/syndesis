@@ -17,7 +17,8 @@
   <div class="syn-scrollable"
        *ngIf="step">
     <!-- Toolbar -->
-    <div [class]="getToolbarClass()">
+    <div class="syn-toolbar--inverted"
+      [ngClass]="getToolbarClass()">
       <!-- Toolbar: Breadcrumbs -->
       <div class="container-fluid">
         <div class="row toolbar-pf">

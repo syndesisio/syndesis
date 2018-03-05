@@ -15,7 +15,10 @@ const category = getCategory('Integrations');
 @Component({
   selector: 'syndesis-integration-action-select',
   templateUrl: 'action-select.component.html',
-  styleUrls: ['./action-select.component.scss']
+  styleUrls: [
+    '../../integration-common.scss',
+    './action-select.component.scss'
+  ]
 })
 export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
   flowSubscription: Subscription;

@@ -1,3 +1,5 @@
+@import 'syndesis-sass';
+
 .integrations.edit {
   height: 100%;
 
@@ -22,17 +24,7 @@
     margin-right: 0;
   }
 
-  .wizard-sidebar {
-    flex: 0 0 auto;
-    position: relative;
-    background: #fafafa;
-    border-right: 1px solid #d1d1d1;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 20px 20px 0 20px;
-    min-width: 300px;
-  }
-
+  .wizard-sidebar,
   .mapper-sidebar {
     flex: 0 0 auto;
     position: relative;
@@ -40,6 +32,12 @@
     border-right: 1px solid #d1d1d1;
     overflow-x: hidden;
     overflow-y: auto;
+    padding: 0 $gutter;
+  }
+
+  .wizard-sidebar {
+    min-width: 300px;
+    padding-top: $gutter;
   }
 
   .main-panel {
@@ -47,27 +45,6 @@
   }
 
   ::ng-deep {
-    .toolbar {
-      .toolbar-pf {
-        background: none !important;
-        border-bottom: 1px #d9d9d9 solid;
-        box-shadow: none;
-
-        .breadcrumb {
-          padding: 0;
-          margin: 0;
-        }
-
-        .search {
-          width: 50%;
-
-          .input-group {
-            width: 80%;
-          }
-        }
-     }
-    }
-
     .control-buttons {
       margin-bottom: 15px;
     }

@@ -70,7 +70,8 @@ const DESCRIBE_DATA_FORM_CONFIG = {
 
 @Component({
   selector: 'syndesis-integration-describe-data',
-  templateUrl: 'describe-data.component.html'
+  templateUrl: 'describe-data.component.html',
+  styleUrls: ['../../integration-common.scss']
 })
 export class IntegrationDescribeDataComponent implements OnInit, OnDestroy {
 
