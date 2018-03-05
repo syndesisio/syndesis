@@ -45,7 +45,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>connector-verifier</artifactId>
+			<artifactId>connector-support-verifier</artifactId>
 			<version>${project.version}</version>
 			<optional>true</optional>
 			<scope>provided</scope>
@@ -81,7 +81,7 @@
 
 			<plugin>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>connector-maven-plugin</artifactId>
+				<artifactId>connector-support-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<executions>
 					<execution>

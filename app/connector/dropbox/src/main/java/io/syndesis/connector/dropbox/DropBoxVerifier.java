@@ -18,7 +18,8 @@ package io.syndesis.connector.dropbox;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 
-import io.syndesis.verifier.api.ComponentVerifier;
+import io.syndesis.connector.support.verifier.api.ComponentVerifier;
+
 
 public class DropBoxVerifier extends ComponentVerifier {
 

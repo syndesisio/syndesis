@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import io.syndesis.verifier.api.Verifier;
+import io.syndesis.connector.support.verifier.api.Verifier;
 
 @Configuration
 @ConditionalOnProperty(prefix = "io.syndesis.connector.verifier", name = "enabled")
