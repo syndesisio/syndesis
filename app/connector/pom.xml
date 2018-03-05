@@ -78,6 +78,7 @@
     <module>ftp</module>
     <module>sftp</module>
     <module>mqtt</module>
+    <module>dropbox</module>
   </modules>
 
   <dependencyManagement>
