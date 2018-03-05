@@ -15,36 +15,31 @@
  */
 package io.syndesis.server.openshift;
 
-import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.Handler;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.Quantity;
-import io.fabric8.kubernetes.client.Handlers;
-import io.fabric8.kubernetes.client.RequestConfigBuilder;
-import io.fabric8.kubernetes.client.ResourceHandler;
-import io.fabric8.openshift.api.model.Build;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
-import io.fabric8.openshift.api.model.DeploymentConfigStatus;
-import io.fabric8.openshift.api.model.ImageStream;
-import io.fabric8.openshift.api.model.User;
-import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
-import io.syndesis.common.util.Names;
-import io.syndesis.common.util.SyndesisServerException;
-import okhttp3.OkHttpClient;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import io.fabric8.openshift.api.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.openshift.api.model.Build;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
+import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
+import io.fabric8.openshift.client.OpenShiftClient;
+import io.syndesis.common.util.Names;
+import io.syndesis.common.util.SyndesisServerException;
+
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention"})
 public class OpenShiftServiceImpl implements OpenShiftService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     private static final String OPENSHIFT_PREFIX = "i-";
@@ -76,38 +71,12 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public String deploy(String name, DeploymentData deploymentData) {
         final String sName = openshiftName(name);
-
         LOGGER.debug("Deploy {}", sName);
 
         ensureDeploymentConfig(sName, deploymentData);
         ensureSecret(sName, deploymentData);
         DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
         return String.valueOf(deployment.getStatus().getLatestVersion());
-    }
-
-    // Only required temporarily while image triggers do not work
-    // We are updating the image name with the latest image reference before increasing
-    // the latestVersion number
-    private void updateImageName(String sName) {
-        ImageStream is = openShiftClient.imageStreams().withName(sName).get();
-        if (is != null) {
-            is.getStatus().getTags()
-              .stream()
-              .filter(t -> "latest".equals(t.getTag()))
-              .findFirst().ifPresent(t -> {
-                String image = t.getItems().get(0).getDockerImageReference();
-                updateImageNameInDeployment(sName, image);
-            });
-        }
-    }
-
-    private void updateImageNameInDeployment(String name, String image) {
-        openShiftClient.deploymentConfigs()
-                       .withName(name)
-                       .edit().editOrNewSpec().editOrNewTemplate().editOrNewSpec().editFirstContainer()
-                       .withImage(image)
-                       .endContainer().endSpec().endTemplate().endSpec()
-                       .done();
     }
 
     @Override
@@ -387,7 +356,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
 
-    private static String openshiftName(String name) {
+    protected static String openshiftName(String name) {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
 }

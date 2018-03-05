@@ -18,7 +18,6 @@ package io.syndesis.server.controller;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

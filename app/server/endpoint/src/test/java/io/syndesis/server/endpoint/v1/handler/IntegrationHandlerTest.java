@@ -28,6 +28,7 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 
+import io.syndesis.server.openshift.OpenShiftService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,11 +45,13 @@ public class IntegrationHandlerTest {
 
     private IntegrationHandler handler;
     private Inspectors inspectors;
+    private OpenShiftService openShiftService;
 
     @Before
     public void setUp() {
         DataManager manager = mock(DataManager.class);
         Validator validator = mock(Validator.class);
+        openShiftService = mock(OpenShiftService.class);
         inspectors = mock(Inspectors.class);
         handler = new IntegrationHandler(manager, openShiftService, validator, inspectors, new EncryptionComponent(null));
     }

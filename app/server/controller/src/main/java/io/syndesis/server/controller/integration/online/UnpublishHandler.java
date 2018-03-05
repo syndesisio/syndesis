@@ -20,7 +20,6 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Labels;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 
 import java.util.Collections;
@@ -31,11 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 public class UnpublishHandler extends BaseHandler implements StateChangeHandler {
 
-    private final DataManager dataManager;
-
-    UnpublishHandler(OpenShiftService openShiftService, DataManager dataManager) {
+    UnpublishHandler(OpenShiftService openShiftService) {
         super(openShiftService);
-        this.dataManager = dataManager;
     }
 
     @Override

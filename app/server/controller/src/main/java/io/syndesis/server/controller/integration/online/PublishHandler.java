@@ -17,12 +17,9 @@ package io.syndesis.server.controller.integration.online;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -141,8 +138,8 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, Integer.toString(integrationDeployment.getVersion()))
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
-            .addLabel(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationDeployment.getIntegrationId().get())
-            .addLabel(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion()))
+            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, integrationDeployment.getIntegrationId().get())
+            .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, Integer.toString(integrationDeployment.getVersion()))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
@@ -157,7 +154,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         try {
             return openShiftService().build(integration.getSpec().getName(), data, tarInputStream);
         } catch (InterruptedException e) {
-            throw new InterruptedIOException(e.getMessage());
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 

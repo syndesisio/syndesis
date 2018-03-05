@@ -57,6 +57,6 @@ public class OnlineHandlerProvider extends BaseHandler implements StateChangeHan
                 projectGenerator,
                 properties
             ),
-            new UnpublishHandler(openShiftService(), dataManager));
+            new UnpublishHandler(openShiftService()));
     }
 }

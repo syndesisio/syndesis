@@ -46,7 +46,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import io.syndesis.openshift.OpenShiftService;
+import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
