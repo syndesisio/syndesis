@@ -1,12 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
+import { ConfigService } from '@syndesis/ui/config.service';
 import { moment } from '@syndesis/ui/vendor';
 import {
   Connections,
   IntegrationState, Integrations, IntegrationMetrics
 } from '@syndesis/ui/platform';
+
+const DEFAULT_POLLING_INTERVAL = 5000;
 
 @Component({
   selector: 'syndesis-dashboard-metrics',
@@ -18,11 +21,13 @@ export class DashboardMetricsComponent implements OnInit {
   @Input() connections: Connections; // TODO: Replace by connectionState once the ngrx store supports it
   @Input() integrations: Integrations; // TODO: Replace by integrationState.collection once the legacy Integrations store is phased out
   @Input() integrationState: IntegrationState;
+  @Output() refresh = new EventEmitter();
 
   uptimeStart: string;
-  uptimeLegend$: Observable<string>;
 
-  private startDate: moment.Moment;
+  private metricsRefreshInterval: any;
+
+  constructor(private configService: ConfigService) {}
 
   get errorIntegrations(): number {
     return this.integrations
@@ -35,21 +40,24 @@ export class DashboardMetricsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.startDate = moment(this.integrationMetrics.start);
-    this.uptimeStart = this.startDate.format('MMM Do HH:mm A'); // eg January 12nd 8:53 pm
+    this.uptimeStart = moment(this.integrationMetrics.start).format('MMM Do HH:mm A'); // eg January 12nd 8:53 pm
 
-    const uptimeDuration = moment.duration(moment().diff(this.startDate));
-    this.uptimeLegend$ = Observable.of(uptimeDuration).pipe(
-      map(duration => ({
-        days: duration.days(),
-        hours: duration.hours(),
-        minutes: duration.minutes(),
-      })),
-      map(durationAsObject => Object
-        .keys(durationAsObject)
-        .reduce((timeSpan: string, key: string) => {
-          return durationAsObject[key] > 0 ? timeSpan + `${durationAsObject[key]} ${key} ` : timeSpan;
-        }, ''))
-    );
+    let pollingInterval: number;
+
+    try {
+      pollingInterval = this.configService.getSettings('metricsPollingInterval');
+    } catch (error) {
+      pollingInterval = DEFAULT_POLLING_INTERVAL;
+    }
+
+    if (pollingInterval > 0) {
+      this.metricsRefreshInterval = setInterval(() => this.refresh.emit(), pollingInterval);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.metricsRefreshInterval) {
+      clearInterval(this.metricsRefreshInterval);
+    }
   }
 }

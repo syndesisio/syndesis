@@ -25,12 +25,9 @@
           </h2>
           <div class="card-pf-body">
             <p class="card-pf-aggregate-status-notifications">
-              <span class="card-pf-aggregate-status-notification" *ngIf="integration?.lastUpdated; else lastUpdatedUnavailable">
-                {{ integration.lastUpdated | date:'short' }}
+              <span class="card-pf-aggregate-status-notification">
+                {{ (integrationMetrics.lastProcessed | date:'short') || 'n/a' }}
               </span>
-              <ng-template #lastUpdatedUnavailable>
-                n/a
-              </ng-template>
             </p>
           </div>
         </div>
@@ -71,7 +68,7 @@
           </div>
           <div class="card-pf-body">
             <h4 class="metrics__uptime-legend">
-              {{ uptimeLegend$ | async }}
+              {{ integrationMetrics.start | synDuration$ | async }}
             </h4>
           </div>
         </div>

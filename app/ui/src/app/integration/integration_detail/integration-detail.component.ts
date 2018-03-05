@@ -77,8 +77,6 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
   selectedTabType: TabType = 'description';
 
-  private metricsRefreshInterval: any;
-
   constructor(
     public integrationStore: IntegrationStore,
     public stepStore: StepStore,
@@ -179,6 +177,10 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     this.integrationMetrics$ = this.platformStore.select('integrationState').pipe(
       map(integrationState => integrationState.metrics.list),
       combineLatest(this.route.paramMap.first(params => params.has('integrationId')).map(paramMap => paramMap.get('integrationId'))),
+      map(([integrationMetrics, integrationId]) => {
+        console.log(integrationMetrics);
+        return ([integrationMetrics, integrationId]);
+      }),
       switchMap(([integrationMetrics, integrationId]) => Observable.of(integrationMetrics.find(metrics => metrics.id === integrationId)))
     );
 
@@ -203,19 +205,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         }
         const integrationId = paramMap.get('integrationId');
 
-        let pollingInterval: number;
-
-        try {
-          pollingInterval = this.configService.getSettings('metricsPollingInterval');
-        } catch (error) {
-          pollingInterval = DEFAULT_POLLING_INTERVAL;
-        }
-
-        if (pollingInterval && !isNaN(pollingInterval) && pollingInterval > 0) {
-          this.metricsRefreshInterval = setInterval(() => this.refreshDashboard(), pollingInterval);
-        }
-
-        this.platformStore.dispatch(new IntegrationActions.FetchMetrics(integrationId));
+        this.onRefreshMetrics(integrationId);
 
         const integration$ = this.integrationSupportService.watchOverview(integrationId);
         this.integrationSubscription = integration$.subscribe((integration: IntegrationOverview) => {
@@ -249,18 +239,16 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.metricsRefreshInterval) {
-      clearInterval(this.metricsRefreshInterval);
-    }
-
     if (this.integrationSubscription) {
       this.integrationSubscription.unsubscribe();
     }
     this.routeSubscription.unsubscribe();
   }
 
-  private refreshDashboard(): void {
-    this.platformStore.dispatch(new IntegrationActions.FetchMetrics());
+  onRefreshMetrics(integrationId: string): void {
+    if (integrationId || this.integration.id) {
+      this.platformStore.dispatch(new IntegrationActions.FetchMetrics(integrationId || this.integration.id));
+    }
   }
 
 }

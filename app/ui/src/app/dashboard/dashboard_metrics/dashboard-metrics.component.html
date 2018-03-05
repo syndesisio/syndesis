@@ -82,7 +82,7 @@
           </div>
           <div class="card-pf-body">
             <h4 class="metrics__uptime-legend">
-              {{ uptimeLegend$ | async }}
+              {{ integrationMetrics.start | synDuration$ | async }}
             </h4>
           </div>
         </div>

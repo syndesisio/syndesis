@@ -153,6 +153,7 @@ export interface IntegrationMetrics {
   messages: number;
   errors: number;
   start: number;
+  lastProcessed: number;
 }
 
 export interface IntegrationState extends BaseReducerCollectionModel<Integration> {

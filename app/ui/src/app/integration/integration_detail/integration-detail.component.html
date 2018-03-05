@@ -84,29 +84,25 @@
       </ul>
 
       <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'description'">
-        <syndesis-integration-description
-          [integration]="integration"
-          [stepStore]="stepStore"
-          (viewDetails)="viewDetails($event)"
-          (attributeUpdated)="attributeUpdated($event)"
-          (draftAction)="draftAction($event)">
+        <syndesis-integration-description [integration]="integration" [stepStore]="stepStore" (viewDetails)="viewDetails($event)"
+          (attributeUpdated)="attributeUpdated($event)" (draftAction)="draftAction($event)">
         </syndesis-integration-description>
       </div>
 
       <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'logs'">
         <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
       </div>
-      
+
       <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'activity'">
         <syndesis-integration-activity [integration]=integration></syndesis-integration-activity>
       </div>
-      
+
       <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'metrics'">
         <syndesis-integration-metrics
           [integration]=integration
-          [integrationMetrics]="integrationMetrics$ | async">
+          [integrationMetrics]="integrationMetrics$ | async"
+          (refresh)="onRefreshMetrics()">
         </syndesis-integration-metrics>
       </div>
     </div>
-  </div>
 </syndesis-loading>
