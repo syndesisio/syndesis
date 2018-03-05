@@ -159,6 +159,11 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
         }
 
         @Override
+        public List<Extension> loadExtensionsByTag(String tag) {
+            return Collections.emptyList();
+        }
+
+        @Override
         public String decrypt(String encrypted) {
             return encrypted;
         }

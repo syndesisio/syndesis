@@ -7,6 +7,10 @@
     {
       "type": "MAVEN",
       "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    },
+    {
+      "type": "EXTENSION_TAG",
+      "id": "jdbc-driver"
     }
   ],
   "configuredProperties": {},

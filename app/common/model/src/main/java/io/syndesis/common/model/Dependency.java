@@ -25,7 +25,8 @@ public interface Dependency {
 
     enum Type {
         MAVEN,
-        EXTENSION
+        EXTENSION,
+        EXTENSION_TAG
     }
 
     /**
@@ -58,6 +59,11 @@ public interface Dependency {
     }
 
     @JsonIgnore
+    default boolean isExtensionTag() {
+        return isOfType(Type.EXTENSION_TAG);
+    }
+
+    @JsonIgnore
     static Dependency from(Type type, String id) {
         return new Builder().type(type).id(id).build();
     }
@@ -70,6 +76,11 @@ public interface Dependency {
     @JsonIgnore
     static Dependency extension(String id) {
         return from(Type.EXTENSION, id);
+    }
+
+    @JsonIgnore
+    static Dependency libraryTag(String id) {
+        return from(Type.EXTENSION_TAG, id);
     }
 
     // *****************

@@ -188,7 +188,7 @@ public class IntegrationSupportHandler {
         for (String id : ids) {
             Integration integration = integrationHandler.get(id);
             addToExport(memJsonDB, integration);
-            resourceManager.collectDependencies(integration.getSteps()).stream()
+            resourceManager.collectDependencies(integration.getSteps(), true).stream()
                 .filter(Dependency::isExtension)
                 .map(Dependency::getId)
                 .forEach(extensions::add);

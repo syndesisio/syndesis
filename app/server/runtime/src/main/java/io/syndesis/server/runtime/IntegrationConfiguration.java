@@ -17,8 +17,11 @@ package io.syndesis.server.runtime;
 
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import io.syndesis.common.model.ListResult;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
@@ -51,6 +54,18 @@ public class IntegrationConfiguration {
             @Override
             public Optional<Extension> loadExtension(String id) {
                 return Optional.ofNullable(extensionDataManager.getExtensionMetadata(id));
+            }
+
+            @Override
+            public List<Extension> loadExtensionsByTag(String tag) {
+                return dataManager.fetchAll(Extension.class,
+                    resultList -> new ListResult.Builder<Extension>()
+                        .items(resultList.getItems().stream()
+                            .filter(extension -> extension.getTags().contains(tag))
+                            .collect(Collectors.toList()))
+                        .totalCount(resultList.getTotalCount())
+                        .build()
+                ).getItems();
             }
 
             @Override
