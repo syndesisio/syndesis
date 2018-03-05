@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-5697-g422ec4637,</span>
-<span id="revdate">2018-03-03</span>
+<span id="revnumber">version 1.1.3-5699-g57b3ee61f,</span>
+<span id="revdate">2018-03-05</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -883,10 +883,10 @@ It is mainly a wrapper around Maven but adds some convenience for common develop
 <pre class="CodeRay highlight"><code>Usage: syndesis build [... options ...]
 
 Options for build:
--b  --backend                 Build only backend modules (core, extension, integration, connectors, rest, verifier)
-    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
+    --images                  Build only modules with Docker images (ui, server, meta, s2i)
 -m  --module &lt;m1&gt;,&lt;m2&gt;, ..    Build modules
-                              Modules: ui, rest, connectors, s2i, verifier, integration, extension, core
+                              Modules: ui, server, connector, s2i, meta, integration, extension, common
 -d  --dependencies            Build also all project the specified module depends on
     --init                    Install top-level parent pom, too. Only needed when used with -m
     --skip-tests              Skip unit and system test execution
@@ -927,7 +927,7 @@ This compiles all Java and Javascript artefacts and also runs all tests and code
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>rest</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>server</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Main backend providing a REST API for the user interface</p></td>
 </tr>
 <tr>
@@ -935,11 +935,11 @@ This compiles all Java and Javascript artefacts and also runs all tests and code
 <td class="tableblock halign-left valign-top"><p class="tableblock">The SPA user interface application</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>verifier</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verifier used for verifying connections and providing connector metadata</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>meta</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Meta data and verifier used for verifying connections and providing connector metadata</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>connectors</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>connector</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All connectors used by Syndesis out of the box</p></td>
 </tr>
 <tr>
@@ -951,8 +951,8 @@ This compiles all Java and Javascript artefacts and also runs all tests and code
 <td class="tableblock halign-left valign-top"><p class="tableblock">Tools for developing and running Syndesis custom extensions</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>core</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Core module containing common code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>common</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common modules containing common code</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>s2i</strong></p></td>
@@ -966,7 +966,7 @@ This compiles all Java and Javascript artefacts and also runs all tests and code
 <div class="ulist">
 <ul>
 <li>
-<p><code>--backend</code> (short: <code>-b</code>) for the modules <code>rest</code>, <code>integration</code>, <code>verifier</code>, <code>connectors</code>, <code>extension</code>, <code>core</code></p>
+<p><code>--backend</code> (short: <code>-b</code>) for the modules <code>server</code>, <code>integration</code>, <code>meta</code>, <code>connector</code>, <code>extension</code>, <code>common</code></p>
 </li>
 <li>
 <p><code>--images</code> build all modules which result in Docker images, and also builds the Docker images in addition to the Maven artefacts.</p>
@@ -1327,13 +1327,13 @@ This section needs a more detailed explanation how the systems tests are working
 <pre class="CodeRay highlight"><code>Usage: syndesis dev [... options ...]
 
 Options for dev:
-    --debug &lt;name&gt;            Setup a port forwarding to &lt;name&gt; pod (default: rest)</code></pre>
+    --debug &lt;name&gt;            Setup a port forwarding to &lt;name&gt; pod (default: server)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This command enable port-forwarding of port 5005 from a specific pod (by default: "rest") to port 5005 on the localhost.
+<p>This command enable port-forwarding of port 5005 from a specific pod (by default: "server") to port 5005 on the localhost.
 You then can point your Java IDE to port 5005 on localhost for connecting for remote debugging.
-As argument to <code>--debug</code> "rest", "verifier" and "atlasmap" can be used, which are our Java based services.</p>
+As argument to <code>--debug</code> "server", "meta" and "atlasmap" can be used, which are our Java based services.</p>
 </div>
 </div>
 </div>
@@ -1614,7 +1614,7 @@ If no <code>--release-version</code> is given, then the script aborts.</p>
 <p>Run an <code>mvn clean install</code> to verify that the build is not broken and all tests succeed.</p>
 </li>
 <li>
-<p>Re-generate the OpenShift templates in <code>app/deploy</code> so that the image streams included in these templates refer to Docker images with the new version.</p>
+<p>Re-generate the OpenShift templates in <code>install</code> so that the image streams included in these templates refer to Docker images with the new version.</p>
 </li>
 <li>
 <p>Now run an <code>mvn -Prelease clean deploy</code> to deploy all artefacts to a new staging repository on oss.sonatype.org, the platform for release artefacts on Maven central.
@@ -1625,7 +1625,7 @@ The staging repository on this Sonatype Nexus is validated and closed.</p>
 Otherwise, it is assumed that the user is already logged in.</p>
 </li>
 <li>
-<p>The Docker images are created with <code>mvn -Prelease,image package</code> in the <code>rest</code>, <code>verifier</code>, <code>ui</code> and <code>s2i</code> modules.</p>
+<p>The Docker images are created with <code>mvn -Prelease,image package</code> in the <code>server</code>, <code>meta</code>, <code>ui</code> and <code>s2i</code> modules.</p>
 </li>
 </ul>
 </div>
@@ -1668,7 +1668,7 @@ It will take a bit, but the artefact should then be downloadable from <a href="h
 <div class="ulist">
 <ul>
 <li>
-<p>In <code>app/deploy</code> create new templates which contain image streams that reference images with the minor version (e.g. <code>syndesis/syndesis-rest:1.2</code> for a release version of 1.2.8).</p>
+<p>In <code>install</code> create new templates which contain image streams that reference images with the minor version (e.g. <code>syndesis/syndesis-server:1.3</code> for a release version of 1.3.8).</p>
 </li>
 <li>
 <p>Commit those generated templates</p>
@@ -2065,7 +2065,7 @@ Maven groups are used to separate the various Syndesis parts.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>rest</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.rest</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-rest</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-server</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">REST backend for managing integrations. This is the main sever.</p></td>
 </tr>
 <tr>
@@ -2089,7 +2089,7 @@ Maven groups are used to separate the various Syndesis parts.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>meta</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.syndesis.meta</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-verifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>syndesis/syndesis-meta</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Service for connector meta-data and verification of connections</p></td>
 </tr>
 <tr>
@@ -3016,8 +3016,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-5697-g422ec4637<br>
-Last updated 2018-03-03 09:55:50 UTC
+Version 1.1.3-5699-g57b3ee61f<br>
+Last updated 2018-03-05 07:45:37 UTC
 </div>
 </div>
 </body>
