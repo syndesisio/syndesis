@@ -167,7 +167,7 @@
     <profile>
       <id>system-tests</id>
       <modules>
-        <module>tests</module>
+        <module>test</module>
       </modules>
     </profile>
 
