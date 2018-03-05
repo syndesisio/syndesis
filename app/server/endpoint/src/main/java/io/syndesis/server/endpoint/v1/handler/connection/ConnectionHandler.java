@@ -183,7 +183,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Path("/{id}/actions")
-    public ConnectionActionHandler credentials(
+    public ConnectionActionHandler metadata(
         @NotNull final @PathParam("id") @ApiParam(required = true, example = "my-connection") String connectionId) {
         final Connection connection = get(connectionId);
 

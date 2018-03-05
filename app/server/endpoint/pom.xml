@@ -251,6 +251,12 @@
       <artifactId>snakeyaml</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.netflix.hystrix</groupId>
+      <artifactId>hystrix-core</artifactId>
+    </dependency>
+
+
     <!-- ===================================================================================== -->
 
     <!-- Atlasmap Data Mapper Services -->
