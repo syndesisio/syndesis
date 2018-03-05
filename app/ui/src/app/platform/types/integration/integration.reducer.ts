@@ -190,7 +190,7 @@ export function integrationReducer(state = initialState, action: any): Integrati
 
     case IntegrationActions.FETCH_METRICS: {
       const id = (action as IntegrationActions.FetchMetrics).id;
-      let list = state.metrics.list;
+      const list = state.metrics.list;
       if (id) {
         if (!list.some(integrationMetrics => integrationMetrics.id === id)) {
           list.push({ id, ...initialIntegrationMetrics });
