@@ -917,6 +917,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-salesforce</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ============================================== -->
 
       <!-- TODO: Maybe import BOM ? -->

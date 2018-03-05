@@ -24,15 +24,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import io.syndesis.common.util.Json;
-import io.syndesis.common.model.ModelData;
-import io.syndesis.server.dao.init.ReadApiClientData;
 import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.integration.Integration;
-
+import io.syndesis.common.util.Json;
+import io.syndesis.server.dao.init.ReadApiClientData;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,7 +45,6 @@ public class ReadApiClientDataTest {
                     .createdAt(System.currentTimeMillis())
                     .build();
         String integrationJson = Json.writer().writeValueAsString(integrationIn);
-//        System.out.println(integrationJson);
         Integration integrationOut = Json.reader().forType(Integration.class).readValue(integrationJson);
 
         //serialize
@@ -64,17 +61,16 @@ public class ReadApiClientDataTest {
     @Test
     public void loadApiClientDataTest() throws IOException {
         List<ModelData<?>> modelDataList = new ReadApiClientData().readDataFromFile("io/syndesis/server/dao/deployment.json");
-//        System.out.println("Found " + modelDataList.size() + " entities.");
         Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
-        List<Connector> connectorList = new ArrayList<>();
+
+        List<Object> items = new ArrayList<>();
         for (ModelData<?> md : modelDataList) {
-            if (md.getKind() == Kind.Connector) {
-                Connector cg = (Connector) md.getData();
-                connectorList.add(cg);
+            if (md.getKind() == Kind.ConnectorTemplate) {
+                items.add(md.getData());
             }
         }
-//        System.out.println("Found " + connectorList.size() + " Connectors");
-        Assert.assertTrue("We should find some Connectors", 0 < connectorList.size());
+
+        Assert.assertFalse("We should find some Connectors", items.isEmpty());
     }
 
     @Test
@@ -91,7 +87,6 @@ public class ReadApiClientDataTest {
 
             //passing in the updated String with replaced tokens
             List<ModelData<?>> modelDataList = readApiClientData.readDataFromString(jsonText);
-//            System.out.println("Found " + modelDataList.size() + " entities.");
             Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
 
             //the second item is the sampledb-connection

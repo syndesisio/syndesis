@@ -1,0 +1,669 @@
+{
+  "id": "salesforce",
+  "name": "Salesforce",
+  "description": "Cloud-based Customer Relationship Management",
+  "dependencies": [
+    {
+      "type": "MAVEN",
+      "id": "@project.groupId@:@project.artifactId@:@project.version@"
+    }
+  ],
+  "icon": "fa-puzzle-piece",
+  "tags": [
+    "verifier"
+  ],
+  "properties": {
+    "loginUrl": {
+      "kind": "property",
+      "displayName": "Login Url",
+      "group": "security",
+      "label": "common,security",
+      "required": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "defaultValue": "https://login.salesforce.com",
+      "description": "URL of the Salesforce instance used for authentication by default set to https://login.salesforce.com"
+    },
+    "clientId": {
+      "kind": "property",
+      "displayName": "Client Id",
+      "group": "security",
+      "label": "common,security",
+      "required": true,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-client-id"
+      ],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "OAuth Consumer Key of the connected app configured in the Salesforce instance setup. Typically a connected app needs to be configured but one can be provided by installing a package."
+    },
+    "clientSecret": {
+      "kind": "property",
+      "displayName": "Client Secret",
+      "group": "security",
+      "label": "common,security",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "OAuth Consumer Secret of the connected app configured in the Salesforce instance setup."
+    },
+    "refreshToken": {
+      "kind": "property",
+      "displayName": "Refresh Token",
+      "group": "security",
+      "label": "common,security",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "Refresh token already obtained in the refresh token OAuth flow. One needs to setup a web application and configure a callback URL to receive the refresh token or configure using the builtin callback at https://login.salesforce.com/services/oauth2/success or https://test.salesforce.com/services/oauth2/success and then retrive the refresh_token from the URL at the end of the flow. Note that in development organizations Salesforce allows hosting the callback web application at localhost."
+    },
+    "userName": {
+      "kind": "property",
+      "displayName": "User Name",
+      "group": "security",
+      "label": "common,security",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": false,
+      "componentProperty": true,
+      "description": "Username used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows."
+    },
+    "password": {
+      "kind": "property",
+      "displayName": "Password",
+      "group": "security",
+      "label": "common,security",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "Password used in OAuth flow to gain access to access token. It's easy to get started with password OAuth flow but in general one should avoid it as it is deemed less secure than other flows. Make sure that you append security token to the end of the password if using one."
+    }
+  },
+  "actions": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-create-sobject",
+      "name": "New record",
+      "description": "Create a new Salesforce record, such as an Account, Contact, or Order.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+        },
+        "configuredProperties": {
+          "operationName": "createSObject",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-create-sobject"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to create.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject",
+      "name": "Delete record",
+      "description": "Delete a record from Salesforce.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {
+          "operationName": "deleteSObject",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to delete.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject-with-id",
+      "name": "Delete record by external identifier",
+      "description": "Delete a record from Salesforce based on the value of an external identifier.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {
+          "operationName": "deleteSObjectWithId",
+          "sObjectIdName": "Id",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject-with-id"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to delete.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          },
+          {
+            "name": "External identifier field name",
+            "description": "Specify the field name of the external identifier.",
+            "properties": {
+              "sObjectIdName": {
+                "kind": "parameter",
+                "displayName": "External identifier field",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "defaultValue": "",
+                "description": "Field name of the external identifier"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-get-sobject",
+      "name": "Fetch record",
+      "description": "Fetches a record from Salesforce by its identifier value.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "configuredProperties": {
+          "operationName": "getSObject",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-get-sobject"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to fetch.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-get-sobject-with-id",
+      "name": "Fetch record by external identifier",
+      "description": "Fetches a record from Salesforce by the value of an external identifier.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.ExpectingIdCustomizer",
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "configuredProperties": {
+          "operationName": "getSObjectWithId",
+          "sObjectIdName": "Id",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-get-sobject-with-id"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to fetch.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          },
+          {
+            "name": "External identifier field name",
+            "description": "Specify the field name of the external identifier.",
+            "properties": {
+              "sObjectIdName": {
+                "kind": "parameter",
+                "displayName": "External identifier field",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "defaultValue": "",
+                "description": "Field name of the external identifier"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-update-sobject",
+      "name": "Update record",
+      "description": "Update a record on Salesforce.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.ForUpdateCustomizer",
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "configuredProperties": {
+          "operationName": "updateSObject",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-update-sobject"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to update.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-upsert-sobject",
+      "name": "Create or update record",
+      "description": "Create or update a record on Salesforce.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "To",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorCustomizers": [
+          "io.syndesis.connector.salesforce.customizer.ForUpdateCustomizer",
+          "io.syndesis.connector.salesforce.customizer.DataShapeCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "org.apache.camel.component.salesforce.api.dto.CreateSObjectResult"
+        },
+        "configuredProperties": {
+          "operationName": "upsertSObject",
+          "sObjectIdName": "Id",
+          "rawPayload": "true",
+          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-upsert-sobject"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name of the record to create or update.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          },
+          {
+            "name": "Identifier field name",
+            "description": "Specify the field name that holds the identifying value.",
+            "properties": {
+              "sObjectIdName": {
+                "kind": "parameter",
+                "displayName": "Identifier field",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "defaultValue": "",
+                "description": "Field name of the identifier"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-on-create",
+      "name": "On create",
+      "description": "Get notified when a Salesforce record is created.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "From",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "configuredProperties": {
+          "updateTopic": "true",
+          "notifyForFields": "ALL",
+          "notifyForOperationCreate": "true",
+          "notifyForOperationUpdate": "false",
+          "notifyForOperationDelete": "false",
+          "notifyForOperationUndelete": "false",
+          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name for which to receive notification when records are created.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-on-update",
+      "name": "On update",
+      "description": "Get notified when a Salesforce record is updated.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "From",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "configuredProperties": {
+          "updateTopic": "true",
+          "notifyForFields": "ALL",
+          "notifyForOperationCreate": "false",
+          "notifyForOperationUpdate": "true",
+          "notifyForOperationDelete": "false",
+          "notifyForOperationUndelete": "false",
+          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name for which to receive notification when records are updated.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "@project.groupId@:@project.artifactId@:salesforce-on-delete",
+      "name": "On delete",
+      "description": "Get notified when a Salesforce record is deleted.",
+      "tags": [
+        "dynamic"
+      ],
+      "pattern": "From",
+      "actionType": "connector",
+      "descriptor": {
+        "componentScheme": "salesforce",
+        "connectorFactory": "io.syndesis.connector.salesforce.SalesforceStreamingConnectorFactory",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "type": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "configuredProperties": {
+          "updateTopic": "true",
+          "notifyForFields": "ALL",
+          "notifyForOperationCreate": "false",
+          "notifyForOperationUpdate": "false",
+          "notifyForOperationDelete": "true",
+          "notifyForOperationUndelete": "false",
+          "sObjectClass": "io.syndesis.connector.salesforce.SalesforceIdentifier"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "name": "Name of the object",
+            "description": "Specify the Salesforce object name for which to receive notification when records are deleted.",
+            "properties": {
+              "sObjectName": {
+                "kind": "parameter",
+                "displayName": "Object name",
+                "group": "common",
+                "required": true,
+                "type": "string",
+                "javaType": "java.lang.String",
+                "tags": [],
+                "deprecated": false,
+                "secret": false,
+                "componentProperty": false,
+                "description": "Name of the Salesforce object"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
