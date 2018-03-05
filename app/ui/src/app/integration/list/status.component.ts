@@ -9,7 +9,7 @@ import { IntegrationOverview } from '@syndesis/ui/platform';
       <!-- In Progress -->
       <div class="status pending" *ngIf="integration.currentState === 'Pending'">
         <div class="spinner spinner-sm spinner-inline"></div>
-        In Progress
+        Publishing
       </div>
       <!-- Status -->
       <div *ngIf="integration.currentState !== 'Pending'"
@@ -48,7 +48,7 @@ export class IntegrationStatusComponent {
       case 'Unpublished':
         return 'Unpublished';
       case 'Pending':
-        return 'In Progress';
+        return 'Publishing';
       default:
         return currentState;
     }
