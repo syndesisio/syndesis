@@ -10,11 +10,6 @@
         }
     ],
     "componentScheme": "dropbox",
-    "configuredProperties": {
-        "tokenUrl": "https://api.dropboxapi.com/oauth2/token",
-        "authorizationUrl": "https://www.dropbox.com/oauth2/authorize",
-        "authenticationType": "oauth2"
-    },
     "tags": [
         "verifier"
     ],
@@ -32,7 +27,7 @@
             "deprecated": false,
             "secret": true,
             "componentProperty": true,
-            "description": "dropbox.com User Name"
+            "description": "The access token to make API requests for a specific Dropbox user"
         },
         "clientIdentifier": {
             "kind": "parameter",
@@ -47,70 +42,7 @@
             "deprecated": false,
             "secret": false,
             "componentProperty": true,
-            "description": "Access Token"
-        },
-        "clientSecret": {
-            "kind": "parameter",
-            "displayName": "Client Secret",
-            "group": "common,secret",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [
-                "oauth-client-secret"
-            ],
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "description": "Access Token"
-        },
-        "tokenUrl": {
-            "kind": "property",
-            "displayName": "Token URL",
-            "group": "security",
-            "label": "security",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [
-                "oauth-access-token-url"
-            ],
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "description": "The access token"
-        },
-        "authorizationUrl": {
-            "kind": "property",
-            "displayName": "Authorization URL",
-            "group": "security",
-            "label": "security",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [
-                "oauth-authorization-url"
-            ],
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "description": "Authorization URL"
-        },
-        "authenticationType": {
-            "kind": "property",
-            "displayName": "Authentication Type",
-            "group": "security",
-            "label": "security",
-            "required": false,
-            "type": "string",
-            "javaType": "java.lang.String",
-            "tags": [
-                "authentication-type"
-            ],
-            "deprecated": false,
-            "secret": true,
-            "componentProperty": true,
-            "description": "Authentication Type"
+            "description": "Name of the app registered to make API requests"
         }
     },
     "actions": [
@@ -124,7 +56,10 @@
                 "componentScheme": "dropbox",
                 "inputDataShape": {
                     "kind": "any"
-                },"outputDataShape":{"kind":"none"},
+                },
+                "outputDataShape":{
+                    "kind":"none"
+                },
                 "configuredProperties": {
                     "operation": "put"
                 },
