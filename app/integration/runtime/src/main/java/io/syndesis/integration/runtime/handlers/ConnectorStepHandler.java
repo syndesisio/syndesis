@@ -80,7 +80,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
         final String componentId = scheme + "-" + index;
-        final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, descriptor);
+        final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, connector, descriptor);
         final List<String> customizers = CollectionsUtils.aggregate(ArrayList::new, connector.getConnectorCustomizers(), descriptor.getConnectorCustomizers());
         final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
@@ -111,37 +111,27 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         descriptor.getConfiguredProperties().forEach(properties::put);
 
         try {
-            final Map<String, Object> customizersOptions = new HashMap<>(properties);
+            final Map<String, Object> proxyProperties = new HashMap<>(properties);
+
+            // Try to set properties to the component
+            setProperties(context, component, proxyProperties);
 
             for (String customizerType : customizers) {
                 final ComponentProxyCustomizer customizer = resolveCustomizer(context, customizerType);
-                final Iterator<Map.Entry<String, Object>> iterator = customizersOptions.entrySet().iterator();
 
                 // Set the camel context if the customizer implements
                 // the CamelContextAware interface.
                 ObjectHelper.trySetCamelContext(customizer, context);
 
-                while (iterator.hasNext()){
-                    final Map.Entry<String, Object> entry = iterator.next();
+                // Try to set properties to the component
+                setProperties(context, customizer, proxyProperties);
 
-                    String key = entry.getKey();
-                    Object val = entry.getValue();
-
-                    if (val instanceof String) {
-                        val = context.resolvePropertyPlaceholders((String) val);
-                    }
-
-                    // Bind properties to the customizer
-                    if (IntrospectionSupport.setProperty(context, customizer, key, val)) {
-                        // Remove property if bound to the customizer.
-                        iterator.remove();
-                    }
-                }
-
-                customizer.customize(component, customizersOptions);
+                // Invoke the customizer
+                customizer.customize(component, proxyProperties);
             }
 
-            component.setOptions(customizersOptions);
+            component.setCamelContext(context);
+            component.setOptions(proxyProperties);
 
             // Remove component
             context.removeComponent(component.getComponentId());
@@ -167,11 +157,45 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
     // Helpers
     // *************************
 
-    private ComponentProxyComponent resolveComponent(String componentId, String componentScheme, CamelContext context, ConnectorDescriptor descriptor) {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    private void setProperties(CamelContext context, Object target, Map<String, Object> properties) throws Exception {
+        final Iterator<Map.Entry<String, Object>> iterator = properties.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            final Map.Entry<String, Object> entry = iterator.next();
+
+            String key = entry.getKey();
+            Object val = entry.getValue();
+
+            if (val instanceof String) {
+                val = context.resolvePropertyPlaceholders((String) val);
+            }
+
+            // Bind properties to the customizer
+            if (IntrospectionSupport.setProperty(context, target, key, val)) {
+                // Remove property if bound to the customizer.
+                iterator.remove();
+            }
+        }
+    }
+
+    private ComponentProxyComponent resolveComponent(String componentId, String componentScheme, CamelContext context, Connector connector, ConnectorDescriptor descriptor) {
         ComponentProxyFactory factory = ComponentProxyComponent::new;
 
         if (descriptor.getConnectorFactory().isPresent()) {
-            final String factoryType = descriptor.getConnectorFactory().get();
+            factory = resolveComponentProxyFactory(context, descriptor.getConnectorFactory()).orElse(factory);
+        } else if (connector.getConnectorFactory().isPresent()) {
+            factory = resolveComponentProxyFactory(context, connector.getConnectorFactory()).orElse(factory);
+        }
+
+        return factory.newInstance(componentId, componentScheme);
+    }
+
+    private Optional<ComponentProxyFactory> resolveComponentProxyFactory(CamelContext context, Optional<String> componentProxyFactory) {
+        ComponentProxyFactory factory = null;
+
+        if (componentProxyFactory.isPresent()) {
+            final String factoryType = componentProxyFactory.get();
             final ClassResolver resolver = context.getClassResolver();
 
             Class<? extends ComponentProxyFactory> type = resolver.resolveClass(factoryType, ComponentProxyFactory.class);
@@ -185,7 +209,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
             }
         }
 
-        return factory.newInstance(componentId, componentScheme);
+        return Optional.ofNullable(factory);
     }
 
 

@@ -197,7 +197,7 @@
       <artifactId>camel-core</artifactId>
     </dependency>
 
-     <dependency>
+    <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-salesforce</artifactId>
       <version>${camel.version}</version>
@@ -218,48 +218,31 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-activemq-model</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-activemq-publish</artifactId>
-      <version>${project.version}</version>
+      <artifactId>connector-activemq</artifactId>
       <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-sjms-starter</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-amqp</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-ftp</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-sftp</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-aws-s3</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
       <exclusions>
         <exclusion>
