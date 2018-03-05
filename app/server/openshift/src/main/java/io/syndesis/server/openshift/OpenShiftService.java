@@ -15,21 +15,21 @@
  */
 package io.syndesis.server.openshift;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.User;
 
 public interface OpenShiftService {
 
-    String INTEGRATION_ID_ANNOTATION = "syndesis.io/integration-id";
     String INTEGRATION_NAME_ANNOTATION = "syndesis.io/integration-name";
-    String DEPLOYMENT_VERSION_ANNOTATION = "syndesis.io/deployment-version";
+
     String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
     String DEPLOYMENT_ID_LABEL = "syndesis.io/deployment-id";
+    String DEPLOYMENT_VERSION_LABEL = "syndesis.io/deployment-version";
     String USERNAME_LABEL = "syndesis.io/username";
     String COMPONENT_LABEL = "component";
 
@@ -39,17 +39,18 @@ public interface OpenShiftService {
      * @param name name of the build
      * @param data the deployment data to use
      * @param tarInputStream input stream representing a tar file containing the project files
+     * @return the image digest.
      */
-    void build(String name, DeploymentData data, InputStream tarInputStream) throws IOException;
+    String build(String name, DeploymentData data, InputStream tarInputStream) throws InterruptedException;
 
     /**
      * Perform a deployment
      *
      * @param data the deployment data to use
      * @param name name of the deployment to trigger
-     *
+     * @return the revision of the deployment.
      */
-    void deploy(String name, DeploymentData data);
+    String deploy(String name, DeploymentData data);
 
     /**
      * Check whether a deployment is ready
@@ -82,10 +83,16 @@ public interface OpenShiftService {
 
     /**
      * Scale the deployment (Deployment and Build configurations, Image Streams etc)
+     *
      * @param name of the deployment to delete
+     * @param labels a set of labels that need to be match.
      * @param desiredReplicas how many replicas to scale to
+     * @param amount of time to wait for scaling
+     * @param timeUnit of the time
+     * @return true if scaling was completed, false otherwise.
      */
-    void scale(String name, int desiredReplicas);
+    boolean scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException;
+
 
     /**
      * Checks if the deployment (Deployment and Build configurations, Image Streams etc) is scaled.

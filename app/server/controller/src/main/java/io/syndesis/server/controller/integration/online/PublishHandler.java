@@ -17,6 +17,7 @@ package io.syndesis.server.controller.integration.online;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             int userIntegrations = countActiveIntegrationsOfSameUserAs(integrationDeployment);
             if (userIntegrations >= maxIntegrationsPerUser) {
                 //What the user sees.
-                return new StateUpdate(IntegrationDeploymentState.Unpublished, "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
+                return new StateUpdate(IntegrationDeploymentState.Unpublished, integrationDeployment.getStepsDone(), "User has currently " + userIntegrations + " integrations, while the maximum allowed number is " + maxIntegrationsPerUser + ".");
             }
         }
 
@@ -80,7 +81,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             int userDeployments = countDeployments(integrationDeployment);
             if (userDeployments >= maxDeploymentsPerUser) {
                 //What we actually want to limit. So even though this should never happen, we still need to make sure.
-                return new StateUpdate(IntegrationDeploymentState.Unpublished, "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
+                return new StateUpdate(IntegrationDeploymentState.Unpublished, integrationDeployment.getStepsDone(), "User has currently " + userDeployments + " deployments, while the maximum allowed number is " + maxDeploymentsPerUser + ".");
             }
         }
 
@@ -96,24 +97,29 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         final Integration integration = integrationOf(integrationDeployment);
         try {
-
             setVersion(integrationDeployment);
             deactivatePreviousDeployments(integrationDeployment);
 
             DeploymentData deploymentData = createDeploymentData(integration, integrationDeployment);
             stepPerformer.perform("build", this::build, deploymentData);
+
+            deploymentData = new DeploymentData.Builder().createFrom(deploymentData).withImage(stepPerformer.stepsPerformed.get("build")).build();
+            if (hasPublishedDeployments(integrationDeployment)) {
+                return new StateUpdate(IntegrationDeploymentState.Unpublished, integrationDeployment.getStepsDone(), "Integration has still active deployments. Will retry shortly");
+            }
+
             stepPerformer.perform("deploy", this::deploy, deploymentData);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             logError(integrationDeployment, "[ERROR] Activation failure", e);
             // Setting a message to update means implicitly thats in an error state (for the UI)
-            return new StateUpdate(IntegrationDeploymentState.Pending, e.getMessage());
+            return new StateUpdate(IntegrationDeploymentState.Pending, stepPerformer.getStepsPerformed(), e.getMessage());
         }
 
         // Set status to activate if finally running. Also clears the previous step which has been performed
         if (isRunning(integrationDeployment)) {
             logInfo(integrationDeployment, "[ACTIVATED] bc. integration is running with 1 pod");
             updateDeploymentState(integrationDeployment, IntegrationDeploymentState.Published);
-            return new StateUpdate(IntegrationDeploymentState.Published);
+            return new StateUpdate(IntegrationDeploymentState.Published, stepPerformer.getStepsPerformed());
         }
 
         logInfo(integrationDeployment, "Build started: {}, isRunning: {}, Deployment ready: {}",
@@ -129,12 +135,14 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String username = integrationDeployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         return DeploymentData.builder()
+            .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"))))
             .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL,  Integer.toString(integrationDeployment.getVersion()))
+            .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, Integer.toString(integrationDeployment.getVersion()))
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
-            .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationDeployment.getIntegrationId().get())
-            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion()))
+            .addLabel(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationDeployment.getIntegrationId().get())
+            .addLabel(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, Integer.toString(integrationDeployment.getVersion()))
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
@@ -143,16 +151,21 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
     // =============================================================================
     // Various steps to perform:
 
-    private void build(IntegrationDeployment integration, DeploymentData data) throws IOException {
+    private String build(IntegrationDeployment integration, DeploymentData data) throws IOException  {
         InputStream tarInputStream = createProjectFiles(integration.getSpec());
         logInfo(integration, "Created project files and starting build");
-        openShiftService().build(integration.getSpec().getName(), data, tarInputStream);
+        try {
+            return openShiftService().build(integration.getSpec().getName(), data, tarInputStream);
+        } catch (InterruptedException e) {
+            throw new InterruptedIOException(e.getMessage());
+        }
     }
 
-    private void deploy(IntegrationDeployment integration, DeploymentData data) throws IOException {
+    private String deploy(IntegrationDeployment integration, DeploymentData data) throws IOException {
         logInfo(integration, "Starting deployment");
-        openShiftService().deploy(integration.getSpec().getName(), data);
+        String revision = openShiftService().deploy(integration.getSpec().getName(), data);
         logInfo(integration, "Deployment done");
+        return revision;
     }
 
     private void setVersion(IntegrationDeployment integrationDeployment) {
@@ -165,8 +178,10 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .stream()
             .map(id -> dataManager.fetch(IntegrationDeployment.class, id))
             .filter(r -> r.getVersion() != integrationDeployment.getVersion())
-            .map(r -> r.withTargetState(IntegrationDeploymentState.Unpublished))
-            .forEach(r -> dataManager.update(r));
+            .map(r -> r.unpublishing())
+            .forEach(r -> {
+                dataManager.update(r);
+            });
     }
 
     private void updateDeploymentState(IntegrationDeployment integrationDeployment, IntegrationDeploymentState state) {
@@ -251,6 +266,27 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .count();
     }
 
+    /**
+     * Check if Integration has active deployments.
+     * @param deployment The specified {@link IntegrationDeployment}.
+     * @return  The true if there are, false otherwise.
+     */
+    private boolean hasPublishedDeployments(IntegrationDeployment deployment) {
+        Integration integration = deployment.getSpec();
+        String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
+        String version = String.valueOf(integration.getVersion());
+
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(id));
+
+        return (int) openShiftService().getDeploymentsByLabel(labels)
+            .stream()
+            .filter(d -> !id.equals(d.getMetadata().getLabels().get(OpenShiftService.INTEGRATION_ID_LABEL)))
+            .filter(d -> !version.equals(d.getMetadata().getLabels().get(OpenShiftService.DEPLOYMENT_VERSION_LABEL)))
+            .filter(d -> d.getSpec().getReplicas() > 0)
+            .count() > 0;
+    }
+
     private InputStream createProjectFiles(Integration integrationDeployment) {
         try {
             return projectGenerator.generate(integrationDeployment);
@@ -263,28 +299,27 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
     // Some helper method to conditional execute certain steps
     @FunctionalInterface
     public interface IoCheckedFunction<T> {
-        void apply(T t, DeploymentData data) throws IOException;
+        String apply(T t, DeploymentData data) throws IOException;
     }
 
     private class BuildStepPerformer {
-        private final List<String> stepsPerformed;
+        private final Map<String, String> stepsPerformed;
         private final IntegrationDeployment integrationDeployment;
 
         BuildStepPerformer(IntegrationDeployment integrationDeployment) {
             this.integrationDeployment = integrationDeployment;
-            this.stepsPerformed = new ArrayList<>(integrationDeployment.getStepsDone());
+            this.stepsPerformed = new HashMap<>(integrationDeployment.getStepsDone());
         }
 
         void perform(String step, IoCheckedFunction<IntegrationDeployment> callable, DeploymentData data) throws IOException {
-            if (!stepsPerformed.contains(step)) {
-                callable.apply(integrationDeployment, data);
-                stepsPerformed.add(step);
-            } else {
-                logInfo(integrationDeployment, "Skipped step {} because already performed", step);
+            if (!stepsPerformed.containsKey(step)) {
+                    stepsPerformed.put(step, callable.apply(integrationDeployment, data));
+                } else {
+                    logInfo(integrationDeployment, "Skipped step {} because already performed", step);
+                }
             }
-        }
 
-        List<String> getStepsPerformed() {
+        Map<String, String> getStepsPerformed() {
             return stepsPerformed;
         }
     }

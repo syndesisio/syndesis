@@ -46,6 +46,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import io.syndesis.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
@@ -90,13 +91,15 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 public class IntegrationHandler extends BaseHandler
     implements Lister<Integration>, Getter<Integration>, Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
 
+    private final OpenShiftService openShiftService;
     private final Inspectors inspectors;
     private final EncryptionComponent encryptionSupport;
 
     private final Validator validator;
 
-    public IntegrationHandler(final DataManager dataMgr, final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport) {
+    public IntegrationHandler(final DataManager dataMgr, OpenShiftService openShiftService, final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport) {
         super(dataMgr);
+        this.openShiftService = openShiftService;
         this.validator = validator;
         this.inspectors = inspectors;
         this.encryptionSupport = encryptionSupport;
@@ -262,7 +265,7 @@ public class IntegrationHandler extends BaseHandler
             deploymentIds.stream()
                 .map(i -> getDataManager().fetch(IntegrationDeployment.class, i))
                 .filter(r -> r != null)
-                .map(r -> r.withTargetState(IntegrationDeploymentState.Unpublished))
+                .map(r -> r.unpublishing())
                 .forEach(r -> getDataManager().update(r));
         }
 
@@ -272,6 +275,7 @@ public class IntegrationHandler extends BaseHandler
             .isDeleted(true)
             .build();
 
+        openShiftService.delete(existing.getName());
         Updater.super.update(id, updatedIntegration);
     }
 

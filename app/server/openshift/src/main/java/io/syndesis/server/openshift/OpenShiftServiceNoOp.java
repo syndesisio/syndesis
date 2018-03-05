@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.User;
@@ -28,13 +29,15 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
 
 
     @Override
-    public void build(String name, DeploymentData data, InputStream tarInputStream) {
+    public String build(String name, DeploymentData data, InputStream tarInputStream) {
         // Empty no-op just for testing
+        return null;
     }
 
     @Override
-    public void deploy(String name, DeploymentData data) {
+    public String deploy(String name, DeploymentData data) {
         // Empty no-op just for testing
+        return null;
     }
 
     @Override
@@ -53,8 +56,8 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public void scale(String name, int nrReplicas) {
-        // Empty no-op just for testing
+    public boolean scale(String name, Map<String, String> lables, int desiredReplicas, long amount, TimeUnit timeUnit)  {
+        return false;
     }
 
     @Override

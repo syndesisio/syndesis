@@ -16,21 +16,32 @@
 package io.syndesis.server.openshift;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
+import io.fabric8.kubernetes.api.model.Handler;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.client.Handlers;
 import io.fabric8.kubernetes.client.RequestConfigBuilder;
+import io.fabric8.kubernetes.client.ResourceHandler;
+import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.common.util.Names;
+import io.syndesis.common.util.SyndesisServerException;
+import okhttp3.OkHttpClient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -47,24 +58,56 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws IOException {
-        final String sName = openshiftName(name);
-
+    public String build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws InterruptedException {
+        final String sName = Names.sanitize(name);
         ensureImageStreams(sName);
         ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
-        openShiftClient.buildConfigs().withName(sName)
+        Build build = openShiftClient.buildConfigs().withName(sName)
                        .instantiateBinary()
                        .fromInputStream(tarInputStream);
+        Build complete = waitForBuild(build, 10, TimeUnit.MINUTES);
+        if (complete != null && complete.getStatus() != null) {
+            return build.getStatus().getOutputDockerImageReference();
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public void deploy(String name, DeploymentData deploymentData) {
+    public String deploy(String name, DeploymentData deploymentData) {
         final String sName = openshiftName(name);
 
         LOGGER.debug("Deploy {}", sName);
 
         ensureDeploymentConfig(sName, deploymentData);
         ensureSecret(sName, deploymentData);
+        DeploymentConfig deployment = openShiftClient.deploymentConfigs().withName(sName).deployLatest();
+        return String.valueOf(deployment.getStatus().getLatestVersion());
+    }
+
+    // Only required temporarily while image triggers do not work
+    // We are updating the image name with the latest image reference before increasing
+    // the latestVersion number
+    private void updateImageName(String sName) {
+        ImageStream is = openShiftClient.imageStreams().withName(sName).get();
+        if (is != null) {
+            is.getStatus().getTags()
+              .stream()
+              .filter(t -> "latest".equals(t.getTag()))
+              .findFirst().ifPresent(t -> {
+                String image = t.getItems().get(0).getDockerImageReference();
+                updateImageNameInDeployment(sName, image);
+            });
+        }
+    }
+
+    private void updateImageNameInDeployment(String name, String image) {
+        openShiftClient.deploymentConfigs()
+                       .withName(name)
+                       .edit().editOrNewSpec().editOrNewTemplate().editOrNewSpec().editFirstContainer()
+                       .withImage(image)
+                       .endContainer().endSpec().endTemplate().endSpec()
+                       .done();
     }
 
     @Override
@@ -93,16 +136,20 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void scale(String name, int desiredReplicas) {
-        final String sName = openshiftName(name);
+    public boolean scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException {
+        String sName = openshiftName(name);
 
-        LOGGER.debug("Scale {}", sName);
+        DeploymentConfig deploymentConfig = getDeploymentsByLabel(labels)
+            .stream()
+            .filter(d -> d.getMetadata().getName().equals(sName))
+            .map(d -> new DeploymentConfigBuilder(d).editSpec().withReplicas(desiredReplicas).endSpec().build())
+            .map(d -> openShiftClient.deploymentConfigs().createOrReplace(d))
+            .findAny().orElse(null);
 
-        openShiftClient.deploymentConfigs().withName(sName).edit()
-                       .editSpec()
-                       .withReplicas(desiredReplicas)
-                       .endSpec()
-                       .done();
+        if (deploymentConfig == null) {
+            return false;
+        }
+       return waitForDeployment(deploymentConfig, amount, timeUnit).getSpec().getReplicas().equals(desiredReplicas);
     }
 
 
@@ -204,7 +251,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     .endMetadata()
                     .withNewSpec()
                         .addNewContainer()
-                        .withImage(" ")
+                        .withImage(deploymentData.getImage())
                         .withImagePullPolicy("Always")
                         .withName(name)
                         // don't chain withEnv as every invocation overrides the previous one, use var-args instead
@@ -310,8 +357,37 @@ public class OpenShiftServiceImpl implements OpenShiftService {
        return openShiftClient.secrets().withName(projectName).delete();
     }
 
+    private Build waitForBuild(Build r, long timeout, TimeUnit timeUnit) throws InterruptedException {
+        long end = System.currentTimeMillis() + timeUnit.toMillis(timeout);
+        Build next = r;
+
+        while ( System.currentTimeMillis() < end) {
+            if (next.getStatus() != null && ("Complete".equals(next.getStatus().getPhase()) || "Failed".equals(next.getStatus().getPhase()))) {
+                return next;
+            }
+            next = openShiftClient.builds().inNamespace(next.getMetadata().getNamespace()).withName(next.getMetadata().getName()).get();
+            Thread.sleep(5000);
+        }
+        throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
+    }
+
+    private DeploymentConfig waitForDeployment(DeploymentConfig r, long timeout, TimeUnit timeUnit) throws InterruptedException {
+        long end = System.currentTimeMillis() + timeUnit.toMillis(timeout);
+        DeploymentConfig next = r;
+
+        while ( System.currentTimeMillis() < end) {
+            if (next.getSpec().getReplicas().equals(next.getStatus().getReplicas())) {
+                return next;
+            }
+            next = openShiftClient.deploymentConfigs().inNamespace(next.getMetadata().getNamespace()).withName(next.getMetadata().getName()).get();
+            Thread.sleep(5000);
+        }
+        throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
+
+    }
+
+
     private static String openshiftName(String name) {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
-
 }

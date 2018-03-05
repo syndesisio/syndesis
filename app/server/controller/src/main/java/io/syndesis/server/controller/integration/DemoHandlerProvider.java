@@ -59,7 +59,7 @@ public class DemoHandlerProvider implements StateChangeHandlerProvider {
 
             try {
                 Thread.sleep(waitMillis);
-                return new StateUpdate(state);
+                return new StateUpdate(state, integrationDeployment.getStepsDone());
             } catch (InterruptedException e) {
                 return null;
             }

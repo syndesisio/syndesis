@@ -15,15 +15,19 @@
  */
 package io.syndesis.server.controller.integration.online;
 
-import java.util.Collections;
-import java.util.Set;
-
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Labels;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
 import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.openshift.OpenShiftService;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class UnpublishHandler extends BaseHandler implements StateChangeHandler {
 
@@ -41,17 +45,28 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
 
     @Override
     public StateUpdate execute(IntegrationDeployment integrationDeployment) {
-        IntegrationDeploymentState currentState = !openShiftService().exists(integrationDeployment.getSpec().getName())
-            || openShiftService().delete(integrationDeployment.getSpec().getName())
-            ? IntegrationDeploymentState.Unpublished
-            : IntegrationDeploymentState.Pending;
+        Map<String, String> stepsDone = new HashMap<>(integrationDeployment.getStepsDone());
+        stepsDone.remove("deploy"); //we are literally undoing this step.
 
-        if (currentState == IntegrationDeploymentState.Unpublished) {
-            logInfo(integrationDeployment,"Deleted");
-            IntegrationDeployment updated = new IntegrationDeployment.Builder().createFrom(integrationDeployment).addAllStepsDone(Collections.emptyList()).build();
-            dataManager.update(updated);
+        IntegrationDeploymentState currentState = integrationDeployment.getCurrentState();
+
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().get()));
+        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
+
+        if (!openShiftService().getDeploymentsByLabel(labels).isEmpty()) {
+            try {
+                openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
+                currentState = IntegrationDeploymentState.Unpublished;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return new StateUpdate(currentState, stepsDone);
+            }
+        } else  {
+            currentState = IntegrationDeploymentState.Unpublished;
         }
-        return new StateUpdate(currentState);
+
+        return new StateUpdate(currentState, stepsDone);
     }
 
 }

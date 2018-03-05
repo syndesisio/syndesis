@@ -16,7 +16,9 @@
 package io.syndesis.common.model.integration;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -63,8 +65,8 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
     }
 
     @Value.Default
-    default List<String> getStepsDone() {
-        return Collections.emptyList();
+    default Map<String, String> getStepsDone() {
+        return Collections.emptyMap();
     }
 
     @Value.Default
@@ -90,6 +92,12 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
 
     default IntegrationDeployment withTargetState(IntegrationDeploymentState state) {
         return builder().targetState(state).build();
+    }
+
+    default IntegrationDeployment unpublishing() {
+        Map<String, String> stepsDone = new HashMap<>(getStepsDone());
+        stepsDone.remove("deploy");
+        return builder().targetState(IntegrationDeploymentState.Unpublished).stepsDone(stepsDone).build();
     }
 
 }

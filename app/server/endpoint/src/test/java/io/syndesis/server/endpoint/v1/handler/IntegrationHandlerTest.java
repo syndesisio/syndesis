@@ -50,7 +50,7 @@ public class IntegrationHandlerTest {
         DataManager manager = mock(DataManager.class);
         Validator validator = mock(Validator.class);
         inspectors = mock(Inspectors.class);
-        handler = new IntegrationHandler(manager, validator, inspectors, new EncryptionComponent(null));
+        handler = new IntegrationHandler(manager, openShiftService, validator, inspectors, new EncryptionComponent(null));
     }
 
     @Test

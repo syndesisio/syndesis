@@ -25,6 +25,9 @@ public class DeploymentData {
     private final Map<String, String> labels = new HashMap<>();
     private final Map<String, String> secret = new HashMap<>();
 
+    private String image;
+    private int version;
+
     public Map<String, String> getAnnotations() {
         return annotations;
     }
@@ -37,12 +40,33 @@ public class DeploymentData {
         return secret;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private final DeploymentData that = new DeploymentData();
+
+        private final DeploymentData that;
+
+        public Builder() {
+            this(new DeploymentData());
+        }
+
+        private Builder(DeploymentData deploymentData) {
+            this.that = deploymentData;
+        }
+
+        public Builder createFrom(DeploymentData deploymentData) {
+            return new Builder(deploymentData);
+        }
 
         public DeploymentData build() {
             return that;
@@ -57,10 +81,20 @@ public class DeploymentData {
              that.annotations.put(name, value);
              return this;
         }
+
         public DeploymentData.Builder addSecretEntry(String name, String value) {
              that.secret.put(name, value);
              return this;
         }
 
+        public DeploymentData.Builder withImage(String image) {
+            that.image = image;
+            return this;
+        }
+
+        public DeploymentData.Builder withVersion(int version) {
+            that.version = version;
+            return this;
+        }
     }
 }

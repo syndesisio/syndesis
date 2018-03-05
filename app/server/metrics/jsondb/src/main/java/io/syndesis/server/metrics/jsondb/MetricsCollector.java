@@ -102,8 +102,8 @@ public class MetricsCollector implements Runnable, Closeable {
                             kubernetes,
                             p.getMetadata().getName(),
                             p.getMetadata().getAnnotations().get("syndesis.io/integration-name"),
-                            p.getMetadata().getAnnotations().get("syndesis.io/integration-id"),
-                            p.getMetadata().getAnnotations().get("syndesis.io/deployment-version"),
+                            p.getMetadata().getLabels().get("syndesis.io/integration-id"),
+                            p.getMetadata().getLabels().get("syndesis.io/deployment-version"),
                             rmh))
             );
 
