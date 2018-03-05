@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.Dependency;
@@ -60,6 +61,11 @@ public interface IntegrationResourceManager {
     Optional<Extension> loadExtension(String id);
 
     /**
+     * Load all extensions belonging to a specific tag.
+     */
+    List<Extension> loadExtensionsByTag(String tag);
+
+    /**
      * Load an extension binary from the underlying storage by id.
      */
     Optional<InputStream> loadExtensionBLOB(String id);
@@ -73,13 +79,13 @@ public interface IntegrationResourceManager {
      * Collect dependencies.
      */
     default Collection<Dependency> collectDependencies(Integration integration) {
-        return collectDependencies(integration.getSteps());
+        return collectDependencies(integration.getSteps(), true);
     }
 
     /**
      * Collect dependencies.
      */
-    default Collection<Dependency> collectDependencies(Collection<? extends Step> steps) {
+    default Collection<Dependency> collectDependencies(Collection<? extends Step> steps, boolean resolveExtensionTags) {
         final List<Dependency> dependencies = new ArrayList<>();
 
         for (Step step : steps) {
@@ -89,11 +95,11 @@ public interface IntegrationResourceManager {
                 .map(WithDependencies::getDependencies)
                 .ifPresent(dependencies::addAll);
 
-            List<Dependency> connectorDependecies = step.getConnection()
+            List<Dependency> connectorDependencies = step.getConnection()
                 .flatMap(Connection::getConnector)
                 .map(WithDependencies::getDependencies)
                 .orElse(Collections.emptyList());
-            dependencies.addAll(connectorDependecies);
+            dependencies.addAll(connectorDependencies);
 
             List<Dependency> lookedUpConnectorDependecies = step.getConnection()
                 .filter(c -> !c.getConnector().isPresent())
@@ -104,7 +110,7 @@ public interface IntegrationResourceManager {
             dependencies.addAll(lookedUpConnectorDependecies);
 
             // Connector extension
-            Stream.concat(connectorDependecies.stream(), lookedUpConnectorDependecies.stream())
+            Stream.concat(connectorDependencies.stream(), lookedUpConnectorDependecies.stream())
                 .filter(Dependency::isExtension)
                 .map(Dependency::getId)
                 .map(this::loadExtension)
@@ -124,6 +130,22 @@ public interface IntegrationResourceManager {
                 .ifPresent(dependencies::add);
         }
 
-        return dependencies;
+        if (resolveExtensionTags) {
+            return dependencies.stream()
+                .flatMap(dep -> {
+                    if (dep.isExtensionTag()) {
+                        List<Extension> extensions = this.loadExtensionsByTag(dep.getId());
+
+                        Stream<Dependency> extensionDependency = extensions.stream().map(ext -> Dependency.extension(ext.getExtensionId()));
+                        Stream<Dependency> transitive = extensions.stream().map(Extension::getDependencies).flatMap(Collection::stream);
+                        return Stream.concat(extensionDependency, transitive);
+                    } else {
+                        return Stream.of(dep);
+                    }
+                }).collect(Collectors.toCollection(ArrayList::new));
+        } else {
+            return dependencies;
+        }
     }
+
 }

@@ -35,11 +35,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.swagger.annotations.Api;
@@ -47,6 +43,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDAO;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
@@ -55,11 +52,9 @@ import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.Violation;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.NonBlockingValidations;
 import io.syndesis.server.endpoint.util.FilterOptionsParser;
@@ -90,15 +85,19 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     private final Validator validator;
 
+    private final IntegrationResourceManager integrationResourceManager;
+
     public ExtensionHandler(final DataManager dataMgr,
                             final FileDAO fileStore,
                             final ExtensionActivator extensionActivator,
-                            final Validator validator) {
+                            final Validator validator,
+                            final IntegrationResourceManager integrationResourceManager) {
         super(dataMgr);
 
         this.fileStore = fileStore;
         this.extensionActivator = extensionActivator;
         this.validator = validator;
+        this.integrationResourceManager = integrationResourceManager;
     }
 
     @Override
@@ -340,7 +339,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     }
 
     private boolean isIntegrationActiveAndUsingExtension(IntegrationDeployment integrationDeployment, Extension extension) {
-        if (integrationDeployment == null || extension == null) {
+        if (integrationDeployment == null || extension == null || integrationDeployment.getSpec() == null) {
             return false;
         }
 
@@ -348,23 +347,11 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             return false;
         }
 
-        return integrationDeployment.getSpec().getSteps().stream().anyMatch(step -> {
-            boolean usedAsStep = extension.getExtensionId().equals(
-                Optional.ofNullable(step)
-                    .flatMap(Step::getExtension)
-                    .map(Extension::getExtensionId)
-                    .orElse(null)
-            );
-            boolean usedAsConnector = extension.getExtensionId().equals(
-                Optional.ofNullable(step)
-                    .flatMap(Step::getConnection)
-                    .flatMap(Connection::getConnector)
-                    .flatMap(c -> c.getDependencies().stream().filter(Dependency::isExtension).findFirst())
-                    .map(Dependency::getId)
-                    .orElse(null)
-            );
-            return usedAsStep || usedAsConnector;
-        });
+        Collection<Dependency> dependencies = integrationResourceManager.collectDependencies(integrationDeployment.getSpec());
+
+        return dependencies.stream()
+            .filter(Dependency::isExtension)
+            .anyMatch(ext -> ext.getId().equals(extension.getExtensionId()));
     }
 
     private Extension enhance(Extension extension) {

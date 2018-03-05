@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -203,6 +204,11 @@ public class Application implements ApplicationRunner {
         @Override
         public Optional<Extension> loadExtension(String id) {
             return Optional.empty();
+        }
+
+        @Override
+        public List<Extension> loadExtensionsByTag(String tag) {
+            return Collections.emptyList();
         }
 
         @Override

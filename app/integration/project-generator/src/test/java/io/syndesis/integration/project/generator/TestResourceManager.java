@@ -18,9 +18,11 @@ package io.syndesis.integration.project.generator;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -53,6 +55,15 @@ final class TestResourceManager implements IntegrationResourceManager {
         return Optional.ofNullable(resources.get(id))
             .filter(Extension.class::isInstance)
             .map(Extension.class::cast);
+    }
+
+    @Override
+    public List<Extension> loadExtensionsByTag(String tag) {
+        return resources.values().stream()
+            .filter(Extension.class::isInstance)
+            .map(Extension.class::cast)
+            .filter(extension ->  extension.getTags().contains(tag))
+            .collect(Collectors.toList());
     }
 
     @Override
