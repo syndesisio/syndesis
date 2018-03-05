@@ -15,18 +15,13 @@
  */
 package io.syndesis.server.runtime;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.given;
+
 import java.util.Arrays;
 import java.util.List;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
-
-import io.syndesis.server.credential.CredentialFlowState;
-import io.syndesis.server.credential.CredentialProvider;
-import io.syndesis.server.credential.CredentialProviderLocator;
-import io.syndesis.server.credential.OAuth1CredentialFlowState;
-import io.syndesis.server.credential.OAuth1CredentialProvider;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.server.endpoint.v1.handler.setup.OAuthAppHandler;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +30,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.oauth1.OAuthToken;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.awaitility.Awaitility.given;
+import io.syndesis.server.credential.CredentialFlowState;
+import io.syndesis.server.credential.CredentialProvider;
+import io.syndesis.server.credential.CredentialProviderLocator;
+import io.syndesis.server.credential.OAuth1CredentialFlowState;
+import io.syndesis.server.credential.OAuth1CredentialProvider;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.server.endpoint.v1.handler.setup.OAuthAppHandler;
 
 /**
  * /setup/* related endpoint tests.
@@ -50,9 +49,10 @@ public class SetupITCase extends BaseITCase {
     @Test
     public void getOauthApps() {
 
-        ResponseEntity<OAuthAppHandler.OAuthApp[]> result = get("/api/v1/setup/oauth-apps", OAuthAppHandler.OAuthApp[].class);
+        ResponseEntity<OAuthAppHandler.OAuthApp[]> result = get("/api/v1/setup/oauth-apps",
+                OAuthAppHandler.OAuthApp[].class);
         List<OAuthAppHandler.OAuthApp> apps = Arrays.asList(result.getBody());
-        assertThat(apps.size()).isEqualTo(2);
+        assertThat(apps.size()).isEqualTo(3);
 
         OAuthAppHandler.OAuthApp twitter = apps.stream().filter(x -> "twitter".equals(x.id)).findFirst().get();
         assertThat(twitter.id).isEqualTo("twitter");
@@ -72,12 +72,13 @@ public class SetupITCase extends BaseITCase {
         twitter.clientId = "test-id";
         twitter.clientSecret = "test-secret";
 
-        http(HttpMethod.PUT, "/api/v1/setup/oauth-apps/twitter", twitter, null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
+        http(HttpMethod.PUT, "/api/v1/setup/oauth-apps/twitter", twitter, null, tokenRule.validToken(),
+                HttpStatus.NO_CONTENT);
 
-
-        ResponseEntity<OAuthAppHandler.OAuthApp[]> result = get("/api/v1/setup/oauth-apps", OAuthAppHandler.OAuthApp[].class);
+        ResponseEntity<OAuthAppHandler.OAuthApp[]> result = get("/api/v1/setup/oauth-apps",
+                OAuthAppHandler.OAuthApp[].class);
         List<OAuthAppHandler.OAuthApp> apps = Arrays.asList(result.getBody());
-        assertThat(apps.size()).isEqualTo(2);
+        assertThat(apps.size()).isEqualTo(3);
 
         twitter = apps.stream().filter(x -> "twitter".equals(x.id)).findFirst().get();
         assertThat(twitter.id).isEqualTo("twitter");
@@ -86,20 +87,19 @@ public class SetupITCase extends BaseITCase {
         assertThat(twitter.clientId).isEqualTo("test-id");
         assertThat(twitter.clientSecret).isEqualTo("test-secret");
 
-        // Now that we have configured the app, we should be able to create the connection factory.
-        // The connection factory is setup async so we might need to wait a little bit for it to register.
-        given().ignoreExceptions().await()
-            .atMost(10, SECONDS)
-            .pollInterval(1, SECONDS)
-            .until(() -> {
-                final CredentialProvider twitterCredentialProvider = locator.providerWithId("twitter");
+        // Now that we have configured the app, we should be able to create the
+        // connection factory.
+        // The connection factory is setup async so we might need to wait a little bit
+        // for it to register.
+        given().ignoreExceptions().await().atMost(10, SECONDS).pollInterval(1, SECONDS).until(() -> {
+            final CredentialProvider twitterCredentialProvider = locator.providerWithId("twitter");
 
-                // preparing is something we could not do with a `null` ConnectionFactory
-                assertThat(twitterCredentialProvider).isNotNull()
-                    .isInstanceOfSatisfying(OAuth1CredentialProvider.class, p -> {
+            // preparing is something we could not do with a `null` ConnectionFactory
+            assertThat(twitterCredentialProvider).isNotNull().isInstanceOfSatisfying(OAuth1CredentialProvider.class,
+                    p -> {
                         final Connection connection = new Connection.Builder().build();
                         final CredentialFlowState flowState = new OAuth1CredentialFlowState.Builder()
-                            .accessToken(new OAuthToken("value", "secret")).connectorId("connectorId").build();
+                                .accessToken(new OAuthToken("value", "secret")).connectorId("connectorId").build();
                         final Connection appliedTo = p.applyTo(connection, flowState);
 
                         // test that the updated values are used
@@ -107,8 +107,8 @@ public class SetupITCase extends BaseITCase {
                             .contains(entry("consumerKey", "test-id"), entry("consumerSecret", "test-secret"));
                     });
 
-                return true;
-            });
+            return true;
+        });
 
     }
 
