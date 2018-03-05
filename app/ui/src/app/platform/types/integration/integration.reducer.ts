@@ -6,7 +6,8 @@ import * as IntegrationActions from './integration.actions';
 const initialIntegrationMetrics: IntegrationMetrics = {
   messages: 0,
   errors: 0,
-  start: 0
+  start: Date.now(),
+  lastProcessed: Date.now()
 };
 
 const initialState: IntegrationState = {
@@ -189,13 +190,11 @@ export function integrationReducer(state = initialState, action: any): Integrati
 
     case IntegrationActions.FETCH_METRICS: {
       const id = (action as IntegrationActions.FetchMetrics).id;
-      let list = state.metrics.list;
+      const list = state.metrics.list;
       if (id) {
-        if (list.some(integrationMetrics => integrationMetrics.id === id)) {
-          list = list.filter(integrationMetrics => integrationMetrics.id !== id);
+        if (!list.some(integrationMetrics => integrationMetrics.id === id)) {
+          list.push({ id, ...initialIntegrationMetrics });
         }
-
-        list.push({ id, ...initialIntegrationMetrics });
       }
 
       return {
@@ -224,8 +223,8 @@ export function integrationReducer(state = initialState, action: any): Integrati
       return {
         ...state,
         metrics: { ...state.metrics, summary, list },
-        loading: true,
-        loaded: false,
+        loading: false,
+        loaded: true,
         hasErrors: false,
         errors: []
       };

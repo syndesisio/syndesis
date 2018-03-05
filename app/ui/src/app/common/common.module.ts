@@ -19,6 +19,7 @@ import { TruncateWordsPipe } from './truncate-words.pipe';
 import { CapitalizePipe } from './capitalize.pipe';
 import { TitleizePipe } from './titleize.pipe';
 import { SlugifyPipe } from './slugify.pipe';
+import { DurationPipe } from './duration.pipe';
 import { IconPathPipe } from './icon-path.pipe';
 import { ParseMarkdownLinksPipe } from './parse-markdown-links.pipe';
 import { ButtonComponent } from './button.component';
@@ -46,6 +47,7 @@ import { NavigationService } from './navigation.service';
     TitleizePipe,
     ButtonComponent,
     SlugifyPipe,
+    DurationPipe,
     IconPathPipe,
     ParseMarkdownLinksPipe,
     ModalComponent,
@@ -68,6 +70,7 @@ import { NavigationService } from './navigation.service';
     ButtonComponent,
     SlugifyPipe,
     IconPathPipe,
+    DurationPipe,
     ModalComponent,
     WizardProgressBarComponent,
     CancelConfirmationModalComponent,

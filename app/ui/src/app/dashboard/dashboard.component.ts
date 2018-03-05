@@ -11,20 +11,16 @@ import {
 } from '@syndesis/ui/platform';
 import { ConnectionStore, IntegrationStore } from '@syndesis/ui/store';
 
-const DEFAULT_POLLING_INTERVAL = 5000;
-
 @Component({
   selector: 'syndesis-dashboard',
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit {
   integrationState$: Observable<IntegrationState>;
   connections$: Observable<Connections>;
   integrations$: Observable<Integrations>;
   connectionsLoading$: Observable<boolean>;
   integrationsLoading$: Observable<boolean>;
-
-  private metricsRefreshInterval: any;
 
   constructor(
     private store: Store<PlatformState>,
@@ -45,26 +41,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.connectionStore.loadAll();
     this.integrationStore.loadAll();
 
-    let pollingInterval: number;
-
-    try {
-      pollingInterval = this.configService.getSettings('metricsPollingInterval');
-    } catch (error) {
-      pollingInterval = DEFAULT_POLLING_INTERVAL;
-    }
-
-    if (pollingInterval && !isNaN(pollingInterval) && pollingInterval > 0) {
-      this.metricsRefreshInterval = setInterval(() => this.refreshDashboard(), pollingInterval);
-    }
   }
 
-  ngOnDestroy() {
-    if (this.metricsRefreshInterval) {
-      clearInterval(this.metricsRefreshInterval);
-    }
-  }
-
-  private refreshDashboard(): void {
+  onRefreshDashboard(): void {
     this.store.dispatch(new IntegrationActions.FetchMetrics());
   }
 }

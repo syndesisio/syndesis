@@ -1,8 +1,10 @@
+import { ConfigService } from '@syndesis/ui/config.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntegrationState } from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
 import { DashboardMetricsComponent } from './dashboard-metrics.component';
+import { DurationPipe } from '@syndesis/ui/common';
 
 describe('DashboardMetricsComponent', () => {
   let component: DashboardMetricsComponent;
@@ -11,7 +13,11 @@ describe('DashboardMetricsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [CoreModule.forRoot()],
-      declarations: [DashboardMetricsComponent]
+      providers: [ConfigService],
+      declarations: [
+        DashboardMetricsComponent,
+        DurationPipe
+      ]
     })
     .compileComponents();
   }));
