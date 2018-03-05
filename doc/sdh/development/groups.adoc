@@ -25,7 +25,7 @@ In details Syndesis consists of the following groups:
 
 | **rest**
 | `io.syndesis.rest`
-| `syndesis/syndesis-rest`
+| `syndesis/syndesis-server`
 | REST backend for managing integrations. This is the main sever.
 
 | **integration**
@@ -45,7 +45,7 @@ In details Syndesis consists of the following groups:
 
 | **meta**
 | `io.syndesis.meta`
-| `syndesis/syndesis-verifier`
+| `syndesis/syndesis-meta`
 | Service for connector meta-data and verification of connections
 
 | **extension**

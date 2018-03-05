@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import io.syndesis.model.integration.Integration;
+import io.syndesis.common.model.integration.Integration;
 
 public interface IntegrationProjectGenerator {
     /**

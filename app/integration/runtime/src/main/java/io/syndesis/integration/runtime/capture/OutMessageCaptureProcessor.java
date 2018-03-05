@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.capture;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.integration.Step;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;

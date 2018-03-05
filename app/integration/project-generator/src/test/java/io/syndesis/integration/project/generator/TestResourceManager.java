@@ -23,11 +23,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.extension.Extension;
-import io.syndesis.model.integration.Integration;
-import io.syndesis.model.integration.Step;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
 import org.apache.commons.io.IOUtils;
 
 final class TestResourceManager implements IntegrationResourceManager {

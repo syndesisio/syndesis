@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import io.syndesis.core.MavenProperties;
+import io.syndesis.common.util.MavenProperties;
 
 public final class PomContext {
     private final String id;

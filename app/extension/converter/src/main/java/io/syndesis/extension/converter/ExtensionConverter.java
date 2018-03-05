@@ -16,7 +16,7 @@
 package io.syndesis.extension.converter;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.model.extension.Extension;
+import io.syndesis.common.model.extension.Extension;
 
 import java.io.IOException;
 

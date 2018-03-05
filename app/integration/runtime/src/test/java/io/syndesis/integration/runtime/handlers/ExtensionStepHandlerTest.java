@@ -22,11 +22,11 @@ import java.util.Properties;
 
 import io.syndesis.extension.api.Step;
 import io.syndesis.integration.runtime.IntegrationTestSupport;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.action.StepAction;
-import io.syndesis.model.action.StepDescriptor;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
@@ -88,7 +88,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -97,7 +97,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                             .build())
                         .build())
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -108,7 +108,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                     .putConfiguredProperty("Property-1", "Val-1")
                     .putConfiguredProperty("Property-2", "Val-2")
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -151,7 +151,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -160,7 +160,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                             .build())
                         .build())
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -171,7 +171,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                     .putConfiguredProperty("param1", "Val-1")
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -213,7 +213,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -222,7 +222,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                             .build())
                         .build())
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.extension)
                     .action(new StepAction.Builder()
                         .descriptor(new StepDescriptor.Builder()
@@ -233,7 +233,7 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
                     .putConfiguredProperty("param1", "Val-1")
                     .putConfiguredProperty("param2", "Val-2")
                     .build(),
-                new io.syndesis.model.integration.Step.Builder()
+                new io.syndesis.common.model.integration.Step.Builder()
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()

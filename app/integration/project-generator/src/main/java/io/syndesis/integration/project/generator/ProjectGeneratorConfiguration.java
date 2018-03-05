@@ -18,7 +18,7 @@ package io.syndesis.integration.project.generator;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.syndesis.core.MavenProperties;
+import io.syndesis.common.util.MavenProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("generator")

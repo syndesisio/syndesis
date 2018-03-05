@@ -100,7 +100,7 @@ jobs:
           - ~/.m2
       - <<: *push_images
 
-  # Connectors depends on integration, mount workspace .m2
+  # Connector depends on integration, mount workspace .m2
   connector:
     <<: *job_defaults
     environment:
@@ -108,40 +108,40 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+          key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
       - <<: *load_m2
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --init --batch-mode --module connectors | tee build_log.txt
+            ./tools/bin/syndesis build --init --batch-mode --module connector | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - save_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/connectors/pom.xml" }}
+          key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
           paths:
           - ~/.m2
       - <<: *save_m2
 
 
-  # Verifier depends on connectors, mount workspace .m2
+  # Meta depends on connectors, mount workspace .m2
   meta:
     <<: *job_defaults
     environment:
-      DOCKER_IMAGES: syndesis-verifier
+      DOCKER_IMAGES: syndesis-meta
       <<: *common_env
     steps:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
+          key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
       - <<: *load_m2
       - run:
-          name: Build Verifier
+          name: Build Meta
           command: |
-            ./tools/bin/syndesis build --batch-mode --module verifier --image-mode=docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module meta --image-mode=docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -150,11 +150,11 @@ jobs:
       - <<: *push_images
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-verifier-{{ checksum "app/verifier/pom.xml" }}
+          key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
           paths:
           - ~/.m2
 
-  # Core has no dependencies, just load cache
+  # Common has no dependencies, just load cache
   common:
     <<: *job_defaults
     environment:
@@ -162,28 +162,24 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+          key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
       - <<: *load_m2
       - run:
-          name: Build Core
+          name: Build Common
           command: |
-            ./tools/bin/syndesis build --init --batch-mode --module core | tee build_log.txt
+            ./tools/bin/syndesis build --init --batch-mode --module common | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
-      - save_cache:
-          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
-          paths:
-          - ~/.m2
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-core-{{ checksum "app/core/pom.xml" }}
+          key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
           paths:
           - ~/.m2
 
-  # Extension depends on core
+  # Extension depends on common
   extension:
     <<: *job_defaults
     environment:
@@ -216,7 +212,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/integration/pom.xml" }}
+          key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
       - <<: *load_m2
       - run:
           name: Build Connectors
@@ -228,7 +224,7 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - save_cache:
-          key: syndesis-mvn-connectors-{{ checksum "app/integration/pom.xml" }}
+          key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
           paths:
           - ~/.m2
       - <<: *save_m2
@@ -258,22 +254,22 @@ jobs:
           paths:
           - ~/.m2
 
-  # Rest depends on core, connectors and integration, mount workspace .m2
-  rest:
+  # Rest depends on common, connector and integration, mount workspace .m2
+  server:
     <<: *job_defaults
     environment:
-      DOCKER_IMAGES: syndesis-rest
+      DOCKER_IMAGES: syndesis-server
       <<: *common_env
     steps:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
+          key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
       - <<: *load_m2
       - run:
-          name: Build Rest
+          name: Build Server
           command: |
-            ./tools/bin/syndesis build --batch-mode --module rest --image-mode docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module server --image-mode docker | tee build_log.txt
       - run:
           name: Collect API docs
           command: |
@@ -293,7 +289,7 @@ jobs:
       - <<: *push_images
       - <<: *save_m2
       - save_cache:
-          key: syndesis-mvn-rest-{{ checksum "app/rest/pom.xml" }}
+          key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
           paths:
           - ~/.m2
 
@@ -397,10 +393,10 @@ workflows:
       - meta:
           requires:
             - connector
-      - rest:
+      - server:
           requires:
             - integration
             - connector
       - s2i:
           requires:
-            - rest
+            - server

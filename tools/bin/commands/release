@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Maven modules which create Docker images
-IMAGE_MODULES="ui rest verifier s2i"
+IMAGE_MODULES="ui server meta s2i"
 
 release::description() {
     cat - <<EOT
@@ -40,7 +40,7 @@ release::run() {
     source "$(basedir)/commands/util/maven_funcs"
 
     # Main application directory
-    local appdir=$(appdir)
+    local topdir=$(appdir ".")
 
     # Validate release versions
     local release_version=$(readopt --release-version)
@@ -55,7 +55,7 @@ release::run() {
 
     # Generate product templates only if desired
     if [ $(hasflag --product-templates) ]; then
-        do_product_templates $appdir $syndesis_tag "fuse-ignite"
+        do_product_templates $topdir $syndesis_tag "fuse-ignite"
         exit 0
     fi
 
@@ -72,7 +72,7 @@ release::run() {
     fi
 
     # Verify that there are no modified file in git repo
-    check_git_clean "$appdir"
+    check_git_clean "$topdir"
 
     # Temporary local repository to guarantee a clean build
     local local_maven_repo=$(readopt --local-maven-repo)
@@ -85,24 +85,24 @@ release::run() {
     local maven_opts="$(extract_maven_opts $local_maven_repo)"
 
     # Set pom.xml version to the given release_version
-    update_pom_versions "$appdir" "$release_version" "$maven_opts"
+    update_pom_versions "$topdir" "$release_version" "$maven_opts"
 
     # Make a clean install
-    mvn_clean_install "$appdir" "$maven_opts"
+    mvn_clean_install "$topdir" "$maven_opts"
 
     # Create templates for the full syndesis version
-    generate_templates "$appdir" "$release_version"
+    generate_templates "$topdir" "$release_version"
 
     # Stage artefacts to Sonatype
-    stage_artefacts "$appdir" "$maven_opts"
+    stage_artefacts "$topdir" "$maven_opts"
 
     # Build all Docker Images
     docker_login
-    create_docker_images "$appdir" "$maven_opts"
+    create_docker_images "$topdir" "$maven_opts"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
-        drop_staging_repo "$appdir" "$maven_opts"
+        drop_staging_repo "$topdir" "$maven_opts"
 
         echo "==== Dry run finished, nothing has been committed"
         echo "==== Use 'git reset --hard' to cleanup"
@@ -117,34 +117,34 @@ release::run() {
     docker_push "$release_version" "$syndesis_tag"
 
     # Release staging repo
-    release_staging_repo "$appdir" "$maven_opts"
+    release_staging_repo "$topdir" "$maven_opts"
 
     # Git Commit all changed files
-    git_commit_files "$appdir" "$release_version"
+    git_commit_files "$topdir" "$release_version"
 
     # Tag the release version
     echo "==== Tagging version $release_version"
     git tag -f "$release_version"
 
     # Create template versions for the minor tags (without patchlevels)
-    create_templates_for_minor_version "$appdir" "$syndesis_tag"
+    create_templates_for_minor_version "$topdir" "$syndesis_tag"
 
     # Update files for SNAPSHOT and 'latest version'
-    change_to_dev_version "$appdir" "$maven_opts"
+    change_to_dev_version "$topdir" "$maven_opts"
 
     # Push everything (if configured)
-    git_push "$appdir" "$release_version" "$syndesis_tag"
+    git_push "$topdir" "$release_version" "$syndesis_tag"
 }
 
 create_templates_for_minor_version() {
-    local appdir=$1
+    local topdir=$1
     local syndesis_tag=$2
 
-    generate_templates $appdir $syndesis_tag
+    generate_templates $topdir $syndesis_tag
 
     echo "==== Git commit for templates $syndesis_tag"
-    cd $appdir
-    git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag"
+    cd $topdir
+    git_commit ^install/ "Update OpenShift templates for Syndesis $syndesis_tag"
 
     echo "==== Git tag $syndesis_tag"
     git tag -f $syndesis_tag
@@ -154,9 +154,9 @@ create_templates_for_minor_version() {
 # Prep actions:
 
 check_git_clean() {
-    local appdir=$1
+    local topdir=$1
 
-    cd $appdir
+    cd $topdir
     echo "==== Checking for clean Git Repo"
     set +e
     git diff-index --quiet HEAD --
@@ -170,39 +170,39 @@ check_git_clean() {
 }
 
 update_pom_versions() {
-    local appdir="$1"
+    local topdir="$1"
     local version="$2"
     local maven_opts="$3"
 
-    cd $appdir
+    cd $topdir/app
     echo "==== Updating pom.xml versions to $version"
     ./mvnw ${maven_opts} versions:set -DnewVersion=$version -DprocessAllModules=true -DgenerateBackupPoms=false
 }
 
 mvn_clean_install() {
-    local appdir="$1"
+    local topdir="$1"
     local maven_opts="$2"
 
     echo "==== Running 'mvn clean install'"
-    cd $appdir
+    cd $topdir/app
     ./mvnw ${maven_opts} clean install -Pflash
 }
 
 generate_templates() {
-    local appdir="$1"
+    local dir="$1/install"
     local syndesis_tag="$2"
 
     echo "==== Creating templates for $syndesis_tag"
-    cd $appdir/deploy/generator
+    cd $dir/generator
     sh run.sh --syndesis-tag="$syndesis_tag"
 }
 
 stage_artefacts() {
-    local appdir="$1"
+    local topdir="$1"
     local maven_opts="$2"
 
     echo "==== Staging Maven artefacts to Sonatype"
-    cd $appdir
+    cd $topdir/app
     ./mvnw ${maven_opts} -Prelease clean deploy -DstagingDescription="Staging Syndesis for $(readopt --release-version)"
 }
 
@@ -215,11 +215,11 @@ docker_login() {
 }
 
 create_docker_images() {
-    local appdir=$1
+    local topdir=$1
     local maven_opts="$2"
 
     echo "==== Creating Docker images"
-    cd $appdir
+    cd $topdir/app
     for module in $IMAGE_MODULES; do
         # -Pimage binds to fabric8:build
         ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -f $module package
@@ -243,27 +243,27 @@ docker_push() {
 }
 
 release_staging_repo() {
-    local appdir="$1"
+    local topdir="$1"
     local maven_opts="$2"
 
     echo "==== Releasing Sonatype staging repo"
-    cd $appdir
+    cd $topdir/app
     ./mvnw ${maven_opts} -Prelease nexus-staging:release -DstagingDescription="Releasing $(readopt --release-version)"
 }
 
 git_commit_files() {
-    local appdir=$1
+    local dir=$1
     local version=$2
 
     echo "==== Committing files to local git"
-    cd $appdir
-    git_commit pom.xml "Update pom.xmls to $version"
-    git_commit ^connectors/ "Update generated connector files"
-    git_commit ^deploy/ "Update OpenShift templates for Syndesis $version"
+    cd $dir
+    git_commit app/pom.xml "Update pom.xmls to $version"
+    git_commit ^app/connector/ "Update generated connector files"
+    git_commit ^install/ "Update OpenShift templates for Syndesis $version"
 }
 
 change_to_dev_version() {
-    local appdir=$1
+    local topdir=$1
     local maven_opts="$2"
 
     # Calculate hte next development version
@@ -274,25 +274,25 @@ change_to_dev_version() {
     fi
 
     echo "==== Updating pom.xmls to snapshot version"
-    cd $appdir
+    cd "$topdir/app"
     ./mvnw ${maven_opts} versions:set -DnewVersion=$dev_version -DprocessAllModules=true -DgenerateBackupPoms=false
 
     echo "==== Updating OpenShift templates back to 'latest'"
-    cd $appdir/deploy/generator
+    cd $topdir/install/generator
     sh run.sh --syndesis-tag="latest"
 
     echo "==== Committing files for current snapshot"
-    cd $appdir
-    git_commit pom.xml "Setting version $dev_version in pom.xml files"
-    git_commit ^deploy/ "Update OpenShift templates to latest images"
+    cd $topdir
+    git_commit app/pom.xml "Setting version $dev_version in pom.xml files"
+    git_commit ^install/ "Update OpenShift templates to latest images"
 }
 
 git_push() {
-    local appdir=${1:-}
+    local topdir=${1:-}
     local release_version=${2:-}
     local syndesis_tag=${3:-}
 
-    cd $appdir
+    cd $topdir
 
     if [ ! $(hasflag --no-git-push) ] && [ ! $(hasflag --dry-run -n) ]; then
         local remote=$(readopt --git-remote)
@@ -321,39 +321,39 @@ git_push() {
 # Side actions
 
 do_product_templates() {
-  local appdir=$1
+  local topdir=$1
   local syndesis_tag=$2
   local tag_prefix=${4:-fuse-ignite}
 
-  cd $appdir/deploy/generator
+  cd $topdir/install/generator
 
   echo "==== Creating product templates for $syndesis_tag"
   sh run.sh --product --syndesis-tag="$syndesis_tag"
 
   echo "==== Committing"
-  cd $appdir
-  git_commit ^deploy/ "Update OpenShift templates for Syndesis $syndesis_tag"
+  cd $topdir
+  git_commit ^install/ "Update OpenShift templates for Syndesis $syndesis_tag"
 
   echo "=== Tagging"
   git tag -f "${tag_prefix}-${syndesis_tag}"
 
   echo "=== Reverting template versions back to 'latest'"
-  cd $appdir/deploy/generator
+  cd $topdir/install/generator
   sh run.sh --syndesis-tag="latest"
 
   echo "==== Committing"
-  cd $appdir
-  git_commit ^deploy/ "Update OpenShift to latest images"
+  cd $topdir
+  git_commit ^install/ "Update OpenShift to latest images"
 
   git_push
 }
 
 drop_staging_repo() {
-    local appdir="$1"
+    local topdir="$1"
     local maven_opts="$2"
 
     echo "==== Dropping Sonatype staging repo"
-    cd $appdir
+    cd $topdir/app
     ./mvnw ${maven_opts} nexus-staging:drop -Prelease -DstagingDescription="Dropping repo"
 }
 

@@ -20,12 +20,12 @@ import java.util.Collections;
 import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
 import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.connection.Connection;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

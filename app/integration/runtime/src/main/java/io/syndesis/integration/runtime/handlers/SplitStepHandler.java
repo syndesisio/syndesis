@@ -19,8 +19,8 @@ import java.util.Optional;
 
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.Expression;
 import org.apache.camel.builder.Builder;
 import org.apache.camel.model.ProcessorDefinition;

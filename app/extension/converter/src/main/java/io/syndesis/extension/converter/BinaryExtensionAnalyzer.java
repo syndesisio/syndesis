@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.Set;
 
-import io.syndesis.model.extension.Extension;
+import io.syndesis.common.model.extension.Extension;
 
 /**
  * Tools to analyze binary extensions.

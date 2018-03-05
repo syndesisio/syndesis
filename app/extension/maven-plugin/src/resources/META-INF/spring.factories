@@ -1,2 +1,2 @@
 org.springframework.boot.loader.tools.LayoutFactory=\
-io.syndesis.maven.ModuleLayoutFactory
+io.syndesis.server.builder.maven.ModuleLayoutFactory

@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import io.syndesis.core.KeyGenerator;
+import io.syndesis.common.util.KeyGenerator;
 import org.apache.camel.Exchange;
 import org.apache.camel.spi.LogListener;
 import org.apache.camel.util.CamelLogger;

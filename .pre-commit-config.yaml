@@ -2,6 +2,6 @@
   hooks:
   - id: validate-generated-templates
     name: Validate generated templates
-    entry: ./app/deploy/support/validate-generated-templates.sh
+    entry: ./install/support/validate-generated-templates.sh
     language: script
-    files: ^app/deploy/generator/.+\.mustache$
+    files: ^install/generator/.+\.mustache$

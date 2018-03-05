@@ -12,10 +12,10 @@ It is mainly a wrapper around Maven but adds some convenience for common develop
 Usage: syndesis build [... options ...]
 
 Options for build:
--b  --backend                 Build only backend modules (core, extension, integration, connectors, rest, verifier)
-    --images                  Build only modules with Docker images (ui, rest, verifier, s2i)
+-b  --backend                 Build only backend modules (core, extension, integration, connectors, server, meta)
+    --images                  Build only modules with Docker images (ui, server, meta, s2i)
 -m  --module <m1>,<m2>, ..    Build modules
-                              Modules: ui, rest, connectors, s2i, verifier, integration, extension, core
+                              Modules: ui, server, connector, s2i, meta, integration, extension, common
 -d  --dependencies            Build also all project the specified module depends on
     --init                    Install top-level parent pom, too. Only needed when used with -m
     --skip-tests              Skip unit and system test execution
@@ -47,16 +47,16 @@ The following modules are available:
 
 [cols="3,15"]
 |===
-| **rest**
+| **server**
 | Main backend providing a REST API for the user interface
 
 | **ui**
 | The SPA user interface application
 
-| **verifier**
-| Verifier used for verifying connections and providing connector metadata
+| **meta**
+| Meta data and verifier used for verifying connections and providing connector metadata
 
-| **connectors**
+| **connector**
 | All connectors used by Syndesis out of the box
 
 | **integration**
@@ -65,8 +65,8 @@ The following modules are available:
 | **extension**
 | Tools for developing and running Syndesis custom extensions
 
-| **core**
-| Core module containing common code
+| **common**
+| Common modules containing common code
 
 | **s2i**
 | S2I base image used for building the runtime images
@@ -74,7 +74,7 @@ The following modules are available:
 
 Also, to specify each module individually, you can also use some module groups:
 
-* `--backend` (short: `-b`) for the modules `rest`, `integration`, `verifier`, `connectors`, `extension`, `core`
+* `--backend` (short: `-b`) for the modules `server`, `integration`, `meta`, `connector`, `extension`, `common`
 * `--images` build all modules which result in Docker images, and also builds the Docker images in addition to the Maven artefacts.
 
 When the option `--dependencies` (short: `-d`) is given in addition to `--modules`, also all modules which the specified modules depend on are build, too.

@@ -17,11 +17,11 @@ package io.syndesis.integration.project.generator;
 
 import java.util.ResourceBundle;
 
-import io.syndesis.model.Dependency;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.action.ConnectorDescriptor;
-import io.syndesis.model.connection.ConfigurationProperty;
-import io.syndesis.model.connection.Connector;
+import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connector;
 
 final class TestConstants {
 

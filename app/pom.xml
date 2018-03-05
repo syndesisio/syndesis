@@ -42,8 +42,8 @@
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
-    <image.rest>syndesis/syndesis-rest:%l</image.rest>
-    <image.verifier>syndesis/syndesis-verifier:%l</image.verifier>
+    <image.server>syndesis/syndesis-server:%l</image.server>
+    <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>
 
 
@@ -109,13 +109,13 @@
   </properties>
 
   <modules>
-    <module>core</module>
+    <module>common</module>
     <module>extension</module>
     <module>integration</module>
-    <module>connectors</module>
-    <module>rest</module>
+    <module>connector</module>
+    <module>server</module>
     <module>s2i</module>
-    <module>verifier</module>
+    <module>meta</module>
     <module>ui</module>
   </modules>
 
@@ -137,8 +137,8 @@
       </activation>
 
       <modules>
-        <module>rest</module>
-        <module>verifier</module>
+        <module>server</module>
+        <module>meta</module>
         <module>ui</module>
       </modules>
 
@@ -539,10 +539,10 @@
               <exclude>**/.gitkeep</exclude>
               <exclude>**/*.webapp</exclude>
               <exclude>**/browserconfig.xml</exclude>
-              <exclude>connectors/connectors/**/META-INF/syndesis/connector/verifier/*</exclude>
-              <exclude>connectors/connectors/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
-              <exclude>connectors/connectors/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
-              <exclude>rest/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
+              <exclude>connector/**/META-INF/syndesis/connector/verifier/*</exclude>
+              <exclude>connector/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
+              <exclude>connector/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
+              <exclude>server/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
             </excludes>
           </configuration>
           <dependencies>
@@ -695,86 +695,86 @@
       <!-- ::::::::::: rest :::::::::::: -->
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-connector-generator</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-connector-generator</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-controller</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-controller</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-credential</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-credential</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-dao</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-dao</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-logging-jsondb</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-logging-jsondb</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-metrics-prometheus</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-metrics-prometheus</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-filestore</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-filestore</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-inspector</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-inspector</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-jsondb</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-jsondb</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-metrics-jsondb</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-metrics-jsondb</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-openshift</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-openshift</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-endpoint</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-endpoint</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-runtime</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-runtime</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.rest</groupId>
-        <artifactId>rest-verifier</artifactId>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-verifier</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -835,19 +835,19 @@
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-catalog</artifactId>
+        <artifactId>connector-support-catalog</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-verifier</artifactId>
+        <artifactId>connector-support-verifier</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-test</artifactId>
+        <artifactId>connector-support-test</artifactId>
         <version>${project.version}</version>
       </dependency>
 

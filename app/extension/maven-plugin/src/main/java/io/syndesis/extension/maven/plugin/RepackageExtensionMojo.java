@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.core.Json;
+import io.syndesis.common.util.Json;
 import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.model.extension.Extension;
+import io.syndesis.common.model.extension.Extension;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
