@@ -88,6 +88,7 @@ public final class HttpConnectorFactories {
     // Helpers
     // *******************************
 
+    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     public static String computeHttpUri(String scheme, Map<String, Object> options) {
         String baseUrl = (String) options.remove("baseUrl");
 

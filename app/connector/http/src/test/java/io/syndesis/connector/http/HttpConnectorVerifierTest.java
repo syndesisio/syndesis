@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.syndesis.connector.http.util.BasicValidationHandler;
-import io.syndesis.verifier.api.Verifier;
-import io.syndesis.verifier.api.VerifierResponse;
+import io.syndesis.connector.support.verifier.api.Verifier;
+import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -38,7 +38,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Http4ConnectorVerifierTest {
+public class HttpConnectorVerifierTest {
     private HttpServer localServer;
 
     @Before

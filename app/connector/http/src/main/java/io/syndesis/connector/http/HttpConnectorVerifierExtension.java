@@ -39,12 +39,12 @@ public class HttpConnectorVerifierExtension extends DefaultComponentVerifierExte
         this.supportedScheme = supportedScheme;
     }
 
+    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     @Override
     public Result verify(Scope scope, Map<String, Object> parameters) {
         final Map<String, Object> options = new HashMap<>(parameters);
 
         String baseUrl = (String) options.remove("baseUrl");
-        String path = (String) options.remove("path");
         String uriScheme = StringHelper.before(baseUrl, "://");
 
         if (ObjectHelper.isNotEmpty(uriScheme) && !ObjectHelper.equal(supportedScheme, uriScheme)) {
@@ -60,6 +60,7 @@ public class HttpConnectorVerifierExtension extends DefaultComponentVerifierExte
             baseUrl = supportedScheme + "://" + baseUrl;
         }
 
+        String path = (String) options.remove("path");
         if (ObjectHelper.isNotEmpty(path)) {
             if (!path.startsWith("/")) {
                 path = "/" + path;

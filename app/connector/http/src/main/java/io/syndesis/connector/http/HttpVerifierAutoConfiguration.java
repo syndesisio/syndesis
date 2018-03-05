@@ -15,7 +15,8 @@
  */
 package io.syndesis.connector.http;
 
-import io.syndesis.verifier.api.ComponentVerifier;
+import io.syndesis.connector.support.verifier.api.ComponentVerifier;
+import io.syndesis.connector.support.verifier.api.Verifier;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,7 +26,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
-import io.syndesis.verifier.api.Verifier;
 
 @Configuration
 @ConditionalOnProperty(prefix = "io.syndesis.connector.verifier", name = "enabled")
