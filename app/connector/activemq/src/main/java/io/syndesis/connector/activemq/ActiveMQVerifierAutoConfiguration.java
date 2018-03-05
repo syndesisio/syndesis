@@ -15,7 +15,10 @@
  */
 package io.syndesis.connector.activemq;
 
-import io.syndesis.verifier.api.Verifier;
+import io.syndesis.connector.support.verifier.api.ComponentVerifier;
+import io.syndesis.connector.support.verifier.api.Verifier;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +35,11 @@ public class ActiveMQVerifierAutoConfiguration {
     @Lazy
     @ConditionalOnProperty(prefix = "io.syndesis.connector.activemq.verifier", name = "enabled", matchIfMissing = true)
     public Verifier activemqVerifier() {
-        return new ActiveMQVerifier();
+        return new ComponentVerifier() {
+            @Override
+            protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
+                return new ActiveMQConnectorVerifierExtension(context);
+            }
+        };
     }
 }

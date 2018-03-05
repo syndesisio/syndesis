@@ -21,7 +21,7 @@ import java.security.SecureRandom;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 
-import io.syndesis.connector.utils.CertificateUtil;
+import io.syndesis.connector.support.util.CertificateUtil;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSslConnectionFactory;
 import org.apache.camel.util.ObjectHelper;

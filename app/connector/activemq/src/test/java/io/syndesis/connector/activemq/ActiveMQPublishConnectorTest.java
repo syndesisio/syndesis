@@ -21,14 +21,13 @@ import java.util.UUID;
 
 import javax.jms.TextMessage;
 
-import io.syndesis.model.integration.Step;
-import org.apache.camel.component.sjms.SjmsComponent;
+import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
-public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
+public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
 
     // **************************
     // Set up
@@ -37,16 +36,13 @@ public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {
         return Arrays.asList(
-            newActiveMQEndpointStep(
-                "io.syndesis.connector:connector-activemq-subscribe",
-                builder -> {
-                    builder.putConfiguredProperty("destinationName", "sub-"  + testName.getMethodName());
-                    builder.putConfiguredProperty("destinationType", "queue");
-                }),
+            newSimpleEndpointStep(
+                "direct",
+                builder -> builder.putConfiguredProperty("name", "start")),
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-publish",
                 builder -> {
-                    builder.putConfiguredProperty("destinationName", "pub-" + testName.getMethodName());
+                    builder.putConfiguredProperty("destinationName", testName.getMethodName());
                     builder.putConfiguredProperty("destinationType", "queue");
                 })
         );
@@ -57,16 +53,13 @@ public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
     // **************************
 
     @Test
-    public void sharedConnectionTest() throws Exception {
+    public void subscribeTest() {
         final String message = UUID.randomUUID().toString();
-        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-1", SjmsComponent.class);
-        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-2", SjmsComponent.class);
 
-        Assertions.assertThat(sjms1).isEqualTo(sjms2);
+        template().sendBody("direct:start", message);
 
         JmsTemplate template = new JmsTemplate(broker.createConnectionFactory());
-        template.send("sub-" + testName.getMethodName(), session -> session.createTextMessage(message));
-        Object answer = template.receive("pub-" + testName.getMethodName());
+        Object answer = template.receive(testName.getMethodName());
 
         Assertions.assertThat(answer).isInstanceOf(TextMessage.class);
         Assertions.assertThat(answer).hasFieldOrPropertyWithValue("text", message);

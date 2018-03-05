@@ -19,13 +19,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import io.syndesis.model.integration.Step;
-import org.apache.camel.component.mock.MockEndpoint;
+import javax.jms.TextMessage;
+
+import io.syndesis.common.model.integration.Step;
+import org.apache.camel.component.sjms.SjmsComponent;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
-public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport {
+public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
 
     // **************************
     // Set up
@@ -37,12 +40,15 @@ public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-subscribe",
                 builder -> {
-                    builder.putConfiguredProperty("destinationName", testName.getMethodName());
+                    builder.putConfiguredProperty("destinationName", "sub-"  + testName.getMethodName());
                     builder.putConfiguredProperty("destinationType", "queue");
                 }),
-            newSimpleEndpointStep(
-                "mock",
-                builder -> builder.putConfiguredProperty("name", "result"))
+            newActiveMQEndpointStep(
+                "io.syndesis.connector:connector-activemq-publish",
+                builder -> {
+                    builder.putConfiguredProperty("destinationName", "pub-" + testName.getMethodName());
+                    builder.putConfiguredProperty("destinationType", "queue");
+                })
         );
     }
 
@@ -51,16 +57,18 @@ public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport
     // **************************
 
     @Test
-    public void subscribeTest() throws Exception {
+    public void sharedConnectionTest() throws Exception {
         final String message = UUID.randomUUID().toString();
+        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-1", SjmsComponent.class);
+        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-2", SjmsComponent.class);
 
-        MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.expectedMessageCount(1);
-        mock.expectedBodiesReceived(message);
+        Assertions.assertThat(sjms1).isEqualTo(sjms2);
 
         JmsTemplate template = new JmsTemplate(broker.createConnectionFactory());
-        template.send(testName.getMethodName(), session -> session.createTextMessage(message));
+        template.send("sub-" + testName.getMethodName(), session -> session.createTextMessage(message));
+        Object answer = template.receive("pub-" + testName.getMethodName());
 
-        mock.assertIsSatisfied();
+        Assertions.assertThat(answer).isInstanceOf(TextMessage.class);
+        Assertions.assertThat(answer).hasFieldOrPropertyWithValue("text", message);
     }
 }

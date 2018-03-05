@@ -19,15 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.jms.TextMessage;
-
-import io.syndesis.model.integration.Step;
-import org.assertj.core.api.Assertions;
+import io.syndesis.common.model.integration.Step;
+import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
-public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
+public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport {
 
     // **************************
     // Set up
@@ -36,15 +34,15 @@ public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {
         return Arrays.asList(
-            newSimpleEndpointStep(
-                "direct",
-                builder -> builder.putConfiguredProperty("name", "start")),
             newActiveMQEndpointStep(
-                "io.syndesis.connector:connector-activemq-publish",
+                "io.syndesis.connector:connector-activemq-subscribe",
                 builder -> {
                     builder.putConfiguredProperty("destinationName", testName.getMethodName());
                     builder.putConfiguredProperty("destinationType", "queue");
-                })
+                }),
+            newSimpleEndpointStep(
+                "mock",
+                builder -> builder.putConfiguredProperty("name", "result"))
         );
     }
 
@@ -53,15 +51,16 @@ public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
     // **************************
 
     @Test
-    public void subscribeTest() {
+    public void subscribeTest() throws Exception {
         final String message = UUID.randomUUID().toString();
 
-        template().sendBody("direct:start", message);
+        MockEndpoint mock = getMockEndpoint("mock:result");
+        mock.expectedMessageCount(1);
+        mock.expectedBodiesReceived(message);
 
         JmsTemplate template = new JmsTemplate(broker.createConnectionFactory());
-        Object answer = template.receive(testName.getMethodName());
+        template.send(testName.getMethodName(), session -> session.createTextMessage(message));
 
-        Assertions.assertThat(answer).isInstanceOf(TextMessage.class);
-        Assertions.assertThat(answer).hasFieldOrPropertyWithValue("text", message);
+        mock.assertIsSatisfied();
     }
 }

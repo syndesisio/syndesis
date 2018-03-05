@@ -21,11 +21,11 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import javax.jms.TextMessage;
 
-import io.syndesis.connector.test.ConnectorTestSupport;
-import io.syndesis.model.action.ConnectorAction;
-import io.syndesis.model.connection.Connector;
-import io.syndesis.model.integration.Step;
-import io.syndesis.model.integration.StepKind;
+import io.syndesis.connector.support.test.ConnectorTestSupport;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.component.sjms.SjmsComponent;
 import org.assertj.core.api.Assertions;
@@ -96,7 +96,7 @@ public class ActiveMQConnectionTest extends ConnectorTestSupport {
         final Step.Builder builder = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(action)
-            .connection(new io.syndesis.model.connection.Connection.Builder()
+            .connection(new io.syndesis.common.model.connection.Connection.Builder()
                 .connector(connector)
                 .build());
 

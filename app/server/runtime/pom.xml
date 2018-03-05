@@ -147,22 +147,6 @@
             <artifactId>connector-salesforce-delete-with-id</artifactId>
             <version>${project.version}</version>
           </dependency>
-          <!-- ==== JMS ==== -->
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-activemq-publish</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-activemq-subscribe</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-activemq-request</artifactId>
-            <version>${project.version}</version>
-          </dependency>
           <!-- ==== REST Swagger ==== -->
           <dependency>
             <groupId>io.syndesis.connector</groupId>
