@@ -64,7 +64,6 @@
     <module>support/maven-plugin</module>
     <module>support/catalog</module>
     <module>support/test</module>
-    <module>support/verify</module>
 
     <module>aws-s3</module>
     <module>http</module>
