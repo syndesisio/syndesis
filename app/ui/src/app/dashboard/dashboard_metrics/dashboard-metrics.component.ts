@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
@@ -17,7 +17,7 @@ const DEFAULT_POLLING_INTERVAL = 5000;
   styleUrls: ['../dashboard.component.scss',
     './dashboard-metrics.component.scss']
 })
-export class DashboardMetricsComponent implements OnInit {
+export class DashboardMetricsComponent implements OnInit, OnDestroy {
   @Input() connections: Connections; // TODO: Replace by connectionState once the ngrx store supports it
   @Input() integrations: Integrations; // TODO: Replace by integrationState.collection once the legacy Integrations store is phased out
   @Input() integrationState: IntegrationState;

@@ -177,10 +177,6 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     this.integrationMetrics$ = this.platformStore.select('integrationState').pipe(
       map(integrationState => integrationState.metrics.list),
       combineLatest(this.route.paramMap.first(params => params.has('integrationId')).map(paramMap => paramMap.get('integrationId'))),
-      map(([integrationMetrics, integrationId]) => {
-        console.log(integrationMetrics);
-        return ([integrationMetrics, integrationId]);
-      }),
       switchMap(([integrationMetrics, integrationId]) => Observable.of(integrationMetrics.find(metrics => metrics.id === integrationId)))
     );
 

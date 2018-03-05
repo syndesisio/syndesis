@@ -7,8 +7,8 @@ import { moment } from '@syndesis/ui/vendor';
 @Pipe({
   name: 'synDuration$'
 })
-export class DurationPipe implements PipeTransform { 
-  transform(timestamp: number, defaultValue: string = 'n/a'): Observable<string> | string {
+export class DurationPipe implements PipeTransform {
+  transform(timestamp: number, defaultValue = 'n/a'): Observable<string> | string {
     if (!timestamp) {
       return Observable.of(defaultValue);
     }
