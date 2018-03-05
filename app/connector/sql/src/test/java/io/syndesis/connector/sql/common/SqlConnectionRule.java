@@ -63,8 +63,8 @@ public final class SqlConnectionRule extends ExternalResource {
                 stmt.execute("DROP table NAME0");
                 stmt.execute("DROP table ADDRESS0");
                 stmt.close();
-            } catch (final SQLException e) {
-                
+            } catch (final SQLException e) { // NOPMD
+                //ignore
             }
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");

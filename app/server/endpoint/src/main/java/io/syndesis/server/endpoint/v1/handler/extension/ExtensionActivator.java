@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,16 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import io.syndesis.server.dao.manager.DataManager;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
+import org.springframework.stereotype.Component;
+
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfigurationProperties;
@@ -33,15 +43,29 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
-import org.springframework.stereotype.Component;
+import io.syndesis.server.dao.file.FileDataManager;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 @Component
 public class ExtensionActivator {
 
     private final DataManager dataManager;
 
-    public ExtensionActivator(DataManager dataManager) {
+    private final MetadataConfigurationProperties verificationConfig;
+
+    private final FileDataManager fileDataManager;
+
+    private final NamespacedOpenShiftClient openShiftClient;
+
+    public ExtensionActivator(DataManager dataManager,
+            MetadataConfigurationProperties verificationConfig,
+            FileDataManager fileDataManager,
+            NamespacedOpenShiftClient openShiftClient) {
         this.dataManager = dataManager;
+        this.verificationConfig = verificationConfig;
+        this.fileDataManager = fileDataManager;
+        this.openShiftClient = openShiftClient;
     }
 
     public void activateExtension(Extension extension) {
@@ -56,6 +80,10 @@ public class ExtensionActivator {
             .status(Extension.Status.Installed)
             .lastUpdated(rightNow)
             .build());
+
+        if (extension.getTags().contains("jdbc-driver")) {
+            uploadToVerifier(extension);
+        }
     }
 
     public void deleteExtension(Extension extension) {
@@ -63,6 +91,10 @@ public class ExtensionActivator {
             doDeleteRelatedObjects(extension);
         }
         doDelete(extension);
+
+        if (extension.getTags().contains("jdbc-driver")) {
+            deleteFromVerifier(extension);
+        }
     }
 
     private void doDeleteInstalled(String logicalExtensionId) {
@@ -185,5 +217,34 @@ public class ExtensionActivator {
         return "ext-" + extension.getExtensionId().replaceAll("[^a-zA-Z0-9]","-");
     }
 
+    private void uploadToVerifier(Extension extension) {
 
+        final WebTarget target = ClientBuilder.newClient()
+                .target(String.format("http://%s/api/v1/drivers",
+                        verificationConfig.getService()));
+
+        MultipartFormDataOutput multipart = new MultipartFormDataOutput();
+        String fileName = getConnectorIdForExtension(extension);
+        multipart.addFormData("fileName", fileName, MediaType.TEXT_PLAIN_TYPE);
+        InputStream is = fileDataManager.getExtensionBinaryFile(extension.getExtensionId());
+        multipart.addFormData("file", is, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+
+        GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(multipart) {};
+        Boolean isDeployed = target.request().post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE),Boolean.class);
+        if (isDeployed) {
+            openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
+        }
+    }
+
+    private void deleteFromVerifier(Extension extension) {
+        final WebTarget target = ClientBuilder.newClient()
+                .target(String.format("http://%s/api/v1/drivers/%s",
+                        verificationConfig.getService(),getConnectorIdForExtension(extension)));
+
+        Boolean isDeleted = target.request().delete(Boolean.class);
+        if (isDeleted) {
+            openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
+        }
+
+    }
 }

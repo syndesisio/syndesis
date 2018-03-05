@@ -73,6 +73,7 @@ import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
+
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -184,6 +185,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         // Not a real delete of the extension: changing the status to Deleted
         Extension extension = getDataManager().fetch(Extension.class, id);
 
+        //Delete from verifier
         extensionActivator.deleteExtension(extension);
     }
 

@@ -54,7 +54,6 @@ public class SqlParserTest {
         Assert.assertEquals(1, info.getInParams().size());
         Assert.assertEquals("id", info.getInParams().get(0).getName());
         Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
-        String database = db.connection.getMetaData().getDatabaseProductName();
         if (db.connection.getMetaData().getDatabaseProductName().equalsIgnoreCase(DatabaseProduct.ORACLE.name())) {
             Assert.assertEquals(BigDecimal.class, info.getInParams().get(0).getTypeValue().getClazz());
         } else {
