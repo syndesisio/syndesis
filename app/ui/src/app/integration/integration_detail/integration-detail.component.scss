@@ -1,6 +1,11 @@
 @import 'syndesis-sass';
 
 .integration-detail {
+  &__body {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
+  }
   &__info {
     flex-grow: 0;
     padding: 0 0 $gutter $gutter;
