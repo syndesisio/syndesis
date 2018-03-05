@@ -16,7 +16,6 @@
 package io.syndesis.integration.component.proxy;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import java.util.Set;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
-import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.Processor;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.catalog.CamelCatalog;
@@ -324,10 +322,8 @@ public class ComponentProxyComponent extends DefaultComponent {
         // no-op
     }
 
-    /**
-     * Gather all options to use when building the delegate uri.
-     */
-    private Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws URISyntaxException, NoTypeConversionAvailableException {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
         final TypeConverter converter = getCamelContext().getTypeConverter();
         final Map<String, String> endpointOptions = new LinkedHashMap<>();
 
@@ -368,6 +364,10 @@ public class ComponentProxyComponent extends DefaultComponent {
         }
     }
 
+    protected Object getOption(String key) {
+        return configuredOptions.get(key);
+    }
+
     protected CamelCatalog getCatalog() {
         return catalog;
     }
@@ -401,6 +401,7 @@ public class ComponentProxyComponent extends DefaultComponent {
     /**
      * Build a ComponentVerifierExtension using options bound to this component.
      */
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private ComponentVerifierExtension getComponentVerifierExtension() {
         try {
             //
@@ -416,7 +417,7 @@ public class ComponentProxyComponent extends DefaultComponent {
                         // to be compatible with all the methods in CamelContext whereas
                         // catalog deals with Map<String, String>
                         options = Map.class.cast(buildEndpointOptions(null, map));
-                    } catch (URISyntaxException | NoTypeConversionAvailableException e) {
+                    } catch (Exception e) {
                         // If a failure is detected while reading the catalog, wrap it
                         // and stop the validation step.
                         return ResultBuilder.withStatusAndScope(ComponentVerifierExtension.Result.Status.OK, scope)
@@ -438,7 +439,7 @@ public class ComponentProxyComponent extends DefaultComponent {
                         .build();
                 };
             }
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (Exception e) {
             return (scope, map) -> {
                 return ResultBuilder.withStatusAndScope(ComponentVerifierExtension.Result.Status.OK, scope)
                     .error(ResultErrorBuilder.withException(e).build())

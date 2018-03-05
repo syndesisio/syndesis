@@ -61,7 +61,6 @@
   <modules>
     <module>support/util</module>
     <module>support/verifier</module>
-    <module>support/component</module>
     <module>support/maven-plugin</module>
     <module>support/catalog</module>
     <module>support/test</module>

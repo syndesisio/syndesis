@@ -33,7 +33,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-twitter</artifactId>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -63,12 +62,16 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-sql</artifactId>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-mqtt</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-http</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

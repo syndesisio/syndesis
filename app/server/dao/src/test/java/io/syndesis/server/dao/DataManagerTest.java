@@ -15,11 +15,6 @@
  */
 package io.syndesis.server.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,6 +38,11 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class DataManagerTest {
     private CacheManager cacheManager;
     private DataManager dataManager = null;
@@ -65,7 +65,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .containsExactlyInAnyOrder("activemq", "amqp", "ftp","sftp", "sql", "salesforce", "twitter", "aws-s3", "mqtt");
+            .containsExactlyInAnyOrder("activemq", "amqp", "ftp","sftp", "sql", "salesforce", "twitter", "aws-s3", "mqtt", "http4", "https4");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertEquals(connectors.getTotalCount(), connectors.getItems().size());
@@ -94,7 +94,7 @@ public class DataManagerTest {
         );
 
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get)).containsExactlyInAnyOrder("twitter", "activemq");
-        Assert.assertEquals(9, connectors.getTotalCount());
+        Assert.assertEquals(11, connectors.getTotalCount());
         Assert.assertEquals(2, connectors.getItems().size());
     }
 

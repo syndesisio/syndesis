@@ -271,18 +271,6 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-http-get</artifactId>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-http4-starter</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-twitter</artifactId>
       <scope>runtime</scope>
     </dependency>
@@ -296,6 +284,12 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-mqtt</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-http</artifactId>
       <scope>runtime</scope>
     </dependency>
 
