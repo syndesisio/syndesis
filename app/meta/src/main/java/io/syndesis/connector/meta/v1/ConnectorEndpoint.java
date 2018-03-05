@@ -16,6 +16,7 @@
 package io.syndesis.connector.meta.v1;
 
 import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -50,17 +51,16 @@ public class ConnectorEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{connectorId}/actions/{actionId}")
-    public SyndesisMetadata actions(
-            @PathParam("connectorId") final String connectorId,
-            @PathParam("actionId") final String actionId,
-            final Map<String, Object> properties) {
+    public SyndesisMetadata actions(@PathParam("connectorId") final String connectorId, @PathParam("actionId") final String actionId,
+        final Map<String, Object> properties) {
 
         MetadataRetrieval adapter = null;
 
         try {
             adapter = applicationContext.getBean(connectorId + "-adapter", MetadataRetrieval.class);
-        } catch (NoSuchBeanDefinitionException|NoSuchBeanException ignored) {
-            LOGGER.debug("No bean of type: {} with id: {} found in application context, switch to factory finder", MetadataRetrieval.class.getName(), connectorId);
+        } catch (NoSuchBeanDefinitionException | NoSuchBeanException ignored) {
+            LOGGER.debug("No bean of type: {} with id: {} found in application context, switch to factory finder",
+                MetadataRetrieval.class.getName(), connectorId);
 
             try {
                 // Then fallback to camel's factory finder
@@ -68,7 +68,7 @@ public class ConnectorEndpoint {
                 final Class<?> type = finder.findClass(connectorId);
 
                 adapter = (MetadataRetrieval) camelContext.getInjector().newInstance(type);
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
                 LOGGER.warn("No factory finder of type: {} for id: {}", MetadataRetrieval.class.getName(), connectorId, e);
             }
         }
@@ -80,7 +80,11 @@ public class ConnectorEndpoint {
         try {
             return adapter.fetch(camelContext, connectorId, actionId, properties);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
-            throw new IllegalStateException("Unable to fetch and process metadata", e);
+            LOGGER.error("Unable to fetch and process metadata for connector: {}, action: {}", connectorId, actionId);
+            LOGGER.debug("Unable to fetch and process metadata for connector: {}, action: {}, properties: {}", connectorId, actionId,
+                properties, e);
+
+            throw adapter.handle(e);
         }
     }
 }

@@ -17,6 +17,8 @@ package io.syndesis.connector.support.verifier.api;
 
 import java.util.Map;
 
+import io.syndesis.common.util.SyndesisServerException;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
@@ -30,10 +32,13 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 public interface MetadataRetrieval {
 
     /**
-     * Converts Camel {@link MetaData} to
-     * {@link SyndesisMetadata}. Method will receive all properties that client
-     * specified and the retrieved {@link MetaData} from the
-     * appropriate Camel {@link MetaDataExtension}.
+     * Converts Camel {@link MetaData} to {@link SyndesisMetadata}. Method will
+     * receive all properties that client specified and the retrieved
+     * {@link MetaData} from the appropriate Camel {@link MetaDataExtension}.
      */
     SyndesisMetadata fetch(CamelContext context, String componentId, String actionId, Map<String, Object> properties);
+
+    default RuntimeException handle(final Exception e) {
+        return new SyndesisServerException("Unable to fetch and process metadata", e);
+    }
 }
