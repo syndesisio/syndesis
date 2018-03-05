@@ -56,7 +56,7 @@ public class JsonDBTest {
     @Before
     public void before() {
         JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:/tmp/test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+        ds.setURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         DBI dbi = new DBI(ds);
 
         this.jsondb = new SqlJsonDB(dbi, null,
