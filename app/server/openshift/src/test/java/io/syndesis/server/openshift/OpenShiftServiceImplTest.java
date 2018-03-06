@@ -62,6 +62,7 @@ public class OpenShiftServiceImplTest {
             .addAnnotation("testName", testName.getMethodName())
             .addLabel("type", "test")
             .addSecretEntry("secret-key", "secret-val")
+            .withImage("testimage")
             .build();
 
         ImageStream expectedImageStream = new ImageStreamBuilder()
@@ -81,7 +82,7 @@ public class OpenShiftServiceImplTest {
 
         DeploymentConfig expectedDeploymentConfig = new DeploymentConfigBuilder()
             .withNewMetadata()
-                .withName(name)
+                .withName(OpenShiftServiceImpl.openshiftName(name))
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
             .endMetadata()
@@ -107,7 +108,7 @@ public class OpenShiftServiceImplTest {
                     .endMetadata()
                     .withNewSpec()
                         .addNewContainer()
-                            .withImage(" ")
+                            .withImage(deploymentData.getImage())
                             .withImagePullPolicy("Always")
                             .withName(name)
                             .addToEnv(new EnvVarBuilder().withName("LOADER_HOME").withValue(config.getIntegrationDataPath()).build())
@@ -149,6 +150,10 @@ public class OpenShiftServiceImplTest {
             .withPath("/oapi/v1/namespaces/test/deploymentconfigs")
             .andReturn(200, expectedDeploymentConfig)
             .always();
+        server.expect()
+                .withPath("/oapi/v1/namespaces/test/deploymentconfigs/i-test-deployment")
+                .andReturn(200, expectedDeploymentConfig)
+                .always();
         server.expect()
             .withPath("/oapi/v1/namespaces/test/deploymentconfigs/test-deployment")
             .andReturn(200, expectedDeploymentConfig)

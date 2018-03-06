@@ -18,31 +18,27 @@ package io.syndesis.server.controller;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class StateUpdate {
 
     private final IntegrationDeploymentState state;
     private final String statusMessage;
-    private final List<String> stepsPerformed;
+    private final Map<String, String> stepsPerformed;
 
+   //
+   // Constructors
+   //
+   // Don't expose constructors without stepsPerformed, because this instance will be used to update the IntegrationDeployment and we'll end up loosing info.
 
-    public StateUpdate(IntegrationDeploymentState state, String statusMessage) {
-        this(state, Collections.emptyList(), statusMessage);
-    }
-
-    public StateUpdate(IntegrationDeploymentState state) {
-        this(state, Collections.emptyList(), null);
-    }
-
-    public StateUpdate(IntegrationDeploymentState state, List<String> stepsPerformed) {
+    public StateUpdate(IntegrationDeploymentState state, Map<String, String> stepsPerformed) {
         this(state, stepsPerformed, null);
     }
 
-    public StateUpdate(IntegrationDeploymentState state, List<String> stepsPerformed, String statusMessage) {
+    public StateUpdate(IntegrationDeploymentState state, Map<String, String> stepsPerformed, String statusMessage) {
         this.state = state;
-        this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyList);
+        this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyMap);
         this.statusMessage = statusMessage;
     }
 
@@ -54,7 +50,7 @@ public class StateUpdate {
         return statusMessage;
     }
 
-     public List<String> getStepsPerformed() {
+    public Map<String, String> getStepsPerformed() {
         return stepsPerformed;
     }
 }
