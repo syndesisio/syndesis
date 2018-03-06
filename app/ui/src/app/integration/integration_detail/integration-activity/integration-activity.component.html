@@ -18,7 +18,7 @@
           {{ activity.at | date: 'M/d/yy' }}
         </div>
         <div class="list-pf-description text-overflow-pf">
-          {{ activity.at | date: 'shortTime' }}
+          {{ activity.at | date: 'mediumTime' }}
         </div>
         <div class="list-pf-description text-overflow-pf">
           Version {{ activity.ver || 'unknown' }}
@@ -42,7 +42,7 @@
   </ng-template>
 </pfng-list>
 
-<pfng-pagination class="integration-activity__pagination" [config]="paginationConfig"
+<pfng-pagination *ngIf="showPagination" class="integration-activity__pagination" [config]="paginationConfig"
   (onPageNumberChange)="renderActivitiesByPage()"
   (onPageSizeChange)="renderActivitiesByPage()">
 </pfng-pagination>
