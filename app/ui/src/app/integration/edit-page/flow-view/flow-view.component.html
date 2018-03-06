@@ -72,7 +72,7 @@
       <div class="step start">
         <div class="step-line"></div>
         <syndesis-integration-flow-view-step [step]="startConnection()"
-                                              [position]="0"
+                                              [position]="firstPosition()"
                                               [currentPosition]="currentPosition"
                                               [currentState]="currentState"></syndesis-integration-flow-view-step>
       </div>
@@ -100,7 +100,7 @@
       <!-- Last Step -->
       <div class="step finish">
         <syndesis-integration-flow-view-step [step]="endConnection()"
-                                              [position]="-1"
+                                              [position]="lastPosition()"
                                               [currentPosition]="currentPosition"
                                               [currentState]="currentState"></syndesis-integration-flow-view-step>
       </div>
