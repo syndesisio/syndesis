@@ -52,7 +52,7 @@ public class SetupITCase extends BaseITCase {
         ResponseEntity<OAuthAppHandler.OAuthApp[]> result = get("/api/v1/setup/oauth-apps",
                 OAuthAppHandler.OAuthApp[].class);
         List<OAuthAppHandler.OAuthApp> apps = Arrays.asList(result.getBody());
-        assertThat(apps.size()).isEqualTo(3);
+        assertThat(apps.size()).isEqualTo(2);
 
         OAuthAppHandler.OAuthApp twitter = apps.stream().filter(x -> "twitter".equals(x.id)).findFirst().get();
         assertThat(twitter.id).isEqualTo("twitter");
@@ -78,7 +78,7 @@ public class SetupITCase extends BaseITCase {
         ResponseEntity<OAuthAppHandler.OAuthApp[]> result = get("/api/v1/setup/oauth-apps",
                 OAuthAppHandler.OAuthApp[].class);
         List<OAuthAppHandler.OAuthApp> apps = Arrays.asList(result.getBody());
-        assertThat(apps.size()).isEqualTo(3);
+        assertThat(apps.size()).isEqualTo(2);
 
         twitter = apps.stream().filter(x -> "twitter".equals(x.id)).findFirst().get();
         assertThat(twitter.id).isEqualTo("twitter");
