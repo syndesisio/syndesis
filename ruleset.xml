@@ -282,7 +282,7 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/junit.xml/UseAssertTrueInsteadOfAssertEquals">
-    <priority>3</priority>
+    <priority>5</priority>
   </rule>
   <rule ref="rulesets/java/strictexception.xml/AvoidLosingExceptionInformation">
     <priority>3</priority>
