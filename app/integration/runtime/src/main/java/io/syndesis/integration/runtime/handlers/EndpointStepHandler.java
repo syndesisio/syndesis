@@ -20,18 +20,18 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
-import io.syndesis.common.util.CollectionsUtils;
-import io.syndesis.common.util.Optionals;
-import io.syndesis.common.util.Predicates;
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.common.model.WithConfigurationProperties;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.CollectionsUtils;
+import io.syndesis.common.util.Optionals;
+import io.syndesis.common.util.Predicates;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
+
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
@@ -91,11 +91,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         // any configuredProperties on action descriptor are considered
         properties.putAll(descriptor.getConfiguredProperties());
 
-        String uri = componentScheme;
-
-        if (hasComponentProperties(configuredProperties, connector, action)) {
-            uri = String.format("%s-%s", componentScheme, stepIndex);
-        }
+        String uri = String.format("%s-%s", componentScheme, stepIndex);
 
         if (ObjectHelper.isNotEmpty(uri) && ObjectHelper.isNotEmpty(properties)) {
             try {
@@ -114,18 +110,4 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         return Optional.ofNullable(route);
     }
 
-    // *************************
-    // Helpers
-    // *************************
-
-
-    private static boolean hasComponentProperties(Map<String, String> properties, WithConfigurationProperties... withConfigurationProperties) {
-        for (WithConfigurationProperties wcp : withConfigurationProperties) {
-            if (properties.entrySet().stream().anyMatch(wcp::isComponentProperty)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
