@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceUpdateSObjectComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-salesforce-update",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.0-20180307",
   "description" : "Update Salesforce SObject",
   "labels" : [ "salesforce" ],
   "pattern" : "To",

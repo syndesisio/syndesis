@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.odata.ODataRetrieveEntityComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-odata-retrieve-entity",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.0-20180307",
   "description" : "Retrieve OData Entity",
   "labels" : [ "odata" ],
   "pattern" : "To",

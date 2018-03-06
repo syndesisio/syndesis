@@ -9,7 +9,7 @@
   "javaType" : "io.syndesis.connector.salesforce.SalesforceCreateSObjectComponent",
   "groupId" : "io.syndesis.connector",
   "artifactId" : "connector-salesforce-create",
-  "version" : "1.3-SNAPSHOT",
+  "version" : "1.3.0-20180307",
   "description" : "Create Salesforce SObject",
   "labels" : [ "salesforce" ],
   "pattern" : "To",
