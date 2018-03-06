@@ -31,7 +31,7 @@ In our experience operations against the OpenShift API from inside often struggl
 Also, the interaction which such an internal upgrade component is not as easy as when doing it from the command line outside the cluster.
 E.g. rollback and corrective actions could be only done automatically without any additional information provided by a human operator.
 
-The advantage of doing it from the inside is, that such an upgrade component could automatically detect when new a new Syndesis version is available and perform the upgraded automatically and unattended.
+The advantage of doing it from the inside is, that such an upgrade component could automatically detect when new a new Syndesis version is available and perform the upgrade automatically and unattended.
 
 This concept is independent on the inside/outside strategy and applies to both.
 However, for the sake of concreteness, we focus on the _outside_ case, where a CLI tool triggered by a user performs the upgrade on demand.
