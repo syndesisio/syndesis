@@ -22,13 +22,8 @@ import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.ProcessorDefinition;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class LogStepHandler implements IntegrationStepHandler {
 
@@ -57,11 +52,9 @@ public class LogStepHandler implements IntegrationStepHandler {
         if (isContextLoggingEnabled) {
             sb.append("Message Context: [${body}] ");
         }
-	
         if (isBodyLoggingEnabled) {
             sb.append("Body: [${body}] ");
         }
-
         if (customText != null &&
                 !customText.isEmpty() &&
                 !customText.equals("null")) { //TODO: the null thing should be handled by the ui.
@@ -71,42 +64,13 @@ public class LogStepHandler implements IntegrationStepHandler {
         return sb.toString();
     }
 
-    private static void configureProperties(StringBuilder sb, Collection<String> names) {
-        if (names == null) {
-            return;
-        }
-
-        List<String> filtered = names
-                .stream()
-                .filter(n -> !"null".equals(n))
-                .collect(Collectors.toList());
-
-        if (filtered.isEmpty()) {
-            return;
-        }
-
-        sb.append(filtered.stream().map(p->"p = $property."+p)
-                .collect(Collectors.joining(" ", "Properties[", "] ")));
-    }
-
-    private static List<String> asList(String propertyName, Map<String, String> props) {
-        if (props == null || props.isEmpty()) {
-            return null;
-        }
-        String names = props.get(propertyName);
-        if (names == null || names.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(names.split("[ \\n,]+"));
-    }
-
     private static boolean isContextLoggingEnabled(Map<String, String> props) {
         if (props == null || props.isEmpty()) {
             return false;
         }
         return Boolean.parseBoolean(props.getOrDefault("contextLoggingEnabled", "false"));
     }
-    
+
     private static boolean isBodyLoggingEnabled(Map<String, String> props) {
         if (props == null || props.isEmpty()) {
             return false;
