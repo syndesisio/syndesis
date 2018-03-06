@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@ConditionalOnProperty(value = "verifier.kind", havingValue = "always-ok")
+@ConditionalOnProperty(value = "meta.kind", havingValue = "always-ok")
 public class AlwaysOkVerifier implements Verifier {
 
     // All good ....

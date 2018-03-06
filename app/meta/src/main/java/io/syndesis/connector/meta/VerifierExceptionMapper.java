@@ -25,6 +25,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import io.syndesis.common.util.SyndesisServerException;
+
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +63,7 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
 
         LOG.error("Exception while handling request: {} {}", request.getMethod(), request.getRequestURI(), exception);
         if (LOG.isDebugEnabled()) {
-            final ContentCachingRequestWrapper requestCache = WebUtils.getNativeRequest(request,
-                ContentCachingRequestWrapper.class);
+            final ContentCachingRequestWrapper requestCache = WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
 
             final Enumeration<String> headers = request.getHeaderNames();
             final StringJoiner headersJoined = new StringJoiner("\n");
@@ -79,14 +80,17 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
         return Response.serverError().entity(error).build();
     }
 
-    private String rootCauseMessage(final Throwable exception) {
+    private static String rootCauseMessage(final Throwable exception) {
+        if (exception instanceof SyndesisServerException) {
+            return exception.getMessage();
+        }
+
         Throwable rootCause = exception;
-        while (rootCause.getCause() != null) {
+        while (rootCause.getCause() != null && rootCause != rootCause.getCause()) {
             rootCause = rootCause.getCause();
         }
 
         return rootCause.getMessage();
-
     }
 
 }

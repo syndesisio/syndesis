@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan
-@EnableConfigurationProperties(VerificationConfigurationProperties.class)
+@EnableConfigurationProperties(MetadataConfigurationProperties.class)
 public class VerifierConfiguration {
 
 }

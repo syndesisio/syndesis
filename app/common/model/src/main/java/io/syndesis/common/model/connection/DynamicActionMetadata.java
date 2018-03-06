@@ -26,6 +26,8 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = DynamicActionMetadata.Builder.class)
 public interface DynamicActionMetadata {
 
+    DynamicActionMetadata NOTHING = new DynamicActionMetadata.Builder().build();
+
     @Value.Immutable
     @JsonDeserialize(builder = ActionPropertySuggestion.Builder.class)
     interface ActionPropertySuggestion {

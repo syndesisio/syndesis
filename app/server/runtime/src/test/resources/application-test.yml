@@ -48,7 +48,7 @@ management:
 openshift:
   enabled: false
 
-verifier:
+meta:
   kind: always-ok
 
 client:

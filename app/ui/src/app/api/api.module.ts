@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { ApiHttpService, ApiConfigService, Endpoints, API_ENDPOINTS } from '@syndesis/ui/platform';
 import * as SYNDESIS_PROVIDERS from './providers';
@@ -13,7 +13,7 @@ export function endpointsLazyLoaderFactory(apiEndpoints: Endpoints, apiConfigSer
   imports: [CommonModule, HttpClientModule],
 })
 export class ApiModule {
-  constructor(@Optional() private apiEndpointsLazyLoaderService: SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService) {}
+  constructor(@Optional() private apiEndpointsLazyLoaderService: SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService) { }
 
   static forRoot(apiEndpoints?: Endpoints): Array<ModuleWithProviders> {
     return [{
@@ -33,6 +33,11 @@ export class ApiModule {
         provide: ApiHttpService,
         useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService
       },
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: SYNDESIS_PROVIDERS.ApiHttpInterceptor,
+        multi: true
+      }
       ]
     },
     ];

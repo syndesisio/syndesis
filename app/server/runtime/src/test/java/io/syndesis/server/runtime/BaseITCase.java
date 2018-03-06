@@ -130,7 +130,7 @@ public abstract class BaseITCase {
         public void initialize(final ConfigurableApplicationContext applicationContext) {
             final ConfigurableEnvironment environment = applicationContext.getEnvironment();
             environment.getPropertySources().addFirst(new MapPropertySource("test-source",
-                    Collections.singletonMap("verifier.service", "localhost:" + wireMock.port())));
+                    Collections.singletonMap("meta.service", "localhost:" + wireMock.port())));
         }
     }
 

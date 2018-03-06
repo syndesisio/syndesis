@@ -65,7 +65,7 @@ import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
-import io.syndesis.server.verifier.VerificationConfigurationProperties;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 @Path("/connections")
 @Api(value = "connections")
@@ -85,12 +85,12 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
 
     private final Validator validator;
 
-    private final VerificationConfigurationProperties config;
+    private final MetadataConfigurationProperties config;
     private final EncryptionComponent encryptionComponent;
     private final IntegrationHandler integrationHandler;
 
     public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials,
-                             final ClientSideState state, final VerificationConfigurationProperties config, final EncryptionComponent encryptionComponent,
+                             final ClientSideState state, final MetadataConfigurationProperties config, final EncryptionComponent encryptionComponent,
                              IntegrationHandler integrationHandler) {
         super(dataMgr);
         this.validator = validator;
@@ -183,7 +183,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Path("/{id}/actions")
-    public ConnectionActionHandler credentials(
+    public ConnectionActionHandler metadata(
         @NotNull final @PathParam("id") @ApiParam(required = true, example = "my-connection") String connectionId) {
         final Connection connection = get(connectionId);
 

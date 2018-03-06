@@ -39,14 +39,14 @@ import org.springframework.stereotype.Component;
  * Implementation of a verifier which uses an external service
  */
 @Component
-@ConditionalOnProperty(value = "verifier.kind", havingValue = "service", matchIfMissing = true)
+@ConditionalOnProperty(value = "meta.kind", havingValue = "service", matchIfMissing = true)
 public class ExternalVerifierService implements Verifier {
 
     private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new Jdk8Module());
 
-    private final VerificationConfigurationProperties config;
+    private final MetadataConfigurationProperties config;
 
-    public ExternalVerifierService(VerificationConfigurationProperties config) {
+    public ExternalVerifierService(MetadataConfigurationProperties config) {
         this.config = config;
     }
 

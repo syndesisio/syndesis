@@ -17,16 +17,40 @@ package io.syndesis.server.verifier;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("verifier")
-public class VerificationConfigurationProperties {
+@ConfigurationProperties("meta")
+public class MetadataConfigurationProperties {
 
-    private String service = "ipass-verifier";
+    private static final int DEFAULT_THREAD_COUNT = 3;
+
+    private static final int DEFAULT_TIMEOUT = 1500;
+
+    private String service = "syndesis-meta";
+
+    private int threads = DEFAULT_THREAD_COUNT;
+
+    private int timeout = DEFAULT_TIMEOUT;
 
     public String getService() {
         return service;
     }
 
-    public void setService(String service) {
+    public int getThreads() {
+        return threads;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setService(final String service) {
         this.service = service;
+    }
+
+    public void setThreads(final int threads) {
+        this.threads = threads;
+    }
+
+    public void setTimeout(final int timeout) {
+        this.timeout = timeout;
     }
 }

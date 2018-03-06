@@ -84,7 +84,7 @@ openshift:
 github:
   enabled: true
 
-verifier:
+meta:
   kind: service
   service: syndesis-meta
 
