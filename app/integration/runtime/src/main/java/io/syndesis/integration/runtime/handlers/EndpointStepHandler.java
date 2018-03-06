@@ -45,19 +45,18 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
-
         if (!step.getConnection().isPresent()) {
             return false;
         }
         if (!step.getConnection().get().getConnector().isPresent()) {
             return false;
         }
-        if (!step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
+        if (!step.getActionAs(ConnectorAction.class).isPresent()) {
             return false;
         }
 
         return !Optionals.first(
-            step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get().getDescriptor().getComponentScheme(),
+            step.getActionAs(ConnectorAction.class).get().getDescriptor().getComponentScheme(),
             step.getConnection().get().getConnector().get().getComponentScheme()
         ).isPresent();
     }
@@ -68,7 +67,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
-        final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
+        final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel

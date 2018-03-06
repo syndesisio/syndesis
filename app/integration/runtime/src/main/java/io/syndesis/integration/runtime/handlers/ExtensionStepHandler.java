@@ -39,7 +39,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
             return false;
         }
 
-        return step.getAction().filter(StepAction.class::isInstance).isPresent();
+        return step.getActionAs(StepAction.class).isPresent();
     }
 
     @SuppressWarnings("PMD")
@@ -48,7 +48,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
         ObjectHelper.notNull(route, "route");
 
         // Model
-        final StepAction action = step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).get();
+        final StepAction action = step.getActionAs(StepAction.class).get();
 
         // Camel
         final Map<String, String> properties = step.getConfiguredProperties();
