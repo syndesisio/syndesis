@@ -29,7 +29,7 @@ minishift::usage() {
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
 -o  --open                    Open Syndesis in the browser
--y  --yes                     Asume 'yes' automaticlaly when asking for deleting
+-y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
 EOT
 }
