@@ -103,16 +103,16 @@ public class GenerateMetadataMojo extends AbstractMojo {
     @Parameter(readonly = true, defaultValue = "${project.build.directory}/classes/META-INF/syndesis/syndesis-extension-definition.json")
     private String metadataDestination;
 
-    @Parameter(defaultValue = "${project.groupId}:${project.artifactId}")
+    @Parameter
     private String extensionId;
 
-    @Parameter(defaultValue = "${project.version}")
+    @Parameter
     private String version;
 
-    @Parameter(defaultValue = "${project.name}")
+    @Parameter
     private String name;
 
-    @Parameter(defaultValue = "${project.description}")
+    @Parameter
     private String description;
 
     @Parameter
@@ -370,32 +370,43 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
     }
 
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
     protected void overrideConfigFromMavenPlugin() {
         getLog().info("Looking for configuration to override at Maven Plugin configuration level. ");
 
-        if(StringUtils.isNotEmpty(extensionId)) {
+        Extension fragment = extensionBuilder.build();
+
+        if (StringUtils.isNotEmpty(extensionId)) {
             extensionBuilder.extensionId(extensionId);
+        } else if (StringUtils.isEmpty(fragment.getExtensionId())) {
+            extensionBuilder.extensionId(project.getGroupId() + ":" + project.getArtifactId());
         }
 
-        if(StringUtils.isNotEmpty(version)){
+        if (StringUtils.isNotEmpty(version)){
             extensionBuilder.version(version);
+        } else if (StringUtils.isEmpty(fragment.getVersion())) {
+            extensionBuilder.version(project.getVersion());
         }
 
-        if(StringUtils.isNotEmpty(name)) {
+        if (StringUtils.isNotEmpty(name)) {
             extensionBuilder.name(name);
+        } else if (StringUtils.isEmpty(fragment.getName())) {
+            extensionBuilder.name(project.getName());
         }
 
-        if(StringUtils.isNotEmpty(description)) {
+        if (StringUtils.isNotEmpty(description)) {
             extensionBuilder.description(description);
+        } else if (StringUtils.isEmpty(fragment.getDescription())) {
+            extensionBuilder.description(project.getDescription());
         }
 
-        if(StringUtils.isNotEmpty(icon)) {
+        if (StringUtils.isNotEmpty(icon)) {
             extensionBuilder.icon(icon);
         }
 
-        if(StringUtils.isNotEmpty(tags)){
+        if (StringUtils.isNotEmpty(tags)){
             String[] split = tags.split(",");
-            extensionBuilder.tags(Arrays.asList(split));
+            extensionBuilder.addAllTags(Arrays.asList(split));
         }
     }
 
