@@ -85,14 +85,19 @@ export class StepStore {
       description: "Sends a message to the integration's log",
       configuredProperties: undefined,
       properties: {
-        expression: {
-          type: 'string',
-          displayName: 'Log Message',
+        contextLoggingEnabled: {
+          type: 'boolean',
+          displayName: 'Message Context',
           required: false,
         },
         bodyLoggingEnabled: {
           type: 'boolean',
-          displayName: 'Body Logging Enabled',
+          displayName: 'Message Body',
+          required: false,
+        },
+        customText: {
+          type: 'string',
+          displayName: 'Custom Text',
           required: false,
         },
         /*
@@ -109,30 +114,6 @@ export class StepStore {
             {value: 'TRACE', label: 'TRACE'}],
         },
         */
-        propertyNames: {
-          type: 'textarea',
-          displayName: 'Exchange Property Names',
-          defaultValue: '',
-          value: '',
-          required: false,
-          rows: 10
-        },
-        inHeaderNames: {
-          type: 'textarea',
-          displayName: 'Input Message Header Names',
-          defaultValue: '',
-          value: '',
-          required: false,
-          rows: 10
-        },
-        outHeaderNames: {
-          type: 'textarea',
-          displayName: 'Output Message Header Names',
-          defaultValue: '',
-          value: '',
-          required: false,
-          rows: 10
-        },
       },
     },
     /*

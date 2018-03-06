@@ -90,6 +90,7 @@
         <executions>
           <execution>
             <id>generate-mapper-inspections</id>
+            <phase>genrate-resources</phase>
             <goals>
               <goal>generate-mapper-inspections</goal>
             </goals>
