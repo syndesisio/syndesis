@@ -30,7 +30,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
-import io.syndesis.server.verifier.VerificationConfigurationProperties;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -95,7 +95,7 @@ public class ConnectionActionHandlerTest {
         final Connection connection = new Connection.Builder().connector(connector).putConfiguredProperty("clientId", "some-clientId")
             .build();
 
-        handler = new ConnectionActionHandler(connection, new VerificationConfigurationProperties(), new EncryptionComponent(null)) {
+        handler = new ConnectionActionHandler(connection, new MetadataConfigurationProperties(), new EncryptionComponent(null)) {
             @Override
             protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
                 final Map<String, String> parameters) {

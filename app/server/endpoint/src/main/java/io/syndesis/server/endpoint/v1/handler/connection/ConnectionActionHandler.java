@@ -44,7 +44,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
-import io.syndesis.server.verifier.VerificationConfigurationProperties;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
@@ -53,7 +53,7 @@ import com.netflix.hystrix.HystrixInvokableInfo;
 public class ConnectionActionHandler {
     private final List<ConnectorAction> actions;
 
-    private final VerificationConfigurationProperties config;
+    private final MetadataConfigurationProperties config;
 
     private final Connection connection;
 
@@ -61,7 +61,7 @@ public class ConnectionActionHandler {
 
     private final EncryptionComponent encryptionComponent;
 
-    public ConnectionActionHandler(final Connection connection, final VerificationConfigurationProperties config,
+    public ConnectionActionHandler(final Connection connection, final MetadataConfigurationProperties config,
         final EncryptionComponent encryptionComponent) {
         this.connection = connection;
         this.config = config;
@@ -129,7 +129,7 @@ public class ConnectionActionHandler {
 
     protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
         final Map<String, String> parameters) {
-        return new MetadataCommand(config.getService(), connectorId, action, parameters);
+        return new MetadataCommand(config, connectorId, action, parameters);
     }
 
     private static ConnectorDescriptor applyMetadataTo(final ConnectorDescriptor descriptor, final DynamicActionMetadata dynamicMetadata) {

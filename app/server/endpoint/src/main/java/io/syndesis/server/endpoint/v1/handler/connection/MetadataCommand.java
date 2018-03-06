@@ -31,6 +31,7 @@ import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.util.Json;
 import io.syndesis.server.endpoint.v1.SyndesisRestException;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
@@ -39,25 +40,22 @@ import com.netflix.hystrix.HystrixThreadPoolProperties;
 
 class MetadataCommand extends HystrixCommand<DynamicActionMetadata> {
 
-    private static final int THREAD_COUNT = 3;
-
-    private static final int TIMEOUT = 1500;
-
     private final String metadataUrl;
 
     private final Map<String, String> parameters;
 
-    MetadataCommand(final String service, final String connectorId, final ConnectorAction action, final Map<String, String> parameters) {
+    MetadataCommand(final MetadataConfigurationProperties configuration, final String connectorId, final ConnectorAction action,
+        final Map<String, String> parameters) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("Meta"))//
             .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()//
-                .withCoreSize(THREAD_COUNT))//
+                .withCoreSize(configuration.getThreads()))//
             .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()//
-                .withExecutionTimeoutInMilliseconds(TIMEOUT)));
+                .withExecutionTimeoutInMilliseconds(configuration.getTimeout())));
         this.parameters = parameters;
 
         final String actionId = action.getId().get();
 
-        metadataUrl = String.format("http://%s/api/v1/connectors/%s/actions/%s", service, connectorId, actionId);
+        metadataUrl = String.format("http://%s/api/v1/connectors/%s/actions/%s", configuration.getService(), connectorId, actionId);
     }
 
     @Override
