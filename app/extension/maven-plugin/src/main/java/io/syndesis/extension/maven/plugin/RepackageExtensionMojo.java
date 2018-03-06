@@ -15,6 +15,7 @@
  */
 package io.syndesis.extension.maven.plugin;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +34,10 @@ import io.syndesis.common.util.Json;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.common.model.extension.Extension;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.DefaultModelWriter;
+import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
@@ -39,10 +45,12 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.artifact.filter.collection.ArtifactsFilter;
 import org.apache.maven.shared.utils.StringUtils;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactRequest;
@@ -224,14 +232,43 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     protected Set<MavenDependency> obtainBomDependencies(String urlLocation) throws IOException, MojoExecutionException {
-        ArtifactResult artifact = downloadAndInstallArtifact(urlLocation);
-        File file = artifact.getArtifact().getFile();
+        Artifact artifact = downloadAndInstallArtifact(urlLocation).getArtifact();
 
-        MavenResolverSystem resolver = Maven.resolver();
-        resolver.loadPomFromFile(file).importCompileAndRuntimeDependencies();
-        MavenWorkingSession session =((MavenWorkingSessionContainer)resolver).getMavenWorkingSession();
+        File tempPom = new File(outputDirectory, ".syndesis-extension-plugin-temp-pom");
+        try (BufferedWriter out = Files.newBufferedWriter(tempPom.toPath(), StandardCharsets.UTF_8)) {
 
-        return session.getDependencyManagement();
+            Dependency bom = new Dependency();
+            bom.setGroupId(artifact.getGroupId());
+            bom.setArtifactId(artifact.getArtifactId());
+            bom.setVersion(artifact.getVersion());
+            bom.setType(artifact.getExtension());
+            bom.setScope("import");
+
+            Model bomModel = new Model();
+            bomModel.setDependencyManagement(new DependencyManagement());
+            bomModel.getDependencyManagement().addDependency(bom);
+            bomModel.setRepositories(project.getRepositories());
+            MavenProject bomProject = new MavenProject();
+            bomProject.setModel(bomModel);
+            bomProject.setModelVersion(project.getModelVersion());
+            bomProject.setGroupId(project.getGroupId());
+            bomProject.setArtifactId(project.getArtifactId() + "-temp-bom");
+            bomProject.setVersion(project.getVersion());
+
+
+            ModelWriter modelWriter = new DefaultModelWriter();
+            modelWriter.write(out, Collections.emptyMap(), bomProject.getModel());
+
+            MavenResolverSystem resolver = Maven.resolver();
+            resolver.loadPomFromFile(tempPom).importCompileAndRuntimeDependencies();
+            MavenWorkingSession session =((MavenWorkingSessionContainer)resolver).getMavenWorkingSession();
+
+            return session.getDependencyManagement();
+        } finally {
+            if (!tempPom.delete()) {
+                getLog().warn("Cannot delete file " + tempPom);
+            }
+        }
     }
 
     /*
