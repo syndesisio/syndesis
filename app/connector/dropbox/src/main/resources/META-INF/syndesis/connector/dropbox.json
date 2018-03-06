@@ -21,9 +21,6 @@
             "required": true,
             "type": "string",
             "javaType": "java.lang.String",
-            "tags": [
-                "oauth-access-token"
-            ],
             "deprecated": false,
             "secret": true,
             "componentProperty": true,
@@ -36,9 +33,6 @@
             "required": true,
             "type": "string",
             "javaType": "java.lang.String",
-            "tags": [
-                "oauth-client-id"
-            ],
             "deprecated": false,
             "secret": false,
             "componentProperty": true,
@@ -47,8 +41,8 @@
     },
     "actions": [
         {
-            "name": "upload",
-            "description": "Upload a file to dropbox.com",
+            "name": "Upload",
+            "description": "Upload a file to Dropbox",
             "id": "io.syndesis:dropbox-upload-connector",
             "pattern": "To",
             "actionType": "connector",
@@ -65,8 +59,8 @@
                 },
                 "propertyDefinitionSteps": [
                     {
-                        "name": "Upload to Drobbox",
-                        "description": "Upload to Drobbox",
+                        "name": "Upload a file to Dropbox",
+                        "description": "Upload a file to Dropbox",
                         "properties": {
                             "uploadMode": {
                                 "kind": "parameter",
@@ -87,10 +81,10 @@
                                 ],
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "Upload mode"
+                                "description": "File upload mode"
                             },
                             "remotePath": {
-                                "kind": "Remote path",
+                                "kind": "parameter",
                                 "displayName": "Remote path",
                                 "group": "producer",
                                 "required": false,
@@ -98,7 +92,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "Remote path"
+                                "description": "Remote path where upload the file"
                             }
                         }
                     }
@@ -106,7 +100,7 @@
             }
         },
         {
-            "name": "download",
+            "name": "Download",
             "description": "Download from Dropbox",
             "id": "io.syndesis:dropbox-download-connector",
             "pattern": "From",
@@ -118,22 +112,25 @@
                 },
                 "outputDataShape": {
                     "kind": "any"
-                },"configuredProperties":{"operation":"get"},
+                },
+                "configuredProperties": {
+                    "operation":"get"
+                },
                 "propertyDefinitionSteps": [
                     {
-                        "name": "Download  from Dropbox",
-                        "description": "Download  from Dropbox",
+                        "name": "Download from Dropbox",
+                        "description": "Download from Dropbox",
                         "properties": {
                             "remotePath": {
                                 "kind": "parameter",
-                                "displayName": "Folder of file name to download",
+                                "displayName": "Folder or file name path to download",
                                 "group": "consumer",
                                 "required": true,
                                 "type": "string",
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "Folder of file name to download"
+                                "description": "Folder or file name path to download"
                             }
                         }
                     }
