@@ -18,7 +18,7 @@ install::usage() {
     --local                   install from local Git repo when using. By default the resource descriptor is
                               downloaded from GitHub remotely.
 -o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
--y  --yes                     Asume 'yes' automaticlaly when asking for deleting
+-y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
 EOT
 }
