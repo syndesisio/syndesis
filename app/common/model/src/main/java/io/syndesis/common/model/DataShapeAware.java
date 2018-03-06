@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.salesforce;
+package io.syndesis.common.model;
 
-public final class SalesforceConstants {
-    public static final String CONNECTOR_ID = "salesforce";
-    public static final String CONNECTOR_ACTION_ID = "_connectorActionId";
-
-    private SalesforceConstants() {
-    }
+public interface DataShapeAware extends InputDataShapeAware, OutputDataShapeAware {
 }

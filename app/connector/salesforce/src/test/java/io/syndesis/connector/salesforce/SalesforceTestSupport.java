@@ -15,10 +15,15 @@
  */
 package io.syndesis.connector.salesforce;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.function.Consumer;
 
+import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.Json;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.camel.CamelContext;
 
@@ -34,5 +39,35 @@ public abstract class SalesforceTestSupport extends ConnectorTestSupport {
 
     protected final Step newSalesforceEndpointStep(String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) {
         return newEndpointStep("salesforce", "io.syndesis.connector:connector-salesforce:" + actionId, connectionConsumer, stepConsumer);
+    }
+
+
+
+    public static Connector mandatoryLookupConnector() {
+        Connector connector;
+
+        try (InputStream is = SalesforceTestSupport.class.getResourceAsStream("/META-INF/syndesis/connector/salesforce.json")) {
+            connector = Json.reader().forType(Connector.class).readValue(is);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
+        if (connector == null) {
+            throw new IllegalStateException("Unable to lod salesforce connector");
+        }
+
+        return connector;
+    }
+
+    public static final ConnectorAction mandatoryLookupAction(Connector connector, String actionId) {
+        final String fullActionId = "io.syndesis.connector:connector-salesforce:" + actionId;
+
+        for (ConnectorAction action : connector.getActions()) {
+            if (action.getId().isPresent() && action.getId().get().equals(fullActionId)) {
+                return action;
+            }
+        }
+
+        throw new IllegalArgumentException("Unable to find action: " + actionId);
     }
 }

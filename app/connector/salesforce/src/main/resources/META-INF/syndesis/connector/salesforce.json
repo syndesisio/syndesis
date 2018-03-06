@@ -127,8 +127,7 @@
         },
         "configuredProperties": {
           "operationName": "createSObject",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-create-sobject"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {
@@ -176,8 +175,7 @@
         },
         "configuredProperties": {
           "operationName": "deleteSObject",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {
@@ -227,8 +225,7 @@
         "configuredProperties": {
           "operationName": "deleteSObjectWithId",
           "sObjectIdName": "Id",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-delete-sobject-with-id"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {
@@ -297,8 +294,7 @@
         },
         "configuredProperties": {
           "operationName": "getSObject",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-get-sobject"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {
@@ -348,8 +344,7 @@
         "configuredProperties": {
           "operationName": "getSObjectWithId",
           "sObjectIdName": "Id",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-get-sobject-with-id"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {
@@ -417,8 +412,7 @@
         },
         "configuredProperties": {
           "operationName": "updateSObject",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-update-sobject"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {
@@ -468,8 +462,7 @@
         "configuredProperties": {
           "operationName": "upsertSObject",
           "sObjectIdName": "Id",
-          "rawPayload": "true",
-          "_connectorActionId": "@project.groupId@:@project.artifactId@:salesforce-upsert-sobject"
+          "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
           {

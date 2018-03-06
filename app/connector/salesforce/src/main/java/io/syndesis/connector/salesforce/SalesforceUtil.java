@@ -15,48 +15,15 @@
  */
 package io.syndesis.connector.salesforce;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.util.Json;
-import org.apache.camel.CamelContext;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
-import org.apache.camel.util.ResourceHelper;
 
 public final class SalesforceUtil {
     private final static String TOPIC_PREFIX = "syndesis_";
     private final static int TOPIC_NAME_MAX_LENGTH = 25;
 
     private SalesforceUtil() {
-    }
-
-    public static Connector mandatoryLookupConnector(CamelContext context, String id) {
-        Connector connector;
-
-        try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(context, "META-INF/syndesis/connector/" + id + ".json")) {
-            connector = Json.reader().forType(Connector.class).readValue(is);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        if (connector == null) {
-            throw new IllegalStateException("Unable to lod connector for: " + id);
-        }
-
-        return connector;
-    }
-
-    public static final ConnectorAction mandatoryLookupAction(CamelContext context, Connector connector, String actionId) {
-        for (ConnectorAction action : connector.getActions()) {
-            if (action.getId().isPresent() && action.getId().get().equals(actionId)) {
-                return action;
-            }
-        }
-
-        throw new IllegalArgumentException("Unable to find action: " + actionId);
     }
 
     public static String topicNameFor(final Map<String, String> options) {

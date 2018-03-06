@@ -19,12 +19,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.Json;
-import io.syndesis.connector.salesforce.SalesforceConstants;
-import io.syndesis.connector.salesforce.SalesforceUtil;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
@@ -35,8 +32,10 @@ import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
 import org.springframework.cglib.core.internal.Function;
 
-public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelContextAware {
+public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
     private CamelContext camelContext;
+    private DataShape inputDataShape;
+    private DataShape outputDataShape;
 
     @Override
     public CamelContext getCamelContext() {
@@ -49,24 +48,38 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
     }
 
     @Override
+    public DataShape getInputDataShape() {
+        return inputDataShape;
+    }
+
+    @Override
+    public void setInputDataShape(DataShape inputDataShape) {
+        this.inputDataShape = inputDataShape;
+    }
+
+    @Override
+    public DataShape getOutputDataShape() {
+        return outputDataShape;
+    }
+
+    @Override
+    public void setOutputDataShape(DataShape outputDataShape) {
+        this.outputDataShape = outputDataShape;
+    }
+
+    @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        try {
-            consumeOption(camelContext, options, SalesforceConstants.CONNECTOR_ACTION_ID, String.class, actionId -> {
-                final Connector connector = SalesforceUtil.mandatoryLookupConnector(this.camelContext, SalesforceConstants.CONNECTOR_ID);
-                final ConnectorAction action = SalesforceUtil.mandatoryLookupAction(this.camelContext, connector, actionId);
+        if (inputDataShape != null) {
+            Processor processor = new UnmarshallProcessor(inputDataShape, Exchange::getIn);
+            Processor pipeline = Pipeline.newInstance(this.camelContext, processor, component.getBeforeProducer());
 
-                action.getInputDataShape()
-                    .map(dataShape -> new UnmarshallProcessor(dataShape, Exchange::getIn))
-                    .map(processor -> Pipeline.newInstance(this.camelContext, processor, component.getBeforeProducer()))
-                    .ifPresent(component::setBeforeProducer);
+            component.setBeforeProducer(pipeline);
+        }
+        if (outputDataShape != null) {
+            Processor processor = new UnmarshallProcessor(outputDataShape, Exchange::getOut);
+            Processor pipeline = Pipeline.newInstance(this.camelContext, processor, component.getAfterProducer());
 
-                action.getOutputDataShape()
-                    .map(dataShape -> new UnmarshallProcessor(dataShape, Exchange::getOut))
-                    .map(processor -> Pipeline.newInstance(this.camelContext, processor, component.getAfterProducer()))
-                    .ifPresent(component::setAfterProducer);
-            });
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            throw new IllegalStateException(e);
+            component.setAfterProducer(pipeline);
         }
     }
 

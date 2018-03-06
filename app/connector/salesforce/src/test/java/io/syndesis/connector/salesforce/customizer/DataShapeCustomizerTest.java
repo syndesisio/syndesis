@@ -16,12 +16,11 @@
 package io.syndesis.connector.salesforce.customizer;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.connector.salesforce.SalesforceConstants;
 import io.syndesis.connector.salesforce.SalesforceIdentifier;
 import io.syndesis.connector.salesforce.SalesforceTestSupport;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
@@ -49,16 +48,18 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     // ********************
 
     protected ComponentProxyComponent setUpComponent(String actionId) {
+        Connector connector = mandatoryLookupConnector();
+        ConnectorAction action = mandatoryLookupAction(connector, actionId);
+
         ComponentProxyComponent component = new ComponentProxyComponent("salesforce-1", "salesforce");
         component.setBeforeProducer(BEFORE_PROCESSOR);
         component.setAfterProducer(AFTER_PROCESSOR);
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(SalesforceConstants.CONNECTOR_ACTION_ID, "io.syndesis.connector:connector-salesforce:" + actionId);
-
         DataShapeCustomizer customizer = new DataShapeCustomizer();
         customizer.setCamelContext(context());
-        customizer.customize(component, properties);
+        action.getDescriptor().getInputDataShape().ifPresent(customizer::setInputDataShape);
+        action.getDescriptor().getOutputDataShape().ifPresent(customizer::setOutputDataShape);
+        customizer.customize(component, Collections.emptyMap());
 
         return component;
     }
