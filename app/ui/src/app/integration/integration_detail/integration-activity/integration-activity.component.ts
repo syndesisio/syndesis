@@ -52,7 +52,7 @@ export class IntegrationActivityComponent implements OnInit {
     this.showPagination = (activities.length > this.paginationConfig.pageSize);
     this.allActivities = activities.sort((activity1, activity2) => {
       return activity1.at < activity1.at ? -1 : activity1.at > activity1.at ? 1 : 0;
-    })
+    });
 
     this.paginationConfig.totalItems = activities.length;
     this.paginationConfig.pageNumber = 1;
