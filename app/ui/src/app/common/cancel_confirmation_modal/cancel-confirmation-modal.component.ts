@@ -21,19 +21,21 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   </div>
   <div class="modal-footer">
     <button type="button"
-            class="btn btn-danger"
-            (click)="onModalClick(true)">
-      Cancel
-    </button>
-    <button type="button"
             class="btn btn-default"
             (click)="onModalClick(false)">
-      Continue
+      {{ secondaryLabel }}
+    </button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="onModalClick(true)">
+      {{ primaryLabel }}
     </button>
   </div>
   `
 })
 export class CancelConfirmationModalComponent {
+  @Input() primaryLabel = 'Cancel';
+  @Input() secondaryLabel = 'Continue';
   @Output() cancel = new EventEmitter<boolean>();
 
   onModalClick(doCancel: boolean): void {
