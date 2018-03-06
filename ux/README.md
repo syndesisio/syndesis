@@ -23,6 +23,7 @@ Access UX design resource and documentation for Syndesis.
 * ### [Integration  Activity](designs/integrationactivity/integrationactivity.md)
 * ### [Describe Data](designs/describe-data/describe-data.md)
 * ### [Data Buckets](designs/data-buckets/data-buckets.md)
+* ### [Log Step](designs/logstep/logstep.md)
 
 
 ## Create a Connection
