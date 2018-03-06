@@ -46,7 +46,7 @@ public class SalesforceStreamingConnectorFactory implements ComponentProxyFactor
             options.put(SalesforceEndpointConfig.SOBJECT_QUERY, query);
             options.remove(SalesforceEndpointConfig.SOBJECT_NAME);
 
-            if (!topicName.endsWith("_delete")) {
+            if (!topicName.endsWith("_d")) {
                 setBeforeConsumer(
                     new Enricher(
                         new ConstantExpression(scheme + ":getSObject?rawPayload=true&sObjectName=" + sObjectName)
