@@ -10,8 +10,7 @@
         }
     ],
     "componentScheme": "slack",
-    "configuredProperties": {
-        
+    "configuredProperties": {   
     },
     "tags": [
         ""
@@ -70,7 +69,9 @@
             "pattern": "To",
             "actionType": "connector",
             "descriptor": {
-                "componentScheme":"slack",
+                "connectorCustomizers": [
+                    "io.syndesis.connector.slack.SlackChannelCustomizer"
+                ],
                 "inputDataShape": {
                     "kind": "java",
                     "type": "java.lang.String"
@@ -98,8 +99,7 @@
                             }
                         }
                     }
-                ],
-                "connectorFactory":"io.syndesis.connector.slack.SlackConnectorFactory"
+                ]
             }
         },
         {
@@ -109,7 +109,9 @@
             "pattern": "To",
             "actionType": "connector",
             "descriptor": {
-                "componentScheme":"slack",
+                "connectorCustomizers": [
+                    "io.syndesis.connector.slack.SlackChannelCustomizer"
+                ],
                 "inputDataShape": {
                     "kind": "java",
                     "type": "java.lang.String"
@@ -137,8 +139,7 @@
                             }
                         }
                     }
-                ],
-                "connectorFactory":"io.syndesis.connector.slack.SlackConnectorFactory"
+                ]
             }
         }
     ]
