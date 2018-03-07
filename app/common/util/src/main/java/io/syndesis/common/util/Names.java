@@ -19,11 +19,15 @@ import java.util.Locale;
 
 public final class Names {
 
-    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
+    private static final String VALID_REGEX = "[-A-Za-z0-9\\.]+";
+    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-\\.]";
     private static final String SPACE = " ";
     private static final String BLANK = "";
     private static final String DASH = "-";
-    private static final int MAXIMUM_NAME_LENGTH = 100;
+    //The actual limit is 253,
+    // but individual resources have other limitations
+    // (e.g. service has 63: RFC 1035)
+    private static final int MAXIMUM_NAME_LENGTH = 63;
 
     private Names() {
         //Utility
@@ -46,6 +50,7 @@ public final class Names {
             .toLowerCase(Locale.US)
             .chars()
             .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
+             //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
                     int lastChar = b.length() > 0 ? b.charAt(b.length() - 1) : -1;
@@ -55,5 +60,16 @@ public final class Names {
                     }
              }, StringBuilder::append)
             .toString();
+    }
+
+
+    public static boolean isValid(String name) {
+        return name.matches(VALID_REGEX) && name.length() <= MAXIMUM_NAME_LENGTH;
+    }
+
+    public static void validate(String name) {
+        if (!isValid(name)) {
+            throw new IllegalArgumentException("Invalid name: [" + name + "].");
+        }
     }
 }

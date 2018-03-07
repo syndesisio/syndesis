@@ -252,11 +252,11 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
      */
     private int countDeployments(IntegrationDeployment deployment) {
         Integration integration = deployment.getSpec();
-        String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
+        String id = Labels.validate(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
         String username = deployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
+        labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username)); //Names have more loose rules than labels, so we need to sanitize.
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()
@@ -272,7 +272,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
      */
     private boolean hasPublishedDeployments(IntegrationDeployment deployment) {
         Integration integration = deployment.getSpec();
-        String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
+        String id = Labels.validate(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
         String version = String.valueOf(integration.getVersion());
 
         Map<String, String> labels = new HashMap<>();
@@ -280,7 +280,6 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()
-            .filter(d -> !id.equals(d.getMetadata().getLabels().get(OpenShiftService.INTEGRATION_ID_LABEL)))
             .filter(d -> !version.equals(d.getMetadata().getLabels().get(OpenShiftService.DEPLOYMENT_VERSION_LABEL)))
             .filter(d -> d.getSpec().getReplicas() > 0)
             .count() > 0;
