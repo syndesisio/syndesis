@@ -79,6 +79,7 @@
     <module>sftp</module>
     <module>mqtt</module>
     <module>dropbox</module>
+    <module>slack</module>
   </modules>
 
   <dependencyManagement>
