@@ -243,6 +243,9 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/codesize.xml/ModifiedCyclomaticComplexity">
+    <properties>
+      <property name="reportLevel" value="20" />
+    </properties>
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/design.xml/AbstractClassWithoutAnyMethod">
@@ -570,6 +573,9 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/codesize.xml/StdCyclomaticComplexity">
+    <properties>
+      <property name="reportLevel" value="20" />
+    </properties>
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/codesize.xml/ExcessiveParameterList">

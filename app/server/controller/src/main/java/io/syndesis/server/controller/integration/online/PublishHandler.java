@@ -131,13 +131,17 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
 
         String username = integrationDeployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
+        String integrationId = integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"));
+        String version = Integer.toString(integrationDeployment.getVersion());
         return DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
-            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"))))
-            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL,  Integer.toString(integrationDeployment.getVersion()))
-            .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, Integer.toString(integrationDeployment.getVersion()))
+            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationId))
+            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL, version)
+            .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
+            .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationId)
+            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
