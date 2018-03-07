@@ -262,7 +262,6 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "defaultValue": "",
                 "description": "Field name of the external identifier"
               }
             }
@@ -381,7 +380,6 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "defaultValue": "",
                 "description": "Field name of the external identifier"
               }
             }
@@ -499,7 +497,6 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "defaultValue": "",
                 "description": "Field name of the identifier"
               }
             }
