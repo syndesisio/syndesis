@@ -98,7 +98,7 @@ var syndesisContext = Context{
 	Tags: tags{
 		Postgresql: "9.5",
 		OAuthProxy: "v1.1.0",
-		Prometheus: "v2.0.0",
+		Prometheus: "v2.1.0",
 	},
 }
 
@@ -124,7 +124,7 @@ var productContext = Context{
 	Tags: tags{
 		Postgresql: "9.5",
 		OAuthProxy: "v1.1.0",
-		Prometheus: "v2.0.0",
+		Prometheus: "v2.1.0",
 	},
 	Registry: "registry.fuse-ignite.openshift.com",
 }
