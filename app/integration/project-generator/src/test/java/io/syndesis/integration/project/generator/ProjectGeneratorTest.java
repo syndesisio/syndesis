@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Properties;
 
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -185,9 +186,6 @@ public class ProjectGeneratorTest {
         );
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        configuration.getMavenProperties().addRepository("maven.central", "https://repo1.maven.org/maven2");
-        configuration.getMavenProperties().addRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
-        configuration.getMavenProperties().addRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
         configuration.getTemplates().setOverridePath(this.basePath);
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
@@ -207,6 +205,7 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
         assertThat(runtimeDir.resolve("src/main/resources/mapping-step-2.json")).exists();
     }
+
 
     @Test
     public void testGenerateApplicationProperties() throws IOException {
@@ -302,7 +301,7 @@ public class ProjectGeneratorTest {
 
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager);
+        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, getMavenProperties());
         Integration integration = resourceManager.newIntegration(s1, s2);
         Properties properties = generator.generateApplicationProperties(integration);
 
@@ -319,7 +318,7 @@ public class ProjectGeneratorTest {
     // *****************************
 
     private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
-        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager);
+        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager, getMavenProperties());
 
         try (InputStream is = generator.generate(integration)) {
             Path ret = testFolder.newFolder("integration-project").toPath();
@@ -373,5 +372,13 @@ public class ProjectGeneratorTest {
         final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    protected MavenProperties getMavenProperties() {
+        MavenProperties mavenProperties = new MavenProperties();
+        mavenProperties.addRepository("maven.central", "https://repo1.maven.org/maven2");
+        mavenProperties.addRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
+        mavenProperties.addRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
+        return mavenProperties;
     }
 }

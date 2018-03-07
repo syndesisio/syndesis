@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.MavenProperties;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -61,6 +63,7 @@ import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 
+@EnableConfigurationProperties(MavenProperties.class)
 @SpringBootApplication(
     exclude = {
         DaoConfiguration.class,
@@ -71,6 +74,8 @@ import io.syndesis.common.model.integration.Step;
 public class Application implements ApplicationRunner {
     @Autowired
     private ResourceLoader resourceLoader;
+    @Autowired
+    private MavenProperties mavenProperties;
 
     @Value("${to:image}")
     private String to;
@@ -178,9 +183,9 @@ public class Application implements ApplicationRunner {
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private static void generate(Integration integration, File targetDir) throws IOException {
+    private void generate(Integration integration, File targetDir) throws IOException {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager());
+        IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager(), mavenProperties);
 
         Path dir =targetDir.toPath();
         Files.createDirectories(dir);
