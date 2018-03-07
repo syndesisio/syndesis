@@ -15,24 +15,12 @@
  */
 package io.syndesis.server.logging.jsondb.service;
 
-import static io.syndesis.server.logging.jsondb.service.JsonNodeSupport.fieldNames;
-import static io.syndesis.server.logging.jsondb.service.JsonNodeSupport.getLong;
-import static io.syndesis.server.logging.jsondb.service.JsonNodeSupport.getString;
-import static io.syndesis.server.logging.jsondb.service.JsonNodeSupport.removeBoolean;
-import static io.syndesis.server.logging.jsondb.service.JsonNodeSupport.removeLong;
-import static io.syndesis.server.logging.jsondb.service.JsonNodeSupport.removeString;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +28,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.syndesis.common.util.Json;
-import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.server.endpoint.v1.handler.activity.Activity;
+import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.logging.jsondb.controller.ActivityTrackingController;
-import io.syndesis.server.endpoint.v1.handler.activity.Activity;
-import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
-import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
 
 /**
  * Implements a dblogging service for the Activity JAXRS service.
@@ -59,8 +44,6 @@ import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
 public class DBActivityTrackingService implements ActivityTrackingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
-    private static final Set<String> EVENT_FIELDS_SKIP_LIST = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("id", "at", "logts")));
-
     private final JsonDB jsondb;
 
     public DBActivityTrackingService(final JsonDB jsondb) {
@@ -89,100 +72,15 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             return new ArrayList<>();
         }
 
-        return toActivityList(Json.reader().readTree(new ByteArrayInputStream(data)));
-    }
-
-    private List<Activity> toActivityList(JsonNode from) {
-        return toList(from, j-> {
-
-            Activity rc = new Activity();
-
-            rc.setId(removeString(j, "id"));
-            rc.setAt(removeLong(j, "at"));
-            rc.setFailed(removeBoolean(j, "failed"));
-            rc.setPod(removeString(j, "pod"));
-            rc.setStatus(removeString(j, "status"));
-            rc.setVer(removeString(j, "ver"));
-            rc.setLogts(removeString(j, "logts"));
-
-            List<ActivityStep> steps = toActivitySteps(j);
-
-            if( steps!=null ) {
-                Collections.reverse(steps);
-                rc.setSteps(steps);
-            }
-
-            if( j.size() > 0 ) {
-                rc.setMetadata(j);
-            }
-            return rc;
-        });
-    }
-
-    private List<ActivityStep> toActivitySteps(ObjectNode j) {
-        ObjectNode fromSteps = (ObjectNode) j.remove("steps");
-        return toList(fromSteps, fromStepEvents -> {
-
-            ActivityStep toStep = new ActivityStep();
-            toStep.setId(removeString(fromStepEvents, "id"));
-            fromStepEvents.remove("at");
-
-            toStep.setEvents(toList(fromStepEvents, fromStepEvent -> {
-
-                Long at = getLong(fromStepEvent, "at");
-                if (at != null && toStep.getAt() == null) {
-                    toStep.setAt(at);
-                }
-                Long duration = removeLong(fromStepEvent, "duration");
-                if (duration != null) {
-                    toStep.setDuration(duration);
-                }
-                String failure = removeString(fromStepEvent, "failure");
-                if (failure != null) {
-                    toStep.setFailure(failure);
-                }
-
-                String message = getString(fromStepEvent, "message");
-                if (message != null) {
-                    toStep.addMessage(message);
-                }
-
-                // Should we skip adding this event?
-                if (EVENT_FIELDS_SKIP_LIST.equals(fieldNames(fromStepEvent))) {
-                    return null;
-                }
-                return fromStepEvent;
-
-            }));
-
-            if( toStep.getMessages()!=null ) {
-                Collections.reverse(toStep.getMessages());
-            }
-            return toStep;
-        });
-    }
-
-    private static <T> List<T> toList(JsonNode map, Function<ObjectNode, T> converter) {
-        if ( map == null ) {
-            return null;
-        }
-        List<T> rc = new ArrayList<>();
+        JsonNode map = Json.reader().readTree(new ByteArrayInputStream(data));
+        List<Activity> rc = new ArrayList<>();
 
         Iterator<Map.Entry<String, JsonNode>> i = map.fields();
         while (i.hasNext()) {
             Map.Entry<String, JsonNode> entry = i.next();
             try {
-                ObjectNode to = (ObjectNode) entry.getValue();
-                to.put("id", entry.getKey());
-                try {
-                    to.put("at", KeyGenerator.getKeyTimeMillis(entry.getKey()));
-                } catch (IOException ignored) {
-                    // looks like bad id format, skip over it.
-                }
-                T apply = converter.apply(to);
-                if( apply !=null ) {
-                    rc.add(apply);
-                }
+                String value = entry.getValue().textValue();
+                rc.add(Json.reader().forType(Activity.class).readValue(value));
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException ignored) {
                 // We could get stuff like class cast exceptions..
                 LOG.debug("Could convert entry: {}", entry, ignored);

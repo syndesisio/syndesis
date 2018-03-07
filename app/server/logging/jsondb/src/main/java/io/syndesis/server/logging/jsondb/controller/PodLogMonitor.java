@@ -15,27 +15,33 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import io.fabric8.kubernetes.api.model.Pod;
-import io.syndesis.common.util.Json;
-import io.syndesis.server.jsondb.JsonDBException;
-import io.syndesis.server.openshift.OpenShiftService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
+import static java.lang.String.format;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
-import static java.lang.String.format;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import io.fabric8.kubernetes.api.model.Pod;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.server.endpoint.v1.handler.activity.Activity;
+import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
+import io.syndesis.server.jsondb.JsonDBException;
+import io.syndesis.server.openshift.OpenShiftService;
 
 /**
  *
@@ -51,6 +57,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     protected final String integrationId;
     protected final String deploymentVersion;
     protected PodLogState state;
+    protected HashMap<String, InflightData> inflightActivities = new HashMap<>();
 
     public PodLogMonitor(ActivityTrackingController logsController, Pod pod) throws IOException {
         this.logsController = logsController;
@@ -59,13 +66,13 @@ class PodLogMonitor implements Consumer<InputStream> {
             throw new IOException("Could not determine the pod name");
         }
 
-        Map<String, String> labels = pod.getMetadata().getLabels();
-        this.integrationId = labels.get(OpenShiftService.INTEGRATION_ID_LABEL);
+        Map<String, String> annotations = pod.getMetadata().getAnnotations();
+        this.integrationId = annotations.get(OpenShiftService.INTEGRATION_ID_ANNOTATION);
         if (this.integrationId == null) {
             throw new IOException("Could not determine the integration id that is being run on the pod: " + this.podName);
         }
 
-        this.deploymentVersion = labels.get(OpenShiftService.DEPLOYMENT_VERSION_LABEL);
+        this.deploymentVersion = annotations.get(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION);
         if (this.deploymentVersion == null) {
             throw new IOException("Could not determine the deployment version that is being run on the pod: " + this.podName);
         }
@@ -152,6 +159,37 @@ class PodLogMonitor implements Consumer<InputStream> {
         }
     }
 
+    private static class InflightData {
+        Activity activity = new Activity();
+        Map<String, ActivityStep> steps = new HashMap<>();
+        Map<String, Object> metadata = new HashMap<>();
+
+        public ActivityStep getStep(String step, String id) throws IOException {
+            ActivityStep rc = steps.get(step);
+            if( rc == null ) {
+                rc = new ActivityStep();
+                rc.setId(id);
+                rc.setAt(KeyGenerator.getKeyTimeMillis(id));
+                steps.put(step, rc);
+            }
+            return rc;
+        }
+    }
+
+    InflightData getInflightData(String exchangeId, String logts) throws IOException {
+        InflightData data = inflightActivities.get(exchangeId);
+        if( data==null ) {
+            data = new InflightData();
+            data.activity.setPod(podName);
+            data.activity.setVer(deploymentVersion);
+            data.activity.setId(exchangeId);
+            data.activity.setAt(KeyGenerator.getKeyTimeMillis(exchangeId));
+            data.activity.setLogts(logts);
+            inflightActivities.put(exchangeId, data);
+        }
+        return data;
+    }
+
     @SuppressWarnings("PMD.CyclomaticComplexity")
     private void processLine(byte[] line) throws IOException {
         // Could it be a data of json structured output?
@@ -168,58 +206,80 @@ class PodLogMonitor implements Consumer<InputStream> {
 
         String time = new String(line, 0, 30, StandardCharsets.US_ASCII);
         try {
+
+
             @SuppressWarnings("unchecked")
             Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(line, 31, line.length - 31); //NOPMD
 
             // are the required fields set?
-            String exchange = validate((String) json.get("exchange"));
-            String id = validate((String) json.get("id"));
-            String step = validate((String) json.get("step"));
-            String status = validate((String) json.get("status"));
+            String id = validate((String) json.remove("id"));
+            String exchange = validate((String) json.remove("exchange"));
 
-            if (id != null && exchange != null && step != null) {
+            InflightData inflightData = getInflightData(exchange, time);
+            String step = (String) json.remove("step");
+            if( step == null ) {
+                // Looks like an exchange level logging event.
 
-                // Looks like a step level logging event.
-                String stepPath = format("/exchanges/%s/%s/steps/%s/%s", integrationId, exchange, step, id);
-                json.put("logts", time);
-
-                // Drop bits encoded into the key, to reduce size of entry...
-                json.remove("exchange");
-                json.remove("id");
-                json.remove("step");
-
-                logsController.eventQueue.put(batch -> {
-                    // Do as little as possible in here, single thread processes the event queue.
-                    batch.put(stepPath, json);
-                    trackState(time, batch);
-                });
-
-            } else if (exchange != null && status != null) {
-
-                // Looks like a exchange level logging event.
-
-                String transactionPath = format("/exchanges/%s/%s", integrationId, exchange);
-                json.put("pod", podName);
-                json.put("ver", deploymentVersion);
-                if ("begin".equals(status)) {
-                    json.put("logts", time);
+                Boolean failed = (Boolean) json.remove("failed");
+                if( failed != null ) {
+                    inflightData.activity.setFailed(failed);
                 }
 
-                // Drop bits encoded into the key, to reduce size of entry...
-                json.remove("exchange");
 
-                // Protect this field.. use by step level logging events.
-                json.remove("steps");
+                String status = (String) json.remove("status");
 
-                logsController.eventQueue.put(batch -> {
-                    // Do as little as possible in here, single thread processes the event queue.
+                inflightData.metadata.putAll(json);
 
-                    for (Map.Entry<String, Object> entry : json.entrySet()) {
-                        batch.put(transactionPath + "/" + entry.getKey(), entry.getValue());
+                if( status != null ) {
+                    inflightData.activity.setStatus(status);
+
+                    if( "done".equals(status) ) {
+                        inflightData.activity.setSteps(new ArrayList<>(inflightData.steps.values()));
+                        if( !inflightData.metadata.isEmpty() ) {
+                            inflightData.activity.setMetadata(toJsonNode(inflightData.metadata));
+                        }
+
+                        String activityAsString = Json.writer().writeValueAsString(inflightData.activity);
+                        String transactionPath = format("/exchanges/%s/%s", integrationId, exchange);
+                        inflightActivities.remove(exchange);
+
+                        logsController.eventQueue.put(batch -> {
+                            // Do as little as possible in here, single thread processes the event queue.
+                            batch.put(transactionPath, activityAsString);
+                            trackState(time, batch);
+                        });
+
                     }
-                    trackState(time, batch);
-                });
+                }
 
+            } else {
+
+                // Looks like a step level logging event.
+                ActivityStep as = inflightData.getStep(step, id);
+                String message = (String) json.remove("message");
+                if( message!=null ) {
+                    if( as.getMessages() == null ) {
+                        as.setMessages(new ArrayList<>());
+                    }
+                    as.getMessages().add(message);
+                }
+
+                String failure = (String) json.remove("failure");
+                if( failure !=null ) {
+                    as.setFailure(failure);
+                }
+
+                Number duration = (Number) json.remove("duration");
+                if( duration!=null ) {
+                    as.setDuration(duration.longValue());
+                }
+
+                if( !json.isEmpty() ) {
+                    if( as.getEvents() == null)  {
+                        as.setEvents(new ArrayList<>());
+                    }
+                    as.getEvents().add(toJsonNode(json));
+                }
             }
 
         } catch (JsonDBException | ClassCastException | IOException ignored) {
@@ -229,6 +289,10 @@ class PodLogMonitor implements Consumer<InputStream> {
             rethrow.initCause(e);
             throw rethrow;
         }
+    }
+
+    private JsonNode toJsonNode(Map<String, Object> json) throws IOException {
+        return Json.reader().readTree(Json.writer().writeValueAsString(json));
     }
 
     private void trackState(String time, Map<String, Object> batch) {
