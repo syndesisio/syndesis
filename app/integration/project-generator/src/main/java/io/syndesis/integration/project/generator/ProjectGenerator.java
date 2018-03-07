@@ -214,6 +214,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         );
     }
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, String propertyKey, String propertyVal) {
         String key = String.format("%s-%s.%s", propKeyPrefix, index, propertyKey);
         String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);
