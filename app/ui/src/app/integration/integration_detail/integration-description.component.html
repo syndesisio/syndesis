@@ -1,6 +1,6 @@
 <section class="integration-description">
   <p *ngIf="integration.steps">
-    <ng-template ngFor let-step [ngForOf]="integration.steps" let-index="index">
+    <ng-template ngFor let-step [ngForOf]="integration.steps" let-index="index" let-last="last">
       <div *ngIf="step" class="step-block inline-block text-center">
         <ng-container [ngSwitch]="step.stepKind">
           <ng-container *ngSwitchCase="'endpoint'">
@@ -22,6 +22,7 @@
             </div>
           </ng-container>
         </ng-container>
+        <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
       </div>
     </ng-template>
   </p>
