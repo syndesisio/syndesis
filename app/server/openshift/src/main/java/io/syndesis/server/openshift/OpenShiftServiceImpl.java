@@ -54,7 +54,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public String build(String name, DeploymentData deploymentData, InputStream tarInputStream) throws InterruptedException {
-        final String sName = Names.sanitize(name);
+        final String sName = openshiftName(name);
         ensureImageStreams(sName);
         ensureBuildConfig(sName, deploymentData, this.config.getBuilderImageStreamTag(), this.config.getImageStreamNamespace());
         Build build = openShiftClient.buildConfigs().withName(sName)
