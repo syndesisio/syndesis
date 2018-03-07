@@ -1,0 +1,70 @@
+#!/bin/bash
+
+process_template::label() {
+  echo "Process new template to extract update resources"
+}
+
+process_template::doc() {
+  cat <<EOT
+In this step, the OpenShift template of the new Syndesis version is processed locally to create resource objects definitions.
+The parameters used for the template processing are the same as for the original installation.
+
+However, not all objects are kept:
+The following objects need to be filtered out:
+
+* All `ConfigMaps`
+* All `PersistentVolumeClaims` which reference the persistent volumes of the database and other stateful services (e.g. Prometheus's time series database).
+
+Ideally, all such objects are annotated with `io.syndesis/upgrade-mode: keep` and the local processing filters out every object with this annotation.
+
+The files created are stored locally and are applied in a later <<step-apply-upgrade-json, step>>.
+
+.Rollback
+Only the locally created object definitions need to be cleaned up (or kept for a later manual rollback).
+EOT
+}
+
+process_template::run() {
+    local backupdir=$1
+    local workdir=$2
+    local tag=$3
+
+    local syndesis_version=$(read_config syndesis)
+    echo "      - Current Syndesis version \"$syndesis_version\""
+    read_config params > ${workdir}/template_params.props
+    local new_template=$(template_path)
+
+    [ -d ${workdir}/resources ] || mkdir -p ${workdir}/resources
+
+    # Process template locally and create individual descriptor files
+    oc process -f ${new_template}   --param-file=${workdir}/template_params.props | \
+       jq -M -c .items[] | \
+       split -l 1 - ${workdir}/resources/res_
+
+    # Iterate and remove all files with an annotation "io.syndesis/upgrade-mode: keep"
+    # as these should not be updated
+    for res in ${workdir}/resources/res_*; do
+        local anno=$(cat $res | jq -r '.metadata.annotations|.["io.syndesis/upgrade-mode"]')
+        local name=$(cat $res | jq -r '.metadata.name')
+        if [ -n "${anno}" ] && [ "${anno}" = "keep" ]; then
+            echo "      - Not updating $name"
+            rm $res
+        fi
+    done
+}
+
+process_template::rollback() {
+    local backupdir=${1}
+    local workdir=${2}
+    local cleanup=${3:-}
+
+    if [ "$cleanup" = "true" ]; then
+
+        remove_resource_backup $backupdir "secret"
+    fi
+}
+
+read_config() {
+    local key=$1
+    oc get secret syndesis-global-config -o jsonpath={.data.${key}} | base64 --decode
+}

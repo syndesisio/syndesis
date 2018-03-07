@@ -1,0 +1,28 @@
+#!/bin/bash
+
+replace_stateless_resources::label() {
+  echo "Replace stateless resources"
+}
+
+replace_stateless_resources::doc() {
+  cat <<EOT
+Now it is time to do the upgrade of the new version with an `oc replace` for all resource objects extracted <<step-create-upgrade-json, previously>>.
+This command will automatically spin up new versions (or the same if unchanged in this release) for all deployments.
+
+.Rollback
+Recreate the original resources objects by <<step-create-upgrade-json,processing the original Template>> locally.
+This template can be still obtained from the cluster.
+EOT
+}
+
+replace_stateless_resources::run() {
+  sleep 3
+}
+
+replace_stateless_resources::rollback() {
+    local backupdir=${1}
+    local workdir=${2}
+    local cleanup=${3:-}
+
+    sleep 1
+}

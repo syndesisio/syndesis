@@ -1,0 +1,61 @@
+- apiVersion: v1
+  kind: Template
+  metadata:
+    labels:
+      app: syndesis
+    name: syndesis-upgrade
+    annotations:
+      openshift.io/display-name: "Syndesis Upgrade"
+      description: |-
+        This is the upgrade application for Syndesis.
+      openshift.io/long-description: |-
+        When this template is applied then an upgrade to a new Syndesis version is performed.
+        Only the infrastructure components are updated, no running integration is touched.
+        Before doing the upgrade a backup is performed and restored in case of a rollback.
+      tags: "syndesis,upgrade"
+      iconClass: icon-rh-integration
+      openshift.io/provider-display-name: "Red Hat, Inc."
+      openshift.io/documentation-url: "https://syndesis.io"
+      openshift.io/support-url: "https://access.redhat.com"
+  parameters:
+  - name: OC_LOGIN
+    description: '"oc login" command to connect to syndesis. Paste the login line from "Command Line Tools" section in you OpenShift console'
+    required: true
+  - name: SYNDESIS_VERSION
+    description: 'The version to upgrade to or "latest" for the newest version'
+    value: latest
+    required: true
+  message: |-
+    Syndesis upgrade process started
+  objects:
+  - apiVersion: v1
+    kind: Pod
+    metadata:
+      name: syndesis-upgrade-${SYNDESIS_VERSION}
+    spec:
+      containers:
+      - name: upgrade
+        image: syndesis/syndesis-upgrade:${SYNDESIS_VERSION}
+        env:
+          - name: SYNDESIS_UPGRADE_PROJECT
+            valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+        imagePullPolicy: IfNotPresent
+        args:
+          - "--backup"
+          - "/opt/backup"
+          - "--oc-login"
+          - "${OC_LOGIN}"
+          # Temporary for demo:
+          - "--wait"
+          - "3600"
+        volumeMounts:
+        - mountPath: /opt/backup
+          subPath: backup
+          name: backup-dir
+      volumes:
+      - name: backup-dir
+        persistentVolumeClaim:
+          claimName: syndesis-db
+      restartPolicy: Never

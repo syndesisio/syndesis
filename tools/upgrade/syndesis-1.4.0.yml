@@ -4,16 +4,15 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: syndesis-dev
+  name: syndesis
 #
 # Template flavor:
 #
-# Allow localhost refs: true
+# Allow localhost refs: false
 # Use docker images: false
+# Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
-# Postgresql Tag: 9.5
-# OAuthProxy Tag: v1.1.0
 #
   labels:
     app: syndesis
@@ -27,9 +26,6 @@ parameters:
   description: Public OpenShift master address
   value: https://localhost:8443
   required: true
-- name: OPENSHIFT_CONSOLE_URL
-  description: The URL to the OpenShift console
-  displayName: OpenShift Console URL
 - name: OPENSHIFT_PROJECT
   description: The name of the OpenShift project Syndesis is being deployed into.
   displayName: OpenShift project to deploy into
@@ -105,44 +101,15 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
-- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
-  displayName: Prometheus Volume Capacity
-  name: PROMETHEUS_VOLUME_CAPACITY
-  value: 1Gi
-  required: true
 - description: Maximum amount of memory the Prometheus container can use.
   displayName: Memory Limit
   name: PROMETHEUS_MEMORY_LIMIT
   value: 255Mi
-  required: true
-- description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
-  displayName: Meta Volume Capacity
-  name: META_VOLUME_CAPACITY
+- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
+  displayName: Prometheus Volume Capacity
+  name: PROMETHEUS_VOLUME_CAPACITY
   required: true
   value: 1Gi
-  required: true
-- description: Maximum amount of memory the syndesis-meta service might use.
-  displayName: Memory Limit
-  name: META_MEMORY_LIMIT
-  value: 512Mi
-  required: true
-- description: Maximum amount of memory the syndesis-server service might use.
-  displayName: Memory Limit
-  name: SERVER_MEMORY_LIMIT
-  value: 800Mi
-  required: true
-- description: Key used to perform authentication of client side stored state.
-  displayName: Client side state authentication key
-  from: '[a-zA-Z0-9]{32}'
-  generate: expression
-  name: CLIENT_STATE_AUTHENTICATION_KEY
-  required: true
-- description: Key used to perform encryption of client side stored state.
-  displayName: Client side state encryption key
-  from: '[a-zA-Z0-9]{32}'
-  generate: expression
-  name: CLIENT_STATE_ENCRYPTION_KEY
-  required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -249,20 +216,11 @@ objects:
 - apiVersion: v1
   kind: Secret
   metadata:
-    name: syndesis-server-secret
-    labels:
-      app: syndesis
-  stringData:
-    clientStateAuthenticationKey: ${CLIENT_STATE_AUTHENTICATION_KEY}
-    clientStateEncryptionKey: ${CLIENT_STATE_ENCRYPTION_KEY}
-- apiVersion: v1
-  kind: Secret
-  metadata:
     name: syndesis-global-config
     labels:
       app: syndesis
   stringData:
-    syndesis: "latest"
+    syndesis: "1.4.0"
     postgresql: "9.5"
     oauthproxy: "v1.1.0"
     prometheus: "v2.1.0"
@@ -390,8 +348,6 @@ objects:
         "apiBase": "https://${ROUTE_HOSTNAME}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
-        "consoleUrl": "${OPENSHIFT_CONSOLE_URL}",
-        "project": "${OPENSHIFT_PROJECT}",
         "datamapper": {
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/",
           "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/java/",
@@ -413,7 +369,6 @@ objects:
           "productBuild": false
        }
       }
-
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -458,19 +413,6 @@ objects:
           insert into todo(task,completed) VALUES (task,0);
         END;
         $BODY$;
-
-        CREATE OR REPLACE FUNCTION create_lead(
-          OUT first_name text,
-          OUT last_name text,
-          OUT company text,
-          OUT lead_source text)
-          RETURNS SETOF record
-          AS
-          $$
-            SELECT first_name, last_name, company, lead_source
-            FROM contact;
-          $$
-           LANGUAGE 'sql' VOLATILE;
       EOF
 
       echo "***** sampledb created"
@@ -620,19 +562,6 @@ objects:
       app: syndesis
       component: syndesis-meta
 - apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: syndesis-meta
-    labels:
-      app: syndesis
-      component: syndesis-meta
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${META_VOLUME_CAPACITY}
-- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -665,12 +594,8 @@ objects:
           env:
           - name: JAVA_APP_DIR
             value: /deployments
-          - name: LOADER_HOME
-            value: /deployments/ext
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          - name: JAVA_DEBUG
-            value: "true"
           image: ' '
 
           imagePullPolicy: IfNotPresent
@@ -700,7 +625,7 @@ objects:
             protocol: TCP
           resources:
             limits:
-              memory: ${META_MEMORY_LIMIT}
+              memory: 512Mi
             requests:
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
@@ -708,12 +633,7 @@ objects:
           volumeMounts:
           - name: config-volume
             mountPath: /deployments/config
-          - name: ext-volume
-            mountPath: /deployments/ext
         volumes:
-        - name: ext-volume
-          persistentVolumeClaim:
-            claimName: syndesis-meta
         - name: config-volume
           configMap:
             name: syndesis-meta-config
@@ -943,8 +863,12 @@ objects:
         containers:
         - name: syndesis-server
           env:
+          - name: AB_JOLOKIA_OFF
+            value: "true"
           - name: JAVA_APP_DIR
             value: /deployments
+          - name: AB_OFF
+            value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           - name: NAMESPACE
@@ -957,24 +881,6 @@ objects:
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
-          - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
-            value: "HmacSHA1"
-          - name: CLIENT_STATE_AUTHENTICATION_KEY
-            valueFrom:
-              secretKeyRef:
-                name: syndesis-server-secret
-                key: clientStateAuthenticationKey
-          - name: CLIENT_STATE_ENCRYPTION_ALGORITHM
-            value: "AES/CBC/PKCS5Padding"
-          - name: CLIENT_STATE_ENCRYPTION_KEY
-            valueFrom:
-              secretKeyRef:
-                name: syndesis-server-secret
-                key: clientStateEncryptionKey
-          - name: CLIENT_STATE_TID
-            value: "1"
-          - name: JAVA_DEBUG
-            value: "true"
           image: ' '
 
           imagePullPolicy: IfNotPresent
@@ -1006,7 +912,7 @@ objects:
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: ${SERVER_MEMORY_LIMIT}
+              memory: 612Mi
             requests:
               memory: 256Mi
         volumes:
@@ -1040,7 +946,7 @@ objects:
       deployment:
         load-demo-data: ${DEMO_DATA_ENABLED}
       cors:
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
+        allowedOrigins: https://${ROUTE_HOSTNAME}
 
       cache:
         cluster:
@@ -1249,6 +1155,7 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: syndesis-prometheus
+
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -1471,7 +1378,7 @@ objects:
     description: '"oc login" command to connect to syndesis. Paste the login line from "Command Line Tools" section in you OpenShift console'
     required: true
   - name: SYNDESIS_VERSION
-    description: 'The version to upgrade to or "latest" for the newest version'
+    description: 'The version to upgrade to or "latest" for the last available version'
     value: latest
     required: true
   message: |-
@@ -1480,7 +1387,7 @@ objects:
   - apiVersion: v1
     kind: Pod
     metadata:
-      name: syndesis-upgrade-${SYNDESIS_VERSION}
+      name: syndesis-upgrade
     spec:
       containers:
       - name: upgrade
@@ -1490,7 +1397,6 @@ objects:
             valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-        imagePullPolicy: IfNotPresent
         args:
           - "--backup"
           - "/opt/backup"
@@ -1499,12 +1405,5 @@ objects:
           # Temporary for demo:
           - "--wait"
           - "3600"
-        volumeMounts:
-        - mountPath: /opt/backup
-          subPath: backup
-          name: backup-dir
-      volumes:
-      - name: backup-dir
-        persistentVolumeClaim:
-          claimName: syndesis-db
+        imagePullPolicy: IfNotPresent
       restartPolicy: Never
