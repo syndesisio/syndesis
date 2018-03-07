@@ -12,7 +12,7 @@ metadata:
 # Use docker images: false
 # Atlasmap Tag: 
 # Syndesis Tag: latest
-# Prometheus Tag: v2.0.0
+# Prometheus Tag: v2.1.0
 #
   labels:
     app: syndesis
@@ -184,10 +184,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/prom/prometheus:v2.0.0
+        name: ${SYNDESIS_REGISTRY}/prom/prometheus:v2.1.0
       importPolicy:
         scheduled: true
-      name: "v2.0.0"
+      name: "v2.1.0"
 
 - apiVersion: v1
   kind: ImageStream
@@ -1315,7 +1315,7 @@ objects:
         - prometheus
         from:
           kind: ImageStreamTag
-          name: prometheus:v2.0.0
+          name: prometheus:v2.1.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
