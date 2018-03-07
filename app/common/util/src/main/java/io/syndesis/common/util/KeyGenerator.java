@@ -61,7 +61,11 @@ public final class KeyGenerator {
 
         buffer.putLong(getRandomPart(now));
 
-        return encodeKey(buffer.array());
+        try {
+            return Base64.encodeBytes(buffer.array(), 2, 15, Base64.ORDERED);
+        } catch (final IOException e) {
+            throw new SyndesisServerException(e);
+        }
     }
 
     static long getRandomPart(final long timeStamp) {
@@ -81,7 +85,7 @@ public final class KeyGenerator {
      * generated key.
      */
     public static long getKeyTimeMillis(String key) throws IOException {
-        byte[] decoded = Base64.decode(stripPreAndSuffix(key), Base64.ORDERED);
+        byte[] decoded = Base64.decode(key, Base64.ORDERED);
         if (decoded.length != 15) {
             throw new IOException("Invalid key: size is incorrect.");
         }
@@ -103,23 +107,11 @@ public final class KeyGenerator {
         buffer.put((byte) random1);
         buffer.putLong(random2);
 
-        return encodeKey(buffer.array());
-    }
-
-    private static String encodeKey(byte[] data) throws SyndesisServerException {
         try {
-            return "i" + Base64.encodeBytes(data, 2, 15, Base64.ORDERED) + "z";
+            return Base64.encodeBytes(buffer.array(), 2, 15, Base64.ORDERED);
         } catch (final IOException e) {
             throw new SyndesisServerException(e);
         }
     }
 
-
-    private static String stripPreAndSuffix(String key) {
-        if (key.length() >= 3) {
-            return key.substring(1, key.length() - 1);
-        } else {
-            throw new IllegalArgumentException(String.format("Can not parse key %s as identified, prefix and/or suffix is missing", key));
-        }
-    }
 }
