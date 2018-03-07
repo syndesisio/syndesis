@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.camel.catalog.CamelCatalog;
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,8 +30,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.apache.camel.catalog.CamelCatalog;
-import org.immutables.value.Value;
 
 /**
  * Component model.
@@ -89,6 +90,8 @@ public interface ComponentDefinition {
         Optional<String> getDeprecated();
         Optional<String> getSecret();
         Optional<String> getDescription();
+        Optional<String> getControlHint();
+        Optional<String> getLabelHint();
         Optional<String> getName();
         Optional<String> getDefaultValue();
         Optional<String> getEnums();

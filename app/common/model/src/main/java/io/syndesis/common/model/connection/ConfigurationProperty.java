@@ -19,12 +19,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
+
 import io.syndesis.common.model.Ordered;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
-import org.immutables.value.Value;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConfigurationProperty.Builder.class)
@@ -62,6 +63,10 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
     Boolean getDeprecated();
 
     String getDescription();
+
+    String getControlHint();
+
+    String getLabelHint();
 
     String getDisplayName();
 
