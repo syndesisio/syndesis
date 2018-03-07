@@ -67,7 +67,6 @@
 
     <module>aws-s3</module>
     <module>http</module>
-    <module>timer</module>
     <module>twitter</module>
     <module>salesforce</module>
     <module>sql</module>
