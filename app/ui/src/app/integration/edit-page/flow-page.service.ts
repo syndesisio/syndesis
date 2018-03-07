@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CurrentFlowService } from './current-flow.service';

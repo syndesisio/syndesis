@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DynamicFormControlModel } from '@ng-dynamic-forms/core';
+
 import { ConfigurationProperty, ConfiguredConfigurationProperty, StringMap } from '@syndesis/ui/platform';
 
 @Injectable()

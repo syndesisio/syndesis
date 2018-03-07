@@ -6,7 +6,7 @@ import * as SYNDESIS_ABSTRACT_PROVIDERS from '@syndesis/ui/platform';
 import * as SYNDESIS_PROVIDERS from './providers';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule]
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
@@ -27,7 +27,7 @@ export class CoreModule {
         SYNDESIS_PROVIDERS.FormFactoryProviderService,
         {
           provide: SYNDESIS_ABSTRACT_PROVIDERS.FormFactoryService,
-          useClass: SYNDESIS_PROVIDERS.FormFactoryProviderService,
+          useClass: SYNDESIS_PROVIDERS.FormFactoryProviderService
         },
         SYNDESIS_PROVIDERS.UserProviderService,
         {

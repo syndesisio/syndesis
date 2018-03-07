@@ -72,6 +72,8 @@ export interface ConfigurationProperty extends BaseEntity {
   defaultValue: string;
   displayName: string;
   description: string;
+  labelHint?: string;
+  controlHint?: string;
   group: string;
   required: boolean;
   secret: boolean;

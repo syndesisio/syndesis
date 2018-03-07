@@ -20,12 +20,12 @@ const OAUTH_APP_FORM_CONFIG = {
   clientId: {
     displayName: 'Client ID',
     type: 'string',
-    description: 'The OAuth client ID setting for the target application'
+    labelHint: 'The OAuth client ID setting for the target application'
   },
   clientSecret: {
     displayName: 'Client Secret',
     type: 'password',
-    description: 'The OAuth client secret value for the target application'
+    labelHint: 'The OAuth client secret value for the target application'
   }
 };
 

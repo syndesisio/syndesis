@@ -1,4 +1,4 @@
-import { Component,  Input,  ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component,  Input,  ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as fileSaver from 'file-saver';
 

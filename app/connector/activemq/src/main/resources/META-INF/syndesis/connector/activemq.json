@@ -25,7 +25,8 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Location to send data to or obtain data from.",
+      "labelHint": "Location to send data to or obtain data from.",
+      "description": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
       "order": "1"
     },
     "username": {
@@ -39,7 +40,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Access the broker with this user’s authorization credentials.",
+      "controlHint": "Access the broker with this user’s authorization credentials.",
       "order": "2"
     },
     "password": {
@@ -53,7 +54,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": true,
-      "description": "Password for the specified user account.",
+      "controlHint": "Password for the specified user account.",
       "order": "3"
     },
     "clientID": {
@@ -67,7 +68,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+      "labelHint": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
       "order": "4"
     },
     "skipCertificateCheck": {
@@ -102,7 +103,7 @@
       "label": "common,security",
       "required": false,
       "componentProperty": true,
-      "type": "string",
+      "type": "textarea",
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
@@ -116,7 +117,7 @@
       "label": "common,security",
       "required": false,
       "componentProperty": true,
-      "type": "string",
+      "type": "textarea",
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,

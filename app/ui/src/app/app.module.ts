@@ -6,7 +6,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import { DynamicFormsBootstrapUIModule } from '@ng-dynamic-forms/ui-bootstrap';
 import { VendorModule } from '@syndesis/ui/vendor';
 import { TagInputModule } from 'ngx-chips';
 import { Restangular, RestangularModule } from 'ngx-restangular';
@@ -70,7 +69,6 @@ export function mapperRestangularProvider(restangular: Restangular, config: Conf
     ApiModule.forRoot(platformEndpoints),
     CoreModule.forRoot(),
     DynamicFormsCoreModule.forRoot(),
-    DynamicFormsBootstrapUIModule,
     VendorModule,
     TagInputModule,
     AppRoutingModule,
