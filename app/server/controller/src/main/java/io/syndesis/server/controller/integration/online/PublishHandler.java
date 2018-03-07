@@ -135,8 +135,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String version = Integer.toString(integrationDeployment.getVersion());
         return DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
-            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationId))
-            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL, version)
+            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())

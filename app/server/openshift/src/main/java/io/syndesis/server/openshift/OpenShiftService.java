@@ -30,7 +30,6 @@ public interface OpenShiftService {
     String DEPLOYMENT_VERSION_ANNOTATION = "syndesis.io/deployment-version";
 
     String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
-    String DEPLOYMENT_ID_LABEL = "syndesis.io/deployment-id";
     String DEPLOYMENT_VERSION_LABEL = "syndesis.io/deployment-version";
     String USERNAME_LABEL = "syndesis.io/username";
     String COMPONENT_LABEL = "component";
