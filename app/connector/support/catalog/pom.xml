@@ -83,12 +83,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>connector-slack</artifactId>
+      <artifactId>connector-salesforce</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <version>${project.version}</version>
-      <artifactId>connector-salesforce</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-slack</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

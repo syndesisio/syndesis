@@ -923,6 +923,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-slack</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ============================================== -->
 
       <!-- TODO: Maybe import BOM ? -->
