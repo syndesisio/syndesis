@@ -15,9 +15,23 @@
  */
 package io.syndesis.common.util;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class LabelsTest {
+
+    @Test
+    public void testValid() {
+        Assert.assertTrue(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789"));
+        Assert.assertTrue(Labels.isValid("012345678901234567890123456789012345678901234567890123456789123"));
+    }
+
+    @Test
+    public void testInvalid() {
+        Assert.assertFalse(Labels.isValid("-abcdefghijklmnopqrstyvwxyz0123456789"));
+        Assert.assertFalse(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789-"));
+        Assert.assertFalse(Labels.isValid("01234567890123456789012345678901234567890123456789012345678912345"));
+    }
 
     @Test
     public void testValidateGeneratedKeys() {

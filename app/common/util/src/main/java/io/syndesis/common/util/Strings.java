@@ -28,4 +28,8 @@ public final class Strings {
     public static String utf8(byte[] data) {
         return new String(data, StandardCharsets.UTF_8);
     }
+
+    public static String truncate(String name, int max) {
+          return name.length() > max ? name.substring(0, max) : name;
+    }
 }

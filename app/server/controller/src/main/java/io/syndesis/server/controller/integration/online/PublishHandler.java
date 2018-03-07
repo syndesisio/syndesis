@@ -137,7 +137,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
-            .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
+            .addLabel(OpenShiftService.USERNAME_LABEL, Labels.validate(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
             .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationId)
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, version)
@@ -255,7 +255,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String username = deployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username)); //Names have more loose rules than labels, so we need to sanitize.
+        labels.put(OpenShiftService.USERNAME_LABEL, Labels.validate(username));
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()
@@ -275,7 +275,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String version = String.valueOf(integration.getVersion());
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(id));
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(id));
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()

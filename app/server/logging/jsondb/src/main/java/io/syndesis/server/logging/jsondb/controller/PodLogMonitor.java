@@ -66,13 +66,13 @@ class PodLogMonitor implements Consumer<InputStream> {
             throw new IOException("Could not determine the pod name");
         }
 
-        Map<String, String> annotations = pod.getMetadata().getAnnotations();
-        this.integrationId = annotations.get(OpenShiftService.INTEGRATION_ID_ANNOTATION);
+        Map<String, String> labels = pod.getMetadata().getLabels();
+        this.integrationId = labels.get(OpenShiftService.INTEGRATION_ID_ANNOTATION);
         if (this.integrationId == null) {
             throw new IOException("Could not determine the integration id that is being run on the pod: " + this.podName);
         }
 
-        this.deploymentVersion = annotations.get(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION);
+        this.deploymentVersion = labels.get(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION);
         if (this.deploymentVersion == null) {
             throw new IOException("Could not determine the deployment version that is being run on the pod: " + this.podName);
         }

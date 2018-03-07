@@ -16,6 +16,7 @@
 package io.syndesis.common.util;
 
 import java.util.Locale;
+import static io.syndesis.common.util.Strings.truncate;
 
 public final class Names {
 
@@ -35,16 +36,14 @@ public final class Names {
 
     /**
      * Sanitizes the specified name by applying the following rules:
-     * 1. Keep the first 100 characters.
-     * 2. Replace spaces with dashes.
-     * 3. Remove invalid characters.
+     * 1. Replace spaces with dashes.
+     * 2. Remove invalid characters.
+     * 3. Keep the first 64 characters.
      * @param name  The specified name.
      * @return      The sanitized string.
      */
     public static String sanitize(String name) {
-        String trimmed = name.length() > MAXIMUM_NAME_LENGTH ? name.substring(0, MAXIMUM_NAME_LENGTH) : name;
-
-        return trimmed
+        return truncate(name
             .replaceAll(SPACE, DASH)
             .replaceAll(INVALID_CHARACTER_REGEX, BLANK)
             .toLowerCase(Locale.US)
@@ -59,7 +58,7 @@ public final class Names {
                         b.appendCodePoint(chr);
                     }
              }, StringBuilder::append)
-            .toString();
+            .toString(), MAXIMUM_NAME_LENGTH);
     }
 
 

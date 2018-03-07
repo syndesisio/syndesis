@@ -15,6 +15,7 @@
  */
 package io.syndesis.common.util;
 
+
 public final class Labels {
 
     private static final String VALID_REGEX = "(([A-Za-z0-9][-A-Za-z0-9_]*)?[A-Za-z0-9])?";
@@ -38,7 +39,7 @@ public final class Labels {
      * @return      The sanitized string.
      */
     public static String sanitize(String name) {
-        return trim(name)
+        return trim(name
             .replaceAll(SPACE, DASH)
             .chars()
             .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
@@ -51,7 +52,7 @@ public final class Labels {
                         b.appendCodePoint(chr);
                     }
              }, StringBuilder::append)
-            .toString();
+            .toString());
     }
 
 
@@ -64,6 +65,7 @@ public final class Labels {
             throw new IllegalArgumentException("Invalid label: [" + name + "].");
         }
         return name;
+
     }
 
     private static String trim(String name) {
