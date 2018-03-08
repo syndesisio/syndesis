@@ -24,6 +24,7 @@
             "deprecated": false,
             "secret": true,
             "componentProperty": true,
+            "order": "1",
             "description": "The access token to make API requests for a specific Dropbox user"
         },
         "clientIdentifier": {
@@ -36,6 +37,7 @@
             "deprecated": false,
             "secret": false,
             "componentProperty": true,
+            "order": "2",
             "description": "Name of the app registered to make API requests"
         }
     },
@@ -81,6 +83,7 @@
                                 ],
                                 "deprecated": false,
                                 "secret": false,
+                                "order": "2",
                                 "description": "File upload mode"
                             },
                             "remotePath": {
@@ -92,6 +95,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
+                                "order": "1",
                                 "description": "Remote path where upload the file"
                             }
                         }
