@@ -45,14 +45,14 @@ export class IntegrationActionMenuComponent implements OnInit {
       });
     }
     this.actionConfig.moreActions.push({
-      id: 'activate',
+      id: 'publish',
       title: 'Publish',
       tooltip: `Publish ${this.integration.name}`,
       visible: this.integrationActionsService.canActivate(this.integration)
 
     });
     this.actionConfig.moreActions.push({
-      id: 'deactivate',
+      id: 'unpublish',
       title: 'Unpublish',
       tooltip: `Unpublish ${this.integration.name}`,
       visible: this.integrationActionsService.canDeactivate(this.integration)

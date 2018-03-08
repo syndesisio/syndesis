@@ -150,7 +150,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
         this.integrationActionsService.requestAction('replaceDraft', this.integration, event.deployment);
         break;
       case STOP_INTEGRATION:
-        this.integrationActionsService.requestAction('deactivate', <any>this.integration);
+        this.integrationActionsService.requestAction('unpublish', <any>this.integration);
         break;
       case PUBLISH:
         {
