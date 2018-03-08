@@ -80,18 +80,18 @@ public interface ComponentDefinition {
 
     @Value.Immutable
     @Value.Style(builder = "new")
-    @JsonDeserialize(builder = ImmutableRelationWhen.Builder.class)
-    interface RelationWhen {
+    @JsonDeserialize(builder = ImmutableWhen.Builder.class)
+    interface When {
         String getId();
         String getValue();
     }
 
     @Value.Immutable
     @Value.Style(builder = "new")
-    @JsonDeserialize(builder = ImmutableRelation.Builder.class)
-    interface Relation {
+    @JsonDeserialize(builder = ImmutablePropertyRelation.Builder.class)
+    interface PropertyRelation {
         String getAction();
-        List<RelationWhen> getWhen();
+        List<When> getWhen();
     }
 
     @Value.Immutable
@@ -115,7 +115,7 @@ public interface ComponentDefinition {
         Optional<String> getPrefix();
         Optional<String> getMultiValue();
         Optional<String> getEnumValues();
-        Optional<List<Relation>> getRelation();
+        Optional<List<PropertyRelation>> getRelation();
     }
 
     @JsonIgnore

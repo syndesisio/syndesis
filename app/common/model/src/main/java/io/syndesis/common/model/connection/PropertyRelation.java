@@ -32,11 +32,11 @@ public interface PropertyRelation extends Serializable {
     }
 
     @Value.Immutable
-    @JsonDeserialize(builder = PropertyRelationWhen.Builder.class)
-    interface PropertyRelationWhen {
+    @JsonDeserialize(builder = When.Builder.class)
+    interface When {
 
         @SuppressWarnings("PMD.UseUtilityClass")
-        class Builder extends ImmutablePropertyRelationWhen.Builder {
+        class Builder extends ImmutableWhen.Builder {
         }
 
         String getId();
@@ -46,5 +46,5 @@ public interface PropertyRelation extends Serializable {
 
     String getAction();
 
-    List<PropertyRelationWhen> getWhen();
+    List<When> getWhen();
 }
