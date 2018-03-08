@@ -30,7 +30,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
 
   integrationChartData: any[] = [
     ['Published', 0],
-    ['Draft', 0],
     ['Unpublished', 0]
   ];
 
@@ -39,7 +38,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
     chartId: 'integrationsCounter',
     colors: {
       Published: '#0088CE',   // PatternFly Blue 400, Published
-      Draft: '#EC7A08',       // PatternFly Orange 400, Draft
       Unpublished: '#D1D1D1'  // PatternFly Black 300, Unpublished
     },
     donut: {
@@ -67,7 +65,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.integrationChartData = [
         [`Published`, this.countActiveIntegrations()],
-        [`Draft`, this.countDraftIntegrations()],
         [`Unpublished`, this.countInactiveIntegrations()]
       ];
     });
@@ -83,7 +80,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
 
   filterIntegrations() {
     const active = [];
-    const draft = [];
     const inactive = [];
     let total = 0;
     (this.integrations || []).forEach(integration => {
@@ -99,13 +95,9 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
         default:
           break;
       }
-      if (integration.draft) {
-        draft.push(integration);
-      }
     });
     return {
       active: active,
-      draft: draft,
       inactive: inactive,
       total: total
     };
@@ -113,10 +105,6 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
 
   countActiveIntegrations() {
     return this.filterIntegrations().active.length;
-  }
-
-  countDraftIntegrations() {
-    return this.filterIntegrations().draft.length;
   }
 
   countInactiveIntegrations() {
