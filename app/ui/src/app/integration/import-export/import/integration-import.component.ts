@@ -45,7 +45,6 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   done(integrationImports) {
-    console.log('integrationImports: ' + JSON.stringify(integrationImports));
     if(integrationImports.length === 1 && integrationImports[0].id) {
       this.router.navigate(['/integrations', integrationImports[0].id]);
     } else {
@@ -93,11 +92,6 @@ export class IntegrationImportComponent implements OnInit {
     this.uploader.onCompleteItem = (item: FileItem,
                                     response: string,
                                     status: number) => {
-      console.log('File has been uploaded: ' + item);
-      console.log('File item: ' + JSON.stringify(item.file));
-      console.log('Form data: ' + JSON.stringify(item.formData));
-      console.log('Response: ' + JSON.stringify(response));
-
       if (status === 200) {
         this.review = true;
         this.integrationImports$ = JSON.parse(response);
