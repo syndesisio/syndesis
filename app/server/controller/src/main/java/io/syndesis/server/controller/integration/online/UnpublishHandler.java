@@ -47,7 +47,7 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
         IntegrationDeploymentState currentState = integrationDeployment.getCurrentState();
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationDeployment.getIntegrationId().get()));
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
         labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
 
         if (!openShiftService().getDeploymentsByLabel(labels).isEmpty()) {

@@ -15,17 +15,13 @@
  */
 package io.syndesis.common.util;
 
-import java.util.Locale;
-
 public final class Labels {
 
-    private static final String VALID_REGEX = "(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?";
-    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
-    private static final String SIDES_REGEX = "[A-Za-z0-9]";
+    private static final String VALID_VALUE_REGEX = "(?:(?:[A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?";
 
     private static final String SPACE = " ";
     private static final String DASH = "-";
-    private static final int MAXIMUM_NAME_LENGTH = 100;
+    private static final int MAXIMUM_NAME_LENGTH = 63;
 
     private Labels() {
         //Utility
@@ -40,11 +36,11 @@ public final class Labels {
      * @return      The sanitized string.
      */
     public static String sanitize(String name) {
-        return trim(name)
+        return trim(name
             .replaceAll(SPACE, DASH)
-            .toLowerCase(Locale.US)
             .chars()
-            .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
+            .filter(Labels::isValidChar)
+            //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
                     int lastChar = b.length() > 0 ? b.charAt(b.length() - 1) : -1;
@@ -53,30 +49,50 @@ public final class Labels {
                         b.appendCodePoint(chr);
                     }
              }, StringBuilder::append)
-            .toString();
+            .toString());
+    }
+
+
+    public static boolean isValid(String name) {
+        return name.matches(VALID_VALUE_REGEX) && name.length() <= MAXIMUM_NAME_LENGTH;
+    }
+
+    public static String validate(String name) {
+        if (!isValid(name)) {
+            throw new IllegalArgumentException("Invalid label: [" + name + "].");
+        }
+        return name;
+
     }
 
     private static String trim(String name) {
-        String trimmed = name.length() > MAXIMUM_NAME_LENGTH ? name.substring(0, MAXIMUM_NAME_LENGTH) : name;
-
-        if (trimmed.matches(VALID_REGEX)) {
-            return trimmed;
+        if (isValid(name)) {
+            return name;
         }
 
-        int length = trimmed.length();
+        int length = name.length();
         if (length <= 1) {
             throw new IllegalStateException("Specified string:" + name + " cannot be sanitized.");
         }
 
-        String first = trimmed.substring(0, 1);
-        if (!first.matches(SIDES_REGEX)) {
-            return trim(trimmed.substring(1));
+        // Recursively trim
+        if (!isAlphaNumeric(name.charAt(0))) {
+            return trim(name.substring(1));
+        }
+        if (!isAlphaNumeric(name.charAt(length - 1))) {
+            return trim(name.substring(0, length - 1));
         }
 
-        String last = trimmed.substring(length -1, length);
-        if (!last.matches(SIDES_REGEX)) {
-            return trim(trimmed.substring(0, length - 1));
-        }
-        return trimmed;
+        return name;
+    }
+
+    private static boolean isValidChar(int i) {
+        return isAlphaNumeric(i) || i == '.' || i == '-' || i == '_';
+    }
+
+    private static boolean isAlphaNumeric(int i) {
+        return (i >= 'a' && i <= 'z') ||
+               (i >= '0' && i <= '9') ||
+               (i >= 'A' && i <= 'Z');
     }
 }
