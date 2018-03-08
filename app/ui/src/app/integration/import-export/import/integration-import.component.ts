@@ -1,12 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
-  Integration, Integrations, IntegrationOverviews, IntegrationSupportService,
-  IntegrationOverview, Extension
+  Integration, Integrations, IntegrationOverviews, IntegrationSupportService, IntegrationOverview
 } from '@syndesis/ui/platform';
-import {FileError, IntegrationImportsData} from './integration-import.models';
-import {Observable} from 'rxjs/Observable';
+import { FileError, IntegrationImportsData } from './integration-import.models';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   FileItem,
@@ -14,14 +14,13 @@ import {
   FileUploader,
   FileUploaderOptions
 } from 'ng2-file-upload';
-import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'syndesis-import-integration-component',
   templateUrl: './integration-import.component.html',
   styleUrls: ['./integration-import.component.scss']
 })
-export class IntegrationImportComponent implements OnInit {
+export class IntegrationImportComponent implements OnInit, OnDestroy {
   error: FileError;
   importing = false;
   uploader: FileUploader;
@@ -33,10 +32,9 @@ export class IntegrationImportComponent implements OnInit {
   item = {} as FileItem;
   review = false;
 
-  private integrationOverviewsSubscription: Subscription;
-
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
+  private integrationOverviewsSubscription: Subscription;
   constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
   }
 
@@ -45,7 +43,7 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   done(integrationImports) {
-    if(integrationImports.length === 1 && integrationImports[0].id) {
+    if (integrationImports.length === 1 && integrationImports[0].id) {
       this.router.navigate(['/integrations', integrationImports[0].id]);
     } else {
       this.redirectBack();

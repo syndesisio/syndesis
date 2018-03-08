@@ -40,4 +40,3 @@ export interface IntegrationImportData {
 }
 
 export type IntegrationImportsData = Array<IntegrationImportData>;
-
