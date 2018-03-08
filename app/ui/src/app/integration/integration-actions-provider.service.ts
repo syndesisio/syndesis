@@ -81,7 +81,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
       case 'unpublish':
         header = 'Unpublishing integration.';
         message =
-          'Please allow a moment for the integration to unpublish.';
+          'It takes a few moments to unpublish the integration.';
         danger = 'Failed to unpublish integration';
         reason = 'Error unpublishing integration';
         request = this.requestDeactivate(integration);
@@ -249,21 +249,18 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   setModalProperties(action) {
+    this.modalTitle =  'Confirm';
     switch (action) {
       case 'replaceDraft':
-        this.modalTitle =  'Confirm';
         this.modalMessage = 'Are you sure you would like to replace the current draft for the \'' + this.selectedIntegration.name + '\' integration?';
         break;
       case 'publish':
-        this.modalTitle = 'Confirm';
         this.modalMessage = 'Are you sure you would like to publish the \'' + this.selectedIntegration.name + '\' integration?';
         break;
       case 'unpublish':
-        this.modalTitle = 'Confirm';
         this.modalMessage = 'Are you sure you would like to unpublish the \'' + this.selectedIntegration.name + '\' integration?';
         break;
       default:
-        this.modalTitle = 'Confirm ';
         this.modalMessage = 'Are you sure you would like to delete the \'' + this.selectedIntegration.name + '\' integration?';
     }
   }
