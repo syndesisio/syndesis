@@ -24,6 +24,7 @@ import {
 export class IntegrationImportComponent implements OnInit {
   public uploader: FileUploader;
   public hasBaseDropZoneOver: boolean;
+  public review = false;
 
   constructor(
     public notificationService: NotificationService,
@@ -38,8 +39,42 @@ export class IntegrationImportComponent implements OnInit {
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
-      autoUpload: true
+      autoUpload: false
     });
+
+    this.uploader.onAfterAddingFile = (item: FileItem) => {
+      console.log('File has been added: ' + item);
+      this.review = true;
+    };
+
+    this.uploader.onCompleteItem = (
+      item: FileItem,
+      response: string,
+      status: number,
+      headers: ParsedResponseHeaders
+    ) => {
+      if (status === 200) {
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Imported Integrations',
+          message: 'Your integrations have been imported',
+          isPersistent: true,
+        });
+      } else if (status === 400) {
+        this.notificationService.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Import Failed!',
+          message: JSON.parse(response).userMsg,
+          isPersistent: true,
+        });
+      } else {
+        this.notificationService.popNotification({
+          type: NotificationType.DANGER,
+          header: 'Import Failed!',
+          message: 'Your integration could not be imported.'
+        });
+      }
+    };
 
     /*
     this.uploader.onCompleteItem = (
