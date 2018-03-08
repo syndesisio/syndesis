@@ -16,45 +16,29 @@
 package io.syndesis.server.endpoint.v1.dto;
 
 import java.util.Collections;
-import java.util.Optional;
 
-import io.syndesis.server.endpoint.v1.dto.Meta.Data.Type;
+import io.syndesis.server.endpoint.v1.dto.MetaData.Type;
 import io.syndesis.server.endpoint.v1.handler.exception.Errors;
 
-import org.immutables.value.Value;
-
-import static io.syndesis.server.endpoint.v1.dto.ImmutableData.builder;
 
 public final class Meta<T> extends Mixed {
 
-    private final Data data;
+    private final MetaData data;
 
     private final T value;
 
-    @Value.Immutable
-    public interface Data {
-
-        enum Type {
-            DANGER, INFO, SUCCESS, WARNING
-        }
-
-        Optional<String> getMessage();
-
-        Optional<Type> getType();
-    }
-
     public Meta(final T value) {
-        this(value, builder().build());
+        this(value, ImmutableMetaData.builder().build());
     }
 
-    private Meta(final T value, final Data data) {
+    private Meta(final T value, final MetaData data) {
         super(value, Collections.singletonMap("_meta", data));
 
         this.value = value;
         this.data = data;
     }
 
-    public Data getData() {
+    public MetaData getData() {
         return data;
     }
 
@@ -69,7 +53,7 @@ public final class Meta<T> extends Mixed {
     public static <V> Meta<V> withError(final V value, final Throwable throwable) {
         final String message = Errors.userMessageFrom(throwable);
 
-        return new Meta<>(value, builder().type(Type.DANGER).message(message).build());
+        return new Meta<>(value, ImmutableMetaData.builder().type(Type.DANGER).message(message).build());
     }
 
 }
