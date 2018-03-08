@@ -16,9 +16,11 @@
 package io.syndesis.common.util;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public final class Labels {
 
+    private static final Pattern VALID_LABEL_REGEX = Pattern.compile("[a-z0-9A-Z][-A-Za-z0-9_.]*[a-z0-9A-Z]");
     private static final String VALID_REGEX = "(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?";
     private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
     private static final String SIDES_REGEX = "[A-Za-z0-9]";
@@ -40,6 +42,11 @@ public final class Labels {
      * @return      The sanitized string.
      */
     public static String sanitize(String name) {
+
+        if( name.length()<= MAXIMUM_NAME_LENGTH && VALID_LABEL_REGEX.matcher(name).matches() ) {
+            return name;
+        }
+
         return trim(name)
             .replaceAll(SPACE, DASH)
             .toLowerCase(Locale.US)
