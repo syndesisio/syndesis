@@ -15,29 +15,33 @@
  */
 package io.syndesis.connector.salesforce.customizer;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.util.Json;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
 import org.apache.camel.component.salesforce.api.SalesforceException;
-import org.apache.camel.util.URISupport;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ForUpdateCustomizer implements ComponentProxyCustomizer {
+
+    private String idPropertyName;
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        idPropertyName = (String) options.getOrDefault(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, "Id");
+
         component.setBeforeProducer(this::beforeProducer);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public void beforeProducer(final Exchange exchange) throws Exception {
+    public void beforeProducer(final Exchange exchange) throws IOException {
         // parse input json and extract Id field
         final Message in = exchange.getIn();
         final String body = in.getBody(String.class);
@@ -47,7 +51,6 @@ public class ForUpdateCustomizer implements ComponentProxyCustomizer {
         }
 
         final ObjectNode node = (ObjectNode) Json.reader().readTree(body);
-        final String idPropertyName = determineIdProperty(exchange);
 
         final JsonNode idProperty = node.remove(idPropertyName);
         if (idProperty == null) {
@@ -69,13 +72,6 @@ public class ForUpdateCustomizer implements ComponentProxyCustomizer {
 
         // update input json
         in.setBody(Json.writer().writeValueAsString(node));
-    }
-
-    private String determineIdProperty(final Exchange exchange) throws URISyntaxException {
-        final String uri = exchange.getProperty(Exchange.TO_ENDPOINT, String.class);
-        final Map<String, Object> endpointParameters = URISupport.parseParameters(URI.create(uri));
-
-        return (String) endpointParameters.getOrDefault(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, "Id");
     }
 
     private static void clearBaseFields(final ObjectNode node) {
