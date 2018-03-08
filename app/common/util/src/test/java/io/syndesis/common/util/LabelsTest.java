@@ -36,6 +36,6 @@ public class LabelsTest {
     @Test
     public void testValidateGeneratedKeys() {
         for (int i=0;i<1000;i++)
-        Labels.validate(KeyGenerator.createKey());
+        Assert.assertTrue(Labels.isValid(KeyGenerator.createKey()));
     }
 }

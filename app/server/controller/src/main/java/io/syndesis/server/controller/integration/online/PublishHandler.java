@@ -137,10 +137,10 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
-            .addLabel(OpenShiftService.USERNAME_LABEL, Labels.validate(username))
+            .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
-            .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationId)
-            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, version)
+            .addAnnotation(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
+            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
@@ -255,7 +255,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String username = deployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.USERNAME_LABEL, Labels.validate(username));
+        labels.put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()
@@ -275,7 +275,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String version = String.valueOf(integration.getVersion());
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(id));
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, id);
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()

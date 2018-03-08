@@ -20,8 +20,8 @@ import static io.syndesis.common.util.Strings.truncate;
 
 public final class Names {
 
-    private static final String VALID_REGEX = "[-A-Za-z0-9\\.]+";
-    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-\\.]";
+    private static final String VALID_REGEX = "[-A-Za-z0-9\\._]+";
+    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-\\._]";
     private static final String SPACE = " ";
     private static final String BLANK = "";
     private static final String DASH = "-";

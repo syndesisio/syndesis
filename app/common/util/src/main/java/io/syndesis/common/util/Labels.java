@@ -15,12 +15,9 @@
  */
 package io.syndesis.common.util;
 
-
 public final class Labels {
 
-    private static final String VALID_REGEX = "(([A-Za-z0-9][-A-Za-z0-9_]*)?[A-Za-z0-9])?";
-    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-]";
-    private static final String SIDES_REGEX = "[A-Za-z0-9]";
+    private static final String VALID_VALUE_REGEX = "(?:(?:[A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?";
 
     private static final String SPACE = " ";
     private static final String DASH = "-";
@@ -42,7 +39,7 @@ public final class Labels {
         return trim(name
             .replaceAll(SPACE, DASH)
             .chars()
-            .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
+            .filter(Labels::isValidChar)
             //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
@@ -57,7 +54,7 @@ public final class Labels {
 
 
     public static boolean isValid(String name) {
-        return name.matches(VALID_REGEX) && name.length() <= MAXIMUM_NAME_LENGTH;
+        return name.matches(VALID_VALUE_REGEX) && name.length() <= MAXIMUM_NAME_LENGTH;
     }
 
     public static String validate(String name) {
@@ -78,15 +75,24 @@ public final class Labels {
             throw new IllegalStateException("Specified string:" + name + " cannot be sanitized.");
         }
 
-        String first = name.substring(0, 1);
-        if (!first.matches(SIDES_REGEX)) {
+        // Recursively trim
+        if (!isAlphaNumeric(name.charAt(0))) {
             return trim(name.substring(1));
         }
-
-        String last = name.substring(length -1, length);
-        if (!last.matches(SIDES_REGEX)) {
+        if (!isAlphaNumeric(name.charAt(length - 1))) {
             return trim(name.substring(0, length - 1));
         }
+
         return name;
+    }
+
+    private static boolean isValidChar(int i) {
+        return isAlphaNumeric(i) || i == '.' || i == '-' || i == '_';
+    }
+
+    private static boolean isAlphaNumeric(int i) {
+        return (i >= 'a' && i <= 'z') ||
+               (i >= '0' && i <= '9') ||
+               (i >= 'A' && i <= 'Z');
     }
 }
