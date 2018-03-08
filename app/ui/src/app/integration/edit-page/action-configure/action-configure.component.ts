@@ -118,24 +118,12 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
             this.integrationSupport
               .fetchMetadata(this.step.connection, this.step.action, data)
               .toPromise()
-              .then( (descriptor: ActionDescriptor) => {
+              .then((descriptor: ActionDescriptor) => {
                 this.currentFlowService.events.emit({
                   kind: 'integration-set-descriptor',
                   position: this.position,
                   descriptor,
                   onSave: () => {
-                    for (const actionProperty of Object.keys(data)) {
-                      if (data[actionProperty] == null) {
-                        this.step.configuredProperties[
-                          actionProperty
-                        ] = descriptor.propertyDefinitionSteps.map(
-                          actionDefinitionStep => {
-                            return actionDefinitionStep.properties[actionProperty]
-                              .defaultValue;
-                          }
-                        )[0];
-                      }
-                    }
                     /* All done... */
                     this.finishUp();
                   }
@@ -268,10 +256,10 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
     }
     const stepDefinitions = action.descriptor.propertyDefinitionSteps;
     for (let p = 0; p < this.page; p++) {
-      for (const prop in stepDefinitions[ p ].properties) {
+      for (const prop in stepDefinitions[p].properties) {
         /* We don't want null or undefined values here */
-        if (this.step.configuredProperties[ prop ] != null) {
-          props[ prop ] = this.step.configuredProperties[ prop ];
+        if (this.step.configuredProperties[prop] != null) {
+          props[prop] = this.step.configuredProperties[prop];
         }
       }
     }

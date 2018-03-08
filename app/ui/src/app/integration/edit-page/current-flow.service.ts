@@ -469,14 +469,28 @@ export class CurrentFlowService {
           step.action.descriptor = descriptor;
           return;
         }
-        // set the descriptor but avoid overwriting data shapes if they're user set
+        // update the step's configured properties with any defaults defined in the descriptor
+        const data = step.configuredProperties || {};
+        for (const actionProperty of Object.keys(data)) {
+          if (!data[actionProperty]) {
+            step.configuredProperties[
+              actionProperty
+            ] = descriptor.propertyDefinitionSteps.map(
+              actionDefinitionStep => {
+                return actionDefinitionStep.properties[actionProperty]
+                  .defaultValue;
+              }
+            )[0];
+          }
+        }
+        // set the descriptor but avoid overwriting data shapes if they're user set, or if the incoming datashapes don't have the spec set
         const inputDataShape = step.action.descriptor.inputDataShape;
         const outputDataShape = step.action.descriptor.outputDataShape;
         step.action.descriptor = descriptor;
-        if (this.isUserDefined(inputDataShape)) {
+        if (this.isUserDefined(inputDataShape) || !descriptor.inputDataShape.specification) {
           step.action.descriptor.inputDataShape = inputDataShape;
         }
-        if (this.isUserDefined(outputDataShape)) {
+        if (this.isUserDefined(outputDataShape) || !descriptor.outputDataShape.specification) {
           step.action.descriptor.outputDataShape = outputDataShape;
         }
         this.maybeDoAction(event['onSave']);
