@@ -123,7 +123,34 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <classifier>executable</classifier>
+        </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>truezip-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+            <execution>
+                <id>remove-application-yml</id>
+                <goals>
+                  <goal>remove</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <fileset>
+                    <directory>${project.build.directory}/${project.build.finalName}.${packaging}</directory>
+                    <includes>
+                      <include>application.yml</include>
+                    </includes>
+                  </fileset>
+                </configuration>
+            </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>

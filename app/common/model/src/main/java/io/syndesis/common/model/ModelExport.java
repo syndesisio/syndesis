@@ -20,16 +20,17 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * A ModelExport is used to hold an list of models and information about their version.
+ * A ModelExport is used to hold an list of models and information about their
+ * version.
  */
 @Value.Immutable
 @JsonDeserialize(builder = ImmutableModelExport.Builder.class)
 @SuppressWarnings("varargs")
 public interface ModelExport {
 
-    String schemaVersion();
+    int schemaVersion();
 
-    static ModelExport of(String version) {
+    static ModelExport of(final int version) {
         return ImmutableModelExport.builder().schemaVersion(version).build();
     }
 

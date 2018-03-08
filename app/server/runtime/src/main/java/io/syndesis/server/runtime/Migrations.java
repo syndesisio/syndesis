@@ -15,64 +15,67 @@
  */
 package io.syndesis.server.runtime;
 
-import static io.syndesis.common.util.Json.map;
-
-import java.io.IOException;
-
 import javax.annotation.PostConstruct;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+
+import io.syndesis.common.model.Schema;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.jsondb.dao.Migrator;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.common.util.Resources;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.server.jsondb.dao.Migrator;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
-import io.syndesis.common.model.Schema;
-
-/**
- *
- */
 @Service
-public class Migrations implements Migrator {
+@ConditionalOnProperty(value = "dao.autoMigration", havingValue = "true", matchIfMissing = true)
+public class Migrations {
+
     private static final Logger LOG = LoggerFactory.getLogger(Migrations.class);
 
     private final SqlJsonDB jsondb;
+
     private final DataManager manager;
+
+    private final Migrator migrator;
+
     private final StoredSettings storedSettings;
 
-    Migrations(SqlJsonDB jsondb, DataManager manager, StoredSettings storedSettings) {
+    public Migrations(final SqlJsonDB jsondb, final DataManager manager, final StoredSettings storedSettings, final Migrator migrator) {
         this.jsondb = jsondb;
         this.manager = manager;
         this.storedSettings = storedSettings;
+        this.migrator = migrator;
+    }
+
+    public int getTargetVersion() {
+        return Schema.VERSION;
     }
 
     @PostConstruct
     public void run() {
-        String versionInDB = storedSettings.get("model_schema_version");
-        if ( versionInDB == null ) {
+        final String storedVersion = storedSettings.get("model_schema_version");
+
+        final int versionInDB;
+        if (storedVersion == null) {
             LOG.info("Setting up the DB for the first time.");
             jsondb.dropTables();
             jsondb.createTables();
             storedSettings.set("model_schema_version", "0");
-            versionInDB = "0";
+            versionInDB = 0;
+        } else {
+            versionInDB = Integer.parseInt(storedVersion);
         }
 
-        if( !getTargetVersion().equals(versionInDB) ) {
+        if (getTargetVersion() != versionInDB) {
             LOG.info("DB schema changed.");
-            int from = Integer.parseInt(versionInDB);
-            int to = Integer.parseInt(getTargetVersion());
+            final int from = versionInDB;
+            final int to = getTargetVersion();
 
             // Apply per version migration scripts.
             for (int i = from; i < to; i++) {
-                int version = i + 1;
-                migrate(jsondb, version);
+                final int version = i + 1;
+                migrator.migrate(jsondb, version);
                 storedSettings.set("model_schema_version", Integer.toString(version));
             }
         } else {
@@ -80,34 +83,4 @@ public class Migrations implements Migrator {
         }
         manager.resetDeploymentData();
     }
-
-    public String getTargetVersion() {
-        return Schema.VERSION;
-    }
-
-    @Override
-    public void migrate(JsonDB jsondb, int toVersion) {
-        try {
-            String file = migrationsScriptPrefix() + toVersion + ".js";
-            String migrationScript = Resources.getResourceAsText(file);
-            if( migrationScript == null ) {
-                return;
-            }
-            LOG.info("Migrating to schema: {}", toVersion);
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            engine.put("internal",  map(
-                "jsondb", jsondb
-            ));
-
-            engine.eval(Resources.getResourceAsText("migrations/common.js"));
-            engine.eval(migrationScript);
-        } catch (IOException|ScriptException e) {
-            throw new SyndesisServerException(e);
-        }
-    }
-
-    protected String migrationsScriptPrefix() {
-        return "/migrations/up-";
-    }
-
 }

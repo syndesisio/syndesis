@@ -15,17 +15,16 @@
  */
 package io.syndesis.server.runtime;
 
-import static io.syndesis.common.util.Json.map;
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.common.util.Json;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.skife.jdbi.v2.DBI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
@@ -33,74 +32,64 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import io.syndesis.common.util.Json;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import static io.syndesis.common.util.Json.map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest()
 @ActiveProfiles("test")
-@ContextConfiguration(
-    classes = {
-        Application.class,
-        DataSourceConfiguration.class,
-        DataStoreConfiguration.class,
-    }
-)
+@ContextConfiguration(classes = {Application.class, DataSourceConfiguration.class, DataStoreConfiguration.class,})
 public class MigrationsITCase {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MigrationsITCase.class);
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     @Autowired
-    protected DBI dbi;
-    @Autowired
-    protected SqlJsonDB jsondb;
-    @Autowired
-    protected DataManager manager;
-    @Autowired
-    protected StoredSettings storedSettings;
+    private SqlJsonDB jsondb;
 
-    private Migrations createMigrations(String prefix, String target) {
-        return new Migrations(jsondb, manager, storedSettings) {
-            @Override
-            public String getTargetVersion() {
-                return target;
-            }
+    @Autowired
+    private DataManager manager;
 
+    @Autowired
+    private ResourceLoader resourceLoader;
+
+    @Autowired
+    private StoredSettings storedSettings;
+
+    @Test
+    public void shouldPerformMigrations() throws JsonProcessingException {
+        resetDB();
+        Migrations migrations = createMigrations("classpath:test-migrations/up-", 0);
+        migrations.run();
+
+        jsondb.set("/test", json(map("u10001", map("name", "Hiram Chirino"))));
+
+        migrations = createMigrations("classpath:test-migrations/up-", 3);
+        migrations.run();
+
+        final String json = jsondb.getAsString("/test");
+        assertThat(json).isEqualTo("{\"u10001\":{\"name\":\"Hiram Chirino Migrated\"}}");
+
+    }
+
+    private Migrations createMigrations(final String prefix, final int target) {
+        final DefaultMigrator migrator = new DefaultMigrator(resourceLoader) {
             @Override
             protected String migrationsScriptPrefix() {
                 return prefix;
             }
         };
 
-    }
+        return new Migrations(jsondb, manager, storedSettings, migrator) {
+            @Override
+            public int getTargetVersion() {
+                return target;
+            }
+        };
 
-    @Test
-    public void test() throws JsonProcessingException {
-        resetDB();
-        Migrations m = createMigrations("test-migrations/up-", "0");
-        m.run();
-
-        jsondb.set("/test", json(map(
-            "u10001", map(
-                "name", "Hiram Chirino"
-            )
-        )));
-
-        m = createMigrations("test-migrations/up-", "3");
-        m.run();
-
-        String json = jsondb.getAsString("/test");
-        assertThat(json).isEqualTo("{\"u10001\":{\"name\":\"Hiram Chirino Migrated\"}}");
-
-    }
-
-    private String json(Object value) throws JsonProcessingException {
-        return Json.writer().writeValueAsString(value);
     }
 
     private void resetDB() {
@@ -108,5 +97,9 @@ public class MigrationsITCase {
         storedSettings.createTables();
         jsondb.dropTables();
         jsondb.createTables();
+    }
+
+    private static String json(final Object value) throws JsonProcessingException {
+        return Json.writer().writeValueAsString(value);
     }
 }
