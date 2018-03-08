@@ -13,7 +13,7 @@
     "configuredProperties": {   
     },
     "tags": [
-        ""
+        "verifier"
     ],
     "properties": {
         "webhookUrl": {

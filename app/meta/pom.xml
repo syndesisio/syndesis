@@ -283,6 +283,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-slack</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
