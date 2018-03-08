@@ -1,4 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import {
   Integration, Integrations, IntegrationOverviews, IntegrationSupportService,
@@ -36,15 +37,20 @@ export class IntegrationImportComponent implements OnInit {
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  constructor(private integrationSupportService: IntegrationSupportService,) {
+  constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
   }
 
   cancel() {
-    console.log('Cancel');
+    this.redirectBack();
   }
 
-  done() {
-    console.log('Done');
+  done(integrationImports) {
+    console.log('integrationImports: ' + JSON.stringify(integrationImports));
+    if(integrationImports.length === 1 && integrationImports[0].id) {
+      this.router.navigate(['/integrations', integrationImports[0].id]);
+    } else {
+      this.redirectBack();
+    }
   }
 
   getFileTypeError() {
@@ -91,7 +97,6 @@ export class IntegrationImportComponent implements OnInit {
       console.log('File item: ' + JSON.stringify(item.file));
       console.log('Form data: ' + JSON.stringify(item.formData));
       console.log('Response: ' + JSON.stringify(response));
-      //this.;
 
       if (status === 200) {
         this.review = true;
@@ -105,5 +110,9 @@ export class IntegrationImportComponent implements OnInit {
     if (this.integrationOverviewsSubscription) {
       this.integrationOverviewsSubscription.unsubscribe();
     }
+  }
+
+  private redirectBack(): void {
+    this.router.navigate(['/integrations']);
   }
 }

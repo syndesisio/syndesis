@@ -20,16 +20,12 @@
             <input #fileSelect
                    type="file"
                    ng2FileSelect
-                   [uploader]="uploader"
-                   (onFileSelected)="fileSelect.value=''">
+                   [uploader]="uploader">
           </div>
           <div class="col-md-9">
             <div *ngFor="let item of uploader.queue">
               <div class="row">
-                <div class="col-xs-7">
-                  {{ item?.file?.name }}
-                </div>
-                <div class="col-xs-5">
+                <div class="col-xs-10">
                   <div *ngIf="item.isUploading" class="text-muted">
                     <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
                     <em>Importing...</em>
@@ -66,8 +62,7 @@
                 <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
                 <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
               </ng-container>
-              <td>{{ integration.action }}</td>
-              <td>{{ integration.id }}</td>
+              <td></td>
             </tr>
             </tbody>
           </table>
@@ -75,7 +70,7 @@
         <div class="buttons col-xs-12">
           <button type="button"
                   class="btn btn-primary"
-                  (click)="done()">
+                  (click)="done(integrationImports$)">
             Done
           </button>
           <button type="button"
