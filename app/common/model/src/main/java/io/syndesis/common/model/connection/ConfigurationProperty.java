@@ -92,6 +92,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     Boolean getRaw();
 
+    List<PropertyRelation> getRelation();
+
     @JsonIgnore
     default boolean isComponentProperty() {
         Boolean value = getComponentProperty();

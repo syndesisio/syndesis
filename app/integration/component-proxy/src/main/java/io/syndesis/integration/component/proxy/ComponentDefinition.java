@@ -17,6 +17,7 @@ package io.syndesis.integration.component.proxy;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -79,6 +80,22 @@ public interface ComponentDefinition {
 
     @Value.Immutable
     @Value.Style(builder = "new")
+    @JsonDeserialize(builder = ImmutableWhen.Builder.class)
+    interface When {
+        String getId();
+        String getValue();
+    }
+
+    @Value.Immutable
+    @Value.Style(builder = "new")
+    @JsonDeserialize(builder = ImmutablePropertyRelation.Builder.class)
+    interface PropertyRelation {
+        String getAction();
+        List<When> getWhen();
+    }
+
+    @Value.Immutable
+    @Value.Style(builder = "new")
     @JsonDeserialize(builder = ImmutableProperty.Builder.class)
     interface Property {
         Optional<String> getDisplayName();
@@ -99,6 +116,7 @@ public interface ComponentDefinition {
         Optional<String> getPrefix();
         Optional<String> getMultiValue();
         Optional<String> getEnumValues();
+        Optional<List<PropertyRelation>> getRelation();
     }
 
     @JsonIgnore
