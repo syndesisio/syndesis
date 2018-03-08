@@ -18,6 +18,7 @@ package io.syndesis.common.model.integration;
 import java.io.Serializable;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfiguredProperties;
@@ -40,6 +41,11 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     }
 
     Optional<Action> getAction();
+
+    @JsonIgnore
+    default <T extends Action> Optional<T> getActionAs(Class<T> type) {
+        return getAction().filter(type::isInstance).map(type::cast);
+    }
 
     Optional<Connection> getConnection();
 

@@ -53,7 +53,6 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
         return this.resourceManager;
     }
 
-
     protected abstract List<Step> createSteps();
 
     // ******************************
@@ -108,7 +107,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             .build();
     }
 
-    protected final Step newEndpointStep(String connectorId, String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) throws IOException {
+    protected final Step newEndpointStep(String connectorId, String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) {
         Connector connector = resourceManager.mandatoryLoadConnector(connectorId);
         ConnectorAction action = resourceManager.mandatoryLookupAction(connector, actionId);
 

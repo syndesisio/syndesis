@@ -22,6 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Predicates;
@@ -30,18 +37,14 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.ClassResolver;
 import org.apache.camel.util.IntrospectionSupport;
 import org.apache.camel.util.ObjectHelper;
+
+import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
+import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ConnectorStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
@@ -50,19 +53,18 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
-
         if (!step.getConnection().isPresent()) {
             return false;
         }
         if (!step.getConnection().get().getConnector().isPresent()) {
             return false;
         }
-        if (!step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
+        if (!step.getActionAs(ConnectorAction.class).isPresent()) {
             return false;
         }
 
         return Optionals.first(
-            step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get().getDescriptor().getComponentScheme(),
+            step.getActionAs(ConnectorAction.class).get().getDescriptor().getComponentScheme(),
             step.getConnection().get().getConnector().get().getComponentScheme()
         ).isPresent();
     }
@@ -73,7 +75,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
-        final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
+        final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
@@ -113,6 +115,11 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         try {
             final Map<String, Object> proxyProperties = new HashMap<>(properties);
 
+            // Set input/output data shape if the component proxy implements
+            // Input/OutputDataShapeAware
+            descriptor.getInputDataShape().ifPresent(ds -> trySetInputDataShape(component, ds));
+            descriptor.getOutputDataShape().ifPresent(ds -> trySetOutputDataShape(component, ds));
+
             // Try to set properties to the component
             setProperties(context, component, proxyProperties);
 
@@ -122,6 +129,11 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
                 // Set the camel context if the customizer implements
                 // the CamelContextAware interface.
                 ObjectHelper.trySetCamelContext(customizer, context);
+
+                // Set input/output data shape if the customizer implements
+                // Input/OutputDataShapeAware
+                descriptor.getInputDataShape().ifPresent(ds -> trySetInputDataShape(customizer, ds));
+                descriptor.getOutputDataShape().ifPresent(ds -> trySetOutputDataShape(customizer, ds));
 
                 // Try to set properties to the component
                 setProperties(context, customizer, proxyProperties);
@@ -211,7 +223,6 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
 
         return Optional.ofNullable(factory);
     }
-
 
     private ComponentProxyCustomizer resolveCustomizer(CamelContext context, String customizerType) {
         Class<ComponentProxyCustomizer> type = context.getClassResolver().resolveClass(customizerType, ComponentProxyCustomizer.class);

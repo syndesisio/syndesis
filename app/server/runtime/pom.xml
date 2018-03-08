@@ -97,57 +97,6 @@
           </execution>
         </executions>
         <dependencies>
-          <!-- ==== Salesforce ==== -->
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-on-create</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-on-update</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-on-delete</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-update</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-upsert</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-create</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-get</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-get-with-id</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-delete</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-salesforce-delete-with-id</artifactId>
-            <version>${project.version}</version>
-          </dependency>
           <!-- ==== REST Swagger ==== -->
           <dependency>
             <groupId>io.syndesis.connector</groupId>

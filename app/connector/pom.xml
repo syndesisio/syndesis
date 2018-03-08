@@ -65,20 +65,20 @@
     <module>support/catalog</module>
     <module>support/test</module>
 
-    <module>aws-s3</module>
-    <module>http</module>
-    <module>twitter</module>
-    <module>salesforce</module>
-    <module>sql</module>
-    <module>rest-swagger</module>
     <module>activemq</module>
     <module>amqp</module>
-    <module>odata</module>
-    <module>ftp</module>
-    <module>sftp</module>
-    <module>mqtt</module>
+    <module>aws-s3</module>
     <module>dropbox</module>
+    <module>ftp</module>
+    <module>http</module>
+    <module>mqtt</module>
+    <module>odata</module>
+    <module>rest-swagger</module>
+    <module>salesforce</module>
+    <module>sftp</module>
     <module>slack</module>
+    <module>sql</module>
+    <module>twitter</module>
   </modules>
 
   <dependencyManagement>
