@@ -55,26 +55,34 @@
         </p>
       </div>
       <div class="results">
-        <div class="col-xs-2">
-          <b>Import Results:</b>
+        <div class="col-xs-2 text">
+          <h3>Import Results:</h3>
         </div>
         <div class="col-xs-10">
           <table class="table">
             <tbody>
             <tr *ngFor="let integration of integrationImports$">
-              <th scope="row">Integration Name</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">Connection Name</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th scope="row">Connection Name</th>
-              <td>Configuration Required</td>
+              <ng-container [ngSwitch]="integration.kind">
+                <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
+                <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
+              </ng-container>
+              <td>{{ integration.action }}</td>
+              <td>{{ integration.id }}</td>
             </tr>
             </tbody>
           </table>
+        </div>
+        <div class="buttons col-xs-12">
+          <button type="button"
+                  class="btn btn-primary"
+                  (click)="done()">
+            Done
+          </button>
+          <button type="button"
+                  class="btn btn-default"
+                  (click)="cancel()">
+            Cancel
+          </button>
         </div>
       </div>
     </div>

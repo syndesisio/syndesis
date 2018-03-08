@@ -1,19 +1,19 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
-import { NotificationType } from 'patternfly-ng';
-import { NotificationService } from '@syndesis/ui/common';
-import { Integration, Integrations, IntegrationOverviews, IntegrationSupportService } from '@syndesis/ui/platform';
-import { FileError, IntegrationImportsData } from './integration-import.models';
-import { Observable } from 'rxjs/Observable';
+import {
+  Integration, Integrations, IntegrationOverviews, IntegrationSupportService,
+  IntegrationOverview, Extension
+} from '@syndesis/ui/platform';
+import {FileError, IntegrationImportsData} from './integration-import.models';
+import {Observable} from 'rxjs/Observable';
 
 import {
   FileItem,
   FileLikeObject,
-  FilterFunction,
   FileUploader,
-  FileUploaderOptions,
-  ParsedResponseHeaders
+  FileUploaderOptions
 } from 'ng2-file-upload';
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'syndesis-import-integration-component',
@@ -26,21 +26,26 @@ export class IntegrationImportComponent implements OnInit {
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   response: IntegrationImportsData;
-  integrationId: string;
-  integrations$: Observable<IntegrationOverviews>;
-  integrationName: string;
+  integrations: Array<IntegrationOverview>;
+  integrationOverviews$: Observable<IntegrationOverviews>;
   integrationImports$: Observable<IntegrationOverviews>;
-  integrationUpdate = false;
-  item = { } as FileItem;
-  loading = true;
+  item = {} as FileItem;
   review = false;
+
+  private integrationOverviewsSubscription: Subscription;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  constructor(
-    public notificationService: NotificationService,
-    private integrationSupportService: IntegrationSupportService,
-  ) {}
+  constructor(private integrationSupportService: IntegrationSupportService,) {
+  }
+
+  cancel() {
+    console.log('Cancel');
+  }
+
+  done() {
+    console.log('Done');
+  }
 
   getFileTypeError() {
     return {
@@ -54,11 +59,15 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
+    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
+      this.integrations = integrations;
+    });
+
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
       autoUpload: true,
-      //removeAfterUpload: true,
       filters: [
         {
           name: 'filename filter',
@@ -69,28 +78,32 @@ export class IntegrationImportComponent implements OnInit {
       ]
     });
 
-    this.uploader.onAfterAddingFile = (item: FileItem) => {
-      console.log('File has been added: ' + item);
-    };
-
     this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any, options: any): any => {
       this.error = this.getFileTypeError();
       this.fileSelect.nativeElement['value'] = '';
       this.uploader.clearQueue();
     };
 
-    this.uploader.onCompleteItem = (
-      item: FileItem,
-      response: string,
-      status: number
-    ) => {
+    this.uploader.onCompleteItem = (item: FileItem,
+                                    response: string,
+                                    status: number) => {
       console.log('File has been uploaded: ' + item);
+      console.log('File item: ' + JSON.stringify(item.file));
+      console.log('Form data: ' + JSON.stringify(item.formData));
       console.log('Response: ' + JSON.stringify(response));
+      //this.;
 
       if (status === 200) {
         this.review = true;
         this.integrationImports$ = JSON.parse(response);
+        this.item = item;
       }
     };
+  }
+
+  ngOnDestroy() {
+    if (this.integrationOverviewsSubscription) {
+      this.integrationOverviewsSubscription.unsubscribe();
+    }
   }
 }
