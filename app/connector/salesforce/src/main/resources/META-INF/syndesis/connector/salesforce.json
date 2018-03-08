@@ -224,7 +224,6 @@
         },
         "configuredProperties": {
           "operationName": "deleteSObjectWithId",
-          "sObjectIdName": "Id",
           "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
@@ -262,7 +261,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Field name of the external identifier"
+                "description": "Field name of the external identifier",
+                "defaultValue": "Id"
               }
             }
           }
@@ -342,7 +342,6 @@
         },
         "configuredProperties": {
           "operationName": "getSObjectWithId",
-          "sObjectIdName": "Id",
           "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
@@ -380,7 +379,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Field name of the external identifier"
+                "description": "Field name of the external identifier",
+                "defaultValue": "Id"
               }
             }
           }
@@ -459,7 +459,6 @@
         },
         "configuredProperties": {
           "operationName": "upsertSObject",
-          "sObjectIdName": "Id",
           "rawPayload": "true"
         },
         "propertyDefinitionSteps": [
@@ -497,7 +496,8 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Field name of the identifier"
+                "description": "Field name of the identifier",
+                "defaultValue": "Id"
               }
             }
           }
