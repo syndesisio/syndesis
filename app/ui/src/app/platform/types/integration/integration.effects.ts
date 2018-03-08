@@ -32,7 +32,7 @@ export class IntegrationEffects {
     .mergeMap(action =>
       this.integrationService
         .fetchMetrics(action.id)
-        .map(response => ({ type: IntegrationActions.FETCH_METRICS_COMPLETE, payload: response || {} }))
+        .map(response => ({ type: IntegrationActions.FETCH_METRICS_COMPLETE, payload: { id: action.id, ...response } }))
         .catch(error => Observable.of({
           type: IntegrationActions.FETCH_METRICS_FAIL,
           payload: error

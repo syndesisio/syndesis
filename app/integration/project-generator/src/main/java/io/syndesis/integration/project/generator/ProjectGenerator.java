@@ -41,6 +41,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.MavenProperties;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Predicates;
@@ -79,10 +80,12 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     private final Mustache applicationJavaMustache;
     private final Mustache applicationPropertiesMustache;
     private final Mustache pomMustache;
+    private final MavenProperties mavenProperties;
 
-    public ProjectGenerator(ProjectGeneratorConfiguration configuration, IntegrationResourceManager resourceManager) throws IOException {
+    public ProjectGenerator(ProjectGeneratorConfiguration configuration, IntegrationResourceManager resourceManager, MavenProperties mavenProperties) throws IOException {
         this.configuration = configuration;
         this.resourceManager = resourceManager;
+        this.mavenProperties = mavenProperties;
 
         MustacheFactory mf = new DefaultMustacheFactory();
 
@@ -209,11 +212,12 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 integration.getName(),
                 integration.getDescription().orElse(null),
                 dependencies,
-                configuration.getMavenProperties()),
+                    mavenProperties),
             pomMustache
         );
     }
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     private void addDecryptedKeyProperty(Properties properties, String index, String propKeyPrefix, String propertyKey, String propertyVal) {
         String key = String.format("%s-%s.%s", propKeyPrefix, index, propertyKey);
         String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);

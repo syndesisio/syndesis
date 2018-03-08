@@ -13,7 +13,7 @@
     "configuredProperties": {   
     },
     "tags": [
-        ""
+        "verifier"
     ],
     "properties": {
         "webhookUrl": {
@@ -25,6 +25,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
+            "order": "1",
             "description": "The webhook URL used to send messages to"
         },
         "sendingUsername": {
@@ -36,6 +37,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
+            "order": "2",
             "description": "This is the username that the bot will have when sending messages to a channel or user"
         },
         "iconUrl": {
@@ -47,6 +49,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
+            "order": "4",
             "description": "The avatar that the component will use when sending message to a channel or user"
         },
         "iconEmoji": {
@@ -58,6 +61,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
+            "order": "3",
             "description": "The Slack emogi that will be used for the message avatar"
         }
     },

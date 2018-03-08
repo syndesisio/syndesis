@@ -24,45 +24,108 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>connector-salesforce-parent</artifactId>
+  <artifactId>connector-salesforce</artifactId>
   <name>Connector :: Salesforce</name>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
-  <modules>
-    <module>common</module>
-    <module>create-sobject</module>
-    <module>delete-sobject</module>
-    <module>delete-sobject-with-id</module>
-    <module>get-sobject</module>
-    <module>get-sobject-with-id</module>
-    <module>update</module>
-    <module>upsert</module>
-    <module>on-create</module>
-    <module>on-update</module>
-    <module>on-delete</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-salesforce</artifactId>
+      <version>${camel.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.validation</groupId>
+          <artifactId>validation-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-support-verifier</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-component-proxy</artifactId>
+    </dependency>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- Declare camel-salesforce here to remove validation-api from all
-      connectors -->
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-salesforce</artifactId>
-        <version>${camel.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-salesforce-common</artifactId>
+    <!-- test -->
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>connector-support-maven-plugin</artifactId>
         <version>${project.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+        <executions>
+          <execution>
+            <id>inspections</id>
+            <goals>
+              <goal>generate-connector-inspections</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

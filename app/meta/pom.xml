@@ -46,17 +46,18 @@
 
     <dependency>
       <groupId>io.syndesis.common</groupId>
-      <artifactId>common-model</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.common</groupId>
       <artifactId>common-util</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-verifier</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- ===================================================================================== -->
@@ -126,11 +127,6 @@
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
 
@@ -142,11 +138,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jsonSchema</artifactId>
     </dependency>
 
     <dependency>
@@ -197,12 +188,6 @@
       <artifactId>camel-core</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-salesforce</artifactId>
-      <version>${camel.version}</version>
-    </dependency>
-
     <!-- Redefine Activemq deps to override ones from spring-boot pom import -->
     <dependency>
       <groupId>org.apache.activemq</groupId>
@@ -243,7 +228,6 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-dropbox</artifactId>
-      <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -280,6 +264,18 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-http</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-slack</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-salesforce</artifactId>
       <scope>runtime</scope>
     </dependency>
 

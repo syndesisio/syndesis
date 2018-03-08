@@ -15,11 +15,10 @@
  */
 package io.syndesis.integration.project.generator;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import io.syndesis.common.util.MavenProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("generator")
 public class ProjectGeneratorConfiguration {
@@ -31,7 +30,6 @@ public class ProjectGeneratorConfiguration {
      * Templates configuration.
      */
     private final Templates templates = new Templates();
-    private final MavenProperties mavenProperties = new MavenProperties();
 
     public Boolean isSecretMaskingEnabled() {
         return secretMaskingEnabled;
@@ -55,10 +53,6 @@ public class ProjectGeneratorConfiguration {
 
     public Templates getTemplates() {
         return templates;
-    }
-
-    public MavenProperties getMavenProperties() {
-        return mavenProperties;
     }
 
     public static class Templates {

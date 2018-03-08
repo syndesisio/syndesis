@@ -115,10 +115,10 @@ public class ComponentProxyComponent extends DefaultComponent {
         configureDelegateEndpoint(definition, delegate, options);
 
         final ComponentProxyEndpoint answer = new ComponentProxyEndpoint(uri, this, delegate);
-        answer.setBeforeProducer(getBeforeProducer());
-        answer.setAfterProducer(getAfterProducer());
-        answer.setBeforeConsumer(getBeforeConsumer());
-        answer.setAfterConsumer(getAfterConsumer());
+        answer.setBeforeProducer(ObjectHelper.trySetCamelContext(getBeforeProducer(), getCamelContext()));
+        answer.setAfterProducer(ObjectHelper.trySetCamelContext(getAfterProducer(), getCamelContext()));
+        answer.setBeforeConsumer(ObjectHelper.trySetCamelContext(getBeforeConsumer(), getCamelContext()));
+        answer.setAfterConsumer(ObjectHelper.trySetCamelContext(getAfterConsumer(), getCamelContext()));
 
         // clean-up parameters so that validation won't fail later on
         // in DefaultConnectorComponent.validateParameters()

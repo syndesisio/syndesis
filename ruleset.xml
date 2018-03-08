@@ -365,12 +365,6 @@
   <rule ref="rulesets/java/strictexception.xml/AvoidThrowingNullPointerException">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/unnecessary.xml/UselessParentheses">
-    <priority>3</priority>
-    <properties>
-      <property name="violationSuppressXPath" value="//Annotation[./*/Name[@Image = 'Generated']]" />
-    </properties>
-  </rule>
   <rule ref="rulesets/java/basic.xml/JumbledIncrementer">
     <priority>3</priority>
   </rule>

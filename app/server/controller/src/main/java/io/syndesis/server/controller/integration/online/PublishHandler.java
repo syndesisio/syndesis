@@ -135,13 +135,12 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
         String version = Integer.toString(integrationDeployment.getVersion());
         return DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
-            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationId))
-            .addLabel(OpenShiftService.DEPLOYMENT_ID_LABEL, version)
+            .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
             .addAnnotation(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName())
-            .addAnnotation(OpenShiftService.INTEGRATION_ID_ANNOTATION, integrationId)
-            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_ANNOTATION, version)
+            .addAnnotation(OpenShiftService.INTEGRATION_ID_LABEL, integrationId)
+            .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties))
             .build();
     }
@@ -252,7 +251,7 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
      */
     private int countDeployments(IntegrationDeployment deployment) {
         Integration integration = deployment.getSpec();
-        String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
+        String id = Labels.validate(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
         String username = deployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         Map<String, String> labels = new HashMap<>();
@@ -272,15 +271,14 @@ public class PublishHandler extends BaseHandler implements StateChangeHandler {
      */
     private boolean hasPublishedDeployments(IntegrationDeployment deployment) {
         Integration integration = deployment.getSpec();
-        String id = Labels.sanitize(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
+        String id = Labels.validate(integration.getId().orElseThrow(() -> new IllegalStateException("Couldn't find the id of the integration")));
         String version = String.valueOf(integration.getVersion());
 
         Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(id));
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, id);
 
         return (int) openShiftService().getDeploymentsByLabel(labels)
             .stream()
-            .filter(d -> !id.equals(d.getMetadata().getLabels().get(OpenShiftService.INTEGRATION_ID_LABEL)))
             .filter(d -> !version.equals(d.getMetadata().getLabels().get(OpenShiftService.DEPLOYMENT_VERSION_LABEL)))
             .filter(d -> d.getSpec().getReplicas() > 0)
             .count() > 0;

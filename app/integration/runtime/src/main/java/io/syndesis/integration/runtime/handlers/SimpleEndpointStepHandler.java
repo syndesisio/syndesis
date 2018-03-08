@@ -38,16 +38,14 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
-
         if (step.getConnection().isPresent()) {
             return false;
         }
-        if (!step.getAction().filter(ConnectorAction.class::isInstance).isPresent()) {
+        if (!step.getActionAs(ConnectorAction.class).isPresent()) {
             return false;
         }
 
-        ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
-
+        ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
         if (action.getDescriptor() == null) {
             return false;
         }
@@ -59,7 +57,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
     @Override
     public Optional<ProcessorDefinition> handle(Step step, ProcessorDefinition route, IntegrationRouteBuilder builder, final String index) {
         // Model
-        final ConnectorAction action = step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).get();
+        final ConnectorAction action = step.getActionAs(ConnectorAction.class).get();
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel

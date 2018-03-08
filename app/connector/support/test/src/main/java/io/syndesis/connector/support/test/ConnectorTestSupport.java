@@ -24,6 +24,7 @@ import java.util.Properties;
 import java.util.function.Consumer;
 
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
@@ -51,7 +52,6 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
     protected ResourceManager getResourceManager() {
         return this.resourceManager;
     }
-
 
     protected abstract List<Step> createSteps();
 
@@ -81,7 +81,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
     protected Properties useOverridePropertiesWithPropertiesComponent() {
         try {
             ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-            ProjectGenerator projectGenerator = new ProjectGenerator(configuration, new ResourceManager());
+            ProjectGenerator projectGenerator = new ProjectGenerator(configuration, new ResourceManager(), new MavenProperties());
 
             return projectGenerator.generateApplicationProperties(newIntegration());
         } catch (IOException e) {
@@ -107,7 +107,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             .build();
     }
 
-    protected final Step newEndpointStep(String connectorId, String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) throws IOException {
+    protected final Step newEndpointStep(String connectorId, String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) {
         Connector connector = resourceManager.mandatoryLoadConnector(connectorId);
         ConnectorAction action = resourceManager.mandatoryLookupAction(connector, actionId);
 

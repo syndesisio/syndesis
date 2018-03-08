@@ -249,3 +249,19 @@ controllers:
     maxIntegrationsPerUser: 4
     maxDeploymentsPerUser: 4
 ```
+
+## Add a Maven repo to S2I builds`
+```bash
+# provide your own maven repo endpoint, the following is just an example
+# cd ~/.m2/repository
+# python -m SimpleHTTPServer 8888 0.0.0.0
+
+# if you are using the above approach, pick up an ip for your host that will be reachable by the OpenShift containers
+MAVEN_REPO_ADDRESS="http://192.168.1.74:8888"
+# inject your repo
+oc replace -f <(oc get configmap syndesis-server-config -o yaml | sed "s#dao#maven:\\n  repositories:\\n    01_local: $MAVEN_REPO_ADDRESS\\ndao#" )
+# reprovision syndesis-server
+oc rollout latest syndesis-server
+
+# check logs at integration build time
+```

@@ -29,11 +29,11 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class NamesTest {
 
-    @Parameter(1)
-    public String integrationName;
-
     @Parameter(0)
     public String projectName;
+
+    @Parameter(1)
+    public String integrationName;
 
     @Test
     public void testGetSanitizedName() throws Exception {
@@ -43,7 +43,7 @@ public class NamesTest {
     @Parameters
     public static Iterable<Object[]> integrationToProjectNames() {
         return Arrays.asList(pair("bla", "bla"),
-            pair("0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
+            pair("012345678901234567890123456789012345678901234567890123456789012",
                 "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"),
             pair("how-are-you", "how are you?"), //
             pair("yet-sth-with-spaces", "yet sth  with !#ä spaceS"),

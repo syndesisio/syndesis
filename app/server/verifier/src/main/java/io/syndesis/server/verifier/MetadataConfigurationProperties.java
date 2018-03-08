@@ -22,7 +22,7 @@ public class MetadataConfigurationProperties {
 
     private static final int DEFAULT_THREAD_COUNT = 3;
 
-    private static final int DEFAULT_TIMEOUT = 1500;
+    private static final int DEFAULT_TIMEOUT = 15000;
 
     private String service = "syndesis-meta";
 
