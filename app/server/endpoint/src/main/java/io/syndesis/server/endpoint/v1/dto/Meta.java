@@ -20,6 +20,7 @@ import java.util.Collections;
 import io.syndesis.server.endpoint.v1.dto.MetaData.Type;
 import io.syndesis.server.endpoint.v1.handler.exception.Errors;
 
+import com.netflix.hystrix.HystrixInvokableInfo;
 
 public final class Meta<T> extends Mixed {
 
@@ -46,6 +47,20 @@ public final class Meta<T> extends Mixed {
         return value;
     }
 
+    public static <V> Meta<V> from(final V value, final HystrixInvokableInfo<V> metaInfo) {
+        if (metaInfo.isFailedExecution()) {
+            final Throwable executionException = metaInfo.getFailedExecutionException();
+            return Meta.withError(value, executionException);
+        } else if (metaInfo.isResponseTimedOut()) {
+            final double timeout = metaInfo.getProperties().executionTimeoutInMilliseconds().get() / 1000.0;
+            return Meta.withWarning(value, "The query could not be completed in " + timeout + " seconds.");
+        } else if (metaInfo.isSuccessfulExecution()) {
+            return Meta.verbatim(value);
+        } else {
+            return Meta.withWarning(value, "The query did not succeed");
+        }
+    }
+
     public static <V> Meta<V> verbatim(final V value) {
         return new Meta<>(value);
     }
@@ -54,6 +69,10 @@ public final class Meta<T> extends Mixed {
         final String message = Errors.userMessageFrom(throwable);
 
         return new Meta<>(value, ImmutableMetaData.builder().type(Type.DANGER).message(message).build());
+    }
+
+    public static <V> Meta<V> withWarning(final V value, final String message) {
+        return new Meta<>(value, ImmutableMetaData.builder().type(Type.WARNING).message(message).build());
     }
 
 }
