@@ -118,13 +118,10 @@ public class ConnectionActionHandler {
 
         final ConnectorDescriptor enrichedDescriptor = applyMetadataTo(defaultDescriptor, dynamicActionMetadata);
 
-        final HystrixInvokableInfo<?> metaInfo = (HystrixInvokableInfo<?>) meta;
-        if (metaInfo.isFailedExecution()) {
-            final Throwable executionException = metaInfo.getFailedExecutionException();
-            return Meta.withError(enrichedDescriptor, executionException);
-        }
+        @SuppressWarnings("unchecked")
+        final HystrixInvokableInfo<ConnectorDescriptor> metaInfo = (HystrixInvokableInfo<ConnectorDescriptor>) meta;
 
-        return Meta.verbatim(enrichedDescriptor);
+        return Meta.from(enrichedDescriptor, metaInfo);
     }
 
     protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
