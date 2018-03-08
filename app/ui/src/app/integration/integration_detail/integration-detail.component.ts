@@ -111,22 +111,22 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  nameUpdated($event) {
+    this.attributeUpdated({ 'name': $event });
+  }
+
   attributeUpdated(updatedAttribute: { [key: string]: string }) {
     this.integrationStore
       .patch(<any>this.integration, updatedAttribute)
       .toPromise()
       .then((update: Integration) => {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Update Successful',
-          message: `Updated ${updatedAttribute.key}`
-        });
+        // silently succeed
       })
       .catch(reason => {
         this.notificationService.popNotification({
           type: NotificationType.WARNING,
           header: 'Update Failed',
-          message: `Failed to update ${updatedAttribute.key}: ${reason}`
+          message: `Failed to update attribute: ${reason}`
         });
       });
   }

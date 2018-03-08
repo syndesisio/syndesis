@@ -30,7 +30,7 @@
     <div class="integration-detail__body row">
       <div class="integration-detail__info">
         <h1 class="inline-block">
-          <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="attributeUpdated('name', $event, integration)"></syndesis-editable-text>
+          <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated($event)"></syndesis-editable-text>
         </h1>
 
         <ng-container [ngSwitch]="integration.currentState">
