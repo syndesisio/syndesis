@@ -80,7 +80,7 @@ public interface ComponentDefinition {
 
     @Value.Immutable
     @Value.Style(builder = "new")
-    @JsonDeserialize(builder = ImmutableProperty.Builder.class)
+    @JsonDeserialize(builder = ImmutableRelationWhen.Builder.class)
     interface RelationWhen {
         String getId();
         String getValue();
@@ -88,7 +88,7 @@ public interface ComponentDefinition {
 
     @Value.Immutable
     @Value.Style(builder = "new")
-    @JsonDeserialize(builder = ImmutableProperty.Builder.class)
+    @JsonDeserialize(builder = ImmutableRelation.Builder.class)
     interface Relation {
         String getAction();
         List<RelationWhen> getWhen();

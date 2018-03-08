@@ -27,8 +27,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @SuppressWarnings("immutables")
 public interface PropertyRelation extends Serializable {
 
-    class Builder extends ImmutableConfigurationProperty.Builder {
-        // make ImmutableConfigurationProperty.Builder accessible
+    class Builder extends ImmutablePropertyRelation.Builder {
+        // make ImmutablePropertyRelation.Builder accessible
     }
 
     @Value.Immutable
@@ -36,7 +36,7 @@ public interface PropertyRelation extends Serializable {
     interface PropertyRelationWhen {
 
         @SuppressWarnings("PMD.UseUtilityClass")
-        class Builder extends ImmutablePropertyValue.Builder {
+        class Builder extends ImmutablePropertyRelationWhen.Builder {
         }
 
         String getId();
