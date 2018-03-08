@@ -92,6 +92,7 @@ public interface ComponentDefinition {
         Optional<String> getDescription();
         Optional<String> getControlHint();
         Optional<String> getLabelHint();
+        Optional<String> getPlaceholder();
         Optional<String> getName();
         Optional<String> getDefaultValue();
         Optional<String> getEnums();

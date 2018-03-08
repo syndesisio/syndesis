@@ -30,7 +30,7 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "description": "JDBC URL of the database."
+      "labelHint": "JDBC URL of the database."
     },
     "user": {
       "kind": "property",
@@ -44,7 +44,7 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "description": "Username for the database connection."
+      "labelHint": "Username for the database connection."
     },
     "password": {
       "kind": "property",
@@ -58,7 +58,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "Password for the database connection."
+      "labelHint": "Password for the database connection."
     },
     "schema": {
       "kind": "property",
@@ -72,7 +72,7 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "description": "Database schema."
+      "labelHint": "Database schema."
     }
   },
   "connectorCustomizers": [
@@ -113,7 +113,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "SQL statement to be executed. Can contain input parameters prefixed by ':#' (for example ':#MYPARAMNAME')."
+                "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                "placeholder": "for example ':#MYPARAMNAME'"
               }
             }
           }
@@ -156,7 +157,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "SQL SELECT statement to be executed."
+                "labelHint": "SQL SELECT statement to be executed."
               },
               "schedulerExpression": {
                 "kind": "parameter",
@@ -168,7 +169,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milliseconds between scheduling (executing)."
+                "labelHint": "Delay in milliseconds between scheduling (executing)."
               }
             }
           }
@@ -211,7 +212,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": true,
-                "description": "Name of the stored procedure."
+                "labelHint": "Name of the stored procedure."
               },
               "template": {
                 "kind": "path",
@@ -224,7 +225,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Stored procedure template to perform."
+                "labelHint": "Stored procedure template to perform."
               }
             }
           }
@@ -267,7 +268,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": true,
-                "description": "Name of the stored procedure."
+                "labelHint": "Name of the stored procedure."
               },
               "template": {
                 "kind": "path",
@@ -280,7 +281,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Stored Procedure template to perform."
+                "labelHint": "Stored Procedure template to perform."
               },
               "schedulerExpression": {
                 "kind": "parameter",
@@ -292,7 +293,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milliseconds between scheduling (executing)."
+                "labelHint": "Delay in milliseconds between scheduling (executing)."
               }
             }
           }

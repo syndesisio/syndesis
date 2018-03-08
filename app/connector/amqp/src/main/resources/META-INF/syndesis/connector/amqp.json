@@ -26,7 +26,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Location to send data to or obtain data from.",
+      "labelHint": "Location to send data to or obtain data from.",
       "order": "1"
     },
     "username": {
@@ -40,7 +40,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Access the broker with this user’s authorization credentials.",
+      "labelHint": "Access the broker with this user’s authorization credentials.",
       "order": "2"
     },
     "password": {
@@ -54,7 +54,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": true,
-      "description": "Password for the specified user account.",
+      "labelHint": "Password for the specified user account.",
       "order": "3"
     },
     "clientID" : {
@@ -68,7 +68,7 @@
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "description" : "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+      "labelHint" : "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
       "order": "4"
     },
     "skipCertificateCheck" : {
@@ -93,7 +93,7 @@
       "defaultValue" : "false",
       "deprecated" : false,
       "secret" : false,
-      "description" : "For convenience in only development environments. Do not set for secure production environments.",
+      "labelHint" : "For convenience in only development environments. Do not set for secure production environments.",
       "order": "5"
     },
     "brokerCertificate" : {
@@ -107,7 +107,7 @@
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "description" : "AMQ Broker X.509 PEM Certificate",
+      "labelHint" : "AMQ Broker X.509 PEM Certificate",
       "order": "6"
     },
     "clientCertificate" : {
@@ -121,7 +121,7 @@
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "description" : "AMQ Client X.509 PEM Certificate",
+      "labelHint" : "AMQ Client X.509 PEM Certificate",
       "order": "7"
     }
   },
@@ -157,7 +157,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Name of the queue or topic to send data to.",
+                "labelHint": "Name of the queue or topic to send data to.",
                 "order": "1"
               },
               "destinationType": {
@@ -181,7 +181,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "queue",
-                "description": "By default, the destination is a Queue.",
+                "labelHint": "By default, the destination is a Queue.",
                 "order": "2"
               },
               "deliveryPersistent": {
@@ -196,7 +196,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": true,
-                "description": "Message delivery is guaranteed when Persistent is selected.",
+                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
                 "order": "3"
               }
             }
@@ -235,7 +235,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Name of the queue or topic to receive data from.",
+                "labelHint": "Name of the queue or topic to receive data from.",
                 "order": "1"
               },
               "destinationType": {
@@ -259,7 +259,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "queue",
-                "description": "By default, the destination is a Queue.",
+                "labelHint": "By default, the destination is a Queue.",
                 "order": "2"
               },
               "durableSubscriptionId": {
@@ -273,7 +273,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
                 "order": "3"
               },
               "messageSelector": {
@@ -287,7 +287,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Specify a filter expression to receive only data that meets certain criteria.",
+                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
                 "order": "4"
               }
             }
@@ -326,7 +326,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Name of the queue or topic to receive data from.",
+                "labelHint": "Name of the queue or topic to receive data from.",
                 "order": "1"
               },
               "destinationType": {
@@ -350,7 +350,7 @@
                 "secret": false,
                 "componentProperty": false,
                 "defaultValue": "queue",
-                "description": "By default, the destination is a Queue.",
+                "labelHint": "By default, the destination is a Queue.",
                 "order": "2"
               },
               "durableSubscriptionId": {
@@ -364,7 +364,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
                 "order": "3"
               },
               "messageSelector": {
@@ -378,7 +378,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Specify a filter expression to receive only data that meets certain criteria.",
+                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
                 "order": "4"
               }
             }

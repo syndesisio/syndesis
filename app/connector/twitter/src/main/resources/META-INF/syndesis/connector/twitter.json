@@ -26,7 +26,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The access token"
+      "labelHint": "The access token"
     },
     "accessTokenSecret": {
       "kind": "property",
@@ -40,7 +40,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The access token secret"
+      "labelHint": "The access token secret"
     },
     "consumerKey": {
       "kind": "property",
@@ -56,7 +56,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The consumer key"
+      "labelHint": "The consumer key"
     },
     "consumerSecret": {
       "kind": "property",
@@ -72,7 +72,7 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "The consumer secret"
+      "labelHint": "The consumer secret"
     }
   },
   "actions": [
@@ -136,7 +136,7 @@
                 "secret": false,
                 "defaultValue": true,
                 "componentProperty": false,
-                "description": "Filter out old tweets that have previously been polled"
+                "labelHint": "Filter out old tweets that have previously been polled"
               },
               "keywords": {
                 "kind": "path",
@@ -149,7 +149,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "description": "Multiple search values can be separated with comma"
+                "labelHint": "Multiple search values can be separated with comma"
               },
               "delay": {
                 "kind": "parameter",
@@ -164,7 +164,7 @@
                 "secret": false,
                 "defaultValue": 5000,
                 "componentProperty": false,
-                "description": "Milliseconds before the next poll"
+                "labelHint": "Milliseconds before the next poll"
               }
             }
           }

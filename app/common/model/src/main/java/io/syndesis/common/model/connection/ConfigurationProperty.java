@@ -68,6 +68,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     String getLabelHint();
 
+    String getPlaceholder();
+
     String getDisplayName();
 
     List<PropertyValue> getEnum();

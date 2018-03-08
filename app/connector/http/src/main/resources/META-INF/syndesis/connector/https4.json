@@ -22,7 +22,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "description": "Base Http Endpoint URL (eg 'www.redhat.com')"
+      "labelHint": "Base Http Endpoint URL (eg 'www.redhat.com')"
     }
   },
   "componentScheme": "https4",
@@ -58,7 +58,7 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "Endpoint Path (eg '/path/to/endpoint')"
+                "labelHint": "Endpoint Path (eg '/path/to/endpoint')"
               },
               "httpMethod": {
                 "kind": "parameter",
@@ -104,7 +104,7 @@
                 "deprecated": false,
                 "defaultValue": "GET",
                 "secret": false,
-                "description": "The specific http method to execute."
+                "labelHint": "The specific http method to execute."
               }
             }
           }
@@ -142,7 +142,8 @@
                 "javaType": "java.lang.String",
                 "deprecated": false,
                 "secret": false,
-                "description": "Endpoint Path (eg '/path/to/endpoint')"
+                "labelHint": "Endpoint Path",
+                "placeholder": "eg '/path/to/endpoint'"
               },
               "httpMethod": {
                 "kind": "parameter",
@@ -188,7 +189,7 @@
                 "deprecated": false,
                 "defaultValue": "GET",
                 "secret": false,
-                "description": "The specific http method to execute."
+                "labelHint": "The specific http method to execute."
               },
               "schedulerExpression": {
                 "kind": "parameter",
@@ -200,7 +201,7 @@
                 "deprecated": false,
                 "secret": false,
                 "defaultValue": 1000,
-                "description": "Delay in milliseconds between scheduling (executing)."
+                "labelHint": "Delay in milliseconds between scheduling (executing)."
               }
             }
           }

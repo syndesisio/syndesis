@@ -24,7 +24,7 @@
           "deprecated": false,
           "secret": false,
           "raw": true,
-          "description": "Amazon AWS Access Key",
+          "labelHint": "Amazon AWS Access Key",
           "order": "1"
         },
         "secretKey": {
@@ -37,7 +37,7 @@
           "deprecated": false,
           "secret": true,
           "raw": true,
-          "description": "Amazon AWS Secret Key",
+          "labelHint": "Amazon AWS Secret Key",
           "order": "2"
         },
         "region": {
@@ -125,7 +125,7 @@
           "deprecated": false,
           "defaultValue" : "US_EAST_1",
           "secret": false,
-          "description": "The region where the bucket is located. This option is used in the com.amazonaws.services.s3.model.CreateBucketRequest.",
+          "labelHint": "The region where the bucket is located. This option is used in the com.amazonaws.services.s3.model.CreateBucketRequest.",
           "order": "3"
         },
         "bucketNameOrArn": {
@@ -137,7 +137,7 @@
           "javaType": "java.lang.String",
           "deprecated": false,
           "secret": false,
-          "description": "Bucket name or ARN",
+          "labelHint": "Bucket name or ARN",
           "order": "4"
         }
       },
@@ -195,7 +195,7 @@
                     "deprecated": false,
                     "secret": false,
                     "defaultValue": false,
-                    "description": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header.",
+                    "labelHint": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header.",
                     "order": "2"
                   },
                   "fileName": {
@@ -208,7 +208,7 @@
                     "javaType": "java.lang.String",
                     "deprecated": false,
                     "secret": false,
-                    "description": "To get the object from the bucket with the given file name",
+                    "labelHint": "To get the object from the bucket with the given file name",
                     "order": "1"
                   }
                 }
@@ -250,7 +250,7 @@
                     "deprecated": false,
                     "secret": false,
                     "defaultValue": false,
-                    "description": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header.",
+                    "labelHint": "Delete objects from S3 after they have been retrieved. The delete is only performed if the Exchange is committed. If a rollback occurs the object is not deleted. If this option is false then the same objects will be retrieve over and over again on the polls. Therefore you need to use the Idempotent Consumer EIP in the route to filter out duplicates. You can filter using the link S3ConstantsBUCKET_NAME and link S3ConstantsKEY headers or only the link S3ConstantsKEY header.",
                     "order": "4"
                   },
                   "maxMessagesPerPoll": {
@@ -264,7 +264,7 @@
                     "deprecated": false,
                     "secret": false,
                     "defaultValue": 10,
-                    "description": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.",
+                    "labelHint": "Gets the maximum number of messages as a limit to poll at each polling. Is default unlimited but use 0 or negative number to disable it as unlimited.",
                     "order": "2"
                   },
                   "prefix": {
@@ -277,7 +277,7 @@
                     "javaType": "java.lang.String",
                     "deprecated": false,
                     "secret": false,
-                    "description": "The prefix which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only consume objects we are interested in.",
+                    "labelHint": "The prefix which is used in the com.amazonaws.services.s3.model.ListObjectsRequest to only consume objects we are interested in.",
                     "order": "3"
                   },
                   "delay": {
@@ -292,7 +292,7 @@
                     "deprecated": false,
                     "secret": false,
                     "defaultValue": 500,
-                    "description": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                    "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
                     "order": "1"
                   }
                 }

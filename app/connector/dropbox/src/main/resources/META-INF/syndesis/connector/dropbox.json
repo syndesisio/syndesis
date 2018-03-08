@@ -25,7 +25,7 @@
             "secret": true,
             "componentProperty": true,
             "order": "1",
-            "description": "The access token to make API requests for a specific Dropbox user"
+            "labelHint": "The access token to make API requests for a specific Dropbox user"
         },
         "clientIdentifier": {
             "kind": "parameter",
@@ -38,7 +38,7 @@
             "secret": false,
             "componentProperty": true,
             "order": "2",
-            "description": "Name of the app registered to make API requests"
+            "labelHint": "Name of the app registered to make API requests"
         }
     },
     "actions": [
@@ -84,7 +84,7 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "order": "2",
-                                "description": "File upload mode"
+                                "labelHint": "File upload mode"
                             },
                             "remotePath": {
                                 "kind": "parameter",
@@ -96,7 +96,7 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "order": "1",
-                                "description": "Remote path where upload the file"
+                                "labelHint": "Remote path where upload the file"
                             }
                         }
                     }
@@ -134,7 +134,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "Folder or file name path to download"
+                                "labelHint": "Folder or file name path to download"
                             }
                         }
                     }

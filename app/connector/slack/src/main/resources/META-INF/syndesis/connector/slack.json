@@ -10,7 +10,7 @@
         }
     ],
     "componentScheme": "slack",
-    "configuredProperties": {   
+    "configuredProperties": {
     },
     "tags": [
         "verifier"
@@ -26,7 +26,7 @@
             "deprecated": false,
             "secret": false,
             "order": "1",
-            "description": "The webhook URL used to send messages to"
+            "labelHint": "The webhook URL used to send messages to"
         },
         "sendingUsername": {
             "kind": "parameter",
@@ -38,7 +38,7 @@
             "deprecated": false,
             "secret": false,
             "order": "2",
-            "description": "This is the username that the bot will have when sending messages to a channel or user"
+            "labelHint": "This is the username that the bot will have when sending messages to a channel or user"
         },
         "iconUrl": {
             "kind": "parameter",
@@ -50,7 +50,7 @@
             "deprecated": false,
             "secret": false,
             "order": "4",
-            "description": "The avatar that the component will use when sending message to a channel or user"
+            "labelHint": "The avatar that the component will use when sending message to a channel or user"
         },
         "iconEmoji": {
             "kind": "parameter",
@@ -62,7 +62,7 @@
             "deprecated": false,
             "secret": false,
             "order": "3",
-            "description": "The Slack emogi that will be used for the message avatar"
+            "labelHint": "The Slack emogi that will be used for the message avatar"
         }
     },
     "actions": [
@@ -99,7 +99,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "The username to send the message to"
+                                "labelHint": "The username to send the message to"
                             }
                         }
                     }
@@ -139,7 +139,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "The channel to send the message to"
+                                "labelHint": "The channel to send the message to"
                             }
                         }
                     }
