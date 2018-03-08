@@ -1,20 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import { NotificationType } from 'patternfly-ng';
 import { NotificationService } from '@syndesis/ui/common';
-import { IntegrationSupportService } from '@syndesis/ui/platform';
+import { Integration, Integrations, IntegrationOverviews, IntegrationSupportService } from '@syndesis/ui/platform';
+import { FileError, IntegrationImportsData } from './integration-import.models';
+import { Observable } from 'rxjs/Observable';
 
 import {
-  FileUploader,
   FileItem,
+  FileLikeObject,
+  FilterFunction,
+  FileUploader,
+  FileUploaderOptions,
   ParsedResponseHeaders
 } from 'ng2-file-upload';
-
-import {
-  IntegrationImportRequest,
-  IntegrationImportState,
-  IntegrationImportValidationError
-} from '@syndesis/ui/integration/import-export/import';
 
 @Component({
   selector: 'syndesis-import-integration-component',
@@ -22,14 +21,33 @@ import {
   styleUrls: ['./integration-import.component.scss']
 })
 export class IntegrationImportComponent implements OnInit {
-  public uploader: FileUploader;
-  public hasBaseDropZoneOver: boolean;
-  public review = false;
+  error: FileError;
+  importing = false;
+  uploader: FileUploader;
+  hasBaseDropZoneOver: boolean;
+  response: IntegrationImportsData;
+  integrationId: string;
+  integrations$: Observable<IntegrationOverviews>;
+  integrationName: string;
+  integrationImports$: Observable<IntegrationOverviews>;
+  integrationUpdate = false;
+  item = { } as FileItem;
+  loading = true;
+  review = false;
+
+  @ViewChild('fileSelect') fileSelect: ElementRef;
 
   constructor(
     public notificationService: NotificationService,
     private integrationSupportService: IntegrationSupportService,
   ) {}
+
+  getFileTypeError() {
+    return {
+      level: 'alert alert-danger',
+      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
+    };
+  }
 
   onFileOver(e) {
     this.hasBaseDropZoneOver = e;
@@ -39,106 +57,40 @@ export class IntegrationImportComponent implements OnInit {
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
-      autoUpload: false
+      autoUpload: true,
+      //removeAfterUpload: true,
+      filters: [
+        {
+          name: 'filename filter',
+          fn: (item: FileLikeObject, options: FileUploaderOptions) => {
+            return item.name.endsWith('.zip');
+          }
+        }
+      ]
     });
 
     this.uploader.onAfterAddingFile = (item: FileItem) => {
       console.log('File has been added: ' + item);
-      this.review = true;
+    };
+
+    this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any, options: any): any => {
+      this.error = this.getFileTypeError();
+      this.fileSelect.nativeElement['value'] = '';
+      this.uploader.clearQueue();
     };
 
     this.uploader.onCompleteItem = (
       item: FileItem,
       response: string,
-      status: number,
-      headers: ParsedResponseHeaders
+      status: number
     ) => {
+      console.log('File has been uploaded: ' + item);
+      console.log('Response: ' + JSON.stringify(response));
+
       if (status === 200) {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Imported Integrations',
-          message: 'Your integrations have been imported',
-          isPersistent: true,
-        });
-      } else if (status === 400) {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Import Failed!',
-          message: JSON.parse(response).userMsg,
-          isPersistent: true,
-        });
-      } else {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Import Failed!',
-          message: 'Your integration could not be imported.'
-        });
+        this.review = true;
+        this.integrationImports$ = JSON.parse(response);
       }
     };
-
-    /*
-    this.uploader.onCompleteItem = (
-      item: FileItem,
-      response: string,
-      status: number,
-      headers: ParsedResponseHeaders
-    ) => {
-      if (status === 200) {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Imported Integrations',
-          message: 'Your integrations have been imported',
-          isPersistent: true,
-        });
-      } else if (status === 400) {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Import Failed!',
-          message: JSON.parse(response).userMsg,
-          isPersistent: true,
-        });
-      } else {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Import Failed!',
-          message: 'Your integration could not be imported.'
-        });
-      }
-    };
-    */
   }
-
-  /*
-  @Input() integrationImportState: IntegrationImportState;
-  @Output() request = new EventEmitter<IntegrationImportRequest>();
-  integrationImportFileList: FileList;
-
-  get validationError(): IntegrationImportValidationError {
-    if (this.integrationImportState &&
-      this.integrationImportState.createRequest &&
-      this.integrationImportState.createRequest.errors &&
-      this.integrationImportState.createRequest.errors.length > 0) {
-      return this.integrationImportState.createRequest.errors[0];
-    }
-  }
-
-  onSelectFile(event): void {
-    if (event.target && event.target.files) {
-      this.integrationImportFileList = event.target.files;
-    } else {
-      this.integrationImportFileList = null;
-    }
-  }
-
-  onDone({ valid }, attachFile: boolean): void {
-    if (this.integrationImportFileList) {
-      const validateImportRequest = {
-        file: attachFile && this.integrationImportFileList && this.integrationImportFileList[0],
-        integrationImportTemplateId: 'integration-import-template'
-      };
-
-      this.request.next(validateImportRequest);
-    }
-  }
-  */
 }

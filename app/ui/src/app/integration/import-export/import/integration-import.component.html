@@ -54,40 +54,24 @@
             a draft version of the integration, then that draft is lost.</em>
         </p>
       </div>
-      <div class="results"
-           *ngIf="review === false">
+      <div class="results">
         <div class="col-xs-2">
           <b>Import Results:</b>
         </div>
         <div class="col-xs-10">
           <table class="table">
             <tbody>
-            <tr>
+            <tr *ngFor="let integration of integrationImports$">
               <th scope="row">Integration Name</th>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
             </tr>
             <tr>
               <th scope="row">Connection Name</th>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
             </tr>
             <tr>
               <th scope="row">Connection Name</th>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>Configuration required</td>
-              <td></td>
-              <td></td>
+              <td>Configuration Required</td>
             </tr>
             </tbody>
           </table>
