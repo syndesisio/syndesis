@@ -15,16 +15,11 @@
  */
 package io.syndesis.connector.meta.v1;
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -34,7 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +40,7 @@ import io.syndesis.common.util.SyndesisServerException;
 @Path("/drivers")
 public class DriverUploadEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(DriverUploadEndpoint.class);
-    public static final String EXT_DIR = System.getProperty("LOADER_PATH", "/deployments/ext");
+    public static final String EXT_DIR = System.getProperty("LOADER_HOME", "/deployments/ext");
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,9 +48,9 @@ public class DriverUploadEndpoint {
     public Boolean upload(MultipartFormDataInput input) {
 
         String fileName = getFileName(input);
-        storeFile(String.format("%s/%s", EXT_DIR, fileName), input);
+        storeFile(String.format("%s/%s.jar", EXT_DIR, fileName), input);
 
-        LOGGER.info("Driver %s succefully uploaded", fileName);
+        LOGGER.info("Driver {} succefully uploaded", fileName);
         return Boolean.TRUE;
     }
 
@@ -67,23 +61,18 @@ public class DriverUploadEndpoint {
     public Boolean delete(@PathParam("id") String safeExtensionId) {
 
         Boolean isDeleted = Boolean.FALSE;
-        File extensionDir = new File(String.format("%s/%s", EXT_DIR, safeExtensionId));
+        File extensionFile = new File(String.format("%s/%s.jar", EXT_DIR, safeExtensionId));
 
-        if (extensionDir.exists()) {
-            try {
+        if (extensionFile.exists()) {
+            isDeleted = extensionFile.delete();
 
-                workaroundDeleteDriverJar(extensionDir);
-
-                FileUtils.deleteDirectory(extensionDir);
-                LOGGER.info("Extension %s succesfully deleted", safeExtensionId);
-                isDeleted = Boolean.TRUE;
-
-            } catch (IOException e) {
-                LOGGER.error("Extension %s could not be deleted", safeExtensionId, e);
+            if (isDeleted) {
+                LOGGER.info("Extension {} succesfully deleted", safeExtensionId);
+            } else {
+                LOGGER.error("Extension {} could not be deleted", safeExtensionId);
             }
-
         } else {
-            LOGGER.error("Extension %s does not exist", safeExtensionId);
+            LOGGER.warn("Extension {} does not exist", safeExtensionId);
         }
 
         return isDeleted;
@@ -92,71 +81,12 @@ public class DriverUploadEndpoint {
     private void storeFile(String location, MultipartFormDataInput dataInput) {
         // Store the artifact into /deployments/ext
         try (final InputStream is = getBinaryArtifact(dataInput)) {
-            final File file = File.createTempFile("ext", "jar");
+            final File file = new File(location);
 
-            Files.copy(
-                    is,
-                    file.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-
-            closeQuietly(is);
-            extractJar(file, location);
-            if (! file.delete()) {
-                LOGGER.warn("Could not delete file %s ", file.getPath());
-            }
+            Files.copy(is, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException ex) {
             throw SyndesisServerException.launderThrowable("Unable to store the driver file into " + EXT_DIR, ex);
-        }
-    }
-
-    private void extractJar(File jar, String dest) throws IOException {
-        JarFile jarFile = new JarFile(jar);
-        final File destDir = new File(dest);
-        boolean isCreated = destDir.mkdir();
-        if (isCreated) {
-            Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                JarEntry entry = (JarEntry) entries.nextElement();
-                File file = new File(dest + File.separator + entry.getName());
-                if (entry.isDirectory()) {
-                    if (file.mkdir()) {
-                        LOGGER.warn("Dir %s already exists", file.getPath());
-                    }
-                    continue;
-                }
-                InputStream is = null;
-                FileOutputStream os = null;
-                try {
-                    is = jarFile.getInputStream(entry);
-                    os = new FileOutputStream(file);
-                    while (is.available() > 0) {
-                        os.write(is.read());
-                    }
-                } finally {
-                    closeQuietly(os);
-                    closeQuietly(is);
-                }
-
-                //Workaround
-                if (file.getPath().startsWith(dest + File.separator + "lib")) {
-                    FileUtils.copyFileToDirectory(file, new File(EXT_DIR));
-                }
-            }
-        } else {
-            LOGGER.warn("Dir %s already existed.", dest);
-        }
-        jarFile.close();
-    }
-
-    @SuppressWarnings("PMD.EmptyCatchBlock")
-    private void closeQuietly(Closeable stream) {
-        try {
-            if (stream != null) {
-                stream.close();
-            }
-        } catch (final IOException ioe) {
-            // ignore
         }
     }
 
@@ -193,19 +123,4 @@ public class DriverUploadEndpoint {
         }
     }
 
-    //For now as workaround delete driver jars found from EXT_DIR
-    private void workaroundDeleteDriverJar(File extensionDir) {
-        File libDir = new File(extensionDir.getAbsolutePath() + File.separator + "lib");
-        if (libDir != null && libDir.exists() && libDir.isDirectory()) {
-            File[] files = libDir.listFiles();
-            if (files != null) {
-                for (final File fileEntry : files) {
-                    File driverJar = new File(EXT_DIR + File.separator + fileEntry.getName());
-                    if (driverJar.exists() && !driverJar.delete()) {
-                        LOGGER.warn("Could not delete jar %s", driverJar.getPath());
-                    }
-                }
-            }
-        }
-    }
 }

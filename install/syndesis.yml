@@ -10,7 +10,7 @@ metadata:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Atlasmap Tag: 
+# Atlasmap Tag:
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
 #
@@ -892,7 +892,7 @@ objects:
           env:
           - name: JAVA_APP_DIR
             value: /deployments
-          - name: LOADER_PATH
+          - name: LOADER_HOME
             value: /deployments/ext
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
