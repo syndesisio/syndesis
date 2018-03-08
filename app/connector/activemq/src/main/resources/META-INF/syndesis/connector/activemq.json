@@ -26,7 +26,7 @@
       "deprecated": false,
       "secret": false,
       "labelHint": "Location to send data to or obtain data from.",
-      "description": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
+      "placeholder": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
       "order": "1"
     },
     "username": {
@@ -40,7 +40,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "controlHint": "Access the broker with this user’s authorization credentials.",
+      "labelHint": "Access the broker with this user’s authorization credentials.",
       "order": "2"
     },
     "password": {
@@ -54,7 +54,7 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": true,
-      "controlHint": "Password for the specified user account.",
+      "labelHint": "Password for the specified user account.",
       "order": "3"
     },
     "clientID": {
@@ -93,7 +93,7 @@
       "defaultValue": "false",
       "deprecated": false,
       "secret": false,
-      "description": "For convenience in only development environments. Do not set for secure production environments.",
+      "labelHint": "For convenience in only development environments. Do not set for secure production environments.",
       "order": "5"
     },
     "brokerCertificate": {
@@ -108,7 +108,18 @@
       "deprecated": false,
       "secret": false,
       "description": "AMQ Broker X.509 PEM Certificate",
-      "order": "6"
+      "order": "6",
+      "relation": [
+        {
+          "action": "DISABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "false"
+            }
+          ]
+        }
+      ]
     },
     "clientCertificate": {
       "kind": "property",
@@ -122,7 +133,18 @@
       "deprecated": false,
       "secret": false,
       "description": "AMQ Client X.509 PEM Certificate",
-      "order": "7"
+      "order": "7",
+      "relation": [
+        {
+          "action": "DISABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "false"
+            }
+          ]
+        }
+      ]
     }
   },
   "actions": [

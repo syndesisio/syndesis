@@ -156,6 +156,7 @@ export class FormFactoryProviderService extends FormFactoryService {
       controlTooltip: field.controlHint,
       inputType: type,
       value: value || field.value || field.defaultValue,
+      placeholder: field.placeholder,
       hint: field.description,
       list: field.enum
         ? (<Array<any>>field.enum).map(val => {

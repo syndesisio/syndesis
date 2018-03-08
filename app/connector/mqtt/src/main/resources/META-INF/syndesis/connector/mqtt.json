@@ -11,7 +11,7 @@
     ],
     "componentScheme": "paho",
     "configuredProperties": {
-        
+
     },
     "tags": [
         "verifier"
@@ -26,7 +26,8 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "description": "MQTT broker URL (eg 'tcp://localhost:1833')"
+            "labelHint": "MQTT broker URL",
+            "placeholder": "eg 'tcp://localhost:1833'"
         }
     },
     "actions": [
@@ -60,7 +61,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "MQTT queue/topic name"
+                                "labelHint": "MQTT queue/topic name"
                             }
                         }
                     }
@@ -97,7 +98,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "description": "MQTT queue/topic name"
+                                "labelHint": "MQTT queue/topic name"
                             }
                         }
                     }
