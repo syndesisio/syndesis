@@ -25,6 +25,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class NamesTest {
@@ -37,7 +38,9 @@ public class NamesTest {
 
     @Test
     public void testGetSanitizedName() throws Exception {
-        assertEquals(projectName, Names.sanitize(integrationName));
+        final String sanitized = Names.sanitize(integrationName);
+        assertEquals(projectName, sanitized);
+        assertTrue("Sanitized name: `" + sanitized + "` is not valid", Names.isValid(sanitized));
     }
 
     @Parameters
@@ -49,9 +52,10 @@ public class NamesTest {
             pair("yet-sth-with-spaces", "yet sth  with !#ä spaceS"),
             pair("aaa-big-and-small-zzz", "AaA BIG and Small ZzZ"),
             pair("twitter-mention-salesforce-upsert-contact", "Twitter Mention -> Salesforce upsert contact"),
-            pair("-twitter-mention-salesforce-upsert-contact-",
+            pair("twitter-mention-salesforce-upsert-contact-",
                 "??? Twitter Mention <-> Salesforce upsert contact !!!"),
-            pair("-s-p-a-c-e-the-final-frontier", "    s   p  a  c  e   , the final frontier"));
+            pair("s-p-a-c-e-the-final-frontier", "    s   p  a  c  e   , the final frontier"),
+            pair("walking-on-sunshine-", "_walking_on_sunshine_"));
     }
 
     private static Object[] pair(final String projectName, final String integrationName) {
