@@ -71,27 +71,19 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         request = this.requestReplaceDraft(integration, deployment);
         break;
       case 'publish':
-        header = 'Publishing deployment.';
+        header = 'Publishing integration.';
         message =
-          'Please allow a moment for the integration to fully activate.';
-        danger = 'Failed to publish integration deployment';
+          'Your integration will start running in a few moments.';
+        danger = 'Failed to publish integration';
         reason = 'Error publishing integration';
         request = this.requestPublish(integration);
         break;
-      case 'activate':
-        header = 'Integration is activating.';
+      case 'unpublish':
+        header = 'Unpublishing integration.';
         message =
-          'Please allow a moment for the integration to fully activate.';
-        danger = 'Failed to activate integration';
-        reason = 'Error activating integration';
-        request = this.requestActivate(integration);
-        break;
-      case 'deactivate':
-        header = 'Integration is deactivating.';
-        message =
-          'Please allow a moment for the integration to be unpublished.';
-        danger = 'Failed to deactivate integration';
-        reason = 'Error deactivating integration';
+          'It takes a few moments to unpublish the integration.';
+        danger = 'Failed to unpublish integration';
+        reason = 'Error unpublishing integration';
         request = this.requestDeactivate(integration);
         break;
       case 'delete':
@@ -142,7 +134,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
       case 'activate':
       case 'publish':
         return this.activateAction(integration);
-      case 'deactivate':
+      case 'unpublish':
         return this.deactivateAction(integration);
       case 'delete':
         return this.deleteAction(integration);
@@ -182,7 +174,7 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
         JSON.stringify(integration['id'])
     );
     this.selectedIntegration = integration;
-    return this.showModal('deactivate');
+    return this.showModal('unpublish');
   }
 
   // Open modal to confirm delete
@@ -257,25 +249,19 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
   }
 
   setModalProperties(action) {
+    this.modalTitle =  'Confirm';
     switch (action) {
       case 'replaceDraft':
-        this.modalTitle =  'Confirm Replace Draft';
-        this.modalMessage = 'Are you sure you would like to replace the current draft for this integration?';
+        this.modalMessage = 'Are you sure you would like to replace the current draft for the \
+        \'' + this.selectedIntegration.name + '\' integration?';
         break;
       case 'publish':
-        this.modalTitle = 'Confirm Publish';
-        this.modalMessage = 'Are you sure you would like to publish this deployment?';
+        this.modalMessage = 'Are you sure you would like to publish the \'' + this.selectedIntegration.name + '\' integration?';
         break;
-      case 'activate':
-        this.modalTitle = 'Confirm Activation';
-        this.modalMessage = 'Are you sure you would like to activate the \'' + this.selectedIntegration.name + '\' integration?';
-        break;
-      case 'deactivate':
-        this.modalTitle = 'Confirm Deactivation';
-        this.modalMessage = 'Are you sure you would like to deactivate the \'' + this.selectedIntegration.name + '\' integration?';
+      case 'unpublish':
+        this.modalMessage = 'Are you sure you would like to unpublish the \'' + this.selectedIntegration.name + '\' integration?';
         break;
       default:
-        this.modalTitle = 'Confirm Deletion';
         this.modalMessage = 'Are you sure you would like to delete the \'' + this.selectedIntegration.name + '\' integration?';
     }
   }
