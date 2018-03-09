@@ -21,8 +21,8 @@ if [ -z "${DEMO_DATA_ENABLED}" ]; then
 fi
 
 SYNDESIS_TEMPLATE_TYPE="syndesis"
-SYNDESIS_TEMPLATE_URL="${WORKSPACE}/deploy/${SYNDESIS_TEMPLATE_TYPE}.yml"
-SYNDESIS_OAUTHCLIENT_URL="${WORKSPACE}/deploy/support/serviceaccount-as-oauthclient-restricted.yml"
+SYNDESIS_TEMPLATE_URL="${WORKSPACE:-$(pwd)/../..}/install/${SYNDESIS_TEMPLATE_TYPE}.yml"
+SYNDESIS_OAUTHCLIENT_URL="${WORKSPACE:-$(pwd)/../..}/install/support/serviceaccount-as-oauthclient-restricted.yml"
 
 ROUTE_HOSTNAME=${KUBERNETES_NAMESPACE}.b6ff.rh-idev.openshiftapps.com
 

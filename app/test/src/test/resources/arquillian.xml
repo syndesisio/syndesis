@@ -10,7 +10,7 @@
       <property name="namespace.cleanup.enabled">true</property>
       <property name="env.setup.script.url">setup.sh</property>
       <property name="env.teardown.script.url">teardown.sh</property>
-      <property name="wait.for.service.list">syndesis-server syndesis-ui</property>
+      <property name="wait.for.service.list">syndesis-server,syndesis-ui</property>
       <property name="wait.timeout">600000</property>
       <property name="logs.copy">true</property>
     </extension>
