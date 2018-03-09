@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -33,7 +32,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
