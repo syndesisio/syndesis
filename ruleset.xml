@@ -5,12 +5,6 @@
   <rule ref="rulesets/java/sunsecure.xml/ArrayIsStoredDirectly">
     <priority>1</priority>
   </rule>
-  <rule ref="rulesets/java/strictexception.xml/AvoidCatchingGenericException">
-    <priority>3</priority>
-    <properties>
-      <property name="violationSuppressXPath" value="//Annotation[./*/Name[@Image = 'Generated']]" />
-    </properties>
-  </rule>
   <rule ref="rulesets/java/design.xml/NonStaticInitializer">
     <priority>3</priority>
   </rule>
