@@ -1,109 +1,110 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
-import { NotificationType } from 'patternfly-ng';
-import { NotificationService } from '@syndesis/ui/common';
-import { IntegrationSupportService } from '@syndesis/ui/platform';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import {
-  FileUploader,
+  Integration, Integrations, IntegrationOverviews, IntegrationSupportService, IntegrationOverview
+} from '@syndesis/ui/platform';
+import { FileError, IntegrationImportsData } from './integration-import.models';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
+import {
   FileItem,
-  ParsedResponseHeaders
+  FileLikeObject,
+  FileUploader,
+  FileUploaderOptions
 } from 'ng2-file-upload';
-
-import {
-  IntegrationImportRequest,
-  IntegrationImportState,
-  IntegrationImportValidationError
-} from '@syndesis/ui/integration/import-export/import';
 
 @Component({
   selector: 'syndesis-import-integration-component',
   templateUrl: './integration-import.component.html',
   styleUrls: ['./integration-import.component.scss']
 })
-export class IntegrationImportComponent implements OnInit {
-  public uploader: FileUploader;
-  public hasBaseDropZoneOver: boolean;
+export class IntegrationImportComponent implements OnInit, OnDestroy {
+  error: FileError;
+  importing = false;
+  uploader: FileUploader;
+  hasBaseDropZoneOver: boolean;
+  response: IntegrationImportsData;
+  integrations: Array<IntegrationOverview>;
+  integrationOverviews$: Observable<IntegrationOverviews>;
+  integrationImports$: Observable<IntegrationOverviews>;
+  item = {} as FileItem;
+  review = false;
 
-  constructor(
-    public notificationService: NotificationService,
-    private integrationSupportService: IntegrationSupportService,
-  ) {}
+  @ViewChild('fileSelect') fileSelect: ElementRef;
+
+  private integrationOverviewsSubscription: Subscription;
+  constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
+  }
+
+  cancel() {
+    this.redirectBack();
+  }
+
+  done(integrationImports) {
+    if (integrationImports.length === 1 && integrationImports[0].id) {
+      this.router.navigate(['/integrations', integrationImports[0].id]);
+    } else {
+      this.redirectBack();
+    }
+  }
+
+  getFileTypeError() {
+    return {
+      level: 'alert alert-danger',
+      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
+    };
+  }
 
   onFileOver(e) {
     this.hasBaseDropZoneOver = e;
   }
 
   ngOnInit() {
+    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
+    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
+      this.integrations = integrations;
+    });
+
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
-      autoUpload: true
+      autoUpload: true,
+      filters: [
+        {
+          name: 'filename filter',
+          fn: (item: FileLikeObject, options: FileUploaderOptions) => {
+            return item.name.endsWith('.zip');
+          }
+        }
+      ]
     });
 
-    /*
-    this.uploader.onCompleteItem = (
-      item: FileItem,
-      response: string,
-      status: number,
-      headers: ParsedResponseHeaders
-    ) => {
+    this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any, options: any): any => {
+      this.error = this.getFileTypeError();
+      this.fileSelect.nativeElement['value'] = '';
+      this.uploader.clearQueue();
+    };
+
+    this.uploader.onCompleteItem = (item: FileItem,
+                                    response: string,
+                                    status: number) => {
       if (status === 200) {
-        this.notificationService.popNotification({
-          type: NotificationType.SUCCESS,
-          header: 'Imported Integrations',
-          message: 'Your integrations have been imported',
-          isPersistent: true,
-        });
-      } else if (status === 400) {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Import Failed!',
-          message: JSON.parse(response).userMsg,
-          isPersistent: true,
-        });
-      } else {
-        this.notificationService.popNotification({
-          type: NotificationType.DANGER,
-          header: 'Import Failed!',
-          message: 'Your integration could not be imported.'
-        });
+        this.review = true;
+        this.integrationImports$ = JSON.parse(response);
+        this.item = item;
       }
     };
-    */
   }
 
-  /*
-  @Input() integrationImportState: IntegrationImportState;
-  @Output() request = new EventEmitter<IntegrationImportRequest>();
-  integrationImportFileList: FileList;
-
-  get validationError(): IntegrationImportValidationError {
-    if (this.integrationImportState &&
-      this.integrationImportState.createRequest &&
-      this.integrationImportState.createRequest.errors &&
-      this.integrationImportState.createRequest.errors.length > 0) {
-      return this.integrationImportState.createRequest.errors[0];
+  ngOnDestroy() {
+    if (this.integrationOverviewsSubscription) {
+      this.integrationOverviewsSubscription.unsubscribe();
     }
   }
 
-  onSelectFile(event): void {
-    if (event.target && event.target.files) {
-      this.integrationImportFileList = event.target.files;
-    } else {
-      this.integrationImportFileList = null;
-    }
+  private redirectBack(): void {
+    this.router.navigate(['/integrations']);
   }
-
-  onDone({ valid }, attachFile: boolean): void {
-    if (this.integrationImportFileList) {
-      const validateImportRequest = {
-        file: attachFile && this.integrationImportFileList && this.integrationImportFileList[0],
-        integrationImportTemplateId: 'integration-import-template'
-      };
-
-      this.request.next(validateImportRequest);
-    }
-  }
-  */
 }

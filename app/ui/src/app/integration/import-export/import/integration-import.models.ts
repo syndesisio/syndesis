@@ -15,13 +15,28 @@ export interface IntegrationImportRequest extends BaseRequestModel, IntegrationI
 }
 
 export interface IntegrationImportState extends BaseReducerModel {
-  createRequest?: IntegrationImportRequest;
   errors?: Array<IntegrationImportValidationError>;
   file?: File;
   importResults?: {
     integrations?: string[];
     connections?: string[];
+    action?: string;
+    kind?: string;
+    id?: string;
   };
   list?: IntegrationImports;
   warnings?: Array<{ key: string; longdesc: string; }>;
 }
+
+export interface FileError {
+  level: string;
+  message: string;
+}
+
+export interface IntegrationImportData {
+  action?: string;
+  kind?: string;
+  id?: string;
+}
+
+export type IntegrationImportsData = Array<IntegrationImportData>;

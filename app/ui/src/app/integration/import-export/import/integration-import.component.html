@@ -6,26 +6,26 @@
       </div>
     </div>
     <div class="card-pf-body">
+      <div>
+        <p>Choose one or more zip files that contain exported integrations that you want to import.</p>
+      </div>
       <div class="syn-drop-zone"
-        ng2FileDrop
-        [uploader]="uploader" 
-        [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
-        (fileOver)="onFileOver($event)">
+           ng2FileDrop
+           [uploader]="uploader"
+           [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+           (fileOver)="onFileOver($event)">
         <p>Drag and drop your integration files here or</p>
         <div class="row syn-drop-zone__file-select">
           <div class="col-md-3">
-            <input #fileSelect type="file" 
-              ng2FileSelect
-              [uploader]="uploader" 
-              (onFileSelected)="fileSelect.value=''">
+            <input #fileSelect
+                   type="file"
+                   ng2FileSelect
+                   [uploader]="uploader">
           </div>
           <div class="col-md-9">
             <div *ngFor="let item of uploader.queue">
               <div class="row">
-                <div class="col-xs-7">
-                  {{ item?.file?.name }}
-                </div>
-                <div class="col-xs-5">
+                <div class="col-xs-10">
                   <div *ngIf="item.isUploading" class="text-muted">
                     <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
                     <em>Importing...</em>
@@ -49,6 +49,37 @@
           <em>Note: The imported integration will be in the draft state. If you previously imported and this environment has
             a draft version of the integration, then that draft is lost.</em>
         </p>
+      </div>
+      <div class="results"
+           *ngIf="review">
+        <div class="col-xs-2 text">
+          <h3>Import Results:</h3>
+        </div>
+        <div class="col-xs-10">
+          <table class="table">
+            <tbody>
+            <tr *ngFor="let integration of integrationImports$">
+              <ng-container [ngSwitch]="integration.kind">
+                <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
+                <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
+              </ng-container>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="buttons col-xs-12">
+          <button type="button"
+                  class="btn btn-primary"
+                  (click)="done(integrationImports$)">
+            Done
+          </button>
+          <button type="button"
+                  class="btn btn-default"
+                  (click)="cancel()">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>
