@@ -97,7 +97,7 @@
           </div>
           <div *ngSwitchDefault>
             <div class="title">
-              <h1>Configure {{ step.stepKind | titleize:{separator: '-'} | capitalize }}</h1>
+              <h1>Configure {{ (step.name || step.stepKind) | titleize:{separator: '-'} | capitalize }}</h1>
             </div>
             <p>Fill out the fields associated with the selected step.</p>
             <div *ngIf="formGroup">
