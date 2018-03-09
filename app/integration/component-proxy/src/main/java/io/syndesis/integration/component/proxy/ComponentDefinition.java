@@ -116,7 +116,6 @@ public interface ComponentDefinition {
         Optional<String> getPrefix();
         Optional<String> getMultiValue();
         Optional<String> getEnumValues();
-        Optional<List<PropertyRelation>> getRelation();
     }
 
     @JsonIgnore
