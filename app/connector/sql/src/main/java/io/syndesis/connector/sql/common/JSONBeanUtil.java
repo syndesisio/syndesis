@@ -62,7 +62,9 @@ public final class JSONBeanUtil {
         }
 
         final Properties ret = new Properties();
-        ret.putAll(parsed);
+        if (parsed != null) {
+            ret.putAll(parsed);
+        }
 
         return ret;
     }
