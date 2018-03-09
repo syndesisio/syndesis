@@ -52,7 +52,7 @@ if [ "true" == "$MINISHIFT_ENABLED" ]; then
 fi
 
 oc create -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}  || oc replace -f ${SYNDESIS_TEMPLATE_URL} -n ${KUBERNETES_NAMESPACE}
-oc new-app ${SYNDESIS_TEMPLATE_TYPE} \
+oc new-app --template=${SYNDESIS_TEMPLATE_TYPE} \
     -p ROUTE_HOSTNAME=$ROUTE_HOSTNAME \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \

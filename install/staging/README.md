@@ -13,7 +13,7 @@ oc create -f support/serviceaccount-as-oauthclient-restricted.yml
 oc create -f syndesis.yml
 
 # Instantiate application
-oc new-app syndesis \
+oc new-app --template=syndesis \
     -p ROUTE_HOSTNAME=$(oc project -q).b6ff.rh-idev.openshiftapps.com \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \

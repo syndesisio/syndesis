@@ -46,7 +46,7 @@ All template parameters are required. Most of them have sane defaults, but some 
 In order to one of the templates described above these parameters must be provided:
 
 ```
-$ oc new-app syndesis -p \
+$ oc new-app --template=syndesis -p \
        ROUTE_HOSTNAME=<external hostname>
 ```
 
@@ -121,7 +121,7 @@ For development purposes you can also chose `syndesis-dev.yml` which enables Jav
 You can now use the template and the ServiceAccount created above to deploy Syndesis:
 
 ```bash
-$ oc new-app syndesis \
+$ oc new-app --template=syndesis \
     -p ROUTE_HOSTNAME=<EXTERNAL_HOSTNAME> \
     -p OPENSHIFT_MASTER=$(oc whoami --show-server) \
     -p OPENSHIFT_PROJECT=$(oc project -q) \

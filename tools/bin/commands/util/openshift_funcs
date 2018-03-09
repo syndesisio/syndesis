@@ -103,7 +103,7 @@ create_and_apply_template() {
         template_name="${template_name}-restricted"
     fi
 
-    oc new-app ${template_name} \
+    oc new-app --template=${template_name} \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
