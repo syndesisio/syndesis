@@ -3,10 +3,9 @@
 .connections-list {
   .cards {
     .card {
-      &.new-connection {
-        .card-pf-view {
-          background: inherit;
-          box-shadow: none;
+      &.card-empty-state {
+        .card-pf-icon-large {
+          color: $color-pf-blue-300;
         }
       }
 

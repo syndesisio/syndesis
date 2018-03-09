@@ -99,6 +99,7 @@
   }
 }
 
+/* Drag and drop file upload zone */
 .syn-drop-zone {
   border: 2px dashed $color-pf-black-300;
   padding: $gutter;
@@ -114,6 +115,7 @@
   }
 }
 
+/* Transparent toolbar */
 .syn-toolbar--inverted {
   .toolbar-pf {
     @include toolbar;
@@ -125,5 +127,27 @@
 
   &__ellipsis {
     @include truncate(ellipsis);
+  }
+}
+
+/* Empty state card */
+.card-empty-state {
+  .card-pf-view {
+    background: transparent;
+
+    &::after {
+      position: absolute;
+      content: '';
+      top: -2px;
+      bottom: -2px;
+      left: -2px;
+      right: -2px;
+      border: 5px dashed #ffffff;
+    }
+
+    &,
+    &:hover {
+      box-shadow: none;
+    }
   }
 }
