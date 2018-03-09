@@ -33,7 +33,8 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import org.springframework.stereotype.Component;
 
-import io.fabric8.openshift.client.NamespacedOpenShiftClient;
+import io.fabric8.openshift.client.DefaultOpenShiftClient;
+import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfigurationProperties;
@@ -45,6 +46,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 @Component
@@ -56,16 +58,16 @@ public class ExtensionActivator {
 
     private final FileDataManager fileDataManager;
 
-    private final NamespacedOpenShiftClient openShiftClient;
+    private final OpenShiftClient openShiftClient;
 
     public ExtensionActivator(DataManager dataManager,
             MetadataConfigurationProperties verificationConfig,
             FileDataManager fileDataManager,
-            NamespacedOpenShiftClient openShiftClient) {
+            OpenShiftConfigurationProperties openShiftConfigurationProperties) {
         this.dataManager = dataManager;
         this.verificationConfig = verificationConfig;
         this.fileDataManager = fileDataManager;
-        this.openShiftClient = openShiftClient;
+        this.openShiftClient = new DefaultOpenShiftClient(openShiftConfigurationProperties.getOpenShiftClientConfiguration());
     }
 
     public void activateExtension(Extension extension) {
