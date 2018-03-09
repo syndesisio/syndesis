@@ -22,7 +22,8 @@
       "javaType": "java.lang.String",
       "deprecated": false,
       "secret": false,
-      "labelHint": "Base Http Endpoint URL (eg 'www.redhat.com')"
+      "labelHint": "Base Http Endpoint URL",
+      "placeholder": "eg 'www.redhat.com'"
     }
   },
   "componentScheme": "http4",
