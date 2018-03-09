@@ -16,15 +16,18 @@
 package io.syndesis.common.util;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 import static io.syndesis.common.util.Strings.truncate;
 
 public final class Names {
 
-    private static final String VALID_REGEX = "[-A-Za-z0-9\\._]+";
-    private static final String INVALID_CHARACTER_REGEX = "[^a-zA-Z0-9-\\._]";
+    private static final Pattern VALID_REGEX = Pattern.compile("^[a-z0-9][-A-Za-z0-9\\\\.]+$");
+    private static final Pattern INVALID_START_REGEX = Pattern.compile("^[^a-z0-9]+");
+    private static final Pattern INVALID_CHARACTER_REGEX = Pattern.compile("[^a-zA-Z0-9-\\._]");
     private static final String SPACE = " ";
     private static final String BLANK = "";
     private static final String DASH = "-";
+    private static final String UNDERSCORE = "_";
     //The actual limit is 253,
     // but individual resources have other limitations
     // (e.g. service has 63: RFC 1035)
@@ -37,18 +40,24 @@ public final class Names {
     /**
      * Sanitizes the specified name by applying the following rules:
      * 1. Replace spaces with dashes.
-     * 2. Remove invalid characters.
-     * 3. Keep the first 64 characters.
+     * 2. Replace underscores with dashes.
+     * 3. Ensures that the first character is a alphanumeric
+     * 4. Remove invalid characters.
+     * 5. Keep the first 64 characters.
      * @param name  The specified name.
      * @return      The sanitized string.
      */
     public static String sanitize(String name) {
-        return truncate(name
+        final String firstPass = name
             .replaceAll(SPACE, DASH)
-            .replaceAll(INVALID_CHARACTER_REGEX, BLANK)
-            .toLowerCase(Locale.US)
-            .chars()
-            .filter(i -> !String.valueOf(i).matches(INVALID_CHARACTER_REGEX))
+            .replaceAll(UNDERSCORE, DASH)
+            .toLowerCase(Locale.US);
+
+        final String secondPass = INVALID_START_REGEX.matcher(firstPass).replaceAll(BLANK);
+
+        final String thirdPass = INVALID_CHARACTER_REGEX.matcher(secondPass).replaceAll(BLANK);
+
+        return truncate(thirdPass.chars()
              //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
@@ -63,7 +72,7 @@ public final class Names {
 
 
     public static boolean isValid(String name) {
-        return name.matches(VALID_REGEX) && name.length() <= MAXIMUM_NAME_LENGTH;
+        return VALID_REGEX.matcher(name).matches() && name.length() <= MAXIMUM_NAME_LENGTH;
     }
 
     public static void validate(String name) {
