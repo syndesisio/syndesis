@@ -48,23 +48,19 @@ public class ActivityTrackingControllerTest {
     @Before
     public void before() {
         JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+        ds.setURL("jdbc:h2:mem:t;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
         this.dbi = new DBI(ds);
         this.jsondb = new SqlJsonDB(dbi, null);
-        try {
-            this.jsondb.dropTables();
-        } catch (Exception e) {
-        }
         this.jsondb.createTables();
     }
 
     @Test
-    public void testLogsController() throws InterruptedException, IOException {
+    public void testLogsController() throws IOException {
 
         final String expectedDBState = resource("logs-controller-db.json").trim();
         final String podLogs = resource("test-pod-x23x.txt");
 
-        try (ActivityTrackingController controller = new ActivityTrackingController(jsondb, dbi,null) {
+        try (ActivityTrackingController controller = new ActivityTrackingController(jsondb, dbi, null) {
 
             @Override
             protected PodList listPods() {

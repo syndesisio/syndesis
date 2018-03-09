@@ -168,7 +168,7 @@ class PodLogMonitor implements Consumer<InputStream> {
             ActivityStep rc = steps.get(step);
             if( rc == null ) {
                 rc = new ActivityStep();
-                rc.setId(id);
+                rc.setId(step);
                 rc.setAt(KeyGenerator.getKeyTimeMillis(id));
                 steps.put(step, rc);
             }
