@@ -128,8 +128,10 @@ export interface Activity extends BaseEntity {
 export interface ActivityStep extends BaseEntity {
   at: number;
   duration?: number;
+  isFailed: boolean;
   failure?: string;
   message?: string[];
+  output?: string;
   events?: any;
 }
 

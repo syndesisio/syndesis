@@ -9,7 +9,7 @@
   Error: the activity logs could not be refreshed. Please try again by clicking on 'Refresh'.
 </syndesis-validation-error>
 
-<pfng-list [items]="activities" [config]="{ useExpandItems: false }" [itemTemplate]="itemTemplate" [expandTemplate]="expandTemplate"
+<pfng-list [items]="activities" [config]="{ useExpandItems: true }" [itemTemplate]="itemTemplate" [expandTemplate]="expandTemplate"
   [actionTemplate]="actionTemplate">
   <ng-template #itemTemplate let-activity="item" let-index="index">
     <div class="list-pf-content-wrapper">
@@ -35,7 +35,27 @@
     </div>
   </ng-template>
   <ng-template #expandTemplate let-activity="item" let-index="index">
-
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Time</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Output</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let step of activity.steps">
+          <td>{{ step.name }}</td>
+          <td>{{ step.at | date:'medium' }}</td>
+          <td>{{ step.duration | synDuration: 's' }}</td>
+          <td *ngIf="step.isFailed"><i class="pficon pficon-error-circle-o"></i> Error</td>
+          <td *ngIf="!step.isFailed"><i class="pficon pficon-ok"></i> Success</td>
+          <td>{{ step.output }}</td>
+        </tr>
+      </tbody>
+    </table>
   </ng-template>
   <ng-template #actionTemplate let-activity="item" let-index="index">
 

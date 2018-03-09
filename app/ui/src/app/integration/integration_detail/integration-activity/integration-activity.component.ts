@@ -35,6 +35,22 @@ export class IntegrationActivityComponent implements OnInit {
     this.onError = false;
     this.integrationSupportService
       .requestIntegrationActivity(this.integration.id)
+      .do(activitities => {
+        // TODO: In a real, efficient RFP environment, this should be performed as a
+        //       one step operation within the reducer data logic and never within a component
+        activitities.forEach(activity => {
+          activity.steps.forEach(step => {
+            // XXX: ANTIPATTERN AHEAD. The following code block mutates an object state
+            const integrationStep = this.integration.steps.find(_integrationStep => _integrationStep.id == step.id);
+            step.name = integrationStep ? integrationStep.name : 'n/a';
+            step.isFailed = (step.failure && step.failure.length > 0) || (step.message && step.message.length > 0);
+            const errorMessages = [step.failure, ...step.message].filter(messages => !!messages);
+            step.output = errorMessages.length > 0 ? errorMessages.join('. ') : 'N/A';
+          });
+        });
+
+        return activitities;
+      })
       .subscribe(
         activities => this.updateActivities(activities),
         error => this.handleError(error)

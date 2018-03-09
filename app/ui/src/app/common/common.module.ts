@@ -20,6 +20,7 @@ import { CapitalizePipe } from './capitalize.pipe';
 import { TitleizePipe } from './titleize.pipe';
 import { SlugifyPipe } from './slugify.pipe';
 import { DurationPipe } from './duration.pipe';
+import { DurationDiffPipe } from './duration-diff.pipe';
 import { IconPathPipe } from './icon-path.pipe';
 import { ParseMarkdownLinksPipe } from './parse-markdown-links.pipe';
 import { ButtonComponent } from './button.component';
@@ -48,6 +49,7 @@ import { NavigationService } from './navigation.service';
     ButtonComponent,
     SlugifyPipe,
     DurationPipe,
+    DurationDiffPipe,
     IconPathPipe,
     ParseMarkdownLinksPipe,
     ModalComponent,
@@ -71,6 +73,7 @@ import { NavigationService } from './navigation.service';
     SlugifyPipe,
     IconPathPipe,
     DurationPipe,
+    DurationDiffPipe,
     ModalComponent,
     WizardProgressBarComponent,
     CancelConfirmationModalComponent,
