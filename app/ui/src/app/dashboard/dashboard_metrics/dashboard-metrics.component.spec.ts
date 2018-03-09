@@ -4,7 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IntegrationState } from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
 import { DashboardMetricsComponent } from './dashboard-metrics.component';
-import { DurationPipe } from '@syndesis/ui/common';
+import { DurationDiffPipe } from '@syndesis/ui/common';
 
 describe('DashboardMetricsComponent', () => {
   let component: DashboardMetricsComponent;
@@ -16,7 +16,7 @@ describe('DashboardMetricsComponent', () => {
       providers: [ConfigService],
       declarations: [
         DashboardMetricsComponent,
-        DurationPipe
+        DurationDiffPipe
       ]
     })
     .compileComponents();

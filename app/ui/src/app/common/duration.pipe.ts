@@ -5,29 +5,35 @@ import { map } from 'rxjs/operators';
 import { moment } from '@syndesis/ui/vendor';
 
 @Pipe({
-  name: 'synDuration$'
+  name: 'synDuration'
 })
 export class DurationPipe implements PipeTransform {
-  transform(timestamp: number, defaultValue = 'n/a'): Observable<string> | string {
-    if (!timestamp) {
-      return Observable.of(defaultValue);
+  transform(duration: number, timeUnit: 's' | 'm' | 'h' | 'd' | 'w'): string {
+    if (!duration) {
+      return 'NaN';
     }
 
-    const startDate = moment(timestamp);
-    const uptimeDuration = moment.duration(moment().diff(startDate));
+    const durationMoment = moment.duration(duration);
+    switch (timeUnit.toLowerCase()) {
+      case 'm': {
+        return `${durationMoment.minutes()} minutes`;
+      }
 
-    return Observable.of(uptimeDuration).pipe(
-      map(duration => ({
-        days: duration.days(),
-        hours: duration.hours(),
-        minutes: duration.minutes(),
-      })),
-      map(durationAsObject => Object
-        .keys(durationAsObject)
-        .reduce((timeSpan: string, key: string) => {
-          return durationAsObject[key] > 0 ? timeSpan + `${durationAsObject[key]} ${key} ` : timeSpan;
-        }, '')),
-      map(durationString => durationString && durationString.length > 0 ? durationString : defaultValue)
-    );
+      case 'h': {
+        return `${durationMoment.hours()} hours`;
+      }
+
+      case 'd': {
+        return `${durationMoment.days()} days`;
+      }
+
+      case 'w': {
+        return `${durationMoment.weeks()} weeks`;
+      }
+
+      default: {
+        return `${durationMoment.seconds()} seconds`;
+      }
+    }
   }
 }
