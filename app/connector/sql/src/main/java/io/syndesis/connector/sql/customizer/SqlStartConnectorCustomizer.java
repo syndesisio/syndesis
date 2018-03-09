@@ -24,6 +24,7 @@ import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 
 public final class SqlStartConnectorCustomizer implements ComponentProxyCustomizer {
     @Override
@@ -43,19 +44,27 @@ public final class SqlStartConnectorCustomizer implements ComponentProxyCustomiz
     private void doAfterProducer(Exchange exchange) {
         final List<String> answer = new ArrayList<>();
 
-        if (exchange.getIn().getBody(List.class) != null) {
-            List<Map<String, Object>> maps = exchange.getIn().getBody(List.class);
-            if (maps.isEmpty()) {
-                throw new IllegalStateException("Got an empty collection");
-            }
+        final Message in = exchange.getIn();
+        if (in.getBody(List.class) != null) {
+            @SuppressWarnings("unchecked")
+            final List<Map<String, Object>> maps = in.getBody(List.class);
 
-            for (Map<String, Object> map: maps) {
-                answer.add(JSONBeanUtil.toJSONBean(map));
+            if (maps != null) {
+                for (Map<String, Object> map: maps) {
+                    final String bean = JSONBeanUtil.toJSONBean(map);
+                    answer.add(bean);
+                }
             }
         } else {
-            answer.add(JSONBeanUtil.toJSONBean(exchange.getIn().getBody(Map.class)));
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> singleMap = in.getBody(Map.class);
+
+            if (singleMap != null) {
+                final String bean = JSONBeanUtil.toJSONBean(singleMap);
+                answer.add(bean);
+            }
         }
 
-        exchange.getIn().setBody(answer);
+        in.setBody(answer);
     }
 }
