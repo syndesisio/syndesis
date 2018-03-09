@@ -60,6 +60,13 @@ public final class SqlConnectionRule extends ExternalResource {
         try {
             connection = DriverManager.getConnection(url, user, password);
             try (Statement stmt = connection.createStatement()) {
+                stmt.execute("DROP table NAME0");
+                stmt.execute("DROP table ADDRESS0");
+                stmt.close();
+            } catch (final SQLException e) { // NOPMD
+                //ignore
+            }
+            try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate("CREATE TABLE name0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), " + "lastName VARCHAR(255))");
                 stmt.executeUpdate("CREATE TABLE ADDRESS0 (id INTEGER PRIMARY KEY, Address VARCHAR(255), " + "lastName VARCHAR(255))");
                 stmt.close();

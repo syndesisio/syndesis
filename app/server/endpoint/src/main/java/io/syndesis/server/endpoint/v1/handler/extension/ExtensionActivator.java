@@ -23,7 +23,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import io.syndesis.server.dao.manager.DataManager;
+import org.springframework.stereotype.Component;
+
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfigurationProperties;
@@ -33,15 +34,19 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
-import org.springframework.stereotype.Component;
+import io.syndesis.server.dao.manager.DataManager;
 
 @Component
 public class ExtensionActivator {
 
     private final DataManager dataManager;
 
-    public ExtensionActivator(DataManager dataManager) {
+    private final VerifierExtensionUploader verifier;
+
+    public ExtensionActivator(DataManager dataManager,
+            VerifierExtensionUploader verifier) {
         this.dataManager = dataManager;
+        this.verifier = verifier;
     }
 
     public void activateExtension(Extension extension) {
@@ -56,6 +61,10 @@ public class ExtensionActivator {
             .status(Extension.Status.Installed)
             .lastUpdated(rightNow)
             .build());
+
+        if (extension.getTags().contains("jdbc-driver")) {
+            verifier.uploadToVerifier(extension);
+        }
     }
 
     public void deleteExtension(Extension extension) {
@@ -63,6 +72,10 @@ public class ExtensionActivator {
             doDeleteRelatedObjects(extension);
         }
         doDelete(extension);
+
+        if (extension.getTags().contains("jdbc-driver")) {
+            verifier.deleteFromVerifier(extension);
+        }
     }
 
     private void doDeleteInstalled(String logicalExtensionId) {
@@ -181,9 +194,7 @@ public class ExtensionActivator {
             .build();
     }
 
-    private String getConnectorIdForExtension(Extension extension) {
+    protected static String getConnectorIdForExtension(Extension extension) {
         return "ext-" + extension.getExtensionId().replaceAll("[^a-zA-Z0-9]","-");
     }
-
-
 }

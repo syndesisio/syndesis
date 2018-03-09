@@ -110,6 +110,11 @@ parameters:
   name: PROMETHEUS_VOLUME_CAPACITY
   required: true
   value: 1Gi
+- description: Volume space available for Verifier data, e.g. 512Mi, 2Gi.
+  displayName: Verifier Volume Capacity
+  name: VERIFIER_VOLUME_CAPACITY
+  required: true
+  value: 256Mi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -842,6 +847,19 @@ objects:
       app: syndesis
       component: syndesis-meta
 - apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: syndesis-verifier
+    labels:
+      app: syndesis
+      component: syndesis-verifier
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VERIFIER_VOLUME_CAPACITY}
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -874,6 +892,8 @@ objects:
           env:
           - name: JAVA_APP_DIR
             value: /deployments
+          - name: LOADER_PATH
+            value: /deployments/ext
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           image: ' '
@@ -913,7 +933,12 @@ objects:
           volumeMounts:
           - name: config-volume
             mountPath: /deployments/config
+          - name: ext-volume
+            mountPath: /deployments/ext
         volumes:
+        - name: ext-volume
+          persistentVolumeClaim:
+            claimName: syndesis-verifier
         - name: config-volume
           configMap:
             name: syndesis-meta-config

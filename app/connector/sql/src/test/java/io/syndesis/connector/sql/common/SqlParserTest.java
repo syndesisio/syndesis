@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.sql.common;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import org.junit.Assert;
@@ -38,7 +39,11 @@ public class SqlParserTest {
         Assert.assertEquals(String.class, info.getInParams().get(0).getTypeValue().getClazz());
         Assert.assertEquals("id", info.getInParams().get(1).getName());
         Assert.assertEquals("ID", info.getInParams().get(1).getColumn());
-        Assert.assertEquals(Integer.class, info.getInParams().get(1).getTypeValue().getClazz());
+        if (db.connection.getMetaData().getDatabaseProductName().equalsIgnoreCase(DatabaseProduct.ORACLE.name())) {
+            Assert.assertEquals(BigDecimal.class, info.getInParams().get(1).getTypeValue().getClazz());
+        } else {
+            Assert.assertEquals(Integer.class, info.getInParams().get(1).getTypeValue().getClazz());
+        }
     }
 
     @Test
@@ -49,7 +54,11 @@ public class SqlParserTest {
         Assert.assertEquals(1, info.getInParams().size());
         Assert.assertEquals("id", info.getInParams().get(0).getName());
         Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
-        Assert.assertEquals(Integer.class, info.getInParams().get(0).getTypeValue().getClazz());
+        if (db.connection.getMetaData().getDatabaseProductName().equalsIgnoreCase(DatabaseProduct.ORACLE.name())) {
+            Assert.assertEquals(BigDecimal.class, info.getInParams().get(0).getTypeValue().getClazz());
+        } else {
+            Assert.assertEquals(Integer.class, info.getInParams().get(0).getTypeValue().getClazz());
+        }
         Assert.assertFalse(info.getDefaultedSqlStatement().contains(":"));
     }
 
