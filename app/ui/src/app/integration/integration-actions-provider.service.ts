@@ -252,7 +252,8 @@ export class IntegrationActionsProviderService extends IntegrationActionsService
     this.modalTitle =  'Confirm';
     switch (action) {
       case 'replaceDraft':
-        this.modalMessage = 'Are you sure you would like to replace the current draft for the \'' + this.selectedIntegration.name + '\' integration?';
+        this.modalMessage = 'Are you sure you would like to replace the current draft for the \
+        \'' + this.selectedIntegration.name + '\' integration?';
         break;
       case 'publish':
         this.modalMessage = 'Are you sure you would like to publish the \'' + this.selectedIntegration.name + '\' integration?';
