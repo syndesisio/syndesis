@@ -86,8 +86,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
 
     data = this.formFactory.supressNullValues(data);
 
-    // set a copy in the integration
-    const properties = JSON.parse(JSON.stringify(data));
+    const properties = { ...data };
     this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
