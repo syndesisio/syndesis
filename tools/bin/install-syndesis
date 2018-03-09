@@ -78,7 +78,7 @@ create_and_apply_template() {
         "install/${template}.yml" \
         "$tag"
 
-    oc new-app $(get_template_name $template $tag) \
+    oc new-app --template=$(get_template_name $template $tag) \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
