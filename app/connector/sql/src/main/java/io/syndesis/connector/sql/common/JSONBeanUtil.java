@@ -63,9 +63,10 @@ public final class JSONBeanUtil {
 
         final Properties ret = new Properties();
         if (parsed != null) {
-            ret.putAll(parsed);
+            parsed.entrySet().stream()
+                    .filter(e -> e.getKey() != null && e.getValue() != null)
+                    .forEach(e -> ret.put(e.getKey(), e.getValue()));
         }
-
         return ret;
     }
 
