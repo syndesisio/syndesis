@@ -74,9 +74,10 @@ public final class DatabaseMetaDataHelper {
     static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
         final String schemaPattern, final String tableNamePattern) throws SQLException {
         Set<String> tablesInSchema = new HashSet<>();
-        ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });
-        while (rs.next()) {
-            tablesInSchema.add(rs.getString(3).toUpperCase(Locale.US));
+        try (ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[] { "TABLE" });) {
+            while (rs.next()) {
+                tablesInSchema.add(rs.getString(3).toUpperCase(Locale.US));
+            }
         }
         return tablesInSchema;
     }
@@ -110,37 +111,41 @@ public final class DatabaseMetaDataHelper {
     @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
     private static List<ColumnMetaData> getColumnMetaData(final DatabaseMetaData meta, String catalog, //NOPMD
             String schema, String tableName, String columnName, int expectedSize) throws SQLException { //NOPMD
-        ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);
-        List<ColumnMetaData> columnList = convert(columns);
-        if (columnList.isEmpty()) {
-            //Postgresql does lowercase instead, so let's try that if we don't have a match
-            String table = tableName.toLowerCase(Locale.US);
-            String column = columnName == null ? null : columnName.toLowerCase(Locale.US);
-            columns = meta.getColumns(catalog, schema, table, column);
-            columnList = convert(columns);
+        try (ResultSet columns = meta.getColumns(catalog, schema, tableName, columnName);) {
+            List<ColumnMetaData> columnList = convert(columns);
+            if (columnList.isEmpty()) {
+                //Postgresql does lowercase instead, so let's try that if we don't have a match
+                String table = tableName.toLowerCase(Locale.US);
+                String column = columnName == null ? null : columnName.toLowerCase(Locale.US);
+                try (ResultSet columnMeta = meta.getColumns(catalog, schema, table, column)) {
+                    columnList = convert(columnMeta);
+                }
+            }
+            if (columnList.size() < expectedSize) {
+                String msg = String.format("Invalid SQL, the number of columns (%s) should match the number of number of input parameters (%s)",
+                        columnList.size(), expectedSize);
+                throw new SQLException(msg);
+            }
+            return columnList;
         }
-        if (columnList.size() < expectedSize) {
-            String msg = String.format("Invalid SQL, the number of columns (%s) should match the number of number of input parameters (%s)",
-                    columnList.size(), expectedSize);
-            throw new SQLException(msg);
-        }
-        return columnList;
+        
     }
 
     /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection, 
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
-        Statement stmt = connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery(sqlSelectStatement);
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        if (metaData.getColumnCount()>0){
-            for (int i=1; i<=metaData.getColumnCount(); i++) {
-                SqlParam param = new SqlParam(metaData.getColumnName(i));
-                param.setJdbcType(JDBCType.valueOf(metaData.getColumnType(i)));
-                paramList.add(param);
+        try (Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(sqlSelectStatement);) {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            if (metaData.getColumnCount()>0){
+                for (int i=1; i<=metaData.getColumnCount(); i++) {
+                    SqlParam param = new SqlParam(metaData.getColumnName(i));
+                    param.setJdbcType(JDBCType.valueOf(metaData.getColumnType(i)));
+                    paramList.add(param);
+                }
             }
+            return paramList;
         }
-        return paramList;
     }
 
     private static List<ColumnMetaData> convert(ResultSet resultSet) throws SQLException {
