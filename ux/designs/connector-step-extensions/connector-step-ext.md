@@ -30,7 +30,7 @@ This design covers the following workflows:
 
 5.	Information about how many integrations is using a given extension.
 
-6.	User has the ability to update or delete an  extension from the list.    
+6.	User has the ability to update or delete an  extension from the list.  
 
 ### Extension Details
 

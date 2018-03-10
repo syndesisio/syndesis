@@ -44,7 +44,7 @@ public class SqlStoredCommon {
             }
             Map<String,StoredProcedureMetadata> storedProcedures = SqlSupport.getStoredProcedures(parameters);
 
-            if (!storedProcedures.keySet().contains("DEMO_ADD") 
+            if (!storedProcedures.keySet().contains("DEMO_ADD")
                     && databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute(SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
@@ -54,7 +54,7 @@ public class SqlStoredCommon {
                     fail("Exception during Stored Procedure Creation.", e);
                 }
             }
-            if (!storedProcedures.keySet().contains("DEMO_OUT") 
+            if (!storedProcedures.keySet().contains("DEMO_OUT")
                     && databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
                 try (Statement stmt = connection.createStatement()) {
                     //Create procedure

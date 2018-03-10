@@ -54,4 +54,3 @@ class PingResult {
  private String errorMessage();
 }
 ```
-

@@ -60,7 +60,7 @@ public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
         assertThat(routes.getRoutes()).hasSize(1);
 
         RouteDefinition routeDefinition = routes.getRoutes().get(0);
-        
+
         assertThat(routeDefinition.getInputs()).hasSize(1);
         assertThat(routeDefinition.getInputs().get(0)).isInstanceOf(FromDefinition.class);
         assertThat(routeDefinition.getOutputs()).hasSize(2);

@@ -3,14 +3,14 @@
 
 :context: t2sf
 This sample integration watches Twitter for tweets that mention
-a particular Twitter user. When the integration finds such tweets, 
+a particular Twitter user. When the integration finds such tweets,
 it filters
 them so that only those tweets that contain the text you specify cause
-the integration to continue. 
+the integration to continue.
 
 For tweets that contain the specified text, the integration passes
 data related to the tweet, including the Twitter user name, to Salesforce
-and Salesforce creates a new contact. 
+and Salesforce creates a new contact.
 
 To implement, deploy, and test this sample integration, the main steps are:
 
@@ -22,7 +22,7 @@ To implement, deploy, and test this sample integration, the main steps are:
 . <<t2sf-confirm-working>>
 . <<cleanup_{context}>>
 
-Before you implement this sample integration, 
+Before you implement this sample integration,
 see <<t2sf-prerequisites>>.
 
 include::t2sf_prereqs.adoc[leveloffset=+1]
@@ -34,7 +34,7 @@ include::shared/create_twitter_connection.adoc[leveloffset=+1]
 include::shared/register_with_sf.adoc[leveloffset=+1]
 
 include::shared/create_sf_connection.adoc[leveloffset=+1]
- 
+
 include::t2sf_create_integration.adoc[leveloffset=+1]
 
 include::t2sf_confirm_working.adoc[leveloffset=+1]

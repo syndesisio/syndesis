@@ -9,7 +9,7 @@ I.e. these are:
 * `move_issues.pl` : Move issues from single repos to monorepo in bulk
 * `move_board.pl` : Use ZenHub API to mobe Epics to the monorepo and reattach issues to Epics
 
-Look into the scripts at top-level, there is some short explanations. 
+Look into the scripts at top-level, there is some short explanations.
 
 ## move_issues.pl
 

@@ -50,14 +50,14 @@ public class SqlParam {
         this.jdbcType = jdbcType;
         this.typeValue = javaType(jdbcType);
     }
-    
+
 
     @Data
     public class TypeValue<T> {
 
         private Class<T> clazz;
         private T sampleValue;
-        
+
         public TypeValue(Class<T> clazz, T sampleValue) {
             super();
             this.clazz = clazz;
@@ -80,10 +80,10 @@ public class SqlParam {
         public static final Long LONG_VALUE = 0l;
         public static final Float FLOAT_VALUE = 0f;
     }
-    
+
     @SuppressWarnings({"rawtypes", "PMD.CyclomaticComplexity"})
     static TypeValue<?> javaType(final JDBCType jdbcType) {
-        
+
         SqlParam sqlParam = new SqlParam();
         switch (jdbcType) {
         case ARRAY:

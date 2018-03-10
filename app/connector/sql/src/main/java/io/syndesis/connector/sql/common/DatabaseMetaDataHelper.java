@@ -69,8 +69,8 @@ public final class DatabaseMetaDataHelper {
 
         return meta.getProcedures(catalog, schemaPattern, procedurePattern);
     }
-    
-    
+
+
     static Set<String> fetchTables(final DatabaseMetaData meta, final String catalog,
         final String schemaPattern, final String tableNamePattern) throws SQLException {
         Set<String> tablesInSchema = new HashSet<>();
@@ -95,7 +95,7 @@ public final class DatabaseMetaDataHelper {
         return paramList;
     }
 
-    static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog, 
+    static List<SqlParam> getJDBCInfoByColumnOrder(final DatabaseMetaData meta, String catalog,
             String schema, String tableName, final List<SqlParam> params) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         List<ColumnMetaData> cList = getColumnMetaData(meta, catalog, schema, tableName, null, params.size());
@@ -128,10 +128,10 @@ public final class DatabaseMetaDataHelper {
             }
             return columnList;
         }
-        
+
     }
 
-    /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection, 
+    /* default */ static List<SqlParam> getOutputColumnInfo(final Connection connection,
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
         try (Statement stmt = connection.createStatement();

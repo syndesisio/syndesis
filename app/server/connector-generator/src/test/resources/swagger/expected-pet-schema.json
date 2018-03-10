@@ -1,77 +1,77 @@
 {
   "xml": {
     "name": "Pet"
-  }, 
+  },
   "$schema": "http://json-schema.org/schema#",
   "title": "Pet",
   "required": [
-    "name", 
+    "name",
     "photoUrls"
-  ], 
-  "type": "object", 
+  ],
+  "type": "object",
   "properties": {
     "category": {
       "xml": {
         "name": "Category"
-      }, 
-      "type": "object", 
+      },
+      "type": "object",
       "properties": {
         "id": {
-          "type": "integer", 
+          "type": "integer",
           "format": "int64"
-        }, 
+        },
         "name": {
           "type": "string"
         }
       }
-    }, 
+    },
     "status": {
       "enum": [
-        "available", 
-        "pending", 
+        "available",
+        "pending",
         "sold"
-      ], 
-      "type": "string", 
+      ],
+      "type": "string",
       "description": "pet status in the store"
-    }, 
+    },
     "name": {
-      "type": "string", 
+      "type": "string",
       "example": "doggie"
-    }, 
+    },
     "tags": {
       "xml": {
-        "wrapped": true, 
+        "wrapped": true,
         "name": "tag"
-      }, 
+      },
       "items": {
         "xml": {
           "name": "Tag"
-        }, 
-        "type": "object", 
+        },
+        "type": "object",
         "properties": {
           "id": {
-            "type": "integer", 
+            "type": "integer",
             "format": "int64"
-          }, 
+          },
           "name": {
             "type": "string"
           }
         }
-      }, 
+      },
       "type": "array"
-    }, 
+    },
     "photoUrls": {
       "xml": {
-        "wrapped": true, 
+        "wrapped": true,
         "name": "photoUrl"
-      }, 
+      },
       "items": {
         "type": "string"
-      }, 
+      },
       "type": "array"
-    }, 
+    },
     "id": {
-      "type": "integer", 
+      "type": "integer",
       "format": "int64"
     }
   }

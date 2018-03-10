@@ -1,34 +1,34 @@
 [id='t2sf-confirm-working']
-= Confirm that the Twitter to Salesforce integration works 
+= Confirm that the Twitter to Salesforce integration works
 
 To confirm that the Twitter to Salesforce sample integration is working:
 
 . In the panel on the left, click *Integrations* to see that the integration you
 created is an *Active* integration,
 which means that it is running. If you entered the example name, you
-would see that *Twitter to Salesforce Sample Integration* is running. 
+would see that *Twitter to Salesforce Sample Integration* is running.
 . Confirm that the integration does not create a contact record when a
-tweet does not contain the text you specified in the basic filter 
+tweet does not contain the text you specified in the basic filter
 step:
-.. In Twitter, send a tweet that: 
+.. In Twitter, send a tweet that:
 * Mentions your Twitter handle
 * Does not contain the text you specified in the basic filter step
 +
 For example: `*@Aslan #likesRedHat.*`
-.. Wait for the polling interval to elapse, which can be 30 - 60 seconds. 
-.. In Salesforce, confirm that a contact record with your 
-name does not exist. 
+.. Wait for the polling interval to elapse, which can be 30 - 60 seconds.
+.. In Salesforce, confirm that a contact record with your
+name does not exist.
 . Confirm that the integration creates a new contact record when it should:
 .. In Twitter, send a tweet that:
 * Mentions your Twitter handle
 * Contains the text you specified in the basic filter step
 +
 For example: `*@Aslan knows #RedHatIsGreat.*`
-.. Wait for the polling interval to elapse. 
-.. In Salesforce, locate a contact record that has 
+.. Wait for the polling interval to elapse.
+.. In Salesforce, locate a contact record that has
 your name, the text of your tweet in the
 `Description` field, and your Twitter screen name
 in the `Title` field.
 
-In this Technology Preview release, exactly one integration at a time can be 
-running. If you create another integration, it is automatically inactive. 
+In this Technology Preview release, exactly one integration at a time can be
+running. If you create another integration, it is automatically inactive.

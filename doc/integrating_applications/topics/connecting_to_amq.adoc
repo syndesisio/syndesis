@@ -7,7 +7,7 @@ use either of these connectors to create a connection:
 * Apache ActiveMQ (AMQ) uses the OpenWire protocol for communication
 between clients and message brokers.
 
-* Advanced Message Queue Protocol (AMQP) uses AMQP for communication 
+* Advanced Message Queue Protocol (AMQP) uses AMQP for communication
 between clients and message brokers.
 
 Use the AMQ connector to create a connection when you want to connect to
@@ -20,18 +20,18 @@ Use the AMQP connector to create a connection when you want to connect to
 one of these brokers:
 
 * Apache ActiveMQ broker that supports AMQP
-* Apache ActiveMQ Artemis 
+* Apache ActiveMQ Artemis
 * JBoss A-MQ 7
 * EnMasse, which is an open source messaging platform
 
 [NOTE]
 It is possible to use the AMQP connector to create a connection to an
 Apache ActiveMQ broker that does not support AMQP or to a JBoss A-MQ 6 broker.
-Doing this requires transport configuration in the broker.  
+Doing this requires transport configuration in the broker.
 
 For details, see:
 
-* <<create-amq-connection>> 
+* <<create-amq-connection>>
 * <<adding-amq-connections>>
 
 include::create_amq_connection.adoc[leveloffset=+1]

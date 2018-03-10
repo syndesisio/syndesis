@@ -53,4 +53,3 @@ CMD ["nginx", "-g", "daemon off;"]
 
 COPY ${CONTEXT_DIR}/nginx-syndesis.conf /etc/nginx/conf.d
 COPY ${SRC_DIR} /usr/share/nginx/html
-

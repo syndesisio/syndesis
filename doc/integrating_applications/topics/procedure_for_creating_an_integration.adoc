@@ -10,57 +10,57 @@ To create an integration:
 . Choose and configure the start connection:
 
 .. On the *Choose a Start Connection* page, click the connection you want
-to use to start the integration. When this integration is running, 
+to use to start the integration. When this integration is running,
 {prodname} will connect to this application and obtain data that you want
-the integration to operate on. 
+the integration to operate on.
 
 .. On the *Choose an Action* page, click the action you want this connection
-to perform. The available actions vary for each connection. 
+to perform. The available actions vary for each connection.
 
-.. On the page for configuring the action, enter values in the fields. 
-.. Click *Done* to add the start connection. 
+.. On the page for configuring the action, enter values in the fields.
+.. Click *Done* to add the start connection.
 
 . Choose and configure the finish connection:
 
 .. On the *Choose a Finish Connection* page, click the connection you want
-to use to complete the integration. When this integration is running, 
+to use to complete the integration. When this integration is running,
 {prodname} will connect to this application with the data that the integration
 has been operating on.
 
 .. On the *Choose an Action* page, click the action you want this connection
-to perform. The available actions vary for each connection. 
+to perform. The available actions vary for each connection.
 
-.. On the page for configuring the action, enter values in the fields. 
-.. Click *Done* to add the finish connection. 
+.. On the page for configuring the action, enter values in the fields.
+.. Click *Done* to add the finish connection.
 
-. Optionally, add one or more connections between the start connection and 
+. Optionally, add one or more connections between the start connection and
 the finish connections. For each connection, choose its action and enter
-any required configuration details. 
+any required configuration details.
 
 . Optionally, add one or more steps that operate on integration
 data between connections. See
-<<add-steps>>. 
+<<add-steps>>.
 
-. When the integration contains all needed steps, 
+. When the integration contains all needed steps,
 click *Save as Draft* or *Publish* according to whether you want
 to start running the integration.
 
 .. In the *Integration Name* field, enter a name that distinguishes this
-integration from any other integrations. 
+integration from any other integrations.
 
 .. In the *Description* field, enter a description, for example, you can
 indicate what this integration does.
 
-.. If you are ready to start running the integration, in the upper right, 
-click *Publish*. Otherwise, click *Save as Draft*. 
+.. If you are ready to start running the integration, in the upper right,
+click *Publish*. Otherwise, click *Save as Draft*.
 
 In the {prodname} *Integrations* page, you can see your new integration
 in the list of integrations. If you published the integration, then you
-can see that {prodname} is in the process of deploying it. It may take 
+can see that {prodname} is in the process of deploying it. It may take
 a few moments for the status of the integration to become *Active*, which
 means that it is running. If you saved the integration as a draft, then
-*Draft* appears on the integration's entry. 
+*Draft* appears on the integration's entry.
 
 Click the integration's entry to see a summary of the integration.
-On the integration's summary page, you can start or stop the integration, 
-edit it, or delete it. 
+On the integration's summary page, you can start or stop the integration,
+edit it, or delete it.

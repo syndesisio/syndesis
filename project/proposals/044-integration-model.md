@@ -25,14 +25,14 @@ When rethinking the integration and the state model, the following points are co
 
 ## IntegrationDeployment state model
 
-An `Integration` is the domain object describing Camel Routes used for performing integration tasks. 
+An `Integration` is the domain object describing Camel Routes used for performing integration tasks.
 Each `Integration` has properties which can be changed by a user from the UI like its name, so its mutable.
 
-The actual logic like the used connectors used and the configuration is encapsulated in an `IntegrationDeployment`. 
+The actual logic like the used connectors used and the configuration is encapsulated in an `IntegrationDeployment`.
 Multiple `IntegrationDeployment`s can be connected to a single `Integration`.
 Each `IntegrationDeployment` represents a certain version of the defined integration and can be in different states.
 
-Both objects are managed by `syndesis-rest` and `syndesis-ui`. 
+Both objects are managed by `syndesis-rest` and `syndesis-ui`.
 
 This runnable artefact consists OpenShift build and resource configuration which transforms this code into running application pods.
 The process of building and managing the the lifecylce of the application pods for that given version of the integration is tracked using an `IntegrationDeployment` object.  
@@ -45,14 +45,14 @@ An `IntegrationDeployment` can be in one of the following current states:
 
 | State       | Description |
 | ----------- |------------ |
-| Undeployed | An `IntegrationDeployment` has been undeployed | 
+| Undeployed | An `IntegrationDeployment` has been undeployed |
 | Active | `IntegrationDeployment` is deployed and running |
 | Inactive | `IntegrationDeployment` is deployed but is not running|
 | Error | The `IntegrationDeployment` is deployed but in an error state |
 
 ### Undeployed
 
-Right after an `IntegrationDeployment` is created it enters the _Undeployed_ state. This means 
+Right after an `IntegrationDeployment` is created it enters the _Undeployed_ state. This means
 the `IntegrationDeployment` is not yet built and deployed.
 
 ### Inactive
@@ -65,8 +65,8 @@ An _Active_ integration revision is a running integration. This state can be eit
 
 ### Error
 
-The error state indicates that the integration revision is not running. This state can no be entered via UI but only as a side effect in the backends. 
-An integration revision can enter the error state any time. 
+The error state indicates that the integration revision is not running. This state can no be entered via UI but only as a side effect in the backends.
+An integration revision can enter the error state any time.
 The `targetState` stays untouched (as is `== currentState` when being in equillibrium) so that the controlled know which state to reconcile again to get out of the error state (which might not be possible in every case).
 
 ## Operations
@@ -84,7 +84,7 @@ The following operations change the `targetState`. The `targetState` could be up
 
 * **Undeploy** marks an integration revision's targetState as _Undeployed_.   This operation can be called when the Deployment is not in the _Undeployed_ state.
 
-The `syndesis-rest` backend in this case will simply validate the context (i.e. whether the operation is allowed), updates the `targetState` and then returns to `syndesis-ui`.  A background controller detects the state change and performs the proper actions to reach the target state. 
+The `syndesis-rest` backend in this case will simply validate the context (i.e. whether the operation is allowed), updates the `targetState` and then returns to `syndesis-ui`.  A background controller detects the state change and performs the proper actions to reach the target state.
 
 Creating a new `IntegrationDeployment` will _Undeploy_ all older `IntegrationDeployment`s associated with the integration.
 
@@ -98,11 +98,11 @@ An integration is/has a _Draft_ when there are no `IntegrationDeployment` for th
 
 A 'Restore' operation on a `IntegrationDeployment` will copy the older version of the integration assoicated with the `IntegrationDeployment` to current `Integration` but still increments the version.  Since this increments the version, this resored integration will be considered to be a _Draft_.
 
-## State reconciliation 
+## State reconciliation
 
-`IntegrationDeployment` follows a declarative reconciliation paradigm. 
-An `IntegrationDeployment` is always in a _currentState_. 
-As consequence of an operation (see below) a new _targetState_ can be set. 
+`IntegrationDeployment` follows a declarative reconciliation paradigm.
+An `IntegrationDeployment` is always in a _currentState_.
+As consequence of an operation (see below) a new _targetState_ can be set.
 It is now the duty of the Syndesis backend to reconcile the _currentState_ to become the _targetState_.
 This is modelled closely after the Kubernetes state model itself.
 
@@ -111,11 +111,11 @@ Reconciliation itself can be in one of two states:
 * _Pending_ when `currentState != targetState`
 * _Ok_ when `currentState == targetState`
 
-This state is modelled implicitely by comparing both state variables. 
+This state is modelled implicitely by comparing both state variables.
 
-`Error` can never be set to a `targetState` by the user, but could be set by the backend to mark an integration revision as erroneous. 
-The error state is typically part of a `currentState`. 
-The backend controllers try to get out of the error state by might give up at some point. 
+`Error` can never be set to a `targetState` by the user, but could be set by the backend to mark an integration revision as erroneous.
+The error state is typically part of a `currentState`.
+The backend controllers try to get out of the error state by might give up at some point.
 
 Every state change (current or target) should be tracked as event in an event list for auditing purposes.
 
@@ -127,16 +127,16 @@ The state itself is modelled with a simple enum:
 
 ```java
 enum IntegrationState {
-    
+
     // Undeployed (application not built/provisioned)
     Undeployed,
 
     // Deployed and running
-    Active, 
-  
+    Active,
+
     // Deployed and suspended (no running pods)
     Inactive,  
-  
+
     // Error occured
     Error;
 }
@@ -147,10 +147,10 @@ The `Integration` holds all global properties, which can be mutated (like the na
 
 ```java
 public class Integration {
-    
+
     // Name of the integration
     String name;
-    
+
     int version;
 
 
@@ -178,25 +178,25 @@ public class IntegrationDeployment {
 
     // The actual version of the deployment.
     int version;
-  
+
     // Current state of this revision
     IntegrationState currentState;
-    
+
     // Target state of the revision
     IntegrationState targetState;
-      
+
     // Message describing the currentState further (e.g. error message)
     String currentMessage;
-    
+
     // Message which should become the currentMessage after reconciliation
     String targetMessage;
-    
+
     // Whether this integration has converged to its target state
     boolean isPending() {
         return currentState != targetState;
     }
-    
-    // All other props specific for a version of an integration revision. 
+
+    // All other props specific for a version of an integration revision.
     // These properties are immutable after the Active state has ben reached
     // for the first time
     // ....
@@ -226,16 +226,16 @@ The following section describe some of the common use cases and how they are imp
 Publishing happens when you create an `IntgrationDeployment` with `targetState = Active`.
 Several actions will be performed by the controller who detects this transition:
 
-* All older `IntgrationDeployment`s get updated so that `targetState = Undeployed` 
+* All older `IntgrationDeployment`s get updated so that `targetState = Undeployed`
 * A new OpenShift build is created which in turns triggers a redeployment.
 * The OpenShift deployment triggers the reconciliation of the currentState for the new, just deployed, revision and the undeployed old revision.
 
-> Question: It would be awesome if we could change the state for an _Active_ integration to _Undeployed_ by watching OpenShift for update deployments so that we can mark the old integration as _Undeployed_ and the new as _Active_. 
+> Question: It would be awesome if we could change the state for an _Active_ integration to _Undeployed_ by watching OpenShift for update deployments so that we can mark the old integration as _Undeployed_ and the new as _Active_.
 > Is this possible with OpenShift ? How to correlate OpenShift deployments with integration versions ?
 
 ## UI changes and updates
 
-Within the UI the state of an integration should be visualized. 
+Within the UI the state of an integration should be visualized.
 
 It is suggested that when the reconciliation state is `Ok` the _currentState_ should be shown and when the reconciliation state is `Pending` then "Pending" should be shown (possibly whith the `targetState` as a tool tip info). Alternatively, when a reconciliation process the label could be more specific about the action just performing ("Deploying", "Suspending", "Resuming", "Undeploying") which can be infered from `currentState` and `targetState`
 

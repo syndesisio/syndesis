@@ -1,13 +1,13 @@
 [id='mapping-data']
 = Mapping data to fields for the next connection
 
-In most integrations, you need to map data fields that have 
-been obtained or processed to data fields that the next connection can process. 
+In most integrations, you need to map data fields that have
+been obtained or processed to data fields that the next connection can process.
 {prodname} provides a data mapper to simplify doing this. In an integration,
 at each point where you need to map data fields, add a data mapper step.
 Details for mapping data fields are in the following topics:
 
-* <<about-mapping-data>> 
+* <<about-mapping-data>>
 * <<finding-the-field-you-want-to-map>>
 * <<identifying-where-data-mapping-is-needed>>
 * <<map-one-source-field-to-one-target-field>>

@@ -2,9 +2,9 @@
 = Comparison of sample integrations
 
 You can create the sample integrations in any order. To help you decide
-which one to try first, the following table compares them. 
+which one to try first, the following table compares them.
 
-[cols="4*"] 
+[cols="4*"]
 |===
 |*Comparison Point*
 |*Twitter to Salesforce*
@@ -12,14 +12,14 @@ which one to try first, the following table compares them.
 |*AMQ to REST API*
 
 |Average time to complete
-|25 minutes. This includes the time needed to obtain Twitter and Salesforce accounts. 
+|25 minutes. This includes the time needed to obtain Twitter and Salesforce accounts.
 It does not include 5 - 12 minutes of waiting for Salesforce registration to take effect
-and for {prodname} to start running the integration. 
-|10 minutes if you already created the Twitter to Salesforce sample. Otherwise, 
+and for {prodname} to start running the integration.
+|10 minutes if you already created the Twitter to Salesforce sample. Otherwise,
 20 minutes, which includes the time needed to obtain a Salesforce account.
-This does not include waiting time.  
-|25 minutes. This does not include the time it takes {prodname} to 
-start running the integration. 
+This does not include waiting time.
+|25 minutes. This does not include the time it takes {prodname} to
+start running the integration.
 
 |Prerequisites
 |Twitter account, Salesforce account
@@ -29,7 +29,7 @@ start running the integration.
 |Demonstrated features include
 |Connections, OAuth support, data mapping, filtering
 |Connections, OAuth support, data mapping, SQL database access
-|Connections, data mapping, custom step extension, custom REST API client 
+|Connections, data mapping, custom step extension, custom REST API client
 connector
 
 |===

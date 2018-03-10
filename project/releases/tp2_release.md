@@ -19,7 +19,7 @@ These are the Maven dependencies used by other apps. They do not necessarily req
 * Atlasmap, release with version `$VERSION_ATLAS_MAP` (e.g. 1.31.0)
   - https://github.com/atlasmap/atlasmap via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/atlasmap-release/ This will also build the atlasmap/atlasmap images.
   - https://github.com/atlasmap/camel-atlasmap (required by syndesis-rest) via https://jenkins-syndesis-ci.b6ff.rh-idev.openshiftapps.com/job/camel-atlasmap-release/
- 
+
 ### Syndesis
 
 * Build, release and push Docker images with version `$VERSION_SYNDESIS` (e.g. 1.1.0)
@@ -51,7 +51,7 @@ These are the Maven dependencies used by other apps. They do not necessarily req
   - Build number are synced via https://docs.google.com/spreadsheets/u/1/d/1ohR6poCaYmQ7Ga3OWgSd189sT8MlXexDCZbmb_SY994/edit?usp=drive_web
   - Run import scripts: `perl migrate-images.pl`
 * Ensure that all images streams have been created properly in the namespace fuse-ignite:
-  - fuse-ignite-java-openshift      
+  - fuse-ignite-java-openshift  
   - fuse-ignite-mapper
   - fuse-ignite-rest
   - fuse-ignite-ui
@@ -76,4 +76,4 @@ oc new-app fuse-ignite/syndesis-restricted-1.1 \
     -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
 ```
 
-* Important: Communicate to OpenShift Online Team to update the provisioning script to point to the tagged github URL 
+* Important: Communicate to OpenShift Online Team to update the provisioning script to point to the tagged github URL

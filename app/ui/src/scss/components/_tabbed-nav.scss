@@ -5,11 +5,11 @@
   padding-right: $top-nav-gutter;
   background: inherit;
 
-  &__tab { 
+  &__tab {
     min-width: 200px;
     background: inherit;
     cursor: pointer;
-    
+
     &.active {
       cursor: default;
     }

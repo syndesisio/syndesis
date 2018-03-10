@@ -1,7 +1,7 @@
 [id='managing-integrations']
 = Managing integrations
 
-The following topics provide information to help you manage your 
+The following topics provide information to help you manage your
 integrations:
 
 * <<about-integration-lifecycle-handling>>

@@ -31,4 +31,4 @@ This design covers the following aspects of data buckets:
 
 2.	Showing multiple sources in source card. The default view has all the sources collapsed so more information can be shown.
 
-3.	Showing only number + data type information in source title area. 
+3.	Showing only number + data type information in source title area.

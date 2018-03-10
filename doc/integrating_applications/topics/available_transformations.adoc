@@ -16,21 +16,21 @@ The following table describes the available transformations.
 |None
 |`String`
 |`dateFormat`
-|Create a string that represents the current date in the supplied format. 
+|Create a string that represents the current date in the supplied format.
 The default format is `yyyy-MM-dd`.
 
 |`CurrentDateTime`
 |None
 |`String`
 |`dateFormat`
-|Create a string that represents the current date and time in the specified 
+|Create a string that represents the current date and time in the specified
 format. The default format is "yyyy-MM-dd'T'HH:mm'Z'".
 
 |`CurrentTime`
 |None
 |`String`
 |`dateFormat`
-|Create a string that represents the current time in the supplied format. 
+|Create a string that represents the current time in the supplied format.
 The default format is `HH:mm:ss`.
 
 |`GenerateUUID`
@@ -51,7 +51,7 @@ The default format is `HH:mm:ss`.
 |`padCharacter` *
 
 `padCount` *
-|Insert the character supplied in `padCharacter` at the beginning of a 
+|Insert the character supplied in `padCharacter` at the beginning of a
 string. Do this the number of times specified in `padCount`.
 
 |`PadStringRight`
@@ -60,7 +60,7 @@ string. Do this the number of times specified in `padCount`.
 |`padCharacter` *
 
 `padCount` *
-|Append the character supplied in `padCharacter` to the end of a string.  
+|Append the character supplied in `padCharacter` to the end of a string.
 Do this number of times specified in `padCount`.
 
 |`Replace`
@@ -70,21 +70,21 @@ Do this number of times specified in `padCount`.
 
 `newString`
 |Replace each occurrence of the value supplied  in `oldString`
-with the value supplied in `newString`. The default value of `newString` 
+with the value supplied in `newString`. The default value of `newString`
 is an empty string.
 
 |`SeparateByDash`
 |`String`
 |`String`
 |None
-|Replace each occurrence of whitespace, colon (:), underscore (_), 
+|Replace each occurrence of whitespace, colon (:), underscore (_),
 plus (+), and equals (=) with a hyphen (-).
 
 |`SeparateByUnderscore`
 |`String`
 |`String`
 |None
-|Replace each occurrence of whitespace, colon (:), hyphen (-), plus (+), 
+|Replace each occurrence of whitespace, colon (:), hyphen (-), plus (+),
 and equals (=) with an underscore (_).
 
 |`Substring`
@@ -93,9 +93,9 @@ and equals (=) with an underscore (_).
 |`startIndex` *
 
 `endIndex`
-|Retrieve a segment of a string from the specified `startIndex` to the 
-specified `endIndex`. Both indexes start at zero. `startIndex` is 
-inclusive. `endIndex` is exclusive. The default value of `endIndex` is the 
+|Retrieve a segment of a string from the specified `startIndex` to the
+specified `endIndex`. Both indexes start at zero. `startIndex` is
+inclusive. `endIndex` is exclusive. The default value of `endIndex` is the
 length of the string.
 
 |`SubstringAfter`
@@ -106,9 +106,9 @@ length of the string.
 `endIndex`
 
 `match` *
-|Retrieve the segment of a string after the specified `match` string from the 
-specified inclusive `startIndex` to the specified exclusive `endIndex`. 
-Both indexes start at zero. The default value of `endIndex` is the length of the 
+|Retrieve the segment of a string after the specified `match` string from the
+specified inclusive `startIndex` to the specified exclusive `endIndex`.
+Both indexes start at zero. The default value of `endIndex` is the length of the
 string after the supplied `match` string.
 
 |`SubstringBefore`
@@ -119,9 +119,9 @@ string after the supplied `match` string.
 `endIndex`
 
 `match` *
-|Retrieve a segment of a string before the supplied `match` string 
-from the supplied inclusive `startIndex` to the supplied exclusive 
-`endIndex`. Both indexes start at zero. The default value of `endIndex` is the 
+|Retrieve a segment of a string before the supplied `match` string
+from the supplied inclusive `startIndex` to the supplied exclusive
+`endIndex`. Both indexes start at zero. The default value of `endIndex` is the
 length of the string before the supplied `match` string.
 
 |`Trim`

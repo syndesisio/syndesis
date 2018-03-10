@@ -3,22 +3,22 @@
 
 :context: amq2api
 This sample integration connects to an AMQ broker to obtain item
-delivery records for a hypothetical enterprise. The integration then executes 
+delivery records for a hypothetical enterprise. The integration then executes
 a custom step that operates on the records to identify any
-items that were damaged when they were received. After a simple data mapping, 
-the integration connects to 
-a REST API to obtain and provide contact information for vendors of 
-damaged items. 
+items that were damaged when they were received. After a simple data mapping,
+the integration connects to
+a REST API to obtain and provide contact information for vendors of
+damaged items.
 
 The other sample integrations use connectors and data operations that are built
-into {prodname}. This integration also does that, but in addition, 
+into {prodname}. This integration also does that, but in addition,
 it provides instructions for customizing
 and extending {prodname} by leading you through the procedures for:
 
 * Adding a custom data operation by uploading an extension.
 * Adding a custom REST API client connector by uploading a Swagger file.
 
-{prodname} provides the extension file and the Swagger file. 
+{prodname} provides the extension file and the Swagger file.
 
 To implement the AMQ to REST API sample integration, the main steps are:
 

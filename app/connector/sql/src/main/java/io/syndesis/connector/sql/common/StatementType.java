@@ -17,7 +17,7 @@ package io.syndesis.connector.sql.common;
 
 /**
  * SQL Statement Types
- * 
+ *
  * @since 09/11/17
  * @author kstam
  *

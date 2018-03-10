@@ -17,7 +17,7 @@
 set -euo pipefail
 
 pod=${1:-xxx}
-if [ $pod = "xxx" ]; then 
+if [ $pod = "xxx" ]; then
   echo "Usage $0 <integration pod> [directory]"
   exit 1
 fi

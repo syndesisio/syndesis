@@ -38,4 +38,3 @@ class ConnectorSettings extends SocialProperties {
             () -> new IllegalArgumentException("No property tagged with `" + tag + "` on connector: " + connector));
     }
 }
-

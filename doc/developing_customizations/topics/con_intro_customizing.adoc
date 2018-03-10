@@ -15,21 +15,21 @@ properties and defaults
 
 Each connector
 
-* Has a single purpose, for example, connect to a 
+* Has a single purpose, for example, connect to a
 Salesforce application
 
 * Hides component properties that are not relevant to that purpose
 
 When an integration of different applications is ready to be deployed:
 
-. {prodname} creates a Spring Boot-based Camel project and a 
+. {prodname} creates a Spring Boot-based Camel project and a
 build configuration.
 
 . Triggers the build, which produces a container image.
 
 . Starts running the container image on OpenShift.
 
-In addition, {prodname} stores your integration’s implementation 
+In addition, {prodname} stores your integration’s implementation
 source code and configuration in a source control management system,
-such as GitHub. This enables you to look at it, change it and 
-include it as a part of your DevOps pipeline. 
+such as GitHub. This enables you to look at it, change it and
+include it as a part of your DevOps pipeline.

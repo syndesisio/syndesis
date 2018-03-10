@@ -1,12 +1,12 @@
 [id='understanding']
-= Understanding {prodname} 
+= Understanding {prodname}
 
-{prodname} is an integration platform. With {prodname}, you 
+{prodname} is an integration platform. With {prodname}, you
 can obtain data from an
-application or service, operate on that data if you need to, and then 
-send the 
-data to a completely different application or service.  No coding is 
-required to accomplish this. 
+application or service, operate on that data if you need to, and then
+send the
+data to a completely different application or service.  No coding is
+required to accomplish this.
 
 For a high-level overview of {prodname}, see:
 

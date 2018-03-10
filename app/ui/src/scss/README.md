@@ -28,7 +28,7 @@ Bear in mind that the files contained in that folder will be exposed globally th
 - Make a generous use of variables for ensuring consistency in the UI, abstracting commonly used values for margins, paddings, etc.
 - Wrap commonly repeated blocks of CSS code in mixins.
 - Expose mixins in classname extensions (`%{className}`) you can later inherit from in your own CSS class names.
-- When relying on third party variables (eg. Patternfly colors or variables), abstract such variables by linking its own partials from the `_vendor.scss` partial. This will prevent you from tweaking paths file by file should such dependency change its path or filename in the future. 
+- When relying on third party variables (eg. Patternfly colors or variables), abstract such variables by linking its own partials from the `_vendor.scss` partial. This will prevent you from tweaking paths file by file should such dependency change its path or filename in the future.
 
 ### The `/utils` folder
 
@@ -81,7 +81,7 @@ Please note that we process and build our CSS code by means of the Angular CLI c
 
 ### Appending 3rd party libraries to the project
 
-If you install a 3rd party dependency which also features CSS stylesheets, those can be added to the main CSS bundle by appending them to the `styles` array property in `.angular-cli.json`. 
+If you install a 3rd party dependency which also features CSS stylesheets, those can be added to the main CSS bundle by appending them to the `styles` array property in `.angular-cli.json`.
 
 Do not forget also to append any file containing vendor SASS variables (such as colors, widths or heights) to our own `base/_vendor.scss` file.
 

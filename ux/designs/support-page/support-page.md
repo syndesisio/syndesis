@@ -34,7 +34,7 @@ Users can find Syndesis version information on support page, and download diagno
 
 2.	Users can apply filters to narrow down the integration list.
      
-3.	Allow users to select all integrations that meet the filter requirements. 
+3.	Allow users to select all integrations that meet the filter requirements.
 
 4.	Allow users to select a specific integration.
 

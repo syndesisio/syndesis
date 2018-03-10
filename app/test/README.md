@@ -24,4 +24,3 @@ This project is using [Arquillian Cube](https://github.com/arquillian/arquillian
 Arquillian creates a namespace, installs Syndesis in it and once everything is ready, it starts the test suite.
 
 More documentation at [Arquillian Cube with Kubernetes and Openshift](https://github.com/arquillian/arquillian-cube/blob/master/docs/kubernetes.adoc).
-

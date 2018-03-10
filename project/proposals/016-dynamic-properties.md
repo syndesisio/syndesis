@@ -139,7 +139,7 @@ Content-Type: application/json
           }, ...
         ]
       }
-    }    
+    }  
   }, {
     "name": "Unique field",
     "description": "Specify field to hold the identifying value",
@@ -210,7 +210,7 @@ Content-Type: application/json
           }, ...
         ]
       }
-    }    
+    }  
   }, {
     "name": "Unique field",
     "description": "Specify field to hold the identifying value",
@@ -294,7 +294,7 @@ Content-Type: application/json
           },...
         ]
       }
-    }    
+    }  
   }],
   "outputDataShape": {
     "kind": "java",

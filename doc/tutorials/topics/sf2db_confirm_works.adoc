@@ -5,15 +5,15 @@ To confirm that the Salesforce to database integration is working:
 
 . In the left panel, click *Integrations*.
 . If necessary, wait until your sample integration is an *Active* integration,
-which means that it is running. If you used the example name, you would 
-see that 
+which means that it is running. If you used the example name, you would
+see that
 *Salesforce to Database Sample Integration* is *Active*.
 . In your Salesforce installation, create a new lead. Be
-sure to enter data 
+sure to enter data
 in the fields that you mapped: *Company*, *Email*, *FirstName*,
-*LastName*, *LeadSource*, *Status*, *Phone*, and *Rating*. 
+*LastName*, *LeadSource*, *Status*, *Phone*, and *Rating*.
 . In a new browser window, insert `*todo-*` in front of the URL
-for your {prodname} installation. For example: 
+for your {prodname} installation. For example:
 `\https://todo-proj7614.6a63.fuse-ignite.openshiftapps.com/`.
-. In the *To Do App* display, you should see a notification that a new 
-lead was created in the database. 
+. In the *To Do App* display, you should see a notification that a new
+lead was created in the database.

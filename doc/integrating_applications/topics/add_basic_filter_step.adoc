@@ -8,61 +8,61 @@ criteria that you define. For example, in an integration that
 obtains data from Twitter, you can specify that you want to
 continue the integration by operating only on tweets that contain "Red Hat".
 
-Add all connections to your integration before you add additional steps. When you 
+Add all connections to your integration before you add additional steps. When you
 add a step, {prodname} operates on the data it receives from the
-previous connection(s) and any other previous step(s). 
+previous connection(s) and any other previous step(s).
 
 If you cannot define the filter you need in a basic filter step,
-see <<add-advanced-filter-step>>. 
+see <<add-advanced-filter-step>>.
 
 You can add a step when you are creating an integration or editing
 an integration. The flow of the integration appears in the left panel. To
 add a filter step:
 
 . In the left panel, where you want to add a filter step to
-the integration, hover over the 
+the integration, hover over the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign']
-and in the popup that appears, click *Add a Step*. 
+and in the popup that appears, click *Add a Step*.
 
-. On the *Add a Step* page, click *Basic Filter*. 
+. On the *Add a Step* page, click *Basic Filter*.
 
-. On the *Configure Basic Filter Step* page, in 
+. On the *Configure Basic Filter Step* page, in
 the *Continue only if incoming data match* field, select one of the
 following options:
 +
-* Accept the 
+* Accept the
 default that all defined rules must be satisfied.
 *  Indicate that only
-one rule must be satisfied by selecting *ANY of the following*.  
+one rule must be satisfied by selecting *ANY of the following*.
 
 . Define the filter rule:
 
 .. *For this field*: In the field on the left, enter the name of the field that contains the
 content you want the filter to evaluate. For example, suppose the data
 coming in to the step consists of tweets that mention your Twitter handle.
-You want to continue the integration only when the tweet contains 
-certain content. The tweet is in a field named `text` so you enter or 
-select `text` as the value in the first field. 
+You want to continue the integration only when the tweet contains
+certain content. The tweet is in a field named `text` so you enter or
+select `text` as the value in the first field.
 +
 You can define the field value in the following ways:
 +
-*** Start typing. The data name field has a typeahead feature that 
-provides a list of possible completions for you in a pop-up box. 
-Select the correct one from the box. 
-*** Click in the *text* field. A dropdown box appears with a list of 
+*** Start typing. The data name field has a typeahead feature that
+provides a list of possible completions for you in a pop-up box.
+Select the correct one from the box.
+*** Click in the *text* field. A dropdown box appears with a list of
 available fields. Select the field of interest from the list.
 
-.. *This condition must be satisfied*: In the middle field, select a condition from the dropdown box. 
+.. *This condition must be satisfied*: In the middle field, select a condition from the dropdown box.
 The setting defaults to *Contains*. For the integration to continue,
 the condition that you select in this field must be
-true for the value that you enter in the third field. 
+true for the value that you enter in the third field.
 
-.. *For this value*: In the third field, enter a value to filter on. For example, 
-if you want to operate on mentions of a certain product from the 
+.. *For this value*: In the third field, enter a value to filter on. For example,
+if you want to operate on mentions of a certain product from the
 Twitter feed, you would enter the product name here.
 
-. Optionally, click *+ Add another rule* and define another rule. 
-+ 
-You can delete a rule by clicking the trash can icon next to the entry. 
+. Optionally, click *+ Add another rule* and define another rule.
++
+You can delete a rule by clicking the trash can icon next to the entry.
 
 . When the filter step is complete, click *Done* to add it to the integration.

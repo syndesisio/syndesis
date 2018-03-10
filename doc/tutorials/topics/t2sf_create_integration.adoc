@@ -1,7 +1,7 @@
 [id='create-twitter-sf-integration']
 = Create and deploy Twitter to Salesforce sample integration
 
-To create and deploy an integration that uses the 
+To create and deploy an integration that uses the
 Twitter and Salesforce connections
 you created, the main steps are:
 

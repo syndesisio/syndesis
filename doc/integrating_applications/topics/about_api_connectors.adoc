@@ -3,25 +3,25 @@
 
 After you upload a Swagger specification to {prodname}, a connector to the API
 becomes available. An integrator can select the connector, create
-an API client connection, and then add that connection to an integration. 
+an API client connection, and then add that connection to an integration.
 
 When {prodname} creates an API client connector, it maps each resource
 operation in the Swagger specification to an action. The action name
-and action description comes from documentation in the Swagger specification. 
+and action description comes from documentation in the Swagger specification.
 
 {prodname} connectors support OAuth 2.0 and HTTP Basic
 Authorization. If access to the API requires Transport Layer Security (TLS)
 then the API needs to use a valid certificate that is issued by
 a recognized Certificate Authority (CA).
 
-An API that uses OAuth must have an authorization URL that takes a client 
-callback URL as input. For {prodname} to obtain authorization to access an 
-API that uses OAuth, you provide the {prodname} callback URL at the client 
+An API that uses OAuth must have an authorization URL that takes a client
+callback URL as input. For {prodname} to obtain authorization to access an
+API that uses OAuth, you provide the {prodname} callback URL at the client
 API authorization URL. The details for doing this are described in
-<<register-with-rest-api>>. 
+<<register-with-rest-api>>.
 
 {prodname} cannot create connectors for APIs that support the HTTP 2.0
-protocol. 
+protocol.
 
 See <<creating-api-connectors>> for instructions for
-uploading a Swagger specification. 
+uploading a Swagger specification.

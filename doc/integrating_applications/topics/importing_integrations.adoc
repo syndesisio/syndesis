@@ -4,45 +4,45 @@
 To import an integration:
 
 :context: ug
-. Open the {prodname} environment that you want to import the integration into. 
-. In the left panel, click *Integrations*. 
-. In the upper right, click *Import*. 
-. Drag and drop one or more exported integration zip files, 
-or navigate to a zip file that contains an exported integration and select it. 
+. Open the {prodname} environment that you want to import the integration into.
+. In the left panel, click *Integrations*.
+. In the upper right, click *Import*.
+. Drag and drop one or more exported integration zip files,
+or navigate to a zip file that contains an exported integration and select it.
 . After {prodname} imports the file(s), click *Done*. {prodname} displays
-information about imported integrations. 
-. In the left panel, click *Connections*. 
-+ 
-If an imported integration uses a connection that requires configuration, 
-then there is a *Configuration Required* message at the bottom of the 
-connection's card. 
+information about imported integrations.
+. In the left panel, click *Connections*.
++
+If an imported integration uses a connection that requires configuration,
+then there is a *Configuration Required* message at the bottom of the
+connection's card.
 
-. For each connection that requires configuration: 
+. For each connection that requires configuration:
 
-.. Click it to display its details. 
-.. Enter or change connection details as needed. It is possible that every 
-field on this page is correct and that only security configuration is required. 
+.. Click it to display its details.
+.. Enter or change connection details as needed. It is possible that every
+field on this page is correct and that only security configuration is required.
 .. If you updated any fields, click *Save*.
-.. In the left panel, click *Settings*. 
+.. In the left panel, click *Settings*.
 +
 If there is an entry for the application that a connection that requires
-configuration is for, 
-then this application uses the OAuth protocol. For {prodname} to connect 
-to this application, you must register this installation of {prodname} 
-as a client of the application. 
+configuration is for,
+then this application uses the OAuth protocol. For {prodname} to connect
+to this application, you must register this installation of {prodname}
+as a client of the application.
 
-.. For each connection that requires configuration and that accesses an 
-application that uses the OAuth protocol, register this installation of 
-{prodname} with the application. The steps vary for each application. 
+.. For each connection that requires configuration and that accesses an
+application that uses the OAuth protocol, register this installation of
+{prodname} with the application. The steps vary for each application.
 See the appropriate topic:
 
 * <<register-with-salesforce_{context}>>
 * <<register-with-twitter>>
 * <<register-with-rest-api>>
 
-. In the left panel, click *Connections* and confirm that there are no 
-longer any connections that require configuration. 
+. In the left panel, click *Connections* and confirm that there are no
+longer any connections that require configuration.
 
-You now have a *Draft* version of the imported integration and each 
-connection in this integration is configured. You can publish the imported 
-integration. 
+You now have a *Draft* version of the imported integration and each
+connection in this integration is configured. You can publish the imported
+integration.

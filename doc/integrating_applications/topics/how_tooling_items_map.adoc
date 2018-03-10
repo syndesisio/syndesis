@@ -13,10 +13,10 @@ The following table shows how items in Fuse tooling map to items in {prodname}.
 |*Location*
 |*Item*
 
-.3+|*New Fuse Ignite Extension Project* wizard prompts the user to specify 
-information about the exension in these fields. 
+.3+|*New Fuse Ignite Extension Project* wizard prompts the user to specify
+information about the exension in these fields.
 |*Extension id*
-.4+|*Import Extension* upload page. {prodname} populates these fields with 
+.4+|*Import Extension* upload page. {prodname} populates these fields with
 values obtained from the extension.
 |*ID*
 |*Name*
@@ -26,16 +26,16 @@ values obtained from the extension.
 
 .3+|`syndesis-extension-definition.json` file
 .2+|`action` names
-|*Steps* lists the action names and their descriptions. Each action 
+|*Steps* lists the action names and their descriptions. Each action
 corresponds to a custom step.
 
 |*Choose a Step* page when creating or editing an integration
 |There is an entry for each custom step that is defined in an uploaded extension.
 |`property` names
-|After choosing a custom step to add to an integration, if the custom step 
-requires parameter values for execution then the *Configure _custom_ Step* 
+|After choosing a custom step to add to an integration, if the custom step
+requires parameter values for execution then the *Configure _custom_ Step*
 page prompts for any parameter values.
-|Label and input field for each property. 
-Each property corresponds to a parameter for executing the custom step. 
+|Label and input field for each property.
+Each property corresponds to a parameter for executing the custom step.
 
 |===

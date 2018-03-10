@@ -6,8 +6,8 @@
 [id='integrating_applications']
 = Integrating Applications with Ignite
 
-This guide provides information and instructions for using 
-{prodname}'s web interface to integrate applications. 
+This guide provides information and instructions for using
+{prodname}'s web interface to integrate applications.
 
 [IMPORTANT]
 ====
@@ -17,8 +17,8 @@ not be functionally complete, and Red Hat does not recommend to use them for
 production. These features provide early access to upcoming product features,
 enabling customers to test functionality and provide feedback during the
 development process.
-For more information on Red Hat Technology Preview features support scope, 
-see https://access.redhat.com/support/offerings/techpreview/. 
+For more information on Red Hat Technology Preview features support scope,
+see https://access.redhat.com/support/offerings/techpreview/.
 ====
 
 The content in this guide is organized as follows:
@@ -34,13 +34,13 @@ The content in this guide is organized as follows:
 To learn how to use {prodname} by creating sample integrations, see the
 https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/[Sample Integration Tutorials].
 
-In this Technology Preview, consider the names Red Hat Fuse Online and 
-Fuse Ignite as interchangeable. 
+In this Technology Preview, consider the names Red Hat Fuse Online and
+Fuse Ignite as interchangeable.
 
-In this Technology Preview, only one integration at a time can 
-be running. If you have a running (published) integration and you create a new 
-integration and try to publish it, the new integration is automatically 
-in the *Unpublished* state. You must stop the running integration before you can 
+In this Technology Preview, only one integration at a time can
+be running. If you have a running (published) integration and you create a new
+integration and try to publish it, the new integration is automatically
+in the *Unpublished* state. You must stop the running integration before you can
 start the new integration.
 
 include::topics/understanding.adoc[leveloffset=+1]

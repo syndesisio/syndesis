@@ -33,7 +33,7 @@ enlist the different endpoints available and the payload/response schemas.
 <!--
 Enlist all the acceptance criteria for new features or the steps required to reproduce the bug/regression reported.
 -->
-1. 
+1.
 2.
 3.
 4.

@@ -333,4 +333,3 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
         }
     }
 }
-

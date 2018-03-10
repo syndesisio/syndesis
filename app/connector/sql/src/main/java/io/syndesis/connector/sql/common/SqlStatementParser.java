@@ -30,9 +30,9 @@ public class SqlStatementParser {
      * R - SELECT FIRSTNAME, LASTNAME FROM NAME WHERE ID=:id
      * U - UPDATE NAME SET FIRSTNAME=:firstname WHERE ID=:id
      * D - DELETE FROM NAME WHERE ID=:id
-     * 
+     *
      * DEMO_ADD(INTEGER ${body[A]}
-     * 
+     *
      * validate no "AS"
      * input params
      * output params
@@ -194,7 +194,7 @@ public class SqlStatementParser {
         }
         return params;
     }
-    
+
     List<SqlParam> findInputParams(List<String> values) {
         List<SqlParam> params = new ArrayList<>();
         int i=0;
@@ -216,7 +216,7 @@ public class SqlStatementParser {
         }
         return params;
     }
-    
+
     List<SqlParam> findOutputColumnsInSelectStatement() {
         boolean isParam = true;
         List<SqlParam> params = new ArrayList<>();
@@ -246,7 +246,7 @@ public class SqlStatementParser {
             if ("FROM".equals(word)) {
                 isTable = true; //in the next iteration
             }
-            
+
         }
         return tables;
     }

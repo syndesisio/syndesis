@@ -6,16 +6,16 @@ In an integration, to add an AMQ or AMQP connection as the finish connection,
 start creating the integration, add and configure the start connection
 and then:
 
-. On the *Choose a Finish Connection* page, click the AMQ connection 
+. On the *Choose a Finish Connection* page, click the AMQ connection
 or the AMQP connection that
-you want to use as the integration's finish connection. 
+you want to use as the integration's finish connection.
 . On the *Choose an Action* page, click the *Publish Messages* action to
-publish messages to the queue or topic you specify. 
-. In the *Destination Name* field, enter the name of the queue or 
-topic to send messages to. 
-. For the *Destination Type*, accept *Queue* or select *Topic*. 
-. For the *Delivery Mode*, accept *Non-Persistent* 
+publish messages to the queue or topic you specify.
+. In the *Destination Name* field, enter the name of the queue or
+topic to send messages to.
+. For the *Destination Type*, accept *Queue* or select *Topic*.
+. For the *Delivery Mode*, accept *Non-Persistent*
 or select *Persistent* to guarantee message delivery even if
-a connection fails. 
-. Click *Next*. 
+a connection fails.
+. Click *Next*.
 include::add_describe_data_step.adoc[]

@@ -2,17 +2,17 @@
 = Adding an Amazon S3 connection as a middle connection
 
 :context: middle
-In an integration, to add an Amazon S3 connection between the start and 
+In an integration, to add an Amazon S3 connection between the start and
 finish connections:
 
-. Add the start and finish connections. 
-. In the left panel, hover over the plus sign that is in the location 
+. Add the start and finish connections.
+. In the left panel, hover over the plus sign that is in the location
 where you want to add the Amazon S3 connection.
-. In the popup, click *Add a Connection*. 
+. In the popup, click *Add a Connection*.
 . Click the Amazon S3 connection that you want to use as a middle
-connection in the integration. 
-. Click the *Copy Object* action. 
+connection in the integration.
+. Click the *Copy Object* action.
 The integration obtains the objects to be added to the bucket from the
-previous integration step(s). 
-. Click *Next*. 
+previous integration step(s).
+. Click *Next*.
 include::add_describe_data_step.adoc[]

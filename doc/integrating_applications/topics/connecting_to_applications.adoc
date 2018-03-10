@@ -1,8 +1,8 @@
 [id='connecting-to-applications']
 = Connecting to applications that you want to integrate
 
-When you create an integration you add a connection to each application 
-that you want to integrate. The following topics provide details for 
+When you create an integration you add a connection to each application
+that you want to integrate. The following topics provide details for
 creating connections and adding them to integrations:
 
 * <<overview-of-creating-connections>>
@@ -12,11 +12,11 @@ creating connections and adding them to integrations:
 * <<connecting-to-sf>>
 * <<connecting-to-databases>>
 * <<connecting-to-twitter>>
- 
+
 include::overview_of_creating_connections.adoc[leveloffset=+1]
 
 include::connecting_to_amazon_s3.adoc[leveloffset=+1]
-   
+
 include::connecting_to_amq.adoc[leveloffset=+1]
 
 include::connecting_to_rest_apis.adoc[leveloffset=+1]

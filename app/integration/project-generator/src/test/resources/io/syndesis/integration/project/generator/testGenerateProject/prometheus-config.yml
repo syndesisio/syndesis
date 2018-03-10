@@ -352,7 +352,7 @@ rules:
     type: GAUGE
   - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MinDuration'
     name: org.apache.camel.MinDuration
-    help: Minimum Duration 
+    help: Minimum Duration
     labels:
         context: $1
         service: $2
@@ -368,7 +368,7 @@ rules:
     type: GAUGE
   - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>ThreadsBlocked'
     name: org.apache.camel.ThreadsBlocked
-    help: Threads Blocked 
+    help: Threads Blocked
     labels:
         context: $1
         service: $2
@@ -376,7 +376,7 @@ rules:
     type: GAUGE
   - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>ThreadsInterrupted'
     name: org.apache.camel.ThreadsInterrupted
-    help: Threads Interrupted 
+    help: Threads Interrupted
     labels:
         context: $1
         service: $2

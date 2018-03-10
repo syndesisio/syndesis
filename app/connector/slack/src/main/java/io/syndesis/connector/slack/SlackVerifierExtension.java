@@ -80,7 +80,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
             httpPost.setEntity(body);
 
             HttpResponse response = client.execute(httpPost);
-            
+
             // 2xx is OK, anything else we regard as failure
             if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
                 builder.error(ResultErrorBuilder
@@ -95,7 +95,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
                     .parameterKey("webhookUrl").build());
         }
     }
-    
+
     protected String asJson(SlackMessage message) {
         Map<String, Object> jsonMap = new HashMap<>();
 

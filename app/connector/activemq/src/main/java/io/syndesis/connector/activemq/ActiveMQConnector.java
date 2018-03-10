@@ -134,7 +134,7 @@ class ActiveMQConnector extends ComponentProxyComponent {
         if (ObjectHelper.isEmpty(names)) {
             return null;
         }
-            
+
         // Try to check if a component with same set-up has already been
         // configured, if so reuse it.
         for (String name: names) {

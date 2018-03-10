@@ -16,9 +16,9 @@
 package io.syndesis.connector.sql.common.stored;
 
 /**
- * Complete Enumeration of Column modes in use by 
+ * Complete Enumeration of Column modes in use by
  * Stored Procedures.
- * 
+ *
  * @since 09/11/17
  * @author kstam
  *

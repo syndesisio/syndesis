@@ -84,7 +84,7 @@ public class IntegrationLoggingDisabledTest {
             }
         });
     }
-    
+
     @Test
     public void testDisabledLoggingRoutePolicyFactory() {
         assertThat(camelContext.getRoutePolicyFactories()).have(new Condition<RoutePolicyFactory>() {

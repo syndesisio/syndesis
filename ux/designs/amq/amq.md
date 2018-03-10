@@ -66,7 +66,7 @@ User select AMQ connection as the start connection.
 
 1. Users fill in Durable Subscription ID.
 
-2. “Done” action button becomes active.   
+2. “Done” action button becomes active.  
 
 
 ## Create integration with AMQ as finish connection

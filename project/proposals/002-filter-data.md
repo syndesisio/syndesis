@@ -35,15 +35,15 @@ class FilterStep extends Step {
 
   // Type of filter, which is either "RULE" or "TEXT"
   FilterType type;
-  
+
   // Predicate can be either "AND" (every) or "OR" (any)
   FilterPredicate predicate;
-  
+
   // List of rules to combine. null when type is "SIMPLE"
   List<FilterRule> rules;
-  
+
   // Filter in the simple expression language. It is either the provided
-  // freeform expression when type it "TEXT" or the calculated 
+  // freeform expression when type it "TEXT" or the calculated
   // filter text when type is "RULE" (but can be initially null)
   String simple;
 }
@@ -54,7 +54,7 @@ class FilterStep extends Step {
 enum FilterType {
     // Rule based filter which consists of a list of rules
     RULE,
-    
+
     // Freeform filter using the simple expression language
     TEXT
 }
@@ -65,7 +65,7 @@ enum FilterType {
 enum FilterPredicate {
   // Every rule must match for the filter to pass
   ANY,
-  
+
   // Any rule must match for the filter to pass
   OR;
 }
@@ -77,11 +77,11 @@ class FilterRule {
   // Path expression within the message on which to filter. Can be part of header, body, properties
   // The path must match the syntax used by the datamapper
   String path;
-  
-  // Operator to use for the filter. The value comes from meta dara obtained by the UI in 
+
+  // Operator to use for the filter. The value comes from meta dara obtained by the UI in
   // a separate call. Example: "contains"
   String op;
-  
+
   // Value used by operator to decide whether the filter applies
   String value;
 }
@@ -96,7 +96,7 @@ For example, the following configuration
   - path: "body.text"
     op: "contains"
     value: "antman"
-  - path: "header.region"    
+  - path: "header.region"  
     op: "=~"
     value: "asia"
   - path: "body.text"
@@ -117,7 +117,7 @@ The simple expression language [does not support parentheses](http://camel.apach
 
 ##### Fixed background data
 
-For the `path` as well as for the possible `operators` the UI needs a list of values which can be chosen. The list of operators should be fixed, whereas it should be possible to add a freeform path (but with suggestion of a set of given paths). 
+For the `path` as well as for the possible `operators` the UI needs a list of values which can be chosen. The list of operators should be fixed, whereas it should be possible to add a freeform path (but with suggestion of a set of given paths).
 
 This background data can be obtained by a dedicated API call to an endpoint `/api/{version}/integrations/filter/options` which takes an existing integration ID (if the intergration has already been created, otherwise the ids of all connections before this filter step need to be send to the API server) as parameter.
 
@@ -139,7 +139,7 @@ It's up to the server how to determine this data set. Ideally the connector them
 
 #### Text based filter (freeform)
 
-It should be possible to add a simple expression directly as text. Ideally there should be some sort of intellisense, but in the first step its a plain text input. However the expression needs to be validated before its stored in the DB. In the examples above the simple expression would be added directly. 
+It should be possible to add a simple expression directly as text. Ideally there should be some sort of intellisense, but in the first step its a plain text input. However the expression needs to be validated before its stored in the DB. In the examples above the simple expression would be added directly.
 
 ### Persistence
 
@@ -154,7 +154,7 @@ In the case of a "form" filter, the "simple" expression is calculated when the s
 Example for a persistent integration step:
 
 ```json
-[{ 
+[{
   "id": "1",
   "stepKind": "filter",
   "configuredProperties": {
@@ -162,11 +162,11 @@ Example for a persistent integration step:
     "predicate": "AND",
     "simple" : "${body} contains \"antman\" || ${in.header.publisher} =~ \"DC Comics\"",
     "rules" : [
-       { 
+       {
          "path": "body.text",
          "value": "antman"
        },
-       { 
+       {
          "path": "header.kind",
          "op": "=~",
          "value": "DC Comics",
@@ -184,7 +184,7 @@ Example for a persistent integration step:
 }]
 ```
 
-The example is simplified in so far as the value to the "rules" field for step with id "1" must be entered as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string. 
+The example is simplified in so far as the value to the "rules" field for step with id "1" must be entered as a single line string with newlines replaced by "\n" since the value of a property is currently only allowed to be a string.
 
 If switching to JPA it is recommended to use a more typed approach which `FilterStep` being a subclass of `Step` and having the relation to "filter rules" in a seperate table, which are linked together.
 

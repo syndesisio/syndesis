@@ -21,4 +21,3 @@ git commit -m "Regenerated the tooltips for the UI"
 . Follow the standard Merge Request process to contribute this update.
 
 For more details about how the tooltips are defined in the documentation, see link:../tools/syndesis-documentation-maven-plugin/README.adoc[]
-

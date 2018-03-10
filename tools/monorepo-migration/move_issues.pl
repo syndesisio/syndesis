@@ -90,12 +90,12 @@ Options:
    --dry             : Don't write, only test
    --clean           : Use a new fresh cache and remove the cache from the previous run
    --state <file>    : State file to use
-   --pause <wait s>  : Pause for that main seconds after each write (default: 5s, use this to comply to 
+   --pause <wait s>  : Pause for that main seconds after each write (default: 5s, use this to comply to
                        https://developer.github.com/v3/guides/best-practices-for-integrators/#dealing-with-abuse-rate-limits)
    --help            : this help message
 
 EOT
-    print ">>> $extra\n\n" if $extra;    
+    print ">>> $extra\n\n" if $extra;
 }
 
 
@@ -159,7 +159,7 @@ sub update_links {
                                                                  &get_target_repo($opts,$config),
                                                                  issue_id => $issue_id
                                                                 );
-            
+
             while (my $comment = $comments_result->next) {
                 my $comment_id = $comment->{id};
 
@@ -222,12 +222,12 @@ sub replace_issue_links {
            # - <comment> : Reference to issue comment (optional)
            # - <original>: the original match which is returned if there is no update
             # Space or beginning of text
-           (?<init>^|\s|\.|\(|\n)             
-           (?<original> 
+           (?<init>^|\s|\.|\(|\n)
+           (?<original>
              # Full URL:
-             # https://github.com/syndesisio/syndesis-ui/issues/630#issuecomment-318366353 
+             # https://github.com/syndesisio/syndesis-ui/issues/630#issuecomment-318366353
              # issuecomment part is optional
-             https://github.com/(?<repo>[^/]+/[^/]+)/issues/(?<id>\d+)(?:\#issuecomment-(?<comment>\d+))? |   
+             https://github.com/(?<repo>[^/]+/[^/]+)/issues/(?<id>\d+)(?:\#issuecomment-(?<comment>\d+))? |
 
              # orga/repo#id format : syndesisio/syndesis-ui#630
              (?<repo>[^/\s]+/[^/\s]+)\#(?<id>\d+) |
@@ -251,19 +251,19 @@ sub conditional_replace_issue_link {
     my $processed = shift;
     my $repo_from_labels = shift;
     my $target = shift;
-    
+
     my $original = shift;
     my $repo_name = shift;
     my $number = shift;
     my $comment_id = shift;
-    
+
     if (!$repo_name && $processed->{$number}) {
         # No repo given and the issue number has been already processed
         return $original;
     }
-    
+
     my $repo = $repo_name ? $repo_map->{$repo_name} : $repo_from_labels;
-        
+
     #print Dumper($repo_map);
     print <<EOT if $DEBUG;
 RL:     $repo_from_labels
@@ -275,16 +275,16 @@ Repo:     $repo
 ID:       $number
 Comment:  $comment_id
 EOT
-    
+
     # If its no one of our repos (or when its already ourself), then return the
     # original match
     if (!$repo) {
         return $original;
     }
-    
+
     my $mapped = $state->{$repo}->{$number};
     print "Mapped: ",$mapped->{new_id},"\n" if $DEBUG;
-    if ($mapped && $mapped->{new_id}) {     
+    if ($mapped && $mapped->{new_id}) {
         $processed->{$mapped->{new_id}}++;
         if ($comment_id) {
             my $mapped_comment_id = $state->{$repo}->{$number}->{comments}->{$comment_id};
@@ -297,9 +297,9 @@ EOT
         }
         # Ok, its not an URL. So we need to check whether we already processed
         # this id here.
-        return "#" . $mapped->{new_id};        
+        return "#" . $mapped->{new_id};
     }
-    
+
     return $original;
 };
 
@@ -336,7 +336,7 @@ sub migrate_repo {
     my $milestone_map = &extract_milestones($opts, $config);
 
     print "Migrating $repo:\n";
-    
+
     # Fetch all source issues
     my $source_issues = Pithub::Issues->new(&parse_auth($opts, $config),
                                             per_page => 200,
@@ -349,19 +349,19 @@ sub migrate_repo {
     # Handle for the target issues
     my $target_issues = Pithub::Issues->new(&parse_auth($opts, $config));
 
-    
+
     my $count = 0;
     while (my $issue = $list_result->next) {
         # Ignore pull requests
         next if $issue->{pull_request};
 
-        
+
         # Temporary checks to find issues of a certain kind
         # next unless $issue->{assignee};
         # next if !$issue->{comments} || ! @{$issue->{labels}};
         # next if !$issue->{milestone};
 
-        my $issue_id = $issue->{number};        
+        my $issue_id = $issue->{number};
         print $issue_id,": ";
 
         # Get persisten cache for this issue
@@ -383,8 +383,8 @@ sub migrate_repo {
                                                                       }
                                                              );
                 die_on_error($new_issue_result);
-                $new_issue_id = $new_issue_result->first->{number}; 
-                $count++;                
+                $new_issue_id = $new_issue_result->first->{number};
+                $count++;
 
                 $cache = {};
                 $cache->{new_id} = $new_issue_id;
@@ -401,13 +401,13 @@ sub migrate_repo {
             print "[C] ";
             $new_issue_id = $cache->{new_id};
         }
-        
+
         if ($issue->{comments} > 0) {
             my $comments_result = $source_issues->comments->list(
                                                                  &parse_repo($source->{name}),
                                                                  issue_id => $issue_id
                                                                 );
-            
+
             while (my $comment = $comments_result->next) {
                 my $comment_id = $comment->{id};
                 if ($cache->{comments}->{$comment_id}) {
@@ -418,7 +418,7 @@ sub migrate_repo {
                     my $new_comment_result = $target_issues->comments->create(&get_target_repo($opts,$config),
                                                                               issue_id => $new_issue_id,
                                                                               data => { body => map_comment($comment) }
-                                                                             );                
+                                                                             );
                     die_on_error($new_comment_result);
                     print "+";
                     sleep ($opts->{pause} || 5);
@@ -508,7 +508,7 @@ sub prepare_body {
     my $labels = create_label_html($issue->{labels});
     my $created = $issue->{created_at};
     $created =~ s/.*(\d{4}-\d{2}-\d{2}).*/$1/;
-    
+
     my $header = sprintf('|<img src="%s" valign="middle" width="22px"></img> %s | %s%s |'."\n",
                          $user_avatar,
                          $user,
@@ -524,7 +524,7 @@ sub map_labels {
     my $labels = shift;
     my $lmap = $config->{repos}->{$repo}->{label_mapping} || {};
     my @ret = ("module/$repo");
-    
+
     for my $label (@$labels) {
         my $l = $label->{name};
         if ($lmap->{$l}) {
@@ -549,7 +549,7 @@ sub map_milestone {
 
 sub map_comment {
     my $comment = shift;
-    
+
     my $body = $comment->{body};
     my $html_url = $comment->{html_url};
     my $user = "@" . $comment->{user}->{login};
@@ -633,8 +633,5 @@ sub parse_auth {
     return (
             user => $user,
             token => $token
-           );    
+           );
 }
-
-
-

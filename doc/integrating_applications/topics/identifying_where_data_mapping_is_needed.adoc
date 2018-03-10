@@ -3,9 +3,9 @@
 
 To identify where data mapping is needed:
 
-. When you are creating or editing an integration, add all connections to 
-the integration. 
+. When you are creating or editing an integration, add all connections to
+the integration.
 . In the integration visualization panel on the left, look for any
 image:shared/images/WarningIcon.png[Warning] icons.
 . Click the icon to see the message. A *Data Type Mismatch* notification
-indicates that you need to add a data mapper step. 
+indicates that you need to add a data mapper step.

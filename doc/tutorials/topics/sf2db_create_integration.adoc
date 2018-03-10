@@ -2,9 +2,9 @@
 = Create and deploy Salesforce to database sample integration
 
 To create and deploy an integration that uses the Salesforce
-connection and the database connection, 
+connection and the database connection,
  the main steps are:
- 
+
 * <<sf2db-choose-start-connection>>
 * <<sf2db-choose-finish-connection>>
 * <<sf2db-add-data-mapping-step>>

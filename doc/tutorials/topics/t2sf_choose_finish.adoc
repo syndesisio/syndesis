@@ -5,18 +5,18 @@ To add the finish connection to the integration:
 
 . On the *Choose a Finish Connection* page, click the Salesforce
 connection you created. If you gave it the example name, you
-would click *SF Connect 1*. 
-This integration finishes by using the credentials 
-defined in this connection to connect to Salesforce. 
+would click *SF Connect 1*.
+This integration finishes by using the credentials
+defined in this connection to connect to Salesforce.
 . On the *Choose an Action* page, click *New record*.
 . On the next page, accept *Contact* as the
-Salesforce record to create. 
-. Click  *Done* to add the finish 
-connection to the integration. 
+Salesforce record to create.
+. Click  *Done* to add the finish
+connection to the integration.
 //. On the next page, enter `*TwitterScreenName__c*` as the field
 //that holds the identifying value. The
-//connection uses the value in this custom field to determine 
+//connection uses the value in this custom field to determine
 //whether creation of
 //a Salesforce contact record is required. If a Salesforce contact record
-//with this ID already exists then the integration updates that record. 
+//with this ID already exists then the integration updates that record.
 //Otherwise, the integration creates a contact record.

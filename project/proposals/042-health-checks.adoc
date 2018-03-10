@@ -7,7 +7,7 @@
 
 * Branches:
 ** https://github.com/apache/camel (master)
-  
+
 * Example:
 ** https://github.com/apache/camel/tree/master/examples/camel-example-spring-boot-routecontroller
 
@@ -89,7 +89,7 @@ The MVC endpoint could expose the following api:
 
 [cols="3*", options="header"]
 |===
-| HTTP Verb | Path | Description 
+| HTTP Verb | Path | Description
 | GET | /camelroutes | List all the routes with minimal information
 | GET | /camelroutes/{id}/info | Provide detailed information about the route identified by {id}
 | POST | /camelroutes/{id}/start | Attempt to start the route identified by {id}

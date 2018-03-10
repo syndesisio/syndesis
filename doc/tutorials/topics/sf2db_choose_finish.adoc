@@ -3,19 +3,19 @@
 
 To add the finish connection to the integration:
 
-. On the *Choose a Finish Connection* page, 
-click the  *PostgresDB* connection. 
-This integration finishes by using the credentials 
+. On the *Choose a Finish Connection* page,
+click the  *PostgresDB* connection.
+This integration finishes by using the credentials
 defined in this database connection to connect to the
-provided sample database. 
+provided sample database.
 
-. On the *Choose an Action* page, click *Invoke SQL stored procedure*, 
+. On the *Choose an Action* page, click *Invoke SQL stored procedure*,
 which passes data to a stored procedure.
 
 . In the *Procedure Name* field, click and select *add_lead*, which is the
-provided stored procedure to run in the sample database. 
-The selected procedure determines the requirements for additional 
+provided stored procedure to run in the sample database.
+The selected procedure determines the requirements for additional
 steps in the integration, for example, which Salesforce data fields
-need to be mapped to which database fields. 
+need to be mapped to which database fields.
 
-. Click *Done* to add the finish connection to the integration. 
+. Click *Done* to add the finish connection to the integration.

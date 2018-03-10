@@ -3,11 +3,11 @@
 
 In an integration, to retrieve data from an Amazon S3 bucket or copy data into
 an Amazon S3 bucket, you create an Amazon S3
-connection. You then add that Amazon S3 connection to an integration. 
+connection. You then add that Amazon S3 connection to an integration.
 For details, see:
 
 * <<prerequisites-for-creating-s3-connection>>
-* <<create-s3-connection>> 
+* <<create-s3-connection>>
 * <<adding-s3-connections>>
 
 include::prerequisites_for_creating_s3_connection.adoc[leveloffset=+1]

@@ -4,27 +4,27 @@
 After you create an integration, you might need to update it to
 add, edit or remove a step. To update an integration:
 
-. In the left {prodname} panel, click *Integrations*. 
-. In the list of integrations, click the entry for the integration that 
+. In the left {prodname} panel, click *Integrations*.
+. In the list of integrations, click the entry for the integration that
 you want to update.
-. On the integration's summary page, in the upper right corner, click 
-*Edit Integration*. 
+. On the integration's summary page, in the upper right corner, click
+*Edit Integration*.
 
-In the left panel, you can see each step in the integration with a 
+In the left panel, you can see each step in the integration with a
 visual cue that indicates whether it is a connection or a data operation
-between connections. 
+between connections.
 Update the integration as needed:
 
 * To add a step, in the left panel, hover over the plus
-sign that is in the location where you want to add it. 
-Click *Add a Connection* or *Add a Step*. 
+sign that is in the location where you want to add it.
+Click *Add a Connection* or *Add a Step*.
 
 * To delete a step, in the left panel, click
-image:images/TrashIcon.png[title='Delete'] 
-to the right of the step that you want to delete. 
+image:images/TrashIcon.png[title='Delete']
+to the right of the step that you want to delete.
 
 * To change the configuration of a step, in the left panel,
-click the step that you want to update. In the 
-configuration page, update the parameter settings as needed. 
+click the step that you want to update. In the
+configuration page, update the parameter settings as needed.
 
-See also: <<publishing-integrations>>. 
+See also: <<publishing-integrations>>.
