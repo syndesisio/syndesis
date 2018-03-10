@@ -22,7 +22,9 @@
     "test:cc": "yarn ng test --watch=false --cc",
     "test:ci": "yarn ng test --watch=false --progress=false",
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
-    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest"
+    "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "private": true,
   "dependencies": {
@@ -54,7 +56,7 @@
     "ngx-bootstrap": "^2.0.2",
     "ngx-chips": "^1.6.2",
     "ngx-restangular": "2.0.2",
-    "patternfly": "3.26.1",
+    "patternfly": "3.36.0",
     "patternfly-ng": "^3.0.0",
     "pluralize": "5.0.0",
     "rxjs": "^5.5.2",
@@ -62,7 +64,8 @@
     "ts-helpers": "1.1.2",
     "typescript-logging": "0.4.0",
     "url": "^0.11.0",
-    "zone.js": "^0.8.14"
+    "zone.js": "^0.8.14",
+    "snyk": "^1.69.11"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^5.2.0",
@@ -87,9 +90,9 @@
     "cucumber-html-reporter": "^0.3.7",
     "cucumber-tsflow": "^1.1.2",
     "fs-extra": "^2.0.0",
-    "jasmine-core": "~2.6.2",
+    "jasmine-core": "~3.1.0",
     "jasmine-spec-reporter": "~4.1.0",
-    "karma": "~1.7.0",
+    "karma": "~2.0.0",
     "karma-chrome-launcher": "~2.1.1",
     "karma-cli": "~1.0.1",
     "karma-coverage-istanbul-reporter": "^1.2.1",
@@ -109,5 +112,6 @@
     "tslint": "~5.7.0",
     "typescript": "~2.4.2",
     "webdriver-manager": "12.0.2"
-  }
+  },
+  "snyk": true
 }

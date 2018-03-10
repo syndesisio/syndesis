@@ -1,0 +1,19 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.10.2
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - karma > socket.io > socket.io-adapter > socket.io-parser > debug:
+        patched: '2018-03-10T17:53:28.859Z'
+  'npm:moment:20161019':
+    - '@atlasmap/atlasmap.data.mapper > patternfly > moment':
+        patched: '2018-03-10T17:53:28.859Z'
+    - patternfly-sass > moment:
+        patched: '2018-03-10T17:53:28.859Z'
+  'npm:moment:20160126':
+    - patternfly-sass > eonasdan-bootstrap-datetimepicker > moment:
+        patched: '2018-03-10T17:53:28.859Z'
+  'npm:ms:20170412':
+    - karma > socket.io > socket.io-adapter > socket.io-parser > debug > ms:
+        patched: '2018-03-10T17:53:28.859Z'
