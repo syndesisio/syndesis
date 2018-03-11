@@ -24,7 +24,7 @@
     "sw": "sw-precache --root=dist --config=sw-precache-config.js",
     "docker:build": "yarn ng build --aot --prod && docker build -f docker/Dockerfile -t syndesis/syndesis-ui:latest . && docker tag syndesis/syndesis-ui:latest docker.io/syndesis/syndesis-ui:latest",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "yarn snyk-protect"
   },
   "private": true,
   "dependencies": {
