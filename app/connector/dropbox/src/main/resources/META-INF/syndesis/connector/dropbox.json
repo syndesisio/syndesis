@@ -90,7 +90,7 @@
                                 "kind": "parameter",
                                 "displayName": "Remote path",
                                 "group": "producer",
-                                "required": false,
+                                "required": true,
                                 "type": "string",
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
