@@ -101,6 +101,7 @@
     <mailapi.version>1.4.3</mailapi.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.8</json-schema-validator.version>
+    <junit.version>4.12</junit.version>
 
     <resteasy.version>3.1.4.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>

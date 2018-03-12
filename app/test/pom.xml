@@ -14,9 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -29,90 +28,17 @@
   <groupId>io.syndesis.test</groupId>
   <artifactId>test</artifactId>
   <name>Test</name>
-  <inceptionYear>2016</inceptionYear>
-
-  <organization>
-    <name>Red Hat</name>
-    <url>http://redhat.com</url>
-  </organization>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <!-- including A developer as it's required by the maven poms going into
-    central -->
-  <developers>
-    <developer>
-      <id>syndesis</id>
-      <name>Syndesis Development Team</name>
-      <organization>redhat</organization>
-      <organizationUrl>http://redhat.com/</organizationUrl>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git:git@github.com:syndesisio/syndesis.git</connection>
-    <developerConnection>scm:git:git@github.com:syndesisio/syndesis.git
-    </developerConnection>
-    <url>http://github.com/syndesisio/syndesis</url>
-    <tag>${project.version}</tag>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>oss-sonatype-staging</id>
-      <name>Sonatype Staging Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
-
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jcenter-releases</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>apache.snapshots</id>
-      <name>Apache Development Snapshot Repository</name>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
   <properties>
+    <arquillian.version>1.4.0.Final</arquillian.version>
+    <arquillian-cube.version>1.15.2</arquillian-cube.version>
 
-    <arquillian.version>1.1.13.Final</arquillian.version>
-    <arquillian-cube.version>1.9.1</arquillian-cube.version>
+    <kubernetes-client.version>3.1.4</kubernetes-client.version>
+    <kubernetes-model.version>2.0.4</kubernetes-model.version>
+    <okhttp.version> 3.10.0</okhttp.version>
 
-    <junit.version>4.12</junit.version>
-    <kubernetes-client.version>2.6.3</kubernetes-client.version>
-    <kubernetes-model.version>1.1.4</kubernetes-model.version>
-    <okhttp.version>3.8.1</okhttp.version>
+    <basepom.test.fork-count>0</basepom.test.fork-count>
+    <basepom.test.reuse-vm>false</basepom.test.reuse-vm>
   </properties>
 
   <dependencyManagement>
@@ -199,8 +125,6 @@
       <version>${junit.version}</version>
     </dependency>
 
-
-
   </dependencies>
 
   <build>
@@ -217,25 +141,7 @@
           </ignoredResourcePatterns>
         </configuration>
       </plugin>
-      <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-surefire-plugin</artifactId>
-	      <configuration>
-		      <forkCount>0</forkCount>
-		      <reuseForks>false</reuseForks>
-      </configuration>
-      </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>snapshot</id>
-      <properties>
-        <arquillian-cube.version>1.0.0.Final-SNAPSHOT</arquillian-cube.version>
-        <kubernetes-client.version>2.2-SNAPSHOT</kubernetes-client.version>
-      </properties>
-    </profile>
-  </profiles>
 
 </project>
