@@ -37,9 +37,9 @@
                [ngClass]="elementControlClass"
                [required]="model.required"
                [value]="model.value"
-               (dfBlur)="onBlur($event)"
-               (dfChange)="onValueChange($event)"
-               (dfFocus)="onFocus($event)">
+               (blur)="onBlur($event)"
+               (change)="onValueChange($event)"
+               (focus)="onFocus($event)">
         <span [innerHTML]="model.label"
               [ngClass]="[elementLabelClass, gridLabelClass]">
         </span>
@@ -82,9 +82,9 @@
                                  [model]="_model"
                                  [templates]="templateList"
                                  [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
-                                 (dfBlur)="onBlur($event)"
-                                 (dfChange)="onValueChange($event)"
-                                 (dfFocus)="onFocus($event)"></syndesis-form-control>
+                                 (blur)="onBlur($event)"
+                                 (change)="onValueChange($event)"
+                                 (focus)="onFocus($event)"></syndesis-form-control>
 
             <ng-container *ngTemplateOutlet="templates[2]?.templateRef; context: groupModel"></ng-container>
         </div>
@@ -113,9 +113,9 @@
                                [model]="_model"
                                [templates]="templateList"
                                [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
-                               (dfBlur)="onBlur($event)"
-                               (dfChange)="onValueChange($event)"
-                               (dfFocus)="onFocus($event)"></syndesis-form-control>
+                               (blur)="onBlur($event)"
+                               (change)="onValueChange($event)"
+                               (focus)="onFocus($event)"></syndesis-form-control>
       </fieldset>
 
       <!-- INPUT -->
@@ -126,11 +126,10 @@
           <ng-container *ngSwitchCase="'duration'">
             <syndesis-duration-control [group]="group"
                                        [model]="model"
-                                       [fieldId]="model.id"
                                        [bindId]="bindId"
-                                       (dfBlur)="onBlur($event)"
-                                       (dfChange)="onValueChange($event)"
-                                       (dfFocus)="onFocus($event)">
+                                       (blur)="onBlur($event)"
+                                       (change)="onValueChange($event)"
+                                       (focus)="onFocus($event)">
             </syndesis-duration-control>
           </ng-container>
           <ng-container *ngSwitchDefault>
@@ -163,9 +162,9 @@
                   [spellcheck]="model.spellCheck"
                   [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
                   [type]="model.inputType"
-                  (dfBlur)="onBlur($event)"
-                  (dfChange)="onValueChange($event)"
-                  (dfFocus)="onFocus($event)" />
+                  (blur)="onBlur($event)"
+                  (change)="onValueChange($event)"
+                  (focus)="onFocus($event)" />
 
             <div *ngIf="model.suffix"
                 class="input-group-addon"
@@ -191,7 +190,7 @@
                 [dynamicId]="bindId && model.id"
                 [name]="model.name"
                 [ngClass]="elementControlClass"
-                (dfChange)="onValueChange($event)">
+                (change)="onValueChange($event)">
 
         <legend *ngIf="model.legend"
                 [innerHTML]="model.legend"></legend>
@@ -205,8 +204,8 @@
                    [formControlName]="model.id"
                    [name]="model.name"
                    [value]="option.value"
-                   (dfBlur)="onBlur($event)"
-                   (dfFocus)="onFocus($event)" />
+                   (blur)="onBlur($event)"
+                   (focus)="onFocus($event)" />
             <span [innerHTML]="option.label"></span>
           </label>
         </div>
@@ -222,9 +221,9 @@
               [tooltip]="model.controlTooltip"
               [ngClass]="elementControlClass"
               [required]="model.required"
-              (dfBlur)="onBlur($event)"
-              (dfChange)="onValueChange($event)"
-              (dfFocus)="onFocus($event)">
+              (blur)="onBlur($event)"
+              (change)="onValueChange($event)"
+              (focus)="onFocus($event)">
 
         <option *ngFor="let option of model.options$ | async"
                 [attr.name]="model.name"
@@ -250,9 +249,9 @@
                 [rows]="model.rows"
                 [spellcheck]="model.spellCheck"
                 [wrap]="model.wrap"
-                (dfBlur)="onBlur($event)"
-                (dfChange)="onValueChange($event)"
-                (dfFocus)="onFocus($event)"></textarea>
+                (blur)="onBlur($event)"
+                (change)="onValueChange($event)"
+                (focus)="onFocus($event)"></textarea>
 
 
       <span *ngIf="showHint" class="help-block" [innerHTML]="model.hint" [ngClass]="getClass('element', 'hint')"></span>

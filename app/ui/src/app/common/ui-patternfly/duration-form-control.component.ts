@@ -17,7 +17,6 @@ export class DurationFormControlComponent implements OnInit {
   elementControlClass: string;
   @Input() group: FormGroup;
   @Input() model: any;
-  @Input() fieldId: string;
   @Input() bindId: boolean;
 
   @Output() blur = new EventEmitter<any>();
