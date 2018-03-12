@@ -41,9 +41,7 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
                 .error(ResultErrorHelper.requiresOption("accessToken", parameters))
                 .error(ResultErrorHelper.requiresOption("clientIdentifier", parameters));
-        if (builder.build().getErrors().isEmpty()) {
-            verifyCredentials(builder, parameters);
-        }
+
         return builder.build();
     }
 
