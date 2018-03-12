@@ -42,7 +42,7 @@ public class DriverUploadTest {
 
     final private static String FILE_NAME = "syndesis-library-jdbc-1.0.0.jar";
     final private static String FILE_CLASSPATH = "drivers/" + FILE_NAME;
-    
+
     @Test
     public void upload() throws IOException, URISyntaxException {
         URL driverClasspath = DriverUploadTest.class.getClassLoader().getResource(FILE_CLASSPATH);
@@ -51,7 +51,7 @@ public class DriverUploadTest {
         MultipartFormDataInput multiPart = mock(MultipartFormDataInput.class);
         InputPart inputPartFileContent = mock(InputPart.class);
         InputPart inputPartFileName = mock(InputPart.class);
-        
+
         List<InputPart> parts = new ArrayList<>();
         parts.add(inputPartFileContent);
         parts.add(inputPartFileName);
@@ -60,7 +60,7 @@ public class DriverUploadTest {
         when(multiPart.getFormDataPart("fileName", String.class, null)).thenReturn(FILE_NAME);
 
         String tempDir = System.getProperty("java.io.tmpdir");
-        System.setProperty("LOADER_PATH", tempDir);
+        System.setProperty("LOADER_HOME", tempDir);
         DriverUploadEndpoint endpoint = new DriverUploadEndpoint();
         Boolean reply = endpoint.upload(multiPart);
         assertThat(reply).isTrue();
@@ -71,13 +71,13 @@ public class DriverUploadTest {
         //Boolean isEquals = FileUtils.contentEquals(originalFile, uploadedFile);
         //assertThat(isEquals).isTrue();
     }
-    
+
     @Test @Ignore //Easy way to quickly upload an extension when running Application.main()
     public void upload2Server() throws IOException {
-        
+
         URL driverClasspath = DriverUploadTest.class.getClassLoader().getResource(FILE_CLASSPATH);
         assertThat(driverClasspath).isNotNull();
-        
+
         final WebTarget target = ClientBuilder.newClient()
                 .target(String.format("http://%s/api/v1/drivers",
                         "localhost:8080"));
