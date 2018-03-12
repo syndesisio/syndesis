@@ -125,19 +125,19 @@ describe('SyndesisFormComponent test suite', () => {
 
   it('should listen to native focus events', () => {
     spyOn(component, 'onFocus');
-    testElement.triggerEventHandler('dfFocus', null);
+    testElement.triggerEventHandler('focus', null);
     expect(component.onFocus).toHaveBeenCalled();
   });
 
   it('should listen to native blur events', () => {
     spyOn(component, 'onBlur');
-    testElement.triggerEventHandler('dfBlur', null);
+    testElement.triggerEventHandler('blur', null);
     expect(component.onBlur).toHaveBeenCalled();
   });
 
   it('should listen to native change event', () => {
     spyOn(component, 'onValueChange');
-    testElement.triggerEventHandler('dfChange', null);
+    testElement.triggerEventHandler('change', null);
     expect(component.onValueChange).toHaveBeenCalled();
   });
 
