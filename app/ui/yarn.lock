@@ -157,9 +157,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180226231223":
-  version "1.33.0-SNAPSHOT.20180226231223"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180226231223.tgz#f63e940063c70415c094f7719981441dcbc7ad26"
+"@atlasmap/atlasmap.data.mapper@1.33.0-SNAPSHOT.20180312144817":
+  version "1.33.0-SNAPSHOT.20180312144817"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap.data.mapper/-/atlasmap.data.mapper-1.33.0-SNAPSHOT.20180312144817.tgz#bb1d6f8db4b668f7b02c41e52a86d07d41e00fce"
   dependencies:
     "@angular/animations" "^5.2.0"
     "@angular/common" "^5.2.0"
