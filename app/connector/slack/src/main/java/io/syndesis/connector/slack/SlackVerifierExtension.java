@@ -44,9 +44,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
                 .error(ResultErrorHelper.requiresOption("webhookUrl", parameters));
-        if (builder.build().getErrors().isEmpty()) {
-            verifyCredentials(builder, parameters);
-        }
+
         return builder.build();
     }
 
@@ -63,6 +61,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         String webhookUrl = (String) parameters.get("webhookUrl");
+        
           try {
             HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
             HttpPost httpPost = new HttpPost(webhookUrl);
