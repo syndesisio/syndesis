@@ -282,7 +282,7 @@
         <executions>
           <execution>
             <id>default-descriptor</id>
-            <phase>default-descriptor</phase>
+            <phase>process-classes</phase>
             <goals>
             	<goal>descriptor</goal>
             </goals>
