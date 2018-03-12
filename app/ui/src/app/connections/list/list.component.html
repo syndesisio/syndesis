@@ -114,24 +114,21 @@
         </div>
       </ng-container>
       <ng-container *ngIf="showNewConnection && connections.length > 0">
-        <div class="connection card-empty-state col-lg-3 col-md-4 col-sm-6 card"
-             (click)="onSelect(undefined, $event)">
-          <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
-            <div class="card-pf-body">
-
-              <!-- Card Icon -->
-              <div class="card-pf-top-element">
-                <span class="card-pf-icon-large pficon pficon-add-circle-o">
-                </span>
-              </div>
-
-              <!-- Card Description / Item Overview -->
-              <div class="card-pf-info text-center">
-                <button class="btn btn-default" (click)="onSelect(undefined, $event)">Create Connection</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <syndesis-empty-state-card
+          [body]="cardBody"
+          [colClass]="'col-lg-3 col-md-4 col-sm-6'"
+          [topElement]="cardTopElement">
+          <ng-template #cardBody>
+            <p>Don't see the connection you want listed?</p>
+            <p>Create a new one.</p>
+            <p>
+              <button class="btn btn-default" (click)="onSelect(undefined, $event)">Create Connection</button>
+            </p>
+          </ng-template>
+          <ng-template #cardTopElement>
+              <span class="card-pf-icon-large pficon pficon-add-circle-o"></span>
+          </ng-template>
+        </syndesis-empty-state-card>
       </ng-container>
     </div>
   </div>

@@ -2,8 +2,7 @@
 
 .connections-list {
   .cards {
-    .card {
-      &.card-empty-state {
+    ::ng-deep .card.empty-state-card {
         .card-pf-icon-large {
           color: $color-pf-blue-300;
         }
