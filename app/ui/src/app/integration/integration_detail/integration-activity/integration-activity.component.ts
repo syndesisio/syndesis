@@ -75,11 +75,10 @@ export class IntegrationActivityComponent implements OnInit {
     this.lastRefresh = new Date();
 
     const aggregatedActivities = [...activities, ...this.allActivities];
-    
     this.allActivities = Array.from(new Set(aggregatedActivities.map(activity => activity.id)))
       .map(id => aggregatedActivities.find(activity => activity.id === id))
       .sort((activity1, activity2) => activity2.at - activity1.at);
-    
+
     this.showPagination = (this.allActivities.length > this.paginationConfig.pageSize);
     this.paginationConfig.totalItems = this.allActivities.length;
     this.paginationConfig.pageNumber = 1;
