@@ -487,10 +487,12 @@ export class CurrentFlowService {
         const inputDataShape = step.action.descriptor.inputDataShape;
         const outputDataShape = step.action.descriptor.outputDataShape;
         step.action.descriptor = descriptor;
-        if (this.isUserDefined(inputDataShape) || !descriptor.inputDataShape.specification) {
+        if (this.isUserDefined(inputDataShape) ||
+           (descriptor.inputDataShape.kind !== DataShapeKinds.NONE && !descriptor.inputDataShape.specification)) {
           step.action.descriptor.inputDataShape = inputDataShape;
         }
-        if (this.isUserDefined(outputDataShape) || !descriptor.outputDataShape.specification) {
+        if (this.isUserDefined(outputDataShape) ||
+           (descriptor.outputDataShape.kind !== DataShapeKinds.NONE && !descriptor.outputDataShape.specification)) {
           step.action.descriptor.outputDataShape = outputDataShape;
         }
         this.maybeDoAction(event['onSave']);
