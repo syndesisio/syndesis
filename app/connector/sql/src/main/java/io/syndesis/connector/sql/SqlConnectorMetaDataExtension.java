@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
+import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.connector.sql.common.DatabaseMetaDataHelper;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
@@ -51,7 +52,7 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
 
                 metaData = new DefaultMetaData(null, null, sqlStatementMetaData);
             } catch (final SQLException e) {
-                throw new IllegalStateException(e);
+                throw new SyndesisServerException(e.getMessage(),e);
             }
         }
 

@@ -39,6 +39,6 @@ public interface MetadataRetrieval {
     SyndesisMetadata fetch(CamelContext context, String componentId, String actionId, Map<String, Object> properties);
 
     default RuntimeException handle(final Exception e) {
-        return new SyndesisServerException("Unable to fetch and process metadata", e);
+        return new SyndesisServerException(e.getMessage() + ". Unable to fetch and process metadata", e);
     }
 }
