@@ -30,6 +30,7 @@ export class ApiConnectorListComponent implements OnInit, OnDestroy {
     '=1': '<strong>1</strong> time',
     'other': '<strong>#</strong> times'
   };
+  deletableApiConnectorName: string;
 
   private confirmDeleteModalId = 'confirm-delete-modal';
 
@@ -91,7 +92,8 @@ export class ApiConnectorListComponent implements OnInit, OnDestroy {
     this.router.navigate([apiConnector.id], { relativeTo: this.route });
   }
 
-  onDelete(id: string): void {
+  onDelete({ id, name }): void {
+    this.deletableApiConnectorName = name;
     this.modalService.show(this.confirmDeleteModalId).then(modal => {
       if (modal.result) {
         this.apiConnectorStore.dispatch(ApiConnectorActions.delete(id));

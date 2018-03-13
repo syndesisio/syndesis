@@ -48,7 +48,7 @@
             </div>
           </ng-template>
           <ng-template #actionTemplate let-item="item" let-index="index">
-            <button *ngIf="!(item.connectorGroup)" type="button" (click)="onDelete(item.id)" [disabled]="item.uses > 0" class="foo btn btn-default">
+            <button type="button" (click)="onDelete(item)" [disabled]="item.uses > 0" class="foo btn btn-default">
               Delete
             </button>
           </ng-template>
@@ -61,9 +61,11 @@
 
 <ng-template #confirmDeleteModalTemplate>
   <delete-confirmation-modal (delete)="onDeleteConfirm($event)">
-    <h3>Do you really want to delete this custom connector?</h3>
+    <h3>You can no longer edit a connection that was created from this connector.</h3>
     <p>
-      This action cannot be undone.
+      You can still add connections created from this connector to integrations. 
+      Deleting this connector does not affect running integrations.
     </p>
+    <p>Are you sure you want to delete the "{{ deletableApiConnectorName }}" connector?</p>
   </delete-confirmation-modal>
 </ng-template>
