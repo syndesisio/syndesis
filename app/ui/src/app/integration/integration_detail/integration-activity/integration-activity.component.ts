@@ -22,6 +22,8 @@ export class IntegrationActivityComponent implements OnInit {
     pageSizeIncrements: [15, 40, 75]
   };
 
+  selectedActivity: Activity;
+
   private allActivities: Activity[] = [];
 
   constructor(private integrationSupportService: IntegrationSupportService) { }
@@ -62,15 +64,24 @@ export class IntegrationActivityComponent implements OnInit {
     this.activities = this.allActivities.slice(pageItemIndex, pageItemIndex + this.paginationConfig.pageSize);
   }
 
+  onSelectActivity(event: Event, activity: Activity): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.selectedActivity = this.selectedActivity && this.selectedActivity.id === activity.id ? null : activity;
+  }
+
   private updateActivities(activities: Activity[]): void {
     this.onRefresh = false;
     this.lastRefresh = new Date();
-    this.showPagination = (activities.length > this.paginationConfig.pageSize);
-    this.allActivities = activities.sort((activity1, activity2) => {
-      return activity1.at < activity1.at ? -1 : activity1.at > activity1.at ? 1 : 0;
-    });
 
-    this.paginationConfig.totalItems = activities.length;
+    const aggregatedActivities = [...activities, ...this.allActivities];
+    
+    this.allActivities = Array.from(new Set(aggregatedActivities.map(activity => activity.id)))
+      .map(id => aggregatedActivities.find(activity => activity.id === id))
+      .sort((activity1, activity2) => activity2.at - activity1.at);
+    
+    this.showPagination = (this.allActivities.length > this.paginationConfig.pageSize);
+    this.paginationConfig.totalItems = this.allActivities.length;
     this.paginationConfig.pageNumber = 1;
     this.renderActivitiesByPage();
   }
