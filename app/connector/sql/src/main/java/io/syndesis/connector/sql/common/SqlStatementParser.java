@@ -95,6 +95,9 @@ public class SqlStatementParser {
     private void parseInsert(DatabaseMetaData meta) throws SQLException {
         statementInfo.setStatementType(StatementType.INSERT);
         String tableNameInsert = statementInfo.addTable(sqlArray.get(2));
+        if (! statementInfo.getTablesInSchema().contains(tableNameInsert)) {
+            throw new SQLException(String.format("Table '%s' does not exist", tableNameInsert));
+        }
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInsertParams(tableNameInsert);
             if (inputParams.get(0).getColumn() != null) {
@@ -112,6 +115,9 @@ public class SqlStatementParser {
     private void parseUpdate(DatabaseMetaData meta) throws SQLException  {
         statementInfo.setStatementType(StatementType.UPDATE);
         String tableNameUpdate = statementInfo.addTable(sqlArray.get(1));
+        if (! statementInfo.getTablesInSchema().contains(tableNameUpdate)) {
+            throw new SQLException(String.format("Table '%s' does not exist", tableNameUpdate));
+        }
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setInParams(
@@ -123,6 +129,9 @@ public class SqlStatementParser {
     private void parseDelete(DatabaseMetaData meta) throws SQLException  {
         statementInfo.setStatementType(StatementType.DELETE);
         String tableNameDelete = statementInfo.addTable(sqlArray.get(2));
+        if (! statementInfo.getTablesInSchema().contains(tableNameDelete)) {
+            throw new SQLException(String.format("Table '%s' does not exist", tableNameDelete));
+        }
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setInParams(
@@ -133,9 +142,17 @@ public class SqlStatementParser {
 
     private void parseSelect(DatabaseMetaData meta) throws SQLException  {
         statementInfo.setStatementType(StatementType.SELECT);
+        List<String> tableNamesSelect = findTablesInSelectStatement();
+        if (! tableNamesSelect.isEmpty()) {
+            for (String tableNameSelect : tableNamesSelect) {
+                if (! statementInfo.getTablesInSchema().contains(tableNameSelect)) {
+                    throw new SQLException(String.format("Table '%s' does not exist", tableNameSelect));
+                }
+            }
+        }
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInputParams(Collections.emptyList());
-            statementInfo.setTableNames(findTablesInSelectStatement()); //TODO support multiple tables
+            statementInfo.setTableNames(findTablesInSelectStatement());
             statementInfo.setInParams(
                     DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
                             meta, null, schema, statementInfo.getTableNames().get(0), inputParams));
@@ -233,11 +250,14 @@ public class SqlStatementParser {
         return params;
     }
 
-    List<String> findTablesInSelectStatement() {
+    List<String> findTablesInSelectStatement() throws SQLException {
         boolean isTable = false;
         List<String> tables = new ArrayList<>();
         for (String word: sqlArray) {
             if (! statementInfo.getTablesInSchema().contains(word)) {
+                if (isTable && tables.isEmpty()) {
+                    throw new SQLException(String.format("Table '%s' does not exist", word));
+                }
                 isTable = false;
             }
             if (isTable) {

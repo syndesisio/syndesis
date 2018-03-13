@@ -18,6 +18,7 @@ package io.syndesis.connector.sql.common;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
+import org.apache.camel.model.language.SqlExpression;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -164,5 +165,12 @@ public class SqlParserTest {
         Assert.assertEquals("lastname", info.getInParams().get(0).getName());
         Assert.assertEquals(1, info.getInParams().get(0).getColumnPos());
         Assert.assertEquals("LASTNAME", info.getInParams().get(0).getColumn());
+    }
+    
+    @Test(expected=SQLException.class)
+    public void parseSelectFromNoneExistingTable() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,
+            "SELECT FIRSTNAME, LASTNAME FROM NAME-NOTEXIST WHERE FIRSTNAME LIKE :#first");
+        parser.parse();
     }
 }
