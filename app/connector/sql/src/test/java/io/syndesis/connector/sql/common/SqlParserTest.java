@@ -18,7 +18,6 @@ package io.syndesis.connector.sql.common;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-import org.apache.camel.model.language.SqlExpression;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -93,6 +92,20 @@ public class SqlParserTest {
         Assert.assertEquals(String.class, info.getInParams().get(1).getTypeValue().getClazz());
     }
 
+    @Test
+    public void parseInsertWithConstantLowerCase() throws SQLException {
+        SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,
+                "INSERT INTO NAME0 values (29, :#firstname, :#lastname)");
+        SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(2, info.getInParams().size());
+        Assert.assertEquals(1, info.getInParams().get(0).getColumnPos());
+        Assert.assertEquals("firstname", info.getInParams().get(0).getName());
+        Assert.assertEquals(2, info.getInParams().get(1).getColumnPos());
+        Assert.assertEquals("lastname", info.getInParams().get(1).getName());
+        Assert.assertEquals(String.class, info.getInParams().get(1).getTypeValue().getClazz());
+    }
+    
     @Test
     public void parseInsertWithSpecifiedColumnNames() throws SQLException {
         final SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema,

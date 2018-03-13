@@ -42,6 +42,7 @@ public class SqlStatementParser {
     private final String schema;
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
+    private List<String> sqlArrayUpperCase = new ArrayList<>();
 
     public SqlStatementParser(Connection connection, String schema, String sql) {
         super();
@@ -55,8 +56,11 @@ public class SqlStatementParser {
         DatabaseMetaData meta = connection.getMetaData();
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
+        for (String word : sqlArray) {
+            sqlArrayUpperCase.add(word.toUpperCase(Locale.US));
+        }
 
-        if ("SELECT".equals(sqlArray.get(0).toUpperCase(Locale.US))) {
+        if ("SELECT".equals(sqlArrayUpperCase.get(0))) {
             parseSelect(meta);
             if (! statementInfo.getInParams().isEmpty()) {
                 throw new SQLException("Your statement is invalid and cannot contain input parameters");
@@ -72,8 +76,11 @@ public class SqlStatementParser {
         DatabaseMetaData meta = connection.getMetaData();
         statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
+        for (String word : sqlArray) {
+            sqlArrayUpperCase.add(word.toUpperCase(Locale.US));
+        }
 
-        switch (sqlArray.get(0).toUpperCase(Locale.US)) {
+        switch (sqlArrayUpperCase.get(0)) {
             case "INSERT":
                 parseInsert(meta);
                 break;
@@ -94,7 +101,7 @@ public class SqlStatementParser {
 
     private void parseInsert(DatabaseMetaData meta) throws SQLException {
         statementInfo.setStatementType(StatementType.INSERT);
-        String tableNameInsert = statementInfo.addTable(sqlArray.get(2));
+        String tableNameInsert = statementInfo.addTable(sqlArrayUpperCase.get(2));
         if (! statementInfo.getTablesInSchema().contains(tableNameInsert)) {
             throw new SQLException(String.format("Table '%s' does not exist", tableNameInsert));
         }
@@ -114,7 +121,7 @@ public class SqlStatementParser {
 
     private void parseUpdate(DatabaseMetaData meta) throws SQLException  {
         statementInfo.setStatementType(StatementType.UPDATE);
-        String tableNameUpdate = statementInfo.addTable(sqlArray.get(1));
+        String tableNameUpdate = statementInfo.addTable(sqlArrayUpperCase.get(1));
         if (! statementInfo.getTablesInSchema().contains(tableNameUpdate)) {
             throw new SQLException(String.format("Table '%s' does not exist", tableNameUpdate));
         }
@@ -128,7 +135,7 @@ public class SqlStatementParser {
 
     private void parseDelete(DatabaseMetaData meta) throws SQLException  {
         statementInfo.setStatementType(StatementType.DELETE);
-        String tableNameDelete = statementInfo.addTable(sqlArray.get(2));
+        String tableNameDelete = statementInfo.addTable(sqlArrayUpperCase.get(2));
         if (! statementInfo.getTablesInSchema().contains(tableNameDelete)) {
             throw new SQLException(String.format("Table '%s' does not exist", tableNameDelete));
         }
@@ -183,7 +190,7 @@ public class SqlStatementParser {
     List<SqlParam> findInsertParams(String tableName) {
         boolean isColumnName = false;
         List<String> columnNames = new ArrayList<>();
-        for (String word: sqlArray) {
+        for (String word: sqlArrayUpperCase) {
             if ("VALUES".equals(word)) {
                 isColumnName = false;
             }
@@ -194,7 +201,7 @@ public class SqlStatementParser {
                 isColumnName = true; //in the next iteration
             }
         }
-        int v = sqlArray.indexOf("VALUES") + 1;
+        int v = sqlArrayUpperCase.indexOf("VALUES") + 1;
         List<SqlParam> params = Collections.emptyList();
         if (!columnNames.isEmpty()) {
             List<String> values = sqlArray.subList(v, v + columnNames.size() );
@@ -219,10 +226,10 @@ public class SqlStatementParser {
             if (word.startsWith(":#")) {
                 SqlParam param = new SqlParam(word.substring(2));
                 String column = sqlArray.get(i-1);
-                if ("LIKE".equals(column)) {
+                if ("LIKE".equalsIgnoreCase(column)) {
                     column = sqlArray.get(i-2);
                 }
-                if (column.startsWith(":#") || "VALUES".equals(column) || values.contains(column)) {
+                if (column.startsWith(":#") || "VALUES".equalsIgnoreCase(column) || values.contains(column)) {
                     param.setColumnPos(values.indexOf(word));
                 } else {
                     param.setColumn(column.toUpperCase(Locale.US));
@@ -238,11 +245,11 @@ public class SqlStatementParser {
         boolean isParam = true;
         List<SqlParam> params = new ArrayList<>();
         for (String word: sqlArray) {
-            if (isParam && !"SELECT".equals(word) && !"DISTINCT".equals(word)) {
+            if (isParam && !"SELECT".equalsIgnoreCase(word) && !"DISTINCT".equalsIgnoreCase(word)) {
                 SqlParam param = new SqlParam(word);
                 param.setColumn(word);
             }
-            if ("FROM".equals(word)) {
+            if ("FROM".equalsIgnoreCase(word)) {
                 isParam = false;
                 break;
             }
@@ -253,7 +260,7 @@ public class SqlStatementParser {
     List<String> findTablesInSelectStatement() throws SQLException {
         boolean isTable = false;
         List<String> tables = new ArrayList<>();
-        for (String word: sqlArray) {
+        for (String word: sqlArrayUpperCase) {
             if (! statementInfo.getTablesInSchema().contains(word)) {
                 if (isTable && tables.isEmpty()) {
                     throw new SQLException(String.format("Table '%s' does not exist", word));
