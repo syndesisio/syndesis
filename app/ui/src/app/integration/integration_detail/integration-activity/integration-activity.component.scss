@@ -5,7 +5,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 0 0 $gutter;
+    padding: 0;
 
     &-text {
       color: $color-pf-black-400;
@@ -18,4 +18,15 @@
     border: 0;
     margin: $gutter 0;
   }
+}
+
+// Patternfly overrides
+.list-group-item-container {
+  .table {
+    margin-top: 20px;
+  }
+}
+
+.list-view-pf-expand {
+  margin-top: 15px;
 }
