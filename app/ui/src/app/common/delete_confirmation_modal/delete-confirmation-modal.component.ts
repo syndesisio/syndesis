@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'delete-confirmation-modal',
@@ -10,7 +10,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
             (click)="onModalClick(false)">
       <span class="pficon pficon-close"></span>
     </button>
-    <h4 class="modal-title">Delete Warning</h4>
+    <h4 class="modal-title">{{ title }}</h4>
   </div>
   <div class="modal-body">
     <div class="row">
@@ -34,6 +34,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   `
 })
 export class DeleteConfirmationModalComponent {
+  @Input() title = 'Warning';
   @Output() delete = new EventEmitter<boolean>();
 
   onModalClick(doDelete: boolean): void {
