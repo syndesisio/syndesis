@@ -109,6 +109,6 @@
 
 .syn-toolbar--inverted {
   .toolbar-pf {
-    @include toolbar();
+    @include toolbar;
   }
 }

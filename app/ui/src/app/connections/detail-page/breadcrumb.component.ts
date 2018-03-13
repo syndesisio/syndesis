@@ -4,28 +4,27 @@ import { Connection } from '@syndesis/ui/platform';
 @Component({
   selector: 'syndesis-connection-detail-breadcrumb',
   template: `
-    <div class="row toolbar-pf">
-      <div class="col-sm-12">
-          <ol class="breadcrumb">
-            <li>
-              <a [routerLink]=" ['/'] ">Home</a>
-            </li>
-            <li>
-              <a [routerLink]=" ['/connections'] ">Connections</a>
-            </li>
-            <li class='active'><strong>Connection Details</strong></li>
-          </ol>
+    <div class="syn-toolbar--inverted">
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+            <ol class="breadcrumb">
+              <li>
+                <a [routerLink]=" ['/'] ">Home</a>
+              </li>
+              <li>
+                <a [routerLink]=" ['/connections'] ">Connections</a>
+              </li>
+              <li class='active'><strong>Connection Details</strong></li>
+            </ol>
+        </div>
       </div>
     </div>
   `,
   styles: [
     `
-    .toolbar-pf {
-      background: inherit;
-    }
     .toolbar-pf ol {
-      display: inline-block;
-      margin-bottom: 6px;
+      padding: 0;
+      margin-bottom: 10px;
     }
   `
   ]
