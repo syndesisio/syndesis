@@ -10,7 +10,7 @@ metadata:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Atlasmap Tag:
+# Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
 #
@@ -114,7 +114,7 @@ parameters:
   displayName: Verifier Volume Capacity
   name: VERIFIER_VOLUME_CAPACITY
   required: true
-  value: 256Mi
+  value: 1Gi
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
