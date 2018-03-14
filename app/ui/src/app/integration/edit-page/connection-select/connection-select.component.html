@@ -36,7 +36,14 @@
         <div class="title">
           <h1>{{ 'Choose a ' + positionText + ' Connection' | titleize }} </h1>
         </div>
-        <p>First choose a connection.</p>
+        <p *ngIf="positionText == 'start'; else finishDesc">
+          Click the connection that starts the integration. If the connection you need is not available, click Create Connection.
+        </p>
+        <ng-template #finishDesc>
+          <p>
+            Click the connection that completes the integration. If the connection you need is not available, click Create Connection.
+          </p>
+        </ng-template>
         <syndesis-list-toolbar [items]="connections$"
                               [filteredItems]="filteredConnections$"
                               [viewTemplate]="viewTemplate">
