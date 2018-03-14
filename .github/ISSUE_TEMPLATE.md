@@ -32,6 +32,9 @@ Request and response data can be gathered from your browser's developer tools on
  + Click on line in the network tab and then the 'Headers' tab to get the request data
  + Click on the 'Preview' or 'Response' tabs to get the response data.  
  + Pretty print the json too -> http://jsonprettyprint.com/
+
+BE CAREFUL NOT TO INCLUDE ANY USER TOKENS!!!!  
+Things like connection objects can contain sensitive data in their configuration, make sure to rip these out
 -->
 
 ## API Endpoints and Schemas
