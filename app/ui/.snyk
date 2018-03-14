@@ -1,6 +1,19 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.10.2
-ignore: {}
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  bootstrap-ng:
+    - '*':
+        reason: We are locked to what patternfly is compatible with
+        expires: 2018-06-01T00:00:00.000Z
+  patternfly-ng:
+    - '*':
+        reason: We are locked to what patternfly is compatible with
+        expires: 2018-06-01T00:00:00.000Z
+  patternfly:
+    - '*':
+        reason: We are locked to what patternfly is compatible with
+        expires: 2018-06-01T00:00:00.000Z
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:debug:20170905':
