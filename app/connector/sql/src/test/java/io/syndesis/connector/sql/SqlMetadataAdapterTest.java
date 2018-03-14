@@ -125,6 +125,26 @@ public class SqlMetadataAdapterTest {
     }
 
     @Test
+    public void adaptForSqlNoParamTest() throws IOException, JSONException {
+        CamelContext camelContext = new DefaultCamelContext();
+        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
+        Map<String,Object> parameters = new HashMap<>();
+        for (final String name: properties.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), properties.getProperty(name));
+        }
+        parameters.put("query", "SELECT * FROM NAME");
+        Optional<MetaData> metadata = ext.meta(parameters);
+        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
+
+        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
+        ObjectWriter writer = Json.writer();
+        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
+        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+
+    }
+
+    @Test
     public void adaptForSqlStoredTest() throws IOException, JSONException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension(camelContext);
