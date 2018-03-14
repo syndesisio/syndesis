@@ -17,6 +17,8 @@ package io.syndesis.server.endpoint.v1.dto;
 
 import java.util.Optional;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.immutables.value.Value;
 
 /**
@@ -27,7 +29,13 @@ import org.immutables.value.Value;
 public interface MetaData {
 
     enum Type {
-        DANGER, INFO, SUCCESS, WARNING
+        DANGER(Status.BAD_REQUEST), INFO(Status.OK), SUCCESS(Status.OK), WARNING(Status.BAD_REQUEST);
+
+        public final Status status;
+
+        private Type(final Status status) {
+            this.status = status;
+        }
     }
 
     Optional<String> getMessage();

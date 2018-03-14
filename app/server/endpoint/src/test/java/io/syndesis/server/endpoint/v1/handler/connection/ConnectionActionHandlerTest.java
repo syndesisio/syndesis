@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -30,6 +32,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
+import io.syndesis.server.endpoint.v1.dto.MetaData;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 import org.junit.Test;
@@ -105,6 +108,31 @@ public class ConnectionActionHandlerTest {
     }
 
     @Test
+    public void shouldAddMetaAndSetStatusToBadRequestIfMetaCallFails() {
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
+        ArgumentCaptor.forClass(entityType);
+
+        // simulates fallback return
+        final DynamicActionMetadata fallback = new DynamicActionMetadata.Builder().build();
+        when(metadataCommand.execute()).thenReturn(fallback);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(false);
+
+        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+
+        assertThat(response.getStatus()).isEqualTo(Status.BAD_REQUEST.getStatusCode());
+
+        @SuppressWarnings("unchecked")
+        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
+
+        assertThat(meta.getValue()).isEqualTo(createOrUpdateSalesforceObjectDescriptor);
+        final MetaData metadata = meta.getData();
+        assertThat(metadata).isNotNull();
+        assertThat(metadata.getType()).contains(MetaData.Type.WARNING);
+        assertThat(metadata.getMessage()).contains("The query did not succeed");
+    }
+
+    @Test
     public void shouldElicitActionPropertySuggestions() {
         final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
             .putProperty("sObjectName",
@@ -115,6 +143,7 @@ public class ConnectionActionHandlerTest {
                     DynamicActionMetadata.ActionPropertySuggestion.Builder.of("TwitterScreenName__c", "Twitter Screen Name")))
             .build();
         when(metadataCommand.execute()).thenReturn(suggestions);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
 
         final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
             .createFrom(createOrUpdateSalesforceObjectDescriptor)
@@ -130,7 +159,12 @@ public class ConnectionActionHandlerTest {
         final Map<String, String> parameters = new HashMap<>();
         parameters.put("sObjectName", "Contact");
 
-        final Meta<ConnectorDescriptor> meta = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+
+        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+
+        @SuppressWarnings("unchecked")
+        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
         assertThat(meta.getValue()).isEqualTo(enrichedDefinitioin);
     }
@@ -138,7 +172,12 @@ public class ConnectionActionHandlerTest {
     @Test
     public void shouldNotContactVerifierForNonDynamicActions() {
         final ConnectorDescriptor defaultDefinition = new ConnectorDescriptor.Builder().build();
-        final Meta<ConnectorDescriptor> returnValue = handler.enrichWithMetadata(SALESFORCE_LIMITS, null);
+        final Response response = handler.enrichWithMetadata(SALESFORCE_LIMITS, null);
+
+        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+
+        @SuppressWarnings("unchecked")
+        final Meta<ConnectorDescriptor> returnValue = (Meta<ConnectorDescriptor>) response.getEntity();
 
         assertThat(returnValue.getValue()).isEqualTo(defaultDefinition);
     }
@@ -154,8 +193,14 @@ public class ConnectionActionHandlerTest {
                 DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
             .build();
         when(metadataCommand.execute()).thenReturn(suggestions);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
 
-        final Meta<ConnectorDescriptor> meta = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+
+        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+
+        @SuppressWarnings("unchecked")
+        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
         final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
             .createFrom(createOrUpdateSalesforceObjectDescriptor)
