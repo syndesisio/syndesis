@@ -1,15 +1,18 @@
 [id='amq2api-create-custom-step']
 = Make a custom step available
 
-{prodname} provides a number of built-in steps for operating on 
-integration data. If {prodname} does not provide a needed step,
+{prodname} provides a number of steps that operate on 
+integration data between connections. If {prodname} does not provide a
+between-connections step that meets your need,
 a developer can code an extension that defines one or more
-custom steps. The developer gives you a `.jar` file that contains the extension.
+custom steps that operate on data between connections. 
+The developer gives you a `.jar` file that contains the extension.
 You then upload the extension in {prodname} to make the custom step(s)
 available for use in integrations. 
 
 The AMQ to REST API sample integration uses a custom step that 
-identifies items that were damaged when they were received. 
+operates on data between connections to
+identify items that were damaged when they were received. 
 
 To make the *Damage Reporter* custom step available: 
  
@@ -19,7 +22,7 @@ https://github.com/syndesisio/fuse-online-tp3-sample-extension/releases.
 . Download the extension’s `.jar` file.     
                             
 . In {prodname}, in the left panel, click *Customizations*. 
-. At the top, click the *Extensions* tab. 
+. At the top, click *Extensions*. 
 . Click *Import Extension*. 
 . Click *Browse* and select the downloaded `.jar` file that contains the 
 extension. 

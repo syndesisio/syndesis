@@ -8,4 +8,16 @@ the integration.
 . In the integration visualization panel on the left, look for any
 image:shared/images/WarningIcon.png[Warning] icons.
 . Click the icon to see the message. A *Data Type Mismatch* notification
-indicates that you need to add a data mapper step. 
+indicates that you need to add a data mapper step before that connection. 
+
+To see the input type or output type for a particular connection:
+
+. In the {prodname} left panel, click *Integrations*.
+. In the list of integrations, identify the integration that
+has the connection whose input type or output type you want to know. 
+. At the right of that integration's entry click 
+image:shared/images/ThreeVerticalDotsKebab.png[Kebab].
+. Select *Edit*. 
+. In the integration's visualization panel, to the right of a connection, click 
+image:shared/images/InfoIcon.png[Info] to display information about that
+connection, including its input and/or output type. 

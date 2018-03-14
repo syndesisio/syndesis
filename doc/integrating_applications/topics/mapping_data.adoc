@@ -16,7 +16,6 @@ Details for mapping data fields are in the following topics:
 * <<transforming-target-data>>
 * <<available-transformations>>
 * <<viewing-mappings-in-a-step>>
-* <<adding-data-in-mapping-step>>
 
 include::about_mapping_data.adoc[leveloffset=+1]
 
@@ -35,5 +34,3 @@ include::transforming_target_data.adoc[leveloffset=+1]
 include::available_transformations.adoc[leveloffset=+1]
 
 include::viewing_mappings_in_a_step.adoc[leveloffset=+1]
-
-include::adding_data_in_mapping_step.adoc[leveloffset=+1]

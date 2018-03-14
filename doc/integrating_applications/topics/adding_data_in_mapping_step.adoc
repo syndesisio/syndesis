@@ -1,4 +1,0 @@
-[id='adding-data-in-mapping-step']
-= Adding data in a mapping step
-
-TBA

@@ -1,0 +1,26 @@
+[id='about-product-name_{context}']
+= About the product name
+
+Ignite is Red Hat's web-based integration platform. 
+Syndesis is the open source project for Ignite.
+
+Ignite runs in two environments:
+
+[cols="3*"] 
+|===
+|*Product Name*
+|*Host*
+|*Installation*
+
+|Fuse Online
+|OpenShift Online
+|Red Hat installs and provisions Ignite on Red Hat infrastructure.
+
+|Ignite
+|OpenShift Container Platform
+|Customer installs and manages.
+
+|===
+ 
+In user documentation, consider the names Fuse Online and 
+Ignite as interchangeable. 

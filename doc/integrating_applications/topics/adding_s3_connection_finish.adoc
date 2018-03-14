@@ -12,5 +12,5 @@ you want to use as the integration's finish connection.
 one or more objects into the bucket that the connection accesses. 
 The integration obtains the objects to be added to the bucket from the
 previous integration step(s). 
-. Click *Next*.
-include::add_describe_data_step.adoc[]
+. Click *Next* to specify the action's input type. See 
+<<specifying-connection-input-output-types>>.

@@ -1,17 +1,17 @@
-[id='adding-amq-connection-middle']
-= Adding an AMQ connection as a middle connection
+[id='adding-amqp-connection-middle']
+= Adding an AMQP connection as a middle connection
 
 :context: middle
-In an integration, to add an AMQ connection between the start and 
+In an integration, to add an AMQP connection between the start and 
 finish connections:
 
-. On the *Choose a Connection* page, click the AMQ connection that you 
+. On the *Choose a Connection* page, click the AMQP connection that you 
 want the integration to use after the start connection and before 
 the finish connection. 
 
 . On the *Choose an Action* page, select one of the following actions:
 +
-* *Publish messages* action to
+* *Publish messages* to
 publish messages to the queue or topic you specify. To configure this
 action:
 .. In the *Destination Name* field, enter the name of the queue or 
@@ -38,6 +38,5 @@ connection waits for a
 response message before throwing a runtime exception. 
 The default is 5000 milliseconds (5 seconds).
 
-. Click *Next* to specify the action's input type and then the action's
-output type. See 
+. Click *Next* to specify the action's input and output type. See 
 <<specifying-connection-input-output-types>>.

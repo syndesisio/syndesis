@@ -4,7 +4,7 @@
 To confirm that the Twitter to Salesforce sample integration is working:
 
 . In the panel on the left, click *Integrations* to see that the integration you
-created is an *Active* integration,
+created is a *Published* integration,
 which means that it is running. If you entered the example name, you
 would see that *Twitter to Salesforce Sample Integration* is running. 
 . Confirm that the integration does not create a contact record when a
@@ -31,4 +31,5 @@ your name, the text of your tweet in the
 in the `Title` field.
 
 In this Technology Preview release, exactly one integration at a time can be 
-running. If you create another integration, it is automatically inactive. 
+running (published). If you create another integration, it is automatically 
+in the *Unpublished* state. 

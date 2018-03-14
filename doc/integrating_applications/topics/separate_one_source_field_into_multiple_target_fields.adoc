@@ -31,4 +31,4 @@ To confirm that the mapping is correctly defined, click
 image:shared/images/grid.png[Grid] to display the mappings defined in 
 this step. A mapping that separates the value of a source field into
 multiple target fields looks like this:
-(add image).
+image:images/SeparateMapping.png[Separate Fields Mapping]. 

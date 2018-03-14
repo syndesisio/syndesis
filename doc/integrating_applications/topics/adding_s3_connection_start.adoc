@@ -12,17 +12,19 @@ you want to use as the integration's start connection.
 * *Get Object* to obtain a file from the bucket that the connection
 accesses. To configure this action:
 
-.. To obtain a file and then delete it from the bucket, select
-*Delete After Read*. 
-
 .. In the *File Name* field, enter the name of the file that you want
 to obtain. 
+.. To obtain a file and then delete it from the bucket, select
+*Delete After Read*. 
 
 * *Poll an Amazon S3 Bucket* to periodically obtain files from the bucket that the
 connection accesses. To configure this action:
 
-.. To obtain files and then delete them from the bucket, 
-select *Delete After Read*.
+.. In the *Delay* field, enter the number of milliseconds that elapse between
+polls. The default is 500 milliseconds. 
+Alternatively, you can enter something like `3s`, `5m 30s`, or `2h` to
+indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respectively.
+
 .. In the *Max Messages Per Poll* field, enter the largest number of files
 that one poll operation can obtain. The default is 10. 
 +
@@ -38,9 +40,9 @@ modified or created. This behavior can be changed in AWS.
 that evaluates to a string. If you specify a 
 prefix then this action retrieves a file
 only when its name starts with that string. 
-.. In the *Delay* field, enter the number of milliseconds that elapse between
-polls. The default is 500 milliseconds. 
-Alternatively, you can enter something like `3s`, `5m 30s`, or `2h` to
-indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respectively.
-. Click *Next*. 
-include::add_describe_data_step.adoc[]
+
+.. Indicate whether you want to  
+*Obtain files and then delete them from the bucket*.
+
+. Click *Next* to specify the action's output type. See 
+<<specifying-connection-input-output-types>>. 

@@ -1,23 +1,34 @@
 [id='making-extensions-available']
-= Making custom steps available
+= Making custom connectors or custom steps available
 
 To upload an extension to {prodname}: 
 
 . In the left {prodname} panel, click *Customizations*. 
-. At the top, click the *Extensions* tab. 
+. At the top, click *Extensions*. 
 . Click *Import Extension*. 
-. Choose the `.jar` file that contains the extension that you want to upload.
+. Drag and drop, or choose, the `.jar` file that contains the extension 
+that you want to upload.
++
 A developer needs to make this file available to you. 
 {prodname} immediately tries to validate that the file contains an 
 extension. If there is a problem, {prodname} displays a message about the error. 
-You will need to coordinate with the extension 
+You must coordinate with the extension 
 developer to obtain an updated `.jar` file, which you can then try to upload. 
-+
-If {prodname} validates the file, it extracts and displays the extension's 
-name, ID, and description. It also lists the custom steps that the 
-extension defines. 
-. Review the extension details.
-. Click *Import*. {prodname} makes the custom step(s) available and displays
-the extension details page. 
 
-See also: <<add-custom-step>>. 
+. Review the extension details.
++
+After {prodname} validates the file, it extracts and displays the extension's 
+name, ID, description, and type. The type indicates whether the extension
+defines a custom connector, or one or more custom steps for
+operating on data between connections. 
++
+For a connector extension, {prodname} displays
+the actions that are available to a connection that is created from this 
+custom connector. For a step extension, {prodname} displays
+the name of each custom step that the extension defines.
+
+. Click *Import Extension*. {prodname} makes the custom connector or 
+custom step(s) available and displays the extension's details page. 
+
+See also: <<creating-connections-from-custom-connectors>> and 
+<<add-custom-step>>.

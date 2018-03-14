@@ -1,0 +1,16 @@
+[id='identifying-extension-use']
+= Identifying integrations that use extensions
+
+Before you update or delete an extension, you should identify the
+integrations that use customizations provided by that extension. 
+To do this:              
+                            
+. In the left {prodname} panel, click *Customizations*.                         
+                            
+. At the top, click *Extensions*.                         
+                            
+. In the list of extensions, find the entry for the extension that you want 
+to update or delete and click it. 
+
+{prodname} displays details about the extension including a list of 
+any integrations that use a customization provided by the extension. 

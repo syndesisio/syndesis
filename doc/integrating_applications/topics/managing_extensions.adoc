@@ -1,50 +1,18 @@
 [id='managing-extensions']
 = Managing extensions
 
-After you upload an extension, you can update or delete it. 
+After you start using customizations provided in extensions, you can
+identify the integrations that use those customizations. This is helpful
+to do before you update or delete an extension. 
 
-To update an extension:
+For details, see:
 
-. Obtain an updated `.jar` file for the extension from the developer.
-. Upload the updated file in the same way that you uploaded the original file.
-See <<making-extensions-available>>. 
-. In the details page for the updated extension, determine which integrations
-use the custom step(s) defined in the extension. 
+* <<identifying-extension-use>>
+* <<updating-extensions>>
+* <<deleting-extensions>>
 
-It is up to you to 
-know exactly what is required to update each integration that uses a 
-custom step from the updated extension.  At the very least, you must
-stop (click *Unpublish*) and restart (click *Publish*) each 
-integration that uses one of the custom 
-steps. See <<unpublishing-integrations>>. 
+include::identifying_extension_use.adoc[leveloffset=+1]
 
-In some cases, you might need to edit the integration to change
-or add configuration details for the custom steps(s). You must communicate
-with the extension developer to understand how to update integrations. 
+include::updating_extensions.adoc[leveloffset=+1]
 
-You cannot delete an extension if an integration is using a custom step 
-provided by that extension. To determine whether any integrations use 
-custom steps provided by an extension you want to delete:                
-                            
-. In the left {prodname} panel, click *Customizations*.                         
-                            
-. At the top, click the *Extensions* tab.                         
-                            
-. In the list of extensions, find the entry for the extension that you want 
-to delete and click it. 
-
-{prodname} displays details about the extension including a list of 
-any integrations that use custom steps provided by the extension.                    
-If an integration uses a custom step provided by the extension you want 
-to delete then you must edit that integration to remove the custom step. 
-See <<updating-integrations>>, which provides information about deleting steps. 
-
-When no integrations use custom steps provided by an extension, 
-you can delete the extension as follows:
-
-. In the left {prodname} panel, click *Customizations*.                         
-                            
-. At the top, click the *Extensions* tab.                         
-                            
-. In the list of extensions, find the entry for the extension that 
-you want to delete and click *Delete*. 
+include::deleting_extensions.adoc[leveloffset=+1]

@@ -22,5 +22,12 @@ in the integration visualization panel on the left. When you add a data
 mapping step, the step numbers appear in the folder labels in the
 *Sources* panel and in the *Target* panel. 
 +
-To view the data fields available from a particular step, expand the 
+To view the data fields available in a particular step, expand the 
 folder for that step. 
++
+For some connections, you specify its input data type and/or its
+output data type. When you specify the data type, you also give the type a name. 
+For these connections, the type name you specified appears as the name of 
+a folder in the data mapper. If you specified a description when you 
+declared the data type, then the type description appears when you hover
+over the step folder in the mapper.  

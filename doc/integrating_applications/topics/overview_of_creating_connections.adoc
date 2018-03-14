@@ -11,6 +11,7 @@ provide an overview of the workflow:
 * <<about-adding-connections-to-integrations>>
 * <<viewing-and-editing-connection-information>>
 * <<about-connection-validation>>
+* <<creating-connections-from-custom-connectors>>
 
 include::obtaining_authorization_to_access_applications.adoc[leveloffset=+1]
 
@@ -21,6 +22,8 @@ include::about_adding_connections_to_integrations.adoc[leveloffset=+1]
 include::viewing_and_editing_connection_information.adoc[leveloffset=+1]
 
 include::about_connection_validation.adoc[leveloffset=+1]
+
+include::creating_connections_from_custom_connectors.adoc[leveloffset=+1]
 
 
 

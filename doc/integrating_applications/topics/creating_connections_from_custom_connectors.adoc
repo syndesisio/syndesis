@@ -1,0 +1,15 @@
+[id='creating-connections-from-custom-connectors']
+= Creating connections from custom connectors
+
+After you upload an extension that defines a custom connector, the
+custom connector is available for use. You use custom connectors
+to create connections 
+in the same way that you use {prodname}-provided connectors to
+create connections.
+
+If the custom connector uses the OAuth protocol, then {prodname}
+adds an entry for the custom connector to the {prodname} *Settings* page. This
+is where you register this installation of {prodname} as a client of the
+connector's application. 
+
+For more information, see <<overview-of-creating-connections>>.

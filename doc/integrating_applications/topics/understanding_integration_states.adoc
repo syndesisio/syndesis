@@ -18,10 +18,6 @@ Each version of an integration is always in one of the following states:
 Only one version of an integration can be in the *Draft* state. That 
 is, you can update one version of an integration at a time.  
 
-|*In Progress*
-|The integration state is transitioning to *Published* or 
-*Unpublished*. 
-
 |*Published*
 |A *Published* version is running. When you publish an integration, 
 {prodname} builds the integration and starts running it. Only one version 

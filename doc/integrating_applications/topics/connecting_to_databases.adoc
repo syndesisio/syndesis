@@ -8,8 +8,14 @@ databases:
 * MySQL
 * PostgreSQL
 
-The database table that the connection operates on or the stored procedure that
-the connection invokes must already exist
+You create a separate connection for each database that you want to 
+connect to in an integration. You can use the same connection in 
+multiple integrations. 
+
+A database connection operates on a table that you specify or invokes a stored
+procedure that you specify. 
+The database table or the stored procedure must exist when an integration
+connects to the database. 
 
 See the following topics for details:
 

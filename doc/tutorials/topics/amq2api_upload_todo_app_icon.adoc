@@ -13,7 +13,7 @@ To upload the To Do app icon:
 .. In a new browser tab, paste the URL for your Swagger specification.
 .. At the end of the URL, replace `swagger.json` with `images/todo_icon.png` 
 and click *Enter*. For example: 
-`\https://todo-proj217402.6a63.fuse-ignite.openshiftapps.com/images/todo_icon.png`.
+`\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/images/todo_icon.png`.
 
 . Save the `todo_icon.png` image. 
 
