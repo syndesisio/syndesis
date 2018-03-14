@@ -1,7 +1,7 @@
 {
     "id": "ftp",
     "name": "FTP",
-    "description": "File uploading and Recieving from the FTP",
+    "description": "Upload and download files using the FTP protocol",
     "icon": "fa-ftp",
     "dependencies": [
         {
