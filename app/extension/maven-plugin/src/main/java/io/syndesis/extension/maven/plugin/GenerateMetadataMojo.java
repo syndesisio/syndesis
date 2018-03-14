@@ -294,7 +294,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
             for (JsonNode node: properties) {
                 ConfigurationProperty.Builder confBuilder = new ConfigurationProperty.Builder();
 
-                Optional.ofNullable(node.get("description")).ifPresent(n -> confBuilder.displayName(n.textValue()));
+                Optional.ofNullable(node.get("description")).ifPresent(n -> confBuilder.description(n.textValue()));
+                Optional.ofNullable(node.get("displayName")).ifPresent(n -> confBuilder.displayName(n.textValue()));
                 Optional.ofNullable(node.get("componentProperty")).ifPresent(n -> confBuilder.componentProperty(n.booleanValue()));
                 Optional.ofNullable(node.get("defaultValue")).ifPresent(n -> confBuilder.defaultValue(n.textValue()));
                 Optional.ofNullable(node.get("deprecated")).ifPresent(n -> confBuilder.deprecated(n.booleanValue()));
