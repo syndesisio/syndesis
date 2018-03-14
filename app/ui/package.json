@@ -29,7 +29,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^5.2.0",
-    "@angular/cli": "^1.6.5",
+    "@angular/cli": "^1.7.3",
     "@angular/common": "^5.2.0",
     "@angular/compiler": "^5.2.0",
     "@angular/core": "^5.2.0",
@@ -64,8 +64,7 @@
     "ts-helpers": "1.1.2",
     "typescript-logging": "0.4.0",
     "url": "^0.11.0",
-    "zone.js": "^0.8.14",
-    "snyk": "^1.69.11"
+    "zone.js": "^0.8.14"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^5.2.0",
@@ -90,9 +89,9 @@
     "cucumber-html-reporter": "^0.3.7",
     "cucumber-tsflow": "^1.1.2",
     "fs-extra": "^2.0.0",
-    "jasmine-core": "~3.1.0",
+    "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
-    "karma": "~2.0.0",
+    "karma": "~1.7.0",
     "karma-chrome-launcher": "~2.1.1",
     "karma-cli": "~1.0.1",
     "karma-coverage-istanbul-reporter": "^1.2.1",
@@ -106,6 +105,7 @@
     "puppeteer": "^1.0.0",
     "rxjs-tslint-rules": "^3.9.0",
     "sass-lint": "1.10.2",
+    "snyk": "^1.70.0",
     "sw-precache": "5.0.0",
     "swagger-js-codegen": "1.7.12",
     "ts-node": "~3.2.0",
