@@ -15,13 +15,14 @@ Usage: syndesis-install --route <hostname> [options]
 
 with options:
 
--r --route <host>            The route to install (mandatory)
+-r --route <host>            The route to install or "auto" to generate a default route based on OpenShift configuration (mandatory)
 -t --tag <tag>               Optional version to use for the installaton ("latest" by default)
 -p --project <project>       Install into this project. Delete this project
                              if it already exists. By default, install into the current project (without deleting)
 -w --watch                   Wait until the installation has completed
 -o --open                    Open Syndesis after installation (implies --watch)
    --help                    This help message
+-v --verbose                 Verbose logging
 
 This tool is for a standalone installation and can be by downloading it from
 https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis
@@ -31,6 +32,16 @@ EOT
 
 # ============================================================
 # Helper functions taken over from "syndesis" CLI:
+
+oc_get_route_domain() {
+    local domain
+    oc create service clusterip smokeservice --tcp=4343 > /dev/null 2>&1
+    oc create route edge --service=smokeservice > /dev/null 2>&1
+    domain=$(oc get route smokeservice -o template  --template='{{.spec.host}}')
+    echo ${domain#*.}
+    oc delete service smokeservice > /dev/null 2>&1
+    oc delete route smokeservice > /dev/null 2>&1
+}
 
 recreate_project() {
     local project=$1
@@ -78,7 +89,7 @@ create_and_apply_template() {
         "install/${template}.yml" \
         "$tag"
 
-    oc new-app --template=$(get_template_name $template $tag) \
+    oc new-app --template "$(get_template_name $template $tag)"\
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
@@ -91,8 +102,8 @@ get_template_name() {
     local tag=${2:-}
     if [ -n "$tag" ]; then
         local candidate="$template-$tag"
-        $(oc get template $candidate >/dev/null 2>&1)
-        if [ $? -eq 0 ]; then
+        local output=$(oc get template $candidate 2>&1)
+        if [[ $output = "*NotFound*" ]]; then
           echo $candidate
           return
         fi
@@ -181,6 +192,11 @@ readopt() {
 
 # ==============================================================
 
+if [ $(hasflag --verbose -v) ]; then
+    export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+    set -x
+fi
+
 tag=$(readopt --tag -t)
 route=$(readopt --route -r)
 
@@ -194,6 +210,13 @@ fi
 project=$(readopt --project -p)
 if [ -n "${project}" ]; then
     recreate_project $project
+fi
+
+if [[ "$route" = "auto" ]]; then
+    if [[ -z "$project" ]]; then
+        project="$(oc project -q)"
+    fi
+    route="$project.$(oc_get_route_domain)"
 fi
 
 # Required OAuthclient
