@@ -28,25 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import io.syndesis.common.util.Json;
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
-import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
-import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
-import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
-import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
-import io.syndesis.integration.runtime.handlers.LogStepHandler;
-import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
-import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
-import io.syndesis.integration.runtime.handlers.SplitStepHandler;
-import io.syndesis.common.model.Split;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelHelper;
@@ -59,6 +40,28 @@ import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.syndesis.common.model.Split;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Json;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
+import io.syndesis.integration.runtime.handlers.DataMapperStepHandler;
+import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
+import io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler;
+import io.syndesis.integration.runtime.handlers.ExtensionStepHandler;
+import io.syndesis.integration.runtime.handlers.LogStepHandler;
+import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
+import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
+import io.syndesis.integration.runtime.handlers.SplitStepHandler;
+import io.syndesis.integration.runtime.logging.StepDoneTracker;
+import io.syndesis.integration.runtime.logging.StepStartTracker;
+
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
  */
@@ -68,8 +71,13 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     private final String configurationUri;
     private final List<IntegrationStepHandler> stepHandlerList;
     private final Set<String> resources;
+    private final boolean loggingEnabled;
 
     public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers) {
+        this(configurationUri, handlers, false);
+    }
+
+    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers, boolean logging) {
         this.configurationUri = configurationUri;
         this.resources = new HashSet<>();
 
@@ -84,6 +92,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         this.stepHandlerList.add(new SplitStepHandler());
         this.stepHandlerList.add(new LogStepHandler());
         this.stepHandlerList.addAll(handlers);
+
+        this.loggingEnabled = logging;
     }
 
     protected Integration loadIntegration() throws IOException {
@@ -101,6 +111,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return integration;
     }
 
+    @SuppressWarnings("PMD")
     @Override
     public void configure() throws Exception {
         final Integration integration = loadIntegration();
@@ -122,6 +133,13 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
             // Load route fragments eventually defined by extensions.
             loadFragments(step);
+
+            // If a step id is present, then we need to log the step.
+            StepStartTracker startTracker = null;
+            if (loggingEnabled && route != null && step.getId().isPresent()) {
+                startTracker = new StepStartTracker(step.getId().get());
+                route = route.process(startTracker);
+            }
 
             final String index = Integer.toString(i + 1);
             final Optional<ProcessorDefinition> definition = handler.handle(step, route, this, index);
@@ -152,6 +170,10 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 route = route.process(new OutMessageCaptureProcessor(step));
                 if (step.getId().isPresent()) {
                     route.id(step.getId().get() + "-capture");
+                }
+
+                if( startTracker!=null ) {
+                    route = route.process(StepDoneTracker.INSTANCE);
                 }
             }
         }

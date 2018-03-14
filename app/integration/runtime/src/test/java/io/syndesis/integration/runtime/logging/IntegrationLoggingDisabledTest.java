@@ -76,16 +76,6 @@ public class IntegrationLoggingDisabledTest {
     }
 
     @Test
-    public void testDisabledLoggingInterceptor() {
-        assertThat(camelContext.getInterceptStrategies()).have(new Condition<InterceptStrategy>() {
-            @Override
-            public boolean matches(InterceptStrategy value) {
-                return !(value instanceof IntegrationLoggingInterceptStrategy);
-            }
-        });
-    }
-
-    @Test
     public void testDisabledLoggingRoutePolicyFactory() {
         assertThat(camelContext.getRoutePolicyFactories()).have(new Condition<RoutePolicyFactory>() {
             @Override

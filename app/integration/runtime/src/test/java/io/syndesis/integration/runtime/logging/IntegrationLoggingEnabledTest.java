@@ -58,11 +58,6 @@ public class IntegrationLoggingEnabledTest {
     }
 
     @Test
-    public void testLoggingInterceptor() {
-        assertThat(camelContext.getInterceptStrategies()).hasAtLeastOneElementOfType(IntegrationLoggingInterceptStrategy.class);
-    }
-
-    @Test
     public void testLoggingRoutePolicyFactory() {
         assertThat(camelContext.getRoutePolicyFactories()).hasAtLeastOneElementOfType(IntegrationLoggingRoutePolicyFactory.class);
     }
