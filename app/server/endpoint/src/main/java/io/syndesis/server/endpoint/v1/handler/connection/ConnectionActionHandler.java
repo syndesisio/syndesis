@@ -28,6 +28,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -85,7 +87,7 @@ public class ConnectionActionHandler {
     @ApiOperation("Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties")
     @ApiResponses(@ApiResponse(code = 200, reference = "#/definitions/ConnectorDescriptor",
         message = "A map of zero or more action property suggestions keyed by the property name"))
-    public Meta<ConnectorDescriptor> enrichWithMetadata(
+    public Response enrichWithMetadata(
         @PathParam("id") @ApiParam(required = true, example = "io.syndesis:salesforce-create-or-update:latest") final String id,
         final Map<String, String> properties) {
 
@@ -97,7 +99,7 @@ public class ConnectionActionHandler {
         final ConnectorDescriptor defaultDescriptor = action.getDescriptor();
 
         if (!action.getTags().contains("dynamic")) {
-            return Meta.verbatim(defaultDescriptor);
+            return Response.ok().entity(Meta.verbatim(defaultDescriptor)).build();
         }
 
         final Map<String, String> parameters = encryptionComponent
@@ -121,7 +123,11 @@ public class ConnectionActionHandler {
         @SuppressWarnings("unchecked")
         final HystrixInvokableInfo<ConnectorDescriptor> metaInfo = (HystrixInvokableInfo<ConnectorDescriptor>) meta;
 
-        return Meta.from(enrichedDescriptor, metaInfo);
+        final Meta<ConnectorDescriptor> metaResult = Meta.from(enrichedDescriptor, metaInfo);
+
+        final Status status = metaResult.getData().getType().map(t -> t.status).orElse(Status.OK);
+
+        return Response.status(status).entity(metaResult).build();
     }
 
     protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
