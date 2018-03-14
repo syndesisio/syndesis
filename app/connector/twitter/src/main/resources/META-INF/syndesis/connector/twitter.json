@@ -157,7 +157,7 @@
                 "group": "scheduler",
                 "label": "consumer,scheduler",
                 "required": false,
-                "type": "integer",
+                "type": "duration",
                 "javaType": "long",
                 "tags": [],
                 "deprecated": false,
