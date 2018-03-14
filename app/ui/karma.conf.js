@@ -30,7 +30,7 @@ module.exports = function (config) {
       fixWebpackSourcePaths: true
     },
     junitReporter: {
-      outputDir: './junit'
+      outputDir: './target'
     },
     angularCli: {
       config: './angular-cli.json',
@@ -38,7 +38,7 @@ module.exports = function (config) {
     },
     reporters: config.angularCli && config.angularCli.codeCoverage
       ? ['mocha', 'coverage-istanbul', 'junit']
-      : ['mocha'],
+      : ['mocha', 'junit'],
     mochaReporter: {
       output: 'full'
     },

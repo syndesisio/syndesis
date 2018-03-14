@@ -64,7 +64,7 @@ save_junit: &save_junit
     when: always
     command: |
       mkdir -p /workspace/junit/
-      find . -type f -regextype posix-extended -regex ".*/target/(surefire|failsafe)-reports/.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
+      find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
 
 jobs:
   # UI has no dependencies, just load cache
@@ -86,6 +86,9 @@ jobs:
             apt-get update
             apt-get install libxss1
             ./tools/bin/syndesis build --batch-mode --module ui --image-mode=docker | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
