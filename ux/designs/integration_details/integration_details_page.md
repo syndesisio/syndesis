@@ -78,6 +78,10 @@ The designs covers the following user interactions:
 
 #### Modal for confirming actions
 
+![confirm delete](img/integration_details_page_3.14_confirm_delete.png)
+
+Once users click on “Delete Integration (all versions)”, display a modal to notify users and to confrim the delete action. Use destructive button style for the delete button. 
+
 ![replace draft modal](img/integration_details_page_3.14_replacedraft.png)
 
 Once users click on “Replace Draft”, display a modal to notify users and to confirm the replace draft action.
