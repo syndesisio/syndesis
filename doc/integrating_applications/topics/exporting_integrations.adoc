@@ -3,11 +3,17 @@
 
 To export an integration:
 
-. In the left panel of {prodname}, click *Integrations*.
-. In the list of integrations, click the entry for the integration
+. In the left panel of {prodname}, click *Integrations*. 
+. In the list of integrations, identify the entry for the integration 
 that you want to export.
-. In the integration's summary page, in the upper right, click *Export*.
+. At the right of the entry, click 
+image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+select *Export*. 
 
 {prodname} downloads a zip file to your local `Downloads` folder. To import
 the integration into another {prodname} environment, open that environment
-and import this zip file.
+and import this zip file. 
+
+Exporting an integration is also a way to have a backup of the integration. 
+However, {prodname} maintains the versions of an integration so exporting
+an integration is not required for having a backup copy. 

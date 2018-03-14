@@ -1,0 +1,25 @@
+[id='viewing-integration-metrics']
+= Viewing integration metrics
+
+To view integration metrics:
+
+. In the left panel, click *Integrations*. 
+. Click the entry for the integration for which you want to view metrics. 
+. In the integration's summary page, click *Metrics*.
+
+{prodname} provides the following metrics:
+
+* *Total Errors* indicates the number of runtime errors that all
+executions of this integration
+encountered during the past 30 days. 
+
+* *Last Processed* displays the most recent date and time that this 
+integration processed a message. The message might have been successfully
+processed or there might have been an error.  
+
+* *Total Messages* is the number of messages that all executions
+of this integration processed in the last 30 days. This includes 
+message failures. 
+
+* *Uptime* indicates when this integration started running and how long
+it has been running without an error.  

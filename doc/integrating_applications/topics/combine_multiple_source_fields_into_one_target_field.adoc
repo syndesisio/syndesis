@@ -27,4 +27,4 @@ To confirm that the mapping is correctly defined, click
 image:shared/images/grid.png[Grid] to display the mappings defined in
 this step. A mapping that combines the values of more than one source field
 into one target field looks like this:
-(add image).
+image:images/CombineMapping.png[Combine Fields Mapping]. 

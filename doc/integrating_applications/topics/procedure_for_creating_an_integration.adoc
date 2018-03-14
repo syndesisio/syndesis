@@ -56,11 +56,11 @@ click *Publish*. Otherwise, click *Save as Draft*.
 
 In the {prodname} *Integrations* page, you can see your new integration
 in the list of integrations. If you published the integration, then you
-can see that {prodname} is in the process of deploying it. It may take
-a few moments for the status of the integration to become *Active*, which
+can see that {prodname} is in the process of publishing it. It may take 
+a few moments for the status of the integration to become *Published*, which
 means that it is running. If you saved the integration as a draft, then
 *Draft* appears on the integration's entry.
 
-Click the integration's entry to see a summary of the integration.
-On the integration's summary page, you can start or stop the integration,
-edit it, or delete it.
+Click the integration's entry to see a summary of the integration, 
+including its version history, logs for each execution, and aggregate
+execution metrics. 

@@ -1,0 +1,22 @@
+[id='updating-extensions']
+= Updating extensions
+
+To update an extension:
+
+. Obtain an updated `.jar` file for the extension from the developer.
+. Upload the updated file in the same way that you uploaded the original file.
+See <<making-extensions-available>>. 
+. In the details page for the updated extension, determine which integrations
+use the connector or custom step(s) defined in the extension. 
+
+It is up to you to 
+know exactly what is required to update each integration that uses a 
+custom connector or a 
+custom step from the updated extension.  At the very least, you must
+stop (click *Unpublish*) and restart (click *Publish*) each 
+integration that uses a customization defined in the updated extension.
+See <<unpublishing-integrations>>. 
+
+In some cases, you might need to edit the integration to change
+or add configuration details for a customization. You must communicate
+with the extension developer to understand how to update integrations. 

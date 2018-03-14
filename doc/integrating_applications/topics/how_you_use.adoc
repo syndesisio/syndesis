@@ -47,8 +47,8 @@ the integration does.
 
 . Click *Publish* to start running the integration.
 
-. On the {prodname} dashboard, confirm that the Salesforce to database
-integration is designated as *Active*, which means that it is running.
+. On the {prodname} dashboard, confirm that the Salesforce to database 
+integration is designated as *Published*, which means that it is running.
 
 . Confirm that the integration is working as expected by creating a new
 lead in Salesforce.

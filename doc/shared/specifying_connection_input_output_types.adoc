@@ -1,0 +1,42 @@
+[id='specifying-connection-input-output-types']
+= Specifying connection input or output types
+
+To process data from the start connection through the finish connection,
+sometimes you need to specify input/output types when you configure
+a connection's action. Type specifications let {prodname} alert you when a 
+data mapping step is required. A data mapping step ensures that the next
+integration step can process the data it receives.
+
+After you configure an AMQ, AMQP, or Amazon S3 connection, {prodname}
+prompts you to specify input and/or output data types as follows:
+
+. In the *Select Type* field, if the data type does not need to be known, 
+accept *Type specification not required* 
+and then, at the bottom, click *Done*. You do not need to follow the rest of these
+instructions. 
++
+Otherwise, select one of the following as the schema type:
++
+* *JSON schema*
+* *JSON instance* 
+* *XML schema*
+* *XML instance*
+
+. In the *Definition* input box, paste a definition that conforms to the
+schema type you selected. 
+For example, if you select *JSON schema* then you would paste the content of
+a JSON schema file.
+
+. In the *Data Type Name* field, enter a name that you choose for the
+data type. For example, suppose you are specifying a JSON schema for
+vendors. You can specify `*Vendor*` as the data type name. 
++
+You will see this data type name when you are creating 
+or editing an integration that uses the connection
+for which you are specifying this type. {prodname} displays the type name
+in the integration visualization panel and in the data mapper. 
+
+. In the *Data Type Description* field, provide information that helps you
+distinguish this type. This description appears in the data mapper when 
+you hover over the step that processes this type. 
+. Click *Done*. 

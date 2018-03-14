@@ -9,6 +9,8 @@ integrations:
 * <<unpublishing-integrations>>
 * <<republishing-older-integration-versions>>
 * <<viewing-log-information>>
+* <<viewing-integration-metrics>>
+* <<viewing-system-metrics>>
 * <<testing-integrations>>
 * <<updating-integrations>>
 * <<copying-integrations-to-other-environments>>
@@ -23,6 +25,10 @@ include::unpublishing_integrations.adoc[leveloffset=+1]
 include::republishing_older_integration_versions.adoc[leveloffset=+1]
 
 include::viewing_log_information.adoc[leveloffset=+1]
+
+include::viewing_integration_metrics.adoc[leveloffset=+1]
+
+include::viewing_system_metrics.adoc[leveloffset=+1]
 
 include::testing_integrations.adoc[leveloffset=+1]
 

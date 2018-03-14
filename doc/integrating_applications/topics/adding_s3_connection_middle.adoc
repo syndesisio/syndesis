@@ -13,6 +13,6 @@ where you want to add the Amazon S3 connection.
 connection in the integration.
 . Click the *Copy Object* action.
 The integration obtains the objects to be added to the bucket from the
-previous integration step(s).
-. Click *Next*.
-include::add_describe_data_step.adoc[]
+previous integration step(s). 
+. Click *Next* to specify the action's input type. See 
+<<specifying-connection-input-output-types>>.

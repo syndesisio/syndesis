@@ -1,41 +1,20 @@
 [id='how-tooling-items-map']
-= How tooling items map to {prodname} items
+= How extension items map to {prodname} items
 
-The following table shows how items in Fuse tooling map to items in {prodname}.
+Each {prodname} extension includes a `.json` file. 
+In the `.json` file, each `action` definition corresponds to an action or step
+according to the extension type: 
 
-[cols="4*"]
-|===
-2+|*This tooling item*
-2+|*Maps to this {prodname} item*
+* In a connector extension, an action defined in the `.json` file
+corresponds to an action that a connection created from the custom 
+connector can perform.  
++
+A property defined in the `.json` file corresponds to a configuration
+parameter on the connection action. 
 
-|*Location*
-|*Item*
-|*Location*
-|*Item*
-
-.3+|*New Fuse Ignite Extension Project* wizard prompts the user to specify
-information about the exension in these fields.
-|*Extension id*
-.4+|*Import Extension* upload page. {prodname} populates these fields with
-values obtained from the extension.
-|*ID*
-|*Name*
-|*Name*
-|*Description*
-|*Description*
-
-.3+|`syndesis-extension-definition.json` file
-.2+|`action` names
-|*Steps* lists the action names and their descriptions. Each action
-corresponds to a custom step.
-
-|*Choose a Step* page when creating or editing an integration
-|There is an entry for each custom step that is defined in an uploaded extension.
-|`property` names
-|After choosing a custom step to add to an integration, if the custom step
-requires parameter values for execution then the *Configure _custom_ Step*
-page prompts for any parameter values.
-|Label and input field for each property.
-Each property corresponds to a parameter for executing the custom step.
-
-|===
+* In a step extension, an action defined in the `.json` file
+corresponds to a custom step that can operate on integration data
+between connections. 
++
+A property defined in the `.json` file corresponds to a configuration
+parameter on the custom step.  

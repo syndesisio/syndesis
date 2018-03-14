@@ -1,35 +1,23 @@
 [id='connecting-to-amq']
-= Connecting to AMQ or AMQP
+= Connecting to AMQ
 
-In an integration, to connect to a message broker, you can
-use either of these connectors to create a connection:
-
-* Apache ActiveMQ (AMQ) uses the OpenWire protocol for communication
-between clients and message brokers.
-
-* Advanced Message Queue Protocol (AMQP) uses AMQP for communication
-between clients and message brokers.
-
-Use the AMQ connector to create a connection when you want to connect to
-one of these brokers:
+Apache ActiveMQ (AMQ) uses the OpenWire protocol for communication
+between clients and message brokers. Use the AMQ connector to create a 
+connection to one of the following broker types:
 
 * Apache ActiveMQ broker that does not support AMQP
-* JBoss A-MQ 6
+* AMQ 6 broker
 
-Use the AMQP connector to create a connection when you want to connect to
-one of these brokers:
+To connect to one of the following broker types, use the AMQP connector:
 
 * Apache ActiveMQ broker that supports AMQP
-* Apache ActiveMQ Artemis
-* JBoss A-MQ 7
+* Apache ActiveMQ Artemis 
+* AMQ 7 broker
 * EnMasse, which is an open source messaging platform
 
-[NOTE]
-It is possible to use the AMQP connector to create a connection to an
-Apache ActiveMQ broker that does not support AMQP or to a JBoss A-MQ 6 broker.
-Doing this requires transport configuration in the broker.
+See <<connecting-to-amqp>>. 
 
-For details, see:
+To use the AMQ connector, see:
 
 * <<create-amq-connection>>
 * <<adding-amq-connections>>
