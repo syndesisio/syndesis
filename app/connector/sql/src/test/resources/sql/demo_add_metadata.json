@@ -16,7 +16,7 @@
   "properties" : {
     "template" : [ {
       "displayValue" : "template",
-      "value" : "DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER ${body[C]})"
+      "value" : "DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER C)"
     } ]
   }
 }

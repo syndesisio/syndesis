@@ -10,7 +10,7 @@ metadata:
 #
 # Allow localhost refs: true
 # Use docker images: false
-# Atlasmap Tag:
+# Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
 #
@@ -386,7 +386,20 @@ objects:
           insert into todo(task,completed) VALUES (task,0);
         END;
         $BODY$;
-      EOF
+
+        CREATE OR REPLACE FUNCTION create_lead( 
+          OUT first_name text, 
+          OUT last_name text,
+          OUT company text,
+          OUT lead_source text) 
+          RETURNS SETOF record
+          AS
+          $$
+            SELECT first_name, last_name, company, lead_source
+            FROM contact;
+          $$
+           LANGUAGE 'sql' VOLATILE;
+        EOF
 
       echo "***** sampledb created"
     postStart.sh: |

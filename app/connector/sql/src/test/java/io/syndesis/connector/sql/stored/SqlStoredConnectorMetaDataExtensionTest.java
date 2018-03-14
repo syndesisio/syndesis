@@ -76,7 +76,7 @@ public class SqlStoredConnectorMetaDataExtensionTest {
 
         assertThat(metadata.getName()).isEqualTo("procedureName");
         assertThat(metadata.getTemplate())
-            .isEqualTo("procedureName(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER ${body[C]})");
+            .isEqualTo("procedureName(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER C)");
         final List<StoredProcedureColumn> columnList = metadata.getColumnList();
         assertThat(columnList.get(0)).isEqualToComparingFieldByField(columnA);
         assertThat(columnList.get(1)).isEqualToComparingFieldByField(columnB);

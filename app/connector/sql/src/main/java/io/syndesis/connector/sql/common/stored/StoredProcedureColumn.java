@@ -60,7 +60,7 @@ public class StoredProcedureColumn {
         if (mode == ColumnMode.IN) {
             return jdbcType + " ${body[" + name + "]}";
         } else if (mode == ColumnMode.OUT) {
-            return mode.name() + " " + jdbcType + " ${body[" + name + "]}";
+            return mode.name() + " " + jdbcType + " " + name;
         } else {
             return null;
         }
