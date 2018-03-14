@@ -64,7 +64,7 @@
               <tr *ngFor="let step of activity.steps">
                 <td>{{ step.name }}</td>
                 <td>{{ step.at | date:'medium' }}</td>
-                <td>{{ step.duration | synDuration: 's' }}</td>
+                <td>{{ step.duration | synDuration }}</td>
                 <td *ngIf="step.isFailed">
                   <i class="pficon pficon-error-circle-o"></i> Error</td>
                 <td *ngIf="!step.isFailed">

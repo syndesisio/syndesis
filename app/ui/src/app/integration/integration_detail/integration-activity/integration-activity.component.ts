@@ -47,7 +47,7 @@ export class IntegrationActivityComponent implements OnInit {
             step.name = integrationStep ? integrationStep.name : 'n/a';
             step.isFailed = (step.failure && step.failure.length > 0) || (step.message && step.message.length > 0);
             const errorMessages = [step.failure, ...step.message].filter(messages => !!messages);
-            step.output = errorMessages.length > 0 ? errorMessages.join('. ') : 'N/A';
+            step.output = errorMessages.length > 0 ? errorMessages.join('. ') : 'No output';
           });
         });
 
