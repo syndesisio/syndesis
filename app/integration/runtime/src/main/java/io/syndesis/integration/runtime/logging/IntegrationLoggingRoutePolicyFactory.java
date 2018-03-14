@@ -42,6 +42,7 @@ public class IntegrationLoggingRoutePolicyFactory implements RoutePolicyFactory 
             }
             @Override
             public void onExchangeDone(Route route, Exchange exchange) {
+                StepDoneTracker.done(exchange);
                 System.out.println(toJsonObject(
                     "exchange", exchange.getExchangeId(),
                     "status", "done",

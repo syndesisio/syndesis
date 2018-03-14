@@ -18,6 +18,7 @@ package io.syndesis.integration.runtime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 import org.apache.camel.CamelContext;
@@ -28,6 +29,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 
 @Configuration
 @ConditionalOnProperty(prefix = "syndesis.integration.runtime", name = "enabled", matchIfMissing = true)
@@ -41,7 +44,7 @@ public class IntegrationRuntimeAutoConfiguration {
     private List<IntegrationStepHandler> integrationStepHandlers = Collections.emptyList();
 
     @Bean
-    public CamelContextConfiguration integrationContextRuntimeConfiguration() {
+    public CamelContextConfiguration integrationContextRuntimeConfiguration(Optional<IntegrationLoggingListener> loggingListener) {
         return new CamelContextConfiguration() {
             @Override
             public void beforeApplicationStart(CamelContext camelContext) {
@@ -58,7 +61,7 @@ public class IntegrationRuntimeAutoConfiguration {
 
                 // IntegrationRouteBuilder automatically add known handlers to
                 // the list of provided ones, know handlers have priority
-                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers);
+                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers, loggingListener.isPresent());
 
                 try {
                     // Register routes to the camel context

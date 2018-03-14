@@ -15,7 +15,6 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spi.RoutePolicyFactory;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
@@ -35,11 +34,6 @@ public class IntegrationLoggingAutoConfiguration {
     @Bean
     public CamelContextConfiguration integrationContextLoggingConfiguration() {
         return new IntegrationLoggingContextConfiguration();
-    }
-
-    @Bean
-    public InterceptStrategy integrationLoggingInterceptStrategy() {
-        return new IntegrationLoggingInterceptStrategy();
     }
 
     @Bean

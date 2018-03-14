@@ -114,6 +114,9 @@
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
+    <properties>
+      <property name="reportLevel" value="20" />
+    </properties>
     <priority>3</priority>
   </rule>
   <rule ref="rulesets/java/imports.xml/UnnecessaryFullyQualifiedName">
