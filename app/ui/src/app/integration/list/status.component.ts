@@ -9,7 +9,17 @@ import { IntegrationOverview } from '@syndesis/ui/platform';
       <!-- In Progress -->
       <div class="status pending" *ngIf="integration.currentState === 'Pending'">
         <div class="spinner spinner-sm spinner-inline"></div>
-        Publishing
+        <ng-container [ngSwitch]="integration.targetState">
+          <ng-container *ngSwitchCase="'Published'">
+            Publishing
+          </ng-container>
+          <ng-container *ngSwitchCase="'Unpublished'">
+            Unpublishing
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            Pending
+          </ng-container>
+        </ng-container>
       </div>
       <!-- Status -->
       <div *ngIf="integration.currentState !== 'Pending'"
