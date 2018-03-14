@@ -131,7 +131,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
               })
               .catch(error => {
                 // the message is in the _meta attribute in the response
-                const message = error.response._meta ? error.response._meta.message : null;
+                const message = error.data._meta ? error.data._meta.message : null;
                 this.error = {
                   class: 'alert alert-warning',
                   icon: 'pficon pficon-warning-triangle-o',
