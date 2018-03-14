@@ -183,11 +183,15 @@ export class ApiHttpProviderService extends ApiHttpService {
     return endpointTemplate;
   }
 
-  private catchError(error): ActionReducerError {
+  private catchError(response): ActionReducerError {
+    const error = response.error;
+    const message = error ? error.userMsg : response.userMsg;
+    const debugMessage = error ? error.developerMsg : response.developerMsg;
     return {
-      message: error.userMsg || DEFAULT_ERROR_MSG,
-      debugMessage: error.developerMsg || DEFAULT_ERROR_MSG,
-      status: error.errorCode,
+      message: message || DEFAULT_ERROR_MSG,
+      debugMessage: debugMessage || DEFAULT_ERROR_MSG,
+      status: response.errorCode,
+      data: response.error ? response.error : response,
     };
   }
 }

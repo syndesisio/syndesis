@@ -23,6 +23,7 @@ export interface ActionReducerError {
   debugMessage?: string;
   status?: number;
   statusText?: string;
+  data?: any;
 }
 
 /**
