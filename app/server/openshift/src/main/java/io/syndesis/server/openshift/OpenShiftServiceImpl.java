@@ -15,12 +15,14 @@
  */
 package io.syndesis.server.openshift;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.openshift.api.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -323,14 +325,36 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         long end = System.currentTimeMillis() + timeUnit.toMillis(timeout);
         Build next = r;
 
+        int retriesLeft = config.getMaximumRetries();
         while ( System.currentTimeMillis() < end) {
             if (next.getStatus() != null && ("Complete".equals(next.getStatus().getPhase()) || "Failed".equals(next.getStatus().getPhase()))) {
                 return next;
             }
-            next = openShiftClient.builds().inNamespace(next.getMetadata().getNamespace()).withName(next.getMetadata().getName()).get();
-            Thread.sleep(5000);
+            try {
+                next = openShiftClient.builds().inNamespace(next.getMetadata().getNamespace()).withName(next.getMetadata().getName()).get();
+            } catch (KubernetesClientException e) {
+                checkRetryPolicy(e, retriesLeft--);
+            }
+            Thread.sleep(config.getPollingInterval());
         }
         throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
+    }
+
+    /**
+     * Checks if Excpetion can be retried and if retries are left.
+     * @param e
+     * @param retries
+     */
+    private static void checkRetryPolicy(KubernetesClientException e, int retries) {
+        if (retries == 0) {
+            throw new KubernetesClientException("Retries exhausted.", e);
+        } else if (e.getCause() instanceof IOException) {
+            LOGGER.warn("Got: {}. Retrying", e.getMessage());
+        } else if (e.getStatus() != null && (e.getStatus().getCode() == 500 || e.getStatus().getCode() == 503)) {
+            LOGGER.warn("Received HTTP {} from server. Retrying", e.getStatus().getCode());
+        } else {
+            throw e;
+        }
     }
 
     protected static String openshiftName(String name) {
