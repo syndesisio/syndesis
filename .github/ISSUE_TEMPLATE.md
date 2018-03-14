@@ -23,6 +23,17 @@ Briefly describe the issue you are experiencing (or the feature you want to see 
 For features/bugs tackling with UI functionality, drag and drop a screenshot depicting the desired presentation layer or supporting the UX narrative for the new functionality.
 -->
 
+## Request and Response Data
+<!--
+Many issues involve both the UI and it's backend, if possible capture relevant request and response data JSON messages and include it here.
+Request and response data can be gathered from your browser's developer tools on the 'Network' tab.  
+ + As you reproduce the issue, take note of any network requests that are made.  
+ + Requests that result in an error will be highlighted red.  
+ + Click on line in the network tab and then the 'Headers' tab to get the request data
+ + Click on the 'Preview' or 'Response' tabs to get the response data.  
+ + Pretty print the json too -> http://jsonprettyprint.com/
+-->
+
 ## API Endpoints and Schemas
 <!--
 For features or bugfixes entailing data exchanges between the UI and the REST API,
