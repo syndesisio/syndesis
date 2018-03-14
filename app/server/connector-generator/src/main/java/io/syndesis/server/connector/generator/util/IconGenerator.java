@@ -92,7 +92,7 @@ public final class IconGenerator {
     }
 
     static String trimXml(final String xml) {
-        return xml.replaceAll(">\\s*<", "><").replaceAll("\\s\\s+", " ").replaceAll(" />", "/>");
+        return xml.trim().replaceAll(">\\s*<", "><").replaceAll("\\s\\s+", " ").replaceAll(" />", "/>");
     }
 
     private static Map<Character, String> loadLetters() {

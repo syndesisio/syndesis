@@ -74,7 +74,7 @@ sub move_issue_to_pipelines {
                     if ($new_issue_id) {
                         push @epic_issues,{ repo_id => $target_repo, issue_number => $new_issue_id };
                     } else {
-                        push @epic_issues,{ repo_id => $issue->{repo_id}, issue_number => $old_issue_id };                       
+                        push @epic_issues,{ repo_id => $issue->{repo_id}, issue_number => $old_issue_id };
                     }
                 }
                 my $body = "" . &encode_json({ issues => \@epic_issues });
@@ -97,7 +97,7 @@ sub move_issue_to_pipelines {
             }
         }
     }
-    
+
 }
 
 

@@ -25,7 +25,7 @@ The real definition of what an `Integration` does, is delegated to the following
 ##### Connector
 Is used to define a set of common properties the user can define on `Connection` entities related this `Connector`.  
 Think of `Connector` as a **configurable schema**, used to define the shape of a corresponding `Connection` entity.  
-Another responsibility of the `Connector` is to aggregate a list of `Actions`, that are "operations" available to the user. 
+Another responsibility of the `Connector` is to aggregate a list of `Actions`, that are "operations" available to the user.
 
 An example of `Connector` could be a **Twitter** `Connector`, where you define some of the properties that are **required by all** the operations it will provide.  
 Properties could be for example `user`, `password`, `token` and so on. Just understand that **you are not setting the values for these keys** here. You are just declaring what are the fields that a specific instance of this item will be asked to fill!  
@@ -40,7 +40,7 @@ For example it's here that you specify that the value for the field `user` is `s
 `Action` represents a specific operation within the scope of a `Connector`.  
 In the Twitter example, an operation might be `postMessage()`.  
 An `Action` has its own set of of properties.  
-In the Twitter example, a property for an action might be `salute`, that a user might fill in with a value like `hello` or `good bye`.    
+In the Twitter example, a property for an action might be `salute`, that a user might fill in with a value like `hello` or `good bye`.  
 Role of an `Action` is also to define the link with physical java code library that will provide connectivity with a specific system/technology:  
 `CamelConnectorGAV`. In this field, you specify the coordinates of the `Camel Connector` component that this `Action` delegates its logical operations to.
 
@@ -182,7 +182,7 @@ You can extend Syndesis implementing `SyndesisStepExtension` functional interfac
 You need to provide the behavior for a single method:
 ```java
 ProcessorDefinition configure(CamelContext context, ProcessorDefinition definition, Map<String, Object> parameters);
-``` 
+```
 Two important aspects are present here:
 - you have direct access to a `CamelContext` (so you can customize/break Camel engine)
 - you have a direct access to `ProcessorDefinition`

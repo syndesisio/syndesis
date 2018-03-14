@@ -26,20 +26,20 @@
                 <label>
                   <input type="radio"
                         id="alllogs"
-                        name="logs" 
-                        [value]="true" 
-                        [(ngModel)]="allLogsSelected" 
+                        name="logs"
+                        [value]="true"
+                        [(ngModel)]="allLogsSelected"
                         (click)="deselectAll()">
-                  All integrations 
+                  All integrations
                 </label>
               </div>
               <div class="syn-form-input-list__option">
                 <label>
-                  <input type="radio" 
-                        id="specificlogs" 
-                        name="logs" 
-                        [value]="false" 
-                        [(ngModel)]="allLogsSelected"> 
+                  <input type="radio"
+                        id="specificlogs"
+                        name="logs"
+                        [value]="false"
+                        [(ngModel)]="allLogsSelected">
                   Specific integrations
                 </label>
               </div>
@@ -58,7 +58,7 @@
                         <a role="button" (click)="selectAllMatchingFiler(pfnglist)">Select All</a>
                       </div>
                     </div>
-                  </ng-template>  
+                  </ng-template>
                 </pfng-toolbar>
                 <div class="row">
                   <!-- List displayed here -->
@@ -109,4 +109,3 @@
     </div>
   </div>
 </div>
-

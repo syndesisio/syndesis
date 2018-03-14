@@ -7,7 +7,7 @@ With {prodname}, you can:
 * Run the integration on OpenShift in the public cloud or on site.
 * Use the visual data mapper to map data fields in one application to data
 fields in another application.
-* Leverage all the benefits of open source software. You can extend features, 
-and customize interfaces. If {prodname} does not provide a connector for an 
-application or service that you want to integrate then a developer can 
-create the connector that you need. 
+* Leverage all the benefits of open source software. You can extend features,
+and customize interfaces. If {prodname} does not provide a connector for an
+application or service that you want to integrate then a developer can
+create the connector that you need.

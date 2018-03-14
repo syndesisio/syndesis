@@ -51,4 +51,3 @@ var jsondb = {
         return internal.jsondb.exists(path);
     }
 }
-

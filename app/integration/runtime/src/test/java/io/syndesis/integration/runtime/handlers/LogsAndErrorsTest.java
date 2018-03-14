@@ -169,5 +169,3 @@ public class LogsAndErrorsTest extends IntegrationTestSupport {
         }
     }
 }
-
-

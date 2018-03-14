@@ -227,5 +227,3 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
         }
     }
 }
-
-

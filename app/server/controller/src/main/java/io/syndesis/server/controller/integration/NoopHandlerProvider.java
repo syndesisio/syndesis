@@ -44,5 +44,3 @@ public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandl
         return Collections.singletonList(this);
     }
 }
-
-

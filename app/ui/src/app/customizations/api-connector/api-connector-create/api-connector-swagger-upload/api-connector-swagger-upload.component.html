@@ -7,11 +7,11 @@
   <syndesis-validation-error *ngIf="swaggerFileUrlInput.errors?.requiredIfChecked && fetchUrlOption.checked">
     You must enter a valid URL before submitting the form
   </syndesis-validation-error>
-  
+
   <syndesis-validation-error *ngIf="validationError">
     {{ validationError.message }}
   </syndesis-validation-error>
-  
+
   <syndesis-validation-error *ngIf="processingError">
     {{ processingError }}
   </syndesis-validation-error>
@@ -39,7 +39,7 @@
       <div class="syn-form-row syn-form-row--fetch-file" [class.syn-visuallyhidden]="!fetchUrlOption.checked">
         <input class="syn-form-row__input" type="text"
           [class.syn-invalid]="validationError"
-          name="swaggerFileUrl"  
+          name="swaggerFileUrl"
           [(ngModel)]="swaggerFileUrl"
           [requiredIf]="fetchUrlOption.checked"
           #swaggerFileUrlInput="ngModel">

@@ -24,7 +24,7 @@
 ![Image of github settings page](img/github-settings-img-6.png)
 
 1. Disable "Connect GitHub" button until both client ID and client secret have been filled in.
-2. Clicking on "Connect GitHub" will bring users to the OAuth flow where they can grant access for Syndesis.   
+2. Clicking on "Connect GitHub" will bring users to the OAuth flow where they can grant access for Syndesis.  
 
 ![Image of github settings page](img/github-settings-img-7.png)
 

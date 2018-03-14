@@ -3,18 +3,18 @@
 
 You can add a step to an integration to map data from the previous
 connection(s) and any other steps to the next connection. For example,
-suppose the integration data contains a `Name` field and the next 
+suppose the integration data contains a `Name` field and the next
 connection in the integration has a `CustomerName` field. You need to
-map the source `Name` field to the target `CustomerName` field. 
+map the source `Name` field to the target `CustomerName` field.
 
-When you add a data mapper step you might be creating a new integration or editing 
-an integration. The flow of the integration appears in the left panel. 
+When you add a data mapper step you might be creating a new integration or editing
+an integration. The flow of the integration appears in the left panel.
 
 To add a data mapper step:
 
-. In the left panel, where you want to add a data mapper step, 
+. In the left panel, where you want to add a data mapper step,
 hover over the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 . In the popup that appears, click *Add a Step*.
 . On the *Choose a Step* page, click *Data Mapper*.
-  
+
 For details, see  <<mapping-data>>.

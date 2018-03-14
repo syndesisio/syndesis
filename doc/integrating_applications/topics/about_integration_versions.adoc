@@ -2,11 +2,11 @@
 = About integration lifecycle handling
 
 After you create and publish an integration, you  might want to update
-what the integration does. You can edit a draft of the published integration 
-and then replace the initial running version with the updated version. 
-To facilitate this, for each integration, {prodname} maintains multiple  
+what the integration does. You can edit a draft of the published integration
+and then replace the initial running version with the updated version.
+To facilitate this, for each integration, {prodname} maintains multiple
 versions as well as each version's state. The following topics provide
-an understanding of the bahavior to help you manage your integrations. 
+an understanding of the bahavior to help you manage your integrations.
 
 * <<understanding-integration-versions>>
 * <<understanding-integration-states>>

@@ -66,7 +66,7 @@ This design uses AMQ connection as an example to demonstrate the user workflow.
 
 1. Popover appears on clicking information icon. Provide additional information on field input. Next click wil close popover.
 
-2. Data Type Name field only accepts input that is less than 20 characters in length. Validation is required for this field. Show error message when validation failed. 
+2. Data Type Name field only accepts input that is less than 20 characters in length. Validation is required for this field. Show error message when validation failed.
 
 
 ![Image of import via url](img/describe-data-define-url.png)

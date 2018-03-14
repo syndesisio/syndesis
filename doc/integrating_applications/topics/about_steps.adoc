@@ -2,32 +2,27 @@
 = About steps
 
 An integration is a set of ordered steps. Each step operates on data.
-Some steps operate on data while connected to an application or service 
+Some steps operate on data while connected to an application or service
 outside {prodname}. These steps are connections. Between connections, there can
 be other steps that operate on data in {prodname}.
-Typically, an integraton includes a step that maps data fields used 
-in a connection to data fields used in the next connection. 
-Except for the start connection, each step operates on data it receives from 
+Typically, an integraton includes a step that maps data fields used
+in a connection to data fields used in the next connection.
+Except for the start connection, each step operates on data it receives from
 the previous steps.
 
 To operate on data between connections, {prodname} provides steps for:
 
 * Mapping data fields in one application to data fields in another
-application. 
+application.
 
-* Filtering data so that the integration continues only when it meets 
-criteria that you define. 
- 
+* Filtering data so that the integration continues only when it meets
+criteria that you define.
+
 * Logging information in addition to the default logging that {prodname}
-automatically provides. 
+automatically provides.
 
-For details, see <<add-steps>>. 
+For details, see <<add-steps>>.
 
-To operate on data between connections in a way that is not built into 
-{prodname}, you can upload an extension that provides a custom step. 
+To operate on data between connections in a way that is not built into
+{prodname}, you can upload an extension that provides a custom step.
 See <<adding-extensions>>.
-
-
-
-
- 

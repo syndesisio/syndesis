@@ -11,7 +11,7 @@
     <fieldset class="syn-form__body">
       <div class="syn-form-input-list">
         <label class="syn-form-input-list__option" *ngFor="let authType of customConnectorRequest.properties.authenticationType.enum">
-          <input type="radio" 
+          <input type="radio"
             name="authenticationType"
             formControlName="authenticationType"
             [value]="authType.value"> {{ authType.label }}
@@ -25,7 +25,7 @@
           type="text"
           formControlName="authorizationEndpoint">
       </div>
-      
+
       <div class="syn-form-row syn-form-row--oauth" *ngIf="authSetupForm.value.authenticationType == 'oauth2'">
         <label class="syn-form-row__label" for="tokenEndpoint">Access Token URL</label>
         <input class="syn-form-row__input"

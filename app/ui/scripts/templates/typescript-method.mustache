@@ -1,7 +1,7 @@
 {{&methodName}}URL(parameters: {
 {{#parameters}}{{^isSingleton}}'{{&camelCaseName}}'{{&cardinality}}: {{> type}},
 {{/isSingleton}}{{/parameters}}
-$queryParameters?: any, 
+$queryParameters?: any,
 $domain?: string
 }): string {
     let queryParameters: any = {};
@@ -32,7 +32,7 @@ $domain?: string
             path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', `${parameters['{{&camelCaseName}}']}`);
         {{/isPathParameter}}
     {{/parameters}}
-    
+
     if(parameters.$queryParameters) {
         Object.keys(parameters.$queryParameters).forEach(function(parameterName) {
             queryParameters[parameterName] = parameters.$queryParameters[parameterName];

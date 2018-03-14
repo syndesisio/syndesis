@@ -1,13 +1,13 @@
-// Reused in 
+// Reused in
 //"t2sf_intro.adoc", "sf2db_intro.adoc"
 [id='register-with-salesforce_{context}']
 = Register {prodname} as a Salesforce client
 
-You must register your installation of {prodname} as an application 
-that can access Salesforce. 
+You must register your installation of {prodname} as an application
+that can access Salesforce.
 This lets you create any number of integrations that connect
 to Salesforce. In other words, you need to register {prodname}
-with Salesforce only once. 
+with Salesforce only once.
 
 ifeval::["{context}" == "t2sf"]
 If you already registered {prodname} as a Salesforce
@@ -22,45 +22,45 @@ endif::[]
 
 Perform these steps to register {prodname} as a Salesforce client:
 
-. In {prodname}: 
+. In {prodname}:
 .. In the left panel, click *Home*.
 .. Copy the {prodname} URL from the browser address bar so it is in the
 clipboard.
 .. In the left panel, click *Settings*.
 .. In the *OAuth Application Management* page, to the right of *Salesforce*,
 click *Register* to display the *Client ID* and *Client Secret* fields.
-. In another browser tab, log in to your Salesforce account and 
-follow the steps below to create a connected app. 
+. In another browser tab, log in to your Salesforce account and
+follow the steps below to create a connected app.
 These instructions assume that you are
-using the Salesforce Classic user interface. To switch from the 
+using the Salesforce Classic user interface. To switch from the
 Salesforce Lightning Experience interface, click your profile icon and select
-*Switch to Salesforce Classic*. 
-For additional information, see the Salesforce documentation for 
-https://help.salesforce.com/articleView?id=connected_app_create.htm[Create a Connected App]. 
+*Switch to Salesforce Classic*.
+For additional information, see the Salesforce documentation for
+https://help.salesforce.com/articleView?id=connected_app_create.htm[Create a Connected App].
 .. In Salesforce, in the upper right, click *Setup*.
 .. In the left panel, select *Build* > *Create* > *Apps*.
-.. Scroll down to *Connected Apps* and click *New*. 
+.. Scroll down to *Connected Apps* and click *New*.
 .. Enter the required information and then select *Enable OAuth Settings*.
-.. In the *Callback URL* field, paste your 
+.. In the *Callback URL* field, paste your
 {prodname} URL, which you copied in step 2.
 Remove `dashboard` from the end of the URL
-and append `api/v1/credentials/callback`. For example: 
+and append `api/v1/credentials/callback`. For example:
 `\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. For *OAuth Scopes*, add:
 ** *Access and manage your data*
 ** *Allow access to your unique identifier*
-** *Perform requests on your behalf at any time*       
-.. Select *Include ID token* and then *Include Standard Claims*. 
+** *Perform requests on your behalf at any time*
+.. Select *Include ID token* and then *Include Standard Claims*.
 .. Scroll down and click *Save*.
 .. Scroll up to see that Salesforce indicates a short wait:
 image:shared/images/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
 .. Click *Continue*.
-.. Copy the consumer key that Salesforce provides. 
-. Return to your {prodname} installation *Settings* page and paste the 
+.. Copy the consumer key that Salesforce provides.
+. Return to your {prodname} installation *Settings* page and paste the
 Salesforce-provided
-consumer key into the Salesforce *Client ID* field. 
+consumer key into the Salesforce *Client ID* field.
 . Back in Salesforce, copy the consumer secret that Salesforce provides.
-. Return to your {prodname} installation *Settings* page and paste the 
-Salesforce-provided consumer secret into the Salesforce 
-*Client Secret* field. 
+. Return to your {prodname} installation *Settings* page and paste the
+Salesforce-provided consumer secret into the Salesforce
+*Client Secret* field.
 . Click *Save* and then click *Ok*.

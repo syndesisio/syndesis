@@ -15,4 +15,3 @@ RUN cd /tmp/artifacts/m2/project \
  && chmod -R g=u /tmp/artifacts/m2
 
 USER 1000
-

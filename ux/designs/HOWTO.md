@@ -28,17 +28,17 @@ git co -b pr/global-settings-page
 
 ```
 git commit -m "initial version of the global settings page" -a
-# For the first time push you need to create a remote branch with '-u'. This 
+# For the first time push you need to create a remote branch with '-u'. This
 # can be omitted for subsequent pushes
 git push -u origin pr/global-settings-page
 ```
 
 * Create a pull request on yours fork pull request page (e.g. `https://github.com/rhuss/syndesis-ux/pulls`) with button "New pull request". Choose your branch as the source branch and the "master" branch of `syndesisio/syndesis-project` as the target branch.
 
-* If a task issue has been created to which this PR is attached, please attach the PR to this issue. Also use a "Fixes #..." within a _commit comment_ to automatically close the task issue as soon as the PR is merged. 
+* If a task issue has been created to which this PR is attached, please attach the PR to this issue. Also use a "Fixes #..." within a _commit comment_ to automatically close the task issue as soon as the PR is merged.
 
 * If there is no dedicated GitHub issue for the PR, connect it to the top-level Epic / User story (but don't add a 'Fixes' comment as above).
 
-* Discussion and Reviews go now on on this pull request. 
+* Discussion and Reviews go now on on this pull request.
 
 * When the review is done and the design is accepted the PR gets merged and is then available in the main repository.

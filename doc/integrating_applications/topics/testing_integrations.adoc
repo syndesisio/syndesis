@@ -1,16 +1,16 @@
 [id='testing-integrations']
 = Testing integrations
 
-After you create an integration and it is running correctly in a 
+After you create an integration and it is running correctly in a
 development environment, you might want to run it in a different
-environment to test it. 
+environment to test it.
 
 To test an integration in a different {prodname} environment:
 
-. See <<about-copying-integrations>>. 
+. See <<about-copying-integrations>>.
 
 . Export the integration from the development environment. See
-<<exporting-integrations>>. 
+<<exporting-integrations>>.
 
-. Import the integration into the test environment. See 
-<<importing-integrations>>. 
+. Import the integration into the test environment. See
+<<importing-integrations>>.

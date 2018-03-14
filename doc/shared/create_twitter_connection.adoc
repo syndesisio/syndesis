@@ -3,28 +3,28 @@
 
 A connection to Twitter requires registration of
 {prodname} as an application that can access Twitter.
-If you did not already register {prodname}, see <<register-with-twitter>>. 
+If you did not already register {prodname}, see <<register-with-twitter>>.
 
-After you create a Twitter connection, you can use it in multiple integrations.  
+After you create a Twitter connection, you can use it in multiple integrations.
 
 To create a Twitter connection:
 
-. In {prodname}, in the left panel, click *Connections* to 
-display any available connections. 
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
 . In the upper right, click *Create Connection* to display
-the available connectors. A connector is a template that 
-you use to create one or more connections.  
-. Click the *Twitter* connector. 
-. Click *Connect Twitter* to display a Twitter authorization page. 
+the available connectors. A connector is a template that
+you use to create one or more connections.
+. Click the *Twitter* connector.
+. Click *Connect Twitter* to display a Twitter authorization page.
 You might need to log in to Twitter before you see the authorization page.
 . Click *Authorize app* to return to {prodname}.
 . In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connections. 
+helps you distinguish this connection from any other connections.
 For example, enter `*Twitter Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Twitter connection
 that uses my Twitter login credentials.*`
-. In the upper right, click *Create* to see that the connection you 
-created is now available. If you entered the example name, you would 
-see that *Twitter Connect 1* is now available. 
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Twitter Connect 1* is now available.

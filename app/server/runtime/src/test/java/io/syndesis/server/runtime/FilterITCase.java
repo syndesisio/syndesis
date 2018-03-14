@@ -29,4 +29,3 @@ public class FilterITCase extends BaseITCase {
        Assert.assertNotNull(filterOptions);
     }
 }
-

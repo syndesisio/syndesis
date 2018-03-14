@@ -12,7 +12,7 @@ you click *Add a Step*.
 the *Sources* panel on the left displays the fields in the
 output from the damage reporter step. The
 *Target* panel on the right displays the fields in the database that
-the API accesses. 
-. In the *Sources* panel, click the `task` field. 
-. In the *Target* panel, expand the `body` field and click `task`. 
-. Click *Done*. 
+the API accesses.
+. In the *Sources* panel, click the `task` field.
+. In the *Target* panel, expand the `body` field and click `task`.
+. Click *Done*.

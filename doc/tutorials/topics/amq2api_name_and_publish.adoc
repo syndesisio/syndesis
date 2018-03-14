@@ -4,11 +4,11 @@
 :context: amq2api
 The sample integration is complete. To deploy it:
 
-. In the upper right, click *Publish* to give it a name.                                                                                                                                                                                                                                                                                                                             
-. In the *Integration Name* field, enter a name for the 
+. In the upper right, click *Publish* to give it a name.
+. In the *Integration Name* field, enter a name for the
 integration. For example, `*AMQ to REST API Sample Integration*`.
 . Optionally, in the *Description* field, enter information that might be
-helpful to know about this integration. 
-. In the upper right corner, click *Publish*. 
+helpful to know about this integration.
+. In the upper right corner, click *Publish*.
 
 include::one_active_integration.adoc[]

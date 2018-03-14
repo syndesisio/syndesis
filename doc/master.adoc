@@ -5,11 +5,11 @@
 
 // This is a convenience document for generating all doc.
 // Images will not appear because each "book" has its own
-// topics/images folder inside its own folder. 
+// topics/images folder inside its own folder.
 
-= Skeleton for {prodname} User Documentation 
+= Skeleton for {prodname} User Documentation
 
-This document contains the very preliminary state of 
+This document contains the very preliminary state of
 planned topics. Some topics contain draft documentation and/or
 notes. Other topics are empty.
 

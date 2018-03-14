@@ -3,38 +3,38 @@
 
 To create an Amazon S3 connection:
 
-. In {prodname}, in the left panel, click *Connections* to 
-display any available connections. 
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
 . In the upper right, click *Create Connection* to display
-{prodname} connectors.  
-. Click the *Amazon S3* connector. 
-. In the *Access Key* field, enter the Amazon S3 access key ID, 
+{prodname} connectors.
+. Click the *Amazon S3* connector.
+. In the *Access Key* field, enter the Amazon S3 access key ID,
 provided by AWS, for the
-AWS account that created the bucket that you want 
+AWS account that created the bucket that you want
 this connection to access. If the bucket you want the connection to
 access does not already exist then when the integration starts running,
 it uses the AWS account associated with this access key to create the bucket.
 . In the *Bucket Name or Amazon Resource Name* field, enter the name of
-the bucket that you want this connection to access or enter the bucket's ARN. 
+the bucket that you want this connection to access or enter the bucket's ARN.
 If the bucket does not already exist then the connection creates it.
 . In the *Region* field, select the AWS region in which the bucket resides.
 If the bucket does not already exist then the connection creates it in the
-selected region. 
+selected region.
 . In the *Secret Key* field, enter the Amazon S3 secret access key,
-provided by AWS, for the account that created the bucket that you want this 
-connection to access. 
-. Click *Validate*. {prodname} immediately tries to validate the 
+provided by AWS, for the account that created the bucket that you want this
+connection to access.
+. Click *Validate*. {prodname} immediately tries to validate the
 connection and displays a message that indicates whether or not
 validation is successful. If validation fails, revise the configuration
-details as needed and try again. 
-. When validation is successful, click *Next*. 
+details as needed and try again.
+. When validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connections. 
+helps you distinguish this connection from any other connections.
 For example, enter `Obtain S3 Data`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample S3 connection
 that obtains data from the northeast bucket.*`
-. In the upper right, click *Create* to see that the connection you 
-created is now available. If you entered the example name, you would 
-see that *Obtain S3 Data* is now available. 
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Obtain S3 Data* is now available.

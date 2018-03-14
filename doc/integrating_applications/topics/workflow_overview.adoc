@@ -1,7 +1,7 @@
 [id='workflow-overview']
 = Workflow for creating an integration
 
-After you log in to the {prodname} console, the general steps 
+After you log in to the {prodname} console, the general steps
 for integrating applications are:
 
 . For each application that you want to integrate and that uses the
@@ -9,22 +9,22 @@ OAuth protocol, register {prodname} as a client of that application.
 . For each application that you want to integrate, create a connection.
 . Create the integration:
 .. Select the start connection. This connection starts the integration by
-accessing the application you want to obtain data from. 
-.. Select the action that you want the start connection to perform. 
-.. Optionally, depending on the connection, enter some 
+accessing the application you want to obtain data from.
+.. Select the action that you want the start connection to perform.
+.. Optionally, depending on the connection, enter some
 configuration information, for example, you might indicate whether to
-operate on a Salesforce contact or a Salesforce lead. 
+operate on a Salesforce contact or a Salesforce lead.
 .. Select the finish connection. This connection completes the
-integration by accessing the 
-application that uses the data from the start connection. 
+integration by accessing the
+application that uses the data from the start connection.
 .. Select the action you want the finish connection to perform.
 .. Optionally, depending on the connection, enter some configuration
-details. 
-.. Optionally, between the start connection and the finish connection, 
-add one or more connections to other applications. 
-.. Optionally, between connections, add additional steps, 
+details.
+.. Optionally, between the start connection and the finish connection,
+add one or more connections to other applications.
+.. Optionally, between connections, add additional steps,
 such as filtering data, mapping data fields, or
-logging that is in addition to the automatically-provided logging. 
-Typical integrations require data mapping. 
+logging that is in addition to the automatically-provided logging.
+Typical integrations require data mapping.
 
-. Click *Publish* to start running your integration. 
+. Click *Publish* to start running your integration.

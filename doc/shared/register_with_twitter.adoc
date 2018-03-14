@@ -1,42 +1,42 @@
 [id='register-with-twitter']
 = Register {prodname} as a Twitter client
 
-You must register your installation of {prodname} as an application 
-that can access Twitter. 
+You must register your installation of {prodname} as an application
+that can access Twitter.
 This lets you create any number of integrations that connect
 to Twitter. In other words, you need to register {prodname}
-with Twitter only once. 
+with Twitter only once.
 
 Perform these steps:
 
 . In {prodname}:
 .. In the left panel, click *Home*.
-.. Copy the {prodname} URL from the browser address bar so it is in the 
+.. Copy the {prodname} URL from the browser address bar so it is in the
 clipboard.
 .. In the left panel, click *Settings*.
 .. In the *OAuth Application Management* page, to the right of *Twitter*,
 click *Register* to display the *Client ID* and *Client Secret* fields.
 . In another browser tab, go  to `http://apps.twitter.com` and do
 the following:
-.. If you are not already logged in to Twitter, log in. 
+.. If you are not already logged in to Twitter, log in.
 .. Click *Create New App*.
 .. In the *Name* field, enter a name for your new app. This name
-must be unique among all names of apps registered with Twitter. 
+must be unique among all names of apps registered with Twitter.
 .. In the *Description* field, enter helpful information.
-Twitter requires some input in this field. 
-.. Paste your {prodname} URL into the *Website* and 
+Twitter requires some input in this field.
+.. Paste your {prodname} URL into the *Website* and
 *Callback URL* fields.
 .. In the *Callback URL* field, remove `dashboard` from the end
-of the URL and append `api/v1/credentials/callback`. 
+of the URL and append `api/v1/credentials/callback`.
 For example:
 `\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. Click *Yes* to agree to the Twitter developer agreement.
-.. Click *Create your Twitter application*. 
-.. Click the *Keys and Access Tokens* tab. 
+.. Click *Create your Twitter application*.
+.. Click the *Keys and Access Tokens* tab.
 .. Copy the *Consumer Key*.
-. On your {prodname} installation *Settings* page, paste the Twitter 
-consumer key into the Twitter *Client ID* field. 
-. On the Twitter *Keys and Access Tokens* tab, copy the 
-*Consumer Secret* and paste it into the {prodname} Twitter 
-*Client Secret* field. 
+. On your {prodname} installation *Settings* page, paste the Twitter
+consumer key into the Twitter *Client ID* field.
+. On the Twitter *Keys and Access Tokens* tab, copy the
+*Consumer Secret* and paste it into the {prodname} Twitter
+*Client Secret* field.
 . Click *Save* and then click *Ok*.

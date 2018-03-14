@@ -8,18 +8,18 @@ can return to a successful integration.  To do that, you
 unpublish (stop) the incorrect version and republish a version
 that runs the way you want it to.
 
-{prodname} assigns a new version number each time it publishes 
+{prodname} assigns a new version number each time it publishes
 a new version of an integration. For example, suppose you publish the
 Twitter to Salesforce sample integration. After it has been
-running, you update the integration to use a different 
-account to connect to Twitter. You then unpublish the running 
-integration, which stops it, and publish the updated integration. 
+running, you update the integration to use a different
+account to connect to Twitter. You then unpublish the running
+integration, which stops it, and publish the updated integration.
 
-The initial integration that was running 
+The initial integration that was running
 is version 1. The updated integration that is now running is
 version 2. If you edit version 2, for example to
 use a different account to connect to Salesforce, and you publish that
-version then it becomes version 3 of the integration. 
+version then it becomes version 3 of the integration.
 
-See also: <<publishing-integrations>> and 
-<<republishing-older-integration-versions>>. 
+See also: <<publishing-integrations>> and
+<<republishing-older-integration-versions>>.

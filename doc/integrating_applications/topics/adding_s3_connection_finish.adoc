@@ -4,13 +4,13 @@
 :context: finish
 To add an Amazon S3 connection as the finish connection:
 
-. Start creating the integration. 
-. Add and configure the start connection. 
+. Start creating the integration.
+. Add and configure the start connection.
 . On the *Choose a Finish Connection* page, click the Amazon S3 connection that
-you want to use as the integration's finish connection. 
+you want to use as the integration's finish connection.
 . On the *Choose an Action* page, click the *Copy Object* action to copy
-one or more objects into the bucket that the connection accesses. 
+one or more objects into the bucket that the connection accesses.
 The integration obtains the objects to be added to the bucket from the
-previous integration step(s). 
+previous integration step(s).
 . Click *Next*.
 include::add_describe_data_step.adoc[]

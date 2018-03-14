@@ -2,7 +2,7 @@
 = Add an API client connection to an integration
 
 Before you can add an API connection to an integration, you must
-create a connection to that API. See <<create-rest-api-connection>>. 
+create a connection to that API. See <<create-rest-api-connection>>.
 
 In this release, in an integration, a connection to an API can be
 the finish connection or a middle connection. It cannot be the
@@ -12,12 +12,12 @@ or a connection that is not the start connection.
 
 To add an API connection to an integraton:
 
-. On the page that displays available connections, click the API 
-connection that you want to add to the integration. 
-. Click the action that you want the connection to perform. 
-The actions that are available are based on the resource operations 
-specified in the Swagger file that was uploaded to {prodname} and that 
-describes the API you are connecting to. 
-. Depending on the action you select, enter any parameters that 
-{prodname} prompts for. 
-. Click *Done*. 
+. On the page that displays available connections, click the API
+connection that you want to add to the integration.
+. Click the action that you want the connection to perform.
+The actions that are available are based on the resource operations
+specified in the Swagger file that was uploaded to {prodname} and that
+describes the API you are connecting to.
+. Depending on the action you select, enter any parameters that
+{prodname} prompts for.
+. Click *Done*.

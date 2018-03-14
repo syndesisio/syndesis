@@ -127,11 +127,11 @@ cd ../../
 cd atlasmap-ui
 yarn install ; yarn start
 # it will open a browser tab, connected to the standalone runtime you can interact with
-# it will save the corresponding xml mapping file in `atlasmap/atlasmap-runtime/runtime/target/mappings/` where you can inspect the produced file 
+# it will save the corresponding xml mapping file in `atlasmap/atlasmap-runtime/runtime/target/mappings/` where you can inspect the produced file
 ```
 
 ###### In full integration with Syndesis
-- ends up using the steps for Web Development 
+- ends up using the steps for Web Development
 ```bash
 cd atlasmap-ui
 yarn link # understand the output
@@ -178,7 +178,7 @@ JAVA_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005
 - a good starting point is the `examples` directory  in the `connectors` folder
 - to see them in Syndesis:
   - Zoran does a complicated thing: serves his `.m2/repository` folder over http, shares it over the internet and refer with `ngrok` and uses an instance of Nexus, in minishift, to proxy to that. Then he configures Syndesis to point to his Nexus. It's probably not really needed =P
-  
+
 ## Openshift templates
 - in repo `syndesis-templates`
 - they are code generated, so if you want to change anything in them you should change the source template and not the `.yml` you import directly
@@ -197,13 +197,13 @@ syndesis-ui/scripts/syndesis-install --clean --form .
 - the idea is that a running container instance can update it's content at runtime, without the need to produce a new `Image` and redeploy it, based on `oc rsync -f` capability.
 - from https://github.com/fabric8io-images/s2i/tree/master/java/images/jboss
 > This image also supports detecting jars with Spring Boot devtools included, which allows automatic restarts when files on the classpath are updated. Files can be easily updated in OpenShift using command oc rsync.
-- Follow the instruction in `README.MD`. 
+- Follow the instruction in `README.MD`.
 
 
 
 ## Invoke REST APIs from `curl`
 Current configuration doesn't allow that, but the template can be easily modified, at Syndesis deploy time, to enable it:
- 
+
 ```bash
 # get a valid oauth token if you haven't done yet
 oc login -u developer

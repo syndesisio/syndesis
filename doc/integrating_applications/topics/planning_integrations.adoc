@@ -8,8 +8,8 @@ To start the integration:
 
 * Which application should the integration obtain data from?
 * In that application, what triggers the action that obtains the data?
-For example, an integration that starts by obtaining data from 
-Twitter might trigger on a Twitter mention. 
+For example, an integration that starts by obtaining data from
+Twitter might trigger on a Twitter mention.
 * What are the data fields of interest?
 * What credentials does {prodname} use to access this application?
 

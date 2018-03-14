@@ -1,9 +1,9 @@
 [id='amq2api-upload-todo-app-icon']
 = Upload the To Do app icon
 
-To show the flow of an integration, {prodname} displays icons that identify 
-the applications that the integration is connecting to. Your {prodname} 
-installation provides an icon for the REST API connector that you just 
+To show the flow of an integration, {prodname} displays icons that identify
+the applications that the integration is connecting to. Your {prodname}
+installation provides an icon for the REST API connector that you just
 created for the To Do app.
 
 To upload the To Do app icon:
@@ -11,18 +11,18 @@ To upload the To Do app icon:
 . Display the To Do app icon:
 
 .. In a new browser tab, paste the URL for your Swagger specification.
-.. At the end of the URL, replace `swagger.json` with `images/todo_icon.png` 
-and click *Enter*. For example: 
+.. At the end of the URL, replace `swagger.json` with `images/todo_icon.png`
+and click *Enter*. For example:
 `\https://todo-proj217402.6a63.fuse-ignite.openshiftapps.com/images/todo_icon.png`.
 
-. Save the `todo_icon.png` image. 
+. Save the `todo_icon.png` image.
 
-. In {prodname}, in the *API Client Connectors* tab, click the entry for 
-the *Todo App API* to display its details. 
+. In {prodname}, in the *API Client Connectors* tab, click the entry for
+the *Todo App API* to display its details.
 
-. On the *Connector Details* page, click *Browse*. 
+. On the *Connector Details* page, click *Browse*.
 
 . Navigate to `todo_icon.png`, select it, and click *Open*.
- 
-. Refresh the display of the *Connector Details* page. 
-The image now appears on the left. 
+
+. Refresh the display of the *Connector Details* page.
+The image now appears on the left.

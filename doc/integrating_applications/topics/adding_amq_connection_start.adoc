@@ -2,21 +2,21 @@
 = Adding an AMQ connection as the start connection
 
 :context: start
-In an integration, to add an AMQ connection as the start connection: 
+In an integration, to add an AMQ connection as the start connection:
 
-. In the {prodname} panel on the left, click *Integrations*. 
-. Click *Create Integration*. 
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
 . On the *Choose a Start Connection* page, click the AMQ connection that
-you want to use as the integration's start connection. 
+you want to use as the integration's start connection.
 . On the *Choose an Action* page, click the *Subscribe for Messages* action
-to receive messages from the queue or topic you specify. 
-. In the *Destination Name* field, enter the name of the queue or topic 
-to receive data from. 
-. For the *Destination Type*, accept *Queue* or select *Topic*. 
-. In the *Message Selector* field, if you want to receive only 
+to receive messages from the queue or topic you specify.
+. In the *Destination Name* field, enter the name of the queue or topic
+to receive data from.
+. For the *Destination Type*, accept *Queue* or select *Topic*.
+. In the *Message Selector* field, if you want to receive only
 data that satisfies a particular condition, enter a filter expression.
-. In the *Durability Subscription ID* field, to allow connections to 
-close and reopen without missing messages, enter the durability 
-subscription ID. The destination type must be a topic. 
-. Click *Next*. 
+. In the *Durability Subscription ID* field, to allow connections to
+close and reopen without missing messages, enter the durability
+subscription ID. The destination type must be a topic.
+. Click *Next*.
 include::add_describe_data_step.adoc[]

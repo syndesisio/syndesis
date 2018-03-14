@@ -40,4 +40,3 @@ public @interface CacheFor {
     TimeUnit unit() default TimeUnit.SECONDS;
 
 }
-

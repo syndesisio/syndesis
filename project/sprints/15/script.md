@@ -31,7 +31,7 @@
 * Select "Status.user.screename" connect with "TwitterScreenName__c"
 * Scroll endpoints off-screen, show that lines stay
 
-### GitHub 
+### GitHub
 
 * Publish integration
 * Show overview page with status ("Progress")

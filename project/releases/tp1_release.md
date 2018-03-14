@@ -9,7 +9,7 @@ This is the release plan for TP1, which consist of multiple distinct repos. This
 * https://github.com/syndesisio/pemtokeystore
 * https://github.com/syndesisio/keycloak-openshift
 
-Those have fixed version numbers are not necessarily released afresh. They have 
+Those have fixed version numbers are not necessarily released afresh. They have
 independent version numbers.
 
 ### Maven Dependencies
@@ -23,7 +23,7 @@ independent version numbers.
 * Atlasmap, release with version `$VERSION_ATLAS_MAP` (e.g. 1.30.0)
   - https://github.com/atlasmap/atlasmap
   - https://github.com/atlasmap/camel-atlasmap (syndesis-rest)
- 
+
 ### Syndesis
 
 * Build, release and push Docker images with version `$VERSION_SYNDESIS` (e.g. 1.0.0)

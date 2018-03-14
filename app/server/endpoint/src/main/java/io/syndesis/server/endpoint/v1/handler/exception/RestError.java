@@ -75,4 +75,3 @@ public class RestError {
         this.errorCode = errorCode;
     }
 }
-

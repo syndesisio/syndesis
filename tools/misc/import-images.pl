@@ -4,15 +4,15 @@ use Getopt::Long;
 use Term::ANSIColor qw(:constants);
 use strict;
 
-=head1 Transfering Docker images 
+=head1 Transfering Docker images
 
-This sript is from our pipeline/brew builds to our ignite cluster. 
+This sript is from our pipeline/brew builds to our ignite cluster.
 
 B<Before running this script please verify the hash C<RELEASE_MAP> for the
 proper tag numbers
 
 
-Run with 
+Run with
 
   import-images.pl [--source=brew|pipeline]
 
@@ -23,9 +23,9 @@ Prerequisites:
 
 =over 4
 
-=item Docker daemon 
+=item Docker daemon
 
-=item VPN Access 
+=item VPN Access
 
 and the Docker daemon must be able to reach VPN (not the case for
 minishift for me)
@@ -37,7 +37,7 @@ minishift for me)
 Please update the following C<$RELEASE_MAP> with the latest version of the images.
 The entries shout be self-explanatory
 
-=cut 
+=cut
 
 my $RELEASE_MAP =
 {
@@ -74,7 +74,7 @@ my $RELEASE_MAP =
           "fuse-ignite-ui" => "1.1-1",
           "fuse-ignite-verifier" => "1.1-1",
           "fuse-ignite-mapper" => "1.1-1"
-         }           
+         }
       }
    },
 };
@@ -89,7 +89,7 @@ my $EXTRA_IMAGES =
      {
       source => "registry.access.redhat.com/jboss-fuse-6/fis-java-openshift:2.0-9",
       target => "fuse-ignite-java-openshift:1.0"
-     }   
+     }
   ];
 
 # Target system
@@ -129,7 +129,7 @@ for my $image (sort keys %{$source->{images}}) {
 
 print RED,<<EOT,RESET;
 =====================
-Pushing extra images 
+Pushing extra images
 =====================
 EOT
 
@@ -142,7 +142,7 @@ for my $extra (@$EXTRA_IMAGES) {
 # ==============================================================================================
 sub format_image {
     my $image = shift;
-    my $map = shift;    
+    my $map = shift;
     return sprintf("%s/%s:%s",$map->{registry},$image,$map->{images}->{$image});
 }
 

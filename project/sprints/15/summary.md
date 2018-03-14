@@ -7,7 +7,7 @@
 * Basic Filter Step based on Rules : (done except runtime check)
 * OAuth authentication for Twitter and Salesforce
 * Global Settings for OAuth:
-* GitHub Workflow change, from API to normal git push 
+* GitHub Workflow change, from API to normal git push
 * Initial image list for productisation
 * Stabilise CI Infrastructure : Mostly stable (but always ongoing)
 * Datamapper integration

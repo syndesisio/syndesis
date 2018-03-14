@@ -3,20 +3,20 @@
 
 To choose the start connection:
 
-. On the left, click *Integrations*. 
-. Click *Create Integration*. 
-. On the *Choose a Start Connection* page, click your 
-Salesforce connection. If you specified the example name, 
+. On the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click your
+Salesforce connection. If you specified the example name,
 you would click *SF Connect 1*.
-. On the *Choose an Action* page, click *On create*. 
-. In the *Object name* field, select *Lead*. 
-. Click *Done* to add the start connection to the integration. 
+. On the *Choose an Action* page, click *On create*.
+. In the *Object name* field, select *Lead*.
+. Click *Done* to add the start connection to the integration.
 
-After connecting to Salesforce, the integration watches for 
-notifications that a Salesforce *Lead* 
-record was created. 
+After connecting to Salesforce, the integration watches for
+notifications that a Salesforce *Lead*
+record was created.
 When the integration finds such a notification, it passes the new
-lead's data to the next step in the integration. 
+lead's data to the next step in the integration.
 
 However, before you can add the next step, you must choose the
-integration's finish connection. 
+integration's finish connection.

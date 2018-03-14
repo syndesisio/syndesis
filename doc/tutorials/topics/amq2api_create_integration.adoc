@@ -1,7 +1,7 @@
 [id='amq2api-create-integration']
 = Create and deploy AMQ to REST API sample integration
 
-To create and deploy the AMQ to REST API sample integration, the main steps are: 
+To create and deploy the AMQ to REST API sample integration, the main steps are:
 
 . <<amq2api-choose-start-connection>>
 . <<amq2api-choose-finish-connection>>

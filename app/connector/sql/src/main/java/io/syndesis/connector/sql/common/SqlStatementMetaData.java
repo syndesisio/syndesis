@@ -65,7 +65,7 @@ public class SqlStatementMetaData {
         }
         return numberOfInputParams;
     }
-    
+
     public String getCamelSqlStatement() {
         if (camelSqlStatement == null) {
             camelSqlStatement = sqlStatement;
@@ -75,7 +75,7 @@ public class SqlStatementMetaData {
         }
         return camelSqlStatement;
     }
-    
+
     @SuppressWarnings("rawtypes")
     public String getDefaultedSqlStatement() {
         final List<Class> stringTypes = Arrays.asList(String.class, Character.class);
@@ -83,10 +83,10 @@ public class SqlStatementMetaData {
             defaultedSqlStatement = sqlStatement;
             for (SqlParam param : inParams) {
                 if (stringTypes.contains(param.getTypeValue().getClazz())) {
-                    defaultedSqlStatement = defaultedSqlStatement.replace(":#" + 
+                    defaultedSqlStatement = defaultedSqlStatement.replace(":#" +
                             param.getName(), "'" + param.getTypeValue().getSampleValue().toString() + "'");
                 } else {
-                    defaultedSqlStatement = defaultedSqlStatement.replace(":#" + 
+                    defaultedSqlStatement = defaultedSqlStatement.replace(":#" +
                             param.getName(), param.getTypeValue().getSampleValue().toString());
                 }
             }

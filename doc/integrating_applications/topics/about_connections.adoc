@@ -1,7 +1,7 @@
 [id='about-connections']
 = About {prodname} connections
 
-Before you can create an integration, you must create a connection 
+Before you can create an integration, you must create a connection
 to each application or service
 that you want to obtain data from or send data to. To create a connection,
 you select a connector and add configuration information. For example,
@@ -10,8 +10,8 @@ and then follow prompts to identify the broker to connect to and the
 account to use for the connection.
 
 To create an integraton, you select a connection to start the integration,
-a connection to end the integration, and optionally one or more 
-connections for accessing additional applications. 
-Any number of integrations can use the same connection. 
+a connection to end the integration, and optionally one or more
+connections for accessing additional applications.
+Any number of integrations can use the same connection.
 
-For details, see <<connecting-to-applications>>. 
+For details, see <<connecting-to-applications>>.

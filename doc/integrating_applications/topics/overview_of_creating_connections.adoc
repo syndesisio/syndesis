@@ -1,7 +1,7 @@
 [id='overview-of-creating-connections']
 = Overview of creating connections
 
-You must create a connection to 
+You must create a connection to
 each application that you want to integrate. The procedure for
 creating a connection varies for each application. The following topics
 provide an overview of the workflow:
@@ -21,8 +21,3 @@ include::about_adding_connections_to_integrations.adoc[leveloffset=+1]
 include::viewing_and_editing_connection_information.adoc[leveloffset=+1]
 
 include::about_connection_validation.adoc[leveloffset=+1]
-
-
-
-   
-   

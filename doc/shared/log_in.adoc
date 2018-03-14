@@ -1,16 +1,16 @@
 [id='logging-in-and-out']
 = Logging in to {prodname}
 
-In this release, you receive a link for accessing {prodname}. 
-Clicking this link displays the 
+In this release, you receive a link for accessing {prodname}.
+Clicking this link displays the
 *Red Hat OpenShift Online Log In* page, which prompts you to log in by
 using your Red Hat account. Logging in prompts you to authorize
 {prodname} to access to your account:
 
-image:images/AuthorizeAccessOnLogin.png[title='Authorize Access'] 
+image:images/AuthorizeAccessOnLogin.png[title='Authorize Access']
 
-Click *Allow selected permissions*. You need to do this only once. The 
-next time you log in, {prodname} immediately appears. 
+Click *Allow selected permissions*. You need to do this only once. The
+next time you log in, {prodname} immediately appears.
 
 Red Hat supports using {prodname} in the following browsers:
 

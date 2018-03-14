@@ -34,7 +34,7 @@
     &__textbox {
       line-height: $forms-row-height;
     }
-  
+
     &__label {
       width: $forms-label-column-width;
       text-align: right;
@@ -73,7 +73,7 @@
       display: block;
     }
   }
-  
+
   &-input-list--horizontal {
     .syn-form-input-list__option {
       margin-right: $forms-grid-gutter * 2;
@@ -113,7 +113,7 @@ input[type="text"] {
   }
 }
 
-// Legacy styles. To be reviewed at some point and 
+// Legacy styles. To be reviewed at some point and
 // replaced by the above styling whereas possible
 .control-label {
   display: flex;

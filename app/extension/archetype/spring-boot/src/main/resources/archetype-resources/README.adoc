@@ -9,4 +9,3 @@ To build this project use
 For more help see the Sydnesis documentsion:
 
     https://syndesis.io/
-

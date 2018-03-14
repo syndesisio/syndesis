@@ -7,7 +7,7 @@ set -euo pipefail
 # It works directly on the upstream repo, so be carefule
 
 # Repos map: key == dir name, value == GitHub repo name
-repos=( 
+repos=(
   "rest:syndesis-rest"
   "ui:syndesis-ui"
   "project:syndesis-project"
@@ -39,22 +39,22 @@ merge_project() {
   echo "====================================================================="
   echo "Processing $project : $repo"
   echo "====================================================================="
-  
+
   git remote add $project $repo
   git fetch $project
-  
+
   git checkout -B ${project}-master $project/master
-  
+
   [ -d $project ] && git mv $project ${project}.orig
   mkdir $project
   git mv $(ls -A . | grep -v -e "^${project}\(.orig\)*\$" | grep -v -e '^.git$') $project
   [ -d ${project}.orig ] && git mv ${project}.orig ${project}/${project}
-  
+
 	git commit -am "Move files from $repo into the $project subdirectory"
-  
+
   git checkout master
   git merge ${project}-master --allow-unrelated-histories -m "Merging in $repo"
-  
+
   git branch -D ${project}-master
   git remote rm $project
 }

@@ -1,7 +1,7 @@
 [id='administrator-tasks']
 = Administrator tasks
 
-This chapter describes typical administrative tasks and processes for the 
+This chapter describes typical administrative tasks and processes for the
 {prodname} administrator.
 
 include::user_admin.adoc[leveloffset=+1]

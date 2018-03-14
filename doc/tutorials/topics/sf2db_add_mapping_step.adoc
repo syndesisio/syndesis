@@ -8,34 +8,34 @@ start connection to display a pop-up in which you click *Add a Step*.
 
 . Click *Data Mapper* and wait a few moments. When the data fields
 appear, the *Sources* panel on the left displays the Salesforce fields
-and the *Target* panel on the right displays the database fields. 
+and the *Target* panel on the right displays the database fields.
 
-. Map the Salesforce `Company` field to the 
+. Map the Salesforce `Company` field to the
 database `company` field:
 .. On the left, in the *Sources* panel, click *Company*.
-.. On the right, in the *Target* panel, click *company*. 
+.. On the right, in the *Target* panel, click *company*.
 The data mapper displays a line
-from the source field to the target field. 
-. Map the *Sources* (Salesforce) `Email` field to the *Target* (database) 
-`email` field. 
+from the source field to the target field.
+. Map the *Sources* (Salesforce) `Email` field to the *Target* (database)
+`email` field.
 . Map two Salesforce fields (`FirstName` and `LastName`) to the database
 `first_and_last_name` field:
 .. In the *Sources* panel, click *FirstName*.
-.. In the *Target* panel, click *first_and_last_name*. 
+.. In the *Target* panel, click *first_and_last_name*.
 .. In the *Mapping Details* panel, under *Action*, select *Combine*.
-.. Just above that, click *Add Source*. 
+.. Just above that, click *Add Source*.
 .. Under *Source*, in the input field, start to type
 `*LastName*`. When */LastName* appears below the field, click it.
 The data mapper displays a line from the *Sources* *LastName* field to the
-*Target* *first_and_last_name* field. 
-. Add the following mappings:  
+*Target* *first_and_last_name* field.
+. Add the following mappings:
 +
 [options="header"]
 |=======================
-|Map This Salesforce Field |To This Database Field     
-|`LeadSource`    |`lead_source`    
-|`Status`    |`lead_status`    
-|`Phone`    |`phone`    
+|Map This Salesforce Field |To This Database Field
+|`LeadSource`    |`lead_source`
+|`Status`    |`lead_status`
+|`Phone`    |`phone`
 |`Rating`    |`rating`
 |=======================
 

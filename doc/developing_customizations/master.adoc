@@ -6,7 +6,7 @@
 [id='developing-customizations']
 = Developing {prodname} Customizations
 
-Add an intro paragraph here. 
+Add an intro paragraph here.
 
 * <<developing-api-client-connectors>>
 * <<developing-custom-steps>>

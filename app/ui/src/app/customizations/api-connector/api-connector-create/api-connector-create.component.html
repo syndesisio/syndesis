@@ -37,7 +37,7 @@
   <section class="wizard__ui wizard__body wizard__body--step1">
     <div class="row row-cards-pf">
       <div class="card-pf">
-        <syndesis-api-connector-swagger-upload 
+        <syndesis-api-connector-swagger-upload
           [apiConnectorState]="apiConnectorState$ | async"
           *ngIf="currentActiveStep == 1"
           (request)="onValidationRequest($event)">
@@ -52,7 +52,7 @@
           [customConnectorRequest]="(apiConnectorState$ | async)?.createRequest"
           (authSetup)="onAuthSetup($event)">
         </syndesis-api-connector-auth>
-        <syndesis-api-connector-info *ngIf="currentActiveStep == 4" 
+        <syndesis-api-connector-info *ngIf="currentActiveStep == 4"
           [apiConnectorState]="apiConnectorState$ | async"
           (update)="onCreateComplete($event)">
         </syndesis-api-connector-info>
@@ -65,7 +65,7 @@
   <cancel-confirmation-modal (cancel)="onCancel($event)" primaryLabel="Yes" secondaryLabel="No">
     <h3>Do you really wish to cancel?</h3>
     <p>
-      You have not completed the API Connector Create process. 
+      You have not completed the API Connector Create process.
       If you leave now you will lose all the data you entered already.
       Do you still wish to cancel?
     </p>

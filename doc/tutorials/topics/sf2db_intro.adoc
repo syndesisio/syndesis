@@ -2,10 +2,10 @@
 = Implement a Salesforce to database sample integration
 
 :context: sf2db
-This sample integration captures updates in Salesforce and then 
+This sample integration captures updates in Salesforce and then
 calls a database
 stored procedure, which synchronizes that database
-with the Salesforce updates. 
+with the Salesforce updates.
 
 To implement, deploy, and test this sample integration, the main steps are:
 
@@ -18,17 +18,17 @@ To implement, deploy, and test this sample integration, the main steps are:
 If you already created the Twitter to Salesforce sample integration:
 
 * {prodname} is already registered as a Salesforce client.
-You do not need to do this again. 
-* You already have a Salesforce connection, which you can reuse in 
-this sample integration. 
- 
-If you did not already create the Twitter to Salesforce sample 
-integration, then you must register {prodname} as a Salesforce client
-and create a Salesforce connection in order to complete the 
-Salesforce to database sample integration. 
+You do not need to do this again.
+* You already have a Salesforce connection, which you can reuse in
+this sample integration.
 
-Before you implement 
-this sample integration, see <<sf2db-prerequisites>>. 
+If you did not already create the Twitter to Salesforce sample
+integration, then you must register {prodname} as a Salesforce client
+and create a Salesforce connection in order to complete the
+Salesforce to database sample integration.
+
+Before you implement
+this sample integration, see <<sf2db-prerequisites>>.
 
 include::sf2db_prereqs.adoc[leveloffset=+1]
 

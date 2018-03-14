@@ -1,7 +1,7 @@
 [id='create-stored-proc-connection']
 
 = Create a stored procedure connection
- 
+
 // There are no files that include this file.
 // This task was eliminated for the SF2DB scenario.
 // But this content might be helpful when it is time to
@@ -10,18 +10,18 @@
 A stored procedure connection lets {prodname} connect to a SQL
 database. When you add a stored procedure connection to
 an integration, you select the stored procedure that you
-want the integration to run.  
+want the integration to run.
 
-To create a stored procedure 
+To create a stored procedure
 connection:
 
-. In the left panel, click *Connections* to display available connections. 
+. In the left panel, click *Connections* to display available connections.
 . In the upper right, click *Create Connection* to display
-{prodname} connection types. 
-. Click the *SQL Stored Procedure* connection type. 
+{prodname} connection types.
+. Click the *SQL Stored Procedure* connection type.
 . Configure the connection as follows:
-.. In the *Password* field, enter the password to use to connect to 
-the database. 
+.. In the *Password* field, enter the password to use to connect to
+the database.
 +
 To obtain the password for connecting to the sample
 database provided with {prodname}, invoke the following
@@ -30,14 +30,14 @@ command:
 `oc get dc syndesis-db -o yaml | grep -A 1 POSTGRESQL_SAMPLEDB_PASSWORD`
 
 .. In the *Connection URL* field, to use the sample database provided
-with {prodname}, enter `*???????*`. Or, enter the URL for your own 
-database. 
+with {prodname}, enter `*???????*`. Or, enter the URL for your own
+database.
 .. In the *Username* field, to use the sample database provided
-with {prodname}, enter `*???????*`. Or, enter the account name for 
-connecting to your own database. 
-.. Click *Next*. 
+with {prodname}, enter `*???????*`. Or, enter the account name for
+connecting to your own database.
+.. Click *Next*.
 . In the *Connection Name* field, enter `*EBS Connect 1*`.
 . In the *Description* field, enter `*Connection for accessing an
 Oracle EBS database in a sample integration.*`
-. In the upper right, click *Create* to see that the 
-*EBS Connect 1* connection is now available for use in an integration. 
+. In the upper right, click *Create* to see that the
+*EBS Connect 1* connection is now available for use in an integration.

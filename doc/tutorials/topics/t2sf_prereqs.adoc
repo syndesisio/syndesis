@@ -3,26 +3,26 @@
 
 To implement a Twitter to Salesforce sample integration:
 
-* You need a Twitter account. You can obtain one at http://twitter.com. 
+* You need a Twitter account. You can obtain one at http://twitter.com.
 
-* You need an account in a Salesforce installation that is used for development. 
-This account must have Salesforce API access, which is available in a 
+* You need an account in a Salesforce installation that is used for development.
+This account must have Salesforce API access, which is available in a
 Salesforce Enterprise account or a Salesforce Developer account. To obtain
-a free developer account, visit https://developer.salesforce.com/signup. 
-It takes less than two minutes to obtain a Salesforce account. 
+a free developer account, visit https://developer.salesforce.com/signup.
+It takes less than two minutes to obtain a Salesforce account.
 
 ////
-* Add the `TwitterScreenName` custom field to the Salesforce 
-contact object. See the 
-https://help.salesforce.com/articleView?id=adding_fields.htm[Salesforce documentation] 
+* Add the `TwitterScreenName` custom field to the Salesforce
+contact object. See the
+https://help.salesforce.com/articleView?id=adding_fields.htm[Salesforce documentation]
 for details, or follow these instructions:
 
-. In Salesforce, ensure that you are using the Salesforce Classic user 
-interface and not the newer Lightning Experience user interface. 
+. In Salesforce, ensure that you are using the Salesforce Classic user
+interface and not the newer Lightning Experience user interface.
 To switch between them, in the upper right, click your account name to
-display a pop-up menu and select the Switch to ... option.  
-. Go to *Build* > *Customize* > *Contact*. 
-. Choose *Fields*. 
+display a pop-up menu and select the Switch to ... option.
+. Go to *Build* > *Customize* > *Contact*.
+. Choose *Fields*.
 . In *Contact Custom Fields & Relationships*, click *New* and add the
 `TwitterScreenName` field with these attributes:
 .. *Data Type* is *Text*.
@@ -30,5 +30,5 @@ display a pop-up menu and select the Switch to ... option.
 .. *Field Length* is `15`.
 .. *Uniqueness* is *Do not allow duplicate values*.
 .. Set: *Set this field as the unique record identifier from an external system.*
-. Click *Save*. 
+. Click *Save*.
 ////

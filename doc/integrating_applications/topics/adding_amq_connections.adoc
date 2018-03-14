@@ -3,8 +3,8 @@
 
 You must create an AMQ or AMQP connection before you can add an
 AMQ or AMQP connection to an
-integration. If you did not already create an AMQ or AMQP connection, 
-see <<create-amq-connection>>. 
+integration. If you did not already create an AMQ or AMQP connection,
+see <<create-amq-connection>>.
 
 The procedure for adding an AMQ or AMQP connection to an integration varies
 according to whether you are adding the connection as the

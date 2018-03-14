@@ -6,67 +6,67 @@ To create an API client connector, do one of the following:
 * Upload a Swagger 2.0 specification.
 * Provide a URL for a Swagger 2.0 specification.
 
-The Swagger specification describes an API that you want to connect to.  
-{prodname} verifies that the Swagger specification is valid and contains 
-the information required to create the connector. {prodname} provides 
-information if there is invalid or missing content. 
+The Swagger specification describes an API that you want to connect to.
+{prodname} verifies that the Swagger specification is valid and contains
+the information required to create the connector. {prodname} provides
+information if there is invalid or missing content.
 
 To create an API client connector:
 
 . In the {prodname} navigation panel, click *Customizations* to display
 the *API Client Connectors* tab. Any API client connectors that are
-already available are listed here. 
-. Click *Create API Connector*. 
+already available are listed here.
+. Click *Create API Connector*.
 . On the *Create API Client Connector* page, indicate whether you want
-to upload a Swagger file or specify a URL for a Swagger specification. 
-. Specify a Swagger file to upload or specify a URL for a Swagger 
-specification. 
-. Click *Next*. If there is invalid or missing content, {prodname} 
-displays information about what needs to be corrected. Select a different 
+to upload a Swagger file or specify a URL for a Swagger specification.
+. Specify a Swagger file to upload or specify a URL for a Swagger
+specification.
+. Click *Next*. If there is invalid or missing content, {prodname}
+displays information about what needs to be corrected. Select a different
 Swagger file to upload or click *Cancel*,
-revise the Swagger file, and upload the updated file. 
+revise the Swagger file, and upload the updated file.
 +
-If the specification is valid and complete, {prodname} displays a summary of 
-the actions that the connector will provide. This might include errors and 
-warnings about the action specifications. 
+If the specification is valid and complete, {prodname} displays a summary of
+the actions that the connector will provide. This might include errors and
+warnings about the action specifications.
 
-. To revise the Swagger file, 
-click *Cancel*, revise the Swagger file, and upload the updated file. 
+. To revise the Swagger file,
+click *Cancel*, revise the Swagger file, and upload the updated file.
 +
 If you are satisfied with the action summary, click *Next*.
-. Indicate the API's security requirements by selecting one of the 
+. Indicate the API's security requirements by selecting one of the
 following:
-.. *No Security* 
-.. *HTTP Basic Authorization* -- Enter the username and password you 
-want to use to access the API. 
+.. *No Security*
+.. *HTTP Basic Authorization* -- Enter the username and password you
+want to use to access the API.
 .. *OAuth* -- {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.
-See <<register-with-rest-api>>. The Swagger specification or other 
-documentation for the API should specify this URL. If it does not then 
-you must contact the service provider to obtain this URL. 
+See <<register-with-rest-api>>. The Swagger specification or other
+documentation for the API should specify this URL. If it does not then
+you must contact the service provider to obtain this URL.
 ... *Access Token URL* is required for OAuth authorization. Again, the
-Swagger specification or other documentation for the API should provide 
-this URL. If it does not then you must contact the service provider. 
-. Click *Next*. {prodname} displays the connector's name, 
-description, host, and base URL as indicated by the Swagger file. 
-For connections that you create from this connector, 
+Swagger specification or other documentation for the API should provide
+this URL. If it does not then you must contact the service provider.
+. Click *Next*. {prodname} displays the connector's name,
+description, host, and base URL as indicated by the Swagger file.
+For connections that you create from this connector,
 +
-** {prodname} 
+** {prodname}
 concatenates the host and base URL values to define the endpoint for
 the connection. For example, if the host is `https://example.com` and
 the base URL is `/api/v1` then the connection endpoint is
 `https://example.com/api/v1`.
-** {prodname} applies  the schema specified in the Swagger file to data 
-mapping steps. If the Swagger file supports more than one schema then {prodname} 
-uses the TLS (HTTPS) schema. 
+** {prodname} applies  the schema specified in the Swagger file to data
+mapping steps. If the Swagger file supports more than one schema then {prodname}
+uses the TLS (HTTPS) schema.
 . Review the connector details and optionally upload an icon for the connector.
 To override a value obtained from
-the Swagger file, edit the field value that you want to change. 
-After {prodname} creates a connector, 
+the Swagger file, edit the field value that you want to change.
+After {prodname} creates a connector,
 you cannot change it. To effect a change, you need to upload an updated
-Swagger file so that {prodname} can create a new connector. 
-. When you are satisfied with the connector details, click *Create API Connector*. 
+Swagger file so that {prodname} can create a new connector.
+. When you are satisfied with the connector details, click *Create API Connector*.
 
-For details about using your new API connector in an integration, see 
-<<connecting-to-rest-apis>>. 
+For details about using your new API connector in an integration, see
+<<connecting-to-rest-apis>>.

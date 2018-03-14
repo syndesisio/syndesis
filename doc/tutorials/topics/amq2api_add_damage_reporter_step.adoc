@@ -3,9 +3,9 @@
 
 With the start and finish connections in place, you are ready to
 add the custom step that receives the messages from the AMQ broker
-and identifies any items that were damaged when they were received. 
+and identifies any items that were damaged when they were received.
 
 To add the custom damage reporter step:
 
-. In the center, click *Add a Step*. 
-. On the *Choose a Step* page, click *Damage Reporter*. 
+. In the center, click *Add a Step*.
+. On the *Choose a Step* page, click *Damage Reporter*.

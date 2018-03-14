@@ -14,33 +14,33 @@ Each version of an integration is always in one of the following states:
 |*Description*
 
 |*Draft*
-|*Draft* is always the initial state of a new version of an integration.  
-Only one version of an integration can be in the *Draft* state. That 
-is, you can update one version of an integration at a time.  
+|*Draft* is always the initial state of a new version of an integration.
+Only one version of an integration can be in the *Draft* state. That
+is, you can update one version of an integration at a time.
 
 |*In Progress*
-|The integration state is transitioning to *Published* or 
-*Unpublished*. 
+|The integration state is transitioning to *Published* or
+*Unpublished*.
 
 |*Published*
-|A *Published* version is running. When you publish an integration, 
-{prodname} builds the integration and starts running it. Only one version 
-of an integration can be running. That is, only one 
-version at a time can be in the *Published* state. 
+|A *Published* version is running. When you publish an integration,
+{prodname} builds the integration and starts running it. Only one version
+of an integration can be running. That is, only one
+version at a time can be in the *Published* state.
 
 |*Unpublished*
-|An *Unpublished* version is not running. It might have been 
+|An *Unpublished* version is not running. It might have been
 published and then unpublished, but it also might never have been
 published. If no version of this
 integration is in the *Published* state, then you can publish
 an unpublished version to run it. The version number does not
-change when you publish an unpublished version. 
+change when you publish an unpublished version.
 
 |*Error*
-|An integration version that is in the *Error* state 
+|An integration version that is in the *Error* state
 encountered an error while being published or while running. The error
-suspended publication or execution.  If this happens, try 
-publishing an earlier integration version that ran correctly. 
-Alternatively, you  can contact technical support for help. 
+suspended publication or execution.  If this happens, try
+publishing an earlier integration version that ran correctly.
+Alternatively, you  can contact technical support for help.
 
 |===

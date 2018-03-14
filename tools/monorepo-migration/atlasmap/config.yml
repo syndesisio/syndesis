@@ -7,7 +7,7 @@ target: "atlasmap/atlasmap"
 labels:
   approved: "0ffa16"
   Epic: "364294"
-   
+
   module/runtime: "657c9a"
   module/camel: "b39d9e"
   module/app: "2e9288"
@@ -18,23 +18,23 @@ labels:
   ext/camel: "c56b37"
   ext/docs: "f9d647"
   ext/qe: "91ac83"
-  
+
   status/wip: "f5c73f"
   status/blocked: "ad0009"
 
   notif/doc-update: "98cc38"
   notif/ux-design: "f382d0"
-  
+
   prio/p0 : "f85963"
   prio/p1 : "e68b8a"
   prio/p2 : "fabaaf"
   prio/p3 : "faeadf"
-  
+
   size/s: "edeca6"
   size/m: "fdf595"
   size/l: "fbdf78"
   size/xl: "fcc674"
-  
+
   cat/bug: "e08891"
   cat/blocker: "dd6977"
   cat/feature: "bdd9f4"
@@ -48,7 +48,7 @@ labels:
   cat/starter: "e2704f"
   cat/research: "e9d355"
   cat/design: "cebdf8"
-  
+
   target/tp1: "c6aad5"
   target/tp2: "bb98cb"
   target/tp3: "ae84c4"
@@ -61,7 +61,7 @@ repos:
     label_mapping:
       approved: "approved"
       architecture: "cat/design"
-      blocker: "status/blocked"                                      
+      blocker: "status/blocked"
       bug: "cat/bug"
       document: "ext/docs"
       enhancement: "cat/enhancement"
@@ -80,7 +80,7 @@ repos:
       enhancement: "cat/enhancement"
       housekeeping: "cat/techdebt"
       question: "cat/question"
-      test: "module/tests"      
+      test: "module/tests"
       approved: "approved"
       bug: "cat/bug"
       "data mapper": "ext/atlasmap"

@@ -3,11 +3,11 @@
 
 :context: t2sf
 The sample integration is complete. To deploy it:
-                                                                                                                                                                                                                                                                                                                           
-. At the top of the left panel, in the *Integration Name* field, 
+
+. At the top of the left panel, in the *Integration Name* field,
 enter a name of your choice that distinguishes this integration
-from any other integrations. For 
+from any other integrations. For
 example: `*Twitter to Salesforce Sample Integration*`.
-. In the upper right corner, click *Publish*. 
+. In the upper right corner, click *Publish*.
 
 include::one_active_integration.adoc[]

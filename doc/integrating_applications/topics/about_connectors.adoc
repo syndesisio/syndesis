@@ -2,11 +2,11 @@
 = About {prodname} connectors
 
 {prodname} provides a set of connectors. A connector represents a specific
-application that you want to obtain data from or send data to. 
+application that you want to obtain data from or send data to.
 Each connector is a template
 for creating a connection to that specific application. For example, you use the
 Salesforce connector to create a connection to
-Salesforce. 
+Salesforce.
 
 If {prodname} does not provide a connector you need, a developer
 can create the needed connector.

@@ -94,7 +94,7 @@ public class ComponentOptionsTest {
 
         context.stop();
     }
-    
+
     @Test
     public void testRegistryOption() throws Exception{
         Map<String, Object> properties = new HashMap<>();

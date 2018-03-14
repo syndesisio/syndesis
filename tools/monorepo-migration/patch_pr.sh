@@ -9,7 +9,7 @@ set -euo pipefail
 # This will create a branch "pr/<patch nr>" which contains the merged PR
 
 # Repos map: key == dir name, value == GitHub repo name
-REPOS=( 
+REPOS=(
   "rest:syndesis-rest"
   "ui:syndesis-ui"
   "project:syndesis-project"
@@ -41,7 +41,7 @@ get_pr_url() {
 module_dir=$1
 pr=$2
 
-if [ ! -d $module_dir ]; then 
+if [ ! -d $module_dir ]; then
   echo "No module directory $module_dir found"
   exit 1;
 fi
@@ -68,6 +68,6 @@ cat - <<EOT
 PR $pr applied successfully.
 
 The patch has been committed locally to branch pr/${module_dir}-$pr
-Please push this branch to your fork and create a new PR against Syndesis 
+Please push this branch to your fork and create a new PR against Syndesis
 (possibly copying over relevant comments from the original PR)
 EOT

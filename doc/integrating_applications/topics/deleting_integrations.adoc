@@ -3,8 +3,8 @@
 
 To delete an integration:
 
-. In the left {prodname} panel, click *Integrations*. 
+. In the left {prodname} panel, click *Integrations*.
 . In the list of integrations, click the entry for the integration
 you want to delete.
-. On the integration's summary page, click *Delete Integration*. 
-. In the popup, click *OK* to confirm that you want to delete the integration. 
+. On the integration's summary page, click *Delete Integration*.
+. In the popup, click *OK* to confirm that you want to delete the integration.

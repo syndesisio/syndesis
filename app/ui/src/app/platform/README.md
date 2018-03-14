@@ -12,7 +12,7 @@ import { StringMap } from '@syndesis/ui/platform';
 
 Some of the tokens available are custom TypeScript types, designed to conveniently wrap recurring schema patterns. Some others are TypeScript interfaces that model Syndesis entities that are meant to be used throughout the application and therefore are not bound to any piece of functionality or the UI feature module in particular.
 
-Last but not least, we will want to define each entity's related service providers here, inside its corresponding folder along with its model file. 
+Last but not least, we will want to define each entity's related service providers here, inside its corresponding folder along with its model file.
 
 **What should you never save in this folder?** Any UI-related class or type which is meant to be used specifically within a feature module. In summary:
 
@@ -49,22 +49,22 @@ Please refer to `CoreModule` (currently in progress).
 
 Syndesis is currently being redesigned to become a state-driven application embracing an architectural pattern commonly known as REDUX. The rationale for this architectural choice is based on the fact that the product's business logic gravitates around several core entities.
 
-Each of these core entities need to be coupled together to add value to the user interaction, yet also feature a high level of independence as standalone types, namely _Connections_, _Integrations_, _Connectors_ or _Extensions_, just to name the more relevant ones. 
+Each of these core entities need to be coupled together to add value to the user interaction, yet also feature a high level of independence as standalone types, namely _Connections_, _Integrations_, _Connectors_ or _Extensions_, just to name the more relevant ones.
 
 These entities interact with each other and force state changes amongst them. Ideally, all types are meant to be immutable--and components or service providers should never mutate or change these entities state.
 
 As Syndesis grows into hundreds of components and dozens of providers, allowing the core entities to perform state changes will turn debugging undesired state changes and fixing bugs into an impossible mission.
 
-The REDUX architecture prevents this from happening by forcing immutability in all platform objects and detaching state management from any piece of the UI. Basically, the UI endpoints (components, impure pipes, services) will subscribe to slices, or fragments, of state and will receive immutable objects through an Observable stream, rendering such information in their views, for instance. 
+The REDUX architecture prevents this from happening by forcing immutability in all platform objects and detaching state management from any piece of the UI. Basically, the UI endpoints (components, impure pipes, services) will subscribe to slices, or fragments, of state and will receive immutable objects through an Observable stream, rendering such information in their views, for instance.
 
 ![redux](https://user-images.githubusercontent.com/1104146/35936058-76933682-0c42-11e8-91e2-38ab6f025d61.png)
 
 
 Whenever a change in state is required for whatever reason (either as the by-product of a user interaction or an event raised in some other end of the application), the UI endpoint involved will not want to alter the properties of such state snapshot, but will dispatch an action instead (picking an existing typed action from a pool of pre-defined applications actions). This action will sometimes include data in its payload, and other times it won't.
 
-The aforementioned actions will be intercepted by _Reducers_. The `Platform` context features several reducer classes, one for each type/context that features its own slice of top-level state. 
+The aforementioned actions will be intercepted by _Reducers_. The `Platform` context features several reducer classes, one for each type/context that features its own slice of top-level state.
 
-> **Fractal state in Syndesis Feature Modules** <br> In addition to the above, some lazy-loaded feature models (eg. Custom API Connection create wizard) also contain their own actions/reducers combo, as a sort of fractal implementation, handling state in an isolated fashion for that feature only. 
+> **Fractal state in Syndesis Feature Modules** <br> In addition to the above, some lazy-loaded feature models (eg. Custom API Connection create wizard) also contain their own actions/reducers combo, as a sort of fractal implementation, handling state in an isolated fashion for that feature only.
 
 These _Reducer_ file simply inspects a property available in all _Action_ objects named `type`. It then informs of the particular action request dispatched by the UI. The reducer operates as a basic `switch/case` flow. When a `case` matching the action `type` is found, the current state is cloned, changes are applied to this clone to fulfill the purpose of the action and then the clone is returned to replace the previously existing state snapshot.
 
@@ -100,7 +100,7 @@ export interface MetadataState extends BaseReducerModel {
   appName?: string;
   locale?: string;
 }
-``` 
+```
 
 ### Creating Actions
 Actions are required to populate the Metadata upon bootstrapping the application:
@@ -215,13 +215,13 @@ export const platformReducer: ActionReducerMap<PlatformState> = {
 
 The real magic behind actions relies on the fact that we can make actions respond to other actions. This allows for more complex business logic to be handled at a lower level, without necessarily depending on user interactions every time.
 
-#### A real case scenario in Syndesis 
+#### A real case scenario in Syndesis
 
 A good example would be to have an _Fetch Connections_ action being triggered right after successfully processing a _Create Connection_ action, for argument's sake.
 
-Initially a user will navigate to the Syndesis app, go to the Connections page, which will fetch all Connections in the Store that was populated upon bootstrapping the application (by means of an action), and then proceed to create a brand new Connection. 
+Initially a user will navigate to the Syndesis app, go to the Connections page, which will fetch all Connections in the Store that was populated upon bootstrapping the application (by means of an action), and then proceed to create a brand new Connection.
 
-Once this new Connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created Connection. Since that list is only loaded when landing on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable. Moreover, if we ever want to understand which are the triggers of data changes in our application ecosystem, we'll want to track down each and every component. 
+Once this new Connection is successfully created, the user might want to return to the Connections page and see the list updated with the newly created Connection. Since that list is only loaded when landing on the application for the first time, we need to re-trigger the _Fetch Connections_ action from the component we are at the end of the create connection process. However, that ties data management logic to components and makes the application less scalable. Moreover, if we ever want to understand which are the triggers of data changes in our application ecosystem, we'll want to track down each and every component.
 
 Triggering actions from components is not wrong, but here we're facing a different scenario--we need to trigger an action that does not depend on a user interaction, but on the accomplishment of another action previously executed. Luckily, we can leverage _Effects_ to achieve that.
 
@@ -294,7 +294,7 @@ The example above involves the `UPDATE` action we already know, which is interce
 
 When the HTTP call is successfully processed, the observable stream allows us to return another action (represented as a raw `{ type: MetadataActions.UPDATE_COMPLETE }` object literal, though we could use `new MetadataActions.UpdateComplete()` instead). We handle errors by also returning an `MetadataActions.ERROR` object literal.
 
-In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end. 
+In a nutshell, all action objects piped through the observable stream will be dispatched by the Effects handler once the observable stream reaches its end.
 
 In the example provided, remember that the `ERROR` action also triggered a `RESET` action by means of the previously created `resetMedatataUponError$` effect class member.
 
@@ -305,7 +305,7 @@ Let's assume that we have observed the guidelines above to create a slice of sta
 import { Component, OnInit } from '@angular/core';
 import { Store }             from '@ngrx/store';
 import { Observable }        from 'rxjs/Observable';
-import { 
+import {
   PlatformState,
   MetadataState,
   IntegrationState,
@@ -322,7 +322,7 @@ export class StatefulComponent implements OnInit {
 
   constructor(private store: Store<PlatformState>) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     // Subscribes to the Metadata changes
     this.store
       .select<MetadataState>((state: PlatformState) => state.metadataState)

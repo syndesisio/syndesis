@@ -27,7 +27,7 @@
     </ng-template>
   </p>
   <p>
-    <syndesis-editable-textarea 
+    <syndesis-editable-textarea
       [value]="integration.description"
       placeholder="No description set..."
       (onSave)="onAttributeUpdated('description', $event)">
@@ -52,7 +52,7 @@
 
           </div>
           <div class="list-pf-actions">
-            <pfng-action [config]="draftConfig" 
+            <pfng-action [config]="draftConfig"
               (onActionSelect)="onDraftAction($event)">
             </pfng-action>
           </div>

@@ -4,9 +4,9 @@
 :context: sf2db
 The sample integration is complete. To deploy it:
 
-. In the upper right, click *Publish* to give it a name.                                                                                                                                                                                                                                                                                                                             
-. In the *Integration Name* field, enter a name for the 
+. In the upper right, click *Publish* to give it a name.
+. In the *Integration Name* field, enter a name for the
 integration. For example, `*Salesforce to Database Sample Integration*`.
-. In the upper right corner, click *Publish*. 
+. In the upper right corner, click *Publish*.
 
 include::one_active_integration.adoc[]
