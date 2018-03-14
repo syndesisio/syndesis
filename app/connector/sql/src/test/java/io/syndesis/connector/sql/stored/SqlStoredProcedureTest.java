@@ -65,7 +65,7 @@ public class SqlStoredProcedureTest  {
 
         // Inspect demo_add
         StoredProcedureMetadata metaData = storedProcedures.get("DEMO_ADD");
-        assertThat(metaData.getTemplate()).isEqualTo("DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER ${body[C]})");
+        assertThat(metaData.getTemplate()).isEqualTo("DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER C)");
     }
 
     @Test
