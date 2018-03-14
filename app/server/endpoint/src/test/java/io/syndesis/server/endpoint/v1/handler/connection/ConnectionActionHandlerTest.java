@@ -24,6 +24,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -60,7 +62,24 @@ public class ConnectionActionHandlerTest {
     private final HystrixExecutable<DynamicActionMetadata> metadataCommand = mock(HystrixExecutable.class,
         withSettings().extraInterfaces(HystrixInvokableInfo.class));
 
+    private final DataShape salesforceContactShape;
+
+    private final DataShape salesforceOutputShape;
+
     public ConnectionActionHandlerTest() {
+        salesforceOutputShape = new DataShape.Builder()//
+            .kind(DataShapeKinds.JAVA).type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult")//
+            .build();
+
+        salesforceContactShape = new DataShape.Builder()//
+            .kind(DataShapeKinds.JSON_SCHEMA)//
+            .type("Contact")//
+            .name("Contact")//
+            .description("Salesforce Contact")//
+            .specification(
+                "{\"type\":\"object\",\"id\":\"urn:jsonschema:org:apache:camel:component:salesforce:dto:Contact\",\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"title\":\"Contact\"}")//
+            .build();
+
         createOrUpdateSalesforceObjectDescriptor = new ConnectorDescriptor.Builder()
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
                 b -> b.putProperty("sObjectName",
@@ -87,7 +106,8 @@ public class ConnectionActionHandlerTest {
                         .componentProperty(false)//
                         .description("Unique field to hold the identifier value")//
                         .build()))
-            .build();
+            .inputDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())//
+            .outputDataShape(salesforceOutputShape).build();
 
         final Connector connector = new Connector.Builder().id("salesforce")
             .addAction(new ConnectorAction.Builder().id(SALESFORCE_CREATE_OR_UPDATE).addTag("dynamic")
@@ -125,7 +145,11 @@ public class ConnectionActionHandlerTest {
         @SuppressWarnings("unchecked")
         final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
-        assertThat(meta.getValue()).isEqualTo(createOrUpdateSalesforceObjectDescriptor);
+        final ConnectorDescriptor descriptor = new ConnectorDescriptor.Builder().createFrom(createOrUpdateSalesforceObjectDescriptor)
+            .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
+            .outputDataShape(salesforceOutputShape)//
+            .build();
+        assertThat(meta.getValue()).isEqualTo(descriptor);
         final MetaData metadata = meta.getData();
         assertThat(metadata).isNotNull();
         assertThat(metadata.getType()).contains(MetaData.Type.WARNING);
@@ -141,6 +165,7 @@ public class ConnectionActionHandlerTest {
                 Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("ID", "Contact ID"),
                     DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Email", "Email"),
                     DynamicActionMetadata.ActionPropertySuggestion.Builder.of("TwitterScreenName__c", "Twitter Screen Name")))
+            .inputShape(salesforceContactShape)//
             .build();
         when(metadataCommand.execute()).thenReturn(suggestions);
         when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
@@ -154,6 +179,7 @@ public class ConnectionActionHandlerTest {
             .replaceConfigurationProperty("sObjectIdName", c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Email", "Email")))
             .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("TwitterScreenName__c", "Twitter Screen Name")))
+            .inputDataShape(salesforceContactShape)//
             .build();
 
         final Map<String, String> parameters = new HashMap<>();
@@ -207,8 +233,30 @@ public class ConnectionActionHandlerTest {
             .replaceConfigurationProperty("sObjectName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
                     ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
+            .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
             .build();
 
         assertThat(meta.getValue()).isEqualTo(enrichedDefinitioin);
+    }
+
+    @Test
+    public void shouldSetInoutOutputShapesToAnyIfMetadataCallFails() {
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
+        ArgumentCaptor.forClass(entityType);
+
+        // simulates fallback return
+        final DynamicActionMetadata fallback = new DynamicActionMetadata.Builder().build();
+        when(metadataCommand.execute()).thenReturn(fallback);
+        when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(false);
+
+        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+
+        @SuppressWarnings("unchecked")
+        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
+
+        final ConnectorDescriptor descriptor = meta.getValue();
+        assertThat(descriptor.getInputDataShape()).contains(ConnectionActionHandler.ANY_SHAPE);
+        assertThat(descriptor.getOutputDataShape()).contains(salesforceOutputShape);
     }
 }
