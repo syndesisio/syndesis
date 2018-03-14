@@ -16,7 +16,7 @@ The designs covers the following user interactions:
 
 #### No Draft  
 
-![no draft section](img/integration_details_page_rework_11.16_no_draft.png)
+![no draft section](img/integration_details_page_3.14_no_draft.png)
 
 1. If there’s no draft for an integration. The draft section would not be shown on this page.
 
@@ -24,7 +24,7 @@ The designs covers the following user interactions:
 
 #### Basic layout
 
-![basic layout](img/integration_details_page_rework_11.16_genericlayout.png)
+![basic layout](img/integration_details_page_3.14_genericlayout.png)
 
 1. Moved status label to the top section right next to Integration Name. Using “check mark” icon to indicate this integration is active.
 
@@ -32,20 +32,21 @@ The designs covers the following user interactions:
 
 3. Added row indicator (green bar) and checkmark icon to indicate active and running version. For active version, users would only be able to perform “Replace Draft” with the active version.
 
-![many steps and connections](img/integration_details_page_rework_11.16_many_stepsconnections.png)
+![many steps and connections](img/integration_details_page_3.14_many_stepsconnections.png)
 
 1. Showing an integration that has many connections and steps.
 
 #### Expanding a row
 
-![expandable row and scrolling](img/integration_details_page_1.22_expand_scroll_BOM.png)
+![expandable row and scrolling](img/integration_details_page_3.14_expand_scroll_bom.png)
 
 1. When expanding a row item, show more details about that version.
 
   - Start Date/Time
-  - Las Run
+  - Last Run
   - Last Modified: user name and timestamp
   - Modification Notes: works like commit message or note to self
+
 
 2. Users are able to scroll on this page. When scrolling, the whole page scrolls.
 
@@ -54,43 +55,49 @@ The designs covers the following user interactions:
 
 #### Kebab menu
 
-![kebab menu](img/integration_details_page_rework_11.21_kebab.png)
+![kebab menu](img/integration_details_page_3.14_kebab.png)
 
 1. Breadcrumb & toolbar level kebab, users are able to:
 
   - Stop Integration
-  - View Logs
+  - Replace Draft
   - Delete Integration (all versions)
 
   When selecting View Logs, users would be directed to the Logs page.  
 
-2. Row level kebab menu includes:
+2. For the active version row, kebab menu includes:
 
   - Replace Draft
+  - Stop integration
+
+3. For inactive version row, kebab menu includes:
+
+  - Replace draft
   - Publish
 
 
 #### Modal for confirming actions
 
-![replace draft modal](img/integration_details_page_rework_11.16_replaceadraft.png)
+![replace draft modal](img/integration_details_page_3.14_replacedraft.png)
 
 Once users click on “Replace Draft”, display a modal to notify users and to confirm the replace draft action.
 
 
-![publish version modal](img/integration_details_page_rework_11.16_publishaversion.png)
+![publish version modal](img/integration_details_page_3.14_publishversion.png)
 
 If users click on “Publish”, display a modal to notify users what would happen and ask them to confirm their action.
 
 
 #### Status indicators
 
-![spinning up](img/integration_details_page_rework_11.16_spinning_up.png)
+![spinning up](img/integration_details_page_3.14_spinning_up.png)
 
 1. In between state - showing the current publish version is still active, and a new version is spinning up.
 
 2. The version spinning up would have a spinner indicator.
 
-![being published](img/integration_details_page_rework_11.16_being_published.png)
+
+![being published](img/integration_details_page_3.14_being_published.png)
 
 In this case, the published version is being “decommissioned” and the new version is being published.
 
@@ -101,7 +108,7 @@ In this case, the published version is being “decommissioned” and the new ve
 
 #### Notifications (alerts)
 
-![warning message](img/integration_details_page_rework_11.16_warning.png)
+![warning message](img/integration_details_page_3.14_warning.png)
 
 1. Display a warning message when a published integration is outdated.
 
@@ -109,6 +116,6 @@ In this case, the published version is being “decommissioned” and the new ve
 
 3. Users can “republish integration” from the warning message.
 
-![error message](img/integration_details_page_rework_11.16_error.png)
+![error message](img/integration_details_page_3.14_error.png)
 
 1. When an integration is not running, display an error message and change indicators accordingly.
