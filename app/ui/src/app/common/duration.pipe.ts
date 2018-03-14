@@ -8,32 +8,31 @@ import { moment } from '@syndesis/ui/vendor';
   name: 'synDuration'
 })
 export class DurationPipe implements PipeTransform {
-  transform(duration: number, timeUnit: 's' | 'm' | 'h' | 'd' | 'w'): string {
-    if (!duration) {
+  transform(milliseconds: number): string {
+    if (!milliseconds) {
       return 'NaN';
     }
 
-    const durationMoment = moment.duration(duration);
-    switch (timeUnit.toLowerCase()) {
-      case 'm': {
-        return `${durationMoment.minutes()} minutes`;
-      }
+    const durationMoment = moment.duration(milliseconds);
+    const days = Math.floor(durationMoment.days());
+    const hours = Math.floor(durationMoment.hours());
+    const minutes = Math.floor(durationMoment.minutes());
+    const seconds = Math.floor(durationMoment.seconds());
 
-      case 'h': {
-        return `${durationMoment.hours()} hours`;
-      }
-
-      case 'd': {
-        return `${durationMoment.days()} days`;
-      }
-
-      case 'w': {
-        return `${durationMoment.weeks()} weeks`;
-      }
-
-      default: {
-        return `${durationMoment.seconds()} seconds`;
-      }
+    const durationStrings = [];
+    if (days > 0) {
+      durationStrings.push(`${days} days`);
     }
+    if (hours > 0) {
+      durationStrings.push(`${hours} hours`);
+    }
+    if (minutes > 0) {
+      durationStrings.push(`${minutes} minutes`);
+    }
+    if (seconds > 0) {
+      durationStrings.push(`${seconds} seconds`);
+    }
+
+    return durationStrings.join(', ').trim();
   }
 }
