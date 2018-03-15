@@ -15,25 +15,37 @@
  */
 package io.syndesis.server.endpoint.metrics;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.syndesis.server.dao.manager.DataManager;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.common.util.SyndesisServerException;
 
 @Component
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "sql")
 public class SQLMetricsProviderImpl implements MetricsProvider {
 
+    private final DateFormat dateFormat = //2018-03-14T23:34:09Z
+            new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ssZ",Locale.US);
+
     private final DataManager dataMgr;
 
-    protected SQLMetricsProviderImpl(DataManager dataMgr) {
+    private final NamespacedOpenShiftClient openShiftClient;
+
+    protected SQLMetricsProviderImpl(DataManager dataMgr, NamespacedOpenShiftClient openShiftClient) {
         this.dataMgr = dataMgr;
+        this.openShiftClient = openShiftClient;
     }
 
     @Override
@@ -63,13 +75,15 @@ public class SQLMetricsProviderImpl implements MetricsProvider {
             } else {
                 totalLastProcessed = summary.getLastProcessed();
             }
-            //grab longest living integration pod
-            if (totalStart.isPresent()) {
-                totalStart = summary.getStart().isPresent() &&
-                        summary.getStart().get().before(totalStart.get()) ?
-                                summary.getStart() : totalStart;
-            } else {
-                totalStart = summary.getStart();
+            try {
+                totalStart = Optional.of(dateFormat.parse(
+                    openShiftClient.pods().withName("syndesis-server")
+                        .get()
+                        .getStatus()
+                        .getStartTime()));
+
+            } catch (ParseException e) {
+                throw new SyndesisServerException(e.getMessage(),e);
             }
         }
         return new IntegrationMetricsSummary.Builder()

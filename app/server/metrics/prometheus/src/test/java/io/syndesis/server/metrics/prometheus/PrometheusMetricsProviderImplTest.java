@@ -15,6 +15,10 @@
  */
 package io.syndesis.server.metrics.prometheus;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +27,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author dhirajsb
@@ -41,7 +44,13 @@ public class PrometheusMetricsProviderImplTest {
     public void setUp() {
         final PrometheusConfigurationProperties config = new PrometheusConfigurationProperties();
         config.setService("syndesis-prometheus-syndesis.192.168.64.22.nip.io");
-        metricsProvider = new PrometheusMetricsProviderImpl(config);
+        NamespacedOpenShiftClient openshiftClient = mock(NamespacedOpenShiftClient.class);
+        when(openshiftClient.pods().withName("syndesis-server")
+                .get()
+                .getStatus()
+                .getStartTime()).thenReturn("2018-03-14T23:34:09Z");
+
+        metricsProvider = new PrometheusMetricsProviderImpl(config, openshiftClient);
     }
 
     @Test
