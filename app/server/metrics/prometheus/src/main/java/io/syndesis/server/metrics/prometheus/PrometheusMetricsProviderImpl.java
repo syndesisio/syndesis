@@ -15,9 +15,14 @@
  */
 package io.syndesis.server.metrics.prometheus;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
@@ -27,8 +32,11 @@ import java.util.stream.Stream;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import io.fabric8.kubernetes.api.model.LabelSelector;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
 
 @Component
@@ -59,11 +67,23 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private final String deploymentVersionLabel;
     private final String metricsHistoryRange;
 
-    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config) {
+    private final NamespacedOpenShiftClient openShiftClient;
+    private final DateFormat dateFormat = //2018-03-14T23:34:09Z
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.US);
+    static final Map<String,String> LABELS = new HashMap<>();
+    static {
+        LABELS.put("app", "syndesis");
+        LABELS.put("component", "syndesis-server");
+    }
+    private static final LabelSelector SELECTOR = new LabelSelector(null, LABELS);
+
+    protected PrometheusMetricsProviderImpl(PrometheusConfigurationProperties config,
+            NamespacedOpenShiftClient openShiftClient) {
         this.serviceName = config.getService();
         this.integrationIdLabel = config.getIntegrationIdLabel();
         this.deploymentVersionLabel = config.getDeploymentVersionLabel();
         this.metricsHistoryRange = config.getMetricsHistoryRange();
+        this.openShiftClient = openShiftClient;
     }
 
     @Override
@@ -134,20 +154,28 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Optional<Long> totalMessages = getSummaryMetricValue(METRIC_TOTAL, Long.class, "sum");
         final Optional<Long> failedMessages = getSummaryMetricValue(METRIC_FAILED, Long.class, "sum");
 
-        final Optional<Date> startTime = getAggregateMetricValue(METRIC_START_TIMESTAMP, Date.class, "min");
+         try {
+             final Optional<Date> startTime = Optional.of(dateFormat.parse(
+                     openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems()
+                        .get(0)
+                        .getStatus()
+                        .getStartTime()));
 
-        // compute last processed time
-        final Optional<Date> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
-        final Optional<Date> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, "max");
-        final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
+            // compute last processed time
+            final Optional<Date> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
+            final Optional<Date> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, "max");
+            final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
-        return new IntegrationMetricsSummary.Builder()
-            .metricsProvider("prometheus")
-            .start(startTime)
-            .lastProcessed(Optional.ofNullable(lastProcessedTime))
-            .messages(totalMessages.orElse(0L))
-            .errors(failedMessages.orElse(0L))
-            .build();
+            return new IntegrationMetricsSummary.Builder()
+                .metricsProvider("prometheus")
+                .start(startTime)
+                .lastProcessed(Optional.ofNullable(lastProcessedTime))
+                .messages(totalMessages.orElse(0L))
+                .errors(failedMessages.orElse(0L))
+                .build();
+         } catch (ParseException e) {
+             throw new SyndesisServerException(e.getMessage(),e);
+         }
     }
 
     private <T> Map<String, T> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
