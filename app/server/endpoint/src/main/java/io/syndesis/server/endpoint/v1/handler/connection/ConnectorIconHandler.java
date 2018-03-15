@@ -47,6 +47,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okio.BufferedSink;
 import okio.Okio;
+import okio.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -142,9 +143,10 @@ public final class ConnectorIconHandler extends BaseHandler {
             }
 
             final StreamingOutput streamingOutput = (out) -> {
-                final BufferedSink sink = Okio.buffer(Okio.sink(out));
-                sink.writeAll(Okio.source(iconDao.read(connectorIconId)));
-                sink.close();
+                try (BufferedSink sink = Okio.buffer(Okio.sink(out));
+                    Source source = Okio.source(iconDao.read(connectorIconId))) {
+                    sink.writeAll(source);
+                }
             };
             return Response.ok(streamingOutput, icon.getMediaType()).build();
         } else if (connectorIcon.startsWith("extension:")) {
