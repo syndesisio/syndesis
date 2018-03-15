@@ -46,7 +46,7 @@ export class ConnectionsCreatePage implements OnInit, OnDestroy {
       case 'configure-fields':
         return this.current.formGroup && this.current.formGroup.valid;
       case 'review':
-      // TODO is this ever going to be false?
+        return this.current.formGroup && this.current.formGroup.valid;
       default:
         return true;
     }

@@ -31,7 +31,7 @@
         <button class="btn btn-primary"
                 *ngIf="getCurrentPage() === 'review'"
                 (click)="doCreate()"
-                [disabled]="!canContinue()">Create
+                [disabled]="current.saving || !canContinue()">Create
         </button>
       </div>
     </div>

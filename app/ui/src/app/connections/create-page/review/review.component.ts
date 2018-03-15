@@ -28,7 +28,7 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
     private router: Router,
     private userService: UserService
   ) {
-    this.reviewForm = this.createReviewForm();
+
   }
 
   createReviewForm(): FormGroup {
@@ -89,6 +89,8 @@ export class ConnectionsReviewComponent implements CanComponentDeactivate, OnIni
   }
 
   ngOnInit() {
+    this.reviewForm = this.createReviewForm();
+    this.current.formGroup = this.reviewForm;
     this.sub = this.current.events.subscribe(event => {
       if (event.kind === 'connection-trigger-create') {
         this.createConnection();
