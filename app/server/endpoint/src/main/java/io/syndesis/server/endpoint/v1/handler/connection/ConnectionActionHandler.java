@@ -53,6 +53,10 @@ import com.netflix.hystrix.HystrixInvokableInfo;
 
 @Api(value = "actions")
 public class ConnectionActionHandler {
+    public static final DataShape ANY_SHAPE = new DataShape.Builder().kind(DataShapeKinds.ANY).build();
+
+    public static final DataShape NO_SHAPE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
+
     private final List<ConnectorAction> actions;
 
     private final MetadataConfigurationProperties config;
@@ -135,6 +139,32 @@ public class ConnectionActionHandler {
         return new MetadataCommand(config, connectorId, action, parameters);
     }
 
+    private static DataShape adaptDataShape(final Optional<DataShape> maybeDataShape) {
+        if (maybeDataShape.isPresent()) {
+            final DataShape dataShape = maybeDataShape.get();
+            if (dataShape.getKind() != DataShapeKinds.ANY && dataShape.getKind() != DataShapeKinds.NONE
+                && dataShape.getSpecification() == null && dataShape.getType() == null) {
+                return ANY_SHAPE;
+            }
+        }
+
+        return maybeDataShape.orElse(NO_SHAPE);
+    }
+
+    private static ConnectorDescriptor adaptDataShapes(final ConnectorDescriptor.Builder builder) {
+        final ConnectorDescriptor descriptor = builder.build();
+
+        final Optional<DataShape> maybeInputDataShape = descriptor.getInputDataShape();
+        final DataShape inputDataShape = adaptDataShape(maybeInputDataShape);
+        builder.inputDataShape(inputDataShape);
+
+        final Optional<DataShape> maybeOutputDataShape = descriptor.getOutputDataShape();
+        final DataShape outputDataShape = adaptDataShape(maybeOutputDataShape);
+        builder.outputDataShape(outputDataShape);
+
+        return builder.build();
+    }
+
     private static ConnectorDescriptor applyMetadataTo(final ConnectorDescriptor descriptor, final DynamicActionMetadata dynamicMetadata) {
         final Map<String, List<DynamicActionMetadata.ActionPropertySuggestion>> actionPropertySuggestions = dynamicMetadata.properties();
 
@@ -161,7 +191,7 @@ public class ConnectionActionHandler {
             enriched.outputDataShape(output);
         }
 
-        return enriched.build();
+        return adaptDataShapes(enriched);
     }
 
     private static boolean isMaleable(final DataShapeKinds kind) {

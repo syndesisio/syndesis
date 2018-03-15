@@ -169,7 +169,7 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
             ConnectorDescriptor.class, tokenRule.validToken(), headers, HttpStatus.OK);
 
         final ConnectorDescriptor firstEnrichment = new ConnectorDescriptor.Builder()//
-            .inputDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).build())
+            .inputDataShape(new DataShape.Builder().kind(DataShapeKinds.ANY).build())
             .outputDataShape(new DataShape.Builder().kind(DataShapeKinds.JAVA)
                 .type("org.apache.camel.component.salesforce.api.dto.CreateSObjectResult").build())
             .withActionDefinitionStep("Select Salesforce object", "Select Salesforce object type to create",
