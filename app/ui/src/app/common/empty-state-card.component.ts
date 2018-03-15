@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   TemplateRef,
   OnInit,
   HostBinding
@@ -13,7 +15,7 @@ import {
       <div class="card-pf-body">
         <!-- Card Icon -->
         <div *ngIf="topElement" class="card-pf-top-element">
-        <ng-template [ngTemplateOutlet]="topElement"></ng-template>
+          <ng-template [ngTemplateOutlet]="topElement"></ng-template>
         </div>
         <!-- Card Description / Item Overview -->
         <div *ngIf="body" class="card-pf-info text-center">
@@ -28,7 +30,12 @@ export class EmptyStateCardComponent implements OnInit {
   @Input() body: TemplateRef<any>;
   @Input() topElement: TemplateRef<any>;
   @Input() colClass: string;
+  @Output() onClick = new EventEmitter<any>();
   @HostBinding() class;
+
+  onSelect($event) {
+    this.onClick.emit($event);
+  }
 
   ngOnInit() {
     this.class = 'empty-state-card card ' + this.colClass;
