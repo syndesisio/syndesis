@@ -53,7 +53,7 @@
       </div>
     </div>
     <!-- Page body -->
-    <syndesis-loading class="syn-scrollable--body {{ step.stepKind !== 'mapper' ? 'body' : 'body mapper' }}"
+    <syndesis-loading class="body {{ step.stepKind !== 'mapper' ? 'syn-scrollable--body' : 'mapper' }}"
                       [loading]="loading">
       <div class="container-fluid">
         <ng-container *ngIf="error">
