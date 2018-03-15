@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
-import { Connection, Connector, Connections, Connectors } from '@syndesis/ui/platform';
+import { Connection, Connector, Connections, Connectors, ConfiguredConfigurationProperty } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { ConnectionStore } from '../../store/connection/connection.store';
 import { ConnectorStore } from '../../store/connector/connector.store';
@@ -247,21 +247,10 @@ export class CurrentConnectionService {
       JSON.stringify(event['connection'] || this.connection)
     );
     // just in case this leaks through from the form
-    for (const prop in connection.connector.properties) {
-      if (!prop.hasOwnProperty(prop)) {
-        continue;
-      }
-      // @FIXME avoid using 'delete' since it leaves memory pointers unhandled by the garbage collector
-      delete connection.connector.properties[prop]['value'];
+    for (const key of Object.keys(connection.connector.properties)) {
+      const { value, ...property } = <ConfiguredConfigurationProperty> connection.connector.properties[key];
+      connection.connector.properties[key] = property;
     }
-    const tags = connection.tags || [];
-    const connectorTag = connection.connectorId || connection.connector.id;
-
-    if (tags.indexOf(connectorTag) === -1) {
-      tags.push(connectorTag);
-    }
-
-    connection.tags = tags;
     const sub = this.store.updateOrCreate(connection).subscribe(
       (c: Connection) => {
         log.debugc(
