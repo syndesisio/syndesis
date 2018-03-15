@@ -119,11 +119,7 @@
           [colClass]="'col-lg-3 col-md-4 col-sm-6'"
           [topElement]="cardTopElement">
           <ng-template #cardBody>
-            <p>Don't see the connection you want listed?</p>
-            <p>Create a new one.</p>
-            <p>
-              <button class="btn btn-default" (click)="onSelect(undefined, $event)">Create Connection</button>
-            </p>
+            <button class="btn btn-default" (click)="onSelect(undefined, $event)">Create Connection</button>
           </ng-template>
           <ng-template #cardTopElement>
               <span class="card-pf-icon-large pficon pficon-add-circle-o"></span>
