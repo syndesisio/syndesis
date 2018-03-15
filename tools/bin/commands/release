@@ -130,7 +130,9 @@ release::run() {
     create_templates_for_minor_version "$topdir" "$syndesis_tag"
 
     # Update files for SNAPSHOT and 'latest version'
-    change_to_dev_version "$topdir" "$maven_opts"
+    # This is not needed anymore as we pushing the tag directly,
+    # and not 'master'. So master still refers to the old version.
+    # change_to_dev_version "$topdir" "$maven_opts"
 
     # Push everything (if configured)
     git_push "$topdir" "$release_version" "$syndesis_tag"
@@ -257,7 +259,7 @@ git_commit_files() {
 
     echo "==== Committing files to local git"
     cd $dir
-    git_commit app/pom.xml "Update pom.xmls to $version"
+    git_commit pom.xml "Update pom.xmls to $version"
     git_commit ^app/connector/ "Update generated connector files"
     git_commit ^install/ "Update OpenShift templates for Syndesis $version"
 }
@@ -283,7 +285,7 @@ change_to_dev_version() {
 
     echo "==== Committing files for current snapshot"
     cd $topdir
-    git_commit app/pom.xml "Setting version $dev_version in pom.xml files"
+    git_commit pom.xml "Setting version $dev_version in pom.xml files"
     git_commit ^install/ "Update OpenShift templates to latest images"
 }
 
