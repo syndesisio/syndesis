@@ -24,6 +24,7 @@ export class CurrentConnectionService {
   private _credentials: any;
   private _oauthStatus: any;
   private _formGroup: FormGroup;
+  private _saving: boolean;
   private subscription: Subscription;
 
   constructor(
@@ -40,6 +41,10 @@ export class CurrentConnectionService {
     this.subscription = this.events.subscribe((event: ConnectionEvent) =>
       this.handleEvent(event)
     );
+  }
+
+  get saving() {
+    return this._saving;
   }
 
   dispose() {
@@ -242,10 +247,8 @@ export class CurrentConnectionService {
   }
 
   private saveConnection(event: ConnectionEvent) {
-    // poor man's clone
-    const connection = <Connection>JSON.parse(
-      JSON.stringify(event['connection'] || this.connection)
-    );
+    this._saving = true;
+    const connection = { ...(event.connection || this.connection) };
     // just in case this leaks through from the form
     for (const key of Object.keys(connection.connector.properties)) {
       const { value, ...property } = <ConfiguredConfigurationProperty> connection.connector.properties[key];
@@ -261,6 +264,7 @@ export class CurrentConnectionService {
         if (action && typeof action === 'function') {
           action(c);
         }
+        this._saving = false;
         sub.unsubscribe();
       },
       (reason: any) => {
@@ -273,6 +277,7 @@ export class CurrentConnectionService {
         if (errorAction && typeof errorAction === 'function') {
           errorAction(reason);
         }
+        this._saving = false;
         sub.unsubscribe();
       }
     );
