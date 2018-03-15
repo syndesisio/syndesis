@@ -19,14 +19,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import io.syndesis.server.dao.manager.DataManager;
+import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
@@ -37,7 +40,13 @@ import io.syndesis.common.util.SyndesisServerException;
 public class SQLMetricsProviderImpl implements MetricsProvider {
 
     private final DateFormat dateFormat = //2018-03-14T23:34:09Z
-            new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ssZ",Locale.US);
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.US);
+    static final Map<String,String> LABELS = new HashMap<>();
+    static {
+        LABELS.put("app", "syndesis");
+        LABELS.put("component", "syndesis-server");
+    }
+    private static final LabelSelector SELECTOR = new LabelSelector(null, LABELS);
 
     private final DataManager dataMgr;
 
@@ -77,8 +86,8 @@ public class SQLMetricsProviderImpl implements MetricsProvider {
             }
             try {
                 totalStart = Optional.of(dateFormat.parse(
-                    openShiftClient.pods().withName("syndesis-server")
-                        .get()
+                    openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems()
+                        .get(0)
                         .getStatus()
                         .getStartTime()));
 
