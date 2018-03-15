@@ -18,6 +18,7 @@ export class DurationPipe implements PipeTransform {
     const hours = Math.floor(durationMoment.hours());
     const minutes = Math.floor(durationMoment.minutes());
     const seconds = Math.floor(durationMoment.seconds());
+    const ms = Math.floor(durationMoment.milliseconds());
 
     const durationStrings = [];
     if (days > 0) {
@@ -32,7 +33,13 @@ export class DurationPipe implements PipeTransform {
     if (seconds > 0) {
       durationStrings.push(`${seconds} seconds`);
     }
-
+    if (durationStrings.length == 0) {
+      if (ms > 0) {
+        durationStrings.push(`${ms} ms`);
+      } else if (milliseconds != 0) {
+        durationStrings.push(`${milliseconds.toFixed(2)} ms`);
+      }
+    }
     return durationStrings.join(', ').trim();
   }
 }
