@@ -130,7 +130,7 @@ export interface ActivityStep extends BaseEntity {
   duration?: number;
   isFailed: boolean;
   failure?: string;
-  message?: string[];
+  messages?: string[];
   output?: string;
   events?: any;
 }

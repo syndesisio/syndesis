@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { PaginationConfig } from 'patternfly-ng';
 
 import { log } from '@syndesis/ui/logging';
-import { Integration, IntegrationSupportService, Activity } from '@syndesis/ui/platform';
+import { Integration, IntegrationSupportService, Activity, Step } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-activity',
@@ -32,6 +32,19 @@ export class IntegrationActivityComponent implements OnInit {
     this.fetchActivities();
   }
 
+  stepName(step: Step): string {
+    if (!step) {
+      return 'n/a';
+    }
+    if (step.name) {
+      return step.name;
+    }
+    if (step.action && step.action.name) {
+      return step.action.name;
+    }
+    return 'n/a';
+  }
+
   fetchActivities(): void {
     this.onRefresh = true;
     this.onError = false;
@@ -44,9 +57,9 @@ export class IntegrationActivityComponent implements OnInit {
           activity.steps.forEach(step => {
             // XXX: ANTIPATTERN AHEAD. The following code block mutates an object state
             const integrationStep = this.integration.steps.find(_integrationStep => _integrationStep.id == step.id);
-            step.name = integrationStep ? integrationStep.name : 'n/a';
-            step.isFailed = (step.failure && step.failure.length > 0) || (step.message && step.message.length > 0);
-            const errorMessages = [step.failure, ...step.message].filter(messages => !!messages);
+            step.name = this.stepName(integrationStep);
+            step.isFailed = (step.failure && step.failure.length > 0) || (step.messages && step.messages.length > 0);
+            const errorMessages = [step.failure, ...step.messages].filter(messages => !!messages);
             step.output = errorMessages.length > 0 ? errorMessages.join('. ') : 'No output';
           });
         });
