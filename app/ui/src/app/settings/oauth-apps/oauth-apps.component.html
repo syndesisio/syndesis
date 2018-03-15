@@ -1,81 +1,81 @@
 <div class="row oauth-apps">
   <div class="col-md-12">
     <h1>OAuth Application Management</h1>
-    <p>Register {{ config.getSettings('branding', 'appName', 'Syndesis') }} with the applications you want to connect to in an integration. Find out more about this at <a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/fuse_ignite_sample_integration_tutorial/" rel="nofollow" target="_blank">{{ config.getSettings('branding', 'appName', 'Syndesis') }} Help</a>.</p>
+    <p>To connect to an application that uses the OAuth protocol, obtain a client ID and a client secret from the application. See the <a href="https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications" target="_blank" rel="nofollow">documentation</a> for help.</p>
+    <p>During registration, enter this callback URL: {{ callbackURL }}.</p>
+        
+    <!-- Modal -->
+    <syndesis-oauth-app-modal #modal></syndesis-oauth-app-modal>
 
-      <!-- Modal -->
-      <syndesis-oauth-app-modal #modal></syndesis-oauth-app-modal>
+    <!-- Toolbar -->
+    <pfng-toolbar [config]="toolbarConfig"
+                  (onFilterChange)="filterChanged($event)"
+                  (onSortChange)="sortChanged($event)">
+    </pfng-toolbar>
 
-      <!-- Toolbar -->
-      <pfng-toolbar [config]="toolbarConfig"
-                    (onFilterChange)="filterChanged($event)"
-                    (onSortChange)="sortChanged($event)">
-      </pfng-toolbar>
+    <!-- List displayed here -->
+    <syndesis-loading [loading]="loading | async">
+      <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
+                  [config]="listConfig"
+                  [itemTemplate]="listItemMain"
+                  [actionTemplate]="actions"
+                  [expandTemplate]="listItemExpansion">
+      </pfng-list>
+    </syndesis-loading>
 
-      <!-- List displayed here -->
-      <syndesis-loading [loading]="loading | async">
-        <pfng-list [items]="items | objectPropertyFilter:filter | objectPropertySort:sort"
-                   [config]="listConfig"
-                   [itemTemplate]="listItemMain"
-                   [actionTemplate]="actions"
-                   [expandTemplate]="listItemExpansion">
-        </pfng-list>
-      </syndesis-loading>
-
-      <!-- One list item, main row -->
-      <ng-template #listItemMain
-                   let-item="item">
-        <div class="list-pf-chevron"
-             (click)="item.expanded = !item.expanded">
-          <span *ngIf="item.expanded"
-                class="fa fa-angle-down"></span>
-          <span *ngIf="!item.expanded"
-                class="fa fa-angle-right"></span>
+    <!-- One list item, main row -->
+    <ng-template #listItemMain
+                  let-item="item">
+      <div class="list-pf-chevron"
+            (click)="item.expanded = !item.expanded">
+        <span *ngIf="item.expanded"
+              class="fa fa-angle-down"></span>
+        <span *ngIf="!item.expanded"
+              class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-pf-content list-pf-content-flex">
+        <div class="list-pf-left">
+          <img *ngIf="!item.client.icon.startsWith('fa-')" class="syn-icon-medium list-pf-icon list-pf-icon-bordered list-pf-icon-small" [src]="item.client | synIconPath">
+          <span *ngIf="item.client.icon.startsWith('fa-')" class="fa {{ item.client.icon }} list-pf-icon list-pf-icon-bordered list-pf-icon-small"></span>
         </div>
-        <div class="list-pf-content list-pf-content-flex">
-          <div class="list-pf-left">
-            <img *ngIf="!item.client.icon.startsWith('fa-')" class="syn-icon-medium list-pf-icon list-pf-icon-bordered list-pf-icon-small" [src]="item.client | synIconPath">
-            <span *ngIf="item.client.icon.startsWith('fa-')" class="fa {{ item.client.icon }} list-pf-icon list-pf-icon-bordered list-pf-icon-small"></span>
-          </div>
-          <div class="list-pf-content-wrapper">
-            <div class="list-pf-main-content">
-              <div class="list-pf-title">
-                {{ item.client.name }}
-              </div>
-              <div class="list-pf-description">
-                <ng-container *ngIf="!isConfigured(item)">
-                  <i>Client ID and client secret not configured.</i>
-                </ng-container>
-              </div>
-
+        <div class="list-pf-content-wrapper">
+          <div class="list-pf-main-content">
+            <div class="list-pf-title">
+              {{ item.client.name }}
             </div>
+            <div class="list-pf-description">
+              <ng-container *ngIf="!isConfigured(item)">
+                <i>Client ID and client secret not configured.</i>
+              </ng-container>
+            </div>
+
           </div>
         </div>
-      </ng-template>
+      </div>
+    </ng-template>
 
-      <!-- list item actions -->
-      <ng-template #actions
-                   let-item="item">
-        <div class="list-pf-actions">
-          <button *ngIf="!item.expanded"
-                  class="btn btn-default"
-                  (click)="item.expanded = !item.expanded">
-                  <ng-container *ngIf="!isConfigured(item)">Register</ng-container>
-                  <ng-container *ngIf="isConfigured(item)">Edit</ng-container>
-                </button>
-          <button class="btn btn-default"
-                  *ngIf="isConfigured(item)"
-                  (click)="item.expanded = false; modal.show(item)">Remove</button>
-        </div>
-      </ng-template>
+    <!-- list item actions -->
+    <ng-template #actions
+                  let-item="item">
+      <div class="list-pf-actions">
+        <button *ngIf="!item.expanded"
+                class="btn btn-default"
+                (click)="item.expanded = !item.expanded">
+                <ng-container *ngIf="!isConfigured(item)">Register</ng-container>
+                <ng-container *ngIf="isConfigured(item)">Edit</ng-container>
+              </button>
+        <button class="btn btn-default"
+                *ngIf="isConfigured(item)"
+                (click)="item.expanded = false; modal.show(item)">Remove</button>
+      </div>
+    </ng-template>
 
-      <!-- list item's expansion -->
-      <ng-template #listItemExpansion
-                   let-item="item">
-        <div *ngIf="item.expanded">
-          <syndesis-oauth-app-form [item]="item"></syndesis-oauth-app-form>
-        </div>
-      </ng-template>
-
+    <!-- list item's expansion -->
+    <ng-template #listItemExpansion
+                  let-item="item">
+      <div *ngIf="item.expanded">
+        <syndesis-oauth-app-form [item]="item"></syndesis-oauth-app-form>
+      </div>
+    </ng-template>
   </div>
 </div>

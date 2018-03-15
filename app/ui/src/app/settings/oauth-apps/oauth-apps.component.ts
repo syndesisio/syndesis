@@ -66,6 +66,8 @@ export class OAuthAppsComponent implements OnInit {
 
   items: Array<OAuthAppListItem> = [];
 
+  callbackURL: string;
+
   constructor(
     public store: OAuthAppStore,
     public config: ConfigService
@@ -118,5 +120,6 @@ export class OAuthAppsComponent implements OnInit {
       }
     });
     this.store.loadAll();
+    this.callbackURL = window.location.protocol + '//' + window.location.hostname + '/api/v1/credentials/callback';
   }
 }
