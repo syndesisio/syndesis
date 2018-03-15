@@ -24,14 +24,6 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
     </h1>
     <dl class="dl-horizontal">
       <dt>
-        Tags:
-      </dt>
-      <dd>
-        <syndesis-editable-tags [value]="connection.tags"
-                                placeholder="No tags set..."
-                                (onSave)="onAttributeUpdated('tags', $event)"></syndesis-editable-tags>
-      </dd>
-      <dt>
         Description:
       </dt>
       <dd>
