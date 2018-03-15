@@ -68,6 +68,9 @@
     }
   },
   "defaults": {
-    "styleExt": "scss"
+    "styleExt": "scss",
+    "build": {
+          "showCircularDependencies": false
+        }
   }
 }
