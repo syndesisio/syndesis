@@ -93,7 +93,7 @@
       "defaultValue": "false",
       "deprecated": false,
       "secret": false,
-      "labelHint": "For convenience in only development environments. Ensure certificate checks are enabled for secure production environments.",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
       "order": "5"
     },
     "brokerCertificate": {
