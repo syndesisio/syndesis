@@ -92,6 +92,13 @@
   @include syn-scrollable-body;
 }
 
+.syn-nowrap {
+  &,
+  > td {
+    white-space: nowrap;
+  }
+}
+
 .syn-drop-zone {
   border: 2px dashed $color-pf-black-300;
   padding: $gutter;
