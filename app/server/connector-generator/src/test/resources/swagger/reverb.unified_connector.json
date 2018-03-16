@@ -6,7 +6,7 @@
   "description": "reverb",
   "actions": [
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-61",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-61",
       "name": "GET /articles",
       "description": "Send GET request to /articles",
       "descriptor": {
@@ -41,7 +41,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-7",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-7",
       "name": "Full taxonomy tree of categories including middle categories",
       "description": "Full taxonomy tree of categories including middle categories",
       "descriptor": {
@@ -76,7 +76,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-5",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-5",
       "name": "GET /categories/flat",
       "description": "Send GET request to /categories/flat",
       "descriptor": {
@@ -111,7 +111,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-6",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-6",
       "name": "Get category details",
       "description": "Get category details",
       "descriptor": {
@@ -146,7 +146,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-8",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-8",
       "name": "Get subcategory details",
       "description": "Get subcategory details",
       "descriptor": {
@@ -181,7 +181,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-4",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-4",
       "name": "List of supported product categories",
       "description": "List of supported product categories",
       "descriptor": {
@@ -216,7 +216,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-68",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-68",
       "name": "GET /comparison_shopping_pages/{id}",
       "description": "Send GET request to /comparison_shopping_pages/{id}",
       "descriptor": {
@@ -251,7 +251,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-69",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-69",
       "name": "Return new or used listings for a comparison shopping page",
       "description": "Return new or used listings for a comparison shopping page",
       "descriptor": {
@@ -286,7 +286,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-66",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-66",
       "name": "Returns a set of comparison shopping pages based on the current params",
       "description": "Returns a set of comparison shopping pages based on the current params",
       "descriptor": {
@@ -321,7 +321,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-67",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-67",
       "name": "Show comparison shopping page",
       "description": "Show comparison shopping page",
       "descriptor": {
@@ -356,7 +356,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-70",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-70",
       "name": "View reviews of a comparison shopping page",
       "description": "View reviews of a comparison shopping page",
       "descriptor": {
@@ -391,7 +391,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-39",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-39",
       "name": "Make an offer to the other participant in the conversation",
       "description": "Make an offer to the other participant in the conversation",
       "descriptor": {
@@ -426,7 +426,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-151",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-151",
       "name": "Retrieve a list of country codes with corresponding subregions",
       "description": "Retrieve a list of country codes with corresponding subregions",
       "descriptor": {
@@ -461,7 +461,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-38",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-38",
       "name": "GET /curated_sets/{slug}",
       "description": "Send GET request to /curated_sets/{slug}",
       "descriptor": {
@@ -496,7 +496,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-72",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-72",
       "name": "List of supported display currencies for browsing listings",
       "description": "List of supported display currencies for browsing listings",
       "descriptor": {
@@ -531,7 +531,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-71",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-71",
       "name": "List of supported listing currencies for shops",
       "description": "List of supported listing currencies for shops",
       "descriptor": {
@@ -566,7 +566,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-46",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-46",
       "name": "Feedback details",
       "description": "Feedback details",
       "descriptor": {
@@ -601,7 +601,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-9",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-9",
       "name": "Get results from a handpicked collection",
       "description": "Get results from a handpicked collection",
       "descriptor": {
@@ -636,7 +636,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-65",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-65",
       "name": "List of supported product conditions",
       "description": "List of supported product conditions",
       "descriptor": {
@@ -671,7 +671,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-19",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-19",
       "name": "All listings including used, handmade, and brand new",
       "description": "All listings including used, handmade, and brand new",
       "descriptor": {
@@ -706,7 +706,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-18",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-18",
       "name": "Bump a listing",
       "description": "Bump a listing",
       "descriptor": {
@@ -741,7 +741,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-11",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-11",
       "name": "Create a listing",
       "description": "Create a listing",
       "descriptor": {
@@ -776,7 +776,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-24",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-24",
       "name": "Create a review for a listing",
       "description": "Create a review for a listing",
       "descriptor": {
@@ -811,7 +811,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-10",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-10",
       "name": "Default search of listings includes only used & handmade. Add a filter to view all listings or use the /listings/all endpoint.",
       "description": "Default search of listings includes only used & handmade. Add a filter to view all listings or use the /listings/all endpoint.",
       "descriptor": {
@@ -846,7 +846,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-22",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-22",
       "name": "Delete a draft listing. Cannot be used on non-drafts.",
       "description": "Delete a draft listing. Cannot be used on non-drafts.",
       "descriptor": {
@@ -881,7 +881,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-15",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-15",
       "name": "Delete an image from a listing",
       "description": "Delete an image from a listing",
       "descriptor": {
@@ -916,7 +916,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-26",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-26",
       "name": "Edit listing.",
       "description": "Edit listing.",
       "descriptor": {
@@ -951,7 +951,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-16",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-16",
       "name": "Find a product bundle attached to a listing",
       "description": "Find a product bundle attached to a listing",
       "descriptor": {
@@ -986,7 +986,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-25",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-25",
       "name": "Flag a listing for inappropriate content or fraud",
       "description": "Flag a listing for inappropriate content or fraud",
       "descriptor": {
@@ -1021,7 +1021,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-28",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-28",
       "name": "Individual facets",
       "description": "Individual facets",
       "descriptor": {
@@ -1056,7 +1056,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-20",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-20",
       "name": "Listing details",
       "description": "Listing details",
       "descriptor": {
@@ -1091,7 +1091,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-27",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-27",
       "name": "Listing details",
       "description": "Listing details",
       "descriptor": {
@@ -1126,7 +1126,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-29",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-29",
       "name": "Make an offer to the seller of a listing",
       "description": "Make an offer to the seller of a listing",
       "descriptor": {
@@ -1161,7 +1161,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-30",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-30",
       "name": "Returns the latest negotiation for the requesting user given a listing id",
       "description": "Returns the latest negotiation for the requesting user given a listing id",
       "descriptor": {
@@ -1196,7 +1196,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-13",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-13",
       "name": "See all sales that include a listing.",
       "description": "See all sales that include a listing.",
       "descriptor": {
@@ -1231,7 +1231,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-12",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-12",
       "name": "Start a conversation with a seller",
       "description": "Start a conversation with a seller",
       "descriptor": {
@@ -1266,7 +1266,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-21",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-21",
       "name": "Update a listing",
       "description": "Update a listing",
       "descriptor": {
@@ -1301,7 +1301,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-17",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-17",
       "name": "View available bump tiers and stats for a listing",
       "description": "View available bump tiers and stats for a listing",
       "descriptor": {
@@ -1336,7 +1336,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-23",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-23",
       "name": "View reviews of a listing",
       "description": "View reviews of a listing",
       "descriptor": {
@@ -1371,7 +1371,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-14",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-14",
       "name": "View the images associated with a particular listing",
       "description": "View the images associated with a particular listing",
       "descriptor": {
@@ -1406,7 +1406,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-104",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-104",
       "name": "Accept an offer",
       "description": "Accept an offer",
       "descriptor": {
@@ -1441,7 +1441,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-109",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-109",
       "name": "Add a listing to your wishlist",
       "description": "Add a listing to your wishlist",
       "descriptor": {
@@ -1476,7 +1476,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-106",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-106",
       "name": "Counter an offer",
       "description": "Counter an offer",
       "descriptor": {
@@ -1511,7 +1511,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-144",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-144",
       "name": "Create a new address in your address book",
       "description": "Create a new address in your address book",
       "descriptor": {
@@ -1546,7 +1546,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-95",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-95",
       "name": "DELETE /my/curated_set/product/{product_id}",
       "description": "Send DELETE request to /my/curated_set/product/{product_id}",
       "descriptor": {
@@ -1581,7 +1581,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-126",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-126",
       "name": "DELETE /my/follows/{follow_id}/alert",
       "description": "Send DELETE request to /my/follows/{follow_id}/alert",
       "descriptor": {
@@ -1616,7 +1616,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-107",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-107",
       "name": "Decline an offer",
       "description": "Decline an offer",
       "descriptor": {
@@ -1651,7 +1651,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-127",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-127",
       "name": "Delete a follow",
       "description": "Delete a follow",
       "descriptor": {
@@ -1686,7 +1686,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-146",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-146",
       "name": "Delete an existing address in your address book",
       "description": "Delete an existing address in your address book",
       "descriptor": {
@@ -1721,7 +1721,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-99",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-99",
       "name": "Display conversation details with messages in natural time order (oldest to newest)",
       "description": "Display conversation details with messages in natural time order (oldest to newest)",
       "descriptor": {
@@ -1756,7 +1756,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-89",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-89",
       "name": "End a listing",
       "description": "End a listing",
       "descriptor": {
@@ -1791,7 +1791,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-136",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-136",
       "name": "Follow a brand",
       "description": "Follow a brand",
       "descriptor": {
@@ -1826,7 +1826,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-114",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-114",
       "name": "Follow a category",
       "description": "Follow a category",
       "descriptor": {
@@ -1861,7 +1861,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-133",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-133",
       "name": "Follow a collection",
       "description": "Follow a collection",
       "descriptor": {
@@ -1896,7 +1896,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-120",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-120",
       "name": "Follow a handpicked collection",
       "description": "Follow a handpicked collection",
       "descriptor": {
@@ -1931,7 +1931,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-129",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-129",
       "name": "Follow a search",
       "description": "Follow a search",
       "descriptor": {
@@ -1966,7 +1966,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-123",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-123",
       "name": "Follow a shop",
       "description": "Follow a shop",
       "descriptor": {
@@ -2001,7 +2001,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-117",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-117",
       "name": "Follow a subcategory",
       "description": "Follow a subcategory",
       "descriptor": {
@@ -2036,7 +2036,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-135",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-135",
       "name": "Follow status for a brand",
       "description": "Follow status for a brand",
       "descriptor": {
@@ -2071,7 +2071,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-113",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-113",
       "name": "Follow status for a category",
       "description": "Follow status for a category",
       "descriptor": {
@@ -2106,7 +2106,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-132",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-132",
       "name": "Follow status for a collection",
       "description": "Follow status for a collection",
       "descriptor": {
@@ -2141,7 +2141,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-119",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-119",
       "name": "Follow status for a handpicked collection",
       "description": "Follow status for a handpicked collection",
       "descriptor": {
@@ -2176,7 +2176,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-128",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-128",
       "name": "Follow status for a search",
       "description": "Follow status for a search",
       "descriptor": {
@@ -2211,7 +2211,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-122",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-122",
       "name": "Follow status for a shop",
       "description": "Follow status for a shop",
       "descriptor": {
@@ -2246,7 +2246,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-116",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-116",
       "name": "Follow status for a subcategory",
       "description": "Follow status for a subcategory",
       "descriptor": {
@@ -2281,7 +2281,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-103",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-103",
       "name": "Get a list of active negotiations as a buyer",
       "description": "Get a list of active negotiations as a buyer",
       "descriptor": {
@@ -2316,7 +2316,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-88",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-88",
       "name": "Get a list of active negotiations as a seller",
       "description": "Get a list of active negotiations as a seller",
       "descriptor": {
@@ -2351,7 +2351,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-147",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-147",
       "name": "Get a list of payouts",
       "description": "Get a list of payouts",
       "descriptor": {
@@ -2386,7 +2386,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-92",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-92",
       "name": "Get a list of refund requests as a seller",
       "description": "Get a list of refund requests as a seller",
       "descriptor": {
@@ -2421,7 +2421,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-108",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-108",
       "name": "Get a list of wishlisted items",
       "description": "Get a list of wishlisted items",
       "descriptor": {
@@ -2456,7 +2456,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-96",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-96",
       "name": "Get a list of your conversations",
       "description": "Get a list of your conversations",
       "descriptor": {
@@ -2491,7 +2491,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-111",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-111",
       "name": "Get a list of your lists (wishlist, watch list, etc)",
       "description": "Get a list of your lists (wishlist, watch list, etc)",
       "descriptor": {
@@ -2526,7 +2526,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-141",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-141",
       "name": "Get a list of your recently viewed listings.",
       "description": "Get a list of your recently viewed listings.",
       "descriptor": {
@@ -2561,7 +2561,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-149",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-149",
       "name": "Get account details",
       "description": "Get account details",
       "descriptor": {
@@ -2596,7 +2596,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-74",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-74",
       "name": "Get all seller orders, newest first.",
       "description": "Get all seller orders, newest first.",
       "descriptor": {
@@ -2631,7 +2631,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-138",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-138",
       "name": "Get listings from your feed",
       "description": "Get listings from your feed",
       "descriptor": {
@@ -2666,7 +2666,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-105",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-105",
       "name": "Get offer details",
       "description": "Get offer details",
       "descriptor": {
@@ -2701,7 +2701,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-91",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-91",
       "name": "Get payment",
       "description": "Get payment",
       "descriptor": {
@@ -2736,7 +2736,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-90",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-90",
       "name": "Get payments",
       "description": "Get payments",
       "descriptor": {
@@ -2771,7 +2771,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-77",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-77",
       "name": "Get seller orders awaiting shipment, newest first.",
       "description": "Get seller orders awaiting shipment, newest first.",
       "descriptor": {
@@ -2806,7 +2806,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-76",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-76",
       "name": "Get unpaid seller orders, newest first.",
       "description": "Get unpaid seller orders, newest first.",
       "descriptor": {
@@ -2841,7 +2841,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-142",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-142",
       "name": "Get your actionable status counts",
       "description": "Get your actionable status counts",
       "descriptor": {
@@ -2876,7 +2876,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-75",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-75",
       "name": "Initiate a refund for a sold order",
       "description": "Initiate a refund for a sold order",
       "descriptor": {
@@ -2911,7 +2911,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-73",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-73",
       "name": "List of orders that need feedback",
       "description": "List of orders that need feedback",
       "descriptor": {
@@ -2946,7 +2946,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-102",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-102",
       "name": "List of received feedback",
       "description": "List of received feedback",
       "descriptor": {
@@ -2981,7 +2981,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-101",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-101",
       "name": "List of sent feedback",
       "description": "List of sent feedback",
       "descriptor": {
@@ -3016,7 +3016,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-100",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-100",
       "name": "Mark a conversation read/unread",
       "description": "Mark a conversation read/unread",
       "descriptor": {
@@ -3051,7 +3051,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-80",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-80",
       "name": "Marks an order as picked up",
       "description": "Marks an order as picked up",
       "descriptor": {
@@ -3086,7 +3086,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-85",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-85",
       "name": "Marks an order as received by the buyer",
       "description": "Marks an order as received by the buyer",
       "descriptor": {
@@ -3121,7 +3121,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-79",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-79",
       "name": "Marks an order as shipped",
       "description": "Marks an order as shipped",
       "descriptor": {
@@ -3156,7 +3156,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-94",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-94",
       "name": "POST /my/curated_set/product/{product_id}",
       "description": "Send POST request to /my/curated_set/product/{product_id}",
       "descriptor": {
@@ -3191,7 +3191,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-125",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-125",
       "name": "POST /my/follows/{follow_id}/alert",
       "description": "Send POST request to /my/follows/{follow_id}/alert",
       "descriptor": {
@@ -3226,7 +3226,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-148",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-148",
       "name": "Read the line items of a payout",
       "description": "Read the line items of a payout",
       "descriptor": {
@@ -3261,7 +3261,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-110",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-110",
       "name": "Remove a listing from your wishlist",
       "description": "Remove a listing from your wishlist",
       "descriptor": {
@@ -3296,7 +3296,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-86",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-86",
       "name": "Retrieve a list of live listings for the seller. To search all listings specify state=all",
       "description": "Retrieve a list of live listings for the seller. To search all listings specify state=all",
       "descriptor": {
@@ -3331,7 +3331,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-87",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-87",
       "name": "Retrieve a list your draft listings",
       "description": "Retrieve a list your draft listings",
       "descriptor": {
@@ -3366,7 +3366,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-130",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-130",
       "name": "Returns a user's ArticleCategoryFollows",
       "description": "Returns a user's ArticleCategoryFollows",
       "descriptor": {
@@ -3401,7 +3401,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-82",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-82",
       "name": "Returns all orders, newest first.",
       "description": "Returns all orders, newest first.",
       "descriptor": {
@@ -3436,7 +3436,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-84",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-84",
       "name": "Returns order details for a buyer",
       "description": "Returns order details for a buyer",
       "descriptor": {
@@ -3471,7 +3471,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-78",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-78",
       "name": "Returns order details for a seller",
       "description": "Returns order details for a seller",
       "descriptor": {
@@ -3506,7 +3506,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-83",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-83",
       "name": "Returns unpaid orders, newest first.",
       "description": "Returns unpaid orders, newest first.",
       "descriptor": {
@@ -3541,7 +3541,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-143",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-143",
       "name": "See all addresses in your address book",
       "description": "See all addresses in your address book",
       "descriptor": {
@@ -3576,7 +3576,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-81",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-81",
       "name": "See previous orders from buyer",
       "description": "See previous orders from buyer",
       "descriptor": {
@@ -3611,7 +3611,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-112",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-112",
       "name": "See what the user is following",
       "description": "See what the user is following",
       "descriptor": {
@@ -3646,7 +3646,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-98",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-98",
       "name": "Send a message",
       "description": "Send a message",
       "descriptor": {
@@ -3681,7 +3681,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-131",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-131",
       "name": "Set a user's ArticleCategoryFollows",
       "description": "Set a user's ArticleCategoryFollows",
       "descriptor": {
@@ -3716,7 +3716,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-97",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-97",
       "name": "Start a conversation",
       "description": "Start a conversation",
       "descriptor": {
@@ -3751,7 +3751,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-137",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-137",
       "name": "Unfollow a brand",
       "description": "Unfollow a brand",
       "descriptor": {
@@ -3786,7 +3786,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-115",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-115",
       "name": "Unfollow a category",
       "description": "Unfollow a category",
       "descriptor": {
@@ -3821,7 +3821,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-134",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-134",
       "name": "Unfollow a collection",
       "description": "Unfollow a collection",
       "descriptor": {
@@ -3856,7 +3856,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-121",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-121",
       "name": "Unfollow a handpicked collection",
       "description": "Unfollow a handpicked collection",
       "descriptor": {
@@ -3891,7 +3891,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-124",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-124",
       "name": "Unfollow a shop",
       "description": "Unfollow a shop",
       "descriptor": {
@@ -3926,7 +3926,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-118",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-118",
       "name": "Unfollow a subcategory",
       "description": "Unfollow a subcategory",
       "descriptor": {
@@ -3961,7 +3961,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-93",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-93",
       "name": "Update a refund request for a sold order",
       "description": "Update a refund request for a sold order",
       "descriptor": {
@@ -3996,7 +3996,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-150",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-150",
       "name": "Update account details",
       "description": "Update account details",
       "descriptor": {
@@ -4031,7 +4031,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-145",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-145",
       "name": "Update an existing address in your address book",
       "description": "Update an existing address in your address book",
       "descriptor": {
@@ -4066,7 +4066,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-139",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-139",
       "name": "get your feed",
       "description": "get your feed",
       "descriptor": {
@@ -4101,7 +4101,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-140",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-140",
       "name": "get your feed customization options",
       "description": "get your feed customization options",
       "descriptor": {
@@ -4136,7 +4136,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-3",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-3",
       "name": "Add feedback about an order's buyer",
       "description": "Add feedback about an order's buyer",
       "descriptor": {
@@ -4171,7 +4171,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-1",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-1",
       "name": "Add feedback about an order's seller",
       "description": "Add feedback about an order's seller",
       "descriptor": {
@@ -4206,7 +4206,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-2",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-2",
       "name": "Feedback details for an order's buyer",
       "description": "Feedback details for an order's buyer",
       "descriptor": {
@@ -4241,7 +4241,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-0",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-0",
       "name": "Feedback details for an order's seller",
       "description": "Feedback details for an order's seller",
       "descriptor": {
@@ -4276,7 +4276,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-64",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-64",
       "name": "Get list of payment methods",
       "description": "Get list of payment methods",
       "descriptor": {
@@ -4311,7 +4311,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-41",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-41",
       "name": "Get a list of paginated transactions for a price guide.",
       "description": "Get a list of paginated transactions for a price guide.",
       "descriptor": {
@@ -4346,7 +4346,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-42",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-42",
       "name": "Get a summary of transactions for a given price guide",
       "description": "Get a summary of transactions for a given price guide",
       "descriptor": {
@@ -4381,7 +4381,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-40",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-40",
       "name": "Retrieve a Price Guide",
       "description": "Retrieve a Price Guide",
       "descriptor": {
@@ -4416,7 +4416,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-55",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-55",
       "name": "Create a review for a product",
       "description": "Create a review for a product",
       "descriptor": {
@@ -4451,7 +4451,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-53",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-53",
       "name": "Update a review",
       "description": "Update a review",
       "descriptor": {
@@ -4486,7 +4486,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-52",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-52",
       "name": "View a review",
       "description": "View a review",
       "descriptor": {
@@ -4521,7 +4521,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-54",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-54",
       "name": "View reviews of a comparison shopping page",
       "description": "View reviews of a comparison shopping page",
       "descriptor": {
@@ -4556,7 +4556,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-59",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-59",
       "name": "Add listings to a sale",
       "description": "Add listings to a sale",
       "descriptor": {
@@ -4591,7 +4591,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-57",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-57",
       "name": "GET /sales/{slug}",
       "description": "Send GET request to /sales/{slug}",
       "descriptor": {
@@ -4626,7 +4626,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-60",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-60",
       "name": "Remove a listing from a sale",
       "description": "Remove a listing from a sale",
       "descriptor": {
@@ -4661,7 +4661,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-56",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-56",
       "name": "View upcoming and live Reverb official sales.",
       "description": "View upcoming and live Reverb official sales.",
       "descriptor": {
@@ -4696,7 +4696,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-58",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-58",
       "name": "View your created sales.",
       "description": "View your created sales.",
       "descriptor": {
@@ -4731,7 +4731,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-62",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-62",
       "name": "GET /shipping/regions",
       "description": "Send GET request to /shipping/regions",
       "descriptor": {
@@ -4766,7 +4766,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-63",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-63",
       "name": "List of supported shipping providers",
       "description": "List of supported shipping providers",
       "descriptor": {
@@ -4801,7 +4801,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-37",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-37",
       "name": "Disable vacation mode. All listings will be re-enabled.",
       "description": "Disable vacation mode. All listings will be re-enabled.",
       "descriptor": {
@@ -4836,7 +4836,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-36",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-36",
       "name": "Enable vacation mode. All listings will be unavailable until vacation mode is turned off.",
       "description": "Enable vacation mode. All listings will be unavailable until vacation mode is turned off.",
       "descriptor": {
@@ -4871,7 +4871,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-33",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-33",
       "name": "Get accepted payment methods",
       "description": "Get accepted payment methods",
       "descriptor": {
@@ -4906,7 +4906,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-31",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-31",
       "name": "Get your own shop details",
       "description": "Get your own shop details",
       "descriptor": {
@@ -4941,7 +4941,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-34",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-34",
       "name": "List of supported product conditions",
       "description": "List of supported product conditions",
       "descriptor": {
@@ -4976,7 +4976,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-35",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-35",
       "name": "Returns shop vacation status",
       "description": "Returns shop vacation status",
       "descriptor": {
@@ -5011,7 +5011,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-32",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-32",
       "name": "Update your shop profile",
       "description": "Update your shop profile",
       "descriptor": {
@@ -5046,7 +5046,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-47",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-47",
       "name": "Get details on a shop.",
       "description": "Get details on a shop.",
       "descriptor": {
@@ -5081,7 +5081,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-48",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-48",
       "name": "Get seller's feedback",
       "description": "Get seller's feedback",
       "descriptor": {
@@ -5116,7 +5116,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-50",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-50",
       "name": "Get seller's feedback as a buyer",
       "description": "Get seller's feedback as a buyer",
       "descriptor": {
@@ -5151,7 +5151,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-49",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-49",
       "name": "Get seller's feedback as a seller",
       "description": "Get seller's feedback as a seller",
       "descriptor": {
@@ -5186,7 +5186,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-51",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-51",
       "name": "List of shipping profiles for your shop",
       "description": "List of shipping profiles for your shop",
       "descriptor": {
@@ -5221,7 +5221,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-43",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-43",
       "name": "A list of wanted items by the user",
       "description": "A list of wanted items by the user",
       "descriptor": {
@@ -5256,7 +5256,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-44",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-44",
       "name": "Mark an item wanted. Returns 200 on success or 422 on failure.",
       "description": "Mark an item wanted. Returns 200 on success or 422 on failure.",
       "descriptor": {
@@ -5291,7 +5291,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-45",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-45",
       "name": "Unmark an item wanted.",
       "description": "Unmark an item wanted.",
       "descriptor": {
@@ -5326,7 +5326,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-154",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-154",
       "name": "Get details of a webhook registration",
       "description": "Get details of a webhook registration",
       "descriptor": {
@@ -5361,7 +5361,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-152",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-152",
       "name": "Get webhook registrations",
       "description": "Get webhook registrations",
       "descriptor": {
@@ -5396,7 +5396,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-153",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-153",
       "name": "Register a webhook",
       "description": "Register a webhook",
       "descriptor": {
@@ -5431,7 +5431,7 @@
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:operation-155",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-155",
       "name": "Remove a webhook",
       "description": "Remove a webhook",
       "descriptor": {

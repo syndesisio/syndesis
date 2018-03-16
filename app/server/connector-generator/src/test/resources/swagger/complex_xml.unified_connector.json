@@ -7,12 +7,12 @@
   "description": "unspecified",
   "actions": [
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:complexOperation",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:complexOperation",
       "name": "POST /complex/{pathParam}",
       "description": "Send POST request to /complex/{pathParam}",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -31,7 +31,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"

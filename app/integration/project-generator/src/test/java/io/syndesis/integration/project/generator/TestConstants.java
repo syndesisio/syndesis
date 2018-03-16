@@ -25,7 +25,7 @@ import io.syndesis.common.model.connection.Connector;
 
 final class TestConstants {
 
-    protected static final String SYNDESIS_CONNECTORS_VERSION;
+    protected static final String SYNDESIS_VERSION;
     protected static final String CAMEL_VERSION;
     protected static final ConnectorAction PERIODIC_TIMER_ACTION;
     protected static final Connector TIMER_CONNECTOR;
@@ -36,7 +36,7 @@ final class TestConstants {
     protected static final Connector TWITTER_CONNECTOR;
 
     static {
-        SYNDESIS_CONNECTORS_VERSION = ResourceBundle.getBundle("test").getString("syndesis-connectors.version");
+        SYNDESIS_VERSION = ResourceBundle.getBundle("test").getString("syndesis.version");
         CAMEL_VERSION = ResourceBundle.getBundle("test").getString("camel.version");
 
         PERIODIC_TIMER_ACTION = new ConnectorAction.Builder()
@@ -44,7 +44,7 @@ final class TestConstants {
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("timer")
                 .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-timer:" + SYNDESIS_CONNECTORS_VERSION)
+                .camelConnectorGAV("io.syndesis.connector:connector-timer:" + SYNDESIS_VERSION)
                 .build())
             .build();
 
@@ -66,7 +66,7 @@ final class TestConstants {
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-http-get:" + SYNDESIS_CONNECTORS_VERSION)
+                .camelConnectorGAV("io.syndesis.connector:connector-http-get:" + SYNDESIS_VERSION)
                 .build())
             .build();
 
@@ -76,7 +76,7 @@ final class TestConstants {
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
                 .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-http-post:" + SYNDESIS_CONNECTORS_VERSION)
+                .camelConnectorGAV("io.syndesis.connector:connector-http-post:" + SYNDESIS_VERSION)
                 .build())
             .build();
 
@@ -150,7 +150,7 @@ final class TestConstants {
                     .secret(true)
                     .build())
             .componentScheme("twitter")
-            .addDependency(Dependency.maven("io.syndesis.integration:integration-component-proxy:" + SYNDESIS_CONNECTORS_VERSION))
+            .addDependency(Dependency.maven("io.syndesis.integration:integration-component-proxy:" + SYNDESIS_VERSION))
             .addDependency(Dependency.maven("org.apache.camel:camel-twitter:" + CAMEL_VERSION))
             .addAction(TWITTER_MENTION_ACTION)
             .build();

@@ -14,8 +14,7 @@
   <properties>
     <spring-boot.version>@spring-boot.version@</spring-boot.version>
     <camel.version>@camel.version@</camel.version>
-    <syndesis-integration-runtime.version>@syndesis-integration-runtime.version@</syndesis-integration-runtime.version>
-    <syndesis-connectors.version>@syndesis-connectors.version@</syndesis-connectors.version>
+    <syndesis.version>@project.version@</syndesis.version>
   </properties>
 
   <dependencyManagement>
@@ -42,7 +41,7 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-verify</artifactId>
-      <version>${syndesis-connectors.version}</version>
+      <version>${syndesis.version}</version>
     </dependency>
 
     <!-- connectors -->
