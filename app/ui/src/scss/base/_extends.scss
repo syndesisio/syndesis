@@ -13,3 +13,8 @@
   margin-top: $button-top-gutter;
   min-width: $button-min-width;
 }
+
+%reset-padmargins {
+  margin: 0;
+  padding: 0;
+}

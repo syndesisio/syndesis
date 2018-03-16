@@ -20,6 +20,23 @@
   }
 }
 
+.integration-step {
+  &__output {
+    @extend %reset-padmargins;
+    background-color: $color-pf-black-100;
+
+    &-log {
+      @extend %reset-padmargins;
+      padding: 5px;
+      border: 0;
+      white-space: pre-wrap;
+      height: 15em;
+      overflow: scroll;
+      word-wrap: break-word;
+    }
+  }
+}
+
 // Patternfly overrides
 .list-group-item-container {
   .table {
@@ -29,21 +46,4 @@
 
 .list-view-pf-expand {
   margin-top: 15px;
-}
-
-.nowrap {
-  white-space: nowrap
-}
-.step-output {
-  padding: 0;
-  background-color: #fafafa;
-}
-.step-output pre {
-  margin:0; border:0;
-}
-.step-output .scrollable {
-  max-height: 15em;
-  margin: 0;
-  padding: 0;
-  overflow: auto;
 }

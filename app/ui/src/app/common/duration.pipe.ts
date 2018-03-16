@@ -8,17 +8,21 @@ import { moment } from '@syndesis/ui/vendor';
   name: 'synDuration'
 })
 export class DurationPipe implements PipeTransform {
-  transform(milliseconds: number): string {
-    if (!milliseconds) {
+  transform(timeDuration: number, unit: 'ms'|'ns'): string {
+    if (!timeDuration) {
       return 'NaN';
     }
 
-    const durationMoment = moment.duration(milliseconds);
+    if (unit === 'ns') {
+      timeDuration = timeDuration / 1000000;
+    }
+
+    const durationMoment = moment.duration(timeDuration);
     const days = Math.floor(durationMoment.days());
     const hours = Math.floor(durationMoment.hours());
     const minutes = Math.floor(durationMoment.minutes());
     const seconds = Math.floor(durationMoment.seconds());
-    const ms = Math.floor(durationMoment.milliseconds());
+    const milliseconds = Math.floor(durationMoment.milliseconds());
 
     const durationStrings = [];
     if (days > 0) {
@@ -34,12 +38,13 @@ export class DurationPipe implements PipeTransform {
       durationStrings.push(`${seconds} seconds`);
     }
     if (durationStrings.length == 0) {
-      if (ms > 0) {
-        durationStrings.push(`${ms} ms`);
-      } else if (milliseconds != 0) {
-        durationStrings.push(`${milliseconds.toFixed(2)} ms`);
+      if (milliseconds > 0) {
+        durationStrings.push(`${milliseconds} ms`);
+      } else if (timeDuration != 0) {
+        durationStrings.push(`${timeDuration.toFixed(2)} ms`);
       }
     }
+
     return durationStrings.join(', ').trim();
   }
 }

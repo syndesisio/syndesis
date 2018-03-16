@@ -10,9 +10,7 @@
 </syndesis-validation-error>
 
 <div class="list-group list-view-pf list-view-pf-view">
-  <div class="list-group-item"
-    *ngFor="let activity of activities"
-    [class.list-view-pf-expand-active]="activity.id == selectedActivity?.id">
+  <div class="list-group-item" *ngFor="let activity of activities" [class.list-view-pf-expand-active]="activity.id == selectedActivity?.id">
     <div class="list-group-item-header" (click)="onSelectActivity($event, activity)">
       <div class="list-view-pf-expand" [class.active]="activity.id == selectedActivity?.id">
         <span class="fa fa-angle-right" [class.fa-angle-down]="activity.id == selectedActivity?.id"></span>
@@ -49,7 +47,7 @@
         <span class="pficon pficon-close"></span>
       </div>
       <div class="row">
-        <div class="col-md-11">
+        <div class="col-md-12">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -61,16 +59,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let step of activity.steps">
-                <td class="nowrap">{{ step.name }}</td>
-                <td class="nowrap">{{ step.at | date:'medium' }}</td>
-                <td class="nowrap">{{ step.duration / 1000000 | synDuration }}</td>
-                <td class="nowrap" *ngIf="step.isFailed">
+              <tr *ngFor="let step of activity.steps" class="syn-nowrap integration-step">
+                <td>{{ step.name }}</td>
+                <td>{{ step.at | date:'medium' }}</td>
+                <td>{{ step.duration | synDuration:'ns' }}</td>
+                <td *ngIf="step.isFailed">
                   <i class="pficon pficon-error-circle-o"></i> Error</td>
-                <td class="nowrap" *ngIf="!step.isFailed">
+                <td *ngIf="!step.isFailed">
                   <i class="pficon pficon-ok"></i> Success</td>
-                <td *ngIf='step.output' class="step-output"><div class="scrollable"><pre>{{ step.output }}</pre></div></td>
-                <td class="nowrap" *ngIf='!step.output'>No output</td>
+                <td *ngIf='step.output' class="integration-step__output">
+                  <pre class="integration-step__output-log">{{ step.output }}</pre>
+                </td>
+                <td *ngIf='!step.output'>
+                  No output
+                </td>
               </tr>
             </tbody>
           </table>
