@@ -2,7 +2,11 @@ import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/co
 import { Router } from '@angular/router';
 
 import {
-  Integration, Integrations, IntegrationOverviews, IntegrationSupportService, IntegrationOverview
+  Integration,
+  Integrations,
+  IntegrationOverview,
+  IntegrationOverviews,
+  IntegrationSupportService
 } from '@syndesis/ui/platform';
 import { FileError, IntegrationImportsData } from './integration-import.models';
 import { Observable } from 'rxjs/Observable';
@@ -24,7 +28,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   error: FileError;
   importing = false;
   uploader: FileUploader;
-  hasBaseDropZoneOver: boolean;
+  importTypeIsDragDrop: boolean;
   response: IntegrationImportsData;
   integrations: Array<IntegrationOverview>;
   integrationOverviews$: Observable<IntegrationOverviews>;
@@ -50,15 +54,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     }
   }
 
-  getFileTypeError() {
-    return {
-      level: 'alert alert-danger',
-      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
-    };
-  }
-
   onFileOver(e) {
-    this.hasBaseDropZoneOver = e;
+    this.importTypeIsDragDrop = e;
   }
 
   ngOnInit() {
@@ -102,6 +99,17 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     if (this.integrationOverviewsSubscription) {
       this.integrationOverviewsSubscription.unsubscribe();
     }
+  }
+
+  private checkIfSingleOrMultiple(): void {
+    // Do something here
+  }
+
+  private getFileTypeError() {
+    return {
+      level: 'alert alert-danger',
+      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
+    };
   }
 
   private redirectBack(): void {

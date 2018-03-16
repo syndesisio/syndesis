@@ -12,7 +12,7 @@
       <div class="syn-drop-zone"
            ng2FileDrop
            [uploader]="uploader"
-           [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
+           [ngClass]="{'syn-drop-zone--hover': importTypeIsDragDrop}"
            (fileOver)="onFileOver($event)">
         <p>Drag and drop your integration files here or</p>
         <div class="row syn-drop-zone__file-select">
