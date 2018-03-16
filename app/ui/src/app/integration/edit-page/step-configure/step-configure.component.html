@@ -65,7 +65,7 @@
           <div *ngSwitchCase="'mapper'">
             <div class="row">
               <div class="col-md-12" *ngIf="step">
-                <syndesis-data-mapper-host [position]="position"></syndesis-data-mapper-host>
+                <syndesis-data-mapper-host [position]="position" (mappings)="setMappings($event)"></syndesis-data-mapper-host>
               </div>
             </div>
           </div>

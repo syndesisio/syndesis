@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -64,6 +64,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   targetDocTypes = [];
 
   @Input() position: number;
+  @Output() mappings = new EventEmitter<string>();
 
   @ViewChild('dataMapperComponent')
   dataMapperComponent: DataMapperAppComponent;
@@ -105,17 +106,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
       this.cfg.sourceDocs = [];
       this.cfg.targetDocs = [];
     }
-
-    // make sure the property is set on the integration
-    this.currentFlowService.events.emit({
-      kind: 'integration-set-properties',
-      position: this.position,
-      properties: {
-        atlasmapping: mappings
-      },
-      onSave
-    });
-
+    this.mappings.emit(mappings);
+    if (onSave) {
+      onSave();
+    }
     this.removeInitializationTask();
   }
 
@@ -287,18 +281,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
     return this.cfg.mappingService.saveMappingOutput$.subscribe(
       (saveHandler: Function) => {
         const json = this.cfg.mappingService.serializeMappingsToJSON();
-        const properties = {
-          atlasmapping: JSON.stringify(json)
-        };
-        this.currentFlowService.events.emit({
-          kind: 'integration-set-properties',
-          position: this.position,
-          properties: properties,
-          onSave: () => {
-            this.cfg.mappingService.handleMappingSaveSuccess(saveHandler);
-            log.debugc(() => 'Saved mapping file: ' + json, category);
-          }
-        });
+        this.mappings.emit(JSON.stringify(json));
+        this.cfg.mappingService.handleMappingSaveSuccess(saveHandler);
       }
     );
   }
