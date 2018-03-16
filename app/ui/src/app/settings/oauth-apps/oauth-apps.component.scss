@@ -1,34 +1,19 @@
-@import 'patternfly-sass/assets/stylesheets/patternfly/color-variables';
-
-:host {
-  flex: 1 1 auto;
-  height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-bottom: 20px;
-  // Dock the scrollbar to the right
-  margin-right: -20px;
-  padding-right: 20px;
-}
+@import 'syndesis-sass';
 
 .oauth-apps {
-  height: 100%;
+  padding-bottom: $gutter;
 
-  .col-md-12 {
-    height: 100%;
-  }
+  ::ng-deep {
+    .toolbar-pf {
+      @include toolbar($border-bottom: none);
+    }
 
-  & /deep/ .toolbar-pf {
-    background: inherit;
-    box-shadow: none;
-    border-bottom-color: transparent;
-  }
+    .list-pf-item {
+      background: $color-pf-white;
+    }
 
-  & /deep/ .list-pf-item {
-    background: $color-pf-white;
-  }
-
-  & /deep/ div.close {
-    display: none;
+    div.close {
+      display: none;
+    }
   }
 }
