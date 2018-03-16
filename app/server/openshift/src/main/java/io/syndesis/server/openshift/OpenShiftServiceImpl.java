@@ -107,13 +107,11 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException {
         String sName = openshiftName(name);
-
         getDeploymentsByLabel(labels)
             .stream()
             .filter(d -> d.getMetadata().getName().equals(sName))
             .map(d -> new DeploymentConfigBuilder(d).editSpec().withReplicas(desiredReplicas).endSpec().build())
-            .map(d -> openShiftClient.deploymentConfigs().createOrReplace(d))
-            .findAny().orElse(null);
+            .findAny().ifPresent(d -> openShiftClient.deploymentConfigs().createOrReplace(d));
     }
 
 
