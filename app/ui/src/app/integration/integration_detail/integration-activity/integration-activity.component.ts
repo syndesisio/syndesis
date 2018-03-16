@@ -58,9 +58,9 @@ export class IntegrationActivityComponent implements OnInit {
             // XXX: ANTIPATTERN AHEAD. The following code block mutates an object state
             const integrationStep = this.integration.steps.find(_integrationStep => _integrationStep.id == step.id);
             step.name = this.stepName(integrationStep);
-            step.isFailed = (step.failure && step.failure.length > 0) || (step.messages && step.messages.length > 0);
-            const errorMessages = [step.failure, ...step.messages].filter(messages => !!messages);
-            step.output = errorMessages.length > 0 ? errorMessages.join('. ') : 'No output';
+            step.isFailed = step.failure && step.failure.length > 0;
+            const errorMessages = [null, ...step.messages, step.failure].filter(messages => !!messages);
+            step.output = errorMessages.length > 0 ? errorMessages.join('\n') : null;
           });
         });
 

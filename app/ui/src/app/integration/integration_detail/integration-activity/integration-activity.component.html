@@ -62,14 +62,15 @@
             </thead>
             <tbody>
               <tr *ngFor="let step of activity.steps">
-                <td>{{ step.name }}</td>
-                <td>{{ step.at | date:'medium' }}</td>
-                <td>{{ step.duration / 1000000 | synDuration }}</td>
-                <td *ngIf="step.isFailed">
+                <td class="nowrap">{{ step.name }}</td>
+                <td class="nowrap">{{ step.at | date:'medium' }}</td>
+                <td class="nowrap">{{ step.duration / 1000000 | synDuration }}</td>
+                <td class="nowrap" *ngIf="step.isFailed">
                   <i class="pficon pficon-error-circle-o"></i> Error</td>
-                <td *ngIf="!step.isFailed">
+                <td class="nowrap" *ngIf="!step.isFailed">
                   <i class="pficon pficon-ok"></i> Success</td>
-                <td>{{ step.output }}</td>
+                <td *ngIf='step.output' class="step-output"><div class="scrollable"><pre>{{ step.output }}</pre></div></td>
+                <td class="nowrap" *ngIf='!step.output'>No output</td>
               </tr>
             </tbody>
           </table>

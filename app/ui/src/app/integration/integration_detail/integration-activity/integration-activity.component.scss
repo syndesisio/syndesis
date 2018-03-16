@@ -30,3 +30,20 @@
 .list-view-pf-expand {
   margin-top: 15px;
 }
+
+.nowrap {
+  white-space: nowrap
+}
+.step-output {
+  padding: 0;
+  background-color: #fafafa;
+}
+.step-output pre {
+  margin:0; border:0;
+}
+.step-output .scrollable {
+  max-height: 15em;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}

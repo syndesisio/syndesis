@@ -25,6 +25,7 @@ import java.io.InterruptedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -161,7 +162,7 @@ class PodLogMonitor implements Consumer<InputStream> {
 
     private static class InflightData {
         Activity activity = new Activity();
-        Map<String, ActivityStep> steps = new HashMap<>();
+        Map<String, ActivityStep> steps = new LinkedHashMap<>();
         Map<String, Object> metadata = new HashMap<>();
 
         public ActivityStep getStep(String step, String id) throws IOException {
