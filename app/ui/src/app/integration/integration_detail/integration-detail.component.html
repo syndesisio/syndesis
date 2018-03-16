@@ -35,7 +35,7 @@
 
         <ng-container [ngSwitch]="integration.currentState">	 
           <ng-container *ngSwitchCase="'Pending'">	  
-            <div class="spinner spinner-sm spinner-inline"></div> {{integration.targetState == 'Published' ? 'Publishing...' : 'Unpublishing...'}}
+            <div class="spinner spinner-sm spinner-inline"></div> {{ integration.targetState == 'Published' ? 'Publishing...' : 'Unpublishing...' }}
           </ng-container>
           <ng-container *ngSwitchCase="'Published'">
             <span class="pficon pficon-ok"></span> Published version {{ integration.deploymentVersion }}
