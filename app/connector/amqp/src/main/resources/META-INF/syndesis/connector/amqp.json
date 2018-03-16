@@ -73,7 +73,7 @@
     },
     "skipCertificateCheck" : {
       "kind" : "property",
-      "displayName" : "Skip Certificate Check",
+      "displayName" : "Check Certificates",
       "group" : "security",
       "label" : "common,security",
       "required" : false,
@@ -93,7 +93,7 @@
       "defaultValue" : "false",
       "deprecated" : false,
       "secret" : false,
-      "labelHint" : "For convenience in only development environments. Do not set for secure production environments.",
+      "labelHint" : "For convenience in only development environments. Ensure certificate checks are enabled for secure production environments.",
       "order": "5"
     },
     "brokerCertificate" : {
@@ -103,12 +103,23 @@
       "label" : "common,security",
       "required" : false,
       "componentProperty": true,
-      "type" : "string",
+      "type" : "textarea",
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "labelHint" : "AMQ Broker X.509 PEM Certificate",
-      "order": "6"
+      "description" : "AMQ Broker X.509 PEM Certificate",
+      "order": "6",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "true"
+            }
+          ]
+        }
+      ]
     },
     "clientCertificate" : {
       "kind" : "property",
@@ -117,12 +128,23 @@
       "label" : "common,security",
       "required" : false,
       "componentProperty": true,
-      "type" : "string",
+      "type" : "textarea",
       "javaType" : "java.lang.String",
       "deprecated" : false,
       "secret" : false,
-      "labelHint" : "AMQ Client X.509 PEM Certificate",
-      "order": "7"
+      "description" : "AMQ Client X.509 PEM Certificate",
+      "order": "7",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "true"
+            }
+          ]
+        }
+      ]
     }
   },
   "actions": [
