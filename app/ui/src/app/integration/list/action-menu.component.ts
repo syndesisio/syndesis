@@ -62,12 +62,20 @@ export class IntegrationActionMenuComponent implements OnInit {
       title: 'Delete',
       tooltip: `Delete ${this.integration.name}`
     });
-    this.actionConfig.moreActions.push({
-      id: 'export',
-      title: 'Export',
-      tooltip: `Export ${this.integration.name}`,
-    });
+    if (!this.showPrimaryActions) {
+      this.actionConfig.moreActions.push({
+        id: 'export',
+        title: 'Export',
+        tooltip: `Export ${this.integration.name}`,
+      });
+    }
     if (this.showPrimaryActions) {
+      this.actionConfig.primaryActions.push({
+        id: 'export',
+        styleClass: 'btn btn-default',
+        title: 'Export',
+        tooltip: `Export ${this.integration.name}`
+      });
       this.actionConfig.primaryActions.push({
         id: 'edit',
         styleClass: 'btn btn-primary',
