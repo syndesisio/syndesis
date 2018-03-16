@@ -40,8 +40,6 @@
     <basepom.compiler.fail-warnings>true</basepom.compiler.fail-warnings>
     <dep.plugin.compiler.version>3.7.0</dep.plugin.compiler.version>
 
-    <syndesis-connectors.version>${project.version}</syndesis-connectors.version>
-
     <camel.runtime.version>${camel.version}</camel.runtime.version>
     <derby.version>10.14.1.0</derby.version>
     <jdbi.version>2.78</jdbi.version>

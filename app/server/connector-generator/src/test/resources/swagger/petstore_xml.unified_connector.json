@@ -6,12 +6,12 @@
   "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
   "actions": [
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:addPet",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:addPet",
       "name": "Add a new pet to the store",
       "description": "Send POST request to /pet",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -33,18 +33,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:deletePet",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deletePet",
       "name": "Deletes a pet",
       "description": "Send DELETE request to /pet/{petId}",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -66,18 +66,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:getPetById",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getPetById",
       "name": "Find pet by ID",
       "description": "Returns a single pet",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -102,18 +102,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:findPetsByStatus",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByStatus",
       "name": "Finds Pets by status",
       "description": "Multiple status values can be provided with comma separated strings",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -138,18 +138,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:findPetsByTags",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByTags",
       "name": "Finds Pets by tags",
       "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -174,18 +174,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:updatePet",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePet",
       "name": "Update an existing pet",
       "description": "Send PUT request to /pet",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -207,18 +207,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:updatePetWithForm",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePetWithForm",
       "name": "Updates a pet in the store with form data",
       "description": "Send POST request to /pet/{petId}",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -240,18 +240,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:uploadFile",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:uploadFile",
       "name": "uploads an image",
       "description": "Send POST request to /pet/{petId}/uploadImage",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -276,18 +276,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:deleteOrder",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteOrder",
       "name": "Delete purchase order by ID",
       "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -309,18 +309,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:getOrderById",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getOrderById",
       "name": "Find purchase order by ID",
       "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -345,18 +345,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:placeOrder",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:placeOrder",
       "name": "Place an order for a pet",
       "description": "Send POST request to /store/order",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -381,18 +381,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:getInventory",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getInventory",
       "name": "Returns pet inventories by status",
       "description": "Returns a map of status codes to quantities",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -411,18 +411,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:createUser",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUser",
       "name": "Create user",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -444,18 +444,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:createUsersWithArrayInput",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithArrayInput",
       "name": "Creates list of users with given input array",
       "description": "Send POST request to /user/createWithArray",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -477,18 +477,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:createUsersWithListInput",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithListInput",
       "name": "Creates list of users with given input array",
       "description": "Send POST request to /user/createWithList",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -510,18 +510,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:deleteUser",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteUser",
       "name": "Delete user",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -543,18 +543,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:getUserByName",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getUserByName",
       "name": "Get user by user name",
       "description": "Send GET request to /user/{username}",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -579,18 +579,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:logoutUser",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:logoutUser",
       "name": "Logs out current logged in user session",
       "description": "Send GET request to /user/logout",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "kind": "none"
@@ -609,18 +609,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:loginUser",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:loginUser",
       "name": "Logs user into the system",
       "description": "Send GET request to /user/login",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -642,18 +642,18 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
     },
     {
-      "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@:_id_:updateUser",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updateUser",
       "name": "Updated user",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
         "connectorId": "_id_",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "inputDataShape": {
           "name": "Request",
@@ -675,7 +675,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:@syndesis-connectors.version@"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"

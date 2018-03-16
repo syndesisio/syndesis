@@ -32,7 +32,6 @@
     <mustache.compiler.version>0.9.2</mustache.compiler.version>
     <commons-compress.version>1.14</commons-compress.version>
     <commons-lang3.version>3.2.1</commons-lang3.version>
-    <syndesis-connectors.version>${project.version}</syndesis-connectors.version>
   </properties>
 
   <dependencies>
