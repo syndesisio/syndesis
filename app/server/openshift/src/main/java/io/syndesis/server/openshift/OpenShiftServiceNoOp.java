@@ -56,8 +56,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public boolean scale(String name, Map<String, String> lables, int desiredReplicas, long amount, TimeUnit timeUnit)  {
-        return false;
+    public void scale(String name, Map<String, String> lables, int desiredReplicas, long amount, TimeUnit timeUnit)  {
     }
 
     @Override

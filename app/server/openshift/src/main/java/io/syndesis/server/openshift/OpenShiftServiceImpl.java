@@ -105,7 +105,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public boolean scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException {
+    public void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException {
         String sName = openshiftName(name);
 
         DeploymentConfig deploymentConfig = getDeploymentsByLabel(labels)
@@ -114,11 +114,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .map(d -> new DeploymentConfigBuilder(d).editSpec().withReplicas(desiredReplicas).endSpec().build())
             .map(d -> openShiftClient.deploymentConfigs().createOrReplace(d))
             .findAny().orElse(null);
-
-        if (deploymentConfig == null) {
-            return false;
-        }
-       return waitForDeployment(deploymentConfig, amount, timeUnit).getSpec().getReplicas().equals(desiredReplicas);
     }
 
 

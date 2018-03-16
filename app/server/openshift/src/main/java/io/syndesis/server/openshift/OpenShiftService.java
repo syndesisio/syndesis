@@ -88,9 +88,8 @@ public interface OpenShiftService {
      * @param desiredReplicas how many replicas to scale to
      * @param amount of time to wait for scaling
      * @param timeUnit of the time
-     * @return true if scaling was completed, false otherwise.
      */
-    boolean scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException;
+    void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException;
 
 
     /**

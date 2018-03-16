@@ -33,9 +33,9 @@
           <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated($event)"></syndesis-editable-text>
         </h1>
 
-        <ng-container [ngSwitch]="integration.currentState">
-          <ng-container *ngSwitchCase="'Pending'">
-            <div class="spinner spinner-sm spinner-inline"></div> Publishing...
+        <ng-container [ngSwitch]="integration.currentState">	 
+          <ng-container *ngSwitchCase="'Pending'">	  
+            <div class="spinner spinner-sm spinner-inline"></div> {{integration.targetState == 'Published' ? 'Publishing...' : 'Unpublishing...'}}
           </ng-container>
           <ng-container *ngSwitchCase="'Published'">
             <span class="pficon pficon-ok"></span> Published version {{ integration.deploymentVersion }}
@@ -47,6 +47,7 @@
             <span class="pficon pficon-error"></span> Published version {{ integration.deploymentVersion }}
           </ng-container>
         </ng-container>
+
       </div>
 
       <div *ngIf="integration.messages && integration.messages.length" class="col-md-12">
