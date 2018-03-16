@@ -1,7 +1,8 @@
 <div [class.form-group]="formGroupClass"
      [class.has-error]="showErrorMessages"
      [formGroup]="group"
-     [ngClass]="[elementContainerClass, gridContainerClass, model?.inputType == 'hidden' ? 'hidden' : '']">
+     [hidden]="model?.inputType == 'hidden'"
+     [ngClass]="[elementContainerClass, gridContainerClass]">
 
   <label *ngIf="type !== 2 && model.label !== null"
          [attr.for]="model.id"
