@@ -73,7 +73,7 @@
     },
     "skipCertificateCheck": {
       "kind": "property",
-      "displayName": "Skip Certificate Check",
+      "displayName": "Check Certificates",
       "group": "security",
       "label": "common,security",
       "required": false,
@@ -93,7 +93,7 @@
       "defaultValue": "false",
       "deprecated": false,
       "secret": false,
-      "labelHint": "For convenience in only development environments. Do not set for secure production environments.",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
       "order": "5"
     },
     "brokerCertificate": {
@@ -111,11 +111,11 @@
       "order": "6",
       "relation": [
         {
-          "action": "DISABLE",
+          "action": "ENABLE",
           "when": [
             {
               "id": "skipCertificateCheck",
-              "value": "false"
+              "value": "true"
             }
           ]
         }
@@ -136,11 +136,11 @@
       "order": "7",
       "relation": [
         {
-          "action": "DISABLE",
+          "action": "ENABLE",
           "when": [
             {
               "id": "skipCertificateCheck",
-              "value": "false"
+              "value": "true"
             }
           ]
         }
@@ -179,7 +179,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "labelHint": "Name of the queue or topic to send data to.",
+                "description": "Name of the queue or topic to send data to.",
                 "order": "1"
               },
               "destinationType": {
@@ -257,7 +257,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "labelHint": "Name of the queue or topic to receive data from.",
+                "description": "Name of the queue or topic to receive data from.",
                 "order": "1"
               },
               "destinationType": {
@@ -342,7 +342,7 @@
             "properties": {
               "destinationName": {
                 "kind": "path",
-                "displayName": "Name of the queue or topic to send data to.",
+                "displayName": "Destination Name",
                 "group": "common",
                 "required": true,
                 "type": "string",
@@ -351,7 +351,7 @@
                 "deprecated": false,
                 "secret": false,
                 "componentProperty": false,
-                "labelHint": "DestinationName is a JMS queue or topic name. By default the destinationName is interpreted as a queue name.",
+                "description": "Name of the queue or topic to send data to.",
                 "order": "1"
               },
               "destinationType": {
