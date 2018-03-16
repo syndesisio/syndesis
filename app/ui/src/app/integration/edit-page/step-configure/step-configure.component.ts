@@ -23,17 +23,18 @@ const category = getCategory('IntegrationsCreatePage');
 export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, AfterViewInit {
   flowSubscription: Subscription;
   position: number;
-  step: Step = undefined;
-  formModel: DynamicFormControlModel[] = undefined;
-  formGroup: FormGroup = undefined;
+  step: Step;
+  formModel: DynamicFormControlModel[];
+  formGroup: FormGroup;
   formConfig: any;
-  cfg: any = undefined;
-  customProperties: any = undefined;
-  dataShape: DataShape = undefined;
+  cfg: any;
+  customProperties: any;
+  dataShape: DataShape;
   loading = false;
-  error: any = undefined;
+  error: any;
   valid = true;
   routeSubscription: Subscription;
+  mappings: string;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -67,26 +68,18 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
   }
 
   continue(data: any) {
-    // Question: Why is data a parameter here ?
     const step = this.step;
-
     if (step.stepKind === DATA_MAPPER) {
-      this.router.navigate(['save-or-add-step'], {
-        queryParams: { validate: true },
-        relativeTo: this.route.parent
-      });
-      return;
+      this.customProperties = {
+        atlasmapping: this.mappings
+      };
     }
-
     if (this.stepStore.isCustomStep(step)) {
       data = this.customProperties;
     } else {
       data = this.formGroup ? this.formGroup.value : {};
     }
-
-    data = this.formFactory.supressNullValues(data);
-
-    const properties = { ...data };
+    const properties = this.formFactory.supressNullValues({ ...data });
     this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
@@ -98,6 +91,10 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
         });
       }
     });
+  }
+
+  setMappings(mappings: string) {
+    this.mappings = mappings;
   }
 
   getToolbarClass() {
