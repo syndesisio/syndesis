@@ -84,7 +84,8 @@ create_oauthclient() {
 
 create_and_apply_template() {
     local route=$1
-    local template=${2:-syndesis}
+    local console=${2:-}
+    local template=${3:-syndesis}
     local tag="$(readopt --tag)"
     local use_local_resource="$(hasflag --local)"
     local test_support="$(hasflag --test-support)"
@@ -118,6 +119,7 @@ create_and_apply_template() {
 
     oc new-app --template=${template_name} \
       -p ROUTE_HOSTNAME="${route}" \
+      -p OPENSHIFT_CONSOLE_URL="${console}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
       -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \

@@ -26,6 +26,10 @@ parameters:
   description: Public OpenShift master address
   value: https://localhost:8443
   required: true
+- name: OPENSHIFT_CONSOLE_URL
+  description: The URL to the OpenShift console
+  displayName: OpenShift Console URL
+  required: true
 - name: OPENSHIFT_PROJECT
   description: The name of the OpenShift project Syndesis is being deployed into.
   displayName: OpenShift project to deploy into
@@ -333,6 +337,7 @@ objects:
         "apiBase": "https://${ROUTE_HOSTNAME}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
+        "openshiftConsoleProjectURL": "${OPENSHIFT_CONSOLE_URL}/project/${OPENSHIFT_PROJECT}",
         "datamapper": {
           "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/",
           "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/java/",

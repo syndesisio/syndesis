@@ -5,6 +5,7 @@ import { PaginationConfig } from 'patternfly-ng';
 
 import { log } from '@syndesis/ui/logging';
 import { Integration, IntegrationSupportService, Activity, Step, IntegrationDeployment } from '@syndesis/ui/platform';
+import { ConfigService } from '@syndesis/ui/config.service';
 
 @Component({
   selector: 'syndesis-integration-activity',
@@ -17,6 +18,7 @@ export class IntegrationActivityComponent implements OnInit {
   onRefresh: boolean;
   onError: boolean;
   showPagination: boolean;
+  openshiftConsoleURL: string;
   lastRefresh = new Date();
   paginationConfig: PaginationConfig = {
     pageSize: 15,
@@ -27,7 +29,7 @@ export class IntegrationActivityComponent implements OnInit {
 
   private allActivities: Activity[] = [];
 
-  constructor(private integrationSupportService: IntegrationSupportService) { }
+  constructor(private integrationSupportService: IntegrationSupportService, private configService: ConfigService) { }
 
   ngOnInit() {
     this.fetchActivities();
@@ -103,6 +105,16 @@ export class IntegrationActivityComponent implements OnInit {
     this.showPagination = (this.allActivities.length > this.paginationConfig.pageSize);
     this.paginationConfig.totalItems = this.allActivities.length;
     this.paginationConfig.pageNumber = 1;
+
+    this.openshiftConsoleURL = null;
+    if (this.allActivities.length > 0) {
+      const base = this.configService.getSettings('openshiftConsoleProjectURL');
+      const pod = this.allActivities[0].pod;
+      if (base && pod) {
+        this.openshiftConsoleURL = base + `/browse/pods/${pod}?tab=logs`;
+      }
+    }
+
     this.renderActivitiesByPage();
   }
 

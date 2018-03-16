@@ -10,6 +10,7 @@ install::usage() {
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
                               connected cluster.
+    --console                 The URL to the openshift console (mandatory)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
@@ -43,6 +44,12 @@ install::run() {
         check_error $route
     fi
 
+    local console=$(readopt --console)
+    if [ -z "$console" ]; then
+        echo "No console given. Use --console to set the console url."
+        exit 1
+    fi
+
     # Setup oc
     setup_oc
 
@@ -50,7 +57,7 @@ install::run() {
     create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
     # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$(select_template $(hasflag --dev))"
+    create_and_apply_template "$route" "$console" "$(select_template $(hasflag --dev))"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_syndesis_to_be_ready
