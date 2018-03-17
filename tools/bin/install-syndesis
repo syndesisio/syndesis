@@ -19,8 +19,8 @@ Usage: syndesis-install --route <hostname> --console <console-url> [options]
 
 with options:
 
--r --route <host>            The route to install. If not given, the route is tried to be auto detected
-   --console <console-url>   The URL to the openshift console (mandatory)
+-r --route <host>            The route to install or "auto" to generate a default route based on OpenShift configuration (mandatory)
+   --console <console-url>   The URL to the openshift console
 -t --tag <tag>               Optional version to use for the installaton ("latest" by default)
 -p --project <project>       Install into this project. The project will be deleted
                              if it already exists. By default, install into the current project (without deleting)
@@ -233,7 +233,7 @@ route=$(readopt --route -r)
 console=$(readopt --console)
 
 # Main code
-if [ -z "$route" ] || -z "$console" ] ||[ $(hasflag --help -h) ]; then
+if [ -z "$route" ] ||[ $(hasflag --help -h) ]; then
     display_usage
     exit 0
 fi

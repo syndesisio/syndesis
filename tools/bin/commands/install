@@ -10,7 +10,7 @@ install::usage() {
                               if it already exists. By default, install into the current project (without deleting)
     --route                   Route to use. If not given, the route is trying to be detected from the currently
                               connected cluster.
-    --console                 The URL to the openshift console (mandatory)
+    --console                 The URL to the OpenShift console
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
@@ -45,10 +45,6 @@ install::run() {
     fi
 
     local console=$(readopt --console)
-    if [ -z "$console" ]; then
-        echo "No console given. Use --console to set the console url."
-        exit 1
-    fi
 
     # Setup oc
     setup_oc

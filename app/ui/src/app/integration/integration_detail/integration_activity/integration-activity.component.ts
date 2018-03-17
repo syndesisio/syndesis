@@ -108,10 +108,11 @@ export class IntegrationActivityComponent implements OnInit {
 
     this.openshiftConsoleURL = null;
     if (this.allActivities.length > 0) {
-      const base = this.configService.getSettings('openshiftConsoleProjectURL');
+      const base = this.configService.getSettings('consoleUrl');
       const pod = this.allActivities[0].pod;
-      if (base && pod) {
-        this.openshiftConsoleURL = base + `/browse/pods/${pod}?tab=logs`;
+      const project = this.configService.getSettings('project');
+      if (base && pod && project) {
+        this.openshiftConsoleURL = `${base}/project/${project}/browse/pods/${pod}?tab=logs`;
       }
     }
 
