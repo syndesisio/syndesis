@@ -399,7 +399,7 @@ objects:
             FROM contact;
           $$
            LANGUAGE 'sql' VOLATILE;
-        EOF
+      EOF
 
       echo "***** sampledb created"
     postStart.sh: |
