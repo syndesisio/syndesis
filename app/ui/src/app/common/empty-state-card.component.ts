@@ -1,43 +1,30 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  TemplateRef,
-  OnInit,
-  HostBinding
+  Component
 } from '@angular/core';
 
 @Component({
   selector: 'syndesis-empty-state-card',
   template: `
+  <div class="card empty-state-card">
     <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
       <div class="card-pf-body">
-        <!-- Card Icon -->
-        <div *ngIf="topElement" class="card-pf-top-element">
-          <ng-template [ngTemplateOutlet]="topElement"></ng-template>
+        <div class="card-pf-top-element">
+          <ng-content select=".empty-state-card__header"></ng-content>
         </div>
-        <!-- Card Description / Item Overview -->
-        <div *ngIf="body" class="card-pf-info text-center">
-          <ng-template [ngTemplateOutlet]="body"></ng-template>
+        <div class="card-pf-info text-center">
+          <ng-content select=".empty-state-card__body"></ng-content>
         </div>
       </div>
     </div>
-  `
+  </div>
+  `,
+  styles: [`
+    :host { display: block; }
+    :host .card-pf, :host .card-pf:hover { box-shadow: none; }
+    :host .card-pf { background: transparent; padding-top: 1px; padding-bottom: 1px; }
+    :host .card-pf-view { border: 1px dashed #919191; }
+  `]
 })
 
-export class EmptyStateCardComponent implements OnInit {
-  @Input() body: TemplateRef<any>;
-  @Input() topElement: TemplateRef<any>;
-  @Input() colClass: string;
-  @Output() onClick = new EventEmitter<any>();
-  @HostBinding() class;
-
-  onSelect($event) {
-    this.onClick.emit($event);
-  }
-
-  ngOnInit() {
-    this.class = 'card--empty-state card ' + this.colClass;
-  }
+export class EmptyStateCardComponent {
 }

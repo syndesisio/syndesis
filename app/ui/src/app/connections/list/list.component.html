@@ -2,26 +2,21 @@
   <div class="container-cards-pf connections-list container-fluid">
     <div class="row row-cards-pf cards">
 
-      <!-- Delete Modal Container -->
-
       <syndesis-modal title="Confirm Delete"
                       [message]="'Are you sure you would like to delete the \'' + selectedForDelete?.name + '\' connection?'">
       </syndesis-modal>
 
-      <!-- Empty state -->
       <ng-container *ngIf="connections && connections.length === 0">
         <div class="blank-slate-pf">
           <div class="blank-slate-pf-icon">
             <span class="pficon pficon pficon-add-circle-o"></span>
           </div>
-          <!-- Connections -->
           <ng-container *ngIf="!isConnectors">
             <h1>Create a Connection</h1>
             <p>There are currently no connections available. Please click on the button below to create one.</p>
             <button class="btn btn-primary"
                     [routerLink]="['/connections/create']">Create Connection</button>
           </ng-container>
-          <!-- Connectors -->
           <ng-container *ngIf="isConnectors">
             <h1>Register Applications</h1>
             <p>There are currently no applications registered.</p>
@@ -33,20 +28,16 @@
         </div>
       </ng-container>
 
-      <!-- Each Connection's Card Container -->
       <ng-container *ngIf="connections && connections.length > 0">
         <div class="connection col-lg-3 col-md-4 col-sm-6 card"
           *ngFor="let connection of connections"
           (click)="onSelect(connection, $event)">
 
-          <!-- Connection Card -->
           <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select"
               [class.active]="connection.id === selectedId">
             <div class="card-pf-body">
 
-              <!-- Card Heading -->
               <div class="card-pf-heading-kebab">
-                <!-- Card Actions -->
                 <div *ngIf="showKebab">
                   <div dropdown
                       class="dropdown dropdown-kebab-pf pull-right"
@@ -114,16 +105,13 @@
         </div>
       </ng-container>
       <ng-container *ngIf="showNewConnection && connections.length > 0">
-        <syndesis-empty-state-card
-          [body]="cardBody"
-          [colClass]="'col-lg-3 col-md-4 col-sm-6'"
-          [topElement]="cardTopElement">
-          <ng-template #cardBody>
-            <button class="btn btn-default" (click)="onSelect(undefined, $event)">Create Connection</button>
-          </ng-template>
-          <ng-template #cardTopElement>
-              <span class="card-pf-icon-large pficon pficon-add-circle-o"></span>
-          </ng-template>
+        <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6" (click)="onSelect(undefined, $event)">
+          <div class="empty-state-card__header">
+            <span class="card-pf-icon-large pficon pficon-add-circle-o"></span>
+          </div>
+          <div class="empty-state-card__body">
+            <button class="btn btn-default">Create Connection</button>
+          </div>
         </syndesis-empty-state-card>
       </ng-container>
     </div>
