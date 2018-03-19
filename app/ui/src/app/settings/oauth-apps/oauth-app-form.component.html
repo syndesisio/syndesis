@@ -4,7 +4,7 @@
          *ngIf="message">
       <span class="pficon pficon-ok"></span>
       <strong>Registration successful!</strong> You can validate these values when
-      <a [routerLink]="['/connections/create']">creating a connection</a> to {{ item.client.name }}
+      <a [routerLink]="['/connections/create']">creating a connection</a> to {{ item.client.name }}.
     </div>
     <div class="alert alert-warning"
          *ngIf="error">
@@ -18,9 +18,8 @@
                              [group]="formGroup"
                              [model]="controlModel">
         <div *ngIf="last"
-             class="col-md-12">
-          <p></p>
-          <div class="pull-right">
+             class="col-xs-12 text-right">
+          <div class="syn-form__submit">
             <ng-container *ngIf="!message">
               <button type="button"
                       class="btn btn-primary"

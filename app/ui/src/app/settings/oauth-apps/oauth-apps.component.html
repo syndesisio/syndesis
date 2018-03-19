@@ -18,15 +18,15 @@
                 [config]="listConfig"
                 [itemTemplate]="listItemMain"
                 [actionTemplate]="actions"
-                [expandTemplate]="listItemExpansion">
+                [expandTemplate]="listItemExpansion"
+                (onClick)="$event.item.expanded = !$event.item.expanded">
     </pfng-list>
   </syndesis-loading>
 
   <!-- One list item, main row -->
   <ng-template #listItemMain
                 let-item="item">
-    <div class="list-pf-chevron"
-          (click)="item.expanded = !item.expanded">
+    <div class="list-pf-chevron">
       <span *ngIf="item.expanded"
             class="fa fa-angle-down"></span>
       <span *ngIf="!item.expanded"
