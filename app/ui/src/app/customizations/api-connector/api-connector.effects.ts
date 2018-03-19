@@ -77,8 +77,8 @@ export class ApiConnectorEffects {
   @Effect()
   refreshApiConnectors$: Observable<Action> = this.actions$
     .ofType(
-      ApiConnectorActions.CREATE_COMPLETE,
-      ApiConnectorActions.UPDATE_COMPLETE
+    ApiConnectorActions.CREATE_COMPLETE,
+    ApiConnectorActions.UPDATE_COMPLETE
     )
     .switchMap(() => Observable.of(ApiConnectorActions.fetch()));
 
@@ -93,8 +93,8 @@ export class ApiConnectorEffects {
           type: ApiConnectorActions.DELETE_FAIL,
           payload: error
         }))
-  );
-  
+    );
+
   @Effect()
   watchCustomConnectorUse$: Observable<Action> = this.actions$
     .ofType(ApiConnectorActions.FETCH_COMPLETE)
