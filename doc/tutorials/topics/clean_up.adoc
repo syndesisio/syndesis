@@ -3,22 +3,25 @@
 [id='cleanup_{context}']
 = Clean up your integration
 
-In this Technology Preview release, exactly one integration at
-a time can be running. You can create another sample integration,
-but you cannot publish it while an integration is running.
+In this Technology Preview release, exactly one integration at 
+a time can be running. In other words, exactly one integration can
+be in the *Published* state. You can create another sample integration, 
+but you cannot publish it while an integration is running. 
 
-When you are done working with a sample integration, deactivate it:
+When you are done working with a sample integration, unpublish it and
+delete it:
 
 . In the left panel, click *Integrations*.
-. In the main panel, click the entry for the sample integration
-you want to deactivate.
-. In the integration summary, click *Stop Integration* and click
-*OK* to confirm that you want to stop running the integration.
+. In the main panel, identify the entry for the sample integration that 
+you want to unpublish.
+. In that entry, to the right, click
+image:shared/images/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
+click *Unpublish*. 
+. Click *OK* to confirm that you want to stop running the integration.
++
+You can now publish another integration. 
 
-When there is a deactivated sample integration,
-you can run another sample integration.
-
-When you are no longer working with a sample integration you
-should delete it. Ensure that the sample integration is
-`Inactive` and then at the bottom of the summary, click
-*Delete Integration* and *OK* to confirm.
+. In the entry for the integration that you just unpublished, to the right, click
+image:shared/images/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
+click *Delete*. 
+. Click *OK* to confirm that you want to delete the integration.

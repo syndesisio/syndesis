@@ -1,0 +1,22 @@
+[id='adding-amqp-connections']
+= Adding an AMQP connection to an integration
+
+You must create an AMQP connection before you can add an
+AMQP connection to an
+integration. If you did not already create an AMQP connection, 
+see <<create-amqp-connection>>. 
+
+The procedure for adding an AMQP connection to an integration varies
+according to whether you are adding the connection as the
+start connection, the finish connection, or a middle connection.
+See the following topics:
+
+* <<adding-amqp-connection-start>>
+* <<adding-amqp-connection-finish>>
+* <<adding-amqp-connection-middle>>
+
+include::adding_amqp_connection_start.adoc[leveloffset=+1]
+
+include::adding_amqp_connection_finish.adoc[leveloffset=+1]
+
+include::adding_amqp_connection_middle.adoc[leveloffset=+1]

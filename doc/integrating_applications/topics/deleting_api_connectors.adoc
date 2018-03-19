@@ -1,16 +1,26 @@
 [id='deleting-api-connectors']
 = Deleting API client connectors
 
+After you delete an API client connector:
+
+* You cannot edit a connection that you created from that connector. 
+
+* An integration that is running and that uses a connection created from the
+deleted connector continues to run. 
+
+* You can continue to use connections created from the deleted connector.
+That is, you can
++
+** Create and publish
+** Edit and publish
+** Unpublish and republish
++
+an integration
+that uses a connection that was created from the deleted connector. 
+
 To delete an API client connector:
 
-. Ensure that no integrations use a connection based on that connector.
-. Delete any connections that were created from the connector
-that you want to delete:
-+
-.. In the left panel, click *Connections*.
-.. For each connection created from the connector that you want to delete,
-click the three vertical dots in the upper right of the connection card.
-.. Click *Delete*.
-. In the left panel, click *Customizations*.
-. In the *API Client Connectors* tab, to the right of the name of the
-connector that you want to delete, click *Delete*.
+. In the left panel, click *Customizations*. 
+. In the *API Client Connectors* tab, to the right of the name of the 
+connector that you want to delete, click *Delete*. 
+. Read the confirmation popup to be sure that you want to click *Delete*. 

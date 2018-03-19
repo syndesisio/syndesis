@@ -6,8 +6,10 @@ that you want to integrate. The following topics provide details for
 creating connections and adding them to integrations:
 
 * <<overview-of-creating-connections>>
+* <<specifying-connection-input-output-types>>
 * <<connecting-to-s3>>
 * <<connecting-to-amq>>
+* <<connecting-to-amqp>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
 * <<connecting-to-databases>>
@@ -15,9 +17,13 @@ creating connections and adding them to integrations:
 
 include::overview_of_creating_connections.adoc[leveloffset=+1]
 
+include::shared/specifying_connection_input_output_types.adoc[leveloffset=+1]
+
 include::connecting_to_amazon_s3.adoc[leveloffset=+1]
 
 include::connecting_to_amq.adoc[leveloffset=+1]
+
+include::connecting_to_amqp.adoc[leveloffset=+1]
 
 include::connecting_to_rest_apis.adoc[leveloffset=+1]
 

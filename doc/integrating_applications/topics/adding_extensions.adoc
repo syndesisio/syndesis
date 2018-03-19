@@ -1,26 +1,32 @@
 [id='adding-extensions']
 = Adding extensions
 
-{prodname} provides a number of steps for operating on
-integration data between connections. If {prodname} does not provide a
-step that you need,
-a developer can code an extension that defines one or more
-custom steps. The developer gives you a `.jar` file that contains the extension.
-You then upload the extension in {prodname} to make the custom step(s)
-available for use in integrations. The following topics provide details:
+{prodname} provides a number of connectors as well as steps for operating on 
+integration data between connections. If {prodname} does not provide a 
+connector or a step that you need, then a developer can code an extension that 
+defines a custom connector or one or more custom steps for operating on data 
+between connections. 
 
-* <<how-tooling-items-map>>
-* <<making-extensions-available>>
+The developer gives you a `.jar` file that contains the extension.
+You then upload the `.jar` file in {prodname} to make the custom connector
+or custom step(s) available for use. 
+
+A `.jar` file that you upload to {prodname} contains exactly one extension.
+An extension defines one or more steps that operate on data between connections
+or it defines exactly one custom connector. 
+
+The following topics provide details:
+
+* <<making-extensions-available>> 
 * <<managing-extensions>>
 
-For an example of uploading and using an extension, see the
+For an example of uploading and using an extension that provides a step
+that operates on data between connections, see the
 link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/#amq-to-rest-api[AMQ to REST API sample integration tutorial].
 
 Information about coding the extension and creating the `.jar` file is
 in the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[10.2 _JBoss Fuse Tooling Guide_]
-
-include::how_tooling_items_map.adoc[leveloffset=+1]
+link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[_Fuse Tooling Guide_].
 
 include::making_extensions_available.adoc[leveloffset=+1]
 

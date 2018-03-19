@@ -1,0 +1,21 @@
+[id='viewing-system-metrics']
+= Viewing system metrics
+
+System metrics appear on the {prodname} home page. To see them, click
+*Home* in the left panel. {prodname} updates the following metrics
+every 5 seconds:
+
+* The number of integrations that are defined in this environment regardless of 
+the integration state. A red cross indicates any integrations that
+were running but that encountered an error that suspended execution. 
+
+* The number of connections that are defined in this environment. 
+
+* Total number of messages that have been processed by integrations in 
+this environment in
+the last 30 days. This includes messages that were processed by 
+integrations that might no longer be running or that might have been 
+deleted from this environment.
+
+* Uptime indicates how long there has been at least one integration that
+is running. The date and time when uptime started appears as well. 

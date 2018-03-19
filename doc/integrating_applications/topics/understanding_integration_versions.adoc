@@ -3,8 +3,8 @@
 
 In each {prodname} environment, each integration can have multiple
 versions. The benefit of multiple integration versions is that
-if you deploy a version that does not work correctly, then you
-can return to a successful integration.  To do that, you
+if you publish a version that does not work correctly, then you
+can return to running a correct integration. To do that, you
 unpublish (stop) the incorrect version and republish a version
 that runs the way you want it to.
 

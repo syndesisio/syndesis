@@ -16,7 +16,6 @@ field to the `CustomerName` field.
 map the `FirstName` and `LastName` fields to the `CustomerName` field.
 * Separate a source field into multiple target fields. For  example,
 map the `Name` field to the `FirstName` and `LastName` fields.
-* Transform the target field to specify how {prodname} stores it.
-For example, pad or trim the source field value, capitalize the first letter
-in a string, or create a timestamp.
-* Add a field and specify its value in either a source or the target.
+* Transform the target field to specify how {prodname} stores it. 
+For example, pad or trim the source field value, capitalize the first letter 
+in a string, or create a timestamp. 

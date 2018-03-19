@@ -1,29 +1,29 @@
-[id='create-amq-connection']
-= Create an AMQ connection
+[id='create-amqp-connection']
+= Create an AMQP connection
 
-To create an AMQ connection:
+To create an AMQP connection:
 
-. In {prodname}, in the left panel, click *Connections* to
-display any available connections.
+. In {prodname}, in the left panel, click *Connections* to 
+display any available connections. 
 . In the upper right, click *Create Connection* to display
 connectors.  
-. Click the *AMQ* connector.
+. Click the *AMQP* connector.
 . Configure the connection by entering: 
 +
-.. In the *Broker URL* field, enter the location you want to send data
+.. In the *Connection URI* field, enter the location you want to send data
 to or obtain data from. 
 .. In the *User Name* field, enter the username for the account that you want
 to use to access this broker. 
 .. In the *Password* field, enter the password for the account that you want
-to use to access this broker.
-.. In the *Client ID* field, enter the ID that allows connections to close
-and reopen without missing messages. The destination type must be a topic.
-.. If this connection will be used in a development
-environment, you can save some time by selecting
-*Skip Certificate Check*. This is a convenience for
+to use to access this broker. 
+.. In the *Client ID* field, enter the ID that allows connections to close 
+and reopen without missing messages. The destination type must be a topic. 
+.. If this connection will be used in a development 
+environment, you can save some time by enabling 
+*Skip Certificate Check*. This is a convenience for 
 development environments. You
-should not select this option for secure production
-environments.
+should not enable this option for secure production 
+environments. 
 .. In the *Broker Certificate* field, paste the broker's PEM certificate text.
 This is required except when you indicate that you want to skip
 checking the certificate. 
@@ -32,15 +32,14 @@ Content in this field is always optional.
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
 validation is successful. If validation fails, revise the configuration
-details as needed and try again.
-. If validation is successful, click *Next*.
+details as needed and try again. 
+. If validation is successful, click *Next*. 
 . In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connections.
-For example, for an AMQ connection, you might enter `AMQ 1`.
+helps you distinguish this connection from any other connections. 
+For example, you might enter `AMQP 1`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
-enter `*Sample AMQ connection
-that uses a provided broker.*`
+enter `*Sample AMQP connection*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you
 entered the example name, you would 

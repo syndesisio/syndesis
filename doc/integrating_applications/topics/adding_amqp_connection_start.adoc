@@ -1,12 +1,12 @@
-[id='adding-amq-connection-start']
-= Adding an AMQ connection as the start connection
+[id='adding-amqp-connection-start']
+= Adding an AMQP connection as the start connection
 
 :context: start
-In an integration, to add an AMQ connection as the start connection:
+In an integration, to add an AMQP connection as the start connection: 
 
-. In the {prodname} panel on the left, click *Integrations*.
-. Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the AMQ connection that
+. In the {prodname} panel on the left, click *Integrations*. 
+. Click *Create Integration*. 
+. On the *Choose a Start Connection* page, click the AMQP connection that
 you want to use as the integration's start connection. 
 . On the *Choose an Action* page, click the *Subscribe for messages* action
 to receive messages from the queue or topic you specify. 
