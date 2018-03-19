@@ -3,6 +3,7 @@ import { Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
+import { EventsService } from '@syndesis/ui/store';
 import { ApiConnectorService } from './api-connector.service';
 import {
   ApiConnectorActions,
@@ -92,10 +93,20 @@ export class ApiConnectorEffects {
           type: ApiConnectorActions.DELETE_FAIL,
           payload: error
         }))
-    );
+  );
+  
+  @Effect()
+  watchCustomConnectorUse$: Observable<Action> = this.actions$
+    .ofType(ApiConnectorActions.FETCH_COMPLETE)
+    .switchMap(() => {
+      return this.eventsService.changeEvents
+        .filter(event => event.kind === 'integration' && event.action === 'updated')
+        .switchMap(() => Observable.of(ApiConnectorActions.fetch()));
+    });
 
   constructor(
     private actions$: Actions,
-    private apiConnectorService: ApiConnectorService
+    private apiConnectorService: ApiConnectorService,
+    private eventsService: EventsService
   ) { }
 }
