@@ -61,11 +61,6 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
-    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-      this.integrations = integrations;
-    });
-
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
@@ -89,6 +84,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     this.uploader.onCompleteItem = (item: FileItem,
                                     response: string,
                                     status: number) => {
+      console.log('onCompleteItem response: ' + response);
+      console.log('onCompleteItem response.length: ' + response.length);
       if (status === 200) {
         this.review = true;
         this.integrationImports$ = JSON.parse(response);
@@ -103,7 +100,11 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     }
   }
 
-  private checkIfSingleOrMultiple(): void {
+  private checkIfDragAndDrop(): void {
+    // Do something here
+  }
+
+  private checkIfMultiple(): void {
     // Do something here
   }
 
