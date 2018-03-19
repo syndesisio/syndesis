@@ -106,7 +106,9 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
       console.log('onCompleteItem response: ' + response);
       console.log('onCompleteItem response.length: ' + response.length);
       if (status === 200) {
-        this.review = true;
+        console.log('Review: ' + this.review);
+        this.review = !this.checkIfMultiple();
+        console.log('Review: ' + this.review);
         this.integrationImports$ = JSON.parse(response);
         this.item = item;
       }
@@ -124,11 +126,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   private checkIfMultiple(): boolean {
-    // Do something here
-    //this.uploader.queue.length;
-    //this.isMultipleImport
     console.log('this.upload.queue.length: ' + this.uploader.queue.length);
-    return this.uploader.queue.length >=1;
+    return this.uploader.queue.length >1;
   }
 
   private redirectBack(): void {
