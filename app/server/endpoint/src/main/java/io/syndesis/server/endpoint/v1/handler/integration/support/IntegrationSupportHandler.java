@@ -15,9 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration.support;
 
-import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler.addEntry;
-import static org.springframework.util.StreamUtils.nonClosing;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,7 +27,6 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
@@ -46,27 +42,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.Names;
-import io.syndesis.server.dao.file.FileDataManager;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
-import io.syndesis.server.dao.manager.operators.ReverseFilter;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.server.jsondb.CloseableJsonDB;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.server.jsondb.dao.JsonDbDao;
-import io.syndesis.server.jsondb.dao.Migrator;
-import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
@@ -74,13 +51,21 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelExport;
 import io.syndesis.common.model.Schema;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.buletin.IntegrationBulletinBoard;
+import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.Names;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.server.dao.file.FileDataManager;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.server.dao.manager.operators.ReverseFilter;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveSorter;
 import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
@@ -89,6 +74,19 @@ import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.model.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
+import io.syndesis.server.jsondb.CloseableJsonDB;
+import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.jsondb.dao.JsonDbDao;
+import io.syndesis.server.jsondb.dao.Migrator;
+import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler.addEntry;
+import static org.springframework.util.StreamUtils.nonClosing;
 
 @Path("/integration-support")
 @Api(value = "integration-support")
@@ -181,7 +179,7 @@ public class IntegrationSupportHandler {
         CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsonDB.getIndexes());
         if( ids.contains("all") ) {
             ids = new ArrayList<>();
-            for (Integration integration : dataManager.fetchAll(Integration.class).getItems()) {
+            for (Integration integration : dataManager.fetchAll(Integration.class)) {
                 ids.add(integration.getId().get());
             }
         }
@@ -218,7 +216,7 @@ public class IntegrationSupportHandler {
             if (c.isPresent()) {
                 Connection connection = c.get();
                 addModelToExport(export, connection);
-                Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId().get());
+                Connector connector = integrationHandler.getDataManager().fetch(Connector.class, connection.getConnectorId());
                 if (connector != null) {
                     addModelToExport(export, connector);
                 }

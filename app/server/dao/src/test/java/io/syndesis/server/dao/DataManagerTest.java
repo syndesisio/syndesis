@@ -114,7 +114,7 @@ public class DataManagerTest {
 
     @Test
     public void createShouldCreateWithUnspecifiedIds() {
-        final Connector given = new Connector.Builder().icon("my-icon").build();
+        final Connector given = new Connector.Builder().version(1).icon("my-icon").build();
         final Connector got = dataManager.create(given);
 
         assertThat(got).isEqualToIgnoringGivenFields(given, "id");
@@ -124,11 +124,11 @@ public class DataManagerTest {
 
     @Test
     public void createShouldCreateWithSpecifiedId() {
-        final Connector connector = new Connector.Builder().id("custom-id").build();
+        final Connector connector = new Connector.Builder().version(1).id("custom-id").build();
         final Connector got = dataManager.create(connector);
 
         assertThat(got).isSameAs(connector);
-        assertThat(cacheManager.getCache(Kind.Connector.modelName).get("custom-id")).isSameAs(connector);
+        assertThat(cacheManager.getCache(Kind.Connector.modelName).get("custom-id")).isEqualTo(connector);
     }
 
     @Test

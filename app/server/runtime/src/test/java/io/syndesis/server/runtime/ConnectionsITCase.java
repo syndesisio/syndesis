@@ -50,8 +50,12 @@ public class ConnectionsITCase extends BaseITCase {
 
     @Test
     public void emptyTagsShouldBeIgnored() {
-        final Connection connection = new Connection.Builder().id("tags-connection-test").name("tags-connection-test")
-            .addTag("", " ", "taggy").build();
+        final Connection connection = new Connection.Builder()
+            .id("tags-connection-test")
+            .connectorId("http")
+            .name("tags-connection-test")
+            .addTag("", " ", "taggy")
+            .build();
 
         final ResponseEntity<Connection> got = post("/api/v1/connections", connection, Connection.class,
             tokenRule.validToken(), HttpStatus.OK);
@@ -81,7 +85,7 @@ public class ConnectionsITCase extends BaseITCase {
 
     @Test
     public void shouldAllowConnectionUpdateWithExistingName() {
-        final Connection connection = new Connection.Builder().name("Existing connection").id(id).build();
+        final Connection connection = new Connection.Builder().name("Existing connection").connectorId("http").id(id).build();
 
         final ResponseEntity<Void> got = put("/api/v1/connections/" + id, connection, Void.class,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);

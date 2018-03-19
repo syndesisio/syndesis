@@ -15,20 +15,6 @@
  */
 package io.syndesis.server.jsondb.dao;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
-import io.syndesis.server.jsondb.GetOptions;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.WithId;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -36,6 +22,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.dao.manager.DataAccessObject;
+import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.server.jsondb.GetOptions;
+import io.syndesis.server.jsondb.JsonDB;
 
 /**
  * Implements a DataAccessObject using the {@see: JsonDB}.
@@ -132,7 +132,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 return map.keySet()
                      .stream().map(path -> path.substring(path.indexOf(':') + 1)).collect(Collectors.toSet());
             } else {
-                return Collections.<String>emptySet();
+                return Collections.emptySet();
             }
 
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {

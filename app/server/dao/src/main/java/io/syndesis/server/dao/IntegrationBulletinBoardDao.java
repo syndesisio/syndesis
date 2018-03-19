@@ -17,7 +17,7 @@ package io.syndesis.server.dao;
 
 
 import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.common.model.buletin.IntegrationBulletinBoard;
+import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 
 public interface IntegrationBulletinBoardDao extends DataAccessObject<IntegrationBulletinBoard> {
 

@@ -123,4 +123,14 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
         return false;
     }
+
+    @JsonIgnore
+    default boolean isRequired() {
+        Boolean value = getRequired();
+        if (value != null) {
+            return Boolean.TRUE.equals(value);
+        }
+
+        return false;
+    }
 }

@@ -138,7 +138,7 @@ public class IntegrationController {
 
     private void scanIntegrationsForWork() {
         executor.execute(() -> {
-            dataManager.fetchAll(IntegrationDeployment.class).getItems().forEach(integration -> {
+            dataManager.fetchAll(IntegrationDeployment.class).forEach(integration -> {
                 LOG.info("Checking integrations for their status.");
                 checkIntegrationStatus(integration);
             });

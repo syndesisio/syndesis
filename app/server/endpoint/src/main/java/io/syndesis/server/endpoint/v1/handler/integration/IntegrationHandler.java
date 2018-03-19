@@ -15,9 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import static io.syndesis.common.model.buletin.LeveledMessage.Level.ERROR;
-import static io.syndesis.common.model.buletin.LeveledMessage.Level.WARN;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -46,22 +42,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import io.syndesis.server.openshift.OpenShiftService;
-import org.springframework.stereotype.Component;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.common.util.SuppressFBWarnings;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
-import io.syndesis.server.dao.manager.operators.ReverseFilter;
-import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.buletin.IntegrationBulletinBoard;
-import io.syndesis.common.model.buletin.LeveledMessage;
+import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
+import io.syndesis.common.model.bulletin.LeveledMessage;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.filter.FilterOptions;
@@ -71,6 +58,11 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.validation.AllValidations;
+import io.syndesis.common.util.SuppressFBWarnings;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
+import io.syndesis.server.dao.manager.operators.ReverseFilter;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveSorter;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
@@ -84,6 +76,12 @@ import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParam
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
+import io.syndesis.server.inspector.Inspectors;
+import io.syndesis.server.openshift.OpenShiftService;
+import org.springframework.stereotype.Component;
+
+import static io.syndesis.common.model.bulletin.LeveledMessage.Level.ERROR;
+import static io.syndesis.common.model.bulletin.LeveledMessage.Level.WARN;
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -137,20 +135,17 @@ public class IntegrationHandler extends BaseHandler
     }
 
     public Connection toCurrentConnection(Connection c) {
-        Connection connection = getDataManager().fetch(Connection.class, c.getId().get());
-        if (connection.getConnectorId().isPresent()) {
-            final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
-            connection = new Connection.Builder().createFrom(connection).connector(connector).build();
-        }
-        return connection;
+        final Connection connection = getDataManager().fetch(Connection.class, c.getId().get());
+        final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId());
+
+        return new Connection.Builder().createFrom(connection).connector(connector).build();
     }
 
     public Step toCurrentSteps(Step step) {
-        Step.Builder from = new Step.Builder().createFrom(step);
-        step.getConnection().ifPresent(c->{
-            from.connection(toCurrentConnection(c));
-        });
-        return from.build();
+        return new Step.Builder()
+            .createFrom(step)
+            .connection(step.getConnection().map(this::toCurrentConnection))
+            .build();
     }
 
     @GET

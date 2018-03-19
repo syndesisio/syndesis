@@ -15,8 +15,6 @@
  */
 package io.syndesis.common.model;
 
-import io.syndesis.common.model.integration.IntegrationDeployment;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,10 +22,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import io.syndesis.common.model.integration.IntegrationDeployment;
+
 public enum Kind {
     Action(io.syndesis.common.model.action.Action.class),
 
     Connection(io.syndesis.common.model.connection.Connection.class),
+    ConnectionOverview(io.syndesis.common.model.connection.ConnectionOverview.class),
     Connector(io.syndesis.common.model.connection.Connector.class),
     ConnectorAction(io.syndesis.common.model.action.ConnectorAction.class),
     ConnectorGroup(io.syndesis.common.model.connection.ConnectorGroup.class),
@@ -52,8 +53,8 @@ public enum Kind {
     Role(io.syndesis.common.model.user.Role.class),
     User(io.syndesis.common.model.user.User.class),
 
-    ConnectionBulletinBoard(io.syndesis.common.model.buletin.ConnectionBulletinBoard.class),
-    IntegrationBulletinBoard(io.syndesis.common.model.buletin.IntegrationBulletinBoard.class),
+    ConnectionBulletinBoard(io.syndesis.common.model.bulletin.ConnectionBulletinBoard.class),
+    IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class),
 
     ;
 

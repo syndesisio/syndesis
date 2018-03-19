@@ -129,7 +129,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
                 final ConnectorDescriptor descriptor = action.getDescriptor();
                 final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
-                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId().get())
+                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId())
                 );
 
                 if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {

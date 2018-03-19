@@ -103,12 +103,15 @@ public class CredentialITCase extends BaseITCase {
 
     @Test
     public void shouldApplyOAuthPropertiesToNewlyCreatedConnections() {
-        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("test-provider")
-            .key("key").accessGrant(new AccessGrant("token")).build();
+        final OAuth2CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder()
+            .providerId("test-provider")
+            .key("key")
+            .accessGrant(new AccessGrant("token"))
+            .build();
 
         final HttpHeaders cookies = persistAsCookie(flowState);
 
-        final Connection newConnection = new Connection.Builder().name("Test connection").build();
+        final Connection newConnection = new Connection.Builder().name("Test connection").connectorId("http").build();
         final ResponseEntity<Connection> connectionResponse = http(HttpMethod.POST, "/api/v1/connections",
             newConnection, Connection.class, tokenRule.validToken(), cookies, HttpStatus.OK);
 

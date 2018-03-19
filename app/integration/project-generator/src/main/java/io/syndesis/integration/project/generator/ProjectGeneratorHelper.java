@@ -150,9 +150,9 @@ public final class ProjectGeneratorHelper {
                 final Connection connection = source.getConnection().get();
 
                 // If connector is not set, fetch it from data source and update connection
-                if (connection.getConnectorId().isPresent() && !connection.getConnector().isPresent()) {
-                    Connector connector = resourceManager.loadConnector(connection.getConnectorId().get()).orElseThrow(
-                        () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId().get())
+                if (!connection.getConnector().isPresent()) {
+                    Connector connector = resourceManager.loadConnector(connection.getConnectorId()).orElseThrow(
+                        () -> new IllegalArgumentException("Unable to fetch connector: " + connection.getConnectorId())
                     );
 
                     // Add missing connector to connection.

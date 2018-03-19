@@ -121,10 +121,7 @@ public interface DataAccessObject<T extends WithId<T>> {
 
 
     default void deleteAll() {
-        ListResult<T> l = fetchAll();
-        for (T entity : l.getItems()) {
-            delete(entity);
-        }
+        fetchAll().forEach(this::delete);
     }
 
 }

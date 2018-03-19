@@ -722,6 +722,12 @@
 
       <dependency>
         <groupId>io.syndesis.server</groupId>
+        <artifactId>server-update-controller</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.server</groupId>
         <artifactId>server-logging-jsondb</artifactId>
         <version>${project.version}</version>
       </dependency>

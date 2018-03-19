@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -127,29 +128,9 @@ public class ExtensionActivator {
             // Put already configured properties into new connector
             newConnector = migrateOldConnectorData(existingConnector.get(), newConnector);
             dataManager.update(newConnector);
-
-            List<Connection> existingConnections = findAssociatedConnections(existingConnector.get());
-            for (Connection connection : existingConnections) {
-                Connection newConnection = recreateConnection(connection, newConnector);
-                dataManager.update(newConnection);
-            }
         } else {
             dataManager.create(newConnector);
         }
-    }
-
-    private Connection recreateConnection(Connection existingConnection, Connector newConnector) {
-        Optional<Connector> connectorToUse = existingConnection.getConnector().map(old -> newConnector);
-
-        Map<String, String> confProperties = new TreeMap<>(existingConnection.getConfiguredProperties());
-        confProperties.keySet().retainAll(newConnector.getProperties().keySet());
-
-        return new Connection.Builder()
-            .createFrom(existingConnection)
-            .connector(connectorToUse)
-            .icon(newConnector.getIcon())
-            .configuredProperties(confProperties)
-            .build();
     }
 
     private Connector migrateOldConnectorData(Connector existingConnector, Connector newConnector) {
@@ -166,8 +147,15 @@ public class ExtensionActivator {
     }
 
     private List<Connection> findAssociatedConnections(Connector connector) {
-        return dataManager.fetchAll(Connection.class).getItems().stream()
-            .filter(c -> connector.getId().equals(c.getConnectorId()))
+        if (!connector.getId().isPresent()) {
+            return Collections.emptyList();
+        }
+
+        final String connectorId = connector.getId().get();
+        final Set<String> ids = dataManager.fetchIdsByPropertyValue(Connection.class, "connectorId", connectorId);
+
+        return ids.stream()
+            .map(id -> dataManager.fetch(Connection.class, id))
             .collect(Collectors.toList());
     }
 

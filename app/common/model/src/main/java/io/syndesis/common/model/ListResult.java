@@ -16,9 +16,13 @@
 package io.syndesis.common.model;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collector;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
@@ -31,7 +35,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = ListResult.Builder.class)
 @SuppressWarnings({"rawtypes", "varargs"})
-public interface ListResult<T> {
+public interface ListResult<T> extends Iterable<T> {
 
     /**
      *
@@ -43,7 +47,22 @@ public interface ListResult<T> {
      *
      * @return The filtered list of items. Depending on operations, this will contain at most getTotalCount elements.
      */
-    List<T> getItems();
+    @Value.Default
+    default List<T> getItems() {
+        return Collections.emptyList();
+    }
+
+    @JsonIgnore
+    @Override
+    default void forEach(Consumer<? super T> action) {
+        getItems().forEach(action);
+    }
+
+    @JsonIgnore
+    @Override
+    default Iterator<T> iterator() {
+        return getItems().iterator();
+    }
 
     class Builder<T> extends ImmutableListResult.Builder<T> {
     }

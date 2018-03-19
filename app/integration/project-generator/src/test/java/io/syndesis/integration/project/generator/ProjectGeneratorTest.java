@@ -32,9 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.MavenProperties;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -47,16 +44,22 @@ import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.MavenProperties;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -193,10 +196,9 @@ public class ProjectGeneratorTest {
         Path runtimeDir = generate(integration, configuration, resourceManager);
 
         assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
-
+        assertFileContentsJson(configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
         assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
         assertFileContents(configuration, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
         assertFileContents(configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
         assertFileContents(configuration, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config.yml");
 
@@ -372,6 +374,34 @@ public class ProjectGeneratorTest {
         final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+
+
+    private void assertFileContentsJson(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException, JSONException {
+        URL resource = null;
+        String overridePath = generatorConfiguration.getTemplates().getOverridePath();
+        String methodName = testName.getMethodName();
+
+        int index = methodName.indexOf('[');
+        if (index != -1) {
+            methodName = methodName.substring(0, index);
+        }
+
+        if (!StringUtils.isEmpty(overridePath)) {
+            resource = ProjectGeneratorTest.class.getResource(methodName + "/" + overridePath + "/" + expectedFileName);
+        }
+        if (resource == null) {
+            resource = ProjectGeneratorTest.class.getResource(methodName + "/" + expectedFileName);
+        }
+        if (resource == null) {
+            throw new IllegalArgumentException("Unable to find te required resource (" + expectedFileName + ")");
+        }
+
+        final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8).trim();
+        final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
+
+        JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
     }
 
     protected MavenProperties getMavenProperties() {

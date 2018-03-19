@@ -28,18 +28,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model.buletin;
+package io.syndesis.common.model.bulletin;
 
-import java.util.Collections;
 import java.util.List;
-
-import org.immutables.value.Value;
+import java.util.OptionalInt;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithModificationTimestamps;
+import io.syndesis.common.util.IndexedProperty;
+import org.immutables.value.Value;
 
 /**
  * A ConnectionBulletinBoard holds any notifications that should be displayed to the user
@@ -48,24 +45,27 @@ import io.syndesis.common.model.WithModificationTimestamps;
 @Value.Immutable
 @JsonDeserialize(builder = ConnectionBulletinBoard.Builder.class)
 @SuppressWarnings("immutables")
-public interface ConnectionBulletinBoard extends WithId<ConnectionBulletinBoard>, WithModificationTimestamps {
+@IndexedProperty("targetResourceId")
+public interface ConnectionBulletinBoard extends BulletinBoard<ConnectionBulletinBoard> {
+    ConnectionBulletinBoard EMPTY_BOARD = new ConnectionBulletinBoard.Builder().build();
 
     @Override
     default Kind getKind() {
         return Kind.ConnectionBulletinBoard;
     }
 
-    @Value.Default
-    default List<LeveledMessage> getMessages() {
-        return Collections.emptyList();
-    }
+    String getTargetResourceId();
+
+    OptionalInt getNotices();
+
+    OptionalInt getWarnings();
+
+    OptionalInt getErrors();
 
     static ConnectionBulletinBoard of(String id, List<LeveledMessage> messages) {
-        return new ConnectionBulletinBoard.Builder().id(id).messages(messages).build();
+        return new ConnectionBulletinBoard.Builder().id(id).targetResourceId(id).messages(messages).build();
     }
 
     class Builder extends ImmutableConnectionBulletinBoard.Builder {
-        // allow access to ImmutableIntegration.Builder
     }
-
 }

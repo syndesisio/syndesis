@@ -49,7 +49,7 @@ public interface IntegrationResourceManager {
         if (connection.getConnector().isPresent()) {
             connector = connection.getConnector();
         } else {
-            connector = loadConnector(connection.getConnectorId().get());
+            connector = loadConnector(connection.getConnectorId());
         }
 
         return connector;
@@ -103,7 +103,7 @@ public interface IntegrationResourceManager {
 
             List<Dependency> lookedUpConnectorDependecies = step.getConnection()
                 .filter(c -> !c.getConnector().isPresent())
-                .flatMap(Connection::getConnectorId)
+                .map(Connection::getConnectorId)
                 .flatMap(this::loadConnector)
                 .map(WithDependencies::getDependencies)
                 .orElse(Collections.emptyList());

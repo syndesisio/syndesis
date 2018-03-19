@@ -19,6 +19,27 @@ package io.syndesis.common.util;
  * Interface for managing client subscriptions and publishing events to them.
  */
 public interface EventBus {
+    /**
+     * Constants for known event types.
+     *
+     * NOTE: May be better to use enums but EventBus is all about strings.
+     */
+    @SuppressWarnings("PMD.ConstantsInInterface")
+    interface Type {
+        String CHANGE_EVENT = "change-event";
+    }
+
+    /**
+     * Constants for known event action
+     *
+     * NOTE: May be better to use enums but EventBus is all about strings.
+     */
+    @SuppressWarnings("PMD.ConstantsInInterface")
+    interface Action {
+        String CREATED = "created";
+        String UPDATED = "updated";
+        String DELETED = "deleted";
+    }
 
     /**
      * Callback interface clients implement to receive events.

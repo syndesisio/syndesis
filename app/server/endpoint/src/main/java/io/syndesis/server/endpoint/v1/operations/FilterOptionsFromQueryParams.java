@@ -15,17 +15,17 @@
  */
 package io.syndesis.server.endpoint.v1.operations;
 
-import io.syndesis.server.endpoint.util.FilterOptionsParser;
-
+import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-import java.util.List;
+
+import io.syndesis.server.endpoint.util.FilterOptionsParser;
 
 public class FilterOptionsFromQueryParams {
 
     private final List<FilterOptionsParser.Filter> queryFilters;
 
-    FilterOptionsFromQueryParams(UriInfo uri) {
+    public FilterOptionsFromQueryParams(UriInfo uri) {
         MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
         String query = queryParams.getFirst("query");
         this.queryFilters = FilterOptionsParser.fromString(query);
