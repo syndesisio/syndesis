@@ -65,16 +65,13 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   onFileSelected(event: Event): void {
     this.isDragAndDropImport = false;
     this.isMultipleImport = this.checkIfMultiple();
-    console.log('onFileSelected: ' + JSON.stringify(event));
   }
 
   onDropOverAndOut(event: Event): void {
-    console.log('onDropOverAndOut(event): ' + JSON.stringify(event));
     this.checkIfDragAndDrop(event);
   }
 
   onDropFile(event: Event): void {
-    console.log('onDropFile: ' + JSON.stringify(event));
     this.isMultipleImport = this.checkIfMultiple();
     this.isDragAndDropImport = true;
   }
@@ -103,12 +100,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     this.uploader.onCompleteItem = (item: FileItem,
                                     response: string,
                                     status: number) => {
-      console.log('onCompleteItem response: ' + response);
-      console.log('onCompleteItem response.length: ' + response.length);
       if (status === 200) {
-        console.log('Review: ' + this.review);
         this.review = !this.checkIfMultiple();
-        console.log('Review: ' + this.review);
         this.integrationImports$ = JSON.parse(response);
         this.item = item;
       }
@@ -126,7 +119,6 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   private checkIfMultiple(): boolean {
-    console.log('this.upload.queue.length: ' + this.uploader.queue.length);
     return this.uploader.queue.length >1;
   }
 
