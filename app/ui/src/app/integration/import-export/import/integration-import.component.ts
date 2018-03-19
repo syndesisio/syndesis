@@ -31,14 +31,18 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   isDragAndDropImport: boolean;
   isMultipleImport: boolean;
   response: IntegrationImportsData;
+  integration: IntegrationOverview;
   integrations: Array<IntegrationOverview>;
+  integrationOverview$: Observable<IntegrationOverview>;
   integrationOverviews$: Observable<IntegrationOverviews>;
   integrationImports$: Observable<IntegrationOverviews>;
   item = {} as FileItem;
+  loading = true;
   review = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
+  private integrationOverviewSubscription: Subscription;
   private integrationOverviewsSubscription: Subscription;
   constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
   }
@@ -62,8 +66,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     };
   }
 
-  onFileSelected(event: Event): void {
-    this.isDragAndDropImport = false;
+  onDropFile(): void {
+    this.isDragAndDropImport = true;
     this.isMultipleImport = this.checkIfMultiple();
   }
 
@@ -71,12 +75,19 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     this.checkIfDragAndDrop(event);
   }
 
-  onDropFile(event: Event): void {
+  onFileSelected(): void {
+    this.isDragAndDropImport = false;
     this.isMultipleImport = this.checkIfMultiple();
-    this.isDragAndDropImport = true;
   }
 
   ngOnInit() {
+    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
+
+    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
+      this.integrations = integrations;
+      this.loading = false;
+    });
+
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
@@ -102,8 +113,12 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
                                     status: number) => {
       if (status === 200) {
         this.review = !this.checkIfMultiple();
-        this.integrationImports$ = JSON.parse(response);
-        this.item = item;
+        //this.integrationImports$ = JSON.parse(response);
+        //this.item = item;
+        console.log('integrationImports$: ' + JSON.stringify(this.integrationImports$));
+        //[{"action":"updated","kind":"integration","id":"-L775DOUc8-A7n1KyeMq"}]
+        //console.log('item: ' + this.item);
+        this.fetchIntegrationOverview(response);
       }
     };
   }
@@ -120,6 +135,28 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
 
   private checkIfMultiple(): boolean {
     return this.uploader.queue.length >1;
+  }
+
+  private fetchIntegrationOverview(results) {
+    if (this.checkIfMultiple() === false) {
+      // Use generics to ensure the results value is just a string ID
+      console.log('Single integration, fetching..');
+      this.integrationOverview$ = this.integrationSupportService.getOverview(results);
+      this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
+        console.log('Integration: ' + JSON.stringify(integration));
+        this.integration = integration;
+      });
+    } else if (results && results.length) {
+      // Use generics to ensure the results value is an array of integrations
+      console.log('Multiple integrations, fetching..');
+      this.integrationOverviews$ = this.integrationSupportService.getOverviews();
+      this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
+        console.log('Integrations: ' + JSON.stringify(integrations));
+        this.integrations = integrations;
+      });
+    } else {
+      console.log('Nothing happening here..');
+    }
   }
 
   private redirectBack(): void {
