@@ -28,8 +28,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   error: FileError;
   importing = false;
   uploader: FileUploader;
-  importMultiple: boolean;
-  importTypeIsDragDrop: boolean;
+  isDragAndDropImport: boolean;
+  isMultipleImport: boolean;
   response: IntegrationImportsData;
   integrations: Array<IntegrationOverview>;
   integrationOverviews$: Observable<IntegrationOverviews>;
@@ -55,9 +55,28 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFileOver(e) {
-    console.log('onFileOver(e): ' + JSON.stringify(e));
-    this.importTypeIsDragDrop = e;
+  getFileTypeError() {
+    return {
+      level: 'alert alert-danger',
+      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
+    };
+  }
+
+  onFileSelected(event: Event): void {
+    this.isDragAndDropImport = false;
+    this.isMultipleImport = this.checkIfMultiple();
+    console.log('onFileSelected: ' + JSON.stringify(event));
+  }
+
+  onDropOverAndOut(event: Event): void {
+    console.log('onDropOverAndOut(event): ' + JSON.stringify(event));
+    this.checkIfDragAndDrop(event);
+  }
+
+  onDropFile(event: Event): void {
+    console.log('onDropFile: ' + JSON.stringify(event));
+    this.isMultipleImport = this.checkIfMultiple();
+    this.isDragAndDropImport = true;
   }
 
   ngOnInit() {
@@ -100,19 +119,16 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     }
   }
 
-  private checkIfDragAndDrop(): void {
-    // Do something here
+  private checkIfDragAndDrop(isDragAndDropImport): void {
+    this.isDragAndDropImport = !!isDragAndDropImport;
   }
 
-  private checkIfMultiple(): void {
+  private checkIfMultiple(): boolean {
     // Do something here
-  }
-
-  private getFileTypeError() {
-    return {
-      level: 'alert alert-danger',
-      message: '<strong>This is not a valid file type.</strong> Try again and specify a .zip file.'
-    };
+    //this.uploader.queue.length;
+    //this.isMultipleImport
+    console.log('this.upload.queue.length: ' + this.uploader.queue.length);
+    return this.uploader.queue.length >=1;
   }
 
   private redirectBack(): void {
