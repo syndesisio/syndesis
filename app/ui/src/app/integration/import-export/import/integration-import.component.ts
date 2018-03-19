@@ -28,6 +28,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   error: FileError;
   importing = false;
   uploader: FileUploader;
+  importMultiple: boolean;
   importTypeIsDragDrop: boolean;
   response: IntegrationImportsData;
   integrations: Array<IntegrationOverview>;
@@ -55,6 +56,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   onFileOver(e) {
+    console.log('onFileOver(e): ' + JSON.stringify(e));
     this.importTypeIsDragDrop = e;
   }
 
