@@ -38,6 +38,6 @@ export class EmptyStateCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.class = 'empty-state-card card ' + this.colClass;
+    this.class = 'card--empty-state card ' + this.colClass;
   }
 }
