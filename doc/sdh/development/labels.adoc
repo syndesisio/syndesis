@@ -25,7 +25,7 @@ There must be only at most one label from the "Exclusive" groups.
 |
 
 | **prio/**
-| Priority of the issue. Only one `prio/` label must be added per issue. `prio/p0` is of highest priority, `prio/p4` the lowest one.
+| Priority of the issue. Only one `prio/` label must be added per issue. `prio/p0` is of highest priority, `prio/p2` the lowest one.
 | ✔︎
 
 | **ext/**
@@ -145,11 +145,6 @@ Currently we have these categories:
 | **cat/bug**
 {set:cellbgcolor:#e08891}
 | A bug which needs fixing.
-{set:cellbgcolor!}
-
-| **cat/blocker**
-{set:cellbgcolor:#dd6977}
-| A blocker, which is a bug which needs to be fixed as soon as possible.
 {set:cellbgcolor!}
 
 | **cat/enhancement**
