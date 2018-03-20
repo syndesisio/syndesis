@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,6 +73,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinate;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 
 
 /**
@@ -412,21 +415,52 @@ public class GenerateMetadataMojo extends AbstractMojo {
     }
 
     protected void includeDependencies() {
-        Stream<Artifact> artifacts;
+        List<Artifact> artifacts;
 
         if (Boolean.TRUE.equals(listAllArtifacts)) {
             artifacts = project.getArtifacts().stream()
-                .filter(artifact -> StringUtils.equals(artifact.getScope(), DefaultArtifact.SCOPE_PROVIDED));
+                .filter(artifact -> StringUtils.equals(artifact.getScope(), DefaultArtifact.SCOPE_PROVIDED))
+                .collect(Collectors.toList());
         } else {
             artifacts = this.project.getDependencies().stream()
                 .filter(dependency -> StringUtils.equals(dependency.getScope(), DefaultArtifact.SCOPE_PROVIDED))
-                .map(this::toArtifact);
+                .map(this::toArtifact)
+                .collect(Collectors.toList());
         }
 
-        artifacts.map(Artifact::getId)
+        Set<String> bomVersionlessArtifacts = artifacts.stream()
+            .map(this::versionlessKey)
+            .collect(Collectors.toSet());
+
+        List<io.syndesis.common.model.Dependency> jsonDependencies = extensionBuilder.build().getDependencies();
+
+        List<Artifact> jsonFilteredArtifacts = jsonDependencies.stream()
+            .filter(io.syndesis.common.model.Dependency::isMaven)
+            .map(io.syndesis.common.model.Dependency::getId)
+            .map(this::artifactFromId)
+            .filter(a -> !bomVersionlessArtifacts.contains(versionlessKey(a)))
+            .collect(Collectors.toList());
+
+        List<io.syndesis.common.model.Dependency> mavenDependencies = Stream.concat(jsonFilteredArtifacts.stream(), artifacts.stream())
+            .map(Artifact::getId)
             .sorted()
             .map(io.syndesis.common.model.Dependency::maven)
-            .forEachOrdered(extensionBuilder::addDependency);
+            .collect(Collectors.toList());
+
+        extensionBuilder.dependencies(Stream.concat(mavenDependencies.stream(), jsonDependencies.stream().filter(d -> !d.isMaven()))
+            .collect(Collectors.toList()));
+    }
+
+    protected String versionlessKey(Artifact artifact) {
+        return artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" +
+            Optional.ofNullable(artifact.getType()).orElse("jar") + ":" +
+            Optional.ofNullable(artifact.getClassifier()).orElse("");
+    }
+
+    protected Artifact artifactFromId(String id) {
+        MavenCoordinate c = MavenCoordinates.createCoordinate(id);
+
+        return new DefaultArtifact(c.getGroupId(), c.getArtifactId(), c.getVersion(), "compile", c.getType() != null ? c.getType().getId() : "jar", c.getClassifier(), null);
     }
 
     protected void saveExtensionMetaData(Extension jsonObject) throws MojoExecutionException {
