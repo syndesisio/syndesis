@@ -38,7 +38,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   integrationImports$: Observable<IntegrationOverviews>;
   item = {} as FileItem;
   loading = true;
-  review = false;
+  showReviewStep = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
@@ -112,13 +112,15 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
                                     response: string,
                                     status: number) => {
       if (status === 200) {
-        this.review = !this.checkIfMultiple();
+        this.showReviewStep = !this.checkIfMultiple();
         //this.integrationImports$ = JSON.parse(response);
         //this.item = item;
         console.log('integrationImports$: ' + JSON.stringify(this.integrationImports$));
         //[{"action":"updated","kind":"integration","id":"-L775DOUc8-A7n1KyeMq"}]
         //console.log('item: ' + this.item);
         this.fetchIntegrationOverview(response);
+        //return (isMember ? "$2.00" : "$10.00");
+        //
       }
     };
   }
@@ -141,7 +143,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     if (this.checkIfMultiple() === false) {
       // Use generics to ensure the results value is just a string ID
       console.log('Single integration, fetching..');
-      this.integrationOverview$ = this.integrationSupportService.getOverview(results);
+      this.integrationOverview$ = this.integrationSupportService.getOverview(results.id);
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
         console.log('Integration: ' + JSON.stringify(integration));
         this.integration = integration;
