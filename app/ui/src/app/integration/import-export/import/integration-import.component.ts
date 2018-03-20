@@ -131,7 +131,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   private checkIfMultiple(): boolean {
-    return this.uploader.queue.length >1;
+    return this.uploader.queue.length > 1;
   }
 
   private fetchIntegrationOverview(results) {
