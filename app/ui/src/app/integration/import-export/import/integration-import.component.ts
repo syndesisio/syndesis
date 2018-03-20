@@ -52,7 +52,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   done(integrationImports) {
-    if (integrationImports.length === 1 && integrationImports[0].id) {
+    if (integrationImports.length === 1 && integrationImports[0].id && !this.isMultipleImport) {
       this.router.navigate(['/integrations', integrationImports[0].id]);
     } else {
       this.redirectBack();
