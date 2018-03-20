@@ -32,6 +32,7 @@ Options for minishift:
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images,
                               "openshift" for image streams (default: "openshift")
 -o  --open                    Open Syndesis in the browser
+    --test-support            Allow test support endpoint for syndesis-server
 ----
 
 ### Installing Syndesis

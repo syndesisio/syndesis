@@ -28,6 +28,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
                               By default the resource descriptor is
                               downloaded from GitHub remotely.
 -o  --open                    Open Syndesis in browser when installation is ready
+    --test-support            Allow test support endpoint for syndesis-server
 ----
 
 The deployment will always happen for the currently connected OpenShift cluster.
