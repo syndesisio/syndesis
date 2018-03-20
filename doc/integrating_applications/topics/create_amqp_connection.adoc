@@ -18,15 +18,15 @@ to use to access this broker.
 to use to access this broker. 
 .. In the *Client ID* field, enter the ID that allows connections to close 
 and reopen without missing messages. The destination type must be a topic. 
-.. If this connection will be used in a development 
-environment, you can save some time by enabling 
-*Skip Certificate Check*. This is a convenience for 
+.. If this connection will be used in a development
+environment, you can save some time by disabling
+*Check Certificates*. Disabling the checking of certificates is a convenience for
 development environments. You
-should not enable this option for secure production 
-environments. 
+should not disable *Check Certificates* for secure production
+environments.
 .. In the *Broker Certificate* field, paste the broker's PEM certificate text.
-This is required except when you indicate that you want to skip
-checking the certificate. 
+This is required except when disable
+checking the certificates. 
 .. In the *Client Certificate* field, paste the client's PEM certificate text. 
 Content in this field is always optional. 
 . Click *Validate*. {prodname} immediately tries to validate the 
@@ -43,4 +43,4 @@ enter `*Sample AMQP connection*`
 . In the upper right, click *Create* to see that the connection you 
 created is now available. If you
 entered the example name, you would 
-see that *AMQ 1* is now available. 
+see that *AMQP 1* is now available. 

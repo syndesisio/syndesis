@@ -19,14 +19,14 @@ to use to access this broker.
 .. In the *Client ID* field, enter the ID that allows connections to close
 and reopen without missing messages. The destination type must be a topic.
 .. If this connection will be used in a development
-environment, you can save some time by selecting
-*Skip Certificate Check*. This is a convenience for
+environment, you can save some time by disabling
+*Check Certificates*. Disabling the checking of certificates is a convenience for
 development environments. You
-should not select this option for secure production
+should not disable *Check Certificates* for secure production
 environments.
 .. In the *Broker Certificate* field, paste the broker's PEM certificate text.
-This is required except when you indicate that you want to skip
-checking the certificate. 
+This is required except when you disable
+checking the certificates. 
 .. In the *Client Certificate* field, paste the client's PEM certificate text. 
 Content in this field is always optional. 
 . Click *Validate*. {prodname} immediately tries to validate the 

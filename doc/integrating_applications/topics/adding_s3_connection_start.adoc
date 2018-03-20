@@ -12,37 +12,23 @@ you want to use as the integration's start connection.
 * *Get Object* to obtain a file from the bucket that the connection
 accesses. To configure this action:
 
-<<<<<<< HEAD
-.. To obtain a file and then delete it from the bucket, select
-*Delete After Read*.
-
-.. In the *File Name* field, enter the name of the file that you want
-to obtain.
-=======
 .. In the *File Name* field, enter the name of the file that you want
 to obtain. 
 .. To obtain a file and then delete it from the bucket, select
 *Delete After Read*. 
->>>>>>> 5040886... Lots of updates including user doc for logging, metrics, amq, amqp, s3 connectors, custom connectors. 1623.
 
 * *Poll an Amazon S3 Bucket* to periodically obtain files from the bucket that the
 connection accesses. To configure this action:
-
-<<<<<<< HEAD
-.. To obtain files and then delete them from the bucket,
-select *Delete After Read*.
-=======
-.. In the *Delay* field, enter the number of milliseconds that elapse between
-polls. The default is 500 milliseconds. 
+.. In the *Delay* field, accept the default or enter the number of 
+milliseconds that elapse between
+polls. The default is 500 milliseconds.
 Alternatively, you can enter something like `3s`, `5m 30s`, or `2h` to
 indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respectively.
-
->>>>>>> 5040886... Lots of updates including user doc for logging, metrics, amq, amqp, s3 connectors, custom connectors. 1623.
-.. In the *Max Messages Per Poll* field, enter the largest number of files
+.. In the *Maximum Objects to Retrieve* field, enter the largest number of files
 that one poll operation can obtain. The default is 10.
 +
 To have no limit on the number of files that can be obtained, specify
-`0` or a negative integer. When *Max Messages Per Poll* is unlimited,
+`0` or a negative integer. When *Maximum Objects to Retrieve* is unlimited,
 the poll action obtains all files in the bucket.
 +
 If the bucket contains more than the specified maximum number of files
@@ -52,20 +38,10 @@ modified or created. This behavior can be changed in AWS.
 .. In the *Prefix* field, optionally specify a regular expression
 that evaluates to a string. If you specify a
 prefix then this action retrieves a file
-<<<<<<< HEAD
 only when its name starts with that string.
-.. In the *Delay* field, enter the number of milliseconds that elapse between
-polls. The default is 500 milliseconds.
-Alternatively, you can enter something like `3s`, `5m 30s`, or `2h` to
-indicate 3 seconds, or 5 minutes 30 seconds, or 2 hours, respectively.
-. Click *Next*.
-include::add_describe_data_step.adoc[]
-=======
-only when its name starts with that string. 
 
 .. Indicate whether you want to  
 *Obtain files and then delete them from the bucket*.
 
-. Click *Next* to specify the action's output type. See 
+. Click *Done* to specify the action's output type. See 
 <<specifying-connection-input-output-types>>. 
->>>>>>> 5040886... Lots of updates including user doc for logging, metrics, amq, amqp, s3 connectors, custom connectors. 1623.
