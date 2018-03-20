@@ -37,6 +37,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   integrationImports$: Observable<IntegrationOverviews>;
   item = {} as FileItem;
   loading = true;
+  showButtons = false;
   showReviewStep = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
@@ -80,12 +81,11 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
+    this.integrationOverviews$ = this.integrationSupportService.getOverviews();
 
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.integrations = integrations;
       this.loading = false;
-      console.log('this.integrations on ngOnInit: ' + JSON.stringify(this.integrations));
     });
 
     this.uploader = new FileUploader({
@@ -112,8 +112,8 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
                                     response: string,
                                     status: number) => {
       if (status === 200) {
-        //this.showReviewStep = !this.checkIfMultiple();
-        this.showReviewStep = true;
+        this.showButtons = true;
+        this.showReviewStep = !this.checkIfMultiple();
         this.integrationImports$ = JSON.parse(response);
         this.fetchIntegrationOverview(this.integrationImports$);
       }
@@ -136,31 +136,11 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
 
   private fetchIntegrationOverview(results) {
     if (this.checkIfMultiple() === false) {
+      // This works, but mutates the integrations object
       this.integrationOverview$ = this.integrationSupportService.getOverview(results[0].id);
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
         this.integrations = [integration];
       });
-    } else if (this.checkIfMultiple() === true) {
-      console.log('Multiple integrations, fetching..');
-      console.log('Let\'s check where integrations list is: ' + JSON.stringify(this.integrations));
-      (this.integrations || []).forEach(integration => {
-        (results || []).forEach(result => {
-          if(result.id === integration.id) {
-            // Push to integrations
-            console.log('It\'s a match!');
-          }
-        });
-      });
-      /*
-      this.integrationOverviews$ = this.integrationSupportService.getOverviews();
-      this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-        console.log('integrations returned value: ' + JSON.stringify(integrations));
-        this.integrations = integrations;
-        console.log('this.integrations: ' + JSON.stringify(this.integrations));
-      });
-      */
-    } else {
-      console.log('Nothing happening here..');
     }
   }
 

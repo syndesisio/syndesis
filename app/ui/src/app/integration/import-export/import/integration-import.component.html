@@ -56,28 +56,30 @@
               a draft version of the integration, then that draft is lost.</em>
           </p>
         </div>
-        <div class="results"
-             *ngIf="showReviewStep">
-          <div class="col-xs-2 text">
-            <h3>Import Results:</h3>
+        <div class="results">
+          <div *ngIf="showReviewStep">
+            <div class="col-xs-2 text">
+              <h3>Import Results:</h3>
+            </div>
+            <div class="col-xs-10">
+              <table class="table">
+                <tbody>
+                <ng-container *ngFor="let integration of integrations">
+                  <tr *ngIf="integration.name">
+                    <th>Integration Name</th>
+                    <td>{{ integration.name }}</td>
+                  </tr>
+                  <tr *ngFor="let step of integration.steps">
+                    <th *ngIf="step.connection">Connection Name</th>
+                    <td>{{ step.connection.name }}</td>
+                  </tr>
+                </ng-container>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="col-xs-10">
-            <table class="table">
-              <tbody>
-              <ng-container *ngFor="let integration of integrations">
-                <tr *ngIf="integration.name">
-                  <th>Integration Name</th>
-                  <td>{{ integration.name }}</td>
-                </tr>
-                <tr *ngFor="let step of integration.steps">
-                  <th *ngIf="step.connection">Connection Name</th>
-                  <td>{{ step.connection.name }}</td>
-                </tr>
-              </ng-container>
-              </tbody>
-            </table>
-          </div>
-          <div class="buttons col-xs-12">
+          <div class="buttons col-xs-12"
+               *ngIf="showButtons || showReviewStep">
             <button type="button"
                     class="btn btn-primary"
                     (click)="done(integrationImports$)">
