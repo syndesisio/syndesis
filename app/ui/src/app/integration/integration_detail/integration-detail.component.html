@@ -84,9 +84,19 @@
       </ul>
 
       <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'description'">
-        <syndesis-integration-description [integration]="integration" [stepStore]="stepStore" (viewDetails)="viewDetails($event)"
-          (attributeUpdated)="attributeUpdated($event)" (draftAction)="draftAction($event)">
+        <syndesis-integration-description
+          [integration]="integration"
+          [stepStore]="stepStore"
+          (viewDetails)="viewDetails($event)"
+          (attributeUpdated)="attributeUpdated($event)"
+          (draftAction)="draftAction($event)">
         </syndesis-integration-description>
+
+        <syndesis-integration-history
+          [integration]="integration"
+          [deploymentActionConfigs]="deploymentActionConfigs"
+          (deploymentAction)="deploymentAction($event)">
+        </syndesis-integration-history>
       </div>
 
       <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'logs'">
