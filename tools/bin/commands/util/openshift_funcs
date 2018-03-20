@@ -186,3 +186,28 @@ patch_imagestreams_for_initial_image() {
         oc patch is $is --type json -p="[$replace_kind, $replace_name, $remove_import_policy]"
     done
 }
+
+guess_route() {
+    local project=${1:-}
+    if [ -z "${project}" ]; then
+        project=$(oc project -q)
+    fi
+    local log=$(oc create service clusterip smokeservice --tcp=4343 2>&1 && \
+                oc create route edge --service=smokeservice 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot create pivot route\n$log"
+        exit 1
+    fi
+    local domain=$(oc get route smokeservice -o template  --template='{{.spec.host}}' 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot extract route: $domain"
+        exit 1
+    fi
+    log=$(oc delete service smokeservice 2>&1 && \
+          oc delete route smokeservice 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot delete pivot route\n$log"
+        exit 1
+    fi
+    echo "${project}.${domain#*.}"
+}
