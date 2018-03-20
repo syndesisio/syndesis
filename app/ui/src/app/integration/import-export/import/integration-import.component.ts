@@ -36,6 +36,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   integrationOverviews$: Observable<IntegrationOverviews>;
   integrationImports$: Observable<IntegrationOverviews>;
   item = {} as FileItem;
+  loading = true;
   showReviewStep = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
@@ -79,13 +80,12 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    /*
     this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
 
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.integrations = integrations;
+      this.loading = false;
     });
-    */
 
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),

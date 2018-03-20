@@ -1,90 +1,94 @@
-<div class="row row-cards-pf second-row">
-  <div class="card-pf">
-    <div class="card-pf-heading">
-      <div class="card-pf-title">
-        <h1>Import Integration</h1>
+<syndesis-loading [loading]="loading">
+
+  <div class="row row-cards-pf second-row">
+    <div class="card-pf">
+      <div class="card-pf-heading">
+        <div class="card-pf-title">
+          <h1>Import Integration</h1>
+        </div>
       </div>
-    </div>
-    <div class="card-pf-body">
-      <div>
-        <p>Choose one or more zip files that contain exported integrations that you want to import.</p>
-      </div>
-      <div class="syn-drop-zone"
-           ng2FileDrop
-           [uploader]="uploader"
-           [ngClass]="{'syn-drop-zone--hover': isDragAndDropImport}"
-           (fileOver)="onDropOverAndOut($event)"
-           (onFileDrop)="onDropFile($event)">
-        <p>Drag and drop your integration files here or</p>
-        <div class="row syn-drop-zone__file-select">
-          <div class="col-md-3">
-            <input #fileSelect
-                   type="file"
-                   ng2FileSelect
-                   (onFileSelected)="onFileSelected($event)"
-                   multiple
-                   [uploader]="uploader">
-          </div>
-          <div class="col-md-9">
-            <div *ngFor="let item of uploader.queue">
-              <div class="row">
-                <div class="col-xs-10">
-                  <div *ngIf="item.isUploading" class="text-muted">
-                    <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
-                    <em>Importing...</em>
-                  </div>
-                  <div *ngIf="item.isUploaded">
-                    <div *ngIf="item.isSuccess; else isError">
-                      <span class="pficon-ok"></span>
-                      Successfully imported.
+      <div class="card-pf-body">
+        <div>
+          <p>Choose one or more zip files that contain exported integrations that you want to import.</p>
+        </div>
+        <div class="syn-drop-zone"
+             ng2FileDrop
+             [uploader]="uploader"
+             [ngClass]="{'syn-drop-zone--hover': isDragAndDropImport}"
+             (fileOver)="onDropOverAndOut($event)"
+             (onFileDrop)="onDropFile($event)">
+          <p>Drag and drop your integration files here or</p>
+          <div class="row syn-drop-zone__file-select">
+            <div class="col-md-3">
+              <input #fileSelect
+                     type="file"
+                     ng2FileSelect
+                     (onFileSelected)="onFileSelected($event)"
+                     multiple
+                     [uploader]="uploader">
+            </div>
+            <div class="col-md-9">
+              <div *ngFor="let item of uploader.queue">
+                <div class="row">
+                  <div class="col-xs-10">
+                    <div *ngIf="item.isUploading" class="text-muted">
+                      <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
+                      <em>Importing...</em>
                     </div>
-                    <ng-template #isError>
-                      <span class="pficon-error-circle-o"></span>
-                      Unable to import this file.
-                    </ng-template>
+                    <div *ngIf="item.isUploaded">
+                      <div *ngIf="item.isSuccess; else isError">
+                        <span class="pficon-ok"></span>
+                        Successfully imported.
+                      </div>
+                      <ng-template #isError>
+                        <span class="pficon-error-circle-o"></span>
+                        Unable to import this file.
+                      </ng-template>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <p class="help-block">
+            <em>Note: The imported integration will be in the draft state. If you previously imported and this
+              environment has
+              a draft version of the integration, then that draft is lost.</em>
+          </p>
         </div>
-        <p class="help-block">
-          <em>Note: The imported integration will be in the draft state. If you previously imported and this
-            environment has
-            a draft version of the integration, then that draft is lost.</em>
-        </p>
-      </div>
-      <div class="results"
-           *ngIf="showReviewStep">
-        <div class="col-xs-2 text">
-          <h3>Import Results:</h3>
-        </div>
-        <div class="col-xs-10">
-          <table class="table">
-            <tbody>
-            <tr *ngFor="let integration of integrationImports$">
-              <ng-container [ngSwitch]="integration.kind">
-                <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
-                <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
-              </ng-container>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="buttons col-xs-12">
-          <button type="button"
-                  class="btn btn-primary"
-                  (click)="done(integrationImports$)">
-            Done
-          </button>
-          <button type="button"
-                  class="btn btn-default"
-                  (click)="cancel()">
-            Cancel
-          </button>
+        <div class="results"
+             *ngIf="showReviewStep">
+          <div class="col-xs-2 text">
+            <h3>Import Results:</h3>
+          </div>
+          <div class="col-xs-10">
+            <table class="table">
+              <tbody>
+              <tr *ngFor="let integration of integrationImports$">
+                <ng-container [ngSwitch]="integration.kind">
+                  <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
+                  <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
+                </ng-container>
+                <td></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="buttons col-xs-12">
+            <button type="button"
+                    class="btn btn-primary"
+                    (click)="done(integrationImports$)">
+              Done
+            </button>
+            <button type="button"
+                    class="btn btn-default"
+                    (click)="cancel()">
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+</syndesis-loading>
