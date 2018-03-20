@@ -36,7 +36,6 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   integrationOverviews$: Observable<IntegrationOverviews>;
   integrationImports$: Observable<IntegrationOverviews>;
   item = {} as FileItem;
-  loading = true;
   showReviewStep = false;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
@@ -80,12 +79,13 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    /*
     this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
 
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.integrations = integrations;
-      this.loading = false;
     });
+    */
 
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
@@ -163,18 +163,25 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     if (this.checkIfMultiple() === false) {
       // Use generics to ensure the results value is just a string ID
       this.integrationOverview$ = this.integrationSupportService.getOverview(results[0].id);
+      console.log('this.integrationOverview$: ' + JSON.stringify(this.integrationOverview$));
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
-        this.integrations = [integration];
+        this.integrations.push(integration);
       });
     } else if (results && results.length) {
       // Use generics to ensure the results value is an array of integrations
       console.log('Multiple integrations, fetching..');
+      //(this.integrations || []).forEach(integration => {});
+      (results || []).forEach(integration => {
+        console.log('each integration: ' + JSON.stringify(integration));
+      });
+      /*
       this.integrationOverviews$ = this.integrationSupportService.getOverviews();
       this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
         console.log('integrations returned value: ' + JSON.stringify(integrations));
         this.integrations = integrations;
         console.log('this.integrations: ' + JSON.stringify(this.integrations));
       });
+      */
     } else {
       console.log('Nothing happening here..');
     }
