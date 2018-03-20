@@ -1,42 +1,46 @@
 <syndesis-loading [loading]="!integration">
-<dl class="dl-horizontal" *ngIf="integration?.draft">
-  <dt>Draft:</dt>
-  <dd>
-    <div class="list-pf">
-      <div class="list-pf-item">
-        <div class="list-pf-container">
-          <div class="list-pf-content list-pf-content-flex">
-            <div class="pfng-list-content">
-              <div class="list-pf-left">
-                <em>Draft</em>
-    
-              </div>
-              <div class="list-pf-content-wrapper">
-                <div class="list-pf-main-content">
+  <dl class="dl-horizontal" *ngIf="integration?.draft">
+    <dt>Draft:</dt>
+    <dd>
+      <div class="list-pf">
+        <div class="list-pf-item">
+          <div class="list-pf-container">
+            <div class="list-pf-content list-pf-content-flex">
+              <div class="pfng-list-content">
+                <div class="list-pf-left">
+                  <em>Draft</em>
+
+                </div>
+                <div class="list-pf-content-wrapper">
+                  <div class="list-pf-main-content">
+                  </div>
+                </div>
+                <div class="list-pf-additional-content">
+                  <span>Last published on {{ integration?.lastUpdated | date }}</span>
                 </div>
               </div>
-              <div class="list-pf-additional-content">
-                <span>Last published on {{ integration?.lastUpdated | date }}</span>
+              <div class="list-pf-actions">
+                <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button">
+                  Publish
+                </syndesis-button>
+                <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button">
+                  Edit
+                </syndesis-button>
               </div>
-            </div>
-            <div class="list-pf-actions">
-              <syndesis-button theme="default" (click)="onDraftAction('publish')" type="button">
-                Publish
-              </syndesis-button>
-              <syndesis-button theme="default" (click)="onDraftAction('edit')" type="button">
-                Edit
-              </syndesis-button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </dd>
-</dl>
-<dl class="dl-horizontal">
+    </dd>
+  </dl>
+  <dl class="dl-horizontal">
     <dt>History:</dt>
     <dd>
-      <pfng-list [items]="integration?.deployments" [config]="deploymentListConfig" [itemTemplate]="itemTemplate" [expandTemplate]="expandTemplate"
+      <pfng-list
+        [items]="integration?.deployments" 
+        [config]="deploymentListConfig"
+        [itemTemplate]="itemTemplate"
+        [expandTemplate]="expandTemplate"
         [actionTemplate]="actionTemplate">
         <ng-template #itemTemplate let-deployment="item" let-index="index">
           <div class="list-pf-left">
@@ -73,7 +77,9 @@
           </div>
         </ng-template>
         <ng-template #actionTemplate let-deployment="item" let-index="index">
-          <pfng-action class="list-pf-actions" [config]="deploymentActionConfigs[deployment.id]" (onActionSelect)="onDeploymentAction($event, deployment)">
+          <pfng-action class="list-pf-actions"
+            [config]="deploymentActionConfigs[deployment.id]"
+            (onActionSelect)="onDeploymentAction($event, deployment)">
           </pfng-action>
         </ng-template>
       </pfng-list>
