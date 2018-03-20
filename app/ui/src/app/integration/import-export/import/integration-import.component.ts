@@ -161,27 +161,20 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
 
   private fetchIntegrationOverview(results) {
     if (this.checkIfMultiple() === false) {
-      // Use generics to ensure the results value is just a string ID
       this.integrationOverview$ = this.integrationSupportService.getOverview(results[0].id);
-      console.log('this.integrationOverview$: ' + JSON.stringify(this.integrationOverview$));
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
-        this.integrations.push(integration);
+        this.integrations = [integration];
       });
     } else if (results && results.length) {
-      // Use generics to ensure the results value is an array of integrations
       console.log('Multiple integrations, fetching..');
       //(this.integrations || []).forEach(integration => {});
-      (results || []).forEach(integration => {
-        console.log('each integration: ' + JSON.stringify(integration));
-      });
-      /*
+      //(this.results || []).forEach(integration => {});
       this.integrationOverviews$ = this.integrationSupportService.getOverviews();
       this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
         console.log('integrations returned value: ' + JSON.stringify(integrations));
         this.integrations = integrations;
         console.log('this.integrations: ' + JSON.stringify(this.integrations));
       });
-      */
     } else {
       console.log('Nothing happening here..');
     }
