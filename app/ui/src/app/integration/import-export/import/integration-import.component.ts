@@ -31,7 +31,6 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   isDragAndDropImport: boolean;
   isMultipleImport: boolean;
   response: IntegrationImportsData;
-  integration: IntegrationOverview;
   integrations: Array<IntegrationOverview>;
   integrationOverview$: Observable<IntegrationOverview>;
   integrationOverviews$: Observable<IntegrationOverviews>;
@@ -113,13 +112,34 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
                                     status: number) => {
       if (status === 200) {
         this.showReviewStep = !this.checkIfMultiple();
-        //this.integrationImports$ = JSON.parse(response);
+        this.integrationImports$ = JSON.parse(response);
         //this.item = item;
-        console.log('integrationImports$: ' + JSON.stringify(this.integrationImports$));
+        //console.log('integrationImports$: ' + JSON.stringify(this.integrationImports$));
         //[{"action":"updated","kind":"integration","id":"-L775DOUc8-A7n1KyeMq"}]
         //console.log('item: ' + this.item);
-        this.fetchIntegrationOverview(response);
-        //return (isMember ? "$2.00" : "$10.00");
+        //this.fetchIntegrationOverview(response);
+
+        // NOTE: We should not have to parse the JSON here,
+        // investigate with ng2-file-upload
+        //this.integrations = JSON.parse(response);
+
+        //console.log('this.integrations: ' + JSON.stringify(this.integrations));
+
+        this.fetchIntegrationOverview(this.integrationImports$);
+
+        /*
+        if (this.showReviewStep) {
+          console.log('this.showReviewStep true');
+          //this.fetchIntegrationOverview(this.integrations[0].id);
+          this.fetchIntegrationOverview(this.integrationImports$);
+        } else {
+          console.log('this.showReviewStep false');
+          //this.fetchIntegrationOverview(this.integrations);
+          //this.fetchIntegrationOverview(response);
+        }
+        */
+
+        //(this.showReviewStep ? this.fetchIntegrationOverview(this.integrations[0].id) : this.fetchIntegrationOverview(this.integrations));
         //
       }
     };
@@ -142,19 +162,18 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
   private fetchIntegrationOverview(results) {
     if (this.checkIfMultiple() === false) {
       // Use generics to ensure the results value is just a string ID
-      console.log('Single integration, fetching..');
-      this.integrationOverview$ = this.integrationSupportService.getOverview(results.id);
+      this.integrationOverview$ = this.integrationSupportService.getOverview(results[0].id);
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
-        console.log('Integration: ' + JSON.stringify(integration));
-        this.integration = integration;
+        this.integrations = [integration];
       });
     } else if (results && results.length) {
       // Use generics to ensure the results value is an array of integrations
       console.log('Multiple integrations, fetching..');
       this.integrationOverviews$ = this.integrationSupportService.getOverviews();
       this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-        console.log('Integrations: ' + JSON.stringify(integrations));
+        console.log('integrations returned value: ' + JSON.stringify(integrations));
         this.integrations = integrations;
+        console.log('this.integrations: ' + JSON.stringify(this.integrations));
       });
     } else {
       console.log('Nothing happening here..');
