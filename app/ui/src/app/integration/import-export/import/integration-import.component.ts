@@ -136,7 +136,6 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
 
   private fetchIntegrationOverview(results) {
     if (this.checkIfMultiple() === false) {
-      // This works, but mutates the integrations object
       this.integrationOverview$ = this.integrationSupportService.getOverview(results[0].id);
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
         this.integrations = [integration];
