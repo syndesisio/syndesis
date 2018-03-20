@@ -65,20 +65,15 @@
             <table class="table">
               <tbody>
               <ng-container *ngFor="let integration of integrations">
+                <tr *ngIf="integration.name">
+                  <th>Integration Name</th>
+                  <td>{{ integration.name }}</td>
+                </tr>
                 <tr *ngFor="let step of integration.steps">
                   <th *ngIf="step.connection">Connection Name</th>
                   <td>{{ step.connection.name }}</td>
                 </tr>
               </ng-container>
-              <!--
-              <tr *ngFor="let integration of integrations">
-                <ng-container [ngSwitch]="integration.kind">
-                  <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
-                  <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
-                </ng-container>
-                <td></td>
-              </tr>
-              -->
               </tbody>
             </table>
           </div>

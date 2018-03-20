@@ -85,6 +85,7 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.integrations = integrations;
       this.loading = false;
+      console.log('this.integrations on ngOnInit: ' + JSON.stringify(this.integrations));
     });
 
     this.uploader = new FileUploader({
@@ -111,36 +112,10 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
                                     response: string,
                                     status: number) => {
       if (status === 200) {
-        this.showReviewStep = !this.checkIfMultiple();
+        //this.showReviewStep = !this.checkIfMultiple();
+        this.showReviewStep = true;
         this.integrationImports$ = JSON.parse(response);
-        //this.item = item;
-        //console.log('integrationImports$: ' + JSON.stringify(this.integrationImports$));
-        //[{"action":"updated","kind":"integration","id":"-L775DOUc8-A7n1KyeMq"}]
-        //console.log('item: ' + this.item);
-        //this.fetchIntegrationOverview(response);
-
-        // NOTE: We should not have to parse the JSON here,
-        // investigate with ng2-file-upload
-        //this.integrations = JSON.parse(response);
-
-        //console.log('this.integrations: ' + JSON.stringify(this.integrations));
-
         this.fetchIntegrationOverview(this.integrationImports$);
-
-        /*
-        if (this.showReviewStep) {
-          console.log('this.showReviewStep true');
-          //this.fetchIntegrationOverview(this.integrations[0].id);
-          this.fetchIntegrationOverview(this.integrationImports$);
-        } else {
-          console.log('this.showReviewStep false');
-          //this.fetchIntegrationOverview(this.integrations);
-          //this.fetchIntegrationOverview(response);
-        }
-        */
-
-        //(this.showReviewStep ? this.fetchIntegrationOverview(this.integrations[0].id) : this.fetchIntegrationOverview(this.integrations));
-        //
       }
     };
   }
@@ -165,16 +140,25 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
       this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
         this.integrations = [integration];
       });
-    } else if (results && results.length) {
+    } else if (this.checkIfMultiple() === true) {
       console.log('Multiple integrations, fetching..');
-      //(this.integrations || []).forEach(integration => {});
-      //(this.results || []).forEach(integration => {});
+      console.log('Let\'s check where integrations list is: ' + JSON.stringify(this.integrations));
+      (this.integrations || []).forEach(integration => {
+        (results || []).forEach(result => {
+          if(result.id === integration.id) {
+            // Push to integrations
+            console.log('It\'s a match!');
+          }
+        });
+      });
+      /*
       this.integrationOverviews$ = this.integrationSupportService.getOverviews();
       this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
         console.log('integrations returned value: ' + JSON.stringify(integrations));
         this.integrations = integrations;
         console.log('this.integrations: ' + JSON.stringify(this.integrations));
       });
+      */
     } else {
       console.log('Nothing happening here..');
     }
