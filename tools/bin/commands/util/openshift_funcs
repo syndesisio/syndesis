@@ -87,6 +87,8 @@ create_and_apply_template() {
     local template=${2:-syndesis}
     local tag=${3:-}
     local use_local_resource=${4:-}
+    local test_support=${5:-false}
+
     if [ -z "$route" ]; then
         echo "No route given"
         exit 1
@@ -107,6 +109,7 @@ create_and_apply_template() {
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
+      -p TEST_SUPPORT_ENABLED=${test_support} \
       -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
 }
 

@@ -20,6 +20,7 @@ install::usage() {
 -o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
+-s  --test-support            Allow test support endpoint for syndesis-server
 EOT
 }
 
@@ -47,7 +48,7 @@ install::run() {
     create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
     # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$(select_template $(hasflag --dev))" "$(readopt --tag)" "$(hasflag --local)"
+    create_and_apply_template "$route" "$(select_template $(hasflag --dev))" "$(readopt --tag)" "$(hasflag --local)" "$(hasflag -s --test-support)"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_syndesis_to_be_ready
