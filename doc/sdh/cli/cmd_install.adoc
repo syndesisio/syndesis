@@ -15,7 +15,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
                               (without recreating)
 -y  --yes                     Automatically answer with "yes" when
                               asked for deleting the project with -p
-    --route                   Route to use (mandatory host name)
+    --route                   Route to use. If not given its tried to be autodected
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
@@ -35,9 +35,12 @@ The deployment will always happen for the currently connected OpenShift cluster.
 So it's mandatory that you have logged into the cluster with `oc login` before.
 You can check the status with `oc status`.
 
-You have to provide the route name with `--route`.
-This value depends on your OpenShift installation but typically is the name of your OpenShift project followed by the cluster's hostname.
-E.g. a route `--route app-proj186023.6a63.fuse-ignite.openshiftapps.com` is specific to the Fuse Ignite test cluster `6a63.fuse-ignite.openshiftapps.com` and for the project `app-proj186023`.
+A route name can be given with `--route`.
+This script tries to autodetect the route if not provided which works most of the time reliably.
+If you provide the route manually, you need to check your OpenShift installation.
+Typically the route name is the name of your OpenShift project followed by the cluster's hostname.
+E.g. a route `--route proj186023.6a63.fuse-ignite.openshiftapps.com` is specific to the Fuse Ignite test cluster `6a63.fuse-ignite.openshiftapps.com` and for the project `proj186023`.
+But you don't have to provide the route name.
 
 By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with `--project <project>`.
 If this project already exists, it gets deleted unconditionally before the deployment, so be careful when using this option.

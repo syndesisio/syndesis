@@ -2,6 +2,10 @@
 
 # ====================================================
 # Standalone script for deploying syndesis
+#
+# This is an alternative to "syndesis install". If you
+# have the choice, try to use "syndesis install" as
+# it has more features
 
 set -o pipefail
 set -eu
@@ -15,9 +19,9 @@ Usage: syndesis-install --route <hostname> [options]
 
 with options:
 
--r --route <host>            The route to install or "auto" to generate a default route based on OpenShift configuration (mandatory)
+-r --route <host>            The route to install. If not given, the route is tried to be auto detected
 -t --tag <tag>               Optional version to use for the installaton ("latest" by default)
--p --project <project>       Install into this project. Delete this project
+-p --project <project>       Install into this project. The project will be deleted
                              if it already exists. By default, install into the current project (without deleting)
 -w --watch                   Wait until the installation has completed
 -o --open                    Open Syndesis after installation (implies --watch)
@@ -32,16 +36,6 @@ EOT
 
 # ============================================================
 # Helper functions taken over from "syndesis" CLI:
-
-oc_get_route_domain() {
-    local domain
-    oc create service clusterip smokeservice --tcp=4343 > /dev/null 2>&1
-    oc create route edge --service=smokeservice > /dev/null 2>&1
-    domain=$(oc get route smokeservice -o template  --template='{{.spec.host}}')
-    echo ${domain#*.}
-    oc delete service smokeservice > /dev/null 2>&1
-    oc delete route smokeservice > /dev/null 2>&1
-}
 
 recreate_project() {
     local project=$1
@@ -110,6 +104,32 @@ get_template_name() {
     fi
     echo $template
 }
+
+guess_route() {
+    local project=${1:-}
+    if [ -z "${project}" ]; then
+        project=$(oc project -q)
+    fi
+    local log=$(oc create service clusterip smokeservice --tcp=4343 2>&1 && \
+                oc create route edge --service=smokeservice 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot create pivot route\n$log"
+        exit 1
+    fi
+    local domain=$(oc get route smokeservice -o template  --template='{{.spec.host}}' 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot extract route: $domain"
+        exit 1
+    fi
+    log=$(oc delete service smokeservice 2>&1 && \
+          oc delete route smokeservice 2>&1)
+    if [ $? != 0 ]; then
+        echo "ERROR: Cannot delete pivot route\n$log"
+        exit 1
+    fi
+    echo "${project}.${domain#*.}"
+}
+
 
 create_openshift_resource() {
     local resource=${1}
@@ -190,6 +210,14 @@ readopt() {
     done
 }
 
+check_error() {
+    local msg="$*"
+    if [ "${msg//ERROR/}" != "${msg}" ]; then
+        echo $msg
+        exit 1
+    fi
+}
+
 # ==============================================================
 
 if [ $(hasflag --verbose -v) ]; then
@@ -212,11 +240,9 @@ if [ -n "${project}" ]; then
     recreate_project $project
 fi
 
-if [[ "$route" = "auto" ]]; then
-    if [[ -z "$project" ]]; then
-        project="$(oc project -q)"
-    fi
-    route="$project.$(oc_get_route_domain)"
+if [ -z "${route}" ]; then
+    route="$(guess_route "${project}")"
+    check_error "$route"
 fi
 
 # Required OAuthclient
