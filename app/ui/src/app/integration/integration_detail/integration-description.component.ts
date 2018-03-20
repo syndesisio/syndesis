@@ -14,7 +14,6 @@ export class IntegrationDescriptionComponent {
 
   @Output() viewDetails = new EventEmitter<Step>();
   @Output() attributeUpdated = new EventEmitter<{ [key: string]: string }>();
-  @Output() draftAction = new EventEmitter<string>();
 
   onViewDetails(step: Step): void {
     this.viewDetails.emit(step);
@@ -22,10 +21,6 @@ export class IntegrationDescriptionComponent {
 
   onAttributeUpdated(attribute: string, value: string): void {
     this.attributeUpdated.emit({ [attribute]: value });
-  }
-
-  onDraftAction(event: { id: string }): void {
-    this.draftAction.emit(event.id);
   }
 
   getStepLineClass(index: number): string {

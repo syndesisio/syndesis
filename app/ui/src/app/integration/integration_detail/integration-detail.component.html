@@ -88,14 +88,14 @@
           [integration]="integration"
           [stepStore]="stepStore"
           (viewDetails)="viewDetails($event)"
-          (attributeUpdated)="attributeUpdated($event)"
-          (draftAction)="draftAction($event)">
+          (attributeUpdated)="attributeUpdated($event)">
         </syndesis-integration-description>
 
         <syndesis-integration-history
           [integration]="integration"
           [deploymentActionConfigs]="deploymentActionConfigs"
-          (deploymentAction)="deploymentAction($event)">
+          (deploymentAction)="deploymentAction($event)"
+          (draftAction)="draftAction($event)">
         </syndesis-integration-history>
       </div>
 
