@@ -48,7 +48,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <table class="table table-bordered">
+          <table class="table table-bordered" *ngIf="activity.steps && activity.steps.length; else noStepsFound;">
             <thead>
               <tr>
                 <th>Step</th>
@@ -76,6 +76,9 @@
               </tr>
             </tbody>
           </table>
+          <ng-template #noStepsFound>
+            <p>No steps information was found for this integration</p>
+          </ng-template>
         </div>
       </div>
     </div>
