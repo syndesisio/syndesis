@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import io.syndesis.common.util.Json;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
+import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
@@ -80,7 +81,11 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             Map.Entry<String, JsonNode> entry = i.next();
             try {
                 String value = entry.getValue().textValue();
-                rc.add(Json.reader().forType(Activity.class).readValue(value));
+                Activity activity = Json.reader().forType(Activity.class).readValue(value);
+                if (activity.getSteps() == null){
+                    activity.setSteps(new ArrayList<ActivityStep>());
+                }
+                rc.add(activity);
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException ignored) {
                 // We could get stuff like class cast exceptions..
                 LOG.debug("Could convert entry: {}", entry, ignored);
