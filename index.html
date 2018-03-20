@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6065-g44fb8af4c,</span>
+<span id="revnumber">version 1.1.3-6067-g89e1388a4,</span>
 <span id="revdate">2018-03-20</span>
 </div>
 <div id="toc" class="toc2">
@@ -1824,7 +1824,7 @@ If you want to install to <a href="https://www.openshift.org/minishift/">Minishi
                               (without recreating)
 -y  --yes                     Automatically answer with "yes" when
                               asked for deleting the project with -p
-    --route                   Route to use (mandatory host name)
+    --route                   Route to use. If not given its tried to be autodected
     --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --dev                     Prepare for development of Syndesis so that S2I builds of
@@ -1846,9 +1846,12 @@ So it&#8217;s mandatory that you have logged into the cluster with <code>oc logi
 You can check the status with <code>oc status</code>.</p>
 </div>
 <div class="paragraph">
-<p>You have to provide the route name with <code>--route</code>.
-This value depends on your OpenShift installation but typically is the name of your OpenShift project followed by the cluster&#8217;s hostname.
-E.g. a route <code>--route app-proj186023.6a63.fuse-ignite.openshiftapps.com</code> is specific to the Fuse Ignite test cluster <code>6a63.fuse-ignite.openshiftapps.com</code> and for the project <code>app-proj186023</code>.</p>
+<p>A route name can be given with <code>--route</code>.
+This script tries to autodetect the route if not provided which works most of the time reliably.
+If you provide the route manually, you need to check your OpenShift installation.
+Typically the route name is the name of your OpenShift project followed by the cluster&#8217;s hostname.
+E.g. a route <code>--route proj186023.6a63.fuse-ignite.openshiftapps.com</code> is specific to the Fuse Ignite test cluster <code>6a63.fuse-ignite.openshiftapps.com</code> and for the project <code>proj186023</code>.
+But you don&#8217;t have to provide the route name.</p>
 </div>
 <div class="paragraph">
 <p>By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
@@ -3014,8 +3017,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6065-g44fb8af4c<br>
-Last updated 2018-03-20 12:15:12 UTC
+Version 1.1.3-6067-g89e1388a4<br>
+Last updated 2018-03-20 16:26:05 UTC
 </div>
 </div>
 </body>
