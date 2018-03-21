@@ -16,16 +16,16 @@
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    name: syndesis-verifier
+    name: syndesis-meta
     labels:
       app: syndesis
-      component: syndesis-verifier
+      component: syndesis-meta
   spec:
     accessModes:
     - ReadWriteOnce
     resources:
       requests:
-        storage: ${VERIFIER_VOLUME_CAPACITY}
+        storage: ${META_VOLUME_CAPACITY}
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -98,7 +98,7 @@
             protocol: TCP
           resources:
             limits:
-              memory: 512Mi
+              memory: ${META_MEMORY_LIMIT}
             requests:
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
@@ -111,7 +111,7 @@
         volumes:
         - name: ext-volume
           persistentVolumeClaim:
-            claimName: syndesis-verifier
+            claimName: syndesis-meta
         - name: config-volume
           configMap:
             name: syndesis-meta-config

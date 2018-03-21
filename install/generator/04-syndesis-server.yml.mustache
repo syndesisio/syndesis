@@ -113,7 +113,7 @@
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: 612Mi
+              memory: ${SERVER_MEMORY_LIMIT}
             requests:
               memory: 256Mi
         volumes:

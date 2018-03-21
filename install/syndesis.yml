@@ -101,20 +101,32 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
+- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
+  displayName: Prometheus Volume Capacity
+  name: PROMETHEUS_VOLUME_CAPACITY
+  value: 1Gi
+  required: true
 - description: Maximum amount of memory the Prometheus container can use.
   displayName: Memory Limit
   name: PROMETHEUS_MEMORY_LIMIT
   value: 255Mi
-- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
-  displayName: Prometheus Volume Capacity
-  name: PROMETHEUS_VOLUME_CAPACITY
+  required: true
+- description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
+  displayName: Meta Volume Capacity
+  name: META_VOLUME_CAPACITY
   required: true
   value: 1Gi
-- description: Volume space available for Verifier data, e.g. 512Mi, 2Gi.
-  displayName: Verifier Volume Capacity
-  name: VERIFIER_VOLUME_CAPACITY
   required: true
-  value: 1Gi
+- description: Maximum amount of memory the syndesis-meta service might use.
+  displayName: Memory Limit
+  name: META_MEMORY_LIMIT
+  value: 512Mi
+  required: true
+- description: Maximum amount of memory the syndesis-server service might use.
+  displayName: Memory Limit
+  name: SERVER_MEMORY_LIMIT
+  value: 800Mi
+  required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -537,6 +549,151 @@ objects:
   metadata:
     labels:
       app: syndesis
+      component: syndesis-meta
+    name: syndesis-meta
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: syndesis
+      component: syndesis-meta
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: syndesis-meta
+    labels:
+      app: syndesis
+      component: syndesis-meta
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${META_VOLUME_CAPACITY}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-meta
+    name: syndesis-meta
+  spec:
+    replicas: 1
+    selector:
+      app: syndesis
+      component: syndesis-meta
+      deploymentconfig: syndesis-meta
+    strategy:
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          component: syndesis-meta
+          deploymentconfig: syndesis-meta
+      spec:
+        serviceAccountName: syndesis-server
+        containers:
+        - name: syndesis-meta
+          env:
+          - name: JAVA_APP_DIR
+            value: /deployments
+          - name: LOADER_HOME
+            value: /deployments/ext
+          - name: JAVA_OPTIONS
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
+          image: ' '
+
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8181
+              scheme: HTTP
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8181
+              scheme: HTTP
+            initialDelaySeconds: 300
+            periodSeconds: 20
+            failureThreshold: 5
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9779
+            name: prometheus
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          resources:
+            limits:
+              memory: ${META_MEMORY_LIMIT}
+            requests:
+              memory: 280Mi
+          # spring-boot automatically picks up application.yml from ./config
+          workingDir: /deployments
+          volumeMounts:
+          - name: config-volume
+            mountPath: /deployments/config
+          - name: ext-volume
+            mountPath: /deployments/ext
+        volumes:
+        - name: ext-volume
+          persistentVolumeClaim:
+            claimName: syndesis-meta
+        - name: config-volume
+          configMap:
+            name: syndesis-meta-config
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-meta
+        from:
+          kind: ImageStreamTag
+          name: syndesis-meta:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+
+    - type: ConfigChange
+
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: syndesis
+      component: syndesis-meta
+    name: syndesis-meta-config
+  data:
+    application.yml: |-
+      server:
+        port: 8080
+      # We only want the status, not the full data. Hence security on, sensitive off.
+      # See https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-monitoring.html
+      # For details
+      management:
+        port: 8181
+        security:
+          enabled: true
+      endpoints:
+        health:
+          sensitive: false
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
       component: syndesis-oauthproxy
     annotations:
       service.alpha.openshift.io/serving-cert-secret-name: syndesis-oauthproxy-tls
@@ -773,7 +930,7 @@ objects:
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: 612Mi
+              memory: ${SERVER_MEMORY_LIMIT}
             requests:
               memory: 256Mi
         volumes:
@@ -844,151 +1001,6 @@ objects:
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
       dao:
         kind: jsondb
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-meta
-    name: syndesis-meta
-  spec:
-    ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: syndesis
-      component: syndesis-meta
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    name: syndesis-verifier
-    labels:
-      app: syndesis
-      component: syndesis-verifier
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${VERIFIER_VOLUME_CAPACITY}
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-meta
-    name: syndesis-meta
-  spec:
-    replicas: 1
-    selector:
-      app: syndesis
-      component: syndesis-meta
-      deploymentconfig: syndesis-meta
-    strategy:
-      resources:
-        limits:
-          memory: "256Mi"
-        requests:
-          memory: "20Mi"
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          app: syndesis
-          component: syndesis-meta
-          deploymentconfig: syndesis-meta
-      spec:
-        serviceAccountName: syndesis-server
-        containers:
-        - name: syndesis-meta
-          env:
-          - name: JAVA_APP_DIR
-            value: /deployments
-          - name: LOADER_HOME
-            value: /deployments/ext
-          - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
-          image: ' '
-
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8181
-              scheme: HTTP
-            initialDelaySeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8181
-              scheme: HTTP
-            initialDelaySeconds: 300
-            periodSeconds: 20
-            failureThreshold: 5
-          ports:
-          - containerPort: 8080
-            name: http
-            protocol: TCP
-          - containerPort: 9779
-            name: prometheus
-            protocol: TCP
-          - containerPort: 8778
-            name: jolokia
-            protocol: TCP
-          resources:
-            limits:
-              memory: 512Mi
-            requests:
-              memory: 280Mi
-          # spring-boot automatically picks up application.yml from ./config
-          workingDir: /deployments
-          volumeMounts:
-          - name: config-volume
-            mountPath: /deployments/config
-          - name: ext-volume
-            mountPath: /deployments/ext
-        volumes:
-        - name: ext-volume
-          persistentVolumeClaim:
-            claimName: syndesis-verifier
-        - name: config-volume
-          configMap:
-            name: syndesis-meta-config
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-meta
-        from:
-          kind: ImageStreamTag
-          name: syndesis-meta:latest
-          namespace: ${IMAGE_STREAM_NAMESPACE}
-      type: ImageChange
-
-    - type: ConfigChange
-
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      app: syndesis
-      component: syndesis-meta
-    name: syndesis-meta-config
-  data:
-    application.yml: |-
-      server:
-        port: 8080
-      # We only want the status, not the full data. Hence security on, sensitive off.
-      # See https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-monitoring.html
-      # For details
-      management:
-        port: 8181
-        security:
-          enabled: true
-      endpoints:
-        health:
-          sensitive: false
 - apiVersion: v1
   kind: Service
   metadata:
