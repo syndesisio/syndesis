@@ -67,7 +67,7 @@ export class ConfigService {
         return def;
       }
       throw new Error(
-        `Error: No setting found with the specified group or key [${group}]!`
+        `Error: No setting found with the specified group/key [${group}]!`
       );
     }
 
