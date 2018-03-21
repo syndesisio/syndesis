@@ -40,6 +40,8 @@ export class FormFactoryProviderService extends FormFactoryService {
       let type = (field.type || '').toLowerCase();
       // first normalize the type
       switch (type) {
+        case 'duration':
+          break;
         case 'boolean':
         case 'checkbox':
           type = 'checkbox';
@@ -60,9 +62,6 @@ export class FormFactoryProviderService extends FormFactoryService {
         default:
           type = field.enum && field.enum.length ? 'select' : 'text';
           break;
-      }
-      if (field.displayName === 'Period') {
-        type = 'duration';
       }
       // then use the appropriate ng2 dynamic forms constructor
       switch (type) {
