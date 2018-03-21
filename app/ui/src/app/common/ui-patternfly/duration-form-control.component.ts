@@ -114,7 +114,7 @@ export class DurationFormControlComponent implements OnInit {
     }
     let duration;
     for (const _duration of this.durations) {
-      if ( value / _duration.value > 1 ) {
+      if ( value / _duration.value >= 1 ) {
         duration = _duration;
       } else {
         break;
