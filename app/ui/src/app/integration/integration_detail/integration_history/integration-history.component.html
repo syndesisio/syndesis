@@ -9,7 +9,6 @@
               <div class="pfng-list-content">
                 <div class="list-pf-left">
                   <em>Draft</em>
-
                 </div>
                 <div class="list-pf-content-wrapper">
                   <div class="list-pf-main-content">
@@ -36,7 +35,11 @@
   <dl class="dl-horizontal">
     <dt>History:</dt>
     <dd>
-      <pfng-list [items]="integration?.deployments" [config]="deploymentListConfig" [itemTemplate]="itemTemplate" [expandTemplate]="expandTemplate"
+      <pfng-list
+        [items]="integration?.deployments"
+        [config]="deploymentListConfig"
+        [itemTemplate]="itemTemplate"
+        [expandTemplate]="expandTemplate"
         [actionTemplate]="actionTemplate">
         <ng-template #itemTemplate let-deployment="item" let-index="index">
           <div class="list-pf-left">
@@ -73,7 +76,9 @@
           </div>
         </ng-template>
         <ng-template #actionTemplate let-deployment="item" let-index="index">
-          <pfng-action class="list-pf-actions" [config]="deploymentActionConfigs[deployment.id]" (onActionSelect)="onDeploymentAction($event, deployment)">
+          <pfng-action class="list-pf-actions"
+            [config]="deploymentActionConfigs[deployment.id]"
+            (onActionSelect)="onDeploymentAction($event, deployment)">
           </pfng-action>
         </ng-template>
       </pfng-list>
