@@ -44,7 +44,7 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
         Map<String, String> stepsDone = new HashMap<>(integrationDeployment.getStepsDone());
         stepsDone.remove("deploy"); //we are literally undoing this step.
 
-        IntegrationDeploymentState currentState = integrationDeployment.getCurrentState();
+        IntegrationDeploymentState currentState = IntegrationDeploymentState.Pending;
 
         Map<String, String> labels = new HashMap<>();
         labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
@@ -53,7 +53,6 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
         if (!openShiftService().getDeploymentsByLabel(labels).isEmpty()) {
             try {
                 openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
-                currentState = IntegrationDeploymentState.Unpublished;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return new StateUpdate(currentState, stepsDone);
