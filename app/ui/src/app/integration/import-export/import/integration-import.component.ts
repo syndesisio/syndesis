@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -24,7 +24,7 @@ import {
   templateUrl: './integration-import.component.html',
   styleUrls: ['./integration-import.component.scss']
 })
-export class IntegrationImportComponent implements OnInit, OnDestroy {
+export class IntegrationImportComponent implements OnInit {
   error: FileError;
   importing = false;
   uploader: FileUploader;
@@ -118,12 +118,6 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
         this.fetchIntegrationOverview(this.integrationImports$);
       }
     };
-  }
-
-  ngOnDestroy() {
-    if (this.integrationOverviewsSubscription) {
-      this.integrationOverviewsSubscription.unsubscribe();
-    }
   }
 
   private checkIfDragAndDrop(isDragAndDropImport): void {
