@@ -74,9 +74,6 @@ export function createBasicFilterModel(
         {
           element: {
             container: 'form-group col-xs-3'
-          },
-          grid: {
-            control: 'input-group'
           }
         }
       ),
@@ -91,9 +88,6 @@ export function createBasicFilterModel(
           element: {
             container: 'form-group col-xs-3',
             label: 'control-label'
-          },
-          grid: {
-            control: 'input-group'
           }
         }
       ),
@@ -106,7 +100,7 @@ export function createBasicFilterModel(
         },
         {
           grid: {
-            container: 'input-group col-xs-4 keywords'
+            container: 'col-xs-4 keywords'
           }
         }
       )
