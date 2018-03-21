@@ -34,30 +34,3 @@
     </syndesis-editable-textarea>
   </p>
 </section>
-<section class="integration-description__draft" *ngIf="integration.draft">
-  <div class="list-pf">
-    <div class="list-pf-item">
-      <div class="list-pf-container">
-        <div class="list-pf-content list-pf-content-flex">
-          <div class="list-pf-left">
-          </div>
-          <div class="list-pf-content-wrapper">
-            <div class="list-pf-main-content">
-              <div class="list-pf-title">
-                <i>Draft</i>
-              </div>
-            </div>
-          </div>
-          <div class="list-pf-additional-content">
-
-          </div>
-          <div class="list-pf-actions">
-            <pfng-action [config]="draftConfig"
-              (onActionSelect)="onDraftAction($event)">
-            </pfng-action>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
