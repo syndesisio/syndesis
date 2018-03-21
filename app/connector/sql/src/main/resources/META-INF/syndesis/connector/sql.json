@@ -168,8 +168,8 @@
                 "javaType": "long",
                 "deprecated": false,
                 "secret": false,
-                "defaultValue": 1000,
-                "labelHint": "Delay in milliseconds between scheduling (executing)."
+                "defaultValue": 60000,
+                "labelHint": "Delay between scheduling (executing)."
               }
             }
           }
@@ -292,8 +292,8 @@
                 "javaType": "long",
                 "deprecated": false,
                 "secret": false,
-                "defaultValue": 1000,
-                "labelHint": "Delay in milliseconds between scheduling (executing)."
+                "defaultValue": 60000,
+                "labelHint": "Delay between scheduling (executing)."
               }
             }
           }
