@@ -29,7 +29,7 @@ export class IntegrationHistoryComponent {
   onDeploymentAction(event: { id: string }, deployment: IntegrationDeployment): void {
     this.deploymentAction.emit({ id: event.id, deployment });
   }
-  
+
   onDraftAction(eventId: string): void {
     this.draftAction.emit(eventId);
   }
