@@ -31,6 +31,8 @@ minishift::usage() {
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
+    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
 EOT
 }
@@ -81,7 +83,7 @@ minishift::run() {
 
         create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
-        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template true)" "$(readopt --tag)" "$(hasflag --local)" "$(hasflag --test-support)"
+        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template true)"
 
         wait_for_syndesis_to_be_ready
         patch_imagestreams_for_initial_image

@@ -20,6 +20,8 @@ install::usage() {
 -o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
+    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
 EOT
 }
@@ -48,7 +50,7 @@ install::run() {
     create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
     # Apply a template, based on the given arguments
-    create_and_apply_template "$route" "$(select_template $(hasflag --dev))" "$(readopt --tag)" "$(hasflag --local)" "$(hasflag --test-support)"
+    create_and_apply_template "$route" "$(select_template $(hasflag --dev))"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
         wait_for_syndesis_to_be_ready

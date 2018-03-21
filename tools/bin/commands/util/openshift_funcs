@@ -85,9 +85,9 @@ create_oauthclient() {
 create_and_apply_template() {
     local route=$1
     local template=${2:-syndesis}
-    local tag=${3:-}
-    local use_local_resource=${4:-}
-    local test_support=${5:-false}
+    local tag="$(readopt --tag)"
+    local use_local_resource="$(hasflag --local)"
+    local test_support="$(hasflag --test-support)"
 
     if [ -z "$route" ]; then
         echo "No route given"
@@ -105,12 +105,23 @@ create_and_apply_template() {
         template_name="${template_name}-restricted"
     fi
 
+    local optional_args=""
+    if [ -n "$(readopt --memory-server)" ]; then
+      optional_args="$optional_args -p SERVER_MEMORY_LIMIT=$(readopt --memory-server)"
+    fi
+    if [ -n "$(readopt --memory-meta)" ]; then
+      optional_args="$optional_args -p META_MEMORY_LIMIT=$(readopt --memory-meta)"
+    fi
+    if [ $(hasflag --test-support) ]; then
+      optional_args="$optional_args -p TEST_SUPPORT_ENABLED=true"
+    fi
+
     oc new-app --template=${template_name} \
       -p ROUTE_HOSTNAME="${route}" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
-      -p TEST_SUPPORT_ENABLED=${test_support} \
-      -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+      -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client) \
+      $optional_args
 }
 
 # Try first a template with the tag as combination

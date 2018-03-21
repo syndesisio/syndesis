@@ -98,20 +98,32 @@ parameters:
   generate: expression
   from: "[a-zA-Z0-9]{64}"
   required: true
+- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
+  displayName: Prometheus Volume Capacity
+  name: PROMETHEUS_VOLUME_CAPACITY
+  value: 1Gi
+  required: true
 - description: Maximum amount of memory the Prometheus container can use.
   displayName: Memory Limit
   name: PROMETHEUS_MEMORY_LIMIT
   value: 255Mi
-- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
-  displayName: Prometheus Volume Capacity
-  name: PROMETHEUS_VOLUME_CAPACITY
+  required: true
+- description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
+  displayName: Meta Volume Capacity
+  name: META_VOLUME_CAPACITY
   required: true
   value: 1Gi
-- description: Volume space available for Verifier data, e.g. 512Mi, 2Gi.
-  displayName: Verifier Volume Capacity
-  name: VERIFIER_VOLUME_CAPACITY
   required: true
-  value: 1Gi
+- description: Maximum amount of memory the syndesis-meta service might use.
+  displayName: Memory Limit
+  name: META_MEMORY_LIMIT
+  value: 512Mi
+  required: true
+- description: Maximum amount of memory the syndesis-server service might use.
+  displayName: Memory Limit
+  name: SERVER_MEMORY_LIMIT
+  value: 800Mi
+  required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:

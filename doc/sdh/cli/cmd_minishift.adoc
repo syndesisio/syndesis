@@ -32,6 +32,8 @@ Options for minishift:
 -i  --image-mode <mode>       Which templates to install: "docker" for plain images,
                               "openshift" for image streams (default: "openshift")
 -o  --open                    Open Syndesis in the browser
+    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
 ----
 
