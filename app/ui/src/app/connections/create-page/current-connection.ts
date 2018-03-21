@@ -249,11 +249,14 @@ export class CurrentConnectionService {
   private saveConnection(event: ConnectionEvent) {
     this._saving = true;
     const connection = { ...(event.connection || this.connection) };
-    // just in case this leaks through from the form
-    for (const key of Object.keys(connection.connector.properties)) {
-      const { value, ...property } = <ConfiguredConfigurationProperty> connection.connector.properties[key];
-      connection.connector.properties[key] = property;
+    // properties can be unset
+    const properties = { ...connection.connector.properties };
+    // strip out any values that happen to have been set in the `properties` object
+    for (const key of Object.keys(properties)) {
+      const { value, ...property } = <ConfiguredConfigurationProperty> properties[key];
+      properties[key] = property;
     }
+    connection.connector.properties = properties;
     const sub = this.store.updateOrCreate(connection).subscribe(
       (c: Connection) => {
         log.debugc(
