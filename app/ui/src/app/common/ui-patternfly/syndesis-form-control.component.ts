@@ -75,6 +75,7 @@ export class SyndesisFormComponent extends DynamicFormControlComponent
   @Input() group: FormGroup;
   @Input() layout: DynamicFormLayout;
   @Input() model: DynamicFormControlModel;
+  @Input() formArrayRowClass: string;
 
   /* tslint:disable */
   @Output() blur: EventEmitter<DynamicFormControlEvent> = new EventEmitter<DynamicFormControlEvent>();

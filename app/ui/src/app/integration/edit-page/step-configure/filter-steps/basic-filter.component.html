@@ -4,7 +4,8 @@
       <syndesis-form-control *ngFor="let controlModel of basicFilterModel"
         [group]="formGroup"
         [model]="controlModel"
-        (change)="onChange($event)">
+        (change)="onChange($event)"
+        [formArrayRowClass]="'clearfix'">
         <ng-template modelId="rulesFormArray" let-context="context" let-index="index">
           <div class="pull-right rule-buttons">
             <a class="fa fa-trash-o"
