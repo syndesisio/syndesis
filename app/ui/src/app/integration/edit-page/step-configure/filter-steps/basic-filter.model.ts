@@ -67,6 +67,7 @@ export function createBasicFilterModel(
             required: 'Object property name is required'
           },
           //placeholder: paths.length ? paths[0] : 'Field Name',
+          placeholder: 'Property name',
           value: rule ? rule.path : undefined,
           list: paths
           //suffix: 'Browse...', // This is just a suffix; this whole field needs to change
@@ -74,9 +75,6 @@ export function createBasicFilterModel(
         {
           element: {
             container: 'form-group col-xs-3'
-          },
-          grid: {
-            control: 'input-group'
           }
         }
       ),
@@ -91,9 +89,6 @@ export function createBasicFilterModel(
           element: {
             container: 'form-group col-xs-3',
             label: 'control-label'
-          },
-          grid: {
-            control: 'input-group'
           }
         }
       ),
@@ -102,11 +97,11 @@ export function createBasicFilterModel(
           hint: 'For this value',
           id: 'value',
           value: rule ? rule.value : undefined,
-          placeholder: 'Keywords...'
+          placeholder: 'Keywords'
         },
         {
           grid: {
-            container: 'input-group col-xs-4 keywords'
+            container: 'col-xs-4 keywords'
           }
         }
       )

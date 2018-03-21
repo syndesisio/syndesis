@@ -21,7 +21,7 @@ export function convertOps(ops: Array<Op>): Array<Op> {
   const answer = [];
   for (const op of ops) {
     // guard against blank label
-    const label = op.label === '' ? op.value || op.operator : op.label;
+    const label = op.label || op.value || op.operator;
     const newOp = {
       label: label,
       value: op.value || op.operator
