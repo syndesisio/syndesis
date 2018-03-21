@@ -71,7 +71,7 @@
         <div *ngFor="let groupModel of model.groups; let idx = index"
              role="group"
              [formGroupName]="idx"
-             [ngClass]="[elementGroupClass, gridGroupClass]">
+             [ngClass]="[elementGroupClass, gridGroupClass, formArrayRowClass]">
 
           <syndesis-form-control *ngFor="let _model of groupModel.group"
                                  [bindId]="false"
@@ -85,7 +85,8 @@
                                  [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
                                  (blur)="onBlur($event)"
                                  (change)="onValueChange($event)"
-                                 (focus)="onFocus($event)"></syndesis-form-control>
+                                 (focus)="onFocus($event)"
+                                 [formArrayRowClass]="formArrayRowClass"></syndesis-form-control>
 
             <ng-container *ngTemplateOutlet="templates[2]?.templateRef; context: groupModel"></ng-container>
         </div>
@@ -116,7 +117,8 @@
                                [ngClass]="[getClass('element', 'host', _model), getClass('grid', 'host', _model)]"
                                (blur)="onBlur($event)"
                                (change)="onValueChange($event)"
-                               (focus)="onFocus($event)"></syndesis-form-control>
+                               (focus)="onFocus($event)"
+                               [formArrayRowClass]="formArrayRowClass"></syndesis-form-control>
       </fieldset>
 
       <!-- INPUT -->
