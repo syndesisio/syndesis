@@ -333,22 +333,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
     }
 
-    private DeploymentConfig waitForDeployment(DeploymentConfig r, long timeout, TimeUnit timeUnit) throws InterruptedException {
-        long end = System.currentTimeMillis() + timeUnit.toMillis(timeout);
-        DeploymentConfig next = r;
-
-        while ( System.currentTimeMillis() < end) {
-            if (next.getSpec().getReplicas().equals(next.getStatus().getReplicas())) {
-                return next;
-            }
-            next = openShiftClient.deploymentConfigs().inNamespace(next.getMetadata().getNamespace()).withName(next.getMetadata().getName()).get();
-            Thread.sleep(5000);
-        }
-        throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
-
-    }
-
-
     protected static String openshiftName(String name) {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
     }
