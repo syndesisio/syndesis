@@ -5,7 +5,8 @@
 }
 
 syndesis-loading {
-  padding-top: $gutter;
-  padding-bottom: $gutter;
+  padding: $gutter;
   display: block;
+  margin-left: -$gutter;
+  margin-right: -$gutter;
 }
