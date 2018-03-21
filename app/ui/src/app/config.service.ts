@@ -62,12 +62,12 @@ export class ConfigService {
       return this.settingsRepository;
     }
 
-    if (!this.settingsRepository[group]) {
+    if (this.settingsRepository[group] === undefined) {
       if (def != undefined) {
         return def;
       }
       throw new Error(
-        `Error: No setting found with the specified group [${group}]!`
+        `Error: No setting found with the specified group or key [${group}]!`
       );
     }
 
