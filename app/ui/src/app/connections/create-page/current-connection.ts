@@ -256,6 +256,7 @@ export class CurrentConnectionService {
       const { value, ...property } = <ConfiguredConfigurationProperty> properties[key];
       properties[key] = property;
     }
+    connection.connectorId = connection.connector.id;
     connection.connector.properties = properties;
     const sub = this.store.updateOrCreate(connection).subscribe(
       (c: Connection) => {
