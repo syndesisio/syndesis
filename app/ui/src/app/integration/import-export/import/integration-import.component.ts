@@ -1,12 +1,12 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
-  Integration, Integrations, IntegrationOverviews, IntegrationSupportService, IntegrationOverview
+  IntegrationOverviews,
+  IntegrationSupportService
 } from '@syndesis/ui/platform';
 import { FileError, IntegrationImportsData } from './integration-import.models';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 
 import {
   FileItem,
@@ -20,31 +20,32 @@ import {
   templateUrl: './integration-import.component.html',
   styleUrls: ['./integration-import.component.scss']
 })
-export class IntegrationImportComponent implements OnInit, OnDestroy {
+export class IntegrationImportComponent implements OnInit {
   error: FileError;
+  importedOverviews$: Observable<IntegrationOverviews>;
   importing = false;
-  uploader: FileUploader;
-  hasBaseDropZoneOver: boolean;
-  response: IntegrationImportsData;
-  integrations: Array<IntegrationOverview>;
-  integrationOverviews$: Observable<IntegrationOverviews>;
-  integrationImports$: Observable<IntegrationOverviews>;
+  isDragAndDropImport: boolean;
+  isMultipleImport: boolean;
   item = {} as FileItem;
-  review = false;
+  loading = true;
+  response: IntegrationImportsData;
+  showButtons = false;
+  showReviewStep = false;
+  uploader: FileUploader;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  private integrationOverviewsSubscription: Subscription;
   constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
+    // Do stuff here!
   }
 
   cancel() {
     this.redirectBack();
   }
 
-  done(integrationImports) {
-    if (integrationImports.length === 1 && integrationImports[0].id) {
-      this.router.navigate(['/integrations', integrationImports[0].id]);
+  done(importedOverviews) {
+    if (importedOverviews.length === 1 && importedOverviews[0].id && !this.isMultipleImport) {
+      this.router.navigate(['/integrations', importedOverviews[0].id]);
     } else {
       this.redirectBack();
     }
@@ -57,16 +58,21 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
     };
   }
 
-  onFileOver(e) {
-    this.hasBaseDropZoneOver = e;
+  onDropFile(): void {
+    this.isDragAndDropImport = true;
+    this.isMultipleImport = this.checkIfMultiple();
+  }
+
+  onDropOverAndOut(event: Event): void {
+    this.checkIfDragAndDrop(event);
+  }
+
+  onFileSelected(): void {
+    this.isDragAndDropImport = false;
+    this.isMultipleImport = this.checkIfMultiple();
   }
 
   ngOnInit() {
-    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
-    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-      this.integrations = integrations;
-    });
-
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
@@ -91,17 +97,28 @@ export class IntegrationImportComponent implements OnInit, OnDestroy {
                                     response: string,
                                     status: number) => {
       if (status === 200) {
-        this.review = true;
-        this.integrationImports$ = JSON.parse(response);
-        this.item = item;
+        this.fetchImportedIntegrations(JSON.parse(response));
       }
     };
   }
 
-  ngOnDestroy() {
-    if (this.integrationOverviewsSubscription) {
-      this.integrationOverviewsSubscription.unsubscribe();
-    }
+  private checkIfDragAndDrop(isDragAndDropImport): void {
+    this.isDragAndDropImport = !!isDragAndDropImport;
+  }
+
+  private checkIfMultiple(): boolean {
+    return this.uploader.queue.length > 1;
+  }
+
+  private fetchImportedIntegrations(results) {
+    this.importedOverviews$ = this.integrationSupportService.getOverviews().map(overviews => {
+      return overviews.filter(overview => {
+        return results.find(result => result.id === overview.id) !== -1;
+      });
+    });
+
+    this.showButtons = true;
+    this.showReviewStep = true;
   }
 
   private redirectBack(): void {

@@ -12,22 +12,27 @@
       <div class="syn-drop-zone"
            ng2FileDrop
            [uploader]="uploader"
-           [ngClass]="{'syn-drop-zone--hover': hasBaseDropZoneOver}"
-           (fileOver)="onFileOver($event)">
+           [ngClass]="{'syn-drop-zone--hover': isDragAndDropImport}"
+           (fileOver)="onDropOverAndOut($event)"
+           (onFileDrop)="onDropFile()">
         <p>Drag and drop your integration files here or</p>
         <div class="row syn-drop-zone__file-select">
           <div class="col-md-3">
             <input #fileSelect
                    type="file"
                    ng2FileSelect
+                   (onFileSelected)="onFileSelected()"
+                   multiple
                    [uploader]="uploader">
           </div>
           <div class="col-md-9">
             <div *ngFor="let item of uploader.queue">
               <div class="row">
                 <div class="col-xs-10">
-                  <div *ngIf="item.isUploading" class="text-muted">
-                    <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
+                  <div *ngIf="item.isUploading"
+                       class="text-muted">
+                    <span *ngIf="item.isUploading"
+                          class="spinner spinner-sm spinner-inline"></span>
                     <em>Importing...</em>
                   </div>
                   <div *ngIf="item.isUploaded">
@@ -46,32 +51,37 @@
           </div>
         </div>
         <p class="help-block">
-          <em>Note: The imported integration will be in the draft state. If you previously imported and this environment has
-            a draft version of the integration, then that draft is lost.</em>
+          <em>Note: The imported integration will be in the draft state. If you previously imported and this
+            environment has a draft version of the integration, then that draft is lost.</em>
         </p>
       </div>
-      <div class="results"
-           *ngIf="review">
-        <div class="col-xs-2 text">
-          <h3>Import Results:</h3>
-        </div>
-        <div class="col-xs-10">
-          <table class="table">
-            <tbody>
-            <tr *ngFor="let integration of integrationImports$">
-              <ng-container [ngSwitch]="integration.kind">
-                <th *ngSwitchCase="'integration'" scope="row">Integration Name</th>
-                <th *ngSwitchCase="'connection'" scope="row">Connection Name</th>
+      <div class="results">
+        <div *ngIf="showReviewStep">
+          <div class="col-xs-2 text">
+            <h3>Import Results:</h3>
+          </div>
+          <div class="col-xs-10">
+            <table class="table">
+              <tbody>
+              <ng-container *ngFor="let integration of importedOverviews$ | async">
+                <tr *ngIf="integration.name">
+                  <th>Integration Name</th>
+                  <td>{{ integration.name }}</td>
+                </tr>
+                <tr *ngFor="let step of integration.steps">
+                  <th *ngIf="step.connection">Connection Name</th>
+                  <td>{{ step.connection.name }}</td>
+                </tr>
               </ng-container>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="buttons col-xs-12">
+        <div class="buttons col-xs-12"
+             *ngIf="showButtons || showReviewStep">
           <button type="button"
                   class="btn btn-primary"
-                  (click)="done(integrationImports$)">
+                  (click)="done(importedOverviews$)">
             Done
           </button>
           <button type="button"
