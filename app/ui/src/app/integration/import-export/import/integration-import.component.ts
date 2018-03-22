@@ -127,14 +127,14 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   private filterIntegrations(results, fetchedIntegrations) {
-    let tempArray = [];
+    const tempArray = [];
 
     // First iterate over list of results, then iterate over integration overviews fetched
     // Finally, push to a temporary array of integration overviews if IDs match
 
     (results || []).forEach(result => {
       (fetchedIntegrations || []).forEach(integration => {
-        if(result.id === integration.id) {
+        if (result.id === integration.id) {
           tempArray.push(integration);
         }
       });
