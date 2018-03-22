@@ -112,8 +112,8 @@ export class IntegrationImportComponent implements OnInit {
 
   private fetchImportedIntegrations(results) {
     this.importedOverviews$ = this.integrationSupportService.getOverviews().map(overviews => {
-      return overviews.filter((overview) => {
-        return results.find((result) => result.id === overview.id) !== -1;
+      return overviews.filter(overview => {
+        return results.find(result => result.id === overview.id) !== -1;
       });
     });
 
