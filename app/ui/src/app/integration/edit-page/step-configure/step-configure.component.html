@@ -6,12 +6,7 @@
             class="btn btn-primary"
             [disabled]="isInvalidInput()"
             (click)="continue()">
-      <ng-container *ngIf="step.configuredProperties">
         Done
-      </ng-container>
-      <ng-container *ngIf="!step.configuredProperties">
-        Next <i class="fa fa-chevron-right"></i>
-      </ng-container>
     </button>
   </ng-template>
   <div class="syn-scrollable"
