@@ -125,9 +125,6 @@ export class IntegrationImportComponent implements OnInit {
       this.fetchedIntegrations = integrations;
       this.filteredIntegrations = this.filterIntegrations(results, this.fetchedIntegrations);
     });
-
-    console.log('Results of upload: ' + results);
-    console.log('Results of upload JSON stringified: ' + JSON.stringify(results));
   }
 
   private filterIntegrations(results, fetchedIntegrations) {
@@ -146,8 +143,6 @@ export class IntegrationImportComponent implements OnInit {
         }
       });
     });
-
-    console.log('tempArray after iteration: ' + JSON.stringify(tempArray));
 
     return tempArray;
   }
