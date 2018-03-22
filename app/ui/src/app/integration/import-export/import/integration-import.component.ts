@@ -24,18 +24,18 @@ import {
 })
 export class IntegrationImportComponent implements OnInit {
   error: FileError;
-  importing = false;
-  uploader: FileUploader;
-  isDragAndDropImport: boolean;
-  isMultipleImport: boolean;
-  response: IntegrationImportsData;
   fetchedIntegrations: Array<IntegrationOverview>;
   filteredIntegrations: Array<IntegrationOverview>;
+  importing = false;
   integrationOverviews$: Observable<IntegrationOverviews>;
+  isDragAndDropImport: boolean;
+  isMultipleImport: boolean;
   item = {} as FileItem;
   loading = true;
+  response: IntegrationImportsData;
   showButtons = false;
   showReviewStep = false;
+  uploader: FileUploader;
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
