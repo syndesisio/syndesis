@@ -1,25 +1,12 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: visible;
-}
+@import 'syndesis-sass';
 
-syndesis-list-toolbar {
-  flex: 0 0 auto;
+:host {
+  @include syn-scrollable-parent;
 }
 
 syndesis-loading {
-  flex: 1 1 auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  // Dock the scrollbar to the right
-  margin-right: -20px;
-  padding-right: 20px;
-}
-
-.max-height {
-  height:100%
+  padding: $gutter;
+  display: block;
+  margin-left: -$gutter;
+  margin-right: -$gutter;
 }
