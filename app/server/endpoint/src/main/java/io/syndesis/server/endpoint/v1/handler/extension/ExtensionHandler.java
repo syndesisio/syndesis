@@ -49,6 +49,7 @@ import io.swagger.annotations.ApiResponses;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.server.connector.generator.util.IconGenerator;
 import io.syndesis.server.dao.file.FileDAO;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
@@ -151,6 +152,11 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
             }
 
+            String icon = embeddedExtension.getIcon();
+            if (icon == null) {
+                icon = IconGenerator.generate("extension", embeddedExtension.getName());
+            }
+
             Extension extension = new Extension.Builder()
                 .createFrom(embeddedExtension)
                 .id(id)
@@ -159,6 +165,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
                 .lastUpdated(rightNow)
                 .createdDate(rightNow)
                 .userId(sec.getUserPrincipal().getName())
+                .icon(icon)
                 .build();
 
             return getDataManager().create(extension);
