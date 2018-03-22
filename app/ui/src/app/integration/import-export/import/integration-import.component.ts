@@ -2,8 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
-  Integration,
-  Integrations,
   IntegrationOverview,
   IntegrationOverviews,
   IntegrationSupportService
@@ -31,10 +29,9 @@ export class IntegrationImportComponent implements OnInit {
   isDragAndDropImport: boolean;
   isMultipleImport: boolean;
   response: IntegrationImportsData;
-  integrations: Array<IntegrationOverview>;
-  integrationOverview$: Observable<IntegrationOverview>;
+  fetchedIntegrations: Array<IntegrationOverview>;
+  filteredIntegrations: Array<IntegrationOverview>;
   integrationOverviews$: Observable<IntegrationOverviews>;
-  integrationImports$: Observable<IntegrationOverviews>;
   item = {} as FileItem;
   loading = true;
   showButtons = false;
@@ -42,9 +39,9 @@ export class IntegrationImportComponent implements OnInit {
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  private integrationOverviewSubscription: Subscription;
   private integrationOverviewsSubscription: Subscription;
   constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
+    this.filteredIntegrations = [];
   }
 
   cancel() {
@@ -81,13 +78,6 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.integrationOverviews$ = this.integrationSupportService.getOverviews();
-
-    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-      this.integrations = integrations;
-      this.loading = false;
-    });
-
     this.uploader = new FileUploader({
       url: this.integrationSupportService.importIntegrationURL(),
       disableMultipart: true,
@@ -114,8 +104,7 @@ export class IntegrationImportComponent implements OnInit {
       if (status === 200) {
         this.showButtons = true;
         this.showReviewStep = !this.checkIfMultiple();
-        this.integrationImports$ = JSON.parse(response);
-        this.fetchIntegrationOverview(this.integrationImports$);
+        this.fetchIntegrationOverview(JSON.parse(response));
       }
     };
   }
@@ -129,12 +118,38 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   private fetchIntegrationOverview(results) {
-    if (this.checkIfMultiple() === false) {
-      this.integrationOverview$ = this.integrationSupportService.getOverview(results[0].id);
-      this.integrationOverviewSubscription = this.integrationOverview$.subscribe(integration => {
-        this.integrations = [integration];
+    this.integrationOverviews$ = this.integrationSupportService.getOverviews();
+
+    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
+      console.log('ALL integration overviews: ' + JSON.stringify(integrations));
+      this.fetchedIntegrations = integrations;
+      this.filteredIntegrations = this.filterIntegrations(results, this.fetchedIntegrations);
+    });
+
+    console.log('Results of upload: ' + results);
+    console.log('Results of upload JSON stringified: ' + JSON.stringify(results));
+  }
+
+  private filterIntegrations(results, fetchedIntegrations) {
+    let tempArray = [];
+
+    // First iterate over list of results, then iterate over integration overviews fetched
+    // Finally, push to a temporary array of integration overviews if IDs match
+
+    (results || []).forEach(result => {
+      (fetchedIntegrations || []).forEach(integration => {
+        if(result.id === integration.id) {
+          console.log('There is a match!');
+          console.log('filtered result: ' + JSON.stringify(result));
+          console.log('filtered integration: ' + JSON.stringify(integration));
+          tempArray.push(integration);
+        }
       });
-    }
+    });
+
+    console.log('tempArray after iteration: ' + JSON.stringify(tempArray));
+
+    return tempArray;
   }
 
   private redirectBack(): void {
