@@ -102,8 +102,6 @@ export class IntegrationImportComponent implements OnInit {
                                     response: string,
                                     status: number) => {
       if (status === 200) {
-        this.showButtons = true;
-        this.showReviewStep = !this.checkIfMultiple();
         this.fetchIntegrationOverview(JSON.parse(response));
       }
     };
@@ -122,7 +120,14 @@ export class IntegrationImportComponent implements OnInit {
 
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.fetchedIntegrations = integrations;
+
       this.filteredIntegrations = this.filterIntegrations(results, this.fetchedIntegrations);
+      //this.filteredIntegrations = this.filterIntegrations(results, integrations);
+
+      this.showButtons = true;
+
+      //this.showReviewStep = !this.checkIfMultiple();
+      this.showReviewStep = true;
     });
   }
 
