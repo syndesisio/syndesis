@@ -121,7 +121,6 @@ export class IntegrationImportComponent implements OnInit {
     this.integrationOverviews$ = this.integrationSupportService.getOverviews();
 
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-      console.log('ALL integration overviews: ' + JSON.stringify(integrations));
       this.fetchedIntegrations = integrations;
       this.filteredIntegrations = this.filterIntegrations(results, this.fetchedIntegrations);
     });
@@ -136,9 +135,6 @@ export class IntegrationImportComponent implements OnInit {
     (results || []).forEach(result => {
       (fetchedIntegrations || []).forEach(integration => {
         if(result.id === integration.id) {
-          console.log('There is a match!');
-          console.log('filtered result: ' + JSON.stringify(result));
-          console.log('filtered integration: ' + JSON.stringify(integration));
           tempArray.push(integration);
         }
       });
