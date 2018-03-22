@@ -10,3 +10,8 @@
     entry: ./install/support/validate-generated-templates.sh
     language: script
     files: ^install/generator/.+\.mustache$
+  - id: commit-msg-check
+    name: Check commit message
+    entry: node_modules/.bin/commitlint --edit
+    language: node
+    stages: [commit-msg]
