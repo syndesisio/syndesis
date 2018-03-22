@@ -68,7 +68,7 @@
     <activemq.version>5.15.2</activemq.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.20.1</camel.version>
+    <camel.version>2.21.0</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.8</dep.plugin.pmd.version>
