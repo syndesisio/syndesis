@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
-  IntegrationOverview,
   IntegrationOverviews,
   IntegrationSupportService
 } from '@syndesis/ui/platform';
@@ -37,9 +36,7 @@ export class IntegrationImportComponent implements OnInit {
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
   constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
-    /**
-     * Do stuff here!
-     */
+    // Do stuff here!
   }
 
   cancel() {
