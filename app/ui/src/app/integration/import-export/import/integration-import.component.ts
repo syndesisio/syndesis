@@ -48,9 +48,9 @@ export class IntegrationImportComponent implements OnInit {
     this.redirectBack();
   }
 
-  done(integrationImports) {
-    if (integrationImports.length === 1 && integrationImports[0].id && !this.isMultipleImport) {
-      this.router.navigate(['/integrations', integrationImports[0].id]);
+  done(filteredIntegrations) {
+    if (filteredIntegrations.length === 1 && filteredIntegrations[0].id && !this.isMultipleImport) {
+      this.router.navigate(['/integrations', filteredIntegrations[0].id]);
     } else {
       this.redirectBack();
     }
