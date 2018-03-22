@@ -64,7 +64,7 @@
           <div class="col-xs-10">
             <table class="table">
               <tbody>
-              <ng-container *ngFor="let integration of filteredIntegrations">
+              <ng-container *ngFor="let integration of importedOverviews$ | async">
                 <tr *ngIf="integration.name">
                   <th>Integration Name</th>
                   <td>{{ integration.name }}</td>

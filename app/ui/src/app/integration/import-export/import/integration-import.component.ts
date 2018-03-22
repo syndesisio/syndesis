@@ -8,7 +8,6 @@ import {
 } from '@syndesis/ui/platform';
 import { FileError, IntegrationImportsData } from './integration-import.models';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 
 import {
   FileItem,
@@ -24,10 +23,8 @@ import {
 })
 export class IntegrationImportComponent implements OnInit {
   error: FileError;
-  fetchedIntegrations: Array<IntegrationOverview>;
-  filteredIntegrations: Array<IntegrationOverview>;
+  importedOverviews$: Observable<IntegrationOverviews>;
   importing = false;
-  integrationOverviews$: Observable<IntegrationOverviews>;
   isDragAndDropImport: boolean;
   isMultipleImport: boolean;
   item = {} as FileItem;
@@ -39,9 +36,10 @@ export class IntegrationImportComponent implements OnInit {
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  private integrationOverviewsSubscription: Subscription;
   constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
-    this.filteredIntegrations = [];
+    /**
+     * Do stuff here!
+     */
   }
 
   cancel() {
@@ -102,7 +100,7 @@ export class IntegrationImportComponent implements OnInit {
                                     response: string,
                                     status: number) => {
       if (status === 200) {
-        this.fetchIntegrationOverview(JSON.parse(response));
+        this.fetchImportedIntegrations(JSON.parse(response));
       }
     };
   }
@@ -115,37 +113,15 @@ export class IntegrationImportComponent implements OnInit {
     return this.uploader.queue.length > 1;
   }
 
-  private fetchIntegrationOverview(results) {
-    this.integrationOverviews$ = this.integrationSupportService.getOverviews();
-
-    this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
-      this.fetchedIntegrations = integrations;
-
-      this.filteredIntegrations = this.filterIntegrations(results, this.fetchedIntegrations);
-      //this.filteredIntegrations = this.filterIntegrations(results, integrations);
-
-      this.showButtons = true;
-
-      //this.showReviewStep = !this.checkIfMultiple();
-      this.showReviewStep = true;
-    });
-  }
-
-  private filterIntegrations(results, fetchedIntegrations) {
-    const tempArray = [];
-
-    // First iterate over list of results, then iterate over integration overviews fetched
-    // Finally, push to a temporary array of integration overviews if IDs match
-
-    (results || []).forEach(result => {
-      (fetchedIntegrations || []).forEach(integration => {
-        if (result.id === integration.id) {
-          tempArray.push(integration);
-        }
+  private fetchImportedIntegrations(results) {
+    this.importedOverviews$ = this.integrationSupportService.getOverviews().map(overviews => {
+      return overviews.filter((overview) => {
+        return results.find((result) => result.id === overview.id) !== -1;
       });
     });
 
-    return tempArray;
+    this.showButtons = true;
+    this.showReviewStep = true;
   }
 
   private redirectBack(): void {
