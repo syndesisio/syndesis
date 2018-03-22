@@ -1,5 +1,7 @@
-:host ::ng-deep .toolbar-pf {
-    background: inherit;
-    border-bottom: none;
-    box-shadow: none;
+@import 'syndesis-sass';
+
+.tech-extensions-list {
+  ::ng-deep .toolbar-pf {
+    @include toolbar($border-bottom: 0);
   }
+}
