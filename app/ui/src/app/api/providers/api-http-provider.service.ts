@@ -165,9 +165,40 @@ export class ApiHttpProviderService extends ApiHttpService {
   }
 
   private replaceNameMatches(endpointTemplate: string, paramsMap: StringMap<any>): string {
-    return endpointTemplate.replace(/\{(\D*?)\}/g, (fullMatch, ...matchGroups) => {
-      return paramsMap[matchGroups[0].trim()];
+    const matched = [];
+    const answer = endpointTemplate.replace(/\{(\D*?)\}/g, (fullMatch, ...matchGroups) => {
+      const match = matchGroups[0].trim();
+      matched.push(match);
+      return paramsMap[match];
     });
+    // Turn any remaining parameters into query params
+    const remainder = Object.keys(paramsMap).filter(x => matched.indexOf(x) === -1);
+    const queryParams = remainder.map(key => {
+      const value = paramsMap[key];
+      // avoid passing any url param as 'undefined'
+      if (!value) {
+        return undefined;
+      }
+      // expand an array value in the param map to multiple query params
+      if (typeof value === 'string') {
+        return key + '=' + value;
+      } else if (typeof value === 'object' && value.map) {
+        return value.map(val => key + '=' + val).join('&');
+      } else {
+        // not supported, drop it
+        return undefined;
+      }
+    }).filter(x => x).join('&');
+    if (queryParams.length) {
+      // cater for the possibility that the template has query params in it
+      if (answer.indexOf('?') !== -1) {
+        return answer + '&' + queryParams;
+      } else {
+        return answer + '?' + queryParams;
+      }
+    } else {
+      return answer;
+    }
   }
 
   private replaceIndexMatches(endpointTemplate: string, ...params: any[]): string {
@@ -179,7 +210,6 @@ export class ApiHttpProviderService extends ApiHttpService {
     } else if (params && params.toString() !== '') {
       return endpointTemplate.replace(/\{(\d*?)\}/g, params.toString());
     }
-
     return endpointTemplate;
   }
 
