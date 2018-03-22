@@ -2,7 +2,7 @@
   "baseScheme" : "olingo4",
   "baseGroupId" : "org.apache.camel",
   "baseArtifactId" : "camel-olingo4",
-  "baseVersion" : "2.20.1",
+  "baseVersion" : "2.21.0",
   "baseJavaType" : "org.apache.camel.component.olingo4.Olingo4Component",
   "name" : "ODataCreateEntity",
   "scheme" : "odata-create-entity",

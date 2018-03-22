@@ -29,7 +29,7 @@
 
     <properties>
         <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
-        <camel.version>2.20.1</camel.version>
+        <camel.version>2.21.0</camel.version>
     </properties>
 
     <!-- Metadata need to publish to central -->
