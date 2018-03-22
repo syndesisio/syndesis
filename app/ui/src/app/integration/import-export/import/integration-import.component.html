@@ -29,8 +29,10 @@
             <div *ngFor="let item of uploader.queue">
               <div class="row">
                 <div class="col-xs-10">
-                  <div *ngIf="item.isUploading" class="text-muted">
-                    <span *ngIf="item.isUploading" class="spinner spinner-sm spinner-inline"></span>
+                  <div *ngIf="item.isUploading"
+                       class="text-muted">
+                    <span *ngIf="item.isUploading"
+                          class="spinner spinner-sm spinner-inline"></span>
                     <em>Importing...</em>
                   </div>
                   <div *ngIf="item.isUploaded">
