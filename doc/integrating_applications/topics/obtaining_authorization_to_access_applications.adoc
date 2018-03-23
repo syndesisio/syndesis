@@ -10,6 +10,13 @@ to a given application. For example, if you register your {prodname}
 installation with Salesforce, all connections from your {prodname}
 installation to Salesforce use the same client ID and the same client secret.
 
+[NOTE]
+====
+For information about using custom connectors that let 
+you access applications that use the
+OAuth protocol, see <<creating-connections-from-custom-connectors>>. 
+====
+
 Registration needs to happen before
 you can create a connection to the application. For example, after you register
 your installation of
