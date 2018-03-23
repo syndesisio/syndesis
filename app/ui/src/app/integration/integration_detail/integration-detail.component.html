@@ -28,11 +28,10 @@
       </div>
     </div>
     <div class="integration-detail__body row syn-scrollable--body">
-      <div class="integration-detail__info">
+      <div class="integration-detail__info integration-detail__row">
         <h1 class="inline-block">
           <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated($event)"></syndesis-editable-text>
         </h1>
-
         <ng-container [ngSwitch]="integration.currentState">	 
           <ng-container *ngSwitchCase="'Pending'">	  
             <div class="spinner spinner-sm spinner-inline"></div> {{ integration.targetState == 'Published' ? 'Publishing...' : 'Unpublishing...' }}
@@ -47,10 +46,9 @@
             <span class="pficon pficon-error"></span> Published version {{ integration.deploymentVersion }}
           </ng-container>
         </ng-container>
-
       </div>
 
-      <div *ngIf="integration.messages && integration.messages.length" class="col-md-12">
+      <div *ngIf="integration.messages && integration.messages.length" class="integration-detail__row">
         <div *ngFor="let message of integration.messages">
           <ng-container [ngSwitch]="message.level">
             <div class="alert alert-danger" *ngSwitchCase="'ERROR'">
