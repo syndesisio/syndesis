@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6161-g54cb23304,</span>
-<span id="revdate">2018-03-22</span>
+<span id="revnumber">version 1.1.3-6163-g2e3dc45c4,</span>
+<span id="revdate">2018-03-23</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -596,10 +596,11 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_groups">3.2.1. Groups</a></li>
 <li><a href="#_categories">3.2.2. Categories</a></li>
-<li><a href="#_notification">3.2.3. Notification</a></li>
-<li><a href="#_external_references">3.2.4. External references</a></li>
-<li><a href="#_daily_meeting_labels">3.2.5. Daily Meeting Labels</a></li>
-<li><a href="#_status">3.2.6. Status</a></li>
+<li><a href="#_pull_request">3.2.3. Pull Request</a></li>
+<li><a href="#_notification">3.2.4. Notification</a></li>
+<li><a href="#_external_references">3.2.5. External references</a></li>
+<li><a href="#_daily_meeting_labels">3.2.6. Daily Meeting Labels</a></li>
+<li><a href="#_status">3.2.7. Status</a></li>
 </ul>
 </li>
 <li><a href="#dev-local">3.3. Local Development</a>
@@ -2257,6 +2258,11 @@ There must be only at most one label from the "Exclusive" groups.</p>
 <td class="tableblock halign-center valign-top"></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>pr/</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Labels which are only relevant for pull request and which have also some semantics for the bot managing pull requests</p></td>
+<td class="tableblock halign-center valign-top"></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>size/</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Tee shirt size for issues. Sizing is a subjective assessment and should be done relative to other issues.</p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">✔︎</p></td>
@@ -2371,7 +2377,7 @@ Currently we have these categories:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A bug which needs fixing.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top" style="background-color: #93d273;"><p class="tableblock"><strong>cat/enhancement</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #b2c303;"><p class="tableblock"><strong>cat/enhancement</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PR label for an enhancement of an existing feature.</p></td>
 </tr>
 <tr>
@@ -2426,7 +2432,30 @@ Currently we have these categories:</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_notification">3.2.3. Notification</h4>
+<h4 id="_pull_request">3.2.3. Pull Request</h4>
+<div class="paragraph">
+<p>This category of labels is all about pull requests.
+All of them have a meaning for the <a href="https://github.com/syndesisio/pure-bot">pure-bot</a> bot which watches a pull request and performs certain action.
+These actions also involve monitoring and creating labels.</p>
+</div>
+<div class="paragraph">
+<p>The following labels are involved:</p>
+</div>
+<div class="paragraph">
+<p>| <strong>pr/approved</strong>
+| This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for <a href="https://github.com/syndesisio/pure-bot">pure-bot</a> to automatically merge the pull request if it passes all required tests. You should not set this label manually for approving a PR but using the GitHub button to do so.</p>
+</div>
+<div class="paragraph">
+<p>| <strong class="white">pr/review-requested</strong>
+| In our process it is not mandatory to have a PR review. However, if the author requests a review via the normal GitHub functionality, this label gets applied automatically. When this label is set on a pull-request, then the mandatory status check <code>pure-bot/review-requested</code> will only pass if at least a single pull request has been given, so prevents manual merging (without forcing).</p>
+</div>
+<div class="paragraph">
+<p>| <strong>status/wip</strong>
+| This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is approved. A dedicated mandatory status check <code>pure-bot/wip</code> monitors this labels and prevents merging if this label is present.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_notification">3.2.4. Notification</h4>
 <div class="paragraph">
 <p>Notification labels from the <code>notif/</code> group serve a particular purpose.
 They are used when one team wants to notify another group that a specific issue might have them relevance to them.</p>
@@ -2451,6 +2480,10 @@ They are used when one team wants to notify another group that a specific issue 
 <td class="tableblock halign-left valign-top"><p class="tableblock">The issue needs some attention from the docs team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a documentation already exists.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top" style="background-color: #97bcfc;"><p class="tableblock"><strong>notif/triage</strong></p></td>
+<td class="tableblock halign-left valign-top" style="background-color: #97bcfc;"><p class="tableblock">Every new issue gets this label and is considered during a triage session for properly priorisation and categorisation. Remove this label after the triage has happened.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top" style="background-color: #f382d0;"><p class="tableblock"><strong>notif/uxd</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This label should be used for issues which needs some attention from the UX team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a UX design already exists.</p></td>
 </tr>
@@ -2469,7 +2502,7 @@ If no update is required, then the label is removed without replacement.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_external_references">3.2.4. External references</h4>
+<h4 id="_external_references">3.2.5. External references</h4>
 <div class="paragraph">
 <p>This label group should be used if an external system is referenced, which is not part of the Syndesis mono repo.</p>
 </div>
@@ -2509,7 +2542,7 @@ If this happens, then labels should be converted to <code>module/</code> kind of
 </div>
 </div>
 <div class="sect3">
-<h4 id="_daily_meeting_labels">3.2.5. Daily Meeting Labels</h4>
+<h4 id="_daily_meeting_labels">3.2.6. Daily Meeting Labels</h4>
 <div class="paragraph">
 <p>This category holds five labels: <a id="f00"></a><code>d/mon</code>, <code>d/tue</code>, <code>d/wed</code>, <code>d/thu</code>, <code>d/fri</code>, one for each working day.
 They are used to mark an Epic so that it is talked about the daily meeting on that day.
@@ -2553,7 +2586,7 @@ At least two-day labels must be added to an epic.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_status">3.2.6. Status</h4>
+<h4 id="_status">3.2.7. Status</h4>
 <div class="paragraph">
 <p>Status labels are unique since they may trigger some automatic actions.</p>
 </div>
@@ -2575,14 +2608,6 @@ At least two-day labels must be added to an epic.</p>
 <tr>
 <td class="tableblock halign-left valign-top" style="background-color: #ad0009;"><p class="tableblock"><strong class="white">status/blocked</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The current issue is blocked by another issue. Refer to the issue itself to see what is blocking this issued. This label is purely informal.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: #0ffa16;"><p class="tableblock"><strong>approved</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for our PR bot to automatically merge the pull request if it passes all required tests. (Note: Should probably be renamed to <code>status/approved</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top" style="background-color: #f5c73f;"><p class="tableblock"><strong>status/wip</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is "Approved"</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" style="background-color: #fdfcb6;"><p class="tableblock"><strong>status/2s2f</strong></p></td>
@@ -3021,8 +3046,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6161-g54cb23304<br>
-Last updated 2018-03-22 18:41:04 UTC
+Version 1.1.3-6163-g2e3dc45c4<br>
+Last updated 2018-03-23 09:38:22 UTC
 </div>
 </div>
 </body>
