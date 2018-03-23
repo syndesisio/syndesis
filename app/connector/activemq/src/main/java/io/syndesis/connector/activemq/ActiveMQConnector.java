@@ -145,13 +145,13 @@ class ActiveMQConnector extends ComponentProxyComponent {
                     ActiveMQConnectionFactory amqFactory = (ActiveMQConnectionFactory)factory;
 
                     if (!Objects.equals(brokerUrl, amqFactory.getBrokerURL())) {
-                        break;
+                        continue;
                     }
                     if (!Objects.equals(username, amqFactory.getUserName())) {
-                        break;
+                        continue;
                     }
                     if (!Objects.equals(password, amqFactory.getPassword())) {
-                        break;
+                        continue;
                     }
 
                     return (SjmsComponent) cmp;
