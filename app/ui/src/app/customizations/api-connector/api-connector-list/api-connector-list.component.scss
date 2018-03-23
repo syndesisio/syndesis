@@ -1,26 +1,7 @@
 @import 'syndesis-sass';
 
-:host {
-  flex: 1 1 auto;
-  height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-bottom: 20px;
-  // Dock the scrollbar to the right
-  margin-right: -20px;
-  padding-right: 20px;
-}
-
 .api-connector-list {
-  height: 100%;
-
-  .col-xs-12 {
-    height: 100%;
-  }
-
-  & ::ng-deep .toolbar-pf {
-    background: inherit;
-    box-shadow: none;
-    border-bottom-color: transparent;
+  ::ng-deep .toolbar-pf {
+    @include toolbar($border-bottom: 0);
   }
 }

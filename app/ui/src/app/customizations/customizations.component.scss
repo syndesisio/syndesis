@@ -1,6 +1,5 @@
+@import 'syndesis-sass';
+
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: visible;
+  @include syn-scrollable-parent;
 }
