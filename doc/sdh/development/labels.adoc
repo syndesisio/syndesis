@@ -216,13 +216,18 @@ Currently we have these categories:
 {set:cellbgcolor!}
 |===
 
-### Pull Request
+### Pull Requests
 
 This category of labels is all about pull requests.
 All of them have a meaning for the https://github.com/syndesisio/pure-bot[pure-bot] bot which watches a pull request and performs certain action.
 These actions also involve monitoring and creating labels.
 
 The following labels are involved:
+
+[cols="3,15",options="header"]
+|===
+|Notification
+|Description
 
 | **pr/approved**
 {set:cellbgcolor:#86d969}
@@ -238,7 +243,7 @@ The following labels are involved:
 {set:cellbgcolor:#ffed17}
 | This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is approved. A dedicated mandatory status check `pure-bot/wip` monitors this labels and prevents merging if this label is present.
 {set:cellbgcolor!}
-
+|===
 
 
 ### Notification
@@ -261,6 +266,7 @@ Currently we have two notifcation labels:
 | **notif/triage**
 {set:cellbgcolor:#97bcfc}
 | Every new issue gets this label and is considered during a triage session for properly priorisation and categorisation. Remove this label after the triage has happened.
+{set:cellbgcolor!}
 
 | **notif/uxd**
 {set:cellbgcolor:#f382d0}
