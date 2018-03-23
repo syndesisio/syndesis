@@ -79,6 +79,7 @@
     <module>controller</module>
     <module>credential</module>
     <module>dao</module>
+    <module>update-controller</module>
     <module>logging/jsondb</module>
     <module>filestore</module>
     <module>inspector</module>

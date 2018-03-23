@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model.buletin;
-
-import static io.syndesis.common.model.buletin.LeveledMessage.Level.INFO;
-
-import org.immutables.value.Value;
+package io.syndesis.common.model.bulletin;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.model.WithMetadata;
+import org.immutables.value.Value;
+
+import static io.syndesis.common.model.bulletin.LeveledMessage.Level.INFO;
 
 /**
  * A message with an associated level.
@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @Value.Immutable
 @JsonDeserialize(builder = LeveledMessage.Builder.class)
 @SuppressWarnings("immutables")
-public interface LeveledMessage {
+public interface LeveledMessage extends WithMetadata {
 
     enum Level {
         INFO,

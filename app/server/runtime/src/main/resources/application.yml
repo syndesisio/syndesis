@@ -71,6 +71,13 @@ dao:
   schema:
     version: 25
 
+resource:
+  update:
+    controller:
+      enabled: true
+      check-interval: 1
+      check-interval-unit: MINUTES
+
 # OpenShift infra value
 openshift:
   # Base API Url up to the api version number (i.e. ending in sth like "oapi1/v1"

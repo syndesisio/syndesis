@@ -15,15 +15,12 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import static io.syndesis.common.model.buletin.LeveledMessage.Level.ERROR;
-import static io.syndesis.common.model.buletin.LeveledMessage.Level.WARN;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,39 +36,47 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-
-import org.springframework.stereotype.Component;
+import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiParam;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
+import io.syndesis.common.model.bulletin.LeveledMessage;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.ConnectionOverview;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.buletin.ConnectionBulletinBoard;
-import io.syndesis.common.model.buletin.LeveledMessage;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.operations.Creator;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
-import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import static io.syndesis.common.model.bulletin.ConnectionBulletinBoard.EMPTY_BOARD;
+import static io.syndesis.common.model.bulletin.LeveledMessage.Level.ERROR;
+import static io.syndesis.common.model.bulletin.LeveledMessage.Level.WARN;
 
 @Path("/connections")
 @Api(value = "connections")
 @Component
-public class ConnectionHandler extends BaseHandler implements Lister<Connection>, Getter<Connection>,
-    Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
+public class ConnectionHandler
+        extends BaseHandler
+        implements Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
 
     private final Credentials credentials;
 
@@ -106,27 +111,56 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
         return Kind.Connection;
     }
 
-    @Override
-    public Connection get(final String id) {
-        Connection connection = Getter.super.get(id);
-        if (connection.getConnectorId().isPresent()) {
-            final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId().get());
-            connection = new Connection.Builder().createFrom(connection).connector(connector).build();
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "sort", value = "Sort the result list according to the given field value",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
+            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
+        @ApiImplicitParam(
+            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
+        @ApiImplicitParam(
+            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
+    })
+    public ListResult<ConnectionOverview> list(@Context UriInfo uriInfo) {
+        final DataManager dataManager = getDataManager();
+        final ListResult<Connection> connections = fetchAll(Connection.class, uriInfo);
+        final List<ConnectionOverview> overviews = new ArrayList<>(connections.getTotalCount());
+
+        for (Connection connection: connections.getItems()) {
+            final String id = connection.getId().get();
+            final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(EMPTY_BOARD);
+
+            overviews.add(
+                new ConnectionOverview.Builder().createFrom(connection).board(board).build()
+            );
         }
-        return connection;
+
+        return ListResult.of(overviews);
     }
 
     @Override
-    public Connection
-        create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
+    public Connection get(final String id) {
+        final Connection connection = Getter.super.get(id);
+        final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId());
+
+        return new Connection.Builder().createFrom(connection).connector(connector).build();
+    }
+
+    @Override
+    public Connection create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         final Date rightNow = new Date();
 
         // Lets make sure we store encrypt secrets.
-        Map<String, String> configuredProperties =connection.getConfiguredProperties();
-        if( connection.getConnectorId().isPresent() ) {
-            Map<String, ConfigurationProperty> connectorProperties = getConnectorProperties(connection.getConnectorId().get());
-            configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connectorProperties);
-        }
+        Map<String, String> configuredProperties = connection.getConfiguredProperties();
+        Map<String, ConfigurationProperty> connectorProperties = getConnectorProperties(connection.getConnectorId());
+
+        configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connectorProperties);
 
         final Connection updatedConnection = new Connection.Builder()
             .createFrom(connection)
@@ -136,8 +170,7 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
             .userId(sec.getUserPrincipal().getName())
             .build();
 
-        final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom,
-            request);
+        final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request);
 
         final Connection connectionToCreate = flowStates.stream().map(s -> {
             final Cookie removal = new Cookie(s.persistenceKey(), "");
@@ -153,19 +186,21 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     private Map<String, ConfigurationProperty> getConnectorProperties(String connectorId) {
-        return getDataManager().fetch(Connector.class, connectorId).getProperties();
+        Connector connector = getDataManager().fetch(Connector.class, connectorId);
+        if (connector != null) {
+            return connector.getProperties();
+        }
+
+        return Collections.emptyMap();
     }
 
     @Override
-    public void update(final String id,
-        @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
-
+    public void update(final String id, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
         // Lets make sure we store encrypt secrets.
         Map<String, String> configuredProperties = connection.getConfiguredProperties();
-        if( connection.getConnectorId().isPresent() ) {
-            Map<String, ConfigurationProperty> connectorProperties = getConnectorProperties(connection.getConnectorId().get());
-            configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connectorProperties);
-        }
+        Map<String, ConfigurationProperty> connectorProperties = getConnectorProperties(connection.getConnectorId());
+
+        configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connectorProperties);
 
         final Connection updatedConnection = new Connection.Builder()
             .createFrom(connection)
@@ -183,11 +218,8 @@ public class ConnectionHandler extends BaseHandler implements Lister<Connection>
     }
 
     @Path("/{id}/actions")
-    public ConnectionActionHandler metadata(
-        @NotNull final @PathParam("id") @ApiParam(required = true, example = "my-connection") String connectionId) {
-        final Connection connection = get(connectionId);
-
-        return new ConnectionActionHandler(connection, config, encryptionComponent);
+    public ConnectionActionHandler metadata(@NotNull @PathParam("id") @ApiParam(required = true, example = "my-connection") final String connectionId) {
+        return new ConnectionActionHandler( get(connectionId), config, encryptionComponent);
     }
 
     @GET

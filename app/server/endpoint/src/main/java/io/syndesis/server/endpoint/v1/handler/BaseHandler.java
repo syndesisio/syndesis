@@ -15,8 +15,18 @@
  */
 package io.syndesis.server.endpoint.v1.handler;
 
+import javax.ws.rs.core.UriInfo;
+
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.WithId;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.WithDataManager;
+import io.syndesis.server.endpoint.util.PaginationFilter;
+import io.syndesis.server.endpoint.util.ReflectiveFilterer;
+import io.syndesis.server.endpoint.util.ReflectiveSorter;
+import io.syndesis.server.endpoint.v1.operations.FilterOptionsFromQueryParams;
+import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
+import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 
 
 public abstract class BaseHandler implements WithDataManager {
@@ -32,4 +42,12 @@ public abstract class BaseHandler implements WithDataManager {
         return dataMgr;
     }
 
+    protected <T extends WithId<T>> ListResult<T> fetchAll(Class<T> type, UriInfo uriInfo) {
+        return getDataManager().fetchAll(
+            type,
+            new ReflectiveFilterer<>(type, new FilterOptionsFromQueryParams(uriInfo).getFilters()),
+            new ReflectiveSorter<>(type, new SortOptionsFromQueryParams(uriInfo)),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+        );
+    }
 }

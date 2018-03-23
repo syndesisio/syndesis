@@ -36,7 +36,7 @@ public class ProjectGeneratorHelperTest {
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
                     .id("timer-connection")
-                    .connectorId(TestConstants.TIMER_CONNECTOR.getId())
+                    .connectorId(TestConstants.TIMER_CONNECTOR.getId().get())
                     .build())
                 .putConfiguredProperty("period", "5000")
                 .action(TestConstants.PERIODIC_TIMER_ACTION)

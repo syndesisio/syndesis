@@ -566,6 +566,12 @@
 
     <dependency>
       <groupId>io.syndesis.server</groupId>
+      <artifactId>server-update-controller</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.server</groupId>
       <artifactId>server-controller</artifactId>
       <scope>runtime</scope>
     </dependency>

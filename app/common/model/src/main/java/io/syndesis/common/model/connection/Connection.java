@@ -15,24 +15,13 @@
  */
 package io.syndesis.common.model.connection;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
-
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.ToJson;
-import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithName;
-import io.syndesis.common.model.WithTags;
-import io.syndesis.common.model.environment.Organization;
 import io.syndesis.common.model.validation.UniqueProperty;
 import io.syndesis.common.model.validation.UniquenessRequired;
+import io.syndesis.common.util.IndexedProperty;
+import org.immutables.value.Value;
 
 /**
  * A connection is basically a Camel endpoint configuration (parameters) and
@@ -42,44 +31,13 @@ import io.syndesis.common.model.validation.UniquenessRequired;
 @JsonDeserialize(builder = Connection.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface Connection extends WithId<Connection>, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
+@IndexedProperty("connectorId")
+public interface Connection extends WithId<Connection>, ConnectionBase {
 
     @Override
     default Kind getKind() {
         return Kind.Connection;
     }
-
-    Optional<Organization> getOrganization();
-
-    Optional<String> getOrganizationId();
-
-    Optional<Connector> getConnector();
-
-    Optional<String> getConnectorId();
-
-    /**
-     * Actual options how this connection is configured
-     * @return list of options
-     */
-    Map<String, String> getOptions();
-
-    String getIcon();
-
-    Optional<String> getDescription();
-
-    Optional<String> getUserId();
-
-    Optional<Date> getLastUpdated();
-
-    Optional<Date> getCreatedDate();
-
-    /**
-     * A flag denoting that the some of connection properties were derived.
-     * Ostensibly used to mark the {@link #getConfiguredProperties()} being
-     * set by the OAuth flow so that the UI can alternate between full edit
-     * and reconnect OAuth views.
-     */
-    boolean isDerived();
 
     class Builder extends ImmutableConnection.Builder {
     }

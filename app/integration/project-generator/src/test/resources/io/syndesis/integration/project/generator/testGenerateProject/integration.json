@@ -16,6 +16,7 @@
     "connection" : {
       "connector" : {
         "id" : "timer",
+        "version": 1,
         "actions" : [ {
           "id" : "periodic-timer-action",
           "descriptor" : {
@@ -136,6 +137,7 @@
     "connection" : {
       "connector" : {
         "id" : "http",
+        "version": 1,
         "actions" : [ {
           "id" : "http-get-action",
           "descriptor" : {

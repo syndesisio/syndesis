@@ -13,49 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model.buletin;
+package io.syndesis.common.model.connection;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.immutables.value.Value;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithModificationTimestamps;
-import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
 import io.syndesis.common.model.validation.UniqueProperty;
 import io.syndesis.common.model.validation.UniquenessRequired;
+import io.syndesis.common.util.IndexedProperty;
+import org.immutables.value.Value;
 
-/**
- * A IntegrationBulletinBoard holds any notifications that should be displayed to the user
- * for a given integration.
- */
 @Value.Immutable
-@JsonDeserialize(builder = Integration.Builder.class)
+@JsonDeserialize(builder = ConnectionOverview.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface IntegrationBulletinBoard extends WithId<IntegrationBulletinBoard>, WithModificationTimestamps {
-
+@IndexedProperty("connectorId")
+public interface ConnectionOverview extends WithId<ConnectionOverview>, ConnectionBase {
     @Override
     default Kind getKind() {
-        return Kind.IntegrationBulletinBoard;
+        return Kind.ConnectionOverview;
     }
 
-    @Value.Default
-    default List<LeveledMessage> getMessages() {
-        return Collections.emptyList();
+    Optional<ConnectionBulletinBoard> getBoard();
+
+    class Builder extends ImmutableConnectionOverview.Builder {
     }
-
-    static IntegrationBulletinBoard of(String id, List<LeveledMessage> messages) {
-        return new Builder().id(id).messages(messages).build();
-    }
-
-    class Builder extends ImmutableIntegrationBulletinBoard.Builder {
-        // allow access to ImmutableIntegration.Builder
-    }
-
-
 }

@@ -23,14 +23,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
+import io.syndesis.common.model.WithIdVersioned;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
@@ -86,6 +89,7 @@ public class DataManager implements DataAccessObjectRegistry {
         this.eventBus = eventBus;
         this.encryptionComponent = encryptionComponent;
         this.resourceLoader = resourceLoader;
+
         if (dataAccessObjects != null) {
             this.dataAccessObjects.addAll(dataAccessObjects);
         }
@@ -218,6 +222,12 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
+    public <K extends WithId<K>> Stream<K> fetchAllByPropertyValue(Class<K> type, String property, String value) {
+        return fetchIdsByPropertyValue(type, property, value).stream()
+            .map(id -> fetch(type, id))
+            .filter(Objects::nonNull);
+    }
+
     public <T extends WithId<T>> T fetch(Class<T> model, String id) {
         Kind kind = Kind.from(model);
         Map<String, T> cache = caches.getCache(kind.getModelName());
@@ -230,6 +240,10 @@ public class DataManager implements DataAccessObjectRegistry {
             }
         }
         return value;
+    }
+
+    public <K extends WithId<K>> Optional<K> fetchByPropertyValue(Class<K> type, String property, String value) {
+        return fetchAllByPropertyValue(type, property, value).findFirst();
     }
 
     @SuppressWarnings("unchecked")
@@ -271,6 +285,7 @@ public class DataManager implements DataAccessObjectRegistry {
         return doWithDataAccessObject(model, d -> d.fetchIdsByPropertyValue(property, value));
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends WithId<T>> T create(final T entity) {
         Kind kind = entity.getKind();
         Map<String, T> cache = caches.getCache(kind.getModelName());
@@ -291,11 +306,14 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.create(entityToCreate));
+
         cache.put(idVal, entityToCreate);
-        broadcast("created", kind.getModelName(), idVal);
+        broadcast(EventBus.Action.CREATED, kind.getModelName(), idVal);
+
         return entityToCreate;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends WithId<T>> void update(T entity) {
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
@@ -303,17 +321,29 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         String idVal = id.get();
-
         Kind kind = entity.getKind();
-        T previous = this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.update(entity));
+
+        final T oldEntity = this.<T>fetch(kind.getModelClass(), idVal);
+        final T newEntity;
+
+        if (oldEntity != null && entity instanceof WithIdVersioned) {
+            WithIdVersioned<T> prev = WithIdVersioned.class.cast(oldEntity);
+            int revision = prev.getVersion();
+
+            newEntity = (T) WithIdVersioned.class.cast(entity).withVersion(revision + 1);
+        } else {
+            newEntity = entity;
+        }
+
+        T previous = this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.update(newEntity));
 
         Map<String, T> cache = caches.getCache(kind.getModelName());
-        if (!cache.containsKey(idVal) && previous==null) {
+        if (!cache.containsKey(idVal) && previous == null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
 
-        cache.put(idVal, entity);
-        broadcast("updated", kind.getModelName(), idVal);
+        cache.put(idVal, newEntity);
+        broadcast(EventBus.Action.UPDATED, kind.getModelName(), idVal);
 
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
     }
@@ -330,7 +360,7 @@ public class DataManager implements DataAccessObjectRegistry {
         this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> { d.set(entity); return null;});
         Map<String, T> cache = caches.getCache(kind.getModelName());
         cache.put(idVal, entity);
-        broadcast("updated", kind.getModelName(), idVal);
+        broadcast(EventBus.Action.UPDATED, kind.getModelName(), idVal);
     }
 
 
@@ -351,7 +381,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
         // Return true if the entity was found in any of the two.
         if ( deletedInCache || deletedFromDAO ) {
-            broadcast("deleted", kind.getModelName(), id);
+            broadcast(EventBus.Action.DELETED, kind.getModelName(), id);
             return true;
         }
 
@@ -384,7 +414,7 @@ public class DataManager implements DataAccessObjectRegistry {
      * Perform a simple action if a {@link DataAccessObject} for the specified kind exists.
      * This is just a way to avoid, duplicating the dao lookup and checks, which are going to change.
      * @param model         The model class of the {@link DataAccessObject}.
-     * @param function      The function to perfom on the {@link DataAccessObject}.
+     * @param function      The function to perform on the {@link DataAccessObject}.
      * @param <R>           The return type.
      * @return              The outcome of the function.
      */
@@ -398,7 +428,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
     private void broadcast(String event, String type, String id) {
         if( eventBus !=null ) {
-            eventBus.broadcast("change-event", ChangeEvent.of(event, type, id).toJson());
+            eventBus.broadcast(EventBus.Type.CHANGE_EVENT, ChangeEvent.of(event, type, id).toJson());
         }
     }
 

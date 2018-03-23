@@ -15,19 +15,20 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration.model;
 
-import static io.syndesis.common.model.integration.IntegrationDeploymentState.Unpublished;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
 
-import io.syndesis.common.model.buletin.IntegrationBulletinBoard;
-import io.syndesis.common.model.buletin.LeveledMessage;
+import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
+import io.syndesis.common.model.bulletin.LeveledMessage;
+import io.syndesis.common.model.bulletin.WithLeveledMessages;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+
+import static io.syndesis.common.model.integration.IntegrationDeploymentState.Unpublished;
 
 public class IntegrationOverview {
 
@@ -70,15 +71,15 @@ public class IntegrationOverview {
     }
 
     public IntegrationDeploymentState getCurrentState() {
-        return deployment.map(x -> x.getCurrentState()).orElse(Unpublished);
+        return deployment.map(IntegrationDeployment::getCurrentState).orElse(Unpublished);
     }
 
     public IntegrationDeploymentState getTargetState() {
-        return deployment.map(x -> x.getTargetState()).orElse(Unpublished);
+        return deployment.map(IntegrationDeployment::getTargetState).orElse(Unpublished);
     }
 
     public Optional<Integer> getDeploymentVersion() {
-        return deployment.map(x->x.getVersion());
+        return deployment.map(IntegrationDeployment::getVersion);
     }
 
     public List<DeploymentOverview> getDeployments() {
@@ -86,11 +87,11 @@ public class IntegrationOverview {
     }
 
     public Optional<String> getStatusMessage() {
-        return deployment.flatMap(x -> x.getStatusMessage());
+        return deployment.flatMap(IntegrationDeployment::getStatusMessage);
     }
 
     public List<LeveledMessage> getMessages() {
-        return bulletins.map(x->x.getMessages()).orElse(Collections.emptyList());
+        return bulletins.map(WithLeveledMessages::getMessages).orElse(Collections.emptyList());
     }
 
 
