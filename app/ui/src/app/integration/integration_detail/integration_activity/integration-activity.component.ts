@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { forkJoin } from "rxjs/observable/forkJoin";
 import { PaginationConfig } from 'patternfly-ng';
 
 import { log } from '@syndesis/ui/logging';
-import { Integration, IntegrationSupportService, Activity, Step } from '@syndesis/ui/platform';
+import { Integration, IntegrationSupportService, Activity, Step, IntegrationDeployment } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-activity',
@@ -32,46 +33,44 @@ export class IntegrationActivityComponent implements OnInit {
     this.fetchActivities();
   }
 
-  stepName(step: Step): string {
-    if (!step) {
-      return 'n/a';
-    }
-    if (step.name) {
-      return step.name;
-    }
-    if (step.action && step.action.name) {
-      return step.action.name;
-    }
-    return 'n/a';
+  fetchStepName(step: Step): string {
+    return step && step.name ? step.name : step && step.action && step.action.name ? step.action.name : 'n/a';
   }
 
   fetchActivities(): void {
     this.onRefresh = true;
     this.onError = false;
-    this.integrationSupportService
-      .requestIntegrationActivity(this.integration.id)
-      .do(activitities => {
-        // TODO: In a real, efficient RFP environment, this should be performed as a
-        //       one step operation within the reducer data logic and never within a component
-        activitities.forEach(activity => {
-          if (activity.steps && Array.isArray(activity.steps)) {
-            activity.steps.forEach(step => {
-              // XXX: ANTIPATTERN AHEAD. The following code block mutates an object state
-              const integrationStep = this.integration.steps.find(_integrationStep => _integrationStep.id == step.id);
-              step.name = this.stepName(integrationStep);
-              step.isFailed = step.failure && step.failure.length > 0;
-              const errorMessages = [null, ...step.messages, step.failure].filter(messages => !!messages);
-              step.output = errorMessages.length > 0 ? errorMessages.join('\n') : null;
-            });
-          }
-        });
 
-        return activitities;
-      })
-      .subscribe(
-        activities => this.updateActivities(activities),
-        error => this.handleError(error)
-      );
+    const activities$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id)
+    const integrationDeployments$ = this.integrationSupportService.getDeployments(this.integration.id); //.map(foo => foo['items']) as Observable<IntegrationDeployment[]>;
+
+    forkJoin<[Activity[], IntegrationDeployment[]]>([activities$, integrationDeployments$]).map(results => {
+      const activitities = results[0];
+      const integrationDeployments = results[1];
+
+      activitities.forEach(activity => {
+        if (activity.steps && Array.isArray(activity.steps)) {
+          activity.steps.forEach(step => {
+            const integrationStep = integrationDeployments
+              .find(deployment => deployment.version === +activity.ver)
+              .spec
+              .steps.find(integrationStep => integrationStep.id == step.id);
+            
+            step.name = this.fetchStepName(integrationStep);
+            step.isFailed = step.failure && step.failure.length > 0;
+            
+            const errorMessages = [null, ...step.messages, step.failure].filter(messages => !!messages);
+            step.output = errorMessages.length > 0 ? errorMessages.join('\n') : null;
+          });
+        }
+      });
+
+      return activitities;
+    })
+    .subscribe(
+      activities => this.updateActivities(activities),
+      error => this.handleError(error)
+    );
   }
 
   renderActivitiesByPage(): void {
