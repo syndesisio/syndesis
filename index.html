@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6163-g2e3dc45c4,</span>
+<span id="revnumber">version 1.1.3-6164-g55f677744,</span>
 <span id="revdate">2018-03-23</span>
 </div>
 <div id="toc" class="toc2">
@@ -596,7 +596,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#_groups">3.2.1. Groups</a></li>
 <li><a href="#_categories">3.2.2. Categories</a></li>
-<li><a href="#_pull_request">3.2.3. Pull Request</a></li>
+<li><a href="#_pull_requests">3.2.3. Pull Requests</a></li>
 <li><a href="#_notification">3.2.4. Notification</a></li>
 <li><a href="#_external_references">3.2.5. External references</a></li>
 <li><a href="#_daily_meeting_labels">3.2.6. Daily Meeting Labels</a></li>
@@ -2432,7 +2432,7 @@ Currently we have these categories:</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_pull_request">3.2.3. Pull Request</h4>
+<h4 id="_pull_requests">3.2.3. Pull Requests</h4>
 <div class="paragraph">
 <p>This category of labels is all about pull requests.
 All of them have a meaning for the <a href="https://github.com/syndesisio/pure-bot">pure-bot</a> bot which watches a pull request and performs certain action.
@@ -2441,18 +2441,32 @@ These actions also involve monitoring and creating labels.</p>
 <div class="paragraph">
 <p>The following labels are involved:</p>
 </div>
-<div class="paragraph">
-<p>| <strong>pr/approved</strong>
-| This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for <a href="https://github.com/syndesisio/pure-bot">pure-bot</a> to automatically merge the pull request if it passes all required tests. You should not set this label manually for approving a PR but using the GitHub button to do so.</p>
-</div>
-<div class="paragraph">
-<p>| <strong class="white">pr/review-requested</strong>
-| In our process it is not mandatory to have a PR review. However, if the author requests a review via the normal GitHub functionality, this label gets applied automatically. When this label is set on a pull-request, then the mandatory status check <code>pure-bot/review-requested</code> will only pass if at least a single pull request has been given, so prevents manual merging (without forcing).</p>
-</div>
-<div class="paragraph">
-<p>| <strong>status/wip</strong>
-| This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is approved. A dedicated mandatory status check <code>pure-bot/wip</code> monitors this labels and prevents merging if this label is present.</p>
-</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 83.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Notification</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #86d969;"><p class="tableblock"><strong>pr/approved</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for <a href="https://github.com/syndesisio/pure-bot">pure-bot</a> to automatically merge the pull request if it passes all required tests. You should not set this label manually for approving a PR but using the GitHub button to do so.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #50549d;"><p class="tableblock"><strong class="white">pr/review-requested</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In our process it is not mandatory to have a PR review. However, if the author requests a review via the normal GitHub functionality, this label gets applied automatically. When this label is set on a pull-request, then the mandatory status check <code>pure-bot/review-requested</code> will only pass if at least a single pull request has been given, so prevents manual merging (without forcing).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" style="background-color: #ffed17;"><p class="tableblock"><strong>status/wip</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is approved. A dedicated mandatory status check <code>pure-bot/wip</code> monitors this labels and prevents merging if this label is present.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_notification">3.2.4. Notification</h4>
@@ -2481,7 +2495,7 @@ They are used when one team wants to notify another group that a specific issue 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" style="background-color: #97bcfc;"><p class="tableblock"><strong>notif/triage</strong></p></td>
-<td class="tableblock halign-left valign-top" style="background-color: #97bcfc;"><p class="tableblock">Every new issue gets this label and is considered during a triage session for properly priorisation and categorisation. Remove this label after the triage has happened.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Every new issue gets this label and is considered during a triage session for properly priorisation and categorisation. Remove this label after the triage has happened.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" style="background-color: #f382d0;"><p class="tableblock"><strong>notif/uxd</strong></p></td>
@@ -3046,8 +3060,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6163-g2e3dc45c4<br>
-Last updated 2018-03-23 09:38:22 UTC
+Version 1.1.3-6164-g55f677744<br>
+Last updated 2018-03-23 09:45:19 UTC
 </div>
 </div>
 </body>
