@@ -44,10 +44,13 @@ There must be only at most one label from the "Exclusive" groups.
 | Notification label which can be added and removed to ping certain subteams
 |
 
+| **pr/**
+| Labels which are only relevant for pull request and which have also some semantics for the bot managing pull requests
+|
+
 | **size/**
 | Tee shirt size for issues. Sizing is a subjective assessment and should be done relative to other issues.
 | ✔︎
-
 
 | **status/**
 | Status of an issue or PR.
@@ -148,7 +151,7 @@ Currently we have these categories:
 {set:cellbgcolor!}
 
 | **cat/enhancement**
-{set:cellbgcolor:#93d273}
+{set:cellbgcolor:#b2c303}
 | PR label for an enhancement of an existing feature.
 {set:cellbgcolor!}
 
@@ -213,6 +216,31 @@ Currently we have these categories:
 {set:cellbgcolor!}
 |===
 
+### Pull Request
+
+This category of labels is all about pull requests.
+All of them have a meaning for the https://github.com/syndesisio/pure-bot[pure-bot] bot which watches a pull request and performs certain action.
+These actions also involve monitoring and creating labels.
+
+The following labels are involved:
+
+| **pr/approved**
+{set:cellbgcolor:#86d969}
+| This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for https://github.com/syndesisio/pure-bot[pure-bot] to automatically merge the pull request if it passes all required tests. You should not set this label manually for approving a PR but using the GitHub button to do so.
+{set:cellbgcolor!}
+
+| [white]**pr/review-requested**
+{set:cellbgcolor:#50549d}
+| In our process it is not mandatory to have a PR review. However, if the author requests a review via the normal GitHub functionality, this label gets applied automatically. When this label is set on a pull-request, then the mandatory status check `pure-bot/review-requested` will only pass if at least a single pull request has been given, so prevents manual merging (without forcing).
+{set:cellbgcolor!}
+
+| **status/wip**
+{set:cellbgcolor:#ffed17}
+| This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is approved. A dedicated mandatory status check `pure-bot/wip` monitors this labels and prevents merging if this label is present.
+{set:cellbgcolor!}
+
+
+
 ### Notification
 
 Notification labels from the `notif/` group serve a particular purpose.
@@ -229,6 +257,10 @@ Currently we have two notifcation labels:
 {set:cellbgcolor:#98cc38}
 | The issue needs some attention from the docs team. This might because a new feature has been introduced or, more important, an existing feature has changed for which a documentation already exists.
 {set:cellbgcolor!}
+
+| **notif/triage**
+{set:cellbgcolor:#97bcfc}
+| Every new issue gets this label and is considered during a triage session for properly priorisation and categorisation. Remove this label after the triage has happened.
 
 | **notif/uxd**
 {set:cellbgcolor:#f382d0}
@@ -332,16 +364,6 @@ The current status labels are:
 | [white]**status/blocked**
 {set:cellbgcolor:#ad0009}
 | The current issue is blocked by another issue. Refer to the issue itself to see what is blocking this issued. This label is purely informal.
-{set:cellbgcolor!}
-
-| **approved**
-{set:cellbgcolor:#0ffa16}
-| This label will be automatically applied to a PR as soon as the PR has been approved at the end of a review. It is an indicator for our PR bot to automatically merge the pull request if it passes all required tests. (Note: Should probably be renamed to `status/approved`)
-{set:cellbgcolor!}
-
-| **status/wip**
-{set:cellbgcolor:#f5c73f}
-| This is a PR request label which should be used for "Work-in-Progress" kind of PRs which has been submitted for early review. If this label is present on a PR, the PR is not merged, even when it is "Approved"
 {set:cellbgcolor!}
 
 | **status/2s2f**
