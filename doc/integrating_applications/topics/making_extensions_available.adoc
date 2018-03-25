@@ -1,7 +1,8 @@
 [id='making-extensions-available']
-= Making custom connectors or custom steps available
+= Making custom features available
 
-To upload an extension to {prodname}:
+To make a custom feature available for use in an integration, you upload
+the extension to {prodname} as follows:
 
 . In the left {prodname} panel, click *Customizations*. 
 . At the top, click *Extensions*. 
@@ -20,15 +21,20 @@ developer to obtain an updated `.jar` file, which you can then try to upload.
 After {prodname} validates the file, it extracts and displays the extension's 
 name, ID, description, and type. The type indicates whether the extension
 defines a custom connector, or one or more custom steps for
-operating on data between connections. 
+operating on data between connections, or a JDBC driver for a 
+proprietary database. An extension that provides a JDBC driver is 
+referred to as a library extension. 
 +
 For a connector extension, {prodname} displays
 the actions that are available to a connection that is created from this 
 custom connector. For a step extension, {prodname} displays
-the name of each custom step that the extension defines.
+the name of each custom step that the extension defines. For a library
+extension, if this extension contains a newer version of a JDBC driver that you 
+previously uploaded, then {prodname} uses the newer version for new
+connections. 
 
 . Click *Import Extension*. {prodname} makes the custom connector or 
 custom step(s) available and displays the extension's details page. 
 
-See also: <<creating-connections-from-custom-connectors>> and 
-<<add-custom-step>>.
+See also: <<creating-connections-from-custom-connectors>>,
+<<add-custom-step>>, <<connecting-to-proprietary-databases>>.

@@ -1,33 +1,20 @@
 [id='adding-extensions']
 = Adding extensions
 
-{prodname} provides a number of connectors as well as steps for operating on 
-integration data between connections. If {prodname} does not provide a 
-connector or a step that you need, then a developer can code an extension that 
-defines a custom connector or one or more custom steps for operating on data 
-between connections. 
-
-The developer gives you a `.jar` file that contains the extension.
-You then upload the `.jar` file in {prodname} to make the custom connector
-or custom step(s) available for use. 
-
-A `.jar` file that you upload to {prodname} contains exactly one extension.
-An extension defines one or more steps that operate on data between connections
-or it defines exactly one custom connector. 
+Extensions let you add customizations to {prodname} so you can integrate 
+applications the way you want to. 
 
 The following topics provide details:
 
+* <<about-extensions>>
 * <<making-extensions-available>> 
 * <<managing-extensions>>
+* <<creating-jdbc-driver-library-extensions>>
 
-For an example of uploading and using an extension that provides a step
-that operates on data between connections, see the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/#amq-to-rest-api[AMQ to REST API sample integration tutorial].
-
-Information about coding the extension and creating the `.jar` file is
-in the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[_Fuse Tooling Guide_].
+include::about_extensions.adoc[leveloffset=+1]
 
 include::making_extensions_available.adoc[leveloffset=+1]
 
 include::managing_extensions.adoc[leveloffset=+1]
+
+include::creating_jdbc_driver_library_extensions.adoc[leveloffset=+1]
