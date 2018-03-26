@@ -1,6 +1,6 @@
 {
     "id": "dropbox",
-    "name": "DropBox",
+    "name": "Dropbox",
     "description": "File upload and download from Dropbox",
     "icon": "fa-dropbox",
     "dependencies": [
@@ -96,7 +96,7 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "order": "1",
-                                "labelHint": "Remote path where upload the file"
+                                "labelHint": "Remote path to upload the file to"
                             }
                         }
                     }

@@ -26,7 +26,7 @@
 	</parent>
 
 	<artifactId>connector-dropbox</artifactId>
-	<name>Connector :: DropBox</name>
+	<name>Connector :: Dropbox</name>
 
 	<dependencies>
 		<dependency>
