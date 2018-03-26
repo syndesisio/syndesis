@@ -16,8 +16,9 @@ want the integration to use.
 * *Upload a file to Dropbox* to add the current integration data to the
 Dropbox account that this connection accesses. To configure this
 action:
-.. In the *Remote Path* field, enter the path of the Dropbox folder 
-in which to store the integration data. 
+.. In the *Remote Path* field, to upload multiple files, enter the 
+path of the Dropbox folder in which to store the integration data. 
+To upload one file, enter the Dropbox path and file name.  
 
 .. For the *Upload mode* select:
 +
