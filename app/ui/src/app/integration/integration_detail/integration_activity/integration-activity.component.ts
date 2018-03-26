@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { forkJoin } from "rxjs/observable/forkJoin";
+import { forkJoin } from 'rxjs/observable/forkJoin';
 import { PaginationConfig } from 'patternfly-ng';
 
 import { log } from '@syndesis/ui/logging';
@@ -34,15 +34,16 @@ export class IntegrationActivityComponent implements OnInit {
   }
 
   fetchStepName(step: Step): string {
-    return step && step.name ? step.name : step && step.action && step.action.name ? step.action.name : 'n/a';
+    const { name, action } = step;
+    return name || action && action.name ? action.name : 'n/a';
   }
 
   fetchActivities(): void {
     this.onRefresh = true;
     this.onError = false;
 
-    const activities$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id)
-    const integrationDeployments$ = this.integrationSupportService.getDeployments(this.integration.id); //.map(foo => foo['items']) as Observable<IntegrationDeployment[]>;
+    const activities$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id);
+    const integrationDeployments$ = this.integrationSupportService.getDeployments(this.integration.id);
 
     forkJoin<[Activity[], IntegrationDeployment[]]>([activities$, integrationDeployments$]).map(results => {
       const activitities = results[0];
@@ -51,14 +52,14 @@ export class IntegrationActivityComponent implements OnInit {
       activitities.forEach(activity => {
         if (activity.steps && Array.isArray(activity.steps)) {
           activity.steps.forEach(step => {
-            const integrationStep = integrationDeployments
+            const deployedIntegrationStep = integrationDeployments
               .find(deployment => deployment.version === +activity.ver)
               .spec
               .steps.find(integrationStep => integrationStep.id == step.id);
-            
-            step.name = this.fetchStepName(integrationStep);
+
+            step.name = this.fetchStepName(deployedIntegrationStep);
             step.isFailed = step.failure && step.failure.length > 0;
-            
+
             const errorMessages = [null, ...step.messages, step.failure].filter(messages => !!messages);
             step.output = errorMessages.length > 0 ? errorMessages.join('\n') : null;
           });
