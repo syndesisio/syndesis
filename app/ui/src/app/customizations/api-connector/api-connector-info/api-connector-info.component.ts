@@ -105,7 +105,8 @@ export class ApiConnectorInfoComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   private onDocumentClick(event: Event): void {
-    const elementTag = event.srcElement.tagName.toLowerCase();
+    const element: any = event.target;
+    const elementTag = element.tagName.toLowerCase();
     if (elementTag !== 'input' && elementTag !== 'textarea' && this.editControlKey) {
       setTimeout(() => this.onSubmit(), 0);
     }

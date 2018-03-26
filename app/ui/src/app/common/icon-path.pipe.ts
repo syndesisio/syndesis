@@ -6,6 +6,7 @@ import { ConfigService } from '@syndesis/ui/config.service';
 
 interface IconConnection {
   icon: string | File;
+  iconFile?: File;
   connectorId?: string;
   id?: string;
 }
@@ -25,10 +26,10 @@ export class IconPathPipe implements PipeTransform {
   }
 
   transform(connection: IconConnection, isConnector?: boolean): SafeUrl | null {
-    if (connection && connection.icon instanceof File) {
-      const tempIconBlobPath = URL.createObjectURL(connection.icon);
+    if (connection && (connection.icon instanceof File || connection.iconFile)) {
+      const file = connection.iconFile || connection.icon;
+      const tempIconBlobPath = URL.createObjectURL(file);
       return this.toSafeUrl(tempIconBlobPath);
-
     } else if (connection && typeof (connection.icon) === 'string') {
       // TODO: Streamline this assignation block once we manage to create a common model
       //       schema for entities featuring icons, so we can remove all these conditional logic
@@ -43,7 +44,7 @@ export class IconPathPipe implements PipeTransform {
 
       if (connection.icon.toLowerCase().startsWith('db:') || connection.icon.startsWith('extension:')) {
         connectionId = isConnector ? connection.id : connectionId;
-        iconPath = `${this.apiEndpoint}/connectors/${connectionId}/icon`;
+        iconPath = `${this.apiEndpoint}/connectors/${connectionId}/icon?${connection.icon}`;
       }
 
       return this.toSafeUrl(iconPath);
