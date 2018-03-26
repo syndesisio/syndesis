@@ -7,9 +7,35 @@ to create connections
 in the same way that you use {prodname}-provided connectors to
 create connections.
 
-If the custom connector uses the OAuth protocol, then {prodname}
-adds an entry for the custom connector to the {prodname} *Settings* page. This
-is where you register this installation of {prodname} as a client of the
-connector's application. 
+// If the custom connector uses the OAuth protocol, then {prodname}
+// adds an entry for the custom connector to the {prodname} *Settings* page. This
+// is where you register this installation of {prodname} as a client of the
+// connector's application. 
+
+A custom connector might be for an application that uses the OAuth 
+protocol. Before you create a connection from this kind of connector, you must 
+register your installation of {prodname} for access to the application
+that the connector is for. You do this in the interface for the application
+that the connector is for. The details for how to register your 
+installation of {prodname} vary for each application. 
+
+For example, suppose the custom connector is
+for creating connections to Yammer. You would need to register your
+installation of {prodname} by creating a new application within Yammer. 
+Registration provides a
+Yammer client ID for {prodname}
+and a Yammer client secret value for {prodname}
+A connection from your {prodname} installation to Yammer
+must provide these two values. 
+
+Note that an application might use different
+names for these values, such as consumer ID or consumer secret. 
+
+After you register your installation of {prodname}, you can create
+a connection to the application. When you configure the connection,
+there should be parameters for entering the client ID and the client
+secret. If these parameters are not available, you need to talk with 
+the extension developer and ask for an updated extension that lets
+you specify the client ID and client secret. 
 
 For more information, see <<overview-of-creating-connections>>.

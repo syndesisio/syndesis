@@ -1,27 +1,27 @@
 [id='connecting-to-databases']
 = Connecting to SQL databases
 
-In an integration, you can connect to any of the following types of
+In an integration, you can connect to any of the following types of SQL
 databases:
 
 * Apache Derby
 * MySQL
 * PostgreSQL
+* Proprietary SQL database, such as Oracle
 
-You create a separate connection for each database that you want to 
-connect to in an integration. You can use the same connection in 
-multiple integrations. 
-
-A database connection operates on a table that you specify or invokes a stored
-procedure that you specify. 
-The database table or the stored procedure must exist when an integration
-connects to the database. 
+You create a connection to the database you want to access in an integration
+and then you add that connection to an integration. Before you can create
+a connection to a proprietary database, you must upload a JDBC driver for
+that database. 
 
 See the following topics for details:
 
 * <<create-database-connection>>
 * <<add-database-connection>>
+* <<connecting-to-proprietary-databases>>
 
 include::create_database_connection.adoc[leveloffset=+1]
 
 include::adding_database_connections.adoc[leveloffset=+1]
+
+include::connecting_to_proprietary_databases.adoc[leveloffset=+1]
