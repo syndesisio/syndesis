@@ -55,7 +55,7 @@ public class SqlFileStore {
 
     private final DBI dbi;
 
-    private DatabaseKind databaseKind;
+    private final DatabaseKind databaseKind;
 
     public SqlFileStore(DBI dbi) {
         this.dbi = dbi;

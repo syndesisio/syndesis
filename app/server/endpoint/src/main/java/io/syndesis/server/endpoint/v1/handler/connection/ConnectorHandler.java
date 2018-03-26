@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -217,6 +218,11 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
                 Icon icon = getDataManager().create(iconBuilder.build());
                 iconDao.write(icon.getId().get(), iconStream);
+
+                final String oldIconId = connectorToUpdate.getIcon();
+                if (oldIconId.toLowerCase(Locale.US).startsWith("db:")) {
+                    iconDao.delete(oldIconId.substring(3));
+                }
                 connectorToUpdate = connectorToUpdate.builder().icon("db:" + icon.getId().get()).build();
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error while reading multipart request", e);
