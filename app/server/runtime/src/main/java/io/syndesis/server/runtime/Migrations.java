@@ -73,8 +73,7 @@ public class Migrations {
             final int to = getTargetVersion();
 
             // Apply per version migration scripts.
-            for (int i = from; i < to; i++) {
-                final int version = i + 1;
+            for (int version = from + 1; version <= to; version++) {
                 migrator.migrate(jsondb, version);
                 storedSettings.set("model_schema_version", Integer.toString(version));
             }

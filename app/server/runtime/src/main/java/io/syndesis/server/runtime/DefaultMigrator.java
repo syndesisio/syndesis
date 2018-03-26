@@ -24,6 +24,7 @@ import javax.script.ScriptException;
 import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.jsondb.WithGlobalTransaction;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.dao.Migrator;
 
@@ -47,9 +48,16 @@ public class DefaultMigrator implements Migrator {
 
     @Override
     public void migrate(final JsonDB jsondb, final int toVersion) {
-        try {
-            final String path = migrationsScriptPrefix() + toVersion + ".js";
+        if (jsondb instanceof WithGlobalTransaction) {
+            ((WithGlobalTransaction) jsondb).withGlobalTransaction(checkpointed -> performMigration(checkpointed, toVersion));
+        } else {
+            performMigration(jsondb, toVersion);
+        }
+    }
 
+    private void performMigration(final JsonDB utilized, final int toVersion) {
+        final String path = migrationsScriptPrefix() + toVersion + ".js";
+        try {
             final Resource resource = resourceLoader.getResource(path);
             if (!resource.exists()) {
                 return;
@@ -59,12 +67,13 @@ public class DefaultMigrator implements Migrator {
 
             LOG.info("Migrating to schema: {}", toVersion);
             final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-            engine.put("internal", map("jsondb", jsondb));
+            engine.put("internal", map("jsondb", utilized));
 
             engine.eval(Resources.getResourceAsText("migrations/common.js"));
             engine.eval(migrationScript);
         } catch (IOException | ScriptException e) {
-            throw new SyndesisServerException(e);
+            throw new SyndesisServerException(
+                "Unable to perform database migration to version " + toVersion + ", using migration script at: " + path, e);
         }
     }
 
