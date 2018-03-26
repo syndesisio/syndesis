@@ -218,7 +218,7 @@
                 "kind": "path",
                 "displayName": "Template",
                 "group": "producer",
-                "required": true,
+                "required": false,
                 "type": "hidden",
                 "javaType": "java.lang.String",
                 "tags": [],

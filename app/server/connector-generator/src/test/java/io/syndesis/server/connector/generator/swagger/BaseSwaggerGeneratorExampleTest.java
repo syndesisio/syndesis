@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.xml.crypto.NodeSetData;
 import javax.xml.crypto.OctetStreamData;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -35,22 +34,21 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import io.syndesis.server.connector.generator.ConnectorGenerator;
-import io.syndesis.common.util.Json;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import io.syndesis.common.util.Json;
+import io.syndesis.server.connector.generator.ConnectorGenerator;
 import org.xml.sax.SAXException;
 
 import static io.syndesis.server.connector.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.server.connector.generator.swagger.TestHelper.resource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorTest {
@@ -95,7 +93,7 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
 
         for (final ConnectorAction expectedAction : expected.getActions()) {
             final String actionId = expectedAction.getId().get().replace("_id_", generated.getId().get());
-            final Optional<ConnectorAction> maybeGeneratedAction = generated.actionById(actionId);
+            final Optional<ConnectorAction> maybeGeneratedAction = generated.findActionById(actionId);
             assertThat(maybeGeneratedAction).as("No action with id: " + actionId + " was generated").isPresent();
 
             final ConnectorAction generatedAction = maybeGeneratedAction.get();

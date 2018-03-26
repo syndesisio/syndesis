@@ -15,33 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.support;
 
-import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
-import io.fabric8.kubernetes.client.utils.HttpClientUtils;
-import io.fabric8.openshift.api.model.BuildConfig;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.ImageStreamTag;
-import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
-import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,6 +34,33 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+
+import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
+import io.fabric8.kubernetes.client.utils.HttpClientUtils;
+import io.fabric8.openshift.api.model.BuildConfig;
+import io.fabric8.openshift.api.model.DeploymentConfig;
+import io.fabric8.openshift.api.model.ImageStreamTag;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.integration.IntegrationOverview;
+import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
+import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 @Service
 @ConditionalOnProperty(value = "openshift.enabled", matchIfMissing = true, havingValue = "true")
@@ -129,7 +129,7 @@ public class SupportUtil {
 
     @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
     protected void addSourceFiles(UriInfo uriInfo, ZipOutputStream os, String integrationName) {
-        ListResult<Integration> list = integrationHandler.list(uriInfo);
+        ListResult<IntegrationOverview> list = integrationHandler.list(uriInfo);
         list.getItems().stream()
             .filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-')))
             .map(integration -> integration.getId())

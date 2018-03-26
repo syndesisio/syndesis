@@ -15,30 +15,26 @@
  */
 package io.syndesis.common.model.integration;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import io.syndesis.common.util.IndexedProperty;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithKind;
-import io.syndesis.common.model.WithModificationTimestamps;
-import io.syndesis.common.model.WithVersion;
+import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.util.IndexedProperty;
+import org.immutables.value.Value;
 
 @IndexedProperty.Multiple({
-        @IndexedProperty("integrationId"),
-        @IndexedProperty("currentState")
+    @IndexedProperty("integrationId"),
+    @IndexedProperty("currentState")
 })
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationDeployment.Builder.class)
 @SuppressWarnings("immutables")
-public interface IntegrationDeployment extends WithVersion, WithModificationTimestamps, WithKind, WithId<IntegrationDeployment> {
+public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId<IntegrationDeployment>, WithKind, WithResourceId  {
 
     String COMPOSITE_ID_SEPARATOR = ":";
 
@@ -51,29 +47,10 @@ public interface IntegrationDeployment extends WithVersion, WithModificationTime
         return Kind.IntegrationDeployment;
     }
 
-    Optional<String> getUserId();
-
-    @Value.Default
-    default IntegrationDeploymentState getCurrentState() {
-        return IntegrationDeploymentState.Pending;
-    }
-
-    @Value.Default
-    default IntegrationDeploymentState getTargetState() {
-        return IntegrationDeploymentState.Published;
-    }
-
-    @Value.Default
-    default Map<String, String> getStepsDone() {
-        return Collections.emptyMap();
-    }
-
     @Value.Default
     default Optional<String> getIntegrationId() {
         return getSpec().getId();
     }
-
-    Optional<String> getStatusMessage();
 
     Integration getSpec();
 
