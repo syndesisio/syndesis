@@ -29,11 +29,13 @@
   <!-- http://checkstyle.sourceforge.net/config_misc.html -->
   <module name="NewlineAtEndOfFile">
     <property name="lineSeparator" value="lf"/>
+    <property name="severity" value="warning"/>
   </module>
 
   <!-- http://checkstyle.sourceforge.net/config_whitespace.html -->
   <module name="FileTabCharacter">
     <property name="eachLine" value="true"/>
+    <property name="severity" value="warning"/>
   </module>
 
   <!-- http://checkstyle.sourceforge.net/config_regexp.html -->
