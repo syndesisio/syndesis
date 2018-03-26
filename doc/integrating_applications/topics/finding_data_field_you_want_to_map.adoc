@@ -29,11 +29,10 @@ by that step. Connections to applications such as Twitter, Salesforce,
 Dropbox, and SQL define their own data types. For connecting to AMQ,
 AMQP, and Amazon S3, you define the connection's input and/or output
 type when you add the connection to an integration and select the action
-that it performs.  
-when you specify the data type, you also give the type a name. 
+that the connection performs.  
+When you specify the data type, you also give the type a name. 
 The type name you specify 
 appears as the name of 
 a folder in the data mapper. If you specified a description when you 
 declared the data type, then the type description appears when you hover
 over the step folder in the mapper.  
-+
