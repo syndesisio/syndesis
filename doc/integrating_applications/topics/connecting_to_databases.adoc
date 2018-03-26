@@ -7,11 +7,11 @@ databases:
 * Apache Derby
 * MySQL
 * PostgreSQL
-* Proprietary SQL database, such as Oracle
 
-You create a connection to the database you want to access in an integration
-and then you add that connection to an integration. Before you can create
-a connection to a proprietary database, you must upload a JDBC driver for
+You create a connection to the database that you want to access in an integration
+and then you add that connection to an integration. 
+
+To connect to other types of databases, you must upload a JDBC driver for
 that database. 
 
 See the following topics for details:
