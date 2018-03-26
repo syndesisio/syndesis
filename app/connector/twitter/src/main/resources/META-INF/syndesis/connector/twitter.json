@@ -164,7 +164,7 @@
                 "secret": false,
                 "defaultValue": 5000,
                 "componentProperty": false,
-                "labelHint": "Milliseconds before the next poll"
+                "labelHint": "Time delay before the next poll"
               }
             }
           }
