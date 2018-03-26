@@ -103,6 +103,12 @@
               <p class="card-pf-info text-center">
                 {{ connection.description | truncate : '100' : truncateTrail }}
               </p>
+              <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors">
+                <div class="alert alert-warning">
+                  <span class="pficon pficon-warning-triangle-o"></span>
+                  Configuration Required
+                </div>
+              </div>
             </div>
           </div>
         </div>
