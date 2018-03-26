@@ -401,7 +401,6 @@
             <ignoredUnusedDeclaredDependency>org.springframework.security:spring-security-crypto</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-security</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.cloud:spring-cloud-starter-zipkin</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>postgresql:postgresql</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>com.github.mikegirard:spring-social-salesforce</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.springframework.social:spring-social-twitter</ignoredUnusedDeclaredDependency>
             <ignoredUnusedDeclaredDependency>org.jboss.resteasy:resteasy-validator-provider-11</ignoredUnusedDeclaredDependency>
@@ -871,8 +870,9 @@
     </dependency>
 
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.jdbi</groupId>
