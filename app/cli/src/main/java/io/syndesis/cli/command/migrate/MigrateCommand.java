@@ -15,9 +15,6 @@
  */
 package io.syndesis.cli.command.migrate;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.syndesis.cli.command.SyndesisCommand;
 import io.syndesis.common.model.Schema;
 import io.syndesis.server.jsondb.JsonDB;
@@ -26,9 +23,7 @@ import io.syndesis.server.runtime.StoredSettings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.AbstractApplicationContext;
-
-import com.kakawait.spring.boot.picocli.autoconfigure.ExitStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -44,8 +39,17 @@ public class MigrateCommand extends SyndesisCommand {
         paramLabel = "<password>")
     private String encryptionPassword;
 
+    @Autowired
+    private JsonDB jsondb;
+
+    @Autowired
+    private Migrator migrator;
+
     @Option(names = {"-p", "--password"}, description = "Password to authenticate against the database", required = false)
     private String password;
+
+    @Autowired
+    private StoredSettings storedSettings;
 
     @Option(names = {"-t", "--target"}, description = "Target schema version number", required = false, paramLabel = "<version>")
     private int targetVersion = Schema.VERSION;
@@ -56,42 +60,6 @@ public class MigrateCommand extends SyndesisCommand {
 
     @Option(names = {"-u", "--user"}, description = "Username to authenticate against the database", required = false)
     private String username;
-
-    @Override
-    public ExitStatus call() {
-        final Map<String, Object> parameters = new HashMap<>();
-        putParameter(parameters, "spring.datasource.url", url);
-        putParameter(parameters, "spring.datasource.username", username);
-        putParameter(parameters, "spring.datasource.password", password);
-        putParameter(parameters, "encrypt.key", encryptionPassword);
-
-        try (AbstractApplicationContext context = createContext("migration", parameters)) {
-            final StoredSettings storedSettings = context.getBean(StoredSettings.class);
-
-            final String storedVersion = storedSettings.get(SCHEMA_VERSION_KEY);
-
-            final int version = storedVersion == null ? 0 : Integer.parseInt(storedVersion);
-
-            LOG.info("Current database schema version: {}", version);
-            if (version < targetVersion) {
-                LOG.info("Migrating to version: {}", targetVersion);
-            }
-
-            final JsonDB jsondb = context.getBean(JsonDB.class);
-
-            final Migrator migrator = context.getBean(Migrator.class);
-
-            for (int i = version; i <= targetVersion; i++) {
-                migrator.migrate(jsondb, i);
-            }
-
-            storedSettings.set(SCHEMA_VERSION_KEY, Integer.toString(targetVersion));
-
-            LOG.info("Migration done");
-
-            return ExitStatus.OK;
-        }
-    }
 
     void setEncryptionPassword(final String encryptionPassword) {
         this.encryptionPassword = encryptionPassword;
@@ -111,5 +79,32 @@ public class MigrateCommand extends SyndesisCommand {
 
     void setUsername(final String username) {
         this.username = username;
+    }
+
+    @Override
+    protected void perform() {
+        final String storedVersion = storedSettings.get(SCHEMA_VERSION_KEY);
+        final int version = storedVersion == null ? 0 : Integer.parseInt(storedVersion);
+
+        LOG.info("Current database schema version: {}", version);
+        if (version < targetVersion) {
+            LOG.info("Starting migration to version: {}", targetVersion);
+        }
+
+        for (int i = version; i <= targetVersion; i++) {
+            migrator.migrate(jsondb, i);
+        }
+
+        storedSettings.set(SCHEMA_VERSION_KEY, Integer.toString(targetVersion));
+
+        LOG.info("Migration done");
+    }
+
+    @Override
+    protected void prepare() {
+        putParameter("spring.datasource.url", url);
+        putParameter("spring.datasource.username", username);
+        putParameter("spring.datasource.password", password);
+        putParameter("encrypt.key", encryptionPassword);
     }
 }

@@ -16,10 +16,10 @@
 package io.syndesis.cli.command;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-import io.syndesis.cli.command.migrate.MigrationConfiguration;
-
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -28,11 +28,39 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
+import com.kakawait.spring.boot.picocli.autoconfigure.ExitStatus;
 import com.kakawait.spring.boot.picocli.autoconfigure.HelpAwarePicocliCommand;
+
+import picocli.CommandLine.Command;
 
 public abstract class SyndesisCommand extends HelpAwarePicocliCommand {
 
-    protected static AbstractApplicationContext createContext(final String name, final Map<String, Object> parameters) {
+    private final String name;
+
+    private final Map<String, Object> parameters = new HashMap<>();
+
+    public SyndesisCommand() {
+        final Command command = getClass().getAnnotation(Command.class);
+
+        name = command.name();
+    }
+
+    @Override
+    public final ExitStatus call() {
+        prepare();
+
+        try (AbstractApplicationContext context = createContext()) {
+            final AutowireCapableBeanFactory beanFactory = context.getAutowireCapableBeanFactory();
+
+            beanFactory.autowireBean(this);
+
+            perform();
+        }
+
+        return ExitStatus.OK;
+    }
+
+    private AbstractApplicationContext createContext() {
         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
         final YamlPropertySourceLoader propertySourceLoader = new YamlPropertySourceLoader();
@@ -50,13 +78,19 @@ public abstract class SyndesisCommand extends HelpAwarePicocliCommand {
 
         context.setEnvironment(environment);
 
-        context.register(MigrationConfiguration.class);
+        final String packageName = getClass().getPackage().getName();
+        context.scan(packageName);
+
         context.refresh();
 
         return context;
     }
 
-    protected static void putParameter(final Map<String, Object> parameters, final String key, final String value) {
+    protected abstract void perform();
+
+    protected abstract void prepare();
+
+    protected final void putParameter(final String key, final String value) {
         if (value != null) {
             parameters.put(key, value);
         }

@@ -116,6 +116,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.11</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.jdbi</groupId>
       <artifactId>jdbi</artifactId>
       <version>${jdbi.version}</version>
