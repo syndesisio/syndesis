@@ -26,8 +26,9 @@ mapping step, the step numbers appear in the folder labels in the
 +
 The folder label also displays the name of the data type that is output
 by that step. Connections to applications such as Twitter, Salesforce,
-Dropbox, and SQL define their own data types. For connecting to AMQ,
-AMQP, and Amazon S3, you define the connection's input and/or output
+and SQL define their own data types. For connecting to applications
+such as Amazon S3, AMQ,
+AMQP, Dropbox, and FTP/SFTP, you define the connection's input and/or output
 type when you add the connection to an integration and select the action
 that the connection performs.  
 When you specify the data type, you also give the type a name. 
