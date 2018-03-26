@@ -6,7 +6,7 @@ To connect to a proprietary SQL database, the main tasks that must be
 accomplished are as follows:
 
 . A developer creates a library extension that contains the JDBC driver 
-for the database you want to access in an integration. 
+for the database that you want to access in an integration. 
 See <<creating-jdbc-driver-library-extensions>>. 
 
 . The developer provides a `.jar` file that contains the library extension.

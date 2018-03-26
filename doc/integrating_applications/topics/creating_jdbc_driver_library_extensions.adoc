@@ -1,19 +1,13 @@
 [id='creating-jdbc-driver-library-extensions']
 = Creating JDBC driver library extensions
 
-To connect to a proprietary SQL database, a developer 
-creates an extension that wraps a JDBC driver for that database. 
+To connect to a SQL database other than Apache Derby, MySQL, and
+PostgreSQL, a developer 
+creates an extension that wraps a JDBC driver for the database you 
+want to connect to. 
 After uploading this extension to {prodname}, the {prodname}-provided 
 *Database* connector can access the driver to validate and create connections 
 to the proprietary database. 
-
-[NOTE]
-====
-A JDBC driver library extension enables connections to Oracle databases. 
-To connect to other proprietary SQL databases, a JDBC driver library
-extension is expected to work. If you try this and you encounter a problem, 
-contact technical support. 
-====
 
 The Syndesis open source community provides a project for creating an
 extension that wraps a JDBC driver. This kind of extension is referred to
