@@ -1,0 +1,50 @@
+[id='create-dropbox-connection']
+= Create a Dropbox connection
+
+A connection to Dropbox requires registration of
+{prodname} as an application that can access Dropbox.
+If you did not already register {prodname}, see <<register-with-dropbox>>.
+
+Follow the instructions below to create a Dropbox connection.
+You can use the same Dropbox connection in multiple integrations.
+
+To create a Dropbox connection:
+
+. In a new browser tab, go  to `https://www.dropbox.com` 
+and do the following:
+.. Sign in to the Dropbox account in which you created the app that
+registers access from your {prodname} installation. 
+.. Go to https://www.dropbox.com/developers/apps.
+.. Click the {prodname} app to display its settings.
+
+. In another browser tab, in {prodname}, do the following:
+.. In the left panel, click *Connections* to
+display any available connections.
+.. In the upper right, click *Create Connection* to display
+the available connectors. 
+.. Click the *Dropbox* connector.
+
+. Go back to the Dropbox settings display for your app and do the following:
+.. Scroll down to see *Generated Access Token*. 
+.. Click *Generate*. 
+.. Copy the generated access token to the clipboard. 
+
+. Back in {prodname}, in the *Configure Connection* page, in the 
+*Access Token* field, paste the generated
+access token. 
+. In the *Client Identifier* field, enter the name that you specified
+when you created the Dropbox app. 
+. Click *Validate*. {prodname} displays a message that indicates whether
+it can validate this connection. If validation fails, try again and 
+be sure to enter the correct values. 
+. When validation is successful, in the upper right, click *Next*.
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*Dropbox Connect 1*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample Dropbox connection
+that can access all content in our company Dropbox account.*`
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Dropbox Connect 1* is now available.

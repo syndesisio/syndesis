@@ -26,6 +26,12 @@ For a connector extension, {prodname} displays
 the actions that are available to a connection that is created from this 
 custom connector. For a step extension, {prodname} displays
 the name of each custom step that the extension defines.
++
+For a library
+extension, if this extension contains a newer version of a JDBC driver that you 
+previously uploaded, then {prodname} uses the newer version for new
+connections. 
+
 
 . Click *Import Extension*. {prodname} makes the custom connector or 
 custom step(s) available and displays the extension's details page. 

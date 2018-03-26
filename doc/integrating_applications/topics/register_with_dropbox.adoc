@@ -1,0 +1,41 @@
+[id='register-with-dropbox']
+= Register {prodname} as a Dropbox client
+
+You must register your installation of {prodname} as an application
+that can access Dropbox.
+This lets you create any number of integrations that connect
+to Dropbox. In other words, you need to register a particular
+installation of {prodname} with Dropbox only once.
+
+Perform these steps:
+
+. In {prodname}:
+.. In the left panel, click *Settings*.
+.. Under the page title, in the sentence that starts with *During
+registration*, copy the URL to the clipboard. 
+For example, the URL is something like this:
+`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+
+. In another browser tab, go  to `https://www.dropbox.com` 
+and do the following:
+.. Sign in to the Dropbox account that has the data that you want to
+access in an integration. 
+.. After signing in, go to https://www.dropbox.com/developers/apps.
+.. Click *Create App*.
+.. Select *Dropbox API*. 
+.. Choose whether {prodname} can access a single folder or all of the 
+folders and files. 
+.. Specify a name for your Dropbox app. For example, you might
+specify `*Ignite Access From Aslan LLC*`.
+.. Check the box to indicate that you agree to Dropbox API terms and 
+conditions. 
+.. Click *Create App*. 
+
+.. In the Dropbox *Settings* page for your new app, in
+the input field for *OAuth2 Redirect URIs*, paste your {prodname} URL,
+which you copied to the clipboard at the beginning of this procedure. 
+.. Click *Add*. 
+
+Your installation of {prodname} is now registered as a Dropbox client, which 
+means that {prodname} can access content in the Dropbox account that
+you signed into. 
