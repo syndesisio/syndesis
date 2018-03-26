@@ -34,6 +34,10 @@
         <div class="list-pf-additional-content integration-status">
           <syndesis-integration-status *ngIf="complete"
                                        [integration]="integration"></syndesis-integration-status>
+          <span *ngIf="integration.messages?.length">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            Configuration Required
+          </span>
           <div class="pass-fail">
             <!-- OK Status -->
             <i *ngIf="!integration.statusMessage"
