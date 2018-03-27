@@ -13,6 +13,8 @@ accesses.
 . To configure the action, in the *Folder or file name path to download* field,
 specify the filename path or the folder path for the content that you want
 the integration to obtain. 
-. Click *Next* to add the start connection to the integration. 
+. Click *Next* to specify the action's output type. See 
+<<specifying-connection-input-output-types>>.
+
 
 . 
