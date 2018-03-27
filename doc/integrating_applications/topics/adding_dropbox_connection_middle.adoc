@@ -1,0 +1,36 @@
+[id='adding-dropbox-connection-middle']
+= Adding a Dropbox connection as a middle connection
+
+In an integration, to add a Dropbox connection between the start and 
+finish connections:
+
+. Add the start and finish connections to the integration.
+. In the left panel, hover over the plus sign that is in the location
+where you want to add a Dropbox connection.
+. In the popup, click *Add a Connection*.
+. On the *Choose a Connection* page, click the Dropbox connection that you 
+want the integration to use. 
+
+. On the *Choose an Action* page, select one of the following actions:
++
+* *Upload a file to Dropbox* to add the current integration data to the
+Dropbox account that this connection accesses. To configure this
+action:
+.. In the *Remote Path* field, enter the path of the Dropbox folder 
+in which to store the integration data. 
+
+.. For the *Upload mode* select:
++
+** *Add* to rename a file that you are uploading if a file with the
+same name already exists in that Dropbox location.
+** *Force* to overwrite a file that is already in that Dropbox location if you are 
+uploading a file with the same name. 
++
+* *Download from Dropbox* to obtain one or more files from the Dropbox
+account that this connection accesses. To configure this action,
+in the *Folder or filename path to download* field, enter the Dropbox
+folder path or the Dropbox file path of the content 
+you want to obtain. 
+
+. Click *Next* to add this connection to the
+integration. 

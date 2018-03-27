@@ -10,6 +10,7 @@ creating connections and adding them to integrations:
 * <<connecting-to-s3>>
 * <<connecting-to-amq>>
 * <<connecting-to-amqp>>
+* <<connecting-to-dropbox>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
 * <<connecting-to-databases>>
@@ -24,6 +25,8 @@ include::connecting_to_amazon_s3.adoc[leveloffset=+1]
 include::connecting_to_amq.adoc[leveloffset=+1]
 
 include::connecting_to_amqp.adoc[leveloffset=+1]
+
+include::connecting_to_dropbox.adoc[leveloffset=+1]
 
 include::connecting_to_rest_apis.adoc[leveloffset=+1]
 

@@ -1,0 +1,25 @@
+[id='adding-dropbox-connections']
+= Adding a Dropbox connection to an integration
+
+You must create a Dropbox connection before you can add a Dropbox
+connection to an integration. If you did not already create a Dropbox connection,
+see <<create-dropbox-connection>>.
+
+You must be creating an integration or updating an integration to
+add a connection to that integration. If you need to, see
+<<procedure-for-creating-an-integration>> or <<updating-integrations>>.
+
+The procedure for adding a Dropbox connection to an integration varies
+according to whether you are adding the connection as the
+start connection, the finish connection, or a middle connection.
+See the following topics:
+
+* <<adding-dropbox-connection-start>>
+* <<adding-dropbox-connection-finish>>
+* <<adding-dropbox-connection-middle>>
+
+include::adding_dropbox_connection_start.adoc[leveloffset=+1]
+
+include::adding_dropbox_connection_finish.adoc[leveloffset=+1]
+
+include::adding_dropbox_connection_middle.adoc[leveloffset=+1]

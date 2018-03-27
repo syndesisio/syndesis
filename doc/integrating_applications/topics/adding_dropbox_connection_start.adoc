@@ -1,0 +1,18 @@
+[id='adding-dropbox-connection-start']
+= Adding a Dropbox connection as the start connection
+
+In an integration, to add a Dropbox connection as the start connection:
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Dropbox connection that
+you want to use as the integration's start connection. 
+. On the *Choose an Action* page, click the *Download from Dropbox* action
+to obtain one or more files from the Dropbox account that this connection
+accesses. 
+. To configure the action, in the *Folder or file name path to download* field,
+specify the filename path or the folder path for the content that you want
+the integration to obtain. 
+. Click *Next* to add the start connection to the integration. 
+
+. 

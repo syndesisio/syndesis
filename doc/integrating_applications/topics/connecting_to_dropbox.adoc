@@ -1,0 +1,15 @@
+[id='connecting-to-dropbox']
+= Connecting to Dropbox
+
+In an integration, you can download files from Dropbox or upload files
+to Dropbox. The following topics provide the details:
+
+* <<register-with-dropbox>>
+* <<create-dropbox-connection>>
+* <<adding-dropbox-connections>>
+
+include::register_with_dropbox.adoc[leveloffset=+1]
+
+include::create_dropbox_connection.adoc[leveloffset=+1]
+
+include::adding_dropbox_connections.adoc[leveloffset=+1]

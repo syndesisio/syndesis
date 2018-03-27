@@ -4,8 +4,8 @@
 You must register your installation of {prodname} as an application
 that can access Twitter.
 This lets you create any number of integrations that connect
-to Twitter. In other words, you need to register {prodname}
-with Twitter only once.
+to Twitter. In other words, you need to register a particular
+installation of {prodname} with Twitter only once.
 
 Perform these steps:
 
