@@ -15,6 +15,8 @@
  */
 package io.syndesis.common.model.bulletin;
 
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.WithMetadata;
 import org.immutables.value.Value;
@@ -29,6 +31,11 @@ import static io.syndesis.common.model.bulletin.LeveledMessage.Level.INFO;
 @SuppressWarnings("immutables")
 public interface LeveledMessage extends WithMetadata {
 
+    enum Code {
+        SYNDESIS000, // Generic message
+        SYNDESIS001 // There are parameter updates for this connection
+    }
+
     enum Level {
         INFO,
         WARN,
@@ -40,7 +47,12 @@ public interface LeveledMessage extends WithMetadata {
         return INFO;
     }
 
-    String getMessage();
+    @Value.Default
+    default Code getCode() {
+        return Code.SYNDESIS000;
+    }
+
+    Optional<String> getMessage();
 
     class Builder extends ImmutableLeveledMessage.Builder {
         // allow access to the immutable builder

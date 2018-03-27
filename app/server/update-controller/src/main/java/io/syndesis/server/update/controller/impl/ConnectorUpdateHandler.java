@@ -28,7 +28,8 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.update.controller.AbstractResourceUpdateHandler;
-import io.syndesis.server.update.controller.ResourceUpdateHelper;
+
+import static io.syndesis.server.update.controller.ResourceUpdateHelper.computeSimpleBulletinMessages;
 
 
 public class ConnectorUpdateHandler extends AbstractResourceUpdateHandler<ConnectionBulletinBoard> {
@@ -66,7 +67,7 @@ public class ConnectorUpdateHandler extends AbstractResourceUpdateHandler<Connec
 
     private ConnectionBulletinBoard computeBoard(Connection connection, Connector oldConnector, Connector newConnector) {
         final DataManager dataManager = getDataManager();
-        final List<LeveledMessage> messages = ResourceUpdateHelper.computeBulletinMessages(oldConnector.getProperties(), newConnector.getProperties());
+        final List<LeveledMessage> messages = computeSimpleBulletinMessages(oldConnector.getProperties(), newConnector.getProperties());
         final String id = connection.getId().get();
         final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(null);
         final ConnectionBulletinBoard.Builder builder;

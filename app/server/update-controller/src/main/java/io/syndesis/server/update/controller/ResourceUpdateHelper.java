@@ -29,6 +29,42 @@ public final class ResourceUpdateHelper {
     private ResourceUpdateHelper() {
     }
 
+    public static List<LeveledMessage> computeSimpleBulletinMessages(Map<String, ConfigurationProperty> left, Map<String, ConfigurationProperty> right) {
+        final List<LeveledMessage> messages = new ArrayList<>();
+        final MapDifference<String, ConfigurationProperty> diff = Maps.difference(left, right);
+
+        if (!diff.entriesOnlyOnLeft().isEmpty() || !diff.entriesOnlyOnRight().isEmpty() || !diff.entriesDiffering().isEmpty()) {
+
+            LeveledMessage.Builder builder = new LeveledMessage.Builder();
+            builder.level(LeveledMessage.Level.INFO);
+            builder.code(LeveledMessage.Code.SYNDESIS001);
+
+            for (Map.Entry<String, ConfigurationProperty> entry : diff.entriesOnlyOnRight().entrySet()) {
+                if (entry.getValue().isRequired()) {
+                    // If the new property is mandatory set level to WARN as
+                    // user needs to configure it
+                    builder.level(LeveledMessage.Level.WARN);
+                }
+            }
+
+            for (Map.Entry<String, MapDifference.ValueDifference<ConfigurationProperty>> entry : diff.entriesDiffering().entrySet()) {
+                final MapDifference.ValueDifference<ConfigurationProperty> value = entry.getValue();
+                final ConfigurationProperty leftValue = value.leftValue();
+                final ConfigurationProperty rightValue = value.rightValue();
+
+                if (leftValue != null && !leftValue.isRequired() && rightValue != null && rightValue.isRequired()) {
+                    // If the new property is mandatory but the old one is not,
+                    // set level to WARN as user may needs to configure it
+                    builder.level(LeveledMessage.Level.WARN);
+                }
+            }
+
+            messages.add(builder.build());
+        }
+
+        return messages;
+    }
+
     public static List<LeveledMessage> computeBulletinMessages(Map<String, ConfigurationProperty> left, Map<String, ConfigurationProperty> right) {
         final List<LeveledMessage> messages = new ArrayList<>();
         final MapDifference<String, ConfigurationProperty> diff = Maps.difference(left, right);
