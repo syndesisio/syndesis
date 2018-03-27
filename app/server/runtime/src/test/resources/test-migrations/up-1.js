@@ -15,7 +15,6 @@
  */
 
 var data = jsondb.get("/test");
-console.log("Data: ", data);
 data["u10001"].name += " Migrated"
 jsondb.set("/test", data);
 jsondb.set("/junk", "Delete me");
