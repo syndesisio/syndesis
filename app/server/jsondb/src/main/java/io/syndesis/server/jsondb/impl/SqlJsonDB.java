@@ -15,15 +15,11 @@
  */
 package io.syndesis.server.jsondb.impl;
 
-import static io.syndesis.server.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
-import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
-import static io.syndesis.server.jsondb.impl.Strings.prefix;
-import static io.syndesis.server.jsondb.impl.Strings.suffix;
-import static io.syndesis.server.jsondb.impl.Strings.trimSuffix;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Proxy;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
@@ -35,10 +31,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.TransactedEventBus;
+import io.syndesis.server.jsondb.WithGlobalTransaction;
+import io.syndesis.server.jsondb.GetOptions;
+import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.jsondb.JsonDBException;
+import io.syndesis.server.jsondb.impl.expr.SqlExpressionBuilder;
 
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
@@ -57,12 +64,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.server.jsondb.GetOptions;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.server.jsondb.JsonDBException;
-import io.syndesis.server.jsondb.impl.expr.SqlExpressionBuilder;
+import static io.syndesis.server.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
+import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
+import static io.syndesis.server.jsondb.impl.Strings.prefix;
+import static io.syndesis.server.jsondb.impl.Strings.suffix;
+import static io.syndesis.server.jsondb.impl.Strings.trimSuffix;
 
 /**
  * Implements the JsonDB via DBI/JDBC
@@ -71,7 +77,7 @@ import io.syndesis.server.jsondb.impl.expr.SqlExpressionBuilder;
  * path to the value.
  */
 @SuppressWarnings({"PMD.GodClass", "PMD.CyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.StdCyclomaticComplexity"})
-public class SqlJsonDB implements JsonDB {
+public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
 
     private static final Logger LOG = LoggerFactory.getLogger(SqlJsonDB.class);
 
@@ -566,6 +572,49 @@ public class SqlJsonDB implements JsonDB {
 
     public DatabaseKind getDatabaseKind() {
         return databaseKind;
+    }
+
+    @Override
+    public void withGlobalTransaction(final Consumer<JsonDB> handler) {
+        final String checkpoint = UUID.randomUUID().toString();
+
+        try (Handle handle = dbi.open()) {
+            handle.begin();
+            handle.checkpoint(checkpoint);
+
+            try (Connection connection = handle.getConnection(); Connection transacted = withoutTransactionControl(connection)) {
+                final TransactedEventBus transactedBus = new TransactedEventBus(bus);
+                final SqlJsonDB checkpointed = new SqlJsonDB(new DBI(() -> transacted), transactedBus);
+
+                boolean commited = false;
+                try {
+                    handler.accept(checkpointed);
+                    handle.commit();
+                    commited = true;
+                    transactedBus.commit();
+                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
+                    if (!commited) {
+                        // if event bus blows up we can't rollback as the transaction has already been commited
+                        handle.rollback(checkpoint);
+                    }
+
+                    throw SyndesisServerException.launderThrowable(e);
+                }
+            } catch (SQLException e) {
+                throw SyndesisServerException.launderThrowable(e);
+            }
+        }
+    }
+
+    private static Connection withoutTransactionControl(Connection connection) {
+        return (Connection) Proxy.newProxyInstance(SqlJsonDB.class.getClassLoader(), new Class<?>[] { Connection.class }, (proxy, method, args) -> {
+            // we control the transaction not the DBI or the consumer
+            if (!"close".equals(method.getName()) && !"commit".equals(method.getName()) && !"rollback".equals(method.getName())) {
+                return method.invoke(connection, args);
+            }
+
+            return null;
+        });
     }
 
 }

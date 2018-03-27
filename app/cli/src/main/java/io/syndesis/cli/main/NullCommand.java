@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
+package io.syndesis.cli.main;
 
-/**
- * This class is used to track the current model schema version.
- */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final int VERSION = 26;
+import com.kakawait.spring.boot.picocli.autoconfigure.ExitStatus;
+import com.kakawait.spring.boot.picocli.autoconfigure.HelpAwarePicocliCommand;
+
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Help.Ansi;
+
+@Command
+class NullCommand extends HelpAwarePicocliCommand {
+    @Override
+    public ExitStatus call() {
+        if (getParsedCommands().size() == 1) {
+            getContext().usage(System.out, Ansi.AUTO);
+            return ExitStatus.TERMINATION;
+        }
+
+        return ExitStatus.OK;
+    }
 }

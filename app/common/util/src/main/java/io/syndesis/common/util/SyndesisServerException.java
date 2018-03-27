@@ -15,6 +15,8 @@
  */
 package io.syndesis.common.util;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 public class SyndesisServerException extends RuntimeException {
 
     private static final long serialVersionUID = 3476018743129184217L;
@@ -45,6 +47,11 @@ public class SyndesisServerException extends RuntimeException {
       }
 
       public static RuntimeException launderThrowable(String message, Throwable cause) {
+        if (cause instanceof UndeclaredThrowableException) {
+            final Throwable throwable = ((UndeclaredThrowableException) cause).getUndeclaredThrowable();
+            return launderThrowable(throwable);
+        }
+
         if (cause instanceof RuntimeException) {
           return (RuntimeException) cause;
         } else if (cause instanceof Error) {

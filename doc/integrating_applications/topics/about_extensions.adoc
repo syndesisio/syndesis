@@ -1,0 +1,31 @@
+[id='about-extensions']
+= About extensions
+
+If {prodname} does not provide a feature that you need, 
+then a developer can code an extension that lets you integrate data the
+way you need to. An extension defines one of the following:
+
+* A single custom connector for creating connections to a particular application
+or service that you want to integrate.
+
+* One or more custom steps that operate on integration data between
+connections.
+
+* A JDBC driver for connecting to a proprietary SQL database, such as Oracle. 
+
+Share your requirements with a developer who codes the extension.
+The developer gives you a `.jar` file that contains the extension.
+You then upload the `.jar` file in {prodname} to make the custom connector, 
+custom step(s), or JDBC driver available for use within {prodname}.
+
+An extension `.jar` file that you upload to {prodname} always contains 
+exactly one extension.  
+
+For an example of uploading and using an extension that provides a step
+that operates on data between connections, see the
+link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/#amq-to-rest-api[AMQ to REST API sample integration tutorial].
+
+For custom connectors and custom steps, information about coding the 
+extension and creating the `.jar` file is in the
+link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[_Fuse Tooling Guide_].
+For extensions that provides JDBC drivers, see <<

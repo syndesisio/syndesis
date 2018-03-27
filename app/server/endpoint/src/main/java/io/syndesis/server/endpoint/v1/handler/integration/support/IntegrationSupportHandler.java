@@ -302,8 +302,8 @@ public class IntegrationSupportHandler {
     public List<ChangeEvent> importModels(SecurityContext sec, ModelExport export, JsonDB jsondb) throws IOException {
 
         // Apply per version migrations to get the schema upgraded on the import.
-        int from = Integer.parseInt(export.schemaVersion());
-        int to = Integer.parseInt(Schema.VERSION);
+        int from = export.schemaVersion();
+        int to = Schema.VERSION;
 
         if( from > to ) {
             throw new IOException("Cannot import an export at schema version level: " + export.schemaVersion());

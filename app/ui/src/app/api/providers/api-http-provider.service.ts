@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpRequest, HttpEventType, HttpProgressEvent, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpRequest,
+  HttpEventType,
+  HttpProgressEvent,
+  HttpResponse,
+  HttpUrlEncodingCodec
+} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
@@ -16,6 +24,7 @@ const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack 
 @Injectable()
 export class ApiHttpProviderService extends ApiHttpService {
   private uploadProgressSubject = new Subject<ApiRequestProgress>();
+  private httpUrlEncodingCodec = new HttpUrlEncodingCodec();
 
   constructor(private httpClient: HttpClient, private apiConfigService: ApiConfigService) {
     super();
@@ -165,9 +174,39 @@ export class ApiHttpProviderService extends ApiHttpService {
   }
 
   private replaceNameMatches(endpointTemplate: string, paramsMap: StringMap<any>): string {
-    return endpointTemplate.replace(/\{(\D*?)\}/g, (fullMatch, ...matchGroups) => {
-      return paramsMap[matchGroups[0].trim()];
+    const matched = [];
+    const answer = endpointTemplate.replace(/\{(\D*?)\}/g, (fullMatch, ...matchGroups) => {
+      const match = matchGroups[0].trim();
+      matched.push(match);
+      return this.httpUrlEncodingCodec.encodeValue(paramsMap[match]);
     });
+    // Turn any remaining parameters into query params
+    const remainder = Object.keys(paramsMap).filter(x => matched.indexOf(x) === -1);
+    const queryParams = remainder.map(key => {
+      const value = paramsMap[key];
+      if (value === undefined || value === null) {
+        return undefined;
+      }
+      // expand an array value in the param map to multiple query params
+      if (typeof value === 'string') {
+        return this.httpUrlEncodingCodec.encodeKey(key) + '=' + this.httpUrlEncodingCodec.encodeValue(value);
+      } else if (Array.isArray(value)) {
+        return value.map(val => this.httpUrlEncodingCodec.encodeKey(key) + '=' +  this.httpUrlEncodingCodec.encodeValue(val)).join('&');
+      } else {
+        // not supported, drop it
+        return undefined;
+      }
+    }).filter(x => x).join('&');
+    if (queryParams.length) {
+      // cater for the possibility that the template has query params in it
+      if (answer.indexOf('?') !== -1) {
+        return answer + '&' + queryParams;
+      } else {
+        return answer + '?' + queryParams;
+      }
+    } else {
+      return answer;
+    }
   }
 
   private replaceIndexMatches(endpointTemplate: string, ...params: any[]): string {
@@ -179,7 +218,6 @@ export class ApiHttpProviderService extends ApiHttpService {
     } else if (params && params.toString() !== '') {
       return endpointTemplate.replace(/\{(\d*?)\}/g, params.toString());
     }
-
     return endpointTemplate;
   }
 

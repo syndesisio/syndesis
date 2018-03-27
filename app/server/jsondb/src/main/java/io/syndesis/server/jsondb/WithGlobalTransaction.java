@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
+package io.syndesis.server.jsondb;
 
-/**
- * This class is used to track the current model schema version.
- */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final int VERSION = 26;
+import java.util.function.Consumer;
+
+public interface WithGlobalTransaction {
+
+    void withGlobalTransaction(Consumer<JsonDB> handler);
+
 }

@@ -107,10 +107,14 @@
     <resteasy-spring-boot-starter.version>2.3.4-RELEASE</resteasy-spring-boot-starter.version>
 
     <immutables.version>2.5.6</immutables.version>
+
+    <jdbi.version>2.78</jdbi.version>
+    <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
   </properties>
 
   <modules>
     <module>common</module>
+    <module>cli</module>
     <module>extension</module>
     <module>integration</module>
     <module>connector</module>

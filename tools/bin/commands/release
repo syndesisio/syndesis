@@ -129,11 +129,6 @@ release::run() {
     # Create template versions for the minor tags (without patchlevels)
     create_templates_for_minor_version "$topdir" "$syndesis_tag"
 
-    # Update files for SNAPSHOT and 'latest version'
-    # This is not needed anymore as we pushing the tag directly,
-    # and not 'master'. So master still refers to the old version.
-    # change_to_dev_version "$topdir" "$maven_opts"
-
     # Push everything (if configured)
     git_push "$topdir" "$release_version" "$syndesis_tag"
 }
@@ -264,31 +259,6 @@ git_commit_files() {
     git_commit ^install/ "Update OpenShift templates for Syndesis $version"
 }
 
-change_to_dev_version() {
-    local topdir=$1
-    local maven_opts="$2"
-
-    # Calculate hte next development version
-    local dev_version=$(readopt --dev-version)
-    if [ -z "${dev_version}" ]; then
-        dev_version=$(calc_dev_version $release_version)
-        check_error $dev_version
-    fi
-
-    echo "==== Updating pom.xmls to snapshot version"
-    cd "$topdir/app"
-    ./mvnw ${maven_opts} versions:set -DnewVersion=$dev_version -DprocessAllModules=true -DgenerateBackupPoms=false
-
-    echo "==== Updating OpenShift templates back to 'latest'"
-    cd $topdir/install/generator
-    sh run.sh --syndesis-tag="latest"
-
-    echo "==== Committing files for current snapshot"
-    cd $topdir
-    git_commit pom.xml "Setting version $dev_version in pom.xml files"
-    git_commit ^install/ "Update OpenShift templates to latest images"
-}
-
 git_push() {
     local topdir=${1:-}
     local release_version=${2:-}
@@ -339,15 +309,8 @@ do_product_templates() {
   echo "=== Tagging"
   git tag -f "${tag_prefix}-${syndesis_tag}"
 
-  echo "=== Reverting template versions back to 'latest'"
-  cd $topdir/install/generator
-  sh run.sh --syndesis-tag="latest"
-
-  echo "==== Committing"
-  cd $topdir
-  git_commit ^install/ "Update OpenShift to latest images"
-
-  git_push
+  # Push release tag only
+  git_push "$topdir" "$release_version"
 }
 
 drop_staging_repo() {

@@ -1,12 +1,21 @@
 [id='create-database-connection']
 = Create a database connection
 
-After you create a database connection, you can use the same database connection
-in any number of integrations.
+You create a separate connection for each database that you want to 
+connect to in an integration. You can use the same connection in 
+multiple integrations. 
+
+A database connection operates on a table that you specify or invokes a stored
+procedure that you specify. 
+The database table or the stored procedure must exist when an integration
+connects to the database. 
 
 To create a database connection:
 
-. Ensure that the JDBC driver for the database is on your classpath.
+. Ensure that the JDBC driver for the database that you want to connect to
+is on your classpath. If you uploaded a JDBC driver library extension to 
+connect to a proprietary database, then the upload process puts the driver
+on your classpath. 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
 . In the upper right, click *Create Connection* to display

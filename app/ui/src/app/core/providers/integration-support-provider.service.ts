@@ -135,8 +135,9 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   exportIntegration(...ids: string[]): Observable<Blob> {
-    const url = integrationEndpoints.export + '?' + ids.map(id => 'id=' + id).join('&');
-    return this.apiHttpService.get<Blob>(url, { responseType: 'blob' });
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.export, { id: ids })
+      .get( { responseType: 'blob' });
   }
 
   importIntegrationURL(): string {
