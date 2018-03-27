@@ -15,6 +15,11 @@
  */
 package io.syndesis.server.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,21 +32,16 @@ import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import io.syndesis.common.util.cache.CacheManager;
-import io.syndesis.common.util.cache.LRUCacheManager;
-import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import io.syndesis.common.util.cache.CacheManager;
+import io.syndesis.common.util.cache.LRUCacheManager;
+import io.syndesis.server.dao.manager.DataAccessObject;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 
 public class DataManagerTest {
     private CacheManager cacheManager;
@@ -114,7 +114,7 @@ public class DataManagerTest {
 
     @Test
     public void createShouldCreateWithUnspecifiedIds() {
-        final Connector given = new Connector.Builder().version(1).icon("my-icon").build();
+        final Connector given = new Connector.Builder().version(1).icon("my-icon").name("my-name").build();
         final Connector got = dataManager.create(given);
 
         assertThat(got).isEqualToIgnoringGivenFields(given, "id");
@@ -124,7 +124,7 @@ public class DataManagerTest {
 
     @Test
     public void createShouldCreateWithSpecifiedId() {
-        final Connector connector = new Connector.Builder().version(1).id("custom-id").build();
+        final Connector connector = new Connector.Builder().version(1).id("custom-id").name("my-name").build();
         final Connector got = dataManager.create(connector);
 
         assertThat(got).isSameAs(connector);
