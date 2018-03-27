@@ -55,6 +55,8 @@
     <dependency>
       <groupId>io.syndesis.server</groupId>
       <artifactId>server-runtime</artifactId>
+      <version>${project.version}</version>
+      <classifier>classes</classifier>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
