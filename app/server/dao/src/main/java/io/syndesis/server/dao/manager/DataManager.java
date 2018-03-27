@@ -454,7 +454,7 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     private <T extends WithId<T>> void validateNoDuplicateName(final T entity, final String ignoreSelfId) {
-        if (WithName.class.isAssignableFrom(entity.getClass())) {
+        if (entity instanceof WithName) {
             WithName n = (WithName) entity;
             if (n.getName() == null) {
                 LOGGER.error("Entity name is a required field");
@@ -464,8 +464,8 @@ public class DataManager implements DataAccessObjectRegistry {
             if (ids != null) {
                 ids.remove(ignoreSelfId);
                 if (! ids.isEmpty()) {
-                    LOGGER.error("Current Entity {} with name {} already exists on id {}",
-                        entity.getId(),
+                    LOGGER.error("Duplicate name, current entity with id '{}' has name '{}' that already exists on entity with id '{}'",
+                        entity.getId().orElse("null"),
                         n.getName(),
                         ids.iterator().next());
                     throw new EntityExistsException(
