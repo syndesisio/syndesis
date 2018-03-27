@@ -15,9 +15,8 @@
  */
 package io.syndesis.cli.main;
 
-import java.util.Set;
+import io.syndesis.cli.command.migrate.MigrateCommand;
 
-import org.reflections.Reflections;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,19 +32,17 @@ import picocli.CommandLine.Command;
 @SuppressWarnings("PMD.UseUtilityClass")
 public class SyndesisCommandLine implements PicocliConfigurer {
 
+    private static final Class<?>[] COMMANDS = {MigrateCommand.class};
+
     @Override
     public void configure(final CommandLine commandLine) {
-        final Reflections reflections = new Reflections("io.syndesis.cli");
-        final Set<Class<?>> commands = reflections.getTypesAnnotatedWith(Command.class);
-
-        for (final Class<?> command : commands) {
+        for (final Class<?> command : COMMANDS) {
             final Object cmd;
             try {
-                cmd = command.newInstance();
+                cmd = command.getDeclaredConstructor().newInstance();
             } catch (final ReflectiveOperationException e) {
                 throw new IllegalStateException("Unable to instantiate", e);
             }
-
             final Command annotation = command.getAnnotation(Command.class);
             commandLine.addSubcommand(annotation.name(), cmd);
         }
