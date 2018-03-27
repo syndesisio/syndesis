@@ -100,7 +100,10 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   }
 
   getDeployments(id: string): Observable<IntegrationDeployments> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.deployments, { id }).get();
+    return this.apiHttpService
+      .setEndpointUrl(integrationEndpoints.deployments, { id })
+      .get()
+      .map(response => (response['items'] as IntegrationDeployments) || []);
   }
 
   watchDeployments(id: string): Observable<any> {
