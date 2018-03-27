@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -31,6 +30,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.netflix.hystrix.HystrixExecutable;
+import com.netflix.hystrix.HystrixInvokableInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,15 +42,12 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
-import com.netflix.hystrix.HystrixExecutable;
-import com.netflix.hystrix.HystrixInvokableInfo;
 
 @Api(value = "actions")
 public class ConnectionActionHandler {
@@ -61,14 +59,14 @@ public class ConnectionActionHandler {
 
     private final MetadataConfigurationProperties config;
 
-    private final Connection connection;
+    private final ConnectionBase connection;
 
     private final String connectorId;
 
     private final EncryptionComponent encryptionComponent;
 
-    public ConnectionActionHandler(final Connection connection, final MetadataConfigurationProperties config,
-        final EncryptionComponent encryptionComponent) {
+    public ConnectionActionHandler(final ConnectionBase connection, final MetadataConfigurationProperties config,
+                                   final EncryptionComponent encryptionComponent) {
         this.connection = connection;
         this.config = config;
         this.encryptionComponent = encryptionComponent;

@@ -39,8 +39,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -61,6 +59,7 @@ import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.operations.Creator;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
+import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -76,10 +75,9 @@ import static io.syndesis.common.model.bulletin.LeveledMessage.Level.WARN;
 @Component
 public class ConnectionHandler
         extends BaseHandler
-        implements Getter<Connection>, Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
+        implements Lister<ConnectionOverview>, Getter<ConnectionOverview>, Creator<Connection>, Deleter<Connection>, Updater<Connection>, Validating<Connection> {
 
     private final Credentials credentials;
-
     private final ClientSideState state;
 
     @Context
@@ -111,22 +109,7 @@ public class ConnectionHandler
         return Kind.Connection;
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
-        @ApiImplicitParam(
-            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
-        @ApiImplicitParam(
-            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
-    })
+    @Override
     public ListResult<ConnectionOverview> list(@Context UriInfo uriInfo) {
         final DataManager dataManager = getDataManager();
         final ListResult<Connection> connections = fetchAll(Connection.class, uriInfo);
@@ -134,10 +117,15 @@ public class ConnectionHandler
 
         for (Connection connection: connections.getItems()) {
             final String id = connection.getId().get();
+            final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
             final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(EMPTY_BOARD);
 
             overviews.add(
-                new ConnectionOverview.Builder().createFrom(connection).board(board).build()
+                new ConnectionOverview.Builder()
+                    .createFrom(connection)
+                    .connector(connector)
+                    .board(board)
+                    .build()
             );
         }
 
@@ -145,11 +133,17 @@ public class ConnectionHandler
     }
 
     @Override
-    public Connection get(final String id) {
-        final Connection connection = Getter.super.get(id);
-        final Connector connector = getDataManager().fetch(Connector.class, connection.getConnectorId());
+    public ConnectionOverview get(final String id) {
+        final DataManager dataManager = getDataManager();
+        final Connection connection = dataManager.fetch(Connection.class, id);
+        final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(EMPTY_BOARD);
+        final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
 
-        return new Connection.Builder().createFrom(connection).connector(connector).build();
+        return new ConnectionOverview.Builder()
+            .createFrom(connection)
+            .connector(connector)
+            .board(board)
+            .build();
     }
 
     @Override
@@ -219,7 +213,7 @@ public class ConnectionHandler
 
     @Path("/{id}/actions")
     public ConnectionActionHandler metadata(@NotNull @PathParam("id") @ApiParam(required = true, example = "my-connection") final String connectionId) {
-        return new ConnectionActionHandler( get(connectionId), config, encryptionComponent);
+        return new ConnectionActionHandler(get(connectionId), config, encryptionComponent);
     }
 
     @GET
@@ -247,9 +241,9 @@ public class ConnectionHandler
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/update-bulletins")
     public ConnectionBulletinBoard updateBulletinBoard(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
-        List<LeveledMessage> messages = new ArrayList<>();
+        final List<LeveledMessage> messages = new ArrayList<>();
+        final Connection connection = getDataManager().fetch(Connection.class, id);
 
-        Connection connection = get(id);
         final Set<ConstraintViolation<Connection>> constraintViolations = getValidator().validate(connection, AllValidations.class);
         for (ConstraintViolation<Connection> violation : constraintViolations) {
             messages.add(LeveledMessage.of(ERROR, violation.getMessage()));
