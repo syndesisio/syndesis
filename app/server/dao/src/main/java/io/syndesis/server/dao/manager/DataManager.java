@@ -32,8 +32,10 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 
 import io.syndesis.common.model.WithIdVersioned;
+import io.syndesis.common.model.WithName;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
@@ -45,6 +47,7 @@ import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -294,6 +297,7 @@ public class DataManager implements DataAccessObjectRegistry {
 
         final T entityToCreate;
         if (!id.isPresent()) {
+            validateNoDuplicateName(entity);
             idVal = KeyGenerator.createKey();
             entityToCreate = entity.withId(idVal);
         } else {
@@ -319,6 +323,8 @@ public class DataManager implements DataAccessObjectRegistry {
         if (!id.isPresent()) {
             throw new EntityNotFoundException("Setting the id on the entity is required for updates");
         }
+
+        validateNoDuplicateName(entity, id.get());
 
         String idVal = id.get();
         Kind kind = entity.getKind();
@@ -441,5 +447,31 @@ public class DataManager implements DataAccessObjectRegistry {
     @SuppressWarnings("unchecked")
     private static <T> Function<ListResult<T>, ListResult<T>>[] noOperators() {
         return (Function<ListResult<T>, ListResult<T>>[]) NO_OPERATORS;
+    }
+
+    private <T extends WithId<T>> void validateNoDuplicateName(final T entity) {
+        validateNoDuplicateName(entity, null);
+    }
+
+    private <T extends WithId<T>> void validateNoDuplicateName(final T entity, final String ignoreSelfId) {
+        if (WithName.class.isAssignableFrom(entity.getClass())) {
+            WithName n = (WithName) entity;
+            if (n.getName() == null) {
+                LOGGER.error("Entity name is a required field");
+                throw new PersistenceException("'Name' is a required field");
+            }
+            Set<String> ids = fetchIdsByPropertyValue(Connection.class, "name", n.getName());
+            if (ids != null) {
+                ids.remove(ignoreSelfId);
+                if (! ids.isEmpty()) {
+                    LOGGER.error("Current Entity {} with name {} already exists on id {}",
+                        entity.getId(),
+                        n.getName(),
+                        ids.iterator().next());
+                    throw new EntityExistsException(
+                            "There already exists a " + entity.getKind() + " with name " + n.getName());
+                }
+            }
+        }
     }
 }
