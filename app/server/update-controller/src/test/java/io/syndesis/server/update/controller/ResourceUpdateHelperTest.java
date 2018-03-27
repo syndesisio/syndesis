@@ -129,4 +129,34 @@ public class ResourceUpdateHelperTest {
         assertThat(messages.get(2).getMetadata()).containsEntry("property", "p1");
         assertThat(messages.get(2).getMetadata()).containsEntry("status", "updated");
     }
+
+    @Test
+    public void testUpdatedPropertySimple() {
+        Map<String, ConfigurationProperty> left = new HashMap<>();
+        Map<String, ConfigurationProperty> right = new HashMap<>();
+
+        left.put("property", new ConfigurationProperty.Builder().description("property").build());
+        right.put("property", new ConfigurationProperty.Builder().description("PROPERTY").build());
+        right.put("property2", new ConfigurationProperty.Builder().description("PROPERTY2").build());
+
+        List<LeveledMessage> messages = ResourceUpdateHelper.computeSimpleBulletinMessages(left, right);
+
+        assertThat(messages).hasSize(1);
+        assertThat(messages.get(0)).hasFieldOrPropertyWithValue("level", LeveledMessage.Level.INFO);
+    }
+
+    @Test
+    public void testNewRequiresPropertySimpl() {
+        Map<String, ConfigurationProperty> left = new HashMap<>();
+        Map<String, ConfigurationProperty> right = new HashMap<>();
+
+        left.put("property", new ConfigurationProperty.Builder().description("property").build());
+        right.put("property", new ConfigurationProperty.Builder().description("PROPERTY").build());
+        right.put("property2", new ConfigurationProperty.Builder().description("PROPERTY2").required(true).build());
+
+        List<LeveledMessage> messages = ResourceUpdateHelper.computeSimpleBulletinMessages(left, right);
+
+        assertThat(messages).hasSize(1);
+        assertThat(messages.get(0)).hasFieldOrPropertyWithValue("level", LeveledMessage.Level.WARN);
+    }
 }
