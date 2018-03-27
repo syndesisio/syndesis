@@ -34,8 +34,14 @@ export class IntegrationActivityComponent implements OnInit {
   }
 
   fetchStepName(step: Step): string {
-    const { name, action } = step;
-    return name || action && action.name ? action.name : 'n/a';
+    let stepName = 'n/a';
+
+    if (step) {
+      const { name, action } = step;
+      stepName = name || action && action.name ? action.name : stepName;
+    }
+
+    return stepName;
   }
 
   fetchActivities(): void {
