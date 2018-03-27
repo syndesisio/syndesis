@@ -21,7 +21,6 @@
 <module name="Checker">
   <!-- http://checkstyle.sourceforge.net/config_filters.html -->
   <module name="SuppressWarningsFilter" />
-  <module name="SuppressWithNearbyCommentFilter"/>
   <module name="SuppressionFilter">
     <property name="file" value="/syndesis/checkstyle-suppressions.xml"/>
   </module>
@@ -54,11 +53,10 @@
   <module name="TreeWalker">
     <property name="cacheFile" value="checkstyle.cache"/>
 
+    <module name="SuppressWithNearbyCommentFilter"/>
+
     <!-- http://checkstyle.sourceforge.net/config_annotation.html -->
     <module name="SuppressWarningsHolder" />
-
-    <!-- http://checkstyle.sourceforge.net/config_filters.html -->
-    <module name="FileContentsHolder"/>
 
     <!-- Checks for blocks. You know, those {}'s         -->
     <!-- See http://checkstyle.sf.net/config_blocks.html -->
