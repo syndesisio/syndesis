@@ -586,15 +586,15 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
                 final TransactedEventBus transactedBus = new TransactedEventBus(bus);
                 final SqlJsonDB checkpointed = new SqlJsonDB(new DBI(() -> transacted), transactedBus);
 
-                boolean commited = false;
+                boolean committed = false;
                 try {
                     handler.accept(checkpointed);
                     handle.commit();
-                    commited = true;
+                    committed = true;
                     transactedBus.commit();
                 } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final RuntimeException e) {
-                    if (!commited) {
-                        // if event bus blows up we can't rollback as the transaction has already been commited
+                    if (!committed) {
+                        // if event bus blows up we can't rollback as the transaction has already been committed
                         handle.rollback(checkpoint);
                     }
 
