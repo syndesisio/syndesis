@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.cli.main;
+package io.syndesis.server.cli.main;
 
-import io.syndesis.cli.command.migrate.MigrateCommand;
+import io.syndesis.server.cli.command.migrate.MigrateCommand;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

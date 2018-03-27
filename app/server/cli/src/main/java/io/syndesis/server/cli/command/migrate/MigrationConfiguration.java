@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.cli.command.migrate;
+package io.syndesis.server.cli.command.migrate;
 
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.cache.CacheManager;

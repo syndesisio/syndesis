@@ -37,4 +37,4 @@ logging:
     org.hibernate: ERROR
     org.springframework: ERROR
     org.reflections: ERROR
-    io.syndesis.cli.main.SyndesisCommandLine: ERROR
+    io.syndesis.server.cli.main.SyndesisCommandLine: ERROR
