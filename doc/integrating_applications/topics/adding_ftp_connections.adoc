@@ -1,0 +1,2 @@
+[id='adding-ftp-connections']
+= Adding an FTP or SFTP connection to an integration

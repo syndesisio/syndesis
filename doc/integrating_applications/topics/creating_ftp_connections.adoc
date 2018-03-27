@@ -1,0 +1,49 @@
+[id='creating-ftp-connections']
+= Creating an FTP or SFTP connection
+
+To create a connection to an FTP server or an SFTP server:
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+{prodname} connectors.
+. Click the *FTP* connector or the *SFTP* connector. 
+. To configure the connection: 
+.. In the *Is file transfer mode binary* field, the default is *Yes*. 
+Select *No* for ASCII transfer mode.
+.. In the *Connect time out* field, the default of *10000* milliseconds
+indicates a maximum wait of 10 seconds to establish 
+the connection. If 10 seconds elapse without a connection then
+Accept the default or enter another vale. 
+.. In the *Disconnect from the server right after use* field, accept the
+default behavior, which is that the connection remains after each
+action. To disconnect after each action, select *No*. 
+.. In the *Host* field, enter the name of the host of the FTP or SFTP
+server. This is the only required field. 
+.. In the *Maximum reconnect attempts* field, 
+.. In the *Is the connection mode passive* field, 
+.. In the *Password* field, 
+.. In the *Port* field, specify the port that the server is listening on. 
+For an FTP server, the default port is `21`. For an SFTP server, the
+default port is `22`
+.. In the *Reconnect delay* field, 
+.. In the *Data time out* field, 
+.. In the *User name* field, specify the name of the account you want to 
+use to access the server. If this field is empty, then this connection
+tries `anonymous` log in without a password. 
+
+. Click *Validate*. {prodname} immediately tries to validate the
+connection and displays a message that indicates whether or not
+validation is successful. If validation fails, revise the configuration
+details as needed and try again.
+. When validation is successful, click *Next*.
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*XLight FTP Server*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection.
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *XLight FTP Server* is now available.
+
+.
