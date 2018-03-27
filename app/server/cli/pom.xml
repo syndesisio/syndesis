@@ -233,6 +233,19 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredResourcePatterns>
+            <!-- application.yml is falsly detected as duplicate as the
+                 plugin consideres target/classes of `server-runtime`
+                 and `cli` modules, not the resulting artefacts -->
+            <ignore>application.yml</ignore>
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+
     </plugins>
 
   </build>
