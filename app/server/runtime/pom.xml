@@ -84,6 +84,27 @@
     <plugins>
 
       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>classes-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>classes</classifier>
+              <excludes>
+                <exclude>static/**</exclude>
+                <exclude>application.yml</exclude>
+                <exclude>messages.properties</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>io.syndesis.server</groupId>
         <artifactId>server-builder-maven-plugin</artifactId>
         <version>${project.version}</version>
@@ -123,9 +144,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <classifier>executable</classifier>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -141,7 +159,7 @@
                 <phase>package</phase>
                 <configuration>
                   <fileset>
-                    <directory>${project.build.directory}/${project.build.finalName}.${packaging}</directory>
+                    <directory>${project.build.directory}/${project.build.finalName}.${project.packaging}</directory>
                     <includes>
                       <include>application.yml</include>
                     </includes>

@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.basepom</groupId>
     <artifactId>basepom-oss</artifactId>
-    <version>23</version>
+    <version>25</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -114,7 +114,6 @@
 
   <modules>
     <module>common</module>
-    <module>cli</module>
     <module>extension</module>
     <module>integration</module>
     <module>connector</module>

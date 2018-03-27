@@ -73,6 +73,7 @@
   </properties>
 
   <modules>
+    <module>cli</module>
     <module>connector-generator</module>
     <module>controller</module>
     <module>credential</module>

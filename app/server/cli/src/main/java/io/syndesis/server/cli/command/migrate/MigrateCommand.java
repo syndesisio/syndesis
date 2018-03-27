@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.cli.command.migrate;
+package io.syndesis.server.cli.command.migrate;
 
-import io.syndesis.cli.command.SyndesisCommand;
 import io.syndesis.common.model.Schema;
+import io.syndesis.server.cli.command.SyndesisCommand;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.runtime.StoredSettings;
