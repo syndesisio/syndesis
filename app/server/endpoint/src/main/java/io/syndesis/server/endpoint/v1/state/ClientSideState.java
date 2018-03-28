@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * <li>State remains opaque (encrypted) so client cannot determine what is
  * stored
  * <li>State tampering is detected by using MAC
- * <li>State timeout is enforced (default 15min)
+ * <li>State timeout is enforced (default 30min)
  * </ul>
  * <p>
  * Given a {@link KeySource} construct {@link ClientSideState} as:
@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ClientSideState {
     // 15 min
-    public static final long DEFAULT_TIMEOUT = 15 * 60;
+    public static final long DEFAULT_TIMEOUT = 30 * 60;
 
     private static final Decoder DECODER = Base64.getUrlDecoder();
 

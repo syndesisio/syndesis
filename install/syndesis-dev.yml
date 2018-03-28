@@ -10,9 +10,10 @@ metadata:
 #
 # Allow localhost refs: true
 # Use docker images: false
-# Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
+# Postgresql Tag: 9.5
+# OAuthProxy Tag: v1.1.0
 #
   labels:
     app: syndesis
@@ -127,6 +128,18 @@ parameters:
   name: SERVER_MEMORY_LIMIT
   value: 800Mi
   required: true
+- description: Key used to perform authentication of client side stored state.
+  displayName: Client side state authentication key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_AUTHENTICATION_KEY
+  required: true
+- description: Key used to perform encryption of client side stored state.
+  displayName: Client side state encryption key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_ENCRYPTION_KEY
+  required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -230,6 +243,15 @@ objects:
       app: syndesis
   stringData:
     oauthCookieSecret: ${OAUTH_COOKIE_SECRET}
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: syndesis-server-secret
+    labels:
+      app: syndesis
+  stringData:
+    clientStateAuthenticationKey: ${CLIENT_STATE_AUTHENTICATION_KEY}
+    clientStateEncryptionKey: ${CLIENT_STATE_ENCRYPTION_KEY}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -399,11 +421,11 @@ objects:
         END;
         $BODY$;
 
-        CREATE OR REPLACE FUNCTION create_lead( 
-          OUT first_name text, 
+        CREATE OR REPLACE FUNCTION create_lead(
+          OUT first_name text,
           OUT last_name text,
           OUT company text,
-          OUT lead_source text) 
+          OUT lead_source text)
           RETURNS SETOF record
           AS
           $$
@@ -901,6 +923,22 @@ objects:
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
+          - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
+            value: "HmacSHA1"
+          - name: CLIENT_STATE_AUTHENTICATION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-server-secret
+                key: clientStateAuthenticationKey
+          - name: CLIENT_STATE_ENCRYPTION_ALGORITHM
+            value: "AES/CBC/PKCS5Padding"
+          - name: CLIENT_STATE_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-server-secret
+                key: clientStateEncryptionKey
+          - name: CLIENT_STATE_TID
+            value: "1"
           - name: JAVA_DEBUG
             value: "true"
           image: ' '

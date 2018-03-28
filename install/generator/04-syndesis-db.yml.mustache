@@ -43,11 +43,11 @@
         END;
         $BODY$;
 
-        CREATE OR REPLACE FUNCTION create_lead( 
-          OUT first_name text, 
+        CREATE OR REPLACE FUNCTION create_lead(
+          OUT first_name text,
           OUT last_name text,
           OUT company text,
-          OUT lead_source text) 
+          OUT lead_source text)
           RETURNS SETOF record
           AS
           $$
