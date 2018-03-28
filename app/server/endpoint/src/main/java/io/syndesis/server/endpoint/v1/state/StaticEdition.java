@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.state;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 
@@ -31,12 +32,10 @@ public class StaticEdition extends Edition {
         private final SecretKey encryptionKey;
 
         StaticKeySource(final ClientSideStateProperties properties) {
-            final Decoder decoder = Base64.getDecoder();
             final String encryptionKeyAlgorithm = properties.getEncryptionAlgorithm().replaceFirst("/.*", "");
 
-            encryptionKey = new SecretKeySpec(decoder.decode(properties.getEncryptionKey()), encryptionKeyAlgorithm);
-            authenticationKey = new SecretKeySpec(decoder.decode(properties.getAuthenticationKey()),
-                properties.getAuthenticationAlgorithm());
+            encryptionKey = new SecretKeySpec(decode(properties.getEncryptionKey()), encryptionKeyAlgorithm);
+            authenticationKey = new SecretKeySpec(decode(properties.getAuthenticationKey()), properties.getAuthenticationAlgorithm());
         }
 
         @Override
@@ -60,4 +59,14 @@ public class StaticEdition extends Edition {
         return keySource;
     }
 
+    static byte[] decode(final String given) {
+        final Decoder decoder = Base64.getDecoder();
+
+        try {
+            return decoder.decode(given);
+        } catch (final IllegalArgumentException ignored) {
+            // given is not a base64 string
+            return given.getBytes(StandardCharsets.US_ASCII);
+        }
+    }
 }
