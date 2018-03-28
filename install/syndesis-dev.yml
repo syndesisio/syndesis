@@ -10,9 +10,10 @@ metadata:
 #
 # Allow localhost refs: true
 # Use docker images: false
-# Atlasmap Tag: 
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
+# Postgresql Tag: 9.5
+# OAuthProxy Tag: v1.1.0
 #
   labels:
     app: syndesis
@@ -126,6 +127,18 @@ parameters:
   displayName: Memory Limit
   name: SERVER_MEMORY_LIMIT
   value: 800Mi
+  required: true
+- description: Key used to perform authentication of client side stored state.
+  displayName: Client side state authentication key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_AUTHENTICATION_KEY
+  required: true
+- description: Key used to perform encryption of client side stored state.
+  displayName: Client side state encryption key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_ENCRYPTION_KEY
   required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
@@ -399,11 +412,11 @@ objects:
         END;
         $BODY$;
 
-        CREATE OR REPLACE FUNCTION create_lead( 
-          OUT first_name text, 
+        CREATE OR REPLACE FUNCTION create_lead(
+          OUT first_name text,
           OUT last_name text,
           OUT company text,
-          OUT lead_source text) 
+          OUT lead_source text)
           RETURNS SETOF record
           AS
           $$

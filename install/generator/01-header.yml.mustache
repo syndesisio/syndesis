@@ -7,9 +7,10 @@ metadata:
 #
 # Allow localhost refs: {{AllowLocalHost}}
 # Use docker images: {{WithDockerImages}}
-# Atlasmap Tag: {{Tags.Atlasmap}}
 # Syndesis Tag: {{Tags.Syndesis}}
 # Prometheus Tag: {{Tags.Prometheus}}
+# Postgresql Tag: {{Tags.Postgresql}}
+# OAuthProxy Tag: {{Tags.OAuthProxy}}
 #
   labels:
     app: syndesis
@@ -123,6 +124,18 @@ parameters:
   displayName: Memory Limit
   name: SERVER_MEMORY_LIMIT
   value: 800Mi
+  required: true
+- description: Key used to perform authentication of client side stored state.
+  displayName: Client side state authentication key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_AUTHENTICATION_KEY
+  required: true
+- description: Key used to perform encryption of client side stored state.
+  displayName: Client side state encryption key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_ENCRYPTION_KEY
   required: true
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
