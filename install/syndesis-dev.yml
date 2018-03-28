@@ -244,6 +244,15 @@ objects:
   stringData:
     oauthCookieSecret: ${OAUTH_COOKIE_SECRET}
 - apiVersion: v1
+  kind: Secret
+  metadata:
+    name: syndesis-server-secret
+    labels:
+      app: syndesis
+  stringData:
+    clientStateAuthenticationKey: ${CLIENT_STATE_AUTHENTICATION_KEY}
+    clientStateEncryptionKey: ${CLIENT_STATE_ENCRYPTION_KEY}
+- apiVersion: v1
   kind: Service
   metadata:
     name: syndesis-ui
@@ -914,6 +923,22 @@ objects:
             value: ${CONTROLLERS_INTEGRATION_ENABLED}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
+          - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
+            value: "HmacSHA1"
+          - name: CLIENT_STATE_AUTHENTICATION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-server-secret
+                key: clientStateAuthenticationKey
+          - name: CLIENT_STATE_ENCRYPTION_ALGORITHM
+            value: "AES/CBC/PKCS5Padding"
+          - name: CLIENT_STATE_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-server-secret
+                key: clientStateEncryptionKey
+          - name: CLIENT_STATE_TID
+            value: "1"
           - name: JAVA_DEBUG
             value: "true"
           image: ' '
