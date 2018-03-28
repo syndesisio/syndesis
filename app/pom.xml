@@ -73,6 +73,8 @@
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.8</dep.plugin.pmd.version>
     <dep.pmd.version>5.8.1</dep.pmd.version>
+    <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
+    <dep.plugin.failsafe.version>2.21.0</dep.plugin.failsafe.version> <!-- SUREFIRE-1422 -->
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
