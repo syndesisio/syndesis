@@ -67,6 +67,15 @@ export abstract class ApiHttpService {
    * @returns {Observable<T>} Observable typed as T containing the server response.
    */
   abstract put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions|any): Observable<T>;
+  
+  /**
+   * Sends a PATCH request containing the given body to the selected API endpoint URL.
+   * @param endpoint URL of the API endpoint to use, provided by `ApiConfigService`.
+   * @param body Request body. Can be any type.
+   * @param options Optional. Adds additional metadata to the request, such as custom headers or response types, credentials, etc.
+   * @returns {Observable<T>} Observable typed as T containing the server response.
+   */
+  abstract patch<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions|any): Observable<T>;
 
   /**
    * Sends a DELETE request to the selected API endpoint URL.

@@ -56,6 +56,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       get: <T>(options?: ApiRequestOptions | any) => this.get<T>(url, options),
       post: <T>(body: any, options?: ApiRequestOptions | any) => this.post<T>([endpointKey, ...endpointParams], body, options),
       put: <T>(body: any, options?: ApiRequestOptions | any) => this.put<T>([endpointKey, ...endpointParams], body, options),
+      patch: <T>(body: any, options?: ApiRequestOptions | any) => this.put<T>([endpointKey, ...endpointParams], body, options),
       delete: <T>(options?: ApiRequestOptions | any) => this.delete<T>(url, options),
       upload: <T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions) => {
         return this.upload<T>([endpointKey, ...endpointParams], fileMap, body, options);
@@ -84,6 +85,14 @@ export class ApiHttpProviderService extends ApiHttpService {
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
       .put<T>(url, body, options)
+      .catch(error => Observable.throw(this.catchError(error)));
+  }
+  
+  patch<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
+    const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
+    const url = this.getEndpointUrl(endpointKey, ...endpointParams);
+    return this.httpClient
+      .patch<T>(url, body, options)
       .catch(error => Observable.throw(this.catchError(error)));
   }
 

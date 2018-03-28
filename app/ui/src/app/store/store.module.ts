@@ -1,6 +1,4 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { HttpModule } from '@angular/http';
-import { RestangularModule } from 'ngx-restangular';
 
 import { ActionService } from './action/action.service';
 import { ActionStore } from './action/action.store';
@@ -18,7 +16,6 @@ import { StepStore } from './step/step.store';
 import { TestSupportService } from './test-support.service';
 
 @NgModule({
-  imports: [HttpModule],
   providers: [
     ActionService,
     ConnectionService,
@@ -38,11 +35,7 @@ import { TestSupportService } from './test-support.service';
   ]
 })
 export class StoreModule {
-  constructor(
-    @Optional()
-    @SkipSelf()
-    parentModule: StoreModule
-  ) {
+  constructor(@Optional() @SkipSelf() parentModule: StoreModule) {
     if (parentModule) {
       throw new Error(
         'StoreModule is already loaded. Import it in the AppModule only'

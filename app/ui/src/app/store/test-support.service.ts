@@ -1,27 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Restangular } from 'ngx-restangular';
+import { Observable } from 'rxjs/Observable';
+
+import { ApiHttpService } from '@syndesis/ui/platform';
 
 @Injectable()
 export class TestSupportService {
-  service: Restangular = undefined;
 
-  constructor(public restangular: Restangular, public http: Http) {
-    this.service = restangular.service('test-support');
-  }
+  constructor(public apiHttpClient: ApiHttpService) { }
 
   resetDB() {
-    const url = this.service.one('reset-db').getRestangularUrl();
-    return this.http.get(url);
+    return this.apiHttpClient.setEndpointUrl('/test-support/reset-db').get();
   }
-
-  snapshotDB() {
-    const url = this.service.one('snapshot-db').getRestangularUrl();
-    return this.http.get(url);
+  
+  snapshotDB(): Observable<Blob> {
+    return this.apiHttpClient.setEndpointUrl('/test-support/snapshot-db').get({ responseType: 'blob' });
   }
-
+  
   restoreDB(data: any) {
-    const url = this.service.one('restore-db').getRestangularUrl();
-    return this.http.post(url, data);
+    return this.apiHttpClient.setEndpointUrl('/test-support/restore-db').post(data);
   }
 }

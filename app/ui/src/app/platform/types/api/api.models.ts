@@ -44,6 +44,7 @@ export interface ApiEndpoint {
   get<T>(options?: ApiRequestOptions): Observable<T>;
   post<T>(body: any, options?: ApiRequestOptions): Observable<T>;
   put<T>(body: any, options?: ApiRequestOptions): Observable<T>;
+  patch<T>(body: any, options?: ApiRequestOptions): Observable<T>;
   delete<T>(body?: any, options?: ApiRequestOptions): Observable<T>;
   upload<T>(fileMap?: FileMap, body?: StringMap<any>, options?: ApiUploadOptions): Observable<T>;
 }

@@ -6,20 +6,11 @@ import { IntegrationService } from './integration.service';
 
 import { createIntegration, createStep, Integration, Integrations } from '@syndesis/ui/platform';
 
-import { AbstractStore } from '../entity/entity.store';
-import { EventsService } from '../entity/events.service';
-import { Response } from '@angular/http';
+import { AbstractStore, EventsService } from '../entity';
 
 @Injectable()
-export class IntegrationStore extends AbstractStore<
-  Integration,
-  Integrations,
-  IntegrationService
-> {
-  constructor(
-    integrationService: IntegrationService,
-    eventService: EventsService
-  ) {
+export class IntegrationStore extends AbstractStore<Integration, Integrations, IntegrationService> {
+  constructor(integrationService: IntegrationService, eventService: EventsService) {
     super(integrationService, eventService, [], <Integration>{});
   }
 
