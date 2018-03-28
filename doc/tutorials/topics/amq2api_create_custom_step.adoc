@@ -33,22 +33,7 @@ that the extension defines.
 the extension details page.
 
 [NOTE]
-.Extension feature will change
 ====
-The files in the `fuse-online-tp3-sample-extension` folder provide an example
-of how to implement an extension in this technology preview.
 For more information about coding an extension and creating its `.jar` file, see the
 link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[10.2 _JBoss Fuse Tooling Guide_].
-However, the extension feature is continuing to evolve and will change in
-the next release. To develop an extension now, note the following about
-the content of the extension’s `.json` file:
-
-* For an extension based on a Camel route and not a bean,
-the entrypoint must correspond to the Camel endpoint.
-
-* For an extension that changes the type of the data it operates on,
-you must specify the input data shape and the output data shape.
-
-To ask questions about developing extensions, send a message to
-fuse-online-tech-preview@redhat.com.
 ====

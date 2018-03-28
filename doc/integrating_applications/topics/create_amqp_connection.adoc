@@ -21,9 +21,8 @@ and reopen without missing messages. The destination type must be a topic.
 .. If this connection will be used in a development
 environment, you can save some time by disabling
 *Check Certificates*. Disabling the checking of certificates is a convenience for
-development environments. You
-should not disable *Check Certificates* for secure production
-environments.
+development environments. For secure production environments, always enable 
+*Check Certificates*.
 .. In the *Broker Certificate* field, paste the broker's PEM certificate text.
 This is required except when disable
 checking the certificates. 

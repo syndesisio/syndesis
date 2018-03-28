@@ -26,7 +26,8 @@ access in an integration.
 .. Choose whether {prodname} can access a single folder or all of the 
 folders and files. 
 .. Specify a name for your Dropbox app. For example, you might
-specify `*Ignite Access From Aslan LLC*`.
+specify `*Ignite Access From Aslan LLC*`. The name you specify must be
+unique in the set of Dropbox app names. 
 .. Check the box to indicate that you agree to Dropbox API terms and 
 conditions. 
 .. Click *Create App*. 

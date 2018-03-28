@@ -24,7 +24,7 @@ To create a Salesforce connection:
 . In the upper right, click *Create Connection* to display
 the available connectors. A connector is a template for creating one
 or more connections.
-. Click the *Salesforce* connection type.
+. Click the *Salesforce* connector.
 . Click *Connect Salesforce* to display a Salesforce authorization page.
 You might need to log in to Salesforce before you see the authorization page.
 +

@@ -16,6 +16,10 @@ you can use the built-in *Database* connector to create connections to
 your proprietary database. You do not create 
 a new connector for your particular database.
 
+The recommendation is to package one driver only in an extension. This makes
+it easier to manage the extension as part of managing your particular database. 
+However, it is possible to create a library extension that wraps more than one driver. 
+
 To use the Syndesis project, you must have a GitHub account.  
 
 To create a JDBC driver library extension:
