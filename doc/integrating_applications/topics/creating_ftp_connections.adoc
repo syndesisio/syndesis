@@ -16,8 +16,8 @@ specify. Enter the host name of the server you want to connect to.
 * For an SFTP connection, you must specify these parameters:
 +
 ** *Host*
-** *User name* is the name of the account you want to 
-use to access the server.
+** *User name* for the account that you want to 
+use to access the server
 ** *Password* associated with that user name
 
 +
