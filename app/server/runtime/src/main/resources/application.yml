@@ -86,6 +86,8 @@ openshift:
   namespace: "myproject"
   # Namespace where the image stream for the builder image can be found
   imageStreamNamespace: ""
+  maximumRetries: 3
+  pollingInterval: 5000
 
 # GitHub service specific config
 github:
