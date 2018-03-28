@@ -182,7 +182,8 @@ public final class ClientSideState {
             try {
                 return Stream.of(restoreWithTimestamp(c, type));
             } catch (final IllegalArgumentException e) {
-                LOG.warn("Unable to restore client side state from cookie: {}", c, e);
+                LOG.warn("Unable to restore client side state: {}", e.getMessage());
+                LOG.debug("Unable to restore client side state from cookie: {}", c, e);
 
                 return Stream.empty();
             }
