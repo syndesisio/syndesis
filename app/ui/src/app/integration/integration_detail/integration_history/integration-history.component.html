@@ -32,7 +32,7 @@
       </div>
     </dd>
   </dl>
-  <dl class="dl-horizontal">
+  <dl class="dl-horizontal" *ngIf="integration?.deployments && integration?.deployments.length">
     <dt>History:</dt>
     <dd>
       <pfng-list
@@ -44,7 +44,19 @@
         <ng-template #itemTemplate let-deployment="item" let-index="index">
           <div class="list-pf-left">
             <ng-container *ngIf="deployment.version === integration.deploymentVersion">
-              <span class="pficon pficon-ok list-pf-icon-small"></span>
+              <ng-container [ngSwitch]="integration.currentState">	 
+                <ng-container *ngSwitchCase="'Pending'">	  
+                  <div class="spinner spinner-sm spinner-inline"></div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Published'">
+                  <span class="pficon pficon-ok"></span>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Unpublished'">
+                </ng-container>
+                <ng-container *ngSwitchCase="'Error'">
+                  <span class="pficon pficon-error"></span>
+                </ng-container>
+              </ng-container>
             </ng-container>
           </div>
           <div class="list-pf-content-wrapper">
