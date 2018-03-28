@@ -50,8 +50,6 @@ const publish = {
   tooltip: 'Publish this version of the integration'
 } as PFAction;
 
-type TabType = 'description' | 'activity' | 'logs' | 'metrics';
-
 const DEFAULT_POLLING_INTERVAL = 5000;
 
 @Component({
@@ -74,8 +72,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
   deploymentActionConfigs: { [id: string]: ActionConfig } = {};
   draftConfig: ActionConfig;
   currentDeployment: IntegrationDeployment;
-
-  selectedTabType: TabType = 'description';
+  selectedTabbedView$: Observable<string>;
 
   constructor(
     public integrationStore: IntegrationStore,
@@ -99,10 +96,6 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
   get modalMessage() {
     return this.integrationActionsService.getModalMessage();
-  }
-
-  toggleTab(tabType: TabType): void {
-    this.selectedTabType = tabType;
   }
 
   viewDetails(step: Step) {
@@ -179,6 +172,8 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
       combineLatest(this.route.paramMap.first(params => params.has('integrationId')).map(paramMap => paramMap.get('integrationId'))),
       switchMap(([integrationMetrics, integrationId]) => Observable.of(integrationMetrics.find(metrics => metrics.id === integrationId)))
     );
+
+    this.selectedTabbedView$ = this.route.queryParams.map(params => params['view'] || 'description');
 
     this.draftConfig = {
       primaryActions: [

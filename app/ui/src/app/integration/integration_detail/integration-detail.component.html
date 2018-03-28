@@ -68,21 +68,21 @@
       </div>
 
       <ul class="syn-tabs row nav nav-tabs nav-tabs-pf toolbar-pf integration-detail__tabs">
-        <li class="syn-tabs__tab" [class.active]="selectedTabType == 'description'">
-          <a (click)="toggleTab('description')">Details</a>
+        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'description'">
+          <a [routerLink]="['/integrations', integration.id]">Details</a>
         </li>
-        <li class="syn-tabs__tab" [class.active]="selectedTabType == 'activity'">
-          <a (click)="toggleTab('activity')">Activity</a>
+        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'activity'">
+          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'activity' }">Activity</a>
         </li>
-        <li class="syn-tabs__tab" [class.active]="selectedTabType == 'logs'" *ngIf="loggingEnabled">
-          <a (click)="toggleTab('logs')">Logs</a>
+        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'logs'" *ngIf="loggingEnabled">
+          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'logs' }">Logs</a>
         </li>
-        <li class="syn-tabs__tab" [class.active]="selectedTabType == 'metrics'">
-          <a (click)="toggleTab('metrics')">Metrics</a>
+        <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'metrics'">
+          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'metrics' }">Metrics</a>
         </li>
       </ul>
 
-      <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'description'">
+      <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'description'">
         <syndesis-integration-description
           [integration]="integration"
           [stepStore]="stepStore"
@@ -98,15 +98,15 @@
         </syndesis-integration-history>
       </div>
 
-      <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'logs'">
+      <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'logs'">
         <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
       </div>
 
-      <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'activity'">
+      <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'activity'">
         <syndesis-integration-activity [integration]=integration></syndesis-integration-activity>
       </div>
 
-      <div class="integration-detail__outlet" [hidden]="selectedTabType !== 'metrics'">
+      <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'metrics'">
         <syndesis-integration-metrics
           [integration]=integration
           [integrationMetrics]="integrationMetrics$ | async"
