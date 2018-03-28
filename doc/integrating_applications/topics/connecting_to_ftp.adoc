@@ -1,0 +1,13 @@
+[id='connecting-to-ftp']
+= Connecting to an FTP or SFTP server
+
+In an integration, you can connect to an FTP or SFTP server to download or 
+upload files by creating an FTP or SFTP connection. You can then add this 
+connection to any number of integrations. The following topics provide details:
+
+* <<creating-ftp-connections>>
+* <<adding-ftp-connections>>
+
+include::creating_ftp_connections.adoc[leveloffset=+1]
+
+include::adding_ftp_connections.adoc[leveloffset=+1]
