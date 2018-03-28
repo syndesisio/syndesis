@@ -7,6 +7,7 @@ dev::description() {
 dev::usage() {
     cat <<EOT
     --debug <name>            Setup a port forwarding to <name> pod (default: server)
+    --cookie                  Creates a valid cookie to invoke APIs with curl
 EOT
 }
 
@@ -23,5 +24,9 @@ dev::run() {
 
         local pod=$(oc get -o name pod -l component=syndesis-${name})
         oc port-forward ${pod//*\//} 5005:5005
+    fi
+
+    if [ -n "$(hasflag --cookie)" ]; then
+        create_api_cookie
     fi
 }
