@@ -50,7 +50,7 @@ public class LogStepHandler implements IntegrationStepHandler {
         Boolean isBodyLoggingEnabled = isBodyLoggingEnabled(l.getConfiguredProperties());
 
         if (isContextLoggingEnabled) {
-            sb.append("Message Context: [${body}] ");
+            sb.append("Message Context: [${in.headers}] ");
         }
         if (isBodyLoggingEnabled) {
             sb.append("Body: [${body}] ");
