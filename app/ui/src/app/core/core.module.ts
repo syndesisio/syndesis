@@ -38,6 +38,11 @@ export class CoreModule {
         {
           provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationSupportService,
           useClass: SYNDESIS_PROVIDERS.IntegrationSupportProviderService
+        },
+        SYNDESIS_PROVIDERS.StatusCodeDecoderProviderService,
+        {
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.StatusCodeDecoderService,
+          useClass: SYNDESIS_PROVIDERS.StatusCodeDecoderProviderService
         }
       ]},
     ];

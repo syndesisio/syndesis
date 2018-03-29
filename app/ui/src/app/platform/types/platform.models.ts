@@ -62,11 +62,53 @@ export interface BaseRequestModel {
  * Global interfaces for modelling all kind of core Syndesis entities
  * TODO: Document each one in more detail
  */
-export interface BaseEntity {
+
+export interface WithId {
   id?: string;
+}
+
+export interface WithMetadata {
+  metadata?: StringMap<string>;
+}
+
+export interface BaseEntity extends WithId {
   kind?: string;
   name?: string;
 }
+
+export enum MessageLevel {
+  INFO = 'INFO',
+  WARN = 'WARN',
+  ERROR = 'ERROR'
+}
+
+export enum MessageCode {
+  SYNDESIS000 = 'SYNDESIS000', // generic message
+  SYNDESIS001 = 'SYNDESIS001', // One or more properties have been updated
+  SYNDESIS002 = 'SYNDESIS002', // One or more properties have been added or removed
+  SYNDESIS003 = 'SYNDESIS003', // Connector has been deleted
+  SYNDESIS004 = 'SYNDESIS004', // Extension has been deleted
+  SYNDESIS005 = 'SYNDESIS005', // Action has been deleted
+  SYNDESIS006 = 'SYNDESIS006', // One or more required properties is not set
+  SYNDESIS007 = 'SYNDESIS007', // Secrets update needed
+  SYNDESIS008 = 'SYNDESIS008', // Validation Error
+}
+
+export interface LeveledMessage {
+  level?: MessageLevel;
+  code?: MessageCode;
+  message?: string;
+}
+
+export interface WithLeveledMessages {
+  messages?: Array<LeveledMessage>;
+}
+
+export interface WithModificationTimestamps {
+  createdAt?: number;
+  updatedAt?: number;
+}
+
 export interface ConfigurationProperty extends BaseEntity {
   javaType: string;
   type: string;
@@ -99,6 +141,10 @@ export interface ConfiguredConfigurationProperty extends ConfigurationProperty {
   value: any;
   rows?: number;
   cols?: number;
+}
+
+export interface BulletinBoard extends WithId, WithMetadata, WithLeveledMessages, WithModificationTimestamps {
+
 }
 
 export enum DataShapeKinds {

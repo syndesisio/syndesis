@@ -48,22 +48,9 @@
         </ng-container>
       </div>
 
-      <div *ngIf="integration.messages && integration.messages.length" class="integration-detail__row">
+      <div *ngIf="integration.messages && integration.messages.length" class="integration-detail__row">        
         <div *ngFor="let message of integration.messages">
-          <ng-container [ngSwitch]="message.level">
-            <div class="alert alert-danger" *ngSwitchCase="'ERROR'">
-              <span class="pficon pficon-error-circle-o"></span>
-              <p [innerHtml]="message.message"></p>
-            </div>
-            <div class="alert alert-warning" *ngSwitchCase="'WARN'">
-              <span class="pficon pficon-warning-triangle-o"></span>
-              <p [innerHtml]="message.message"></p>
-            </div>
-            <div class="alert alert-info" *ngSwitchDefault>
-              <span class="pficon pficon-info"></span>
-              <p [innerHtml]="message.message"></p>
-            </div>
-          </ng-container>
+          <syndesis-inline-alert [message]="message"></syndesis-inline-alert>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { BaseEntity, User, Action, StringMap, ConfigurationProperty } from '@syndesis/ui/platform';
+import { BaseEntity, User, Action, StringMap, ConfigurationProperty, BulletinBoard } from '@syndesis/ui/platform';
 
 // these are related to oauth enabled connections
 export interface AcquisitionMethod extends BaseEntity {
@@ -42,8 +42,16 @@ export interface Organization extends BaseEntity {
 
 export type Organizations = Array<Organization>;
 
+export interface ConnectionBulletinBoard extends BaseEntity, BulletinBoard {
+  notices: number;
+  warnings: number;
+  errors: number;
+  targetResourceId?: string;
+}
+
 export interface Connection extends BaseEntity {
   icon: string;
+  board: ConnectionBulletinBoard;
   organization: Organization;
   configuredProperties: StringMap<string>;
   organizationId: string;

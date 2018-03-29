@@ -5,6 +5,7 @@ export * from './form-factory';
 export * from './integration';
 export * from './metadata';
 export * from './user';
+export * from './status-code-decoder';
 
 import * as PlatformActions from './platform.actions';
 export * from './platform.api';

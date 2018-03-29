@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Connection } from '@syndesis/ui/platform';
+import { Connection, MessageCode, MessageLevel } from '@syndesis/ui/platform';
 import { ConnectionStore } from '../../store/connection/connection.store';
 
 @Component({
@@ -15,7 +15,7 @@ import { ConnectionStore } from '../../store/connection/connection.store';
         <syndesis-connection-detail-info [connection]="connection"
                                          (updated)="update($event)">
         </syndesis-connection-detail-info>
-        <br>
+        <br *ngIf="connection.board?.messages?.length !== 0">
         <syndesis-connection-detail-configuration [connection]="connection"
                                                   (updated)="update($event)">
         </syndesis-connection-detail-configuration>
