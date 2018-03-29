@@ -21,7 +21,7 @@
       "dom"
     ],
     "mapRoot": "./",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "noUnusedParameters": false,
     "noUnusedLocals": false,

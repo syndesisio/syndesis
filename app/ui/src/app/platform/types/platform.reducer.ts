@@ -13,15 +13,18 @@ import { ActionReducerMap } from '@ngrx/store';
 
 import { MetadataState, metadataReducer } from './metadata';
 import { IntegrationState, integrationReducer } from './integration';
+import { I18NState, i18nReducer } from './i18n';
 
 export interface PlatformState {
   metadataState: MetadataState;
   integrationState: IntegrationState;
+  i18nState: I18NState;
   // Add any new [tokenizedState: stateModelInterface] mapping below...
 }
 
 export const platformReducer: ActionReducerMap<PlatformState> = {
   metadataState: metadataReducer,
-  integrationState: integrationReducer
+  integrationState: integrationReducer,
+  i18nState: i18nReducer
   // Add any new [tokenizedState: stateReducer] mapping below...
 };

@@ -1,0 +1,30 @@
+{
+  "locale": "en-GB",
+  "dictionary": {
+    "integrations": {
+      "integration": "Integration",
+      "integrations": "Integrations"
+    },
+    "dashboard": {
+      "header": "Dashboard",
+      "metrics": {
+        "sysmetrics": "System Metrics",
+        "uptime": "Uptime",
+        "integrationsheader": "{{0}} {{integrations.integrations}}"
+      }
+    },
+    "menu": {
+      "home": "Home",
+      "integrations": "Integrations",
+      "connections": "Connections",
+      "customizations": "Customizations",
+      "settings": "Settings"
+    },
+    "shared": {
+      "loading": "loading",
+      "project": {
+        "name": "Syndesis"
+      }
+    }
+  }
+}
