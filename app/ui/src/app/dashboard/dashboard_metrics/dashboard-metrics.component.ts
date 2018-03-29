@@ -5,11 +5,9 @@ import { map } from 'rxjs/operators';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { moment } from '@syndesis/ui/vendor';
 import {
-  PlatformState, I18NFetch,
   Connections,
   IntegrationState, Integrations, IntegrationMetrics
 } from '@syndesis/ui/platform';
-import { Store } from '@ngrx/store';
 
 const DEFAULT_POLLING_INTERVAL = 5000;
 
@@ -29,7 +27,7 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
 
   private metricsRefreshInterval: any;
 
-  constructor(private configService: ConfigService, private store: Store<PlatformState>) {}
+  constructor(private configService: ConfigService) {}
 
   get errorIntegrations(): number {
     return this.integrations
@@ -61,9 +59,5 @@ export class DashboardMetricsComponent implements OnInit, OnDestroy {
     if (this.metricsRefreshInterval) {
       clearInterval(this.metricsRefreshInterval);
     }
-  }
-
-  switchLanguage(locale: string): void {
-    this.store.dispatch(new I18NFetch(locale));
   }
 }
