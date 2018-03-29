@@ -149,7 +149,7 @@
   },
   "actions": [
     {
-      "name": "Publish",
+      "name": "Publish messages",
       "description": "Send data to the destination you specify.",
       "id": "io.syndesis:amqp-publish-action",
       "pattern": "To",
@@ -227,7 +227,7 @@
       }
     },
     {
-      "name": "Subscribe",
+      "name": "Subscribe for messages",
       "description": "Receive data from the destination you specify.",
       "id": "io.syndesis:amqp-subscribe-action",
       "pattern": "From",
@@ -318,7 +318,7 @@
       }
     },
     {
-      "name": "Request",
+      "name": "Request response using messages",
       "description": "Send data to the destination you specify and receive a response.",
       "id": "io.syndesis:amqp-request-action",
       "pattern": "To",
