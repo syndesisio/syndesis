@@ -7,3 +7,4 @@ export * from './duration-diff.pipe';
 export * from './navigation.service';
 export * from './object-property-filter.pipe';
 export * from './object-property-sort.pipe';
+export * from './inline-alert';

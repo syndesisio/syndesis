@@ -24,6 +24,7 @@ import { DurationDiffPipe } from './duration-diff.pipe';
 import { IconPathPipe } from './icon-path.pipe';
 import { ParseMarkdownLinksPipe } from './parse-markdown-links.pipe';
 import { ButtonComponent } from './button.component';
+import { InlineAlertComponent } from './inline-alert';
 
 // TODO: Move these services out to a CoreModule
 import { NotificationService } from './ui-patternfly';
@@ -56,6 +57,7 @@ import { NavigationService } from './navigation.service';
     WizardProgressBarComponent,
     CancelConfirmationModalComponent,
     DeleteConfirmationModalComponent,
+    InlineAlertComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES
   ],
@@ -78,6 +80,7 @@ import { NavigationService } from './navigation.service';
     WizardProgressBarComponent,
     CancelConfirmationModalComponent,
     DeleteConfirmationModalComponent,
+    InlineAlertComponent,
     ...SYNDESYS_EDITABLE_DIRECTIVES,
     ...SYNDESYS_VALIDATION_DIRECTIVES
   ]

@@ -32,6 +32,11 @@ import { ConnectionConfigurationService } from '../common/configuration/configur
                                     (onSave)="onAttributeUpdated('description', $event)"></syndesis-editable-textarea>
       </dd>
     </dl>
+    <div *ngIf="connection.board?.messages && connection.board?.messages.length">
+      <div *ngFor="let message of connection.board.messages">
+        <syndesis-inline-alert [message]="message"></syndesis-inline-alert>
+      </div>
+    </div>
   `,
   styles: [`
     h1 dt { width: 46px; }

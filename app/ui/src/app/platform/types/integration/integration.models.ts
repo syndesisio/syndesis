@@ -1,4 +1,13 @@
-import { BaseReducerCollectionModel, Action, BaseEntity, Connection, User, key } from '@syndesis/ui/platform';
+import {
+  BaseReducerCollectionModel,
+  Action,
+  BaseEntity,
+  Connection,
+  User,
+  MessageLevel,
+  LeveledMessage,
+  key,
+  WithLeveledMessages } from '@syndesis/ui/platform';
 
 export class Step implements BaseEntity {
   id?: string;
@@ -23,18 +32,7 @@ export const ERROR = 'Error';
 
 export type IntegrationStatus = 'Pending' | 'Published' | 'Unpublished' | 'Error';
 
-export enum MessageLevel {
-  INFO = 'INFO',
-  WARN = 'WARN',
-  ERROR = 'ERROR'
-}
-
-export interface IntegrationMessage {
-  level: MessageLevel;
-  message: string;
-}
-
-export interface IntegrationOverview extends BaseEntity {
+export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
   version?: number;
   tags: Array<string>;
   description?: string;
@@ -44,7 +42,6 @@ export interface IntegrationOverview extends BaseEntity {
   targetState: IntegrationStatus;
   statusMessage?: string;
   deploymentVersion?: number;
-  messages: Array<IntegrationMessage>;
 }
 
 export type IntegrationOverviews = Array<IntegrationOverview>;
