@@ -1,0 +1,14 @@
+[id='connecting-to-slack']
+= Connecting to Slack
+
+In an integration, you can connect to an instance of Slack and deliver
+a message to a particular user or to a channel. To do this, create a Slack 
+connection. You can then add that same connection to any number of
+integrations. Details are in the following topics:
+
+* <<creating-slack-connections>>
+* <<adding-slack-connections>>
+
+include::creating_slack_connections.adoc[leveloffset=+1]
+
+include::adding_slack_connections.adoc[leveloffset=+1]

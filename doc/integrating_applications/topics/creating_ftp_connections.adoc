@@ -64,8 +64,3 @@ default port is *22*
 wait time before trying to reconnect again. 
 * *Data timeout* defaults to *30000* milliseconds and indicates the maximum
 length of time that {prodname} waits for a reply. 
-. 
-
-.
-
-.

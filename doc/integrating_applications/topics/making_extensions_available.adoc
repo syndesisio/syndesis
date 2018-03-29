@@ -32,8 +32,13 @@ the name of each custom step that the extension defines.
 +
 For a library
 extension, if this extension contains a newer version of a JDBC driver that you 
-previously uploaded, then {prodname} uses the newer version for new
-connections. 
+previously uploaded, then you must remove the older version from your classpath.
+Ensure that your classpath has only one version of this driver and that the
+reference is to the newer driver you are uploading. Integrations that are running
+and that use connections based on the older driver are not affected. 
+New connections that you create will use the new driver.
+If you publish an integration that has a connection that was created with the
+older driver, {prodname} automatically uses the new driver instead. 
 
 . Click *Import Extension*. {prodname} makes the custom connector or 
 custom step(s) available and displays the extension's details page. 

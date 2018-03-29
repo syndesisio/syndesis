@@ -1,0 +1,22 @@
+[id='creating-http-connections']
+= Create a connection to an HTTP or HTTPS endpoint
+
+To create a connection to an HTTP or HTTPS endpoint:
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+{prodname} connectors.
+. Click the *HTTP* connector to use Hyper Text Transfer Protocol or
+click the *HTTPS* connector to use Secure Hyper Text Transfer Protocol.
+. In the *Base URL* field, enter the endpoint path. For example, 
+`/www.mycompany.com/sales`.
+. Click *Next*. 
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*HTTPS My Company Sales*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection.
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *HTTPS My Company Sales* is now available.

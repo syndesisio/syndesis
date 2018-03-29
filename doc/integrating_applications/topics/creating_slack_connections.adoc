@@ -1,0 +1,27 @@
+[id='creating-slack-connections']
+= Create a Slack connection
+
+To create a connection to an instance of Slack:
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+{prodname} connectors.
+. Click the *Slack* connector.
+. In the *Slack webhook URL* field, enter the webhook URL of the
+Slack instance to send messages to.
+. In the *Sending username for messages* field, enter the user name that 
+the bot has when it sends messages to a channel or a user.
+. In the *Message avatar icon URL* field, specify the URL of 
+the avatar that the bot has when it sends messages. 
+. In the *Message avatar emoji* field, specify the Slack emoji that
+is used for the message avatar.  
+. Click *Next*. 
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*Slack for Company Sales*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection.
+. In the upper right, click *Create* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Slack for Company Sales* is now available.

@@ -12,8 +12,10 @@ creating connections and adding them to integrations:
 * <<connecting-to-amqp>>
 * <<connecting-to-dropbox>>
 * <<connecting-to-ftp>>
+* <<connecting-to-http>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
+* <<connecting-to-slack>>
 * <<connecting-to-databases>>
 * <<connecting-to-twitter>>
 
@@ -31,9 +33,13 @@ include::connecting_to_dropbox.adoc[leveloffset=+1]
 
 include::connecting_to_ftp.adoc[leveloffset=+1]
 
+include::connecting_to_http.adoc[leveloffset=+1]
+
 include::connecting_to_rest_apis.adoc[leveloffset=+1]
 
 include::connecting_to_sf.adoc[leveloffset=+1]
+
+include::connecting_to_slack.adoc[leveloffset=+1]
 
 include::connecting_to_databases.adoc[leveloffset=+1]
 
