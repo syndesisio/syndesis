@@ -181,8 +181,8 @@ without the dot.
 | any
 | string
 | `template` *
-| Return a string that is the result of substituting a field's value within
-a template that contains placeholders such as `%s`, `%d`, and so on. This
+| In `template`, replace each placeholder (such as `%s`) with the value of the 
+input field and return a string that contains the result. This
 is similar to mechanisms that are available in programming languages such
 as Java and C. 
 
@@ -361,8 +361,8 @@ length of the string before the supplied `match` string.
 | collection, array, or set
 | number
 | None
-| For each entry in the set, subtract it from the next entry, if there is one. 
-A normal subtraction operates on a set that has two values. 
+| Return the result of subtracting each entry in the set from its previous entry. 
+A normal `Subtract` transform operates on a set that has two values.
 
 |`Trim`
 |string

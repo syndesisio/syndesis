@@ -1,0 +1,14 @@
+[id='connecting-to-http']
+= Connecting to HTTP and HTTPS endpoints
+
+In an integration, you can connect to HTTP and HTTPS endpoints to execute
+the GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE, or PATCH method. Create
+an HTTP or HTTPS connection and then add it to an integration. 
+The following topics provide details:
+
+* <<creating-http-connections>>
+* <<adding-http-connections>>
+
+include::creating_http_connections.adoc[leveloffset=+1]
+
+include::adding_http_connections.adoc[leveloffset=+1]

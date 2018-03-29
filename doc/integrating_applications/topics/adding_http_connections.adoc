@@ -1,0 +1,41 @@
+[id='adding-http-connections']
+= Adding HTTP or HTTPS connections to integrations
+
+After you create an HTTP or HTTPS connection, you can use it 
+in any number of integrations. 
+
+In an integration, to periodically invoke an HTTP or HTTPS endpoint, 
+add an HTTP or HTTPS connection as the integration's start or finish
+connection, or as a middle connection. 
+
+To invoke an HTTP or HTTPS endpoint once, you can add an HTTP or HTTPS
+connection to an integration as its finish connection or as a 
+middle connection. 
+
+If you are creating an integration, {prodname} prompts you to choose
+and configure the start connection, and then choose and configure the
+finish connection. To add a middle connection, hover over the plus sign
+in the left panel at the location where you want to add the connection, 
+and select *Add a connection*. 
+
+In all of these situations, {prodname} displays the available
+connections. To add an HTTP or HTTPS connection:
+
+. Click the HTTP or HTTPS connection that you want to add to the
+integration. 
+. Select the action that you want the connection to perform:
++ 
+* *Invoke URL* invokes the endpoint once. 
+* *Periodic invoke URL* invokes the endpoint at intervals that you specify.
+When an HTTP or HTTPS start connection performs this action, it triggers
+the integration with the data returned by the endpoint. 
+
+. Select the method that you want the connection to perform. The
+default method is `GET`. The other available methods are `PUT`, `POST`,
+`DELETE`, `HEAD`, `OPTIONS`, `TRACE`, `PATCH`. 
+
+. If the connection periodically invokes the URL, then in the 
+*Period* field, accept the interval of *1000* milliseconds or specify 
+how many milliseconds you want to wait between invocations. 
+
+. Click *Next* to add the connection to the integration. 
