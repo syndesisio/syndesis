@@ -22,17 +22,18 @@
         </a>
   </ng-template>
 
-  <header *ngIf="!firstTime">
+  <header *ngIf="!firstTime" role="banner">
 
     <!-- Navbar: Logged Out -->
     <nav class="navbar navbar-fixed-top navbar-light loggedOut"
+         role="navigation"
          *ngIf="!loggedIn">
       <!-- Logo -->
       <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
     </nav>
 
     <!-- Navbar: Logged In -->
-    <nav *ngIf="loggedIn"
+    <div *ngIf="loggedIn"
          class="navbar navbar-pf-vertical">
       <div class="navbar-header">
 
@@ -51,8 +52,8 @@
 
       <!-- Top Navbar -->
 
-      <nav>
-        <ul class="nav navbar-nav navbar-right navbar-iconic">
+      <nav role="navigation">
+        <ul class="nav navbar-nav navbar-right navbar-iconic" role="list">
 
           <!-- Help Navbar -->
 
@@ -60,15 +61,19 @@
               class="dropdown help">
             <a dropdownToggle
                class="dropdown-toggle nav-item-iconic"
-               id="dropdownHelp"
+               id="helpDropdown"
                aria-haspopup="true"
+               aria-label="Help Dropdown"
+               aria-controls="helpDropdownMenu"
+               role="link"
                aria-expanded="true">
               <span title="Help"
                     class="fa pficon-help"></span>
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu"
-                aria-labelledby="horizontalDropdownMenu1">
+                id="helpDropdownMenu"
+                aria-labelledby="helpDropdown">
               <li>
                 <a [href]="tutorialLink"
                    rel="nofollow"
@@ -101,9 +106,12 @@
               class="dropdown user">
             <a dropdownToggle
                class="dropdown-toggle nav-item-iconic"
-               id="dropdownMenu2"
+               id="userDropdown"
                aria-haspopup="true"
-               aria-expanded="true">
+               aria-controls="userDropdownMenu"
+               aria-label="User Dropdown"
+               role="link"
+               aria-expanded="false">
               <span title="Username"
                     class="fa pficon-user"></span>
               <span class="username">{{ ( user$ | async)?.name }}</span>
@@ -111,7 +119,8 @@
             </a>
             <ul *dropdownMenu
                 class="dropdown-menu"
-                aria-labelledby="dropdownMenu2">
+                id="userDropdownMenu"
+                aria-labelledby="userDropdown">
               <li>
                 <a (click)="logout()">Logout</a>
               </li>
@@ -130,14 +139,15 @@
           </li>
         </ul>
       </nav>
-    </nav>
+    </div>
     <!--/.navbar-->
   </header>
 
   <!-- Sidebar -->
-  <div class="nav-pf-vertical hidden-icons-pf"
+  <nav class="nav-pf-vertical hidden-icons-pf"
+       role="navigation"
        *ngIf="loggedIn">
-    <ul class="list-group">
+    <ul class="list-group" role="list">
       <li class="list-group-item"
           routerLinkActive="active">
         <a routerLink="dashboard">
@@ -184,8 +194,9 @@
         </a>
       </li>
     </ul>
-  </div>
-  <main class="container-fluid container-pf-nav-pf-vertical"
+  </nav>
+  <main role="main"
+        class="container-fluid container-pf-nav-pf-vertical"
         *ngIf="loggedIn">
     <router-outlet></router-outlet>
   </main>
