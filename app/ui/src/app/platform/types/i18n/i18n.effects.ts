@@ -13,11 +13,6 @@ import { registerLocaleData } from '@angular/common';
 
 @Injectable()
 export class I18NEffects {
-  constructor(
-    private actions$: Actions,
-    private i18nService: I18NService
-  ) { }
-
   @Effect() fetch$: Observable<Action> = this.actions$
     .ofType<I18NActions.I18NFetch>(I18NActions.FETCH)
     .switchMap(action => this.i18nService.setLocale(action.payload))
@@ -39,4 +34,9 @@ export class I18NEffects {
   @Effect() localize$: Observable<Action> = this.actions$
     .ofType(PlatformActions.APP_BOOTSTRAP)
     .map(action => new I18NActions.I18NFetch(this.i18nService.getLocale(I18N_DEFAULT_LOCALE)));
+
+  constructor(
+    private actions$: Actions,
+    private i18nService: I18NService
+  ) { }
 }

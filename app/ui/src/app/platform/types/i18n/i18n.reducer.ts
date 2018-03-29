@@ -28,7 +28,7 @@ export function i18nReducer(state = initialState, action: any): I18NState {
         onError: false
       };
     }
-    
+
     case I18NActions.FETCH_FAIL: {
       return {
         ...state,
@@ -36,7 +36,7 @@ export function i18nReducer(state = initialState, action: any): I18NState {
         onError: true
       };
     }
-    
+
     case I18NActions.APPEND_APP_DETAILS: {
       const dictionary = {
         ...state.dictionary,
@@ -49,7 +49,7 @@ export function i18nReducer(state = initialState, action: any): I18NState {
         onSync: false,
         onError: false
       };
-    }  
+    }
 
     default: {
       return state;
