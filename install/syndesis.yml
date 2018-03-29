@@ -903,12 +903,8 @@ objects:
         containers:
         - name: syndesis-server
           env:
-          - name: AB_JOLOKIA_OFF
-            value: "true"
           - name: JAVA_APP_DIR
             value: /deployments
-          - name: AB_OFF
-            value: "true"
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
           - name: NAMESPACE
