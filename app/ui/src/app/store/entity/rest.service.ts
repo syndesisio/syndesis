@@ -19,7 +19,7 @@ export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
     return this.apiHttpService
       .setEndpointUrl(this.getEndpointSegment())
       .get()
-      .map((response: any) => Array.isArray(response) ? response : response.items || []);
+      .map((response: any) => Array.isArray(response) ? response : response.items || [] as L);
   }
 
   create(obj: T): Observable<T> {

@@ -39,24 +39,8 @@ export class IntegrationEffects {
         }))
     );
 
-  @Effect()
-  appendIntegrationOverviews$: Observable<Action> = this.actions$
-    .ofType<IntegrationActions.FetchMetricsComplete>(
-      IntegrationActions.FETCH_INTEGRATIONS_COMPLETE
-    )
-    .mergeMap(action =>
-      this.integrationSupportService
-        .watchOverviews()
-        .map(response => ({ type: IntegrationActions.REFRESH_OVERVIEWS, payload: response }))
-        .catch(error => Observable.of({
-          type: IntegrationActions.REFRESH_OVERVIEWS_FAIL,
-          payload: error
-        }))
-    );
-
   constructor(
     private actions$: Actions,
-    private integrationService: IntegrationService,
-    private integrationSupportService: IntegrationSupportService,
+    private integrationService: IntegrationService
   ) {}
 }

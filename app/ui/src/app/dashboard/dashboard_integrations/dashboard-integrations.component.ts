@@ -11,8 +11,10 @@ import {
   Connections,
   IntegrationOverview,
   IntegrationOverviews,
-  IntegrationSupportService
+  IntegrationSupportService,
+  Integration
 } from '@syndesis/ui/platform';
+import { IntegrationStore } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-dashboard-integrations',
@@ -21,7 +23,7 @@ import {
 })
 export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
 
-  integrationOverviews$: Observable<IntegrationOverviews>;
+  integrationOverviews$: Observable<Integration[]>;
   integrations: Array<IntegrationOverview>;
   loading = true;
 
@@ -54,12 +56,12 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
     private router: Router,
-    private integrationSupportService: IntegrationSupportService
+    private integrationStore: IntegrationStore
   ) {
   }
 
   ngOnInit() {
-    this.integrationOverviews$ = this.integrationSupportService.watchOverviews();
+    this.integrationOverviews$ = this.integrationStore.list;
     this.integrationOverviewsSubscription = this.integrationOverviews$.subscribe(integrations => {
       this.integrations = integrations;
       this.loading = false;
@@ -68,6 +70,7 @@ export class DashboardIntegrationsComponent implements OnInit, OnDestroy {
         [`Unpublished`, this.countInactiveIntegrations()]
       ];
     });
+    this.integrationStore.loadAll();
   }
 
   ngOnDestroy() {

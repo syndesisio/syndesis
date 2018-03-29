@@ -43,9 +43,7 @@ export abstract class AbstractStore<
   ) {
     this._list = new BehaviorSubject<L>(initialList);
     this._current = new BehaviorSubject<T>(initialCurrent);
-    this.changeEvents = this.eventService.changeEvents.filter(x => {
-      return x.kind === this.service.kind;
-    });
+    this.changeEvents = this.setChangeEventsFilter(this.eventService.changeEvents);
     this.currentSub = this._current.asObservable().subscribe(current => {
       if (!current) {
         this.currentId = undefined;
@@ -53,6 +51,10 @@ export abstract class AbstractStore<
       }
       this.currentId = current.id;
     });
+  }
+
+  setChangeEventsFilter(changeEvents: Subject<ChangeEvent>) {
+    return changeEvents.filter(event => event.kind === this.service.kind);
   }
 
   protected abstract get kind(): string;
@@ -66,7 +68,7 @@ export abstract class AbstractStore<
         // We could probably get fancy one day an only fetch the entry that matches event.id
         // simulate no data
         if (EMPTY_STATE) {
-          return Observable.of([]);
+          return Observable.of([] as L) as Observable<L>;
         } else {
           return this.service.list();
         }

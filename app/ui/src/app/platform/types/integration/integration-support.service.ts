@@ -23,27 +23,6 @@ export abstract class IntegrationSupportService {
    */
   abstract getFilterOptions(dataShape: any): Observable<any>;
 
-  /**
-   * Fetch the overview for an integration
-   * @param id
-   */
-  abstract getOverview(id: string): Observable<IntegrationOverview>;
-
-  /**
-   * Fetch the overview for an integration and watch for changes
-   * @param id
-   */
-  abstract watchOverview(id: string): Observable<IntegrationOverview>;
-
-  /**
-   * Fetch all overview objects for all integrations
-   */
-  abstract getOverviews(): Observable<IntegrationOverviews>;
-  /**
-   * Fetch all overview objects and watch for changes
-   */
-  abstract watchOverviews(): Observable<IntegrationOverviews>;
-
   abstract deploy(integration: Integration | IntegrationDeployment): Observable<any>;
 
   abstract undeploy(integration: Integration): Observable<any>;

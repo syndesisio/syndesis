@@ -28,41 +28,6 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
     return this.apiHttpService.post(integrationEndpoints.filterOptions, dataShape);
   }
 
-  getOverview(id: string): Observable<any> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overview, { id }).get();
-  }
-
-  watchOverview(id: string): Observable<IntegrationOverview> {
-    return Observable.merge(
-      this.getOverview(id),
-      this.eventsService.changeEvents
-        .filter(event => {
-          switch (event.kind) {
-            case 'integration':
-              return event.id === id;
-            case 'integration-deployment':
-              return event.id.startsWith(id);
-            default:
-              return false;
-          }
-        })
-        .flatMap(event => this.getOverview(id))
-    );
-  }
-
-  getOverviews(): Observable<IntegrationOverviews> {
-    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overviews).get().map((value: any) => value.items || []);
-  }
-
-  watchOverviews(): Observable<IntegrationOverviews> {
-    return Observable.merge(
-      this.getOverviews(),
-      this.eventsService.changeEvents
-        .filter(event => event.kind === 'integration' || event.kind === 'integration-deployment')
-        .flatMap(event => this.getOverviews())
-    );
-  }
-
   deploy(integration: Integration | IntegrationDeployment): Observable<any> {
     let url, state, method;
     if ('integrationVersion' in integration) {
@@ -161,6 +126,41 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
   downloadSupportData(data: any[]): Observable<Blob> {
     return this.apiHttpService.setEndpointUrl(integrationEndpoints.supportData)
       .post<Blob>(data, { responseType: 'blob' });
+  }
+
+  private getOverview(id: string): Observable<any> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overview, { id }).get();
+  }
+
+  private watchOverview(id: string): Observable<IntegrationOverview> {
+    return Observable.merge(
+      this.getOverview(id),
+      this.eventsService.changeEvents
+        .filter(event => {
+          switch (event.kind) {
+            case 'integration':
+              return event.id === id;
+            case 'integration-deployment':
+              return event.id.startsWith(id);
+            default:
+              return false;
+          }
+        })
+        .flatMap(event => this.getOverview(id))
+    );
+  }
+
+  private getOverviews(): Observable<IntegrationOverviews> {
+    return this.apiHttpService.setEndpointUrl(integrationEndpoints.overviews).get().map((value: any) => value.items || []);
+  }
+
+  private watchOverviews(): Observable<IntegrationOverviews> {
+    return Observable.merge(
+      this.getOverviews(),
+      this.eventsService.changeEvents
+        .filter(event => event.kind === 'integration' || event.kind === 'integration-deployment')
+        .flatMap(event => this.getOverviews())
+    );
   }
 
 }
