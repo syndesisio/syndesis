@@ -1,7 +1,7 @@
 {
     "id": "ftp",
     "name": "FTP",
-    "description": "Upload and download files using the FTP protocol",
+    "description": "Upload and download files using File Transfer Protocol",
     "icon": "fa-ftp",
     "dependencies": [
         {
@@ -26,7 +26,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "labelHint": "User name to connect to the FTP server"
+            "labelHint": "User name for connecting to the FTP server"
         },
         "host": {
             "kind": "path",
@@ -37,7 +37,7 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "labelHint": "FTP host"
+            "labelHint": "Host name of the FTP server to connect to"
         },
         "port": {
             "kind": "path",
@@ -61,11 +61,11 @@
             "deprecated": false,
             "secret": true,
             "raw": true,
-            "labelHint": "Password"
+            "labelHint": "Password for connecting to the FTP server"
         },
         "timeout": {
             "kind": "parameter",
-            "displayName": "Data time out",
+            "displayName": "Data timeout",
             "group": "common",
             "required": false,
             "type": "integer",
@@ -73,11 +73,11 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "30000",
-            "labelHint": "Data timeout in millis"
+            "labelHint": "Maximum number of milliseconds to wait for a reply"
         },
         "connectTimeout": {
             "kind": "parameter",
-            "displayName": "Connect tme out",
+            "displayName": "Connect timeout",
             "group": "common",
             "required": false,
             "type": "integer",
@@ -85,7 +85,7 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "10000",
-            "labelHint": "Connect timeout in millis"
+            "labelHint": "Maximum number of milliseconds to wait for a connection to be established"
         },
         "reconnectDelay": {
             "kind": "parameter",
@@ -97,7 +97,7 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "1000",
-            "labelHint": "Reconnect delay"
+            "labelHint": "Number of milliseconds to wait before trying to reconnect"
         },
         "maximumReconnectAttempts": {
             "kind": "parameter",
@@ -109,11 +109,11 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "3",
-            "labelHint": "Maximum reconnect attempts"
+            "labelHint": "Try to reconnect no more than this many times"
         },
         "binary": {
             "kind": "parameter",
-            "displayName": "Is file transfer mode binary",
+            "displayName": "Binary file transfer mode",
             "group": "common",
             "required": false,
             "type": "string",
@@ -131,11 +131,11 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "true",
-            "labelHint": "Is file transfer mode binary"
+            "labelHint": "Indicate whether file transfer mode is binary"
         },
         "passiveMode": {
             "kind": "parameter",
-            "displayName": "Is the connection mode passive",
+            "displayName": "Passive connection mode",
             "group": "common",
             "required": false,
             "type": "string",
@@ -153,11 +153,11 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "true",
-            "labelHint": "Is the connection mode passive"
+            "labelHint": "Indicates whether passive connection mode is being used"
         },
         "disconnect": {
             "kind": "parameter",
-            "displayName": "Disconnect from the server right after use",
+            "displayName": "Disconnect from server after use",
             "group": "common",
             "required": false,
             "type": "string",
@@ -175,13 +175,13 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "false",
-            "labelHint": "Disconnect from the server right after use"
+            "labelHint": "Disconnect from the server after performing the action"
         }
     },
     "actions": [
         {
             "name": "Upload",
-            "description": "Upload a file to FTP Server",
+            "description": "Upload a file to the FTP server",
             "id": "io.syndesis:ftp-upload-connector",
             "pattern": "To",
             "actionType": "connector",
@@ -197,8 +197,8 @@
                 },
                 "propertyDefinitionSteps": [
                     {
-                        "name": "Upload to FTP Server",
-                        "description": "Upload to FTP Server",
+                        "name": "Upload to FTP server",
+                        "description": "Upload to FTP server",
                         "properties": {
                             "fileName": {
                                 "kind": "parameter",
@@ -209,7 +209,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "labelHint": "File name expression"
+                                "labelHint": "Simple language expression that resolves to a file name"
                             },
                             "directoryName": {
                                 "kind": "path",
@@ -220,11 +220,11 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "labelHint": "FTP directory dame"
+                                "labelHint": "FTP directory name in which to upload file"
                             },
                             "fileExist": {
                                 "kind": "parameter",
-                                "displayName": "What to do if file exist",
+                                "displayName": "If file exists",
                                 "group": "producer",
                                 "required": false,
                                 "type": "string",
@@ -258,7 +258,7 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "defaultValue": "Override",
-                                "labelHint": "What to do if file exist"
+                                "labelHint": "Desired behavior when the file being uploaded is already on the server"
                             },
                             "tempPrefix": {
                                 "kind": "parameter",
@@ -290,8 +290,8 @@
             }
         },
         {
-            "name": "download",
-            "description": "Download a file from FTP Server",
+            "name": "Download",
+            "description": "Download a file from the FTP server",
             "id": "io.syndesis:ftp-download-connector",
             "pattern": "From",
             "actionType": "connector",
@@ -307,8 +307,8 @@
                 },
                 "propertyDefinitionSteps": [
                     {
-                        "name": "Download from FTP Server",
-                        "description": "Download from FTP Server",
+                        "name": "Download from FTP server",
+                        "description": "Download from FTP server",
                         "properties": {
                             "fileName": {
                                 "kind": "parameter",
@@ -319,7 +319,7 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "labelHint": "File name expression"
+                                "labelHint": "Simple language expression that resolves to a file name"
                             },
                             "directoryName": {
                                 "kind": "path",
@@ -330,11 +330,11 @@
                                 "javaType": "java.lang.String",
                                 "deprecated": false,
                                 "secret": false,
-                                "labelHint": "FTP directory dame"
+                                "labelHint": "FTP directory name from which to download file"
                             },
                             "initialDelay": {
                                 "kind": "parameter",
-                                "displayName": "Initial delay in millis before the polling starts",
+                                "displayName": "Milliseconds before polling starts",
                                 "group": "consumer",
                                 "required": false,
                                 "type": "integer",
@@ -342,11 +342,11 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "defaultValue": "1000",
-                                "labelHint": "Initial delays in millis before the polling starts"
+                                "labelHint": "Wait this number of milliseconds before starting to poll"
                             },
                             "delay": {
                                 "kind": "parameter",
-                                "displayName": "Delay in millis before the next polling starts",
+                                "displayName": "Milliseconds before the next poll",
                                 "group": "consumer",
                                 "required": false,
                                 "type": "integer",
@@ -354,11 +354,11 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "defaultValue": "500",
-                                "labelHint": "Delay in millis before the next polling starts"
+                                "labelHint": "Wait this number of milliseconds between polls"
                             },
                             "delete": {
                                 "kind": "parameter",
-                                "displayName": "Delete the file after processing",
+                                "displayName": "Delete file after download",
                                 "group": "consumer",
                                 "required": false,
                                 "type": "string",
@@ -376,7 +376,7 @@
                                 "deprecated": false,
                                 "secret": false,
                                 "defaultValue": "false",
-                                "labelHint": "Delete the file after processing"
+                                "labelHint": "Delete the file from the server after downloading it"
                             }
                         }
                     }
