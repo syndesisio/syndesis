@@ -270,6 +270,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addExtensions(tos, integration);
                 addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
+                addResource(tos, "configuration/settings.xml", "templates/settings.xml");
                 addAdditionalResources(tos);
 
                 List<Step> steps = integration.getSteps();
