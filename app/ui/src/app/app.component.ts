@@ -6,10 +6,8 @@ import {
   Inject
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Response } from '@angular/http';
 import { Meta, Title } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
-import { Restangular } from 'ngx-restangular';
 import { Notification, NotificationEvent } from 'patternfly-ng';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
@@ -25,8 +23,6 @@ import { NotificationService } from '@syndesis/ui/common/ui-patternfly/notificat
   selector: 'syndesis-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default,
-  providers: [Restangular, TestSupportService]
 })
 export class AppComponent implements OnInit, AfterViewInit {
   // TODO icon?
@@ -85,7 +81,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private store: Store<PlatformState>,
     private config: ConfigService,
     private userService: UserService,
-    public testSupport: TestSupportService,
+    private testSupport: TestSupportService,
     private notificationService: NotificationService,
     private navigationService: NavigationService,
     private modalService: ModalService,
@@ -167,20 +163,15 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Function that resets the database.
    */
   resetDB() {
-    this.testSupport.resetDB().subscribe((value: Response) => {
-      log.debugc(() => 'DB has been reset');
-    });
+    this.testSupport.resetDB().subscribe(() => log.debugc(() => 'DB has been reset'));
   }
 
   /**
    * Function that exports the database.
    */
   exportDB() {
-    this.testSupport.snapshotDB().subscribe((value: Response) => {
-      const blob = new Blob([value.text()], {
-        type: 'text/plain;charset=utf-8'
-      });
-      saveAs(blob, 'syndesis-db-export.json');
+    this.testSupport.snapshotDB().subscribe((value: Blob) => {
+      saveAs(value, 'syndesis-db-export.json');
     });
   }
 
@@ -192,9 +183,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (modal.result) {
         return this.testSupport
           .restoreDB(modal['json'])
-          .take(1)
-          .toPromise()
-          .then(_ => log.debugc(() => 'DB has been imported'));
+          .subscribe(() => log.debugc(() => 'DB has been imported'));
       }
     });
   }

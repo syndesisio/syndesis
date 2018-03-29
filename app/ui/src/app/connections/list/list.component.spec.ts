@@ -1,11 +1,8 @@
-/* tslint:disable:no-unused-variable */
+import { DebugElement } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RestangularModule } from 'ngx-restangular';
-import { HttpClientModule } from '@angular/common/http';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -14,6 +11,7 @@ import { StoreModule } from '../../store/store.module';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { ConnectionsListComponent } from './list.component';
+import { TestApiModule } from '@syndesis/ui/api/testing';
 
 describe('ConnectionsListComponent', () => {
   let component: ConnectionsListComponent;
@@ -23,9 +21,8 @@ describe('ConnectionsListComponent', () => {
     async(() => {
       TestBed.configureTestingModule({
         imports: [
+          TestApiModule,
           CommonModule,
-          HttpClientModule,
-          RestangularModule.forRoot(),
           SyndesisCommonModule.forRoot(),
           RouterTestingModule.withRoutes([]),
           ModalModule.forRoot(),

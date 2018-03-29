@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { Restangular } from 'ngx-restangular';
-
-import { RESTService } from '../entity/rest.service';
+import { ApiHttpService } from '@syndesis/ui/platform';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
+import { RESTService } from '../entity';
 
 @Injectable()
 export class OAuthAppService extends RESTService<OAuthApp, OAuthApps> {
-  constructor(restangular: Restangular) {
-    super(restangular.service('setup/oauth-apps'), 'oauth-app');
+  constructor(apiHttpService: ApiHttpService) {
+    super(apiHttpService, 'setup/oauth-apps', 'oauth-app');
   }
 }

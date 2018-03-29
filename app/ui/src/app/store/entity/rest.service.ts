@@ -1,35 +1,53 @@
-import { Restangular } from 'ngx-restangular';
 import { Observable } from 'rxjs/Observable';
 
-import { BaseEntity } from '@syndesis/ui/platform';
+import { BaseEntity, ApiHttpService } from '@syndesis/ui/platform';
 
 export abstract class RESTService<T extends BaseEntity, L extends Array<T>> {
   protected constructor(
-    public restangularService: Restangular,
-    public kind: String
-  ) {}
+    public apiHttpService: ApiHttpService,
+    public endpoint: string,
+    public kind: string
+  ) { }
 
   get(id: string): Observable<T> {
-    return this.restangularService.one(id).get();
+    return this.apiHttpService
+      .setEndpointUrl(this.getEndpointSegment(id))
+      .get();
   }
 
   list(): Observable<L> {
-    return this.restangularService.getList();
+    return this.apiHttpService
+      .setEndpointUrl(this.getEndpointSegment())
+      .get()
+      .map((response: any) => Array.isArray(response) ? response : response.items || []);
   }
 
   create(obj: T): Observable<T> {
-    return this.restangularService.post(obj);
+    return this.apiHttpService
+      .setEndpointUrl(this.getEndpointSegment())
+      .post(obj);
   }
 
   update(obj: T): Observable<T> {
-    return this.restangularService.one(obj.id).customPUT(obj);
+    return this.apiHttpService
+      .setEndpointUrl(this.getEndpointSegment(obj.id))
+      .put(obj)
+      .map((response: any) => response !== null ? response : []);
   }
 
-  delete(obj: T) {
-    return this.restangularService.one(obj.id).remove();
+  delete(obj: T): Observable<any> {
+    return this.apiHttpService
+      .setEndpointUrl(this.getEndpointSegment(obj.id))
+      .delete();
   }
 
-  patch(id: string, attributes: any) {
-    return this.restangularService.one(id).patch(attributes);
+  patch(id: string, attributes: any): Observable<any> {
+    return this.apiHttpService
+      .setEndpointUrl(this.getEndpointSegment(id))
+      .patch(attributes);
+  }
+
+  private getEndpointSegment(id?: string): string {
+    return id ? `/${this.endpoint}/${id}` : `/${this.endpoint}`;
   }
 }

@@ -1,22 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Response } from '@angular/http';
-import { ExtensionService } from './extension.service';
+
 import { Extension, Extensions, Integrations } from '@syndesis/ui/platform';
-import { AbstractStore } from '../entity/entity.store';
-import { EventsService } from '../entity/events.service';
+import { AbstractStore, EventsService } from '../entity';
+import { ExtensionService } from './extension.service';
 
 @Injectable()
-export class ExtensionStore extends AbstractStore<
-  Extension,
-  Extensions,
-  ExtensionService
-> {
+export class ExtensionStore extends AbstractStore<Extension, Extensions, ExtensionService> {
   constructor(extensionService: ExtensionService, eventService: EventsService) {
     super(extensionService, eventService, [], {} as Extension);
   }
 
-  protected get kind() {
+  protected get kind(): string {
     return 'Extension';
   }
 
@@ -29,7 +24,6 @@ export class ExtensionStore extends AbstractStore<
   }
 
   public loadIntegrations(id: string): Observable<Integrations> {
-    return this.service.loadIntegrations(id).map( resp => <Integrations> resp.json() );
+    return this.service.loadIntegrations(id);
   }
-
 }

@@ -1,38 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Http, Response, ResponseContentType } from '@angular/http';
-import { Restangular } from 'ngx-restangular';
 
-import { RESTService } from '../entity/rest.service';
-import { Extension, Extensions } from '@syndesis/ui/platform';
+import { RESTService } from '../entity';
+import { ApiHttpService, Extension, Extensions, Integrations } from '@syndesis/ui/platform';
 
 @Injectable()
 export class ExtensionService extends RESTService<Extension, Extensions> {
-  constructor(restangular: Restangular, private http: Http) {
-    super(restangular.service('extensions'), 'extension');
+  constructor(public apiHttpService: ApiHttpService) {
+    super(apiHttpService, 'extensions', 'extension');
   }
 
   public getUploadUrl(id?: string) {
-    let url = this.restangularService.one().getRestangularUrl();
-    if (id) {
-      url = url + '?updatedId=' + id;
-    }
-    return url;
+    const url = this.apiHttpService.getEndpointUrl('/extensions');
+    return id ? `${url}?updatedId=${id}` : url;
   }
 
-  public importExtension(id: string): Observable<Response> {
-    const url = this.restangularService.one(id).one('install').getRestangularUrl();
-    return this.http.post(url, {});
+  public importExtension(id: string): Observable<any> {
+    return this.apiHttpService
+      .setEndpointUrl(`/extensions/${id}/install`)
+      .post({});
   }
 
-  public loadIntegrations(id: string): Observable<Response> {
-    const url = this.restangularService.one(id).one('integrations').getRestangularUrl();
-    return this.http.get(url);
+  public loadIntegrations(id: string): Observable<Integrations> {
+    return this.apiHttpService
+      .setEndpointUrl(`/extensions/${id}/integrations`)
+      .get();
   }
 
   public list(): Observable<Extensions> {
-    return super.list().map( extensions => {
-      return extensions.filter( extension => extension.status !== 'Deleted');
+    return super.list().map(extensions => {
+      return extensions.filter(extension => extension.status !== 'Deleted');
     });
   }
 }

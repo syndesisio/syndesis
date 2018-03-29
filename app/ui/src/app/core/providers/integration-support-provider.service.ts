@@ -16,7 +16,6 @@ import { Action,
   PUBLISHED
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
-import { RequestMethod, ResponseContentType } from '@angular/http';
 
 @Injectable()
 export class IntegrationSupportProviderService extends IntegrationSupportService {

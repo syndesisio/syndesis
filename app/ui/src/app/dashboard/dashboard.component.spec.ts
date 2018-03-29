@@ -1,10 +1,5 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockBackend } from '@angular/http/testing';
-import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ngx-restangular';
-import { HttpClientModule } from '@angular/common/http';
 import { StoreModule, Store } from '@ngrx/store';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -43,7 +38,6 @@ xdescribe('DashboardComponent', () => {
           ApiModule.forRoot(),
           CoreModule.forRoot(),
           LegacyStore,
-          HttpClientModule,
           ActionModule,
           ListModule,
           ChartModule,
@@ -53,7 +47,6 @@ xdescribe('DashboardComponent', () => {
           BsDropdownModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
-          RestangularModule,
           NotificationModule,
           IntegrationListModule,
           SyndesisCommonModule
@@ -68,16 +61,7 @@ xdescribe('DashboardComponent', () => {
         providers: [
           ConfigService,
           ModalService,
-          MockBackend,
           Store,
-          { provide: RequestOptions, useClass: BaseRequestOptions },
-          {
-            provide: Http,
-            useFactory: (backend, options) => {
-              return new Http(backend, options);
-            },
-            deps: [MockBackend, RequestOptions]
-          }
         ]
       };
       TestBed.configureTestingModule(moduleConfig).compileComponents();

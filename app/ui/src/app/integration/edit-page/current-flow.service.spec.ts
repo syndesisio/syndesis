@@ -1,10 +1,4 @@
-
-/* tslint:disable */
 import { TestBed, async, inject } from '@angular/core/testing';
-import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-import { RestangularModule } from 'ngx-restangular';
-import { HttpClientModule } from '@angular/common/http';
 
 import { Connection,
   Action,
@@ -27,8 +21,6 @@ describe('CurrentFlow', () => {
     TestBed.configureTestingModule({
       imports: [
         ApiModule.forRoot(),
-        HttpClientModule,
-        RestangularModule.forRoot(),
         CoreModule.forRoot(),
         IntegrationSupportModule,
       ],
@@ -38,16 +30,7 @@ describe('CurrentFlow', () => {
         IntegrationService,
         EventsService,
         ConfigService,
-        StepStore,
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http,
-          useFactory: (backend, options) => {
-            return new Http(backend, options);
-          },
-          deps: [MockBackend, RequestOptions]
-        }
+        StepStore
       ]
     });
   });

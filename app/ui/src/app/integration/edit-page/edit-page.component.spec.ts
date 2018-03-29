@@ -2,9 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockBackend } from '@angular/http/testing';
-import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ngx-restangular';
 import { ToolbarModule } from 'patternfly-ng';
 
 import { SyndesisCommonModule, NavigationService } from '@syndesis/ui/common';
@@ -31,7 +28,6 @@ describe('IntegrationsEditComponent', () => {
           FormsModule,
           SyndesisCommonModule,
           ModalModule,
-          RestangularModule.forRoot(),
           RouterTestingModule.withRoutes([]),
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
@@ -45,18 +41,6 @@ describe('IntegrationsEditComponent', () => {
           FlowViewStepComponent
         ],
         providers: [
-          MockBackend,
-          {
-            provide: RequestOptions,
-            useClass: BaseRequestOptions
-          },
-          {
-            provide: Http,
-            useFactory: (backend, options) => {
-              return new Http(backend, options);
-            },
-            deps: [MockBackend, RequestOptions]
-          },
           CurrentFlowService,
           NavigationService,
         ]

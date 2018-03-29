@@ -1,17 +1,14 @@
 import { async, TestBed } from '@angular/core/testing';
-import { BaseRequestOptions, Http, RequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CollapseModule, ModalModule } from 'ngx-bootstrap';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { RestangularModule } from 'ngx-restangular';
 import { NotificationModule } from 'patternfly-ng';
 import { StoreModule as NgRxStoreModule, Store } from '@ngrx/store';
 
 import { AppComponent } from './app.component';
 import { SyndesisCommonModule } from './common/common.module';
 import { NavigationService } from './common/navigation.service';
-import { UserService } from '@syndesis/ui/platform';
+import { UserService, ApiHttpService } from '@syndesis/ui/platform';
 import { ConfigService } from './config.service';
 import { StoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
@@ -27,7 +24,6 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        RestangularModule,
         StoreModule,
         SyndesisCommonModule.forRoot(),
         ModalModule.forRoot(),
@@ -42,15 +38,7 @@ describe('AppComponent', () => {
         UserService,
         TestSupportService,
         NavigationService,
-        MockBackend,
-        { provide: RequestOptions, useClass: BaseRequestOptions },
-        {
-          provide: Http,
-          useFactory: (backend, options) => {
-            return new Http(backend, options);
-          },
-          deps: [MockBackend, RequestOptions]
-        },
+        ApiHttpService,
         { provide: ConfigService, useValue: configServiceStub }
       ],
       declarations: [AppComponent]
