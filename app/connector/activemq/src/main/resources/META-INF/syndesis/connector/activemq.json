@@ -82,11 +82,11 @@
       "javaType": "java.lang.String",
       "enum": [
         {
-          "value": "false",
+          "value": "true",
           "label": "Disable"
         },
         {
-          "value": "true",
+          "value": "false",
           "label": "Enable"
         }
       ],
@@ -115,7 +115,7 @@
           "when": [
             {
               "id": "skipCertificateCheck",
-              "value": "true"
+              "value": "false"
             }
           ]
         }
@@ -140,7 +140,7 @@
           "when": [
             {
               "id": "skipCertificateCheck",
-              "value": "true"
+              "value": "false"
             }
           ]
         }
