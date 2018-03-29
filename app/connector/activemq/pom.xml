@@ -88,6 +88,18 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
+      <exclusions>
+        <!-- avoid conflict with AMQP connector's JMS 2.0 dependency -->
+        <exclusion>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- play nice with AMQP connector, JMS 2.0 is backwards compatible -->
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jms_2.0_spec</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
