@@ -35,7 +35,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
 import io.syndesis.common.model.WithIdVersioned;
-import io.syndesis.common.model.WithName;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
@@ -454,22 +453,22 @@ public class DataManager implements DataAccessObjectRegistry {
     }
 
     private <T extends WithId<T>> void validateNoDuplicateName(final T entity, final String ignoreSelfId) {
-        if (entity instanceof WithName) {
-            WithName n = (WithName) entity;
-            if (n.getName() == null) {
-                LOGGER.error("Entity name is a required field");
+        if (entity instanceof Connection) {
+            Connection c = (Connection) entity;
+            if (c.getName() == null) {
+                LOGGER.error("Connection name is a required field");
                 throw new PersistenceException("'Name' is a required field");
             }
-            Set<String> ids = fetchIdsByPropertyValue(Connection.class, "name", n.getName());
+            Set<String> ids = fetchIdsByPropertyValue(Connection.class, "name", c.getName());
             if (ids != null) {
                 ids.remove(ignoreSelfId);
                 if (! ids.isEmpty()) {
-                    LOGGER.error("Duplicate name, current entity with id '{}' has name '{}' that already exists on entity with id '{}'",
+                    LOGGER.error("Duplicate name, current Connection with id '{}' has name '{}' that already exists on entity with id '{}'",
                         entity.getId().orElse("null"),
-                        n.getName(),
+                        c.getName(),
                         ids.iterator().next());
                     throw new EntityExistsException(
-                            "There already exists a " + entity.getKind() + " with name " + n.getName());
+                            "There already exists a Connection with name " + c.getName());
                 }
             }
         }
