@@ -1,14 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockBackend } from '@angular/http/testing';
-import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabsModule, CollapseModule, PopoverModule } from 'ngx-bootstrap';
 import { ModalModule } from 'ngx-bootstrap/modal';
-
-import { RestangularModule } from 'ngx-restangular';
 
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
@@ -31,11 +26,9 @@ describe('FlowViewComponent', () => {
         imports: [
           CoreModule.forRoot(),
           ApiModule.forRoot(),
-          HttpClientModule,
           CommonModule,
           FormsModule,
           RouterTestingModule.withRoutes([]),
-          RestangularModule,
           ConnectionsModule,
           ModalModule.forRoot(),
           TabsModule.forRoot(),
@@ -47,18 +40,6 @@ describe('FlowViewComponent', () => {
         ],
         declarations: [FlowViewComponent, FlowViewStepComponent],
         providers: [
-          MockBackend,
-          {
-            provide: RequestOptions,
-            useClass: BaseRequestOptions
-          },
-          {
-            provide: Http,
-            useFactory: (backend, options) => {
-              return new Http(backend, options);
-            },
-            deps: [MockBackend, RequestOptions]
-          },
           CurrentFlowService,
           FlowPageService,
           IntegrationStore,

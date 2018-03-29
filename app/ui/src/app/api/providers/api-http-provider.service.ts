@@ -87,7 +87,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       .put<T>(url, body, options)
       .catch(error => Observable.throw(this.catchError(error)));
   }
-  
+
   patch<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
     const { endpointKey, endpointParams } = this.deconstructEndpointParams(endpoint);
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);

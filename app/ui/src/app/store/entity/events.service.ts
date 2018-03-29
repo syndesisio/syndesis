@@ -85,7 +85,7 @@ export class EventsService {
         .subscribe(response => {
           const apiEndpoint = this.configService.getSettings().apiEndpoint;
           const reservation = response.data;
-          
+
           try {
             if (connectUsingWebSockets) {
               let wsApiEndpoint = resolve(window.location.href, apiEndpoint);
@@ -105,8 +105,8 @@ export class EventsService {
             this.onFailure(error);
           }
         },
-        error => this.onFailure(error)
-      );
+          error => this.onFailure(error)
+        );
     } catch (error) {
       this.onFailure(error);
     }

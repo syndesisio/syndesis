@@ -1,49 +1,20 @@
-/* tslint:disable:no-unused-variable */
-import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
-import { IntegrationConfigureActionComponent } from './action-configure.component';
-import { ApiEndpointsLazyLoaderService } from '../../../api/providers/api-endpoints-lazy-loader.service';
-import {
-    ApiConfigService,
-    ActionDescriptor,
-    ActionDescriptorStep,
-    DataShape,
-    UserService,
-    FormFactoryService,
-    IntegrationSupportService
-} from '@syndesis/ui/platform';
-
-import { RouterTestingModule } from '@angular/router/testing';
-import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
-import { ActivatedRoute } from '@angular/router';
-import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
+import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, FormsModule } from '@angular/forms';
-import { CoreModule } from '@syndesis/ui/core';
+import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
 
-import {
-    DynamicFormsCoreModule,
-    DynamicFormService,
-    DynamicCheckboxModel,
-    DynamicCheckboxGroupModel,
-    DynamicDatePickerModel,
-    DynamicEditorModel,
-    DynamicFileUploadModel,
-    DynamicFormArrayModel,
-    DynamicFormControlModel,
-    DynamicFormGroupModel,
-    DynamicInputModel,
-    DynamicRadioGroupModel,
-    DynamicSelectModel,
-    DynamicSliderModel,
-    DynamicSwitchModel,
-    DynamicTextAreaModel,
-    DynamicTimePickerModel
-} from '@ng-dynamic-forms/core';
+import { CoreModule } from '@syndesis/ui/core';
+import { ActionDescriptor, ActionDescriptorStep } from '@syndesis/ui/platform';
+
 import { ApiModule } from '@syndesis/ui/api';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { EventsService, IntegrationStore, IntegrationService, StepStore } from '@syndesis/ui/store';
-import { RestangularModule } from 'ngx-restangular';
+
+import { CurrentFlowService, FlowPageService } from '@syndesis/ui/integration/edit-page';
+import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
+import { IntegrationConfigureActionComponent } from './action-configure.component';
 
 describe('IntegrationConfigureActionComponent', () => {
     let component: IntegrationConfigureActionComponent;
@@ -59,8 +30,7 @@ describe('IntegrationConfigureActionComponent', () => {
                     ReactiveFormsModule,
                     DynamicFormsCoreModule.forRoot(),
                     CoreModule.forRoot(),
-                    ApiModule.forRoot(),
-                    RestangularModule.forRoot()
+                    ApiModule.forRoot()
                 ],
                 declarations: [IntegrationConfigureActionComponent],
                 providers: [

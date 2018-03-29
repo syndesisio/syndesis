@@ -1,9 +1,6 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockBackend } from '@angular/http/testing';
-import { RequestOptions, BaseRequestOptions, Http } from '@angular/http';
-import { RestangularModule } from 'ngx-restangular';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -27,7 +24,6 @@ xdescribe('IntegrationsListPage', () => {
           SyndesisCommonModule.forRoot(),
           StoreModule,
           RouterTestingModule.withRoutes([]),
-          RestangularModule.forRoot(),
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
           TabsModule.forRoot(),
@@ -35,18 +31,7 @@ xdescribe('IntegrationsListPage', () => {
           PatternflyUIModule,
           IntegrationListModule
         ],
-        declarations: [IntegrationListPage],
-        providers: [
-          MockBackend,
-          { provide: RequestOptions, useClass: BaseRequestOptions },
-          {
-            provide: Http,
-            useFactory: (backend, options) => {
-              return new Http(backend, options);
-            },
-            deps: [MockBackend, RequestOptions]
-          }
-        ]
+        declarations: [IntegrationListPage]
       }).compileComponents();
     })
   );

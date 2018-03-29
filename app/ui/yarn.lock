@@ -4967,18 +4967,6 @@ ngx-chips@^1.6.2:
   dependencies:
     ng2-material-dropdown "~0.8.2"
 
-ngx-restangular@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/ngx-restangular/-/ngx-restangular-2.0.2.tgz#3c98929b80885db9bcee4d901cb9cbec78fcc027"
-  dependencies:
-    "@angular/core" "^5.0.0"
-    "@angular/http" "^5.0.0"
-    "@angular/platform-browser" "^5.0.0"
-    "@types/lodash" "^4.14.62"
-    core-js ">=2.4.1"
-    rxjs "^5.0.0"
-    typescript ">=2.4.2 <2.5"
-
 no-case@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
