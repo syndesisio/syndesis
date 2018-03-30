@@ -47,7 +47,10 @@ import org.immutables.value.Value;
 @SuppressWarnings("immutables")
 @IndexedProperty("targetResourceId")
 public interface ConnectionBulletinBoard extends BulletinBoard<ConnectionBulletinBoard> {
-    ConnectionBulletinBoard EMPTY_BOARD = new ConnectionBulletinBoard.Builder().build();
+
+    static ConnectionBulletinBoard emptyBoard() {
+        return new ConnectionBulletinBoard.Builder().build();
+    }
 
     @Override
     default Kind getKind() {
