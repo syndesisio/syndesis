@@ -66,7 +66,6 @@ import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import static io.syndesis.common.model.bulletin.ConnectionBulletinBoard.EMPTY_BOARD;
 import static io.syndesis.common.model.bulletin.LeveledMessage.Level.ERROR;
 import static io.syndesis.common.model.bulletin.LeveledMessage.Level.WARN;
 
@@ -118,7 +117,7 @@ public class ConnectionHandler
         for (Connection connection: connections.getItems()) {
             final String id = connection.getId().get();
             final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
-            final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(EMPTY_BOARD);
+            final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(ConnectionBulletinBoard.emptyBoard());
 
             overviews.add(
                 new ConnectionOverview.Builder()
@@ -136,7 +135,7 @@ public class ConnectionHandler
     public ConnectionOverview get(final String id) {
         final DataManager dataManager = getDataManager();
         final Connection connection = dataManager.fetch(Connection.class, id);
-        final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(EMPTY_BOARD);
+        final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(ConnectionBulletinBoard.emptyBoard());
         final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
 
         return new ConnectionOverview.Builder()
