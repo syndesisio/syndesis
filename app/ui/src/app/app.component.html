@@ -8,7 +8,8 @@
 
   <ng-template #brandTemplate>
     <a routerLink="/"
-       class="navbar-brand">
+       class="navbar-brand"
+       role="link">
           <img *ngIf="iconDarkBg && iconDarkBg !== ''"
                [class]="productBuild ? 'navbar-brand-icon product' : 'navbar-brand-icon'"
                [src]="loggedIn ? iconDarkBg : iconWhiteBg"
@@ -77,16 +78,19 @@
               <li>
                 <a [href]="tutorialLink"
                    rel="nofollow"
+                   role="link"
                    target="_blank">Sample Integration Tutorials</a>
               </li>
               <li>
                 <a [href]="userGuideLink"
                    rel="nofollow"
+                   role="link"
                    target="_blank">User Guide</a>
               </li>
-              <li><a routerLink="/support">Support</a></li>
+              <li><a routerLink="/support" role="link">Support</a></li>
               <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
                    rel="nofollow"
+                   role="link"
                    target="_blank">Contact Us</a></li>
             </ul>
           </li>
@@ -122,17 +126,17 @@
                 id="userDropdownMenu"
                 aria-labelledby="userDropdown">
               <li>
-                <a (click)="logout()">Logout</a>
+                <a (click)="logout()" role="link">Logout</a>
               </li>
               <!--
               <li>
-                <a (click)="resetDB()">Reset DB</a>
+                <a (click)="resetDB()" role="link">Reset DB</a>
               </li>
               <li>
-                <a (click)="exportDB()">Export DB</a>
+                <a (click)="exportDB()" role="link">Export DB</a>
               </li>
               <li>
-                <a (click)="showImportDB()">Import DB</a>
+                <a (click)="showImportDB()" role="link">Import DB</a>
               </li>
               -->
             </ul>
@@ -150,7 +154,7 @@
     <ul class="list-group" role="list">
       <li class="list-group-item"
           routerLinkActive="active">
-        <a routerLink="dashboard">
+        <a routerLink="dashboard" role="link">
           <span class="fa fa-tachometer"
                 data-toggle="tooltip"
                 title="Dashboard"></span>
@@ -159,7 +163,7 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a routerLink="integrations">
+        <a routerLink="integrations" role="link">
           <span class="pficon pficon-topology"
                 data-toggle="tooltip"
                 title="Integrations"></span>
@@ -168,7 +172,7 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a routerLink="connections">
+        <a routerLink="connections" role="link">
           <span class="pficon pficon-network"
                 data-toggle="tooltip"
                 title="Connections"></span>
@@ -177,7 +181,7 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a routerLink="customizations">
+        <a routerLink="customizations" role="link">
           <span class="pficon pficon-network"
                 data-toggle="tooltip"
                 title="Customizations"></span>
@@ -186,7 +190,7 @@
       </li>
       <li class="list-group-item"
           routerLinkActive="active">
-        <a routerLink="settings">
+        <a routerLink="settings" role="link">
           <span class="fa fa-lock"
                 data-toggle="tooltip"
                 title="Settings"></span>

@@ -29,7 +29,7 @@ const DESCRIBE_DATA_FORM_CONFIG = {
     defaultValue: DataShapeKinds.ANY,
     enum: [
       {
-        label: 'Don\'t specify type',
+        label: 'Type specification not required',
         value: DataShapeKinds.ANY
       },
       {
