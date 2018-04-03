@@ -48,8 +48,8 @@
         </ng-container>
       </div>
 
-      <div *ngIf="integration.messages && integration.messages.length" class="integration-detail__row">        
-        <div *ngFor="let message of integration.messages">
+      <div *ngIf="integration.board?.messages && integration.board?.messages.length" class="integration-detail__row">        
+        <div *ngFor="let message of integration.board.messages">
           <syndesis-inline-alert [message]="message"></syndesis-inline-alert>
         </div>
       </div>
