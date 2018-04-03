@@ -159,13 +159,13 @@ public class IntegrationsITCase extends BaseITCase {
 
     public static class IntegrationListResult {
         public int totalCount;
-        public ArrayList<IntegrationOverview> items;
+        public List<IntegrationOverview> items;
 
         public int getTotalCount() {
             return totalCount;
         }
 
-        public ArrayList<IntegrationOverview> getItems() {
+        public List<IntegrationOverview> getItems() {
             return items;
         }
     }
