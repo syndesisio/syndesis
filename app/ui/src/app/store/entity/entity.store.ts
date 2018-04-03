@@ -263,8 +263,8 @@ export abstract class AbstractStore<
     return deleted.share();
   }
 
-  patch(entity: T, attributes: any): Observable<any> {
-    return this.service.patch(entity.id, attributes);
+  patch(id: string, attributes: any): Observable<any> {
+    return this.service.patch(id, attributes);
   }
 
   private massageError(error: any) {

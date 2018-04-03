@@ -104,13 +104,13 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  nameUpdated($event) {
-    this.attributeUpdated({ 'name': $event });
+  nameUpdated(id: string, $event) {
+    this.attributeUpdated(id, { 'name': $event });
   }
 
-  attributeUpdated(updatedAttribute: { [key: string]: string }) {
+  attributeUpdated(id: string, updatedAttribute: { [key: string]: string }) {
     this.integrationStore
-      .patch(<any>this.integration, updatedAttribute)
+      .patch(id, updatedAttribute)
       .toPromise()
       .then((update: Integration) => {
         // silently succeed

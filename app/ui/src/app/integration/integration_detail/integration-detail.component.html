@@ -30,7 +30,7 @@
     <div class="integration-detail__body row syn-scrollable--body">
       <div class="integration-detail__info integration-detail__row">
         <h1 class="inline-block">
-          <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated($event)"></syndesis-editable-text>
+          <syndesis-editable-text [value]="integration.name" [validationFn]="validateName" (onSave)="nameUpdated(integration.id, $event)"></syndesis-editable-text>
         </h1>
         <ng-container [ngSwitch]="integration.currentState">	 
           <ng-container *ngSwitchCase="'Pending'">	  
@@ -74,7 +74,7 @@
           [integration]="integration"
           [stepStore]="stepStore"
           (viewDetails)="viewDetails($event)"
-          (attributeUpdated)="attributeUpdated($event)">
+          (attributeUpdated)="attributeUpdated(integration.id, $event)">
         </syndesis-integration-description>
 
         <syndesis-integration-history
