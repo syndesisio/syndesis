@@ -2,6 +2,7 @@ import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
+import { localStorageFactory } from './factories';
 import * as SYNDESIS_ABSTRACT_PROVIDERS from '@syndesis/ui/platform';
 import * as SYNDESIS_PROVIDERS from './providers';
 
@@ -19,6 +20,15 @@ export class CoreModule {
     return [{
       ngModule: CoreModule,
       providers: [
+        {
+          provide: 'LOCALSTORAGE',
+          useFactory: localStorageFactory
+        },
+        SYNDESIS_PROVIDERS.I18NProviderService,
+        {
+          provide: SYNDESIS_ABSTRACT_PROVIDERS.I18NService,
+          useClass: SYNDESIS_PROVIDERS.I18NProviderService
+        },
         SYNDESIS_PROVIDERS.IntegrationProviderService,
         {
           provide: SYNDESIS_ABSTRACT_PROVIDERS.IntegrationService,

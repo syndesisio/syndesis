@@ -73,6 +73,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/delay';
 
 /***************************************************************************************************
  * APPLICATION IMPORTS

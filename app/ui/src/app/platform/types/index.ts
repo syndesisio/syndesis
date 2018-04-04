@@ -2,6 +2,7 @@ export * from './api';
 export * from './connection';
 export * from './extension';
 export * from './form-factory';
+export * from './i18n';
 export * from './integration';
 export * from './metadata';
 export * from './user';

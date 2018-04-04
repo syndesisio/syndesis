@@ -11,6 +11,7 @@ import { LoadingComponent } from './loading/loading.component';
 import { SYNDESYS_VALIDATION_DIRECTIVES } from './validation';
 import { WizardProgressBarComponent } from './wizard_progress_bar';
 
+import { I18NPipe } from './i18n.pipe';
 import { DerpPipe } from './derp.pipe';
 import { ObjectPropertyFilterPipe } from './object-property-filter.pipe';
 import { ObjectPropertySortPipe } from './object-property-sort.pipe';
@@ -39,6 +40,7 @@ import { NavigationService } from './navigation.service';
     RouterModule
   ],
   declarations: [
+    I18NPipe,
     DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,
@@ -62,6 +64,7 @@ import { NavigationService } from './navigation.service';
     ...SYNDESYS_VALIDATION_DIRECTIVES
   ],
   exports: [
+    I18NPipe,
     DerpPipe,
     ObjectPropertyFilterPipe,
     ObjectPropertySortPipe,

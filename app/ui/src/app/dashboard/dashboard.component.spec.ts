@@ -1,31 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { StoreModule, Store } from '@ngrx/store';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ActionModule, ListModule, NotificationModule, ChartModule } from 'patternfly-ng';
 
-import { platformReducer } from '@syndesis/ui/platform';
+import { PlatformModule } from '@syndesis/ui/platform';
 import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
-import { IntegrationListModule } from '@syndesis/ui/integration/list';
+import { IntegrationListModule } from '@syndesis/ui/integration';
+import { StoreModule as LegacyStoreModule } from '@syndesis/ui/store';
+
 import { DashboardComponent } from './dashboard.component';
 import { DashboardEmptyComponent } from './dashboard_empty';
 import { DashboardConnectionsComponent } from './dashboard_connections';
 import { DashboardIntegrationsComponent } from './dashboard_integrations';
 import { DashboardMetricsComponent } from './dashboard_metrics';
-import { IntegrationListComponent } from '@syndesis/ui/integration/list/list.component';
-import { IntegrationStatusComponent } from '@syndesis/ui/integration/list/status.component';
-import { LoadingComponent } from '@syndesis/ui/common/loading/loading.component';
-import { IconPathPipe } from '@syndesis/ui/common/icon-path.pipe.ts';
-import { TruncateCharactersPipe } from '@syndesis/ui/common/truncate-characters.pipe';
-import { ModalComponent, ModalService } from '@syndesis/ui/common/modal';
+import { ModalService } from '@syndesis/ui/common/modal';
 import { ConfigService } from '@syndesis/ui/config.service';
-import { IntegrationActionMenuComponent } from '@syndesis/ui/integration/list/action-menu.component.ts';
-import { StoreModule as LegacyStore } from '@syndesis/ui/store';
 
 xdescribe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -36,20 +30,19 @@ xdescribe('DashboardComponent', () => {
       const moduleConfig = {
         imports: [
           ApiModule.forRoot(),
+          PlatformModule.forRoot(),
           CoreModule.forRoot(),
-          LegacyStore,
+          SyndesisCommonModule.forRoot(),
           ActionModule,
           ListModule,
           ChartModule,
-          StoreModule.forRoot(platformReducer),
           ModalModule.forRoot(),
           TooltipModule.forRoot(),
           BsDropdownModule.forRoot(),
-          StoreModule,
           RouterTestingModule.withRoutes([]),
           NotificationModule,
           IntegrationListModule,
-          SyndesisCommonModule
+          LegacyStoreModule
         ],
         declarations: [
           DashboardMetricsComponent,
@@ -61,7 +54,6 @@ xdescribe('DashboardComponent', () => {
         providers: [
           ConfigService,
           ModalService,
-          Store,
         ]
       };
       TestBed.configureTestingModule(moduleConfig).compileComponents();

@@ -5,6 +5,11 @@
 
 export const environment = Object.freeze({
   production: false,
+  i18n: {
+    fallbackValue: '?',
+    localStorageKey: 'syndesis-i18n-locale',
+    dictionaryFolderPath: '/assets/dictionary'
+  },
   config: {
     apiEndpoint: 'http://localhost:8080/api/v1',
     title: 'DEVELOPMENT - Syndesis',

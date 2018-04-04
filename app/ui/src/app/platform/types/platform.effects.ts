@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import * as PlatformActions from './platform.actions';
 import { IntegrationEffects, IntegrationActions } from './integration';
+import { I18NEffects } from './i18n';
 
 @Injectable()
 export class PlatformEffects {
@@ -19,6 +20,7 @@ export class PlatformEffects {
     return [
       PlatformEffects,
       IntegrationEffects,
+      I18NEffects,
       // Add any new @Effects-decorated type below...
     ];
   }

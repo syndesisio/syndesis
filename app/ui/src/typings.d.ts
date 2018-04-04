@@ -28,3 +28,8 @@ declare class EventSource {
 interface JQuery {
   matchHeight(options?: any): any;
 }
+// Allows for importing JSON values as ES modules in TypeScript
+declare module '*.json' {
+  const value: any;
+  export default value;
+}
