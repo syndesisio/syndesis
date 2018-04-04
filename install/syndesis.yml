@@ -4,13 +4,13 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: syndesis-fuse-ignite-1.3
+  name: syndesis
 #
 # Template flavor:
 #
 # Allow localhost refs: false
 # Use docker images: false
-# Syndesis Tag: 1.3
+# Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
 # Postgresql Tag: 9.5
 # OAuthProxy Tag: v1.1.0
@@ -83,7 +83,7 @@ parameters:
 - description: Registry from where to fetch Syndesis images
   displayName: Syndesis Image Registry
   name: SYNDESIS_REGISTRY
-  value: 'registry.fuse-ignite.openshift.com'
+  value: 'docker.io'
 - description: Should deployment of integrations be enabled?
   displayName: Enable Integration Deployment
   name: CONTROLLERS_INTEGRATION_ENABLED
@@ -91,7 +91,7 @@ parameters:
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
-  value: 'fuse-ignite'
+  value: ''
 - description: Secret to use to encrypt oauth cookies
   displayName: OAuth Cookie Secret
   name: OAUTH_COOKIE_SECRET
@@ -143,6 +143,97 @@ parameters:
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-server
+    labels:
+      app: syndesis
+      component: syndesis-server
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-server:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-ui
+    labels:
+      app: syndesis
+      component: syndesis-ui
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-meta
+    labels:
+      app: syndesis
+      component: syndesis-meta
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-meta:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: oauth-proxy
+    labels:
+      app: syndesis
+      component: syndesis-oauthproxy
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
+      importPolicy:
+        scheduled: true
+      name: "v1.1.0"
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: prometheus
+    labels:
+      app: syndesis
+      component: syndesis-prometheus
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/prom/prometheus:v2.1.0
+      importPolicy:
+        scheduled: true
+      name: "v2.1.0"
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-s2i
+    labels:
+      app: syndesis
+      component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-s2i:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
 
 - apiVersion: v1
   kind: Secret
@@ -246,7 +337,7 @@ objects:
         - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-ui:1.3
+          name: syndesis-ui:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -274,107 +365,17 @@ objects:
           "logging": false
         },
         "branding": {
-          "logoWhiteBg": "",
-          "logoDarkBg": "",
-          "iconWhiteBg": "assets/images/FuseIgniteLogo_Black.svg",
-          "iconDarkBg": "assets/images/FuseIgniteLogo_White.svg",
-          "appName": "Ignite",
+          "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
+          "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+          "iconWhiteBg": "assets/images/glasses_logo_square.png",
+          "iconDarkBg": "assets/images/glasses_logo_square.png",
+          "appName": "Syndesis",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png",
-          "productBuild": true
+          "productBuild": false
        }
       }
-- apiVersion: v1
-  kind: ImageStream
-  metadata:
-    name: jboss-amq-63
-    labels:
-      app: syndesis
-      component: amq
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3
-      importPolicy:
-        scheduled: true
-      name: "1.3"
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      description: The broker's OpenWire port.
-    labels:
-      application: broker
-    name: broker-amq-tcp
-  spec:
-    ports:
-    - name: openwire
-      port: 61616
-      targetPort: 61616
-    - name: stomp
-      port: 61613
-      targetPort: 61613
-    selector:
-      deploymentConfig: broker-amq
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      application: broker
-    name: broker-amq
-  spec:
-    replicas: 0
-    selector:
-      deploymentConfig: broker-amq
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        labels:
-          application: broker
-          deploymentConfig: broker-amq
-        name: broker-amq
-      spec:
-        containers:
-        - env:
-          - name: AMQ_USER
-            value: amq
-          - name: AMQ_PASSWORD
-            value: topSecret
-          - name: AMQ_TRANSPORTS
-            value: openwire,stomp
-          image: jboss-amq-63
-          imagePullPolicy: Always
-          name: broker-amq
-          ports:
-          - containerPort: 8778
-            name: jolokia
-            protocol: TCP
-          - containerPort: 61616
-            name: tcp
-            protocol: TCP
-          - containerPort: 61613
-            name: stomp
-            protocol: TCP
-          readinessProbe:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - /opt/amq/bin/readinessProbe.sh
-        terminationGracePeriodSeconds: 60
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - broker-amq
-        from:
-          kind: ImageStreamTag
-          name: jboss-amq-63:1.3
-      type: ImageChange
-    - type: ConfigChange
 
 - apiVersion: v1
   kind: ConfigMap
@@ -684,7 +685,7 @@ objects:
         - syndesis-meta
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-meta:1.3
+          name: syndesis-meta:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -978,7 +979,7 @@ objects:
         - syndesis-server
         from:
           kind: ImageStreamTag
-          name: fuse-ignite-server:1.3
+          name: syndesis-server:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1025,16 +1026,11 @@ objects:
           sensitive: false
         jsondb:
           enabled: true
-      maven:
-        repositories:
-          01_maven_central: https://repo1.maven.org/maven2
-          02_redhat_ea_repository: https://maven.repository.redhat.com/earlyaccess/all
-          03_jboss_ea: https://repository.jboss.org/nexus/content/groups/ea
       openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
         imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
-        builderImageStreamTag: fuse-ignite-s2i:1.3
+        builderImageStreamTag: syndesis-s2i:latest
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
