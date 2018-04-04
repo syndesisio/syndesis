@@ -119,7 +119,14 @@ export class IntegrationSelectActionComponent implements OnInit, OnDestroy {
       && this.currentStep <= this.currentFlowService.getLastPosition()) {
       this.actions$ = this.connector$
         .filter(connector => connector !== undefined)
-        .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To')]);
+            .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To')]);
+    }
+
+    if (this.currentStep > this.currentFlowService.getFirstPosition()
+      && this.currentStep < this.currentFlowService.getLastPosition()) {
+      this.actions$ = this.connector$
+        .filter(connector => connector !== undefined)
+            .switchMap(connector => [connector.actions.filter(action => action.pattern === 'To' || action.pattern === 'Pipe')]);
     }
 
     this.actionsSubscription = this.actions$.subscribe(_ =>
