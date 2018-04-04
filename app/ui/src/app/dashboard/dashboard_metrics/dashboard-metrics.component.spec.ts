@@ -1,10 +1,14 @@
 import { ConfigService } from '@syndesis/ui/config.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
 
-import { IntegrationState } from '@syndesis/ui/platform';
 import { CoreModule } from '@syndesis/ui/core';
+import { SyndesisCommonModule } from '@syndesis/ui/common';
+import { PlatformModule, IntegrationState } from '@syndesis/ui/platform';
+import { StoreModule as LegacyStoreModule } from '@syndesis/ui/store';
+
 import { DashboardMetricsComponent } from './dashboard-metrics.component';
-import { DurationDiffPipe } from '@syndesis/ui/common';
+import { ApiModule } from '@syndesis/ui/api';
 
 describe('DashboardMetricsComponent', () => {
   let component: DashboardMetricsComponent;
@@ -12,11 +16,16 @@ describe('DashboardMetricsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [CoreModule.forRoot()],
+      imports: [
+        ApiModule.forRoot(),
+        CoreModule.forRoot(),
+        PlatformModule.forRoot(),
+        SyndesisCommonModule.forRoot(),
+        LegacyStoreModule
+      ],
       providers: [ConfigService],
       declarations: [
-        DashboardMetricsComponent,
-        DurationDiffPipe
+        DashboardMetricsComponent
       ]
     })
     .compileComponents();

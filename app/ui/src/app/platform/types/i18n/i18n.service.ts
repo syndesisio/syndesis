@@ -13,4 +13,6 @@ export abstract class I18NService {
   abstract persistLocale(locale: string): void;
 
   abstract getLocale(defaultLocale: string): string;
+
+  abstract getValue(dictionaryKey: string, args?: any[]): Observable<string>;
 }

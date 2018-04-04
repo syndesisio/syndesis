@@ -10,11 +10,9 @@ import {
   DictionaryEntry,
   I18NService,
 } from '../../platform';
+import { environment } from '../../../environments/environment';
 
-const EMPTY_STRING = '';
-const I18N_DEFAULT_PLACEHOLDER = '?';
-const STORAGE_LANGUAGE_KEY = 'syndesis-i18n-locale';
-const DICTIONARY_PATH = '/assets/dictionary';
+const { fallbackValue, localStorageKey, dictionaryFolderPath } = environment.i18n;
 
 @Injectable()
 export class I18NProviderService extends I18NService {
@@ -35,7 +33,7 @@ export class I18NProviderService extends I18NService {
   }
 
   setLocale(locale: string): Observable<I18NState> {
-    const dictionaryUrl = `${DICTIONARY_PATH}/${locale}.json`;
+    const dictionaryUrl = `${dictionaryFolderPath}/${locale}.json`;
     return this.httpClient
       .get(dictionaryUrl)
       .catch(error => Observable.throw(error));
@@ -43,10 +41,10 @@ export class I18NProviderService extends I18NService {
 
   localize(dictionaryKey: string, args?: any[]): string {
     if (!this.dictionary) {
-      return I18N_DEFAULT_PLACEHOLDER;
+      return fallbackValue;
     }
 
-    let translateKeys = (dictionaryKey || EMPTY_STRING).toLowerCase().split(/[\.:]/);
+    let translateKeys = (dictionaryKey || '').toLowerCase().split(/[\.:]/);
 
     if (translateKeys.length === 1) {
       translateKeys = ['shared', ...translateKeys];
@@ -54,7 +52,7 @@ export class I18NProviderService extends I18NService {
 
     let translation = this.getTranslatedTerm(this.dictionary, ...translateKeys);
 
-    if (translation !== I18N_DEFAULT_PLACEHOLDER)  {
+    if (translation !== fallbackValue)  {
       translation = this.replaceLabelPlaceholders(translation, args);
       translation = this.replaceIndexPlaceholders(translation, args);
     }
@@ -64,16 +62,23 @@ export class I18NProviderService extends I18NService {
 
   persistLocale(locale: string): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.localStorage.setItem(STORAGE_LANGUAGE_KEY, locale);
+      this.localStorage.setItem(localStorageKey, locale);
     }
   }
 
   getLocale(defaultLocale: string): string {
     if (isPlatformBrowser(this.platformId)) {
-      defaultLocale = this.localStorage.getItem(STORAGE_LANGUAGE_KEY) || defaultLocale;
+      defaultLocale = this.localStorage.getItem(localStorageKey) || defaultLocale;
     }
 
     return defaultLocale;
+  }
+
+  getValue(dictionaryKey: string, args?: any[]): Observable<string> {
+    return this.platformStore
+      .select(selectI18NState)
+      .delay(0)
+      .switchMap(() => this.localize(dictionaryKey, args));
   }
 
   private getTranslatedTerm(dictionary: DictionaryEntry, ...keys: string[]): string {
@@ -83,7 +88,7 @@ export class I18NProviderService extends I18NService {
       const key = keys[index];
       translationMatch = translationMatch[key];
       if (!translationMatch) {
-        return I18N_DEFAULT_PLACEHOLDER;
+        return fallbackValue;
       }
       lastValidKey = key;
     }
