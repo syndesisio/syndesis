@@ -1,5 +1,5 @@
 <syndesis-loading [loading]="loading">
-  <div class="container-cards-pf connections-list">
+  <div class="container-cards-pf connections-list container-fluid">
     <div class="row row-cards-pf cards">
 
       <!-- Delete Modal Container -->
@@ -35,7 +35,7 @@
 
       <!-- Each Connection's Card Container -->
       <ng-container *ngIf="connections && connections.length > 0">
-        <div class="connection col-xs-12 col-sm-3 col-md-2 card"
+        <div class="connection col-lg-3 col-md-4 col-sm-6 card"
           *ngFor="let connection of connections"
           (click)="onSelect(connection, $event)">
 
@@ -56,8 +56,8 @@
                             type="button"
                             id="dropdownKebabRight9"
                             (click)="$event.stopPropagation()">
-                    <span class="fa fa-ellipsis-v"></span>
-                  </button>
+                      <span class="fa fa-ellipsis-v"></span>
+                    </button>
                     <ul *dropdownMenu
                         class="dropdown-menu dropdown-menu-right"
                         role="menu">
@@ -84,26 +84,26 @@
                 </div>
               </div>
 
-
               <!-- Card Icon -->
               <div class="card-pf-top-element">
                 <span class="card-pf-icon-large image-icon">
-                <img class="syn-icon-medium" [src]="connection | synIconPath">
-              </span>
+                  <img class="syn-icon-medium" [src]="connection | synIconPath">
+                </span>
               </div>
 
               <!-- Card Name -->
-              <h2 class="card-pf-title text-center"
+              <h2 class="card-pf-title text-center syn-truncate__ellipsis"
                   (click)="onSelect(connection)"
                   title="{{ connection.name }}">
-                {{ connection.name | truncate : '20' : truncateTrail }}
+                {{ connection.name }}
               </h2>
 
               <!-- Card Description / Item Overview -->
-              <p class="card-pf-info text-center">
-                {{ connection.description | truncate : '100' : truncateTrail }}
+              <p class="card-pf-info text-center" title="{{ connection.description }}">
+                {{ connection.description | truncate : '50' : truncateTrail }}
               </p>
-              <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors">
+              <div *ngIf="connection.board?.notices || connection.board?.warnings || connection.board?.errors"
+                class="connection-config-alert">
                 <div class="alert alert-warning">
                   <span class="pficon pficon-warning-triangle-o"></span>
                   Configuration Required
