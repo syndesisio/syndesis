@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfigurationProperties;
+import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.WithKind;
 import io.syndesis.common.model.WithName;
@@ -52,7 +53,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 })
 @JsonPropertyOrder({ "id", "name", "description", "descriptor", "tags", "actionType" })
 @JsonIgnoreProperties(value = {"properties", "inputDataShape", "outputDataShape"}, allowGetters = true)
-public interface Action extends WithResourceId, WithKind, WithName, WithTags, WithConfigurationProperties, Serializable {
+public interface Action extends WithResourceId, WithKind, WithName, WithTags, WithConfigurationProperties, WithMetadata, Serializable {
     String TYPE_CONNECTOR = "connector";
     String TYPE_STEP = "step";
 

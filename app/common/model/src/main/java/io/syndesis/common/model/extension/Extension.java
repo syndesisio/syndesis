@@ -15,18 +15,17 @@
  */
 package io.syndesis.common.model.extension;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.util.IndexedProperty;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
@@ -41,6 +40,7 @@ import io.syndesis.common.model.action.WithActions;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.NonBlockingValidations;
 import io.syndesis.common.model.validation.extension.NoDuplicateExtension;
+import io.syndesis.common.util.IndexedProperty;
 import org.immutables.value.Value;
 
 @Value.Immutable

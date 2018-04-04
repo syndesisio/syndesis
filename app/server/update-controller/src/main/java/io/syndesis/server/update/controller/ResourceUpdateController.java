@@ -29,7 +29,7 @@ import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ResourceUpdateController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceUpdateController.class);
@@ -42,6 +42,7 @@ public class ResourceUpdateController {
 
     private ScheduledExecutorService scheduler;
 
+    @Autowired
     public ResourceUpdateController(ResourceUpdateConfiguration configuration, EventBus eventBus, List<ResourceUpdateHandler> handlers) {
         this.configuration = configuration;
         this.eventBus = eventBus;
@@ -60,7 +61,7 @@ public class ResourceUpdateController {
             running.set(true);
 
             scheduler = Executors.newScheduledThreadPool(1, r -> new Thread(null, r, "ResourceUpdateController (scheduler)"));
-            scheduler.scheduleWithFixedDelay(this::run, 0, configuration.getCheckInterval(), configuration.getCheckIntervalUnit());
+            scheduler.scheduleWithFixedDelay(this::run, configuration.getInitialInterval(), configuration.getCheckInterval(), configuration.getIntervalUnit());
 
             eventBus.subscribe(getClass().getName(), this::onEvent);
         }
@@ -95,8 +96,21 @@ public class ResourceUpdateController {
     }
 
     private void run() {
-        for (int i = 0; i < allEvents.size(); i++) {
-            run(allEvents.get(i));
+        for (int h = 0; h < handlers.size(); h++) {
+            ResourceUpdateHandler handler = handlers.get(h);
+
+            for (int i = 0; i < allEvents.size(); i++) {
+                ChangeEvent event = allEvents.get(i);
+
+                if (handler.canHandle(event)) {
+                    handler.process(event);
+
+                    // At the moment, handlers are not selective but they scan
+                    // resources every time process is invoked so we do not need
+                    // to trigger the handler multiple time.
+                    break;
+                }
+            }
         }
     }
 
@@ -106,8 +120,10 @@ public class ResourceUpdateController {
         }
 
         for (int i = 0; i < handlers.size(); i++) {
-            if (handlers.get(i).canHandle(event)) {
-                handlers.get(i).process(event);
+            ResourceUpdateHandler handler = handlers.get(i);
+
+            if (handler.canHandle(event)) {
+                handler.process(event);
             }
         }
     }

@@ -28,14 +28,22 @@ export class EventsService {
   private eventSource: EventSource;
   private webSocket: WebSocket;
   private starting = false;
+  private started = false;
   private retries = 0;
   private preferredProtocol = null;
 
   constructor(private configService: ConfigService, private apiHttpService: ApiHttpService) {
-    this.configService.asyncSettings$.subscribe(() => this.startConnection(this.retries % 2 === 0));
+    this.configService.asyncSettings$.subscribe(() => this.start());
+  }
+
+  start() {
+    if (!this.started) {
+      this.startConnection(this.retries % 2 === 0);
+    }
   }
 
   onFailure(event) {
+    this.started = false;
     this.starting = false;
     this.retries++;
 
@@ -94,11 +102,13 @@ export class EventsService {
                 this.connectWebSocket(wsApiEndpoint);
               log.info('Connecting using web socket');
               this.starting = false;
+              this.started = true;
             } else {
               this.connectEventSource(
                 apiEndpoint + '/event/streams/' + reservation
               );
               this.starting = false;
+              this.started = true;
               log.info('Connecting using server side events');
             }
           } catch (error) {
@@ -115,12 +125,14 @@ export class EventsService {
   private connectEventSource(url: string) {
     this.eventSource = new EventSource(url);
     this.eventSource.addEventListener('message', (event: any) => {
+      this.started = true;
       this.starting = false;
       this.preferredProtocol = 'es';
       log.info('sse.message: ' + JSON.stringify(event.data));
       this.messageEvents.next(event.data);
     });
     this.eventSource.addEventListener('change-event', (event: any) => {
+      this.started = true;
       const value = JSON.parse(event.data) as ChangeEvent;
       log.info('sse.change-event: ' + JSON.stringify(value));
       this.changeEvents.next(value);
@@ -136,6 +148,7 @@ export class EventsService {
   private connectWebSocket(url) {
     this.webSocket = new WebSocket(url);
     this.webSocket.onmessage = event => {
+      this.started = true;
       const messageEvent = JSON.parse(event.data) as MessageEvent;
       switch (messageEvent.event) {
         case 'message':

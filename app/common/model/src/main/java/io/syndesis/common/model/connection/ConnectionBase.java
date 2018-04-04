@@ -22,13 +22,12 @@ import java.util.Optional;
 
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithConfiguredProperties;
-import io.syndesis.common.model.WithKind;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.environment.Organization;
 
-public interface ConnectionBase extends WithResourceId, WithKind, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
+public interface ConnectionBase extends WithResourceId, WithTags, WithName, WithConfiguredProperties, ToJson, Serializable {
 
     Optional<Organization> getOrganization();
 

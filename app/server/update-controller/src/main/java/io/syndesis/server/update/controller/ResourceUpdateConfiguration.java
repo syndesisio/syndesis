@@ -24,11 +24,14 @@ public class ResourceUpdateConfiguration {
     // Enable/Disable connector upgrades checks
     private boolean enabled;
 
+    // Initial check interval
+    private long initialInterval = 30;
+
     // Interval between check
-    private long checkInterval = 1;
+    private long checkInterval = 60;
 
     // Time unit for check interval
-    private TimeUnit checkIntervalUnit = TimeUnit.MINUTES;
+    private TimeUnit intervalUnit = TimeUnit.SECONDS;
 
     public boolean isEnabled() {
         return enabled;
@@ -36,6 +39,14 @@ public class ResourceUpdateConfiguration {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public long getInitialInterval() {
+        return initialInterval;
+    }
+
+    public void setInitialInterval(long initialInterval) {
+        this.initialInterval = initialInterval;
     }
 
     public long getCheckInterval() {
@@ -46,11 +57,11 @@ public class ResourceUpdateConfiguration {
         this.checkInterval = checkInterval;
     }
 
-    public TimeUnit getCheckIntervalUnit() {
-        return checkIntervalUnit;
+    public TimeUnit getIntervalUnit() {
+        return intervalUnit;
     }
 
-    public void setCheckIntervalUnit(TimeUnit checkIntervalUnit) {
-        this.checkIntervalUnit = checkIntervalUnit;
+    public void setIntervalUnit(TimeUnit intervalUnit) {
+        this.intervalUnit = intervalUnit;
     }
 }

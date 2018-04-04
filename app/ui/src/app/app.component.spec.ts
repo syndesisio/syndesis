@@ -10,7 +10,7 @@ import { SyndesisCommonModule } from './common/common.module';
 import { NavigationService } from './common/navigation.service';
 import { UserService, ApiHttpService } from '@syndesis/ui/platform';
 import { ConfigService } from './config.service';
-import { StoreModule } from './store/store.module';
+import { SyndesisStoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
 import { platformReducer } from './platform';
 
@@ -24,7 +24,7 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        StoreModule,
+        SyndesisStoreModule,
         SyndesisCommonModule.forRoot(),
         ModalModule.forRoot(),
         RouterTestingModule.withRoutes([]),

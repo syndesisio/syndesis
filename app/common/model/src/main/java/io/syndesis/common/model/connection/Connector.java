@@ -31,6 +31,7 @@ import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithProperties;
 import io.syndesis.common.model.WithTags;
+import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.WithActions;
@@ -39,16 +40,12 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
 @SuppressWarnings("immutables")
-public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>, WithActions<ConnectorAction>, WithTags, WithName, WithProperties, WithDependencies, WithMetadata, ToJson, Serializable {
+public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>, WithVersion.AutoUpdatable, WithActions<ConnectorAction>, WithTags, WithName, WithProperties, WithDependencies, WithMetadata, ToJson, Serializable {
 
     class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {
         public Builder putOrRemoveConfiguredPropertyTaggedWith(final String tag, final String value) {
             return putOrRemoveConfiguredPropertyTaggedWith(this, tag, value);
         }
-    }
-
-    default Optional<ConnectorAction> actionById(final String id) {
-        return getActions().stream().filter(a -> a.idEquals(id)).findFirst();
     }
 
     default Builder builder() {

@@ -6,7 +6,8 @@ import { IntegrationService } from './integration.service';
 
 import { createIntegration, createStep, Integration, Integrations } from '@syndesis/ui/platform';
 
-import { AbstractStore, EventsService } from '../entity';
+import { AbstractStore, EventsService, ChangeEvent } from '../entity';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class IntegrationStore extends AbstractStore<Integration, Integrations, IntegrationService> {
@@ -15,7 +16,11 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
   }
 
   protected get kind() {
-    return 'Integration';
+    return 'integration';
+  }
+
+  setChangeEventsFilter(changeEvents: Subject<ChangeEvent>) {
+    return changeEvents.filter(event => event.kind.startsWith('integration'));
   }
 
   newInstance(): Integration {

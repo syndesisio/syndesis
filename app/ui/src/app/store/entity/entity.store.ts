@@ -41,11 +41,11 @@ export abstract class AbstractStore<
     initialList: L,
     initialCurrent: T,
   ) {
+    // TODO: trigger event service to start in case it hasn't, though it should
+    this.eventService.start();
     this._list = new BehaviorSubject<L>(initialList);
     this._current = new BehaviorSubject<T>(initialCurrent);
-    this.changeEvents = this.eventService.changeEvents.filter(x => {
-      return x.kind === this.service.kind;
-    });
+    this.changeEvents = this.setChangeEventsFilter(this.eventService.changeEvents);
     this.currentSub = this._current.asObservable().subscribe(current => {
       if (!current) {
         this.currentId = undefined;
@@ -53,6 +53,10 @@ export abstract class AbstractStore<
       }
       this.currentId = current.id;
     });
+  }
+
+  setChangeEventsFilter(changeEvents: Subject<ChangeEvent>) {
+    return changeEvents.filter(event => event.kind === this.service.kind);
   }
 
   protected abstract get kind(): string;
@@ -66,7 +70,7 @@ export abstract class AbstractStore<
         // We could probably get fancy one day an only fetch the entry that matches event.id
         // simulate no data
         if (EMPTY_STATE) {
-          return Observable.of([]);
+          return Observable.of([] as L) as Observable<L>;
         } else {
           return this.service.list();
         }
@@ -78,9 +82,9 @@ export abstract class AbstractStore<
     return Observable.merge(
       this._current,
       this.changeEvents.filter(event => {
-        return event.id === this.currentId;
+        return event.id.startsWith(this.currentId);
       }).flatMap(event => {
-        return this.service.get(event.id);
+        return this.service.get(this.currentId);
       }),
     );
   }
@@ -261,8 +265,8 @@ export abstract class AbstractStore<
     return deleted.share();
   }
 
-  patch(entity: T, attributes: any): Observable<any> {
-    return this.service.patch(entity.id, attributes);
+  patch(id: string, attributes: any): Observable<any> {
+    return this.service.patch(id, attributes);
   }
 
   private massageError(error: any) {

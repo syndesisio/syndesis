@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
 
 import org.junit.Before;
@@ -74,7 +75,7 @@ public class IntegrationsITCase extends BaseITCase {
         post("/api/v1/integrations", integration, Integration.class);
 
         // Validate we can now fetch it.
-        ResponseEntity<Integration> result = get("/api/v1/integrations/2001", Integration.class);
+        ResponseEntity<IntegrationOverview> result = get("/api/v1/integrations/2001", IntegrationOverview.class);
         assertThat(result.getBody().getName()).as("name").isEqualTo("test");
 
         // Create another integration.
@@ -141,7 +142,7 @@ public class IntegrationsITCase extends BaseITCase {
             .build();
 
         post("/api/v1/integrations", integration, Integration.class);
-        ResponseEntity<Integration> result = get("/api/v1/integrations/3001", Integration.class);
+        ResponseEntity<IntegrationOverview> result = get("/api/v1/integrations/3001", IntegrationOverview.class);
         assertThat(result.getBody().getDescription())
             .as("description")
             .isEqualTo(Optional.of("My first description"));
@@ -150,7 +151,7 @@ public class IntegrationsITCase extends BaseITCase {
         Map<String, Object> patchDoc = Collections.singletonMap("description", "The second description");
         patch("/api/v1/integrations/3001", patchDoc);
 
-        result = get("/api/v1/integrations/3001", Integration.class);
+        result = get("/api/v1/integrations/3001", IntegrationOverview.class);
         assertThat(result.getBody().getDescription())
             .as("description")
             .isEqualTo(Optional.of("The second description"));
@@ -158,13 +159,13 @@ public class IntegrationsITCase extends BaseITCase {
 
     public static class IntegrationListResult {
         public int totalCount;
-        public ArrayList<Integration> items;
+        public List<IntegrationOverview> items;
 
         public int getTotalCount() {
             return totalCount;
         }
 
-        public ArrayList<Integration> getItems() {
+        public List<IntegrationOverview> getItems() {
             return items;
         }
     }

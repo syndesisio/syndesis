@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.runtime;
 
+import java.util.Arrays;
+
+import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.integration.Integration;
 import org.junit.Test;
@@ -56,7 +59,10 @@ public class T3stSupportITCase extends BaseITCase {
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r2 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r2.getBody().length).isEqualTo(1);
+        assertThat(r2.getBody()).isNotEmpty();
+
+        long r2Integrations = Arrays.stream(r2.getBody()).filter(b -> b.getKind() == Kind.Integration).count();
+        assertThat(r2Integrations).isEqualTo(1);
 
         // Reset to fresh startup state..
         get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
@@ -70,8 +76,10 @@ public class T3stSupportITCase extends BaseITCase {
 
         // Snapshot should only contain the integration entity..
         ResponseEntity<ModelData<?>[]> r4 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r4.getBody().length).isEqualTo(1);
+        assertThat(r4.getBody()).isNotEmpty();
 
+        long r4Integrations = Arrays.stream(r4.getBody()).filter(b -> b.getKind() == Kind.Integration).count();
+        assertThat(r4Integrations).isEqualTo(1);
     }
 
 }

@@ -104,13 +104,13 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  nameUpdated($event) {
-    this.attributeUpdated({ 'name': $event });
+  nameUpdated(id: string, $event) {
+    this.attributeUpdated(id, { 'name': $event });
   }
 
-  attributeUpdated(updatedAttribute: { [key: string]: string }) {
+  attributeUpdated(id: string, updatedAttribute: { [key: string]: string }) {
     this.integrationStore
-      .patch(<any>this.integration, updatedAttribute)
+      .patch(id, updatedAttribute)
       .toPromise()
       .then((update: Integration) => {
         // silently succeed
@@ -198,7 +198,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
         this.onRefreshMetrics(integrationId);
 
-        const integration$ = this.integrationSupportService.watchOverview(integrationId);
+        const integration$ = this.integrationStore.resource;
         this.integrationSubscription = integration$.subscribe((integration: IntegrationOverview) => {
           this.loading = false;
           this.integration = integration;
@@ -226,6 +226,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
             this.deploymentActionConfigs[deployment.id] = actionConfig;
           }
         });
+        this.integrationStore.load(integrationId);
       });
   }
 

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.update.controller.impl;
+package io.syndesis.server.update.controller.bulletin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.validation.Validator;
 
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
@@ -27,16 +28,17 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.update.controller.AbstractResourceUpdateHandler;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 
-import static io.syndesis.server.update.controller.ResourceUpdateHelper.computeSimpleBulletinMessages;
-
-
-public class ConnectorUpdateHandler extends AbstractResourceUpdateHandler<ConnectionBulletinBoard> {
+/**
+ * This class handles updates on {@link Connection} and related resources and
+ * generates related {@link ConnectionBulletinBoard}.
+ */
+public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<ConnectionBulletinBoard> {
     private final List<Kind> supportedKinds;
 
-    public ConnectorUpdateHandler(DataManager dataManager) {
-        super(dataManager);
+    public ConnectionUpdateHandler(DataManager dataManager, EncryptionComponent encryptionComponent, Validator validator) {
+        super(dataManager, encryptionComponent, validator);
 
         this.supportedKinds = Arrays.asList(Kind.Connector, Kind.Connection);
     }
@@ -67,7 +69,6 @@ public class ConnectorUpdateHandler extends AbstractResourceUpdateHandler<Connec
 
     private ConnectionBulletinBoard computeBoard(Connection connection, Connector oldConnector, Connector newConnector) {
         final DataManager dataManager = getDataManager();
-        final List<LeveledMessage> messages = computeSimpleBulletinMessages(oldConnector.getProperties(), newConnector.getProperties());
         final String id = connection.getId().get();
         final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(null);
         final ConnectionBulletinBoard.Builder builder;
@@ -83,26 +84,21 @@ public class ConnectorUpdateHandler extends AbstractResourceUpdateHandler<Connec
                 .createdAt(System.currentTimeMillis());
         }
 
+
+        List<LeveledMessage> messages = new ArrayList<>();
+        messages.addAll(computeValidatorMessages(LeveledMessage.Builder::new, connection));
+        messages.addAll(computePropertiesDiffMessages(LeveledMessage.Builder::new, oldConnector.getProperties(), newConnector.getProperties()));
+        messages.addAll(computeMissingMandatoryPropertiesMessages(LeveledMessage.Builder::new, newConnector.getProperties(), connection.getConfiguredProperties()));
+        messages.addAll(computeSecretsUpdateMessages(LeveledMessage.Builder::new, newConnector.getProperties(), connection.getConfiguredProperties()));
+
         builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
         builder.warnings(countMessagesWithLevel(LeveledMessage.Level.WARN, messages));
         builder.notices(countMessagesWithLevel(LeveledMessage.Level.INFO, messages));
         builder.putMetadata("connector-id", newConnector.getId().get());
-        builder.putMetadata("connector-version-latest", Long.toString(newConnector.getVersion()));
-        builder.putMetadata("connector-version-connection", Long.toString(oldConnector.getVersion()));
+        builder.putMetadata("connector-version-latest", Integer.toString(newConnector.getVersion()));
+        builder.putMetadata("connector-version-connection", Integer.toString(oldConnector.getVersion()));
         builder.messages(messages);
 
         return builder.build();
-    }
-
-    private int countMessagesWithLevel(LeveledMessage.Level level, List<LeveledMessage> messages) {
-        int count = 0;
-
-        for (int i = 0; i < messages.size(); i++) {
-            if (messages.get(i).getLevel() == level) {
-                count++;
-            }
-        }
-
-        return count;
     }
 }

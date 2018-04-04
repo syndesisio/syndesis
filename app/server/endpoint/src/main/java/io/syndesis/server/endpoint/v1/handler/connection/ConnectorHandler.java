@@ -141,7 +141,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             return builder.build();
         }
 
-        connector.actionById(actionId).filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
+        connector.findActionById(actionId).filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
             action.getOutputDataShape().ifPresent(dataShape -> {
                 final List<String> paths = inspectors.getPaths(dataShape.getKind().toString(), dataShape.getType(), dataShape.getSpecification(),
                     dataShape.getExemplar());

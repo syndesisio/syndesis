@@ -7,7 +7,7 @@ export class StatusCodeDecoderProviderService extends StatusCodeDecoderService {
   // TODO eventually this would be in a separate json file, also better messages
   private static messages = {
     'SYNDESIS000': 'An unknown error has occurred', // generic message
-    'SYNDESIS001': 'There are parameter updates for this connection. Click <strong>Edit</strong> to update parameter settings.',
+    'SYNDESIS001': 'There are parameter updates. Click <strong>Edit</strong> to update parameter settings.',
     'SYNDESIS002': 'One or more properties have been updated or removed', // One or more properties have been added or removed
     'SYNDESIS003': 'The connector associated with this connection has been deleted', // Connector has been deleted
     'SYNDESIS004': 'The associated extension has been deleted', // Extension has been deleted

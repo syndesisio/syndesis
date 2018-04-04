@@ -19,9 +19,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.validation.UniqueProperty;
-import io.syndesis.common.model.validation.UniquenessRequired;
+import io.syndesis.common.util.IndexedProperty;
 import org.immutables.value.Value;
 
 /**
@@ -29,9 +27,9 @@ import org.immutables.value.Value;
  * for a given integration.
  */
 @Value.Immutable
-@JsonDeserialize(builder = Integration.Builder.class)
-@UniqueProperty(value = "name", groups = UniquenessRequired.class)
+@JsonDeserialize(builder = IntegrationBulletinBoard.Builder.class)
 @SuppressWarnings("immutables")
+@IndexedProperty("targetResourceId")
 public interface IntegrationBulletinBoard extends BulletinBoard<IntegrationBulletinBoard> {
 
     @Override
@@ -39,8 +37,12 @@ public interface IntegrationBulletinBoard extends BulletinBoard<IntegrationBulle
         return Kind.IntegrationBulletinBoard;
     }
 
+    static IntegrationBulletinBoard emptyBoard() {
+        return new IntegrationBulletinBoard.Builder().build();
+    }
+
     static IntegrationBulletinBoard of(String id, List<LeveledMessage> messages) {
-        return new Builder().id(id).messages(messages).build();
+        return new Builder().id(id).targetResourceId(id).messages(messages).build();
     }
 
     class Builder extends ImmutableIntegrationBulletinBoard.Builder {

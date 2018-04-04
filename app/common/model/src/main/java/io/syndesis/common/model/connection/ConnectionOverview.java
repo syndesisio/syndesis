@@ -15,20 +15,15 @@
  */
 package io.syndesis.common.model.connection;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
-import io.syndesis.common.model.validation.UniqueProperty;
-import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.util.IndexedProperty;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectionOverview.Builder.class)
-@UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
 @IndexedProperty("connectorId")
 public interface ConnectionOverview extends WithId<ConnectionOverview>, ConnectionBase {
@@ -37,8 +32,12 @@ public interface ConnectionOverview extends WithId<ConnectionOverview>, Connecti
         return Kind.ConnectionOverview;
     }
 
-    Optional<ConnectionBulletinBoard> getBoard();
+    @Value.Default
+    default ConnectionBulletinBoard getBoard() {
+        return ConnectionBulletinBoard.emptyBoard();
+    }
 
+    // allow access to ImmutableIntegration.Builder
     class Builder extends ImmutableConnectionOverview.Builder {
     }
 }

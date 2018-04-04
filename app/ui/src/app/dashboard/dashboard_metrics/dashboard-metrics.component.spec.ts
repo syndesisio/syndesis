@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { PlatformModule, IntegrationState } from '@syndesis/ui/platform';
-import { StoreModule as LegacyStoreModule } from '@syndesis/ui/store';
+import { SyndesisStoreModule } from '@syndesis/ui/store';
 
 import { DashboardMetricsComponent } from './dashboard-metrics.component';
 import { ApiModule } from '@syndesis/ui/api';
@@ -21,7 +21,7 @@ describe('DashboardMetricsComponent', () => {
         CoreModule.forRoot(),
         PlatformModule.forRoot(),
         SyndesisCommonModule.forRoot(),
-        LegacyStoreModule
+        SyndesisStoreModule
       ],
       providers: [ConfigService],
       declarations: [

@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
+package io.syndesis.common.model.integration;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
-public interface WithVersion {
-    @Value.Default
-    default int getVersion() {
-        return 1;
+@Value.Immutable
+@JsonDeserialize(builder = IntegrationDeploymentOverview.Builder.class)
+@SuppressWarnings("immutables")
+public interface IntegrationDeploymentOverview extends IntegrationDeploymentBase {
+
+    // allow access to ImmutableIntegrationDeploymentOverview.Builder
+    class Builder extends ImmutableIntegrationDeploymentOverview.Builder {
     }
 
-    /**
-     * Marker interface to indicate that the revision should be automatically updated
-     * by the data manager
-     */
-    interface AutoUpdatable {
+    static IntegrationDeploymentOverview of(IntegrationDeployment deployment) {
+        return new IntegrationDeploymentOverview.Builder().createFrom(deployment).build();
     }
 }

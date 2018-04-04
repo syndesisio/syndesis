@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
@@ -43,19 +43,16 @@ import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
-import io.syndesis.common.model.bulletin.LeveledMessage;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
-import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.operations.Creator;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
@@ -63,11 +60,9 @@ import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
+import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-import static io.syndesis.common.model.bulletin.LeveledMessage.Level.ERROR;
-import static io.syndesis.common.model.bulletin.LeveledMessage.Level.WARN;
 
 @Path("/connections")
 @Api(value = "connections")
@@ -89,18 +84,15 @@ public class ConnectionHandler
 
     private final MetadataConfigurationProperties config;
     private final EncryptionComponent encryptionComponent;
-    private final IntegrationHandler integrationHandler;
 
     public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials,
-                             final ClientSideState state, final MetadataConfigurationProperties config, final EncryptionComponent encryptionComponent,
-                             IntegrationHandler integrationHandler) {
+                             final ClientSideState state, final MetadataConfigurationProperties config, final EncryptionComponent encryptionComponent) {
         super(dataMgr);
         this.validator = validator;
         this.credentials = credentials;
         this.state = state;
         this.config = config;
         this.encryptionComponent = encryptionComponent;
-        this.integrationHandler = integrationHandler;
     }
 
     @Override
@@ -116,16 +108,15 @@ public class ConnectionHandler
 
         for (Connection connection: connections.getItems()) {
             final String id = connection.getId().get();
-            final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
-            final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(ConnectionBulletinBoard.emptyBoard());
+            final ConnectionOverview.Builder builder = new ConnectionOverview.Builder().createFrom(connection);
 
-            overviews.add(
-                new ConnectionOverview.Builder()
-                    .createFrom(connection)
-                    .connector(connector)
-                    .board(board)
-                    .build()
-            );
+            // set the connector
+            DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId()).ifPresent(builder::connector);
+
+            // set the board
+            DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
+
+            overviews.add(builder.build());
         }
 
         return ListResult.of(overviews);
@@ -135,14 +126,20 @@ public class ConnectionHandler
     public ConnectionOverview get(final String id) {
         final DataManager dataManager = getDataManager();
         final Connection connection = dataManager.fetch(Connection.class, id);
-        final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(ConnectionBulletinBoard.emptyBoard());
-        final Connector connector = dataManager.fetch(Connector.class, connection.getConnectorId());
 
-        return new ConnectionOverview.Builder()
-            .createFrom(connection)
-            .connector(connector)
-            .board(board)
-            .build();
+        if( connection == null ) {
+            throw new EntityNotFoundException();
+        }
+
+        final ConnectionOverview.Builder builder = new ConnectionOverview.Builder().createFrom(connection);
+
+        // set the connector
+        DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId()).ifPresent(builder::connector);
+
+        // set the board
+        DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
+
+        return builder.build();
     }
 
     @Override
@@ -200,14 +197,8 @@ public class ConnectionHandler
             .configuredProperties(configuredProperties)
             .lastUpdated(new Date())
             .build();
+
         Updater.super.update(id, updatedConnection);
-
-
-        // TODO: do this async perhaps..
-        // We may need to trigger creating bulletins for some integrations.
-        for (String integrationId : getDataManager().fetchIds(Integration.class)) {
-            integrationHandler.updateBulletinBoard(integrationId);
-        }
     }
 
     @Path("/{id}/actions")
@@ -229,41 +220,5 @@ public class ConnectionHandler
     @Override
     public Validator getValidator() {
         return validator;
-    }
-
-    /**
-     * Update the list of notices for a given connection
-     *
-     * @param id
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}/update-bulletins")
-    public ConnectionBulletinBoard updateBulletinBoard(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
-        final List<LeveledMessage> messages = new ArrayList<>();
-        final Connection connection = getDataManager().fetch(Connection.class, id);
-
-        final Set<ConstraintViolation<Connection>> constraintViolations = getValidator().validate(connection, AllValidations.class);
-        for (ConstraintViolation<Connection> violation : constraintViolations) {
-            messages.add(LeveledMessage.of(ERROR, violation.getMessage()));
-        }
-
-        connection.getConnector().ifPresent(connector -> {
-            Connector current = getDataManager().fetch(Connector.class, connector.getId().get());
-            if (current == null) {
-                messages.add(LeveledMessage.of(WARN, String.format("Connector '%s' has been deleted.", connector.getName())));
-            }
-        });
-
-        // We have a null value if it was an encrypted property that was imported into
-        // a different system.
-        Map<String, String> configuredProperties = encryptionComponent.decrypt(connection.getConfiguredProperties());
-        if (configuredProperties.values().contains(null)) {
-            messages.add(LeveledMessage.of(ERROR, "Configuration missing"));
-        }
-
-        ConnectionBulletinBoard bulletinBoard = ConnectionBulletinBoard.of(id, messages);
-        getDataManager().set(bulletinBoard);
-        return bulletinBoard;
     }
 }

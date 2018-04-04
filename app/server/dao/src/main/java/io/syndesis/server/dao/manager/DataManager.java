@@ -35,6 +35,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
 
 import io.syndesis.common.model.WithIdVersioned;
+import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
@@ -331,7 +332,7 @@ public class DataManager implements DataAccessObjectRegistry {
         final T oldEntity = this.<T>fetch(kind.getModelClass(), idVal);
         final T newEntity;
 
-        if (oldEntity != null && entity instanceof WithIdVersioned) {
+        if (oldEntity != null && entity instanceof WithIdVersioned && entity instanceof WithVersion.AutoUpdatable) {
             WithIdVersioned<T> prev = WithIdVersioned.class.cast(oldEntity);
             int revision = prev.getVersion();
 

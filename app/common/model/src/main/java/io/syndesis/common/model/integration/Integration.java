@@ -15,86 +15,25 @@
  */
 package io.syndesis.common.model.integration;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.immutables.value.Value;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.ResourceIdentifier;
-import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithModificationTimestamps;
-import io.syndesis.common.model.WithName;
-import io.syndesis.common.model.WithTags;
-import io.syndesis.common.model.WithVersion;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.validation.UniqueProperty;
 import io.syndesis.common.model.validation.UniquenessRequired;
+import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
-public interface Integration extends WithId<Integration>, WithVersion, WithModificationTimestamps, WithTags, WithName, ToJson, Serializable {
+public interface Integration extends WithId<Integration>, IntegrationBase {
 
     @Override
     default Kind getKind() {
         return Kind.Integration;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    @Value.Default
-    default boolean isDeleted() {
-        return false;
-    }
-
-    @Value.Default
-    default List<Connection> getConnections() {
-        return Collections.emptyList();
-    }
-
-    @Value.Default
-    default List<Step> getSteps() {
-        return Collections.emptyList();
-    }
-
-    @Value.Default
-    default List<ResourceIdentifier> getResources() {
-        return Collections.emptyList();
-    }
-
-    Optional<Scheduler> getScheduler();
-
-    @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
-    Optional<String> getDescription();
-
     class Builder extends ImmutableIntegration.Builder {
         // allow access to ImmutableIntegration.Builder
     }
-
-    @JsonIgnore
-    default Set<String> getUsedConnectorIds() {
-        return getSteps().stream()//
-                .map(s -> s.getAction())//
-                .filter(Optional::isPresent)//
-                .map(Optional::get)//
-                .filter(ConnectorAction.class::isInstance)//
-                .map(ConnectorAction.class::cast)//
-                .map(a -> a.getDescriptor().getConnectorId())//
-                .filter(Objects::nonNull)//
-                .collect(Collectors.toSet());
-    }
-
 }

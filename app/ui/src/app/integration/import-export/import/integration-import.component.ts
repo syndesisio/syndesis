@@ -14,6 +14,7 @@ import {
   FileUploader,
   FileUploaderOptions
 } from 'ng2-file-upload';
+import { IntegrationStore } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-import-integration-component',
@@ -35,7 +36,9 @@ export class IntegrationImportComponent implements OnInit {
 
   @ViewChild('fileSelect') fileSelect: ElementRef;
 
-  constructor(private integrationSupportService: IntegrationSupportService, private router: Router) {
+  constructor(private integrationSupportService: IntegrationSupportService,
+              private integrationStore: IntegrationStore,
+              private router: Router) {
     // Do stuff here!
   }
 
@@ -111,9 +114,9 @@ export class IntegrationImportComponent implements OnInit {
   }
 
   private fetchImportedIntegrations(results) {
-    this.importedOverviews$ = this.integrationSupportService.getOverviews().map(overviews => {
-      return overviews.filter(overview => {
-        return results.find(result => result.id === overview.id) !== -1;
+    this.importedOverviews$ = this.integrationStore.list.map(integrations => {
+      return integrations.filter(integration => {
+        return results.find(result => result.id === integration.id) !== -1;
       });
     });
 

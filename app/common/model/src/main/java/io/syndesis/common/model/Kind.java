@@ -44,9 +44,11 @@ public enum Kind {
     Organization(io.syndesis.common.model.environment.Organization.class),
 
     Integration(io.syndesis.common.model.integration.Integration.class),
+    IntegrationOverview(io.syndesis.common.model.integration.IntegrationOverview.class),
     IntegrationDeployment(IntegrationDeployment.class),
     IntegrationMetricsSummary(io.syndesis.common.model.metrics.IntegrationMetricsSummary.class),
     IntegrationRuntime(io.syndesis.common.model.integration.IntegrationRuntime.class),
+
     Step(io.syndesis.common.model.integration.Step.class),
 
     Permission(io.syndesis.common.model.user.Permission.class),
@@ -54,7 +56,7 @@ public enum Kind {
     User(io.syndesis.common.model.user.User.class),
 
     ConnectionBulletinBoard(io.syndesis.common.model.bulletin.ConnectionBulletinBoard.class),
-    IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class),
+    IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class)
 
     ;
 

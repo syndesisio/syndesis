@@ -33,7 +33,14 @@ public interface LeveledMessage extends WithMetadata {
 
     enum Code {
         SYNDESIS000, // Generic message
-        SYNDESIS001 // There are parameter updates for this connection
+        SYNDESIS001, // One or more properties have been updated
+        SYNDESIS002, // One or more properties have been added or removed
+        SYNDESIS003, // Connector has been deleted
+        SYNDESIS004, // Extension has been deleted
+        SYNDESIS005, // Action has been deleted
+        SYNDESIS006, // One or more required properties is not set
+        SYNDESIS007, // Secrets update needed
+        SYNDESIS008, // Validation Error
     }
 
     enum Level {
@@ -61,5 +68,4 @@ public interface LeveledMessage extends WithMetadata {
     static LeveledMessage of(Level level, String message) {
         return new Builder().level(level).message(message).build();
     }
-
 }
