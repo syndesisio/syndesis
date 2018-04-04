@@ -47,6 +47,9 @@ public class OpenShiftConfigurationProperties {
 
     private boolean debug;
 
+    private int maximumRetries = 3;
+    private long pollingInterval = 5000;
+
     public void setDebug(final boolean debug) {
         this.debug = debug;
     }
@@ -137,5 +140,21 @@ public class OpenShiftConfigurationProperties {
 
     public void setIntegrationDataPath(String integrationDataPath) {
         this.integrationDataPath = integrationDataPath;
+    }
+
+    public int getMaximumRetries() {
+        return maximumRetries;
+    }
+
+    public void setMaximumRetries(int maximumRetries) {
+        this.maximumRetries = maximumRetries;
+    }
+
+    public long getPollingInterval() {
+        return pollingInterval;
+    }
+
+    public void setPollingInterval(long pollingInterval) {
+        this.pollingInterval = pollingInterval;
     }
 }
