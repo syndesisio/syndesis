@@ -41,7 +41,7 @@
         <!-- Toggle Sidebar-->
         <button type="button"
                 class="navbar-toggle">
-          <span class="sr-only">Toggle navigation</span>
+          <span class="sr-only">{{ 'menu.navbartoggle' | synI18n }}</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -79,19 +79,22 @@
                 <a [attr.href]="'links.tutorial' | synI18n"
                     rel="nofollow"
                     role="link"
-                    target="_blank">Sample Integration Tutorials</a>
+                    target="_blank">{{ 'header.helpmenu.sampletutorials' | synI18n }}</a>
               </li>
               <li>
                 <a [attr.href]="'links.userguide' | synI18n:''"
                     rel="nofollow"
                     role="link"
-                    target="_blank">User Guide</a>
+                    target="_blank">{{ 'header.helpmenu.userguide' | synI18n }}</a>
+              <li>
+                <a routerLink="/support" role="link">{{ 'header.helpmenu.support' | synI18n }}</a>
               </li>
-              <li><a routerLink="/support" role="link">Support</a></li>
-              <li><a href="mailto:fuse-ignite-tech-preview@redhat.com"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank">Contact Us</a></li>
+              <li>
+                <a href="mailto:fuse-ignite-tech-preview@redhat.com"
+                   rel="nofollow"
+                   role="link"
+                   target="_blank">{{ 'header.helpmenu.contactus' | synI18n }}</a>
+              </li>
             </ul>
           </li>
 
@@ -126,7 +129,7 @@
                 id="userDropdownMenu"
                 aria-labelledby="userDropdown">
               <li>
-                <a (click)="logout()" role="link">Logout</a>
+                <a (click)="logout()" role="link">{{ 'header.usermenu.logout' | synI18n }}</a>
               </li>
               <!--
               <li>
@@ -203,12 +206,12 @@
           <span class="pficon pficon-help"
                 data-toggle="tooltip"
                 title="User"></span>
-          <span class="list-group-item-value">Help</span>
+          <span class="list-group-item-value">{{ 'help' | synI18n }}</span>
         </a>
         <div class="nav-pf-secondary-nav">
           <div class="nav-item-pf-header">
             <a role="button" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
-            <span>Help</span>
+            <span>{{ 'help' | synI18n }}</span>
           </div>
           <ul class="list-group">
             <li class="list-group-item">
@@ -216,24 +219,24 @@
                 rel="nofollow"
                 role="link"
                 target="_blank"
-                class="list-group-item-value">Sample Integration Tutorials</a>
+                class="list-group-item-value">{{ 'header.helpmenu.sampletutorials' | synI18n }}</a>
             </li>
             <li class="list-group-item">
               <a [attr.href]="'links.userguide' | synI18n:''"
                 rel="nofollow"
                 role="link"
                 target="_blank"
-                class="list-group-item-value">User Guide</a>
+                class="list-group-item-value">{{ 'header.helpmenu.userguide' | synI18n }}</a>
             </li>
             <li class="list-group-item">
-              <a routerLink="/support" role="link"  class="list-group-item-value">Support</a>
+              <a routerLink="/support" role="link"  class="list-group-item-value">{{ 'header.helpmenu.support' | synI18n }}</a>
             </li>
             <li class="list-group-item">
               <a href="mailto:fuse-ignite-tech-preview@redhat.com"
                 rel="nofollow"
                 role="link"
                 target="_blank"
-                class="list-group-item-value">Contact Us</a>
+                class="list-group-item-value">{{ 'header.helpmenu.contactus' | synI18n }}</a>
             </li>
           </ul>
         </div>
@@ -243,17 +246,17 @@
           <span class="pficon pficon-user"
                 data-toggle="tooltip"
                 title="User"></span>
-          <span class="list-group-item-value">User</span>
+          <span class="list-group-item-value">{{ 'user' | synI18n }}</span>
         </a>
         <div class="nav-pf-secondary-nav">
           <div class="nav-item-pf-header">
             <a role="button" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
-            <span>User</span>
+            <span>{{ 'user' | synI18n }}</span>
           </div>
           <ul class="list-group">
             <li class="list-group-item">
               <a (click)="logout()" role="link">
-                <span class="list-group-item-value">Logout</span>
+                <span class="list-group-item-value">{{ 'header.usermenu.logout' | synI18n }}</span>
               </a>
             </li>
           </ul>
@@ -272,7 +275,7 @@
                   [body]="importDbModal">
     <ng-template #importDbModal
                  let-modal="modal">
-      Please select the data file to import:
+      {{ 'import-db-txt' | synI18n }}
       <input type="file"
              id="file-import"
              (change)="importDB($event, modal)">

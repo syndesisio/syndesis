@@ -1,3 +1,4 @@
-<syndesis-modal title="Remove OAuth Credentials?"
-                [message]="'Are you sure you want to clear the credentials for \'' + item?.client.name + '\'?'">
+<syndesis-modal
+  title="Remove OAuth Credentials?"
+  [message]=" ('settings.oauth-apps.list.item.remove-btn-modal' | synI18n: item?.client.name) ">
 </syndesis-modal>

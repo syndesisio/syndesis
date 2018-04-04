@@ -1,16 +1,23 @@
 <div class="row">
   <div class="col-xs-8 col-xs-offset-4">
     <div class="alert alert-success"
+         (click)="handleLinks($event)"
          *ngIf="message">
       <span class="pficon pficon-ok"></span>
-      <strong>Registration successful!</strong> You can validate these values when
-      <a [routerLink]="['/connections/create']">creating a connection</a> to {{ item.client.name }}.
+      <strong>{{ 'settings.oauth-apps.form.success.msg' | synI18n }}</strong>
+      <span [innerHtml]="
+            'settings.oauth-apps.form.success.action.msg' | synI18n: [
+              ('settings.oauth-apps.form.success.action.link' | synI18n: '/connections/create'),
+              item.client.name
+            ]
+          ">
+      </span>
     </div>
     <div class="alert alert-warning"
          *ngIf="error">
       <span class="pficon pficon-warning-triangle"></span>
-      <strong>Error saving OAuth app settings</strong>
-      <pre>{{ error | json }}</pre>
+      <strong>{{ 'settings.oauth-apps.form.warning.msg' | synI18n }}</strong>
+      <pre>{{ 'settings.oauth-apps.form.warning.jsondump' | synI18n: (error | json) }}</pre>
     </div>
     <form class="form-horizontal"
           [formGroup]="formGroup">
@@ -26,17 +33,17 @@
                       (click)="save()"
                       [disabled]="loading">
                 <span class="spinner spinner-sm spinner-inline"
-                      *ngIf="loading"></span>Save</button>
+                      *ngIf="loading"></span>{{ 'save' | synI18n }}</button>
               <button type="button"
                       class="btn btn-default"
                       (click)="item.expanded = false"
-                      [disabled]="loading">Cancel</button>
+                      [disabled]="loading">{{ 'cancel' | synI18n }}</button>
             </ng-container>
             <ng-container *ngIf="message">
               <button type="button"
                       class="btn btn-primary"
                       (click)="item.expanded = false"
-                      [disabled]="loading">Ok</button>
+                      [disabled]="loading">{{ 'ok' | synI18n }}</button>
             </ng-container>
           </div>
         </div>
