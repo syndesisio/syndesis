@@ -46,3 +46,9 @@
   box-shadow: $box-shadow;
   border-bottom: $border-bottom;
 }
+
+@mixin truncate($text-overflow: clip) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: $text-overflow;
+}

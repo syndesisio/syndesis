@@ -119,3 +119,11 @@
     @include toolbar;
   }
 }
+
+.syn-truncate {
+  @include truncate;
+
+  &__ellipsis {
+    @include truncate(ellipsis);
+  }
+}

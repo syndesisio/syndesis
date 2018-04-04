@@ -8,22 +8,6 @@
           background: inherit;
           box-shadow: none;
         }
-        .card-pf-icon-large {
-          color: $color-pf-blue-300;
-        }
-      }
-      width: 25%;
-
-      //----- Same as .card-pf-icon-circle except without the blue circle ----------------->>
-
-      .card-pf-view .card-pf-top-element .card-pf-icon-large {
-        display: block;
-        font-size: 46px;
-        height: 106px;
-        line-height: 102px;
-        margin: 0 auto;
-        text-align: center;
-        width: 106px;
       }
 
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
@@ -42,6 +26,20 @@
 
       .card-pf-body {
         height: 240px;
+
+        .card-pf-top-element {
+          font-size: 46px;
+          color: $color-pf-blue-300;
+          line-height: 1;
+          text-align: center;
+          padding-top: 35px;
+          margin-bottom: 10px;
+        }
+
+        .card-pf-title {
+          margin: 0;
+          line-height: 1.2;
+        }
 
         .card-pf-heading-kebab {
           .dropdown-kebab-pf {
@@ -67,6 +65,26 @@
               left: auto;
               right: -1px;
               top: 26px;
+            }
+          }
+        }
+
+        .connection-config-alert {
+          .alert {
+            position: absolute;
+            bottom: -2px;
+            left: -2px;
+            right: -2px;
+            margin: 0;
+            padding-left: 0;
+            padding-right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            > .pficon {
+              position: static;
+              margin-right: 10px;
             }
           }
         }
