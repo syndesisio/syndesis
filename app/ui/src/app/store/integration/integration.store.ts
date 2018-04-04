@@ -20,7 +20,7 @@ export class IntegrationStore extends AbstractStore<Integration, Integrations, I
   }
 
   setChangeEventsFilter(changeEvents: Subject<ChangeEvent>) {
-    return changeEvents.filter(event => event.kind === 'integration' || event.kind === 'integration-deployment');
+    return changeEvents.filter(event => event.kind.startsWith('integration'));
   }
 
   newInstance(): Integration {

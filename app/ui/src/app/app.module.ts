@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
-import { StoreModule as LegacyStoreModule } from './store/store.module';
+import { SyndesisStoreModule } from './store/store.module';
 import { platformEndpoints, PlatformModule } from './platform';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { platformEndpoints, PlatformModule } from './platform';
     VendorModule,
     TagInputModule,
     AppRoutingModule,
-    LegacyStoreModule,
+    SyndesisStoreModule,
     DataMapperModule,
     NotificationModule,
   ],

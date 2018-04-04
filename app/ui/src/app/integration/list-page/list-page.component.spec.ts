@@ -11,7 +11,7 @@ import { SyndesisCommonModule } from '../../common/common.module';
 import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 import { IntegrationListModule } from '../list/list.module';
 import { IntegrationListPage } from './list-page.component';
-import { StoreModule } from '../../store/store.module';
+import { SyndesisStoreModule } from '../../store/store.module';
 
 xdescribe('IntegrationsListPage', () => {
   let component: IntegrationListPage;
@@ -22,7 +22,7 @@ xdescribe('IntegrationsListPage', () => {
       TestBed.configureTestingModule({
         imports: [
           SyndesisCommonModule.forRoot(),
-          StoreModule,
+          SyndesisStoreModule,
           RouterTestingModule.withRoutes([]),
           ModalModule.forRoot(),
           TooltipModule.forRoot(),

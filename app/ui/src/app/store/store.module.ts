@@ -17,11 +17,11 @@ import { TestSupportService } from './test-support.service';
 
 @NgModule({
   providers: [
+    EventsService,
     ActionService,
     ConnectionService,
     ConnectorService,
     IntegrationService,
-    EventsService,
     ExtensionService,
     ExtensionStore,
     ActionStore,
@@ -34,11 +34,11 @@ import { TestSupportService } from './test-support.service';
     OAuthAppStore
   ]
 })
-export class StoreModule {
-  constructor(@Optional() @SkipSelf() parentModule: StoreModule) {
+export class SyndesisStoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: SyndesisStoreModule) {
     if (parentModule) {
       throw new Error(
-        'StoreModule is already loaded. Import it in the AppModule only'
+        'SyndesisStoreModule is already loaded. Import it in the AppModule only'
       );
     }
   }

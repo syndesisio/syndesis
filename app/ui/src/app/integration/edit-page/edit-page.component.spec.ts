@@ -10,7 +10,7 @@ import { CurrentFlowService,
   FlowViewStepComponent,
   IntegrationEditPage } from '@syndesis/ui/integration/edit-page';
 import { ConnectionsListComponent } from '../../connections/list/list.component';
-import { StoreModule } from '@syndesis/ui/store';
+import { SyndesisStoreModule } from '@syndesis/ui/store';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule, PopoverModule } from 'ngx-bootstrap';
@@ -31,7 +31,7 @@ describe('IntegrationsEditComponent', () => {
           RouterTestingModule.withRoutes([]),
           PopoverModule.forRoot(),
           CollapseModule.forRoot(),
-          StoreModule,
+          SyndesisStoreModule,
           ToolbarModule
         ],
         declarations: [

@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { SyndesisCommonModule } from '../../../common/common.module';
 import { ListActionsComponent } from './list-actions.component';
-import { StoreModule } from '../../../store/store.module';
+import { SyndesisStoreModule } from '../../../store/store.module';
 
 describe('ListActionsComponent', () => {
   let component: ListActionsComponent;
@@ -16,7 +16,7 @@ describe('ListActionsComponent', () => {
         imports: [
           SyndesisCommonModule,
           RouterTestingModule.withRoutes([]),
-          StoreModule
+          SyndesisStoreModule
         ],
         declarations: [ListActionsComponent]
       }).compileComponents();

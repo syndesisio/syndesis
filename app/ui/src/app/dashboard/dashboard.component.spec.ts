@@ -11,7 +11,7 @@ import { ApiModule } from '@syndesis/ui/api';
 import { CoreModule } from '@syndesis/ui/core';
 import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration';
-import { StoreModule as LegacyStoreModule } from '@syndesis/ui/store';
+import { SyndesisStoreModule } from '@syndesis/ui/store';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardEmptyComponent } from './dashboard_empty';
@@ -42,7 +42,7 @@ xdescribe('DashboardComponent', () => {
           RouterTestingModule.withRoutes([]),
           NotificationModule,
           IntegrationListModule,
-          LegacyStoreModule
+          SyndesisStoreModule
         ],
         declarations: [
           DashboardMetricsComponent,

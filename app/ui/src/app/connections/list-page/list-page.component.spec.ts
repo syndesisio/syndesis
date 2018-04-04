@@ -7,7 +7,7 @@ import { NotificationModule } from 'patternfly-ng';
 
 import { TestApiModule } from '@syndesis/ui/api/testing';
 
-import { StoreModule } from '../../store/store.module';
+import { SyndesisStoreModule } from '../../store/store.module';
 import { SyndesisCommonModule } from '../../common/common.module';
 import { PatternflyUIModule } from '../../common/ui-patternfly/ui-patternfly.module';
 import { ConnectionsListPage } from './list-page.component';
@@ -23,7 +23,7 @@ describe('ConnectionListPage', () => {
         imports: [
           TestApiModule,
           SyndesisCommonModule.forRoot(),
-          StoreModule,
+          SyndesisStoreModule,
           RouterTestingModule.withRoutes([]),
           ModalModule.forRoot(),
           BsDropdownModule.forRoot(),

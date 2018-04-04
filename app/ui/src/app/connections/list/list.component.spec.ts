@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NotificationModule } from 'patternfly-ng';
-import { StoreModule } from '../../store/store.module';
+import { SyndesisStoreModule } from '../../store/store.module';
 
 import { SyndesisCommonModule } from '../../common/common.module';
 import { ConnectionsListComponent } from './list.component';
@@ -27,7 +27,7 @@ describe('ConnectionsListComponent', () => {
           RouterTestingModule.withRoutes([]),
           ModalModule.forRoot(),
           BsDropdownModule.forRoot(),
-          StoreModule,
+          SyndesisStoreModule,
           NotificationModule
         ],
         declarations: [ConnectionsListComponent]

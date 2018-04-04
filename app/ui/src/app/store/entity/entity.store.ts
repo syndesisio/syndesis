@@ -41,6 +41,8 @@ export abstract class AbstractStore<
     initialList: L,
     initialCurrent: T,
   ) {
+    // TODO: trigger event service to start in case it hasn't, though it should
+    this.eventService.start();
     this._list = new BehaviorSubject<L>(initialList);
     this._current = new BehaviorSubject<T>(initialCurrent);
     this.changeEvents = this.setChangeEventsFilter(this.eventService.changeEvents);
@@ -80,9 +82,9 @@ export abstract class AbstractStore<
     return Observable.merge(
       this._current,
       this.changeEvents.filter(event => {
-        return event.id === this.currentId;
+        return event.id.startsWith(this.currentId);
       }).flatMap(event => {
-        return this.service.get(event.id);
+        return this.service.get(this.currentId);
       }),
     );
   }
