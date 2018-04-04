@@ -322,7 +322,7 @@
       "name": "Request response using messages",
       "description": "Send data to the destination you specify and receive a response.",
       "tags": [],
-      "pattern": "To",
+      "pattern": "Pipe",
       "actionType": "connector",
       "descriptor": {
         "componentScheme": "sjms",

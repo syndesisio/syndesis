@@ -56,7 +56,7 @@ public interface Action extends WithResourceId, WithKind, WithName, WithTags, Wi
     String TYPE_CONNECTOR = "connector";
     String TYPE_STEP = "step";
 
-    enum Pattern { From, To }
+    enum Pattern { From, Pipe, To }
 
     @Override
     default Kind getKind() {

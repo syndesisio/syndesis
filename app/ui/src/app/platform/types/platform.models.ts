@@ -171,7 +171,7 @@ export type DataShapes = Array<DataShape>;
 
 export interface Action extends BaseEntity {
   actionType: string;
-  pattern: 'From' | 'To';
+  pattern: 'From' | 'Pipe' | 'To';
   descriptor: ActionDescriptor;
   connectorId: string;
   description: string;
