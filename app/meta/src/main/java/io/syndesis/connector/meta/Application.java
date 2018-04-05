@@ -38,6 +38,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
  * @author roland
  * @since 20/03/2017
  */
+@SuppressWarnings("PMD.UseUtilityClass")
 @SpringBootApplication
 public class Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);

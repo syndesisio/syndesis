@@ -71,8 +71,8 @@
     <camel.version>2.21.0</camel.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
-    <dep.plugin.pmd.version>3.8</dep.plugin.pmd.version>
-    <dep.pmd.version>5.8.1</dep.pmd.version>
+    <dep.plugin.pmd.version>3.9.0</dep.plugin.pmd.version>
+    <dep.pmd.version>6.2.0</dep.pmd.version>
     <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
     <dep.plugin.failsafe.version>2.21.0</dep.plugin.failsafe.version> <!-- SUREFIRE-1422 -->
 
@@ -581,7 +581,7 @@
         <plugin>
           <artifactId>maven-pmd-plugin</artifactId>
           <configuration>
-            <analysisCache>true</analysisCache>
+            <analysisCache>false</analysisCache>
             <printFailingErrors>true</printFailingErrors>
             <rulesets>
               <ruleset>/syndesis/ruleset.xml</ruleset>
