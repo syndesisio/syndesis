@@ -83,7 +83,7 @@ minishift::run() {
 
         create_oauthclient "$(readopt --tag)" "$(hasflag --local)"
 
-        create_and_apply_template "syndesis.$(minishift ip).nip.io" "$(select_template true)"
+        create_and_apply_template "syndesis.$(minishift ip).nip.io" "https://$(minishift ip):8443/console" "$(select_template true)"
 
         wait_for_syndesis_to_be_ready
         patch_imagestreams_for_initial_image

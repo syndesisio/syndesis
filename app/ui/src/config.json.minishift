@@ -4,6 +4,8 @@
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
   "metricsPollingInterval": 5000,
+  "consoleUrl": "https://192.168.64.2:8443/console",
+  "project": "syndesis",
   "branding": {
     "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
     "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",

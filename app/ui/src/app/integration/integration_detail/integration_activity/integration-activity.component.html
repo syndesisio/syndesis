@@ -1,4 +1,7 @@
 <div class="integration-activity__toolbar">
+  <p class="integration-activity__toolbar-text" *ngIf='openshiftConsoleURL'>
+    <a href="{{openshiftConsoleURL}}" target="integration-logs">View Log in OpenShift</a> |
+  </p>
   <p class="integration-activity__toolbar-text">Last refresh today at {{ lastRefresh | date: 'mediumTime' }}</p>
   <syndesis-button theme="default" (click)="fetchActivities()" type="button" [loading]="onRefresh" class="is-margin-reset">
     Refresh

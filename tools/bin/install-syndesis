@@ -15,11 +15,12 @@ display_usage() {
   cat <<EOT
 Syndesis Installation Tool (standalone)
 
-Usage: syndesis-install --route <hostname> [options]
+Usage: syndesis-install --route <hostname> --console <console-url> [options]
 
 with options:
 
--r --route <host>            The route to install. If not given, the route is tried to be auto detected
+-r --route <host>            The route to install or "auto" to generate a default route based on OpenShift configuration (mandatory)
+   --console <console-url>   The URL to the openshift console
 -t --tag <tag>               Optional version to use for the installaton ("latest" by default)
 -p --project <project>       Install into this project. The project will be deleted
                              if it already exists. By default, install into the current project (without deleting)
@@ -71,8 +72,9 @@ create_oauthclient() {
 
 create_and_apply_template() {
     local route=$1
-    local template=${2:-syndesis}
-    local tag=${3:-}
+    local console=$2
+    local template=${3:-syndesis}
+    local tag=${4:-}
 
     if [ -z "$route" ]; then
         echo "No route given"
@@ -85,6 +87,7 @@ create_and_apply_template() {
 
     oc new-app --template "$(get_template_name $template $tag)"\
       -p ROUTE_HOSTNAME="${route}" \
+      -p OPENSHIFT_CONSOLE_URL="$console" \
       -p OPENSHIFT_MASTER="$(oc whoami --show-server)" \
       -p OPENSHIFT_PROJECT="$(oc project -q)" \
       -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
@@ -227,9 +230,10 @@ fi
 
 tag=$(readopt --tag -t)
 route=$(readopt --route -r)
+console=$(readopt --console)
 
 # Main code
-if [ -z "$route" ] || [ $(hasflag --help -h) ]; then
+if [ -z "$route" ] ||[ $(hasflag --help -h) ]; then
     display_usage
     exit 0
 fi
@@ -249,7 +253,7 @@ fi
 create_oauthclient "$tag"
 
 # Apply a template, based on the given arguments
-create_and_apply_template "$route" "" "$tag"
+create_and_apply_template "$route" "$console" "" "$tag"
 
 if [ $(hasflag --watch -w) ] || [ $(hasflag --open -o) ]; then
     wait_for_syndesis_to_be_ready
