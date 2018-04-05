@@ -154,8 +154,8 @@
        *ngIf="loggedIn">
     <ul class="list-group" role="list">
       <li class="list-group-item"
-          routerLinkActive="active">
-        <a routerLink="dashboard" role="link">
+          routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="/" role="link">
           <span class="fa fa-tachometer"
                 data-toggle="tooltip"
                 title="Dashboard"></span>
