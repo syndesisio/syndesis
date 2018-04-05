@@ -1,11 +1,11 @@
 @import 'syndesis-sass';
 
 .step-block {
-  white-space: nowrap;
   height: 100px;
-  min-width: 120px;
+  width: 120px;
   vertical-align: top;
   position: relative;
+  padding: 0 10px;
 
   .connection {
     cursor: pointer;
@@ -18,7 +18,7 @@
       padding-top: 12px;
 
       .icon {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
     }
   }
@@ -50,8 +50,7 @@
     padding: 11px;
     width: 55px;
     height: 55px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 5px;    
     background-color: $color-pf-white;
 
     &.not-connection {
@@ -60,7 +59,7 @@
       padding: 5px 0px;
       border-radius: 100px;
       height: 33px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       width: 32px;
 
       .icon-line {

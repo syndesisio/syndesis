@@ -1,15 +1,18 @@
 <section class="integration-description">
-  <p *ngIf="integration.steps">
+  <div *ngIf="integration.steps">
     <ng-template ngFor let-step [ngForOf]="integration.steps" let-index="index" let-last="last">
       <div *ngIf="step" class="step-block inline-block text-center">
         <ng-container [ngSwitch]="step.stepKind">
           <ng-container *ngSwitchCase="'endpoint'">
-            <div id="{{ step.connection.name | synSlugify }}" class="text-center connection" (click)="onViewDetails(step)" title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
+            <div id="{{ step.connection.name | synSlugify }}"
+              class="text-center connection" 
+              (click)="onViewDetails(step)" 
+              title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
               <div [class]="'step-line ' + getStepLineClass(index)"></div>
               <div class="icon">
                 <img class="syn-icon-small" [src]="step.connection | synIconPath">
               </div>
-              <div>{{ step.connection.name | capitalize }}</div>
+              <div class="syn-truncate__ellipsis">{{ step.connection.name | capitalize }}</div>
             </div>
           </ng-container>
           <ng-container *ngSwitchDefault>
@@ -25,7 +28,7 @@
         <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
       </div>
     </ng-template>
-  </p>
+  </div>
   <p>
     <syndesis-editable-textarea
       [value]="integration.description"
