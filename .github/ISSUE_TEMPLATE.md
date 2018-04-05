@@ -1,5 +1,5 @@
 ## This is a...
-<!-- Check one of the following options with "x" -->
+<!-- Check ONLY one of the following options with "x" -->
 <pre><code>
 [ ] Feature request
 [ ] Regression (a behavior that used to work and stopped working in a new release)
