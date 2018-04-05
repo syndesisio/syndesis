@@ -26,7 +26,8 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "labelHint": "User name for connecting to the FTP server"
+            "labelHint": "User name for connecting to the FTP server",
+            "order": "3"
         },
         "host": {
             "kind": "path",
@@ -37,7 +38,8 @@
             "javaType": "java.lang.String",
             "deprecated": false,
             "secret": false,
-            "labelHint": "Host name of the FTP server to connect to"
+            "labelHint": "Host name of the FTP server to connect to",
+            "order": "1"
         },
         "port": {
             "kind": "path",
@@ -49,7 +51,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "21",
-            "labelHint": "FTP port"
+            "labelHint": "FTP port",
+            "order": "2"
         },
         "password": {
             "kind": "parameter",
@@ -61,7 +64,8 @@
             "deprecated": false,
             "secret": true,
             "raw": true,
-            "labelHint": "Password for connecting to the FTP server"
+            "labelHint": "Password for connecting to the FTP server",
+            "order": "4"
         },
         "timeout": {
             "kind": "parameter",
@@ -73,7 +77,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "30000",
-            "labelHint": "Maximum number of milliseconds to wait for a reply"
+            "labelHint": "Maximum number of milliseconds to wait for a reply",
+            "order": "11"
         },
         "connectTimeout": {
             "kind": "parameter",
@@ -85,7 +90,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "10000",
-            "labelHint": "Maximum number of milliseconds to wait for a connection to be established"
+            "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+            "order": "5"
         },
         "reconnectDelay": {
             "kind": "parameter",
@@ -97,7 +103,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "1000",
-            "labelHint": "Number of milliseconds to wait before trying to reconnect"
+            "labelHint": "Number of milliseconds to wait before trying to reconnect",
+            "order": "6"
         },
         "maximumReconnectAttempts": {
             "kind": "parameter",
@@ -109,7 +116,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "3",
-            "labelHint": "Try to reconnect no more than this many times"
+            "labelHint": "Try to reconnect no more than this many times",
+            "order": "7"
         },
         "binary": {
             "kind": "parameter",
@@ -131,7 +139,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "true",
-            "labelHint": "Indicate whether file transfer mode is binary"
+            "labelHint": "Indicate whether file transfer mode is binary",
+            "order": "8"
         },
         "passiveMode": {
             "kind": "parameter",
@@ -153,7 +162,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "true",
-            "labelHint": "Indicates whether passive connection mode is being used"
+            "labelHint": "Indicates whether passive connection mode is being used",
+            "order": "9"
         },
         "disconnect": {
             "kind": "parameter",
@@ -175,7 +185,8 @@
             "deprecated": false,
             "secret": false,
             "defaultValue": "false",
-            "labelHint": "Disconnect from the server after performing the action"
+            "labelHint": "Disconnect from the server after performing the action",
+            "order": "10"
         }
     },
     "actions": [
