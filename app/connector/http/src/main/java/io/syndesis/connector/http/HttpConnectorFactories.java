@@ -107,7 +107,7 @@ public final class HttpConnectorFactories {
 
         String path = (String) options.remove("path");
         if (StringUtils.isNotEmpty(path)) {
-            if (path.charAt(0) != '/') {
+            if (!path.startsWith("/")) {
                 path = "/" + path;
             }
 
