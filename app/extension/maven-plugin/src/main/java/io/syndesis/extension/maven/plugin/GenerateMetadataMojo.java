@@ -83,7 +83,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
  * @author pantinor
  */
 @Mojo(name = "generate-metadata", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
-@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields" })
+@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods" })
 public class GenerateMetadataMojo extends AbstractMojo {
     public enum InspectionMode {
         RESOURCE,
@@ -125,6 +125,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
     private String tags;
 
     @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
+    @SuppressWarnings("PMD.ImmutableField")
     private InspectionMode inspectionMode = InspectionMode.RESOURCE_AND_SPECIFICATION;
 
     /**

@@ -252,6 +252,7 @@ class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
                 jg.writeBoolean(false);
                 break;
             default:
+                break;
         }
     }
 

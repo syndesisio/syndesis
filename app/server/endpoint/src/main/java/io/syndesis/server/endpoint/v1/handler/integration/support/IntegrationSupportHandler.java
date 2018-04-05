@@ -61,7 +61,6 @@ import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.jsondb.CloseableJsonDB;
 import io.syndesis.server.jsondb.JsonDB;
@@ -92,7 +91,6 @@ public class IntegrationSupportHandler {
     private final DataManager dataManager;
     private final IntegrationResourceManager resourceManager;
     private final IntegrationHandler integrationHandler;
-    private final ConnectionHandler connectionHandler;
     private final FileDataManager extensionDataManager;
 
     public IntegrationSupportHandler(
@@ -102,7 +100,6 @@ public class IntegrationSupportHandler {
         final DataManager dataManager,
         final IntegrationResourceManager resourceManager,
         final IntegrationHandler integrationHandler,
-        final ConnectionHandler connectionHandler,
         final FileDataManager extensionDataManager) {
         this.migrator = migrator;
         this.jsonDB = jsonDB;
@@ -111,7 +108,6 @@ public class IntegrationSupportHandler {
         this.dataManager = dataManager;
         this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
-        this.connectionHandler = connectionHandler;
         this.extensionDataManager = extensionDataManager;
     }
 
@@ -317,7 +313,7 @@ public class IntegrationSupportHandler {
         return result;
     }
 
-    private  void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, ArrayList<ChangeEvent> result) {
+    private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, List<ChangeEvent> result) {
         for (Integration integration : export.fetchAll().getItems()) {
             Integration.Builder builder = new Integration.Builder()
                 .createFrom(integration)
@@ -340,7 +336,7 @@ public class IntegrationSupportHandler {
         }
     }
 
-    private <T extends WithId<T>> void importModels(JsonDbDao<T> export, ArrayList<ChangeEvent> result) {
+    private <T extends WithId<T>> void importModels(JsonDbDao<T> export, List<ChangeEvent> result) {
         for (T item : export.fetchAll().getItems()) {
             Kind kind = item.getKind();
             String id = item.getId().get();

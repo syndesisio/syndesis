@@ -101,7 +101,7 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
         }
 
         @Override
-        public final void process(final Exchange exchange) {
+        public void process(final Exchange exchange) {
             if (exchange.isFailed()) {
                 return;
             }
