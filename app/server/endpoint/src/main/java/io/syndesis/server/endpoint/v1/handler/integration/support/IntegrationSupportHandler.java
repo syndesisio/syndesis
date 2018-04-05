@@ -332,7 +332,6 @@ public class IntegrationSupportHandler {
                 integrationHandler.update(id, builder.version(previous.getVersion()+1).build());
                 result.add(ChangeEvent.of("updated", integration.getKind().getModelName(), id));
             }
-            break;
         }
     }
 
