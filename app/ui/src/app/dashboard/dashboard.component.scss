@@ -8,11 +8,13 @@
   }
 
   &__actions {
-    justify-content: flex-end;
-
     .btn {
       margin-left: 10px;
     }
+  }
+
+  &__view-all {
+    vertical-align: middle;
   }
 
   &__title {

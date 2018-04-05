@@ -16,7 +16,7 @@
       <div class="row row-cards-pf syndesis-dashboard__row">
 
         <!-- Top Integrations -->
-        <div class="col-xs-7 top-integrations">
+        <div class="col-md-7 top-integrations">
           <div class="card-pf">
             <div class="card-pf-heading">
               <p class="card-pf-heading-details">Last 30 days</p>
@@ -30,7 +30,7 @@
           </div>
         </div>
 
-        <div class="col-xs-5">
+        <div class="col-md-5">
           <!-- Integration Board -->
           <div class="card-pf integration-board">
             <div class="card-pf-heading">
@@ -59,17 +59,17 @@
                 <div class="update col-xs-12"
                      *ngIf="i<5"
                      (click)="goto(integration)">
-                  <div class="col-xs-5">
+                  <div class="col-sm-5">
                     <a [routerLink]=" ['/integrations', integration.id] ">
                   {{ integration.name }}
                 </a>
                   </div>
-                  <div class="col-xs-3">
+                  <div class="col-sm-3">
                     <span [ngClass]="'label ' + getLabelClass(integration)">
                   {{ integration.currentState }}
                 </span>
                   </div>
-                  <div class="col-xs-4">
+                  <div class="col-sm-4">
                     {{ integration.lastUpdated | date:'d MMM HH:MM' }}
                   </div>
                 </div>

@@ -1,9 +1,9 @@
 <!-- Connections Header & Toolbar -->
 <div class="container-fluid">
-  <div class="row vertical-align syndesis-dashboard__header">
-      <h1 class="col-xs-6 syndesis-dashboard__title">Connections</h1>
-      <div class="col-xs-6 syndesis-dashboard__actions" *ngIf="connections?.length">
-        <a href="#" [routerLink]="['/connections']">View All Connections</a>&nbsp;&nbsp;
+  <div class="row syndesis-dashboard__header">
+      <h1 class="col-sm-6 syndesis-dashboard__title">Connections</h1>
+      <div class="col-sm-6 syndesis-dashboard__actions text-right" *ngIf="connections?.length">
+        <a href="#" [routerLink]="['/connections']" class="syndesis-dashboard__view-all">View All Connections</a>&nbsp;&nbsp;
         <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
       </div>
   </div>
@@ -28,7 +28,7 @@
       <div class="row row-cards-pf">
 
         <!-- Each Connection's Card Container -->
-        <div class="col-xs-12 col-sm-3 col-md-2 card"
+        <div class="col-sm-6 col-md-3 card"
              *ngFor="let connection of connections; let i = index">
 
           <!-- Connection Card -->
@@ -45,14 +45,14 @@
               </div>
 
               <!-- Card Name -->
-              <h2 class="card-pf-title text-center"
+              <h2 class="card-pf-title text-center syn-truncate__ellipsis"
                   title="{{ connection.name }}">
-                {{ connection.name | truncate : '20' : truncateTrail }}
+                {{ connection.name }}
               </h2>
 
               <!-- Card Description / Item Overview -->
-              <p class="card-pf-info text-center">
-                {{ connection.description | truncate : '100' : truncateTrail }}
+              <p class="card-pf-info text-center" title="{{ connection.description }}">
+                {{ connection.description | truncate : '50' : truncateTrail }}
               </p>
             </div>
           </div>
