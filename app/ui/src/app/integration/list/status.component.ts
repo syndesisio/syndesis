@@ -42,10 +42,6 @@ export class IntegrationStatusComponent {
         return 'primary';
       case 'Unpublished':
         return 'inactive';
-      case 'Unpublished':
-        return 'danger';
-      case 'Draft':
-        return 'warning';
       default:
         return currentState;
     }
@@ -57,8 +53,6 @@ export class IntegrationStatusComponent {
         return 'Published';
       case 'Unpublished':
         return 'Unpublished';
-      case 'Pending':
-        return 'Publishing';
       default:
         return currentState;
     }

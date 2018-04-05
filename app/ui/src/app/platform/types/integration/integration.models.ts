@@ -36,7 +36,7 @@ export interface IntegrationOverview extends BaseEntity, WithLeveledMessages {
   version?: number;
   tags: Array<string>;
   description?: string;
-  draft: boolean;
+  isDraft: boolean;
   deployments?: Array<DeploymentOverview>;
   currentState: IntegrationStatus;
   targetState: IntegrationStatus;
