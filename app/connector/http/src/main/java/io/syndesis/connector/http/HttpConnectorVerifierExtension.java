@@ -29,8 +29,8 @@ import org.apache.camel.util.StringHelper;
 import org.apache.commons.lang3.StringUtils;
 
 public class HttpConnectorVerifierExtension extends DefaultComponentVerifierExtension {
-    private final String componentScheme;
-    private final String supportedScheme;
+    private String componentScheme;
+    private String supportedScheme;
 
     public HttpConnectorVerifierExtension(String componentScheme, String supportedScheme, CamelContext context) {
         super(componentScheme, context);
@@ -62,7 +62,7 @@ public class HttpConnectorVerifierExtension extends DefaultComponentVerifierExte
 
         String path = (String) options.remove("path");
         if (ObjectHelper.isNotEmpty(path)) {
-            if (path.charAt(0) != '/') {
+            if (!path.startsWith("/")) {
                 path = "/" + path;
             }
 

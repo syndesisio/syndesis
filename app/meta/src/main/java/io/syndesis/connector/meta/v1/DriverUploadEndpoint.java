@@ -80,7 +80,7 @@ public class DriverUploadEndpoint {
 
     private void storeFile(String location, MultipartFormDataInput dataInput) {
         // Store the artifact into /deployments/ext
-        try (InputStream is = getBinaryArtifact(dataInput)) {
+        try (final InputStream is = getBinaryArtifact(dataInput)) {
             final File file = new File(location);
 
             Files.copy(is, file.toPath(), StandardCopyOption.REPLACE_EXISTING);

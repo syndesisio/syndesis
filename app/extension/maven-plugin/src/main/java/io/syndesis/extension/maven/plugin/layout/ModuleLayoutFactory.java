@@ -32,7 +32,7 @@ public class ModuleLayoutFactory implements LayoutFactory {
             LibraryScope.CUSTOM)
     );
 
-    private final boolean filterDestinationScopes;
+    private boolean filterDestinationScopes;
 
     public ModuleLayoutFactory(boolean filterDestinationScopes) {
         this.filterDestinationScopes = filterDestinationScopes;
