@@ -105,7 +105,8 @@
         </div>
       </ng-container>
       <ng-container *ngIf="showNewConnection && connections.length > 0">
-        <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6" (click)="onSelect(undefined, $event)">
+        <syndesis-empty-state-card class="col-lg-3 col-md-4 col-sm-6" 
+          (click)="onSelect(undefined, $event)">
           <div class="empty-state-card__header">
             <span class="card-pf-icon-large pficon pficon-add-circle-o"></span>
           </div>
