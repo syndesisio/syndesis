@@ -6,18 +6,17 @@
       <span class="pficon pficon-ok"></span>
       <strong>{{ 'settings.oauth-apps.form.success.msg' | synI18n }}</strong>
       <span [innerHtml]="
-            'settings.oauth-apps.form.success.action.msg' | synI18n: [
-              ('settings.oauth-apps.form.success.action.link' | synI18n: '/connections/create'),
-              item.client.name
-            ]
-          ">
-      </span>
+        'settings.oauth-apps.form.success.action.msg' | synI18n: [
+          ('settings.oauth-apps.form.success.action.link' | synI18n: '/connections/create'),
+          item.client.name
+        ]
+      "></span>
     </div>
     <div class="alert alert-warning"
          *ngIf="error">
       <span class="pficon pficon-warning-triangle"></span>
       <strong>{{ 'settings.oauth-apps.form.warning.msg' | synI18n }}</strong>
-      <pre>{{ 'settings.oauth-apps.form.warning.jsondump' | synI18n: (error | json) }}</pre>
+      <pre>{{ error | json }}</pre>
     </div>
     <form class="form-horizontal"
           [formGroup]="formGroup">

@@ -19,9 +19,17 @@
         <div class="col-md-7 top-integrations">
           <div class="card-pf">
             <div class="card-pf-heading">
-              <p class="card-pf-heading-details">{{ 'dashboard.integrations.top-integrations.heading-details' | synI18n }}</p>
+              <p class="card-pf-heading-details">
+                {{ 'last-n-items' | synI18n: [
+                  ('30' | synI18n),
+                  (('days' | synI18n) | lowercase)
+                ] }}
+              </p>
               <h2 class="card-pf-title">
-                {{ 'dashboard.integrations.top-integrations.heading' | synI18n }}
+                {{ 'top-n-items' | synI18n: [
+                  ('5' | synI18n),
+                  ('integrations.integrations' | synI18n)
+                ] }}
               </h2>
             </div>
             <div class="card-pf-body">

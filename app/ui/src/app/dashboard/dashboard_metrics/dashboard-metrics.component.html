@@ -5,7 +5,7 @@
         {{ 'dashboard.metrics.sysmetrics' | synI18n }}
       </h1>
       <div class="col-sm-6 syndesis-dashboard__actions text-right" *ngIf="integrationState.collection?.length > 0">
-        <a routerLink="/integrations" class="syndesis-dashboard__view-all">{{ 'dashboard.metrics.viewall' | synI18n }}</a>&nbsp;&nbsp;
+        <a routerLink="/integrations" class="syndesis-dashboard__view-all">{{ 'viewall' | synI18n: ('integrations.integrations' | synI18n) }}</a>&nbsp;&nbsp;
         <button class="btn btn-primary" routerLink="/integrations/create">
           {{ 'dashboard.metrics.create' | synI18n }}
         </button>

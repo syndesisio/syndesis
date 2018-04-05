@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { OAuthAppStore } from '../../store/oauthApp/oauth-app.store';
 import { OAuthApp, OAuthApps } from '@syndesis/ui/settings';
 import { Observable } from 'rxjs/Observable';
@@ -70,7 +71,8 @@ export class OAuthAppsComponent implements OnInit {
 
   constructor(
     public store: OAuthAppStore,
-    public config: ConfigService
+    public config: ConfigService,
+    private router: Router
   ) {
     this.loading = store.loading;
     this.list = store.list;
@@ -102,6 +104,17 @@ export class OAuthAppsComponent implements OnInit {
       client.clientId !== '' &&
       (client.clientSecret && client.clientSecret !== '')
     );
+  }
+
+  handleLinks(event: any): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (event.target &&
+        event.target.tagName &&
+        event.target.tagName.toLowerCase() === 'a') {
+      window.open(event.target.getAttribute('href'), '_blank');
+    }
   }
 
   // view initialization
