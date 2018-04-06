@@ -3,7 +3,7 @@
   <div class="row syndesis-dashboard__header">
       <h1 class="col-sm-6 syndesis-dashboard__title">Connections</h1>
       <div class="col-sm-6 syndesis-dashboard__actions text-right" *ngIf="connections?.length">
-        <a href="#" [routerLink]="['/connections']" class="syndesis-dashboard__view-all">View All Connections</a>&nbsp;&nbsp;
+        <a [routerLink]="['/connections']" class="syndesis-dashboard__view-all">View All Connections</a>&nbsp;&nbsp;
         <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
       </div>
   </div>
@@ -51,7 +51,7 @@
               </h2>
 
               <!-- Card Description / Item Overview -->
-              <p class="card-pf-info text-center" title="{{ connection.description }}">
+              <p class="card-pf-info text-center" [attr.title]="connection.description">
                 {{ connection.description | truncate : '50' : truncateTrail }}
               </p>
             </div>
