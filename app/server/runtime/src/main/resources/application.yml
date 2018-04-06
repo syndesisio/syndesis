@@ -75,9 +75,10 @@ resource:
   update:
     controller:
       enabled: true
-      initial-interval: 30
-      check-interval: 60
-      interval-unit: SECONDS
+      scheduler:
+        enabled: true
+        interval: 60
+        interval-unit: SECONDS
 
 # OpenShift infra value
 openshift:

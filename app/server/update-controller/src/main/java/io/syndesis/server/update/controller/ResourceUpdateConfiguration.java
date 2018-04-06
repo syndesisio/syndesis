@@ -24,14 +24,8 @@ public class ResourceUpdateConfiguration {
     // Enable/Disable connector upgrades checks
     private boolean enabled;
 
-    // Initial check interval
-    private long initialInterval = 30;
-
     // Interval between check
-    private long checkInterval = 60;
-
-    // Time unit for check interval
-    private TimeUnit intervalUnit = TimeUnit.SECONDS;
+    private Scheduler scheduler = new Scheduler();
 
     public boolean isEnabled() {
         return enabled;
@@ -41,27 +35,42 @@ public class ResourceUpdateConfiguration {
         this.enabled = enabled;
     }
 
-    public long getInitialInterval() {
-        return initialInterval;
+    public Scheduler getScheduler() {
+        return scheduler;
     }
 
-    public void setInitialInterval(long initialInterval) {
-        this.initialInterval = initialInterval;
-    }
+    public static class Scheduler {
+        // Enable/Disable connector upgrades scheduler
+        private boolean enabled = true;
 
-    public long getCheckInterval() {
-        return checkInterval;
-    }
+        // Interval between check
+        private long interval = 60;
 
-    public void setCheckInterval(long checkInterval) {
-        this.checkInterval = checkInterval;
-    }
+        // Time unit for check interval
+        private TimeUnit intervalUnit = TimeUnit.SECONDS;
 
-    public TimeUnit getIntervalUnit() {
-        return intervalUnit;
-    }
+        public boolean isEnabled() {
+            return enabled;
+        }
 
-    public void setIntervalUnit(TimeUnit intervalUnit) {
-        this.intervalUnit = intervalUnit;
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public long getInterval() {
+            return interval;
+        }
+
+        public void setInterval(long interval) {
+            this.interval = interval;
+        }
+
+        public TimeUnit getIntervalUnit() {
+            return intervalUnit;
+        }
+
+        public void setIntervalUnit(TimeUnit intervalUnit) {
+            this.intervalUnit = intervalUnit;
+        }
     }
 }
