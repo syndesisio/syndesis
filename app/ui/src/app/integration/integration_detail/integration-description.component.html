@@ -1,39 +1,34 @@
 <section class="integration-description">
-  <div *ngIf="integration.steps">
-    <ng-template ngFor let-step [ngForOf]="integration.steps" let-index="index" let-last="last">
-      <div *ngIf="step" class="step-block inline-block text-center">
-        <ng-container [ngSwitch]="step.stepKind">
-          <ng-container *ngSwitchCase="'endpoint'">
-            <div id="{{ step.connection.name | synSlugify }}"
-              class="text-center connection" 
-              (click)="onViewDetails(step)" 
-              title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
-              <div [class]="'step-line ' + getStepLineClass(index)"></div>
-              <div class="icon">
-                <img class="syn-icon-small" [src]="step.connection | synIconPath">
-              </div>
-              <div class="syn-truncate__ellipsis">{{ step.connection.name | capitalize }}</div>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <div id="{{ (step.name || step.stepKind) | synSlugify }}" class="text-center step">
-              <div class="step-line"></div>
-              <div class="icon not-connection">
-                <div class="icon-line"></div>
-              </div>
-              <div>{{ stepStore.getStepName(step) }}</div>
-            </div>
-          </ng-container>
-        </ng-container>
-        <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
+  <div *ngFor="let step of integration?.steps; let index=index; let last=last"
+        class="step-block inline-block text-center">
+    <ng-container [ngSwitch]="step.stepKind">
+      <div *ngSwitchCase="'endpoint'"
+            id="{{ step.connection.name | synSlugify }}"
+            class="text-center connection" 
+            (click)="onViewDetails(step)" 
+            title="{{ step.connection.name }}&nbsp;{{ step.action.name }}">
+        <div [class]="'step-line ' + getStepLineClass(index)"></div>
+        <div class="icon">
+          <img class="syn-icon-small" [src]="step.connection | synIconPath">
+        </div>
+        <div class="syn-truncate__ellipsis">{{ step.connection.name | capitalize }}</div>
       </div>
-    </ng-template>
+      <div *ngSwitchDefault
+            id="{{ (step.name || step.stepKind) | synSlugify }}"
+            class="text-center step">
+        <div class="step-line"></div>
+        <div class="icon not-connection">
+          <div class="icon-line"></div>
+        </div>
+        <div>{{ stepStore.getStepName(step) }}</div>
+      </div>
+    </ng-container>
+    <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
   </div>
   <p>
-    <syndesis-editable-textarea
-      [value]="integration.description"
-      placeholder="No description set..."
-      (onSave)="onAttributeUpdated('description', $event)">
+    <syndesis-editable-textarea [value]="integration.description"
+                                placeholder="No description set..."
+                                (onSave)="onAttributeUpdated('description', $event)">
     </syndesis-editable-textarea>
   </p>
 </section>
