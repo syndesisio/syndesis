@@ -28,7 +28,7 @@
             "order": "1",
             "labelHint": "The webhook URL used to send messages to"
         },
-        "sendingUsername": {
+        "username": {
             "kind": "parameter",
             "displayName": "Sending Username for messages",
             "group": "common",
