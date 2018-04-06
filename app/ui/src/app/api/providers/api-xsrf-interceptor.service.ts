@@ -17,7 +17,7 @@ export class ApiXsrfInterceptor implements HttpInterceptor {
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (httpRequest.method !== 'HEAD' && httpRequest.method !== 'GET' && httpRequest.url.startsWith('http')) {
       const token = this.tokenExtractor.getToken();
-      const { headerName } = environment.csrf;
+      const { headerName } = environment.xsrf;
 
       if (!!token && !httpRequest.headers.has(headerName)) {
         httpRequest = httpRequest.clone({ headers: httpRequest.headers.set(headerName, token) });

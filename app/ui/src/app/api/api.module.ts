@@ -14,7 +14,7 @@ export function endpointsLazyLoaderFactory(apiEndpoints: Endpoints, apiConfigSer
   imports: [
     CommonModule,
     HttpClientModule,
-    HttpClientXsrfModule.withOptions(environment.csrf)
+    HttpClientXsrfModule.withOptions(environment.xsrf)
   ],
 })
 export class ApiModule {
