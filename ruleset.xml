@@ -252,9 +252,6 @@
   <rule ref="rulesets/java/codesize.xml/TooManyFields">
     <priority>3</priority>
   </rule>
-  <rule ref="rulesets/java/controversial.xml/AvoidUsingVolatile">
-    <priority>3</priority>
-  </rule>
   <rule ref="rulesets/java/unnecessary.xml/UselessOverridingMethod">
     <priority>3</priority>
   </rule>
