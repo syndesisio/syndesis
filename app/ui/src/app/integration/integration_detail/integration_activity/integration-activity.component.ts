@@ -10,7 +10,8 @@ import { ConfigService } from '@syndesis/ui/config.service';
 @Component({
   selector: 'syndesis-integration-activity',
   templateUrl: './integration-activity.component.html',
-  styleUrls: ['./integration-activity.component.scss']
+  styleUrls: ['./integration-activity.component.scss'],
+  exportAs: 'integrationActivity'
 })
 export class IntegrationActivityComponent implements OnInit {
   @Input() integration: Integration;

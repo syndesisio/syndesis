@@ -59,7 +59,11 @@
           <a [routerLink]="['/integrations', integration.id]">Details</a>
         </li>
         <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'activity'">
-          <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'activity' }">Activity</a>
+          <a [routerLink]="['/integrations', integration.id]"
+            [queryParams]="{ view: 'activity' }"
+            (click)="integrationActivity.fetchActivities()">
+            Activity
+          </a>
         </li>
         <li class="syn-tabs__tab" [class.active]="(selectedTabbedView$ | async) == 'logs'" *ngIf="loggingEnabled">
           <a [routerLink]="['/integrations', integration.id]" [queryParams]="{ view: 'logs' }">Logs</a>
@@ -86,16 +90,17 @@
       </div>
 
       <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'logs'">
-        <syndesis-integration-logs [integration]=integration></syndesis-integration-logs>
+        <syndesis-integration-logs [integration]="integration"></syndesis-integration-logs>
       </div>
 
       <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'activity'">
-        <syndesis-integration-activity [integration]=integration></syndesis-integration-activity>
+        <syndesis-integration-activity [integration]="integration" #integrationActivity="integrationActivity">
+        </syndesis-integration-activity>
       </div>
 
       <div class="integration-detail__outlet" [hidden]="(selectedTabbedView$ | async) !== 'metrics'">
         <syndesis-integration-metrics
-          [integration]=integration
+          [integration]="integration"
           [integrationMetrics]="integrationMetrics$ | async"
           (refresh)="onRefreshMetrics()">
         </syndesis-integration-metrics>
