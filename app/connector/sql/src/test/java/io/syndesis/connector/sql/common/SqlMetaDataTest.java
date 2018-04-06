@@ -42,7 +42,7 @@ public class SqlMetaDataTest {
         }
 
         String select = "SELECT * FROM ALLTYPES where charType=:#myCharValue";
-        final SqlStatementParser sqlParser = new SqlStatementParser(db.connection, db.schema, select);
+        final SqlStatementParser sqlParser = new SqlStatementParser(db.connection, select);
         final SqlStatementMetaData paramInfo = sqlParser.parse();
 
         final DatabaseMetaData meta = db.connection.getMetaData();
@@ -71,7 +71,7 @@ public class SqlMetaDataTest {
         }
 
         final String sqlStatement = "INSERT INTO NAME2 VALUES (:#id, :#first, :#last)";
-        final SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema, sqlStatement);
+        final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
         final SqlStatementMetaData info = parser.parse();
 
         final List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(db.connection.getMetaData(), null, null, "NAME2",
@@ -92,7 +92,7 @@ public class SqlMetaDataTest {
         }
 
         final String sqlStatement = "INSERT INTO NAME3 (ID, FIRSTNAME, LASTNAME) VALUES (:#id, :#first, :#last)";
-        final SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema, sqlStatement);
+        final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
         final SqlStatementMetaData info = parser.parse();
 
         final List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(db.connection.getMetaData(), null, null, "NAME3",
@@ -112,7 +112,7 @@ public class SqlMetaDataTest {
         stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
 
         final String sqlStatement = "SELECT FIRSTNAME, LASTNAME FROM NAME WHERE ID=:#id";
-        final SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema, sqlStatement);
+        final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
         final SqlStatementMetaData info = parser.parse();
 
         final List<SqlParam> paramList = DatabaseMetaDataHelper.getOutputColumnInfo(db.connection, info.getDefaultedSqlStatement());

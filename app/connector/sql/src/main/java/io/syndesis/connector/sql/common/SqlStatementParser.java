@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SqlStatementParser {
 
     /*
@@ -39,16 +42,24 @@ public class SqlStatementParser {
      * table name
      */
     private final Connection connection;
-    private final String schema;
+    private String schema;
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
     private List<String> sqlArrayUpperCase = new ArrayList<>();
+    private final static Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
+
+    public SqlStatementParser(Connection connection, String sql) {
+        super();
+        statementInfo = new SqlStatementMetaData(sql.trim());
+        this.connection = connection;
+        getSchema(null);
+    }
 
     public SqlStatementParser(Connection connection, String schema, String sql) {
         super();
         statementInfo = new SqlStatementMetaData(sql.trim());
         this.connection = connection;
-        this.schema = schema;
+        this.schema = getSchema(schema);
     }
 
     public SqlStatementMetaData parseSelectOnly() throws SQLException {
@@ -61,7 +72,7 @@ public class SqlStatementParser {
         }
 
         if ("SELECT".equals(sqlArrayUpperCase.get(0))) {
-            parseSelect(meta);
+            parseSelect(meta, schema);
             if (! statementInfo.getInParams().isEmpty()) {
                 throw new SQLException("Your statement is invalid and cannot contain input parameters");
             }
@@ -82,16 +93,16 @@ public class SqlStatementParser {
 
         switch (sqlArrayUpperCase.get(0)) {
             case "INSERT":
-                parseInsert(meta);
+                parseInsert(meta, schema);
                 break;
             case "UPDATE":
-                parseUpdate(meta);
+                parseUpdate(meta, schema);
                 break;
             case "DELETE":
-                parseDelete(meta);
+                parseDelete(meta, schema);
                 break;
             case "SELECT":
-                parseSelect(meta);
+                parseSelect(meta, schema);
                 break;
             default:
                 throw new SQLException("Your statement is invalid and should start with INSERT, UPDATE, SELECT or DELETE");
@@ -99,7 +110,32 @@ public class SqlStatementParser {
         return statementInfo;
     }
 
-    private void parseInsert(DatabaseMetaData meta) throws SQLException {
+    private String getSchema(String userSchema) {
+        //if user set, then use that
+        if (userSchema != null) {
+            return userSchema;
+        }
+        try {
+            //try grabbing from the connection, not all drivers support this
+            return connection.getSchema();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(),e);
+        } catch (AbstractMethodError e) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(e.getMessage());
+            }
+        }
+        try {
+            //finally try setting reasonable default
+            DatabaseMetaData meta = connection.getMetaData();
+            return DatabaseMetaDataHelper.getDefaultSchema(meta.getDatabaseProductName(), meta.getUserName());
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(),e);
+        }
+        return null;
+    }
+    
+    private void parseInsert(DatabaseMetaData meta, String schema) throws SQLException {
         statementInfo.setStatementType(StatementType.INSERT);
         String tableNameInsert = statementInfo.addTable(sqlArrayUpperCase.get(2));
         if (! statementInfo.getTablesInSchema().contains(tableNameInsert)) {
@@ -119,7 +155,7 @@ public class SqlStatementParser {
         }
     }
 
-    private void parseUpdate(DatabaseMetaData meta) throws SQLException  {
+    private void parseUpdate(DatabaseMetaData meta, String schema) throws SQLException  {
         statementInfo.setStatementType(StatementType.UPDATE);
         String tableNameUpdate = statementInfo.addTable(sqlArrayUpperCase.get(1));
         if (! statementInfo.getTablesInSchema().contains(tableNameUpdate)) {
@@ -133,7 +169,7 @@ public class SqlStatementParser {
         }
     }
 
-    private void parseDelete(DatabaseMetaData meta) throws SQLException  {
+    private void parseDelete(DatabaseMetaData meta, String schema) throws SQLException  {
         statementInfo.setStatementType(StatementType.DELETE);
         String tableNameDelete = statementInfo.addTable(sqlArrayUpperCase.get(2));
         if (! statementInfo.getTablesInSchema().contains(tableNameDelete)) {
@@ -147,7 +183,7 @@ public class SqlStatementParser {
         }
     }
 
-    private void parseSelect(DatabaseMetaData meta) throws SQLException  {
+    private void parseSelect(DatabaseMetaData meta, String schema) throws SQLException  {
         statementInfo.setStatementType(StatementType.SELECT);
         List<String> tableNamesSelect = findTablesInSelectStatement();
         if (! tableNamesSelect.isEmpty()) {
