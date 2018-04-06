@@ -311,8 +311,10 @@ public class IntegrationHandler extends BaseHandler
         // add board
         DataManagerSupport.fetchBoard(dataManager, IntegrationBulletinBoard.class, id).ifPresent(builder::board);
 
-        // Default as draft
+        // Defaults
         builder.isDraft(true);
+        builder.currentState(IntegrationDeploymentState.Unpublished);
+        builder.targetState(IntegrationDeploymentState.Unpublished);
 
         // Get the latest connection.
         builder.connections(integration.getConnections().stream().map(this::toCurrentConnection).collect(Collectors.toList()));

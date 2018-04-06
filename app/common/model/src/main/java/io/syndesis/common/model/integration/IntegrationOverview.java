@@ -37,19 +37,25 @@ public interface IntegrationOverview extends WithId<IntegrationOverview>, Integr
     boolean isDraft();
 
     @Value.Default
-    default IntegrationBulletinBoard getBoard() {
-        return IntegrationBulletinBoard.emptyBoard();
+    default IntegrationDeploymentState getCurrentState() {
+        return IntegrationDeploymentState.Unpublished;
     }
 
-    IntegrationDeploymentState getCurrentState();
-
-    IntegrationDeploymentState getTargetState();
+    @Value.Default
+    default IntegrationDeploymentState getTargetState(){
+        return IntegrationDeploymentState.Unpublished;
+    }
 
     Optional<Integer> getDeploymentVersion();
 
     @Value.Default
     default List<IntegrationDeploymentOverview> getDeployments() {
         return Collections.emptyList();
+    }
+
+    @Value.Default
+    default IntegrationBulletinBoard getBoard() {
+        return IntegrationBulletinBoard.emptyBoard();
     }
 
     // ******************
