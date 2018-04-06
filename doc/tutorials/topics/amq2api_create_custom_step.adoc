@@ -35,5 +35,5 @@ the extension details page.
 [NOTE]
 ====
 For more information about coding an extension and creating its `.jar` file, see the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[10.2 _JBoss Fuse Tooling Guide_].
+{LinkToolingUserGuide}igniteextension/[{NameOfToolingUserGuide}].
 ====

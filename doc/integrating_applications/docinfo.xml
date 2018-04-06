@@ -1,12 +1,12 @@
-<productname>Red Hat JBoss Fuse</productname>
-<productnumber>7.0-TP</productnumber>
-<subtitle>User's guide to integrating applications with Ignite</subtitle>
+<productname>Syndesis</productname>
+<productnumber>1.0</productnumber>
+<subtitle>User's guide to integrating applications with Syndesis</subtitle>
 <abstract>
- <para>Ignite provides integration as a service on the OpenShift Pro tier.</para>
+ <para>Syndesis provides integration as a service.</para>
 </abstract>
 <authorgroup>
   <org>
-    <orgname>JBoss Fuse Documentation Team</orgname>
+    <orgname>Fuse Documentation Team</orgname>
     <email>fuse-docs-support@redhat.com</email>
   </org>
 </authorgroup>

@@ -1,7 +1,19 @@
-:prodname: Ignite
-:prodversion: 7.0-TP
+:prodname: Syndesis
+:prodversion: 7.0
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.0
+
+:LinkIgniteTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/ignite_sample_integration_tutorials/
+:NameOfIgniteTutorials: Ignite Sample Integration Tutorials
+
+:LinkIgniteIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_ignite/
+:NameOfIgniteIntegrationGuide: Integrating Applications with Ignite
+
+:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
+:NameOfToolingUserGuide: Tooling User Guide
+
 
 [id='tutorials']
 = {prodname} Sample Integration Tutorials
@@ -11,38 +23,14 @@ application or service, operate on that data if you need to, and then send the
 data to a completely different application or service. You can do all this
 without writing code.
 
-[IMPORTANT]
-====
-{prodname} is a Technology Preview feature only. Technology Preview features
-are not supported with Red Hat production service level agreements (SLAs), might
-not be functionally complete, and Red Hat does not recommend to use them for
-production. These features provide early access to upcoming product features,
-enabling customers to test functionality and provide feedback during the
-development process.
-For more information on Red Hat Technology Preview features support scope,
-see https://access.redhat.com/support/offerings/techpreview/.
-====
-
-In this Technology Preview, consider the names Red Hat Fuse Online and
-Fuse Ignite as interchangeable.
-
-In this Technology Preview, only one integration at a time can
-be running. If you have a running (published) integration and you create a new
-integration and try to publish it, the new integration is automatically
-in the *Unpublished* state. You must stop the running integration before you can
-publish (start) the new integration.
-
-Explore the {prodname} Technology Preview by creating these
+Explore {prodname} by creating these
 sample integrations:
 
 * <<twitter-to-salesforce>>
 * <<salesforce-to-db>>
 * <<amq-to-rest-api>>
 
-
-A
-https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite//[user guide]
-for {prodname} is also available.
+See also: {LinkIgniteIntegrationGuide}[{NameOfIgniteIntegrationGuide}]
 
 include::topics/comparison_of_sample_integrations.adoc[leveloffset=+1]
 

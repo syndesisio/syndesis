@@ -3,7 +3,7 @@
 
 The best way to learn about how to use {prodname} is to create the sample
 integrations by following the instructions in the
-https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/[sample integration tutorials].
+{LinkIgniteTutorials}[sample integration tutorials].
 Following is an abbreviated description of one of the samples to provide
 an overview of how you use {prodname}. These steps omit details so
 you should not try to follow them.

@@ -22,10 +22,12 @@ An extension `.jar` file that you upload to {prodname} always contains
 exactly one extension.  
 
 For an example of uploading and using an extension that provides a step
-that operates on data between connections, see the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/ignite_sample_integration_tutorials/#amq-to-rest-api[AMQ to REST API sample integration tutorial].
+that operates on data between connections, see the 
+{LinkIgniteTutorials}#amq-to-rest-api[AMQ to REST API sample integration tutorial].
 
 For custom connectors and custom steps, information about coding the 
 extension and creating the `.jar` file is in the
-link:https://access.redhat.com/documentation/en-us/red_hat_jboss_fuse/6.3/html/tooling_user_guide/igniteextension/[_Fuse Tooling Guide_].
-For extensions that provides JDBC drivers, see <<
+{LinkToolingUserGuide}[{NameOfToolingUserGuide}].
+
+For information about creating extensions that provides JDBC drivers, 
+see <<creating-jdbc-driver-library-extensions>>.

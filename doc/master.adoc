@@ -1,5 +1,5 @@
-:prodname: Fuse Ignite
-:prodversion: 7.0-TP
+:prodname: Syndesis
+:prodversion: 7.0
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 
