@@ -1,6 +1,4 @@
-import {
-  Component
-} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'syndesis-empty-state-card',
@@ -18,13 +16,7 @@ import {
     </div>
   </div>
   `,
-  styles: [`
-    :host { display: block; }
-    :host .card-pf, :host .card-pf:hover { box-shadow: none; }
-    :host .card-pf { background: transparent; padding-top: 1px; padding-bottom: 1px; }
-    :host .card-pf-view { border: 1px dashed #919191; }
-  `]
+  styleUrls: ['empty-state-card.component.scss']
 })
 
-export class EmptyStateCardComponent {
-}
+export class EmptyStateCardComponent {}
