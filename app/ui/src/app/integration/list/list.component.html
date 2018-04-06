@@ -46,10 +46,6 @@
             Configuration Required
           </span>
           <div class="pass-fail">
-            <!-- OK Status -->
-            <i *ngIf="!integration.statusMessage"
-               class="pficon pficon-ok"></i>
-            <!-- Not OK Status -->
             <ng-template #statTemplate>{{ integration.statusMessage }}</ng-template>
             <i *ngIf="integration.statusMessage"
                class="pficon pficon-error-circle-o"
