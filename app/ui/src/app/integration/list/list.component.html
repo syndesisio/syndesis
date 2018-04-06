@@ -14,7 +14,7 @@
     <ng-template #itemTemplate
                  let-integration="item"
                  let-index="index">
-      <div class="list-pf-left integration-icons">
+      <div class="list-view-pf-left integration-icons">
         <span *ngIf="integrationActionsService.getStart(integration).connection; let connection">
           <img class="syn-icon-small" [src]="connection | synIconPath">
         </span>
@@ -26,8 +26,10 @@
       <div class="list-pf-content-wrapper">
         <div class="list-pf-main-content integration-content">
           <div *ngIf="complete"
-               class="list-pf-title name">{{ integration.name }}</div>
-          <div class="list-pf-description description">
+            class="list-pf-title name syn-truncate__ellipsis" 
+            title="{{ integration.name }}">{{ integration.name }}</div>
+          <div class="list-pf-description description syn-truncate__ellipsis"
+            title="{{ complete ? integration.description : integration.name }}">
             {{ complete ? integration.description : integration.name }}
           </div>
         </div>
