@@ -15,27 +15,46 @@
  */
 package io.syndesis.connector.sql.customizer;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.SqlParam;
+import io.syndesis.connector.sql.common.SqlStatementMetaData;
+import io.syndesis.connector.sql.common.SqlStatementParser;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.SqlParameterValue;
 
 public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
+
+    Map<String, Object> options;
+    Map<String, Integer> jdbcTypeMap;
+    private final static Logger LOGGER = LoggerFactory.getLogger(SqlConnectorCustomizer.class);
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(this::doBeforeProducer);
         component.setAfterProducer(this::doAfterProducer);
+        this.options = options;
     }
 
     private void doBeforeProducer(Exchange exchange) {
+        if (jdbcTypeMap==null) {
+            initJdbcMap();
+        }
         final String body = exchange.getIn().getBody(String.class);
         if (body != null) {
-            final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
-            exchange.getIn().setBody(properties);
+            final Map<String,SqlParameterValue> sqlParametersValues = JSONBeanUtil.parseSqlParametersFromJSONBean(body, jdbcTypeMap);
+            exchange.getIn().setBody(sqlParametersValues);
         }
     }
 
@@ -56,4 +75,23 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
         exchange.getIn().setBody(jsonBean);
     }
+
+    private void initJdbcMap() {
+
+        final String sql =  String.valueOf(options.get("query"));
+        final DataSource dataSource = (DataSource) options.get("dataSource");
+
+        final Map<String, Integer> tmpMap = new HashMap<>();
+        try (Connection connection = dataSource.getConnection()) {
+
+            SqlStatementMetaData md = new SqlStatementParser(connection, null, sql).parse();
+            for (SqlParam sqlParam: md.getInParams()) {
+                tmpMap.put(sqlParam.getName(), sqlParam.getJdbcType().getVendorTypeNumber());
+            }
+        } catch (SQLException e){
+            LOGGER.error(e.getMessage(),e);
+        }
+        jdbcTypeMap = tmpMap;
+    }
+
 }

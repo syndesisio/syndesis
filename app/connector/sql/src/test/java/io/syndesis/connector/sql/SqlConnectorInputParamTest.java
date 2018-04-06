@@ -15,12 +15,13 @@
  */
 package io.syndesis.connector.sql;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementParser;
@@ -28,6 +29,7 @@ import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
+import org.junit.After;
 import org.junit.Test;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
@@ -48,6 +50,13 @@ public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
                     "numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT," +
                     "dateType DATE, timeType TIME )"
             );
+        }
+    }
+
+    @After
+    public void after() throws SQLException {
+        try (Statement stmt = db.connection.createStatement()) {
+            stmt.executeUpdate("DROP TABLE ALLTYPES");
         }
     }
 
@@ -72,7 +81,7 @@ public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
 
     @Test
     public void sqlConnectorTest() throws Exception {
-        SqlStatementParser parser = new SqlStatementParser(db.connection, db.schema, STATEMENT);
+        SqlStatementParser parser = new SqlStatementParser(db.connection, null, STATEMENT);
         parser.parse();
 
         Map<String,Object> values = new HashMap<>();
@@ -84,7 +93,21 @@ public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
 
         String result = template.requestBody("direct:start", JSONBeanUtil.toJSONBean(values), String.class);
 
-        Properties props = JSONBeanUtil.parsePropertiesFromJSONBean(result);
-        Assertions.assertThat(values).hasSameSizeAs(props);
+        Assertions.assertThat(result).isNotNull();
+        
+        try (Statement stmt = db.connection.createStatement()) {
+            stmt.execute("SELECT * FROM ALLTYPES");
+            ResultSet resultSet = stmt.getResultSet();
+            resultSet.next();
+            for (int i=1; i< 6; i++) {
+                System.out.print(resultSet.getString(i) + " ");
+            }
+            System.out.println(resultSet.getString(1));
+            Assertions.assertThat(resultSet.getString(1)).isEqualTo(SqlParam.SqlSampleValue.CHAR_VALUE.toString());
+            Assertions.assertThat(resultSet.getString(2)).isEqualTo(SqlParam.SqlSampleValue.STRING_VALUE);
+            Assertions.assertThat(resultSet.getString(3)).isEqualTo(SqlParam.SqlSampleValue.DECIMAL_VALUE.toString());
+            Assertions.assertThat(resultSet.getString(4)).isEqualTo(SqlParam.SqlSampleValue.DECIMAL_VALUE.toString());
+            Assertions.assertThat(resultSet.getString(5)).isEqualTo(SqlParam.SqlSampleValue.INTEGER_VALUE.toString());
+        }
     }
 }

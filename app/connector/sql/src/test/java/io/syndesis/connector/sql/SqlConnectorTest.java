@@ -15,15 +15,20 @@
  */
 package io.syndesis.connector.sql;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
+import org.junit.After;
 import org.junit.Test;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
@@ -36,9 +41,15 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
     @Override
     protected void doPreSetup() throws Exception {
         try (Statement stmt = db.connection.createStatement()) {
-            stmt.executeUpdate("CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))");
-            stmt.executeUpdate("INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')");
-            stmt.executeUpdate("INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
+            //stmt.executeUpdate("DROP TABLE ADDRESS");
+            stmt.executeUpdate("CREATE TABLE ADDRESS (street VARCHAR(255), number INTEGER)");
+        }
+    }
+
+    @After
+    public void after() throws SQLException {
+        try (Statement stmt = db.connection.createStatement()) {
+            stmt.executeUpdate("DROP TABLE ADDRESS");
         }
     }
 
@@ -50,7 +61,7 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
                 "sql-connector",
-                builder -> builder.putConfiguredProperty("query", "SELECT * FROM NAME ORDER BY id")),
+                builder -> builder.putConfiguredProperty("query", "INSERT INTO ADDRESS VALUES (:#street, :#number)")),
             newSimpleEndpointStep(
                 "log",
                 builder -> builder.putConfiguredProperty("loggerName", "test"))
@@ -63,9 +74,20 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
 
     @Test
     public void sqlConnectorTest() throws Exception {
-        String result = template.requestBody("direct:start", null, String.class);
-        Properties props = JSONBeanUtil.parsePropertiesFromJSONBean(result);
 
-        Assertions.assertThat(props.getProperty("ID")).isEqualTo("1");
+        Map<String,Object> values = new HashMap<>();
+        values.put("street", "LaborInVain");
+        values.put("number", 14);
+        String body = JSONBeanUtil.toJSONBean(values);
+
+        String result = template.requestBody("direct:start", body, String.class);
+
+        try (Statement stmt = db.connection.createStatement()) {
+            stmt.execute("SELECT * FROM ADDRESS");
+            ResultSet resultSet = stmt.getResultSet();
+            resultSet.next();
+            Assertions.assertThat(resultSet.getString(1)).isEqualTo("LaborInVain");
+            Assertions.assertThat(resultSet.getInt(2)).isEqualTo(14);
+        }
     }
 }

@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SqlStatementParser {
 
     /*
@@ -39,16 +42,24 @@ public class SqlStatementParser {
      * table name
      */
     private final Connection connection;
-    private final String schema;
+    private String schema;
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
     private List<String> sqlArrayUpperCase = new ArrayList<>();
+    private final static Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
+
+    public SqlStatementParser(Connection connection, String sql) {
+        super();
+        statementInfo = new SqlStatementMetaData(sql.trim());
+        this.connection = connection;
+        getSchema(null);
+    }
 
     public SqlStatementParser(Connection connection, String schema, String sql) {
         super();
         statementInfo = new SqlStatementMetaData(sql.trim());
         this.connection = connection;
-        this.schema = schema;
+        this.schema = getSchema(schema);
     }
 
     public SqlStatementMetaData parseSelectOnly() throws SQLException {
@@ -99,6 +110,31 @@ public class SqlStatementParser {
         return statementInfo;
     }
 
+    private String getSchema(String userSchema) {
+        //if user set, then use that
+        if (userSchema != null) {
+            return userSchema;
+        }
+        try {
+            //try grabbing from the connection, not all drivers support this
+            return connection.getSchema();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(),e);
+        } catch (AbstractMethodError e) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(e.getMessage());
+            }
+        }
+        try {
+            //finally try setting reasonable default
+            DatabaseMetaData meta = connection.getMetaData();
+            return DatabaseMetaDataHelper.getDefaultSchema(meta.getDatabaseProductName(), meta.getUserName());
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(),e);
+        }
+        return null;
+    }
+    
     private void parseInsert(DatabaseMetaData meta) throws SQLException {
         statementInfo.setStatementType(StatementType.INSERT);
         String tableNameInsert = statementInfo.addTable(sqlArrayUpperCase.get(2));

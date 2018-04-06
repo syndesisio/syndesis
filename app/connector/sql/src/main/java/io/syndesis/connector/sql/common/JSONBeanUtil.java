@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.springframework.jdbc.core.SqlParameterValue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -70,6 +71,21 @@ public final class JSONBeanUtil {
         return ret;
     }
 
+    public static Map<String,SqlParameterValue> parseSqlParametersFromJSONBean(final String json, final Map<String, Integer> jdbcTypeMap) {
+        final Map<String, String> parsed;
+        try {
+            parsed = MAPPER.readerFor(STRING_STRING_MAP).readValue(json);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException("Unable to parse given JSON", e);
+        }
+        final Map<String,SqlParameterValue> ret = new HashMap<>();
+        for (String key : parsed.keySet()) {
+            Object value = parsed.get(key);
+            SqlParameterValue sqlParam = new SqlParameterValue(jdbcTypeMap.get(key), value);
+            ret.put(key,sqlParam);
+        }
+        return ret;
+    }
     /**
      * Convenience method to convert a Camel Map output to a JSON Bean String.
      *
