@@ -129,18 +129,3 @@
     @include truncate(ellipsis);
   }
 }
-
-/* Empty state card */
-.empty-state-card {
-  .card-pf-view {
-    background: transparent;
-    border: 1px dashed #919191;
-    padding-top: 1px;
-    padding-bottom: 1px;
-
-    &,
-    &:hover {
-      box-shadow: none;
-    }
-  }
-}

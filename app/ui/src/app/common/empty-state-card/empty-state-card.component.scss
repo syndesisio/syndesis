@@ -3,18 +3,18 @@
 :host {
   display: block;
 
-  .card-pf
-  &:hover {
-    box-shadow: none;
-  }
-
   .card-pf {
     background: transparent;
     padding-bottom: 1px;
     padding-top: 1px;
-  }
 
-  .card-pf-view {
-    border: 1px dashed $color-pf-black-500;
+    &,
+    &:hover {
+      box-shadow: none;
+    }
+
+    &-view {
+      border: 1px dashed $color-pf-black-500;
+    }
   }
 }

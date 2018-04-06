@@ -32,7 +32,7 @@ import { NotificationService } from './ui-patternfly';
 import { ModalComponent, ModalService } from './modal';
 import { ConfigService } from '../config.service';
 import { NavigationService } from './navigation.service';
-import { EmptyStateCardComponent } from './empty-state-card';
+import { EmptyStateCardComponent } from './empty-state-card/empty-state-card.component';
 @NgModule({
   imports: [
     CommonModule,
