@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import io.syndesis.common.model.ChangeEvent;
@@ -172,7 +173,7 @@ abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements Res
         Supplier<LeveledMessage.Builder> supplier, Map<String, ConfigurationProperty> configurationProperties, Map<String, String> configuredProperties) {
 
         for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
-            if (entry.getValue().isRequired() && !configuredProperties.containsKey(entry.getKey())) {
+            if (entry.getValue().isRequired() && Strings.isNullOrEmpty(entry.getValue().getDefaultValue()) && !configuredProperties.containsKey(entry.getKey())) {
                 return Collections.singletonList(
                     supplier.get()
                         .level(LeveledMessage.Level.WARN)
