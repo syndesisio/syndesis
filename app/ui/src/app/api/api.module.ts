@@ -1,19 +1,24 @@
 import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
 import { ApiHttpService, ApiConfigService, Endpoints, API_ENDPOINTS } from '@syndesis/ui/platform';
-import * as SYNDESIS_PROVIDERS from './providers';
+import * as SYNDESIS_API_PROVIDERS from './providers';
 
 export function endpointsLazyLoaderFactory(apiEndpoints: Endpoints, apiConfigService: ApiConfigService) {
-  return new SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService(apiEndpoints, apiConfigService);
+  return new SYNDESIS_API_PROVIDERS.ApiEndpointsLazyLoaderService(apiEndpoints, apiConfigService);
 }
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    HttpClientXsrfModule.withOptions(environment.xsrf)
+  ],
 })
 export class ApiModule {
-  constructor(@Optional() private apiEndpointsLazyLoaderService: SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService) { }
+  constructor(@Optional() private apiEndpointsLazyLoaderService: SYNDESIS_API_PROVIDERS.ApiEndpointsLazyLoaderService) { }
 
   static forRoot(apiEndpoints?: Endpoints): Array<ModuleWithProviders> {
     return [{
@@ -23,19 +28,24 @@ export class ApiModule {
         multi: true,
         useValue: apiEndpoints || {}
       },
-      SYNDESIS_PROVIDERS.ApiConfigProviderService,
+      SYNDESIS_API_PROVIDERS.ApiConfigProviderService,
       {
         provide: ApiConfigService,
-        useClass: SYNDESIS_PROVIDERS.ApiConfigProviderService
+        useClass: SYNDESIS_API_PROVIDERS.ApiConfigProviderService
       },
-      SYNDESIS_PROVIDERS.ApiHttpProviderService,
+      SYNDESIS_API_PROVIDERS.ApiHttpProviderService,
       {
         provide: ApiHttpService,
-        useClass: SYNDESIS_PROVIDERS.ApiHttpProviderService
+        useClass: SYNDESIS_API_PROVIDERS.ApiHttpProviderService
       },
       {
         provide: HTTP_INTERCEPTORS,
-        useClass: SYNDESIS_PROVIDERS.ApiHttpInterceptor,
+        useClass: SYNDESIS_API_PROVIDERS.ApiHttpInterceptor,
+        multi: true
+      },
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: SYNDESIS_API_PROVIDERS.ApiXsrfInterceptor,
         multi: true
       }
       ]
@@ -51,9 +61,9 @@ export class ApiModule {
         multi: true,
         useValue: apiEndpoints
       },
-      SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService,
+      SYNDESIS_API_PROVIDERS.ApiEndpointsLazyLoaderService,
       {
-        provide: SYNDESIS_PROVIDERS.ApiEndpointsLazyLoaderService,
+        provide: SYNDESIS_API_PROVIDERS.ApiEndpointsLazyLoaderService,
         useFactory: endpointsLazyLoaderFactory,
         deps: [API_ENDPOINTS, ApiConfigService]
       }]

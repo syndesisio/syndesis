@@ -5,5 +5,9 @@ export const environment = {
     localStorageKey: 'syndesis-i18n-locale',
     dictionaryFolderPath: '/assets/dictionary'
   },
+  xsrf: {
+    headerName: 'SYNDESIS-XSRF-TOKEN',
+    cookieName: 'SYNDESIS-XSRF-COOKIE'
+  },
   config: {}
 };
