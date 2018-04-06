@@ -10,6 +10,10 @@ export const environment = Object.freeze({
     localStorageKey: 'syndesis-i18n-locale',
     dictionaryFolderPath: '/assets/dictionary'
   },
+  csrf: {
+    headerName: 'SYNDESIS-XSRF-TOKEN',
+    cookieName: 'SYNDESIS-XSRF-COOKIE'
+  },
   config: {
     apiEndpoint: 'http://localhost:8080/api/v1',
     title: 'DEVELOPMENT - Syndesis',
