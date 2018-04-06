@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.support.maven;
 
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.atlasmap.core.DefaultAtlasConversionService;
 import io.atlasmap.java.inspect.ClassInspectionService;
@@ -183,7 +184,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                     getLog().info("Specification for type: " + type + " created");
                     ret = new DataShape.Builder()
                                        .createFrom(given)
-                                       .specification(mapper.writeValueAsString(c))
+                                       .specification(mapper.writer((PrettyPrinter) null).writeValueAsString(c))
                                        .build();
 
                 }
