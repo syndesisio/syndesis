@@ -18,6 +18,8 @@ package io.syndesis.server.endpoint.v1.handler.activity;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  */
@@ -30,6 +32,7 @@ public class Activity {
     private String ver;
     private String status;
     private Boolean failed;
+    @JsonInclude(Include.NON_ABSENT)
     private List<ActivityStep> steps;
     private JsonNode metadata;
 
