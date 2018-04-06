@@ -2,17 +2,6 @@
 
 COOKIE1="$HOME/.syndesis_api_cookie"
 
-
-# helper python command to urlencode
-dev::urlencode() {
-
-local py_script="
-import sys, urllib as ul
-print ul.quote_plus(sys.argv[1])
-"
-python -c "$py_script" $1
-}
-
 # helper python command to unescape html entities
 dev::xml_unescape() {
 
@@ -40,7 +29,6 @@ EOT
 extract_and_escape() {
     local variable=$(grep  -E name=\"$1\" $2 | grep -Po '(?<=value=")[^"]+' )
     variable="$(dev::xml_unescape $variable)"
-    variable="$(dev::urlencode $variable)"
     echo "$variable"
 }
 
@@ -87,13 +75,12 @@ dev::create_api_cookie() {
     scopes=(${scopes// / })
     for i in "${!scopes[@]}"
     do
-        local encoded="$(dev::urlencode ${scopes[i]})"
-        joined_scopes="$joined_scopes --data scope=$encoded"
+        joined_scopes="$joined_scopes --data-urlencode scope=${scopes[i]}"
     done
 
     # approve permission delegation, weaving all the params in the GET parameters
     
-    curl --insecure --location --cookie-jar "$COOKIE1" --cookie "$COOKIE1" -i -v --data "then=$then_url" --data "csrf=$csrf" --data "client_id=$client_id" --data "user_name=$user_name" --data "redirect_uri=$redirect_uri" $joined_scopes --data "approve=Allow+selected+permissions"  -H 'dnt: 1'  "https://$openshift_ip_and_port/oauth/authorize/approve" -o /dev/null 2>/dev/null
+    curl --insecure --location --cookie-jar "$COOKIE1" --cookie "$COOKIE1" -i -v --data-urlencode "then=$then_url" --data-urlencode "csrf=$csrf" --data-urlencode "client_id=$client_id" --data-urlencode "user_name=$user_name" --data-urlencode "redirect_uri=$redirect_uri" $joined_scopes --data-urlencode "approve=Allow+selected+permissions"  -H 'dnt: 1'  "https://$openshift_ip_and_port/oauth/authorize/approve" -o /dev/null 2>/dev/null
 }
 
 
