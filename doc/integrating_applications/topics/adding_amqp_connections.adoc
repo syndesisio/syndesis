@@ -7,8 +7,9 @@ integration. If you did not already create an AMQP connection,
 see <<create-amqp-connection>>. 
 
 The procedure for adding an AMQP connection to an integration varies
-according to whether you are adding the connection as the
-start connection, the finish connection, or a middle connection.
+according to whether you want to use the connection to start an
+integration, finish an integration, or publish messages in the middle
+of an integration.
 See the following topics:
 
 * <<adding-amqp-connection-start>>

@@ -7,20 +7,20 @@ integration. If you did not already create the database connection,
 see <<create-database-connection>>.
 
 The procedure for adding a database connection varies according to
-whether you are adding
+whether you want access the database
 
-* Database connections as start connections
-* Database connections as middle or finish connections
+* To start an integration
+* To finish an integration or in the 
+middle of the integration
 
-== Database connections as start connections
+== Starting an integration by accessing a database
 
-In an integration, to add a database connection as the integration's
-start connection:
+To start an integration by accessing a database:
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click your
-database connection.
+. On the *Choose a Start Connection* page, click the
+database connection that you want to use to start an integration.
 . On the *Choose an Action* page, click one of the following:
 +
 * *Periodic SQL Invocation* obtains data by periodically invoking the
@@ -49,17 +49,19 @@ verfication is successful then {prodname} adds the start connection to
 the integration. If verification fails then {prodname} displays a message
 about the problem. Update your input as needed and try again.
 
-== Database connections as middle or finish connections
+== Finishing an integration by accessing a database or accessing a database in the middle of an integration
 
-In an integration, you can designate a database connection as the
-finish connection or add a database connection between the start and
-finish connections. The instructions below assume that you are
+To finish an integration by accessing a database, add a database
+connection as the finish connection. To access 
+a database in the middle of an integration, add a database connection
+between the start and finiah connections.
+The instructions below assume that you are
 on the {prodname} *Choose a Finish Connection* page or the
 *Choose a Connection* page.
 
 To add a database connection:
 
-. Click your database connection.
+. Click the database connection for the database you want to access.
 . On the *Choose an Action* page, click one of the following:
 +
 * *Invoke SQL* operates on data by executing the

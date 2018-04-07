@@ -1,9 +1,16 @@
 [id='adding-amqp-connection-middle']
-= Adding an AMQP connection as a middle connection
+= Publishing messages to AMQP in the middle of an integration
 
 :context: middle
-In an integration, to add an AMQP connection between the start and 
-finish connections:
+In the middle of an integration, to publish messages to an AMQP broker,
+add an AMQP connection between the start and 
+finish connections. You must be creating or editing an integration. 
+You must have already added the start and finish connections to the
+integration. Follow these instructions:
+
+. In the integration visualization panel on the left, click the plus
+sign in the location where you want to add the connection. 
+. Click *Add a connection*. 
 
 . On the *Choose a Connection* page, click the AMQP connection that you 
 want the integration to use after the start connection and before 

@@ -1,13 +1,13 @@
 [id='adding-amq-connection-finish']
-= Adding an AMQ connection as the finish connection
+= Finish an integration by publishing AMQ messages
 
 :context: finish
-In an integration, to add an AMQ connection as the finish connection,
-start creating the integration, add and configure the start connection
-and then:
+To finish an integration by publishing messages to an AMQ broker, 
+add an AMQ connection as the finish connection:
 
+. Start creating the integration by adding and configuring the start connection.
 . On the *Choose a Finish Connection* page, click the AMQ connection that
-you want to use as the integration's finish connection. 
+you want to use to finish the integration. 
 . On the *Choose an Action* page, click the *Publish messages* action to
 publish messages to the queue or topic you specify. 
 . In the *Destination Name* field, enter the name of the queue or 

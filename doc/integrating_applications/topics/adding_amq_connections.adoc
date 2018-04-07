@@ -6,8 +6,9 @@ integration. If you did not already create an AMQ connection,
 see <<create-amq-connection>>. 
 
 The procedure for adding an AMQ connection to an integration varies
-according to whether you are adding the connection as the
-start connection, the finish connection, or a middle connection.
+according to whether you want to use the AMQ connection to start
+the integration, finish the integration, or publish messages in the
+middle of an integration. 
 See the following topics:
 
 * <<adding-amq-connection-start>>

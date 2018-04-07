@@ -1,13 +1,14 @@
 [id='adding-s3-connection-finish']
-= Adding an Amazon S3 connection as the finish connection
+= Finishing an integration by adding data to Amazon S3
 
 :context: finish
-To add an Amazon S3 connection as the finish connection:
+To finish an integration by copying data to Amazon S3, 
+add an Amazon S3 connection as the finish connection:
 
 . Start creating the integration.
 . Add and configure the start connection.
 . On the *Choose a Finish Connection* page, click the Amazon S3 connection that
-you want to use as the integration's finish connection.
+you want to use to finish the integration. 
 . On the *Choose an Action* page, click the *Copy Object* action to copy
 one or more objects into the bucket that the connection accesses.
 The integration obtains the objects to be added to the bucket from the
