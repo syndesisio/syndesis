@@ -1,5 +1,5 @@
 [id='adding-dropbox-connection-start']
-= Start an integration by obtaining files from Dropbox
+= Starting an integration by obtaining files from Dropbox
 
 To start an integration by downloading files from Dropbox, 
 add a Dropbox connection as the start connection:
