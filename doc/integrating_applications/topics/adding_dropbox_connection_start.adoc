@@ -15,6 +15,3 @@ specify the filename path or the folder path for the content that you want
 the integration to obtain. 
 . Click *Next* to specify the action's output type. See 
 <<specifying-connection-input-output-types>>.
-
-
-. 

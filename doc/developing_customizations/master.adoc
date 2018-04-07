@@ -1,7 +1,18 @@
-:prodname: Fuse Ignite
-:prodversion: 7.0-TP
+:prodname: Syndesis
+:prodversion: 1.0
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
+
+:LinkIgniteTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/ignite_sample_integration_tutorials/
+:NameOfIgniteTutorials: Ignite Sample Integration Tutorials
+
+:LinkIgniteIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_ignite/
+:NameOfIgniteIntegrationGuide: Integrating Applications with Ignite
+
+:LinkToolingUserGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/single/tooling_user_guide/index
+:NameOfToolingUserGuide: Tooling User Guide
+
+
 
 [id='developing-customizations']
 = Developing {prodname} Customizations
