@@ -1,8 +1,9 @@
 [id='adding-s3-connection-middle']
-= Adding an Amazon S3 connection as a middle connection
+= Adding data to Amazon S3 in the middle of an integration
 
 :context: middle
-In an integration, to add an Amazon S3 connection between the start and
+In the middle of an integration, to add data to Amazon S3, 
+add an Amazon S3 connection between the start and
 finish connections:
 
 . Add the start and finish connections.

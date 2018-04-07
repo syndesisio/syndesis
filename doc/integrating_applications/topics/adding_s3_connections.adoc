@@ -7,8 +7,9 @@ integration. If you did not already create an Amazon S3 connection,
 see <<prerequisites-for-creating-s3-connection>>.
 
 The procedure for adding an Amazon S3 connection to an integration varies
-according to whether you are adding it as the
-start connection, the finish connection, or a middle connection.
+according to whether you want to use the S3 connection to start the 
+integration, finish the integration, or access data in the middle of the
+integration. 
 See the following topics:
 
 * <<adding-s3-connection-start>>

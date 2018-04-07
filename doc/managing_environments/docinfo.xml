@@ -1,12 +1,12 @@
-<productname>Red Hat JBoss Fuse</productname>
-<productnumber>7.0-TP</productnumber>
+<productname>Syndesis</productname>
+<productnumber>1.1</productnumber>
 <subtitle>Managing Ignite Environments</subtitle>
 <abstract>
- <para>Managing accounts, resources, integration versions and upgrades</para>
+ <para>Managing accounts, resources, integration versions, and upgrades</para>
 </abstract>
 <authorgroup>
   <org>
-    <orgname>JBoss Fuse Documentation Team</orgname>
+    <orgname>Fuse Documentation Team</orgname>
     <email>fuse-docs-support@redhat.com</email>
   </org>
 </authorgroup>

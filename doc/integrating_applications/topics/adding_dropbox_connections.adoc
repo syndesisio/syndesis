@@ -10,8 +10,9 @@ add a connection to that integration. If you need to, see
 <<procedure-for-creating-an-integration>> or <<updating-integrations>>.
 
 The procedure for adding a Dropbox connection to an integration varies
-according to whether you are adding the connection as the
-start connection, the finish connection, or a middle connection.
+according to whether you want to use the connection to start an
+integration, finish an integration, or access Dropbox in the middle of
+an integration. 
 See the following topics:
 
 * <<adding-dropbox-connection-start>>

@@ -1,13 +1,14 @@
 [id='adding-amq-connection-start']
-= Adding an AMQ connection as the start connection
+= Starting an integration based on receiving AMQ messages
 
 :context: start
-In an integration, to add an AMQ connection as the start connection:
+To trigger execution of an integration based on receiving a message
+from an AMQ broker, add an AMQ connection as the start connection:
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
 . On the *Choose a Start Connection* page, click the AMQ connection that
-you want to use as the integration's start connection. 
+you want to use to start the integration. 
 . On the *Choose an Action* page, click the *Subscribe for messages* action
 to receive messages from the queue or topic you specify. 
 . To configure the action:

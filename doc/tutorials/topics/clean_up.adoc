@@ -3,11 +3,6 @@
 [id='cleanup_{context}']
 = Clean up your integration
 
-In this Technology Preview release, exactly one integration at 
-a time can be running. In other words, exactly one integration can
-be in the *Published* state. You can create another sample integration, 
-but you cannot publish it while an integration is running. 
-
 When you are done working with a sample integration, unpublish it and
 delete it:
 
@@ -18,8 +13,6 @@ you want to unpublish.
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
 click *Unpublish*. 
 . Click *OK* to confirm that you want to stop running the integration.
-+
-You can now publish another integration. 
 
 . In the entry for the integration that you just unpublished, to the right, click
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
