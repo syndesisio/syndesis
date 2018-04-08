@@ -10,13 +10,13 @@ installation of {prodname} with Twitter only once.
 Perform these steps:
 
 . In {prodname}:
-.. In the left panel, click *Home*.
-.. Copy the {prodname} URL from the browser address bar so it is in the
-clipboard.
 .. In the left panel, click *Settings*.
-.. In the *OAuth Application Management* page, to the right of *Twitter*,
+.. Near the top of the *OAuth Application Management* page, where you see
+`*During registration, enter this callback URL:*`, copy that URL to the
+clipboard.
+.. To the right of the *Twitter* entry,
 click *Register* to display the *Client ID* and *Client Secret* fields.
-. In another browser tab, go  to `http://apps.twitter.com` and do
+. In another browser tab, go to http://apps.twitter.com and do
 the following:
 .. If you are not already logged in to Twitter, log in.
 .. Click *Create New App*.
@@ -24,11 +24,11 @@ the following:
 must be unique among all names of apps registered with Twitter.
 .. In the *Description* field, enter helpful information.
 Twitter requires some input in this field.
-.. Paste your {prodname} URL into the *Website* and
-*Callback URL* fields.
-.. In the *Callback URL* field, remove `dashboard` from the end
-of the URL and append `api/v1/credentials/callback`.
-For example:
+.. In the *Website* field, paste the URL that you copied at the beginning
+of this procedure and remove `api/v1/credentials/callback` from the end
+of the URL.
+.. In the *Callback URL* field, paste the URL again. It should be
+something like this:
 `\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. Click *Yes* to agree to the Twitter developer agreement.
 .. Click *Create your Twitter application*.
