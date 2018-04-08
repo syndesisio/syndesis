@@ -2,12 +2,11 @@
 = Adding an FTP or SFTP connection to an integration
 
 After you create an FTP connection or an SFTP connection, you can add 
-it to any number of integrations. 
+it to any number of integrations. See the following topics:
 
-To trigger execution of an integration by polling an FTP server or an 
-SFTP server for a file or files of interest, see 
-<<adding-ftp-start-connection>>.
+* <<adding-ftp-start-connection>>
+* <<adding-ftp-finish-middle-connection>>
 
-To <<adding-ftp-finish-middle-connection>>, add an FTP or SFTP
-connection to the middle of an integration or
-to finish an integration. 
+include::adding_ftp_start_connection.adoc[leveloffset=+1]
+
+include::adding_ftp_finish_middle_connection.adoc[leveloffset=+1]

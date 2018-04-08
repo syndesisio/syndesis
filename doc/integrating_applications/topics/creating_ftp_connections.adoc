@@ -7,21 +7,34 @@ To create a connection to an FTP server or an SFTP server:
 display any available connections.
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.
-. Click the *FTP* connector to use File Transfer Protocol or
-click the *SFTP* connector to use Secure File Transfer Protocol.
+. To create a connection that uses 
+File Transfer Protocol, click the *FTP* connector. 
++
+Or, to create a connection
+that uses Secure File Transfer Protocol, 
+click the *SFTP* connector.
 . Configure the connection. 
 +
-* For an FTP connection, *Host* is the only parameter that you must
+* For an FTP connection:
+** *Host* is the only parameter that you must
 specify. Enter the host name of the server you want to connect to.
-* For an SFTP connection, you must specify these parameters:
-+
-** *Host*
-** *User name* for the account that you want to 
-use to access the server
-** *Password* associated with that user name
+** *Port* is required and has a default value of `21`. This is the
+port that the FTP server is listening on. 
+** All other parameters are either not required or have default values.
+The defaults are suitable for most integrations. Descriptions of these 
+parameters are after this procedure. 
 
+* For an SFTP connection, there must be values for these parameters:
 +
-All other parameters have default values. Descriptions of these 
+** *Host* is the host name of the SFTP server that you 
+want to connect to.
+** *Port* has a default of `22`. This is the port that the SFTP server
+is listening on. 
+** *User name* of the account that you want to 
+use to access the SFTP server.
+** *Password* that is associated with that user name.
+** All other parameters have default values. The defaults are suitable 
+for most integrations. Descriptions of these 
 parameters are after this procedure. 
 
 . Click *Validate*. {prodname} immediately tries to validate the
@@ -40,27 +53,30 @@ see that *XLight FTP Server* is now available.
 
 .Descriptions of other parameters
 
-* *Binary file transfer mode* is used by default.  
-Select *No* for ASCII transfer mode.
 * *Connect timeout* defaults to *10000* milliseconds and 
 indicates a maximum wait of 10 seconds to establish 
 the connection. If 10 seconds elapse without a connection then
 {prodname} waits for the number of milliseconds defined by
-*Reconnect delay* and then tries to reconnect.  
-* *Disconnect from server* defaults to *No*. The connection 
-remains established after it performs the action. Select *Yes*
-if you want to disconnect from the server after the connection
-performs the upload or download. 
+*Reconnect delay* and then tries to reconnect. 
+
+* *Reconnect delay* defaults to *1000* milliseconds and indicates the
+wait time before trying to reconnect again. 
+
 * *Maximum reconnect attempts* defaults to *3*. {prodname} tries as many as 3 times
 to establish a connection.
+ 
+* *Binary file transfer mode* is used by default.  
+Select *No* for ASCII transfer mode.
+
 * *Passive connection mode* defaults to *Yes*, which is usually the preferred
 mode. In passive mode, the client opens communication channels with the server
 as a way to avoid firewall issues. If you select *No* then active mode is
 used.
-* *Port* specifies the port that the server is listening on. 
-For an FTP server, the default port is *21*. For an SFTP server, the
-default port is *22*
-* *Reconnect delay* defaults to *1000* milliseconds and indicates the
-wait time before trying to reconnect again. 
+
+* *Disconnect from the server after use* defaults to *No*. The connection 
+remains established after it performs the action. Select *Yes*
+if you want to disconnect from the server after the connection
+performs the upload or download. 
+
 * *Data timeout* defaults to *30000* milliseconds and indicates the maximum
 length of time that {prodname} waits for a reply. 

@@ -1,9 +1,12 @@
 [id='adding-ftp-start-connection']
-= Starting an integration by obtaining files from and FTP or SFTP server
+= Obtaining files from an FTP or SFTP server
 
 To trigger integration execution when
 an FTP or SFTP connection finds the file(s) you are interested in,
-follow these instructions:
+you must add an FTP or SFTP connection as an integration's start 
+connection.
+
+To add an FTP or SFTP connection as a start connection: 
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -26,6 +29,6 @@ of *1000* milliseconds or change the number of milliseconds.
 of *500* milliseconds or change the number of milliseconds. This is the
 interval between polls. 
 . In the *Delete after download* field, accept the default of *No*
-or select *Yes* to download the file and then delete it from the server.
+or select *Yes* to download the file(s) and then delete it(them) from the server.
 . Click *Next* to specify the action's output type. See 
 <<specifying-connection-input-output-types>>.
