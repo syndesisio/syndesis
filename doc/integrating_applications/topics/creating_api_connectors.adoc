@@ -61,6 +61,11 @@ the base URL is `/api/v1` then the connection endpoint is
 mapping steps. If the Swagger file supports more than one schema then {prodname}
 uses the TLS (HTTPS) schema.
 . Review the connector details and optionally upload an icon for the connector.
+If you do not upload an icon, {prodname} generates one.
+You can upload an icon at a later time. When {prodname} displays
+the flow of an integration, it displays a connector's icon
+to represent connections that are created from that connector.
++
 To override a value obtained from
 the Swagger file, edit the field value that you want to change.
 After {prodname} creates a connector,

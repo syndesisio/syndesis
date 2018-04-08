@@ -11,8 +11,8 @@ Perform these steps:
 
 . In {prodname}:
 .. In the left panel, click *Settings*.
-.. Under the page title, in the sentence that starts with *During
-registration*, copy the URL to the clipboard. 
+.. Under the page title, in the sentence that starts with `*During
+registration*``, copy the URL to the clipboard. 
 For example, the URL is something like this:
 `\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 
