@@ -116,6 +116,42 @@ my $RELEASE_MAP =
          }
       }
    },
+ "TP4" =>
+   {
+    "ignite" =>
+      {
+       "registry" => "registry.fuse-ignite.openshift.com/fuse-ignite",
+       "images" =>
+         {
+          "fuse-ignite-server" => "1.3",
+          "fuse-ignite-ui" => "1.3",
+          "fuse-ignite-meta" => "1.3",
+          "fuse-ignite-s2i" => "1.3"
+         }
+      },
+    "pipeline" =>
+      {
+       "registry" => "docker-registry.engineering.redhat.com/jboss-fuse-7-tech-preview",
+       "images" =>
+         {
+          "fuse-ignite-server" => "1.3.4",
+          "fuse-ignite-ui" => "1.3.4",
+          "fuse-ignite-meta" => "1.3.4",
+          "fuse-ignite-s2i" => "1.3.4"
+         }
+      },
+    "brew" =>
+      {
+       "registry" => "brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/jboss-fuse-7-tech-preview",
+       "images" =>
+         {
+          "fuse-ignite-server" => "1.3-2",
+          "fuse-ignite-ui" => "1.3-2",
+          "fuse-ignite-meta" => "1.3-2",
+          "fuse-ignite-s2i" => "1.3-2"
+         }
+      }
+   },
 };
 
 # Extra images to push
@@ -132,13 +168,17 @@ my $EXTRA_IMAGES =
      {
       source => "registry.access.redhat.com/jboss-fuse-6/fis-java-openshift:2.0-9",
       target => "fuse-ignite-java-openshift:1.0"
-     }
+    },
+    {
+      source => "docker.io/prom/prometheus:v2.1.0",
+      target => "prometheus:v2.1.0"
+    }
   ];
 
 # Target system
 my $target_key = "ignite";
 my $source_key = "brew";
-my $release = "TP3";
+my $release = "TP4";
 GetOptions("source=s",\$source_key,
            "release=s",\$release);
 
