@@ -1,6 +1,8 @@
 [id='understanding']
 = Understanding {prodname}
 
+:context: syndesis
+
 {prodname} is an integration platform. With {prodname}, you
 can obtain data from an
 application or service, operate on that data if you need to, and then
@@ -17,6 +19,10 @@ For a high-level overview of {prodname}, see:
 * <<planning>>
 * <<workflow-overview>>
 * <<how-you-use>>
+ifeval::["{context}" == "ignite"]
+* <<about-product-name_{context}>>
+endif::[]
+
 
 include::how_it_works.adoc[leveloffset=+1]
 
@@ -31,3 +37,7 @@ include::planning_integrations.adoc[leveloffset=+1]
 include::workflow_overview.adoc[leveloffset=+1]
 
 include::how_you_use.adoc[leveloffset=+1]
+
+ifeval::["{context}" == "ignite"]
+include::about_product_name.adoc[leveloffset=+1]
+endif::[]

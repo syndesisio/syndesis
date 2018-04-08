@@ -1,0 +1,65 @@
+[id='adding-ftp-finish-middle-connection']
+= Uploading files to an FTP or SFTP server
+
+To finish an integration by uploading files to an FTP or SFTP server, you 
+add an FTP or SFTP connection as the finish connection. You can also
+upload files to an FTP or SFTP server in the middle of an integration. To
+do this, you add an FTP or SFTP connection as a middle connection.  
+
+To add an FTP or SFTP connection that uploads files:
+
+. Start creating the integration.
+. Add and configure the start connection.
+. On the *Choose a Finish Connection* page, do one of the following:
++
+* To finish an integration by uploading files, click the FTP or SFTP connection that
+you want to use. 
+* To upload files in the middle of an integration, click the connection you
+want to use to finish the integration. Configure that connection. When the
+finish connection is part of the integration, in the left panel, hover over
+the plus sign where you want to add an FTP or SFTP connection and click
+*Add a connection*. Click the FTP or SFTP connection that you want to use
+to upload files in the middle of an integration. 
+
+. On the *Choose an Action* page, click *Upload*. 
+. In the *File name expression* field, if you want to upload only one
+particular file, then enter a Simple language
+expression that resolves to a file name. This is the name of the
+file that the action uploads to the server. To upload more than one
+file, leave this field blank. 
+. In the *FTP directory* field, enter the name of a server directory.
+The connection stores the specified file in this directory. If the
+*File name expression* field is blank, then the connection uploads
+all files that were received from the previous integration step. 
+. In the *If file exists* field, indicate the behavior when you are 
+uploading a file that has the same path and name as a file that is on
+the server. Accept the default, *Override*, to overwrite
+the file that is on the server with the file that you are uploading. 
+Or, select one of the following:
+** *Append* adds the content in the file being uploaded to the file
+that is on the server. 
+** *Fail* throws `GenericFileOperationException`. The integration does
+not enter an error state. 
+** *Ignore* does not upload the file. The integration continues running
+under the assumption that everything is okay.
+** *Move* renames one of the files. 
+** *TryRename* creates a temporary version of the file being uploaded, 
+uploads that temporary version, 
+and then assigns the uploaded file to have the name of the file that is 
+already on the server. 
+
+. In the *Temporary file prefix while copying* field, specify a string. 
+The connection prepends this string to the name of a file while it is
+being uploaded. 
+This enables the connection to write to a temporary file on the 
+server and then rename that temporary file to have the correct name. 
+This is useful for reducing locks when uploading very large files.
+. In the *Temporary file name while copying* field, specify a string. 
+The connection renames a file being uploaded to have this name 
+while it is being uploaded.
+This enables the connection to write to a temporary file on the 
+server and then rename that temporary file to have the correct name. 
+This is useful for reducing locks when uploading very large files.
+
+. Click *Next* to specify the action's input type. See 
+<<specifying-connection-input-output-types>>.
