@@ -4,67 +4,10 @@
 After you create an FTP connection or an SFTP connection, you can add 
 it to any number of integrations. 
 
-To download files, you add an FTP or SFTP connection as the start connection
-as follows:
+To trigger execution of an integration by polling an FTP server or an 
+SFTP server for a file or files of interest, see 
+<<adding-ftp-start-connection>>.
 
-. In the {prodname} panel on the left, click *Integrations*.
-. Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the 
-FTP or SFTP connection that
-you want to use to download files to start an integration. 
-. On the *Choose an Action* page, click *Download*.
-. In the *File name expression* field, enter a Simple language
-expression that resolves to a file name. The connection
-polls (periodically checks) the server for this file and downloads it when it is found. 
-. In the *FTP directory* field, enter the name of the server directory to
-poll. The connection watches for the file of interest in this
-directory.
-. In the *Milliseconds before polling starts* field, accept the default 
-of *1000* milliseconds or change the number of milliseconds.
-. In the *Milliseconds before the next poll* field, accept the default
-of *500* milliseconds or change the number of milliseconds. This is the
-interval between polls. 
-. In the *Delete after download* field, accept the default of *No*
-or select *Yes* to download the file and then delete it from the server.
-. Click *Next* to specify the action's output type. See 
-<<specifying-connection-input-output-types>>.
-
-To upload files, you add an FTP or SFTP connection as a finish or 
-middle connection:
-
-. Start creating the integration.
-. Add and configure the start connection.
-. On the *Choose a Finish Connection* page, do one of the following:
-+
-* Click the FTP or SFTP connection that
-you want to use to upload files to finish an integration. 
-* Click some other kind of connection to
-finish the integration. Configure that connection. When the
-finish connection is part of the integration, in the left panel, hover over
-the plus sign where you want to add an FTP or SFTP connection and click
-*Add a connection*. Click the FTP or SFTP connection that you want to use
-to upload files in the middle of an integration. 
-
-. On the *Choose an Action* page, click *Upload*. 
-. In the *File name expression* field, enter a Simple language
-expression that resolves to a file name. This is the name of the
-file that the action uploads to the server.
-. In the *FTP directory* field, enter the name of a server directory.
-The connection stores the file in this directory. 
-. In the *If file exists* field, indicate the behavior when you are 
-uploading a file that has the same path and name as a file that is on
-the server. Accept the default, *Override*, to overwrite
-the file that is on the server with the file that you are uploading. 
-Or, select one of the following:
-** *Append* adds the content in the file being uploaded to the file
-that is on the server. 
-** *Fail* throws `GenericFileOperationException`.
-** *Ignore* does not upload the file. The integration continues running
-under the assumption that everything is okay.
-** *Move* renames one of the files. 
-** *TryRename* renames the file being uploaded with the value in 
-the *Temporary file name* field. 
-** In the *Temporary file prefix while copying* field, specify a string. 
-** In the *Temporary file name while copying* field, specify a string. 
-. Click *Next* to specify the action's input type. See 
-<<specifying-connection-input-output-types>>.
+To <<adding-ftp-finish-middle-connection>>, add an FTP or SFTP
+connection to the middle of an integration or
+to finish an integration. 

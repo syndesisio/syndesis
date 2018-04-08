@@ -1,0 +1,31 @@
+[id='adding-ftp-start-connection']
+= Starting an integration by obtaining files from and FTP or SFTP server
+
+To trigger integration execution when
+an FTP or SFTP connection finds the file(s) you are interested in,
+follow these instructions:
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the 
+FTP or SFTP connection that
+you want to use to poll an FTP or SFTP server. 
+. On the *Choose an Action* page, click *Download*.
+. In the *File name expression* field, if you are interested in a single file, 
+then enter a Simple language
+expression that resolves to a file name. The connection
+polls (periodically checks) the server for this file and downloads it 
+when it is found. Leave this field blank if you want to download more
+than one file.
+. In the *FTP directory* field, enter the name of the server directory to
+poll. The connection watches this directory for any content and downloads
+all files when it finds any content.
+. In the *Milliseconds before polling starts* field, accept the default 
+of *1000* milliseconds or change the number of milliseconds.
+. In the *Milliseconds before the next poll* field, accept the default
+of *500* milliseconds or change the number of milliseconds. This is the
+interval between polls. 
+. In the *Delete after download* field, accept the default of *No*
+or select *Yes* to download the file and then delete it from the server.
+. Click *Next* to specify the action's output type. See 
+<<specifying-connection-input-output-types>>.
