@@ -23,9 +23,36 @@ public final class OperationDescription {
 
     public final String name;
 
+    private final int hashCode;
+
     public OperationDescription(final String name, final String description) {
         this.name = Objects.requireNonNull(name, "operation name");
         this.description = Objects.requireNonNull(description, "operation description");
+        hashCode = 31 * name.hashCode() + 7 * description.hashCode();
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof OperationDescription)) {
+            return false;
+        }
+
+        final OperationDescription other = (OperationDescription) obj;
+
+        return Objects.equals(name, other.name) && Objects.equals(description, other.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        return "OperationDescription: " + name + ", description: " + description;
+    }
 }
