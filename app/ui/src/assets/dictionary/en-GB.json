@@ -20,6 +20,10 @@
       "customizations": "Customizations",
       "settings": "Settings"
     },
+    "links": {
+      "userguide": "https://access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite/{{0}}",
+      "tutorial": "https://access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/"
+    },
     "shared": {
       "loading": "loading",
       "project": {

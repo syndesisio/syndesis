@@ -76,13 +76,13 @@
                 id="helpDropdownMenu"
                 aria-labelledby="helpDropdown">
               <li>
-                <a [href]="tutorialLink"
+                <a [attr.href]="'links.tutorial' | synI18n"
                     rel="nofollow"
                     role="link"
                     target="_blank">Sample Integration Tutorials</a>
               </li>
               <li>
-                <a [href]="userGuideLink"
+                <a [attr.href]="'links.userguide' | synI18n:''"
                     rel="nofollow"
                     role="link"
                     target="_blank">User Guide</a>
@@ -212,14 +212,14 @@
           </div>
           <ul class="list-group">
             <li class="list-group-item">
-              <a [href]="tutorialLink"
+              <a [attr.href]="'links.tutorial' | synI18n"
                 rel="nofollow"
                 role="link"
                 target="_blank"
                 class="list-group-item-value">Sample Integration Tutorials</a>
             </li>
             <li class="list-group-item">
-              <a [href]="userGuideLink"
+              <a [attr.href]="'links.userguide' | synI18n:''"
                 rel="nofollow"
                 role="link"
                 target="_blank"
