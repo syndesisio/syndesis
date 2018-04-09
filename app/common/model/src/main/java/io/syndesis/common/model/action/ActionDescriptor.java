@@ -16,9 +16,13 @@
 package io.syndesis.common.model.action;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.util.immutable.ImmutablesStyle;
 import io.syndesis.common.model.DataShape;
@@ -44,5 +48,13 @@ public interface ActionDescriptor {
 
     Optional<DataShape> getOutputDataShape();
 
-    List<ActionDescriptorStep> getPropertyDefinitionSteps();
+    @Value.Default
+    default List<ActionDescriptorStep> getPropertyDefinitionSteps() {
+        return Collections.emptyList();
+    }
+
+    @JsonIgnore
+    default Map<String, ActionDescriptorStep> getPropertyDefinitionStepsAsMap() {
+        return getPropertyDefinitionSteps().stream().collect(Collectors.toMap(p -> p.getName(), p -> p));
+    }
 }
