@@ -65,6 +65,7 @@ Once all pods are started up, you should be able to access the Syndesis at `http
 | **OPENSHIFT_OAUTH_CLIENT_ID** | OpenShift OAuth client ID | syndesis |
 | **OPENSHIFT_OAUTH_CLIENT_SECRET** | OpenShift OAuth client secret | _(generated)_ |
 | **OPENSHIFT_OAUTH_DEFAULT_SCOPES** | OpenShift OAuth default scopes | user:full |
+| **OPENSHIFT_CONSOLE_URL** | Optional URL to the OpenShift consol (e.g. https://console.123a.openshift.com/console) | |
 | **POSTGRESQL_MEMORY_LIMIT** | Maximum amount of memory the PostgreSQL container can use | 512Mi |
 | **POSTGRESQL_IMAGE_STREAM_NAMESPACE** | The OpenShift Namespace where the PostgreSQL ImageStream resides | openshift |
 | **POSTGRESQL_USER** | Username for PostgreSQL user that will be used for accessing the database | syndesis |
@@ -131,6 +132,7 @@ $ oc new-app --template=syndesis \
 
 Replace `EXTERNAL_HOSTNAME` appropriately with your public Syndesis address (something like `syndesis.127.0.0.1.nip.io` works great if you are using `oc cluster up` locally).
 Also, when using the development version, use 'syndesis-dev' as template name.
+Optionally you can add a parameter `OPENSHIFT_CONSOLE_URL` which should be the base URL to the OpenShift console. If given, this is URL is used to calculate a link to the integration runtime's system log which can be found in the integration's activity page.
 
 #### Log in
 
