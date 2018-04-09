@@ -33,10 +33,10 @@ import io.swagger.models.Swagger;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerParser;
 import io.swagger.parser.util.RemoteUrl;
+import io.syndesis.common.model.Violation;
+import io.syndesis.common.util.Json;
 import io.syndesis.server.connector.generator.swagger.SwaggerModelInfo;
 import io.syndesis.server.connector.generator.swagger.SyndesisSwaggerValidationRules;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.model.Violation;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -98,8 +98,9 @@ public final class SwaggerHelper {
         final String specifiedSummary = trimToNull(operation.getSummary());
         final String specifiedDescription = trimToNull(operation.getDescription());
 
-        final String name = ofNullable(specifiedSummary).orElseGet(() -> method + " " + path);
-        final String description = ofNullable(specifiedDescription).orElseGet(() -> "Send " + method + " request to " + path);
+        final String name = ofNullable(toLiteralNull(specifiedSummary)).orElseGet(() -> method + " " + path);
+        final String description = ofNullable(toLiteralNull(specifiedDescription))
+            .orElseGet(() -> "Send " + method + " request to " + path);
 
         return new OperationDescription(name, description);
     }
@@ -187,6 +188,20 @@ public final class SwaggerHelper {
         violations.add(new Violation.Builder().error(error.orElse("")).message(message.getMessage()).property(property.orElse("")).build());
 
         return true;
+    }
+
+    private static String toLiteralNull(final String given) {
+        if (given == null) {
+            return null;
+        }
+
+        // Swagger parser sometimes interprets empty strings as literal `"null"`
+        // strings
+        if ("null".equals(given)) {
+            return null;
+        }
+
+        return given;
     }
 
     private static SwaggerModelInfo validateJSonSchema(final String specification, final Swagger model) {

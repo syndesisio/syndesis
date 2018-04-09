@@ -53,13 +53,19 @@ public class SwaggerHelperOperationDescriptionGenerationTest {
     public static Iterable<Object[]> parameters() {
         return Arrays.<Object[]>asList(//
             new Object[] {null, null, "GET /test", "Send GET request to /test"}, //
+            new Object[] {"null", "null", "GET /test", "Send GET request to /test"}, //
             new Object[] {null, "", "GET /test", "Send GET request to /test"}, //
+            new Object[] {"null", "", "GET /test", "Send GET request to /test"}, //
             new Object[] {"", null, "GET /test", "Send GET request to /test"}, //
+            new Object[] {"", "null", "GET /test", "Send GET request to /test"}, //
             new Object[] {"", "", "GET /test", "Send GET request to /test"}, //
             new Object[] {"Test summary", "Test description", "Test summary", "Test description"}, //
             new Object[] {"", "Test description", "GET /test", "Test description"}, //
             new Object[] {null, "Test description", "GET /test", "Test description"}, //
+            new Object[] {"null", "Test description", "GET /test", "Test description"}, //
             new Object[] {"Test summary", "", "Test summary", "Send GET request to /test"}, //
-            new Object[] {"Test summary", null, "Test summary", "Send GET request to /test"});
+            new Object[] {"Test summary", null, "Test summary", "Send GET request to /test"}, //
+            new Object[] {"Test summary", "null", "Test summary", "Send GET request to /test"});
     }
+
 }
