@@ -29,7 +29,8 @@ import org.immutables.value.Value;
 
 @IndexedProperty.Multiple({
     @IndexedProperty("integrationId"),
-    @IndexedProperty("currentState")
+    @IndexedProperty("currentState"),
+    @IndexedProperty("targetState")
 })
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationDeployment.Builder.class)
