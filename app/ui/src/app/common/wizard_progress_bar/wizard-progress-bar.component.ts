@@ -17,12 +17,12 @@ import { SlugifyPipe } from '@syndesis/ui/common/slugify.pipe';
         <a class="disabled"
             routerLink="{{ stepUrls[index] }}"
             routerLinkActive="active">
-          <span class="wizard-pf-step-number">
-            {{ index + 1 }}
-          </span>
           <span class="wizard-pf-step-title">
             {{ steps[index] }}
           </span>
+          <span class="wizard-pf-step-number">
+          {{ index + 1 }}
+        </span>
         </a>
       </li>
     </ul>
