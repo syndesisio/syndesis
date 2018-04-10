@@ -15,15 +15,27 @@
  */
 package io.syndesis.server.endpoint.v1.handler.user;
 
+import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import io.fabric8.openshift.api.model.DoneableUser;
+import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.api.model.UserBuilder;
+import io.fabric8.openshift.api.model.UserList;
+import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.server.mock.OpenShiftServer;
-import io.syndesis.common.model.user.User;
 import io.syndesis.server.openshift.OpenShiftServiceImpl;
+
+import javax.ws.rs.core.SecurityContext;
 
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.security.Principal;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
@@ -39,37 +51,53 @@ public class UserHandlerTest {
 
     @Test
     public void successfulWhoAmI() {
-        openShiftServer.expect()
-            .get().withPath("/oapi/v1/users/~")
-            .andReturn(
-                200,
-                new UserBuilder().withFullName("Test User").withNewMetadata().withName("testuser").and().build()
-            ).once();
+
+        SecurityContext sec = mock(SecurityContext.class);
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+        when(sec.getUserPrincipal()).thenReturn(principal);
+
+        NamespacedOpenShiftClient client = mock(NamespacedOpenShiftClient.class);
+        @SuppressWarnings("unchecked")
+        Resource<User,DoneableUser> user = mock(Resource.class);
+        when(user.get()).thenReturn(new UserBuilder().withFullName("Test User").withNewMetadata().withName("testuser").and().build());
+        @SuppressWarnings("unchecked")
+        NonNamespaceOperation<User, UserList, DoneableUser, Resource<User, DoneableUser>> users = mock(NonNamespaceOperation.class);
+        when(users.withName("testuser")).thenReturn(user);
+        when(client.users()).thenReturn(users);
 
         SecurityContextHolder.getContext().setAuthentication(new PreAuthenticatedAuthenticationToken("testuser", "doesn'tmatter"));
 
-        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(openShiftServer.getOpenshiftClient(), null));
-        User user = userHandler.whoAmI();
-        Assertions.assertThat(user).isNotNull();
-        Assertions.assertThat(user.getUsername()).isEqualTo("testuser");
-        Assertions.assertThat(user.getFullName()).isNotEmpty().hasValue("Test User");
+        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(client, null));
+        io.syndesis.common.model.user.User whoAmI = userHandler.whoAmI(sec);
+        Assertions.assertThat(whoAmI).isNotNull();
+        Assertions.assertThat(whoAmI.getUsername()).isEqualTo("testuser");
+        Assertions.assertThat(whoAmI.getFullName()).isNotEmpty().hasValue("Test User");
     }
     @Test
     public void successfulWhoAmIWithoutFullName() {
-        openShiftServer.expect()
-            .get().withPath("/oapi/v1/users/~")
-            .andReturn(
-                200,
-                new UserBuilder().withNewMetadata().withName("testuser").and().build()
-            ).once();
+
+        SecurityContext sec = mock(SecurityContext.class);
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn("testuser");
+        when(sec.getUserPrincipal()).thenReturn(principal);
+
+        NamespacedOpenShiftClient client = mock(NamespacedOpenShiftClient.class);
+        @SuppressWarnings("unchecked")
+        Resource<User,DoneableUser> user = mock(Resource.class);
+        when(user.get()).thenReturn(new UserBuilder().withNewMetadata().withName("testuser").and().build());
+        @SuppressWarnings("unchecked")
+        NonNamespaceOperation<User, UserList, DoneableUser, Resource<User, DoneableUser>> users = mock(NonNamespaceOperation.class);
+        when(users.withName("testuser")).thenReturn(user);
+        when(client.users()).thenReturn(users);
 
         SecurityContextHolder.getContext().setAuthentication(new PreAuthenticatedAuthenticationToken("testuser", "doesn'tmatter"));
 
-        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(openShiftServer.getOpenshiftClient(), null));
-        User user = userHandler.whoAmI();
-        Assertions.assertThat(user).isNotNull();
-        Assertions.assertThat(user.getUsername()).isEqualTo("testuser");
-        Assertions.assertThat(user.getFullName()).isEmpty();
+        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(client, null));
+        io.syndesis.common.model.user.User whoAmI = userHandler.whoAmI(sec);
+        Assertions.assertThat(whoAmI).isNotNull();
+        Assertions.assertThat(whoAmI.getUsername()).isEqualTo("testuser");
+        Assertions.assertThat(whoAmI.getFullName()).isEmpty();
     }
 
 }

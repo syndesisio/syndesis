@@ -29,13 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
-import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 
@@ -156,10 +154,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public User whoAmI(String openShiftToken) {
-        return openShiftClient.withRequestConfig(
-            new RequestConfigBuilder().withOauthToken(openShiftToken).build()
-        ).call(OpenShiftClient::currentUser);
+    public User whoAmI(String username) {
+        return openShiftClient.users().withName(username).get();
     };
 
     private int nullSafe(Integer nr) {
