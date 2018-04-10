@@ -15,7 +15,9 @@
  */
 package io.syndesis.server.runtime;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ModelData;
@@ -51,10 +53,7 @@ public class T3stSupportITCase extends BaseITCase {
         post("/api/v1/test-support/restore-db", noData, (Class<?>) null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
         // Lets add an integration...
-        Integration integration = new Integration.Builder()
-            .id("3001")
-            .name("test")
-            .build();
+        Integration integration = new Integration.Builder().id("3001").name("test").build();
         post("/api/v1/integrations", integration, Integration.class);
 
         // Snapshot should only contain the integration entity..
@@ -69,7 +68,17 @@ public class T3stSupportITCase extends BaseITCase {
 
         // Verify that the new state has the same number of entities as the original
         ResponseEntity<ModelData<?>[]> r3 = get("/api/v1/test-support/snapshot-db", type);
-        assertThat(r3.getBody().length).isEqualTo(r1.getBody().length);
+        assertThat(r3.getBody()).isNotEmpty();
+
+        for (ModelData<?> model : r1.getBody()) {
+            assertThat(Arrays.stream(r3.getBody()).anyMatch(b -> {
+                try {
+                    return Objects.equals(b.getData().getId().get(), model.getData().getId().get());
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+            })).isTrue();
+        }
 
         // restoring 1 item of data
         post("/api/v1/test-support/restore-db", r2.getBody(), (Class<?>) null, tokenRule.validToken(), HttpStatus.NO_CONTENT);
