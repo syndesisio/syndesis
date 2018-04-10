@@ -85,6 +85,7 @@
     "import-db-txt": "Please select the data file to import:",
     "shared": {
       "loading": "loading",
+      "email": "fuse-online-tech-preview@redhat.com",
       "project": {
         "name": "Syndesis"
       },

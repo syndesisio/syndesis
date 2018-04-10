@@ -1,46 +1,33 @@
 <div class="app">
 
-  <pfng-toast-notification-list [notifications]="notifications|async"
-                                (onActionSelect)="handleAction($event)"
-                                (onCloseSelect)="handleClose($event)"
-                                [showClose]="showClose">
+  <pfng-toast-notification-list [notifications]="notifications|async" (onActionSelect)="handleAction($event)" (onCloseSelect)="handleClose($event)"
+    [showClose]="showClose">
   </pfng-toast-notification-list>
 
   <ng-template #brandTemplate>
-    <a routerLink="/"
-       class="navbar-brand"
-       role="link">
-          <img *ngIf="iconDarkBg && iconDarkBg !== ''"
-               [class]="productBuild ? 'navbar-brand-icon product' : 'navbar-brand-icon'"
-               [src]="loggedIn ? iconDarkBg : iconWhiteBg"
-               alt="" />
-          <img *ngIf="logoDarkBg"
-               [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'"
-               [src]="loggedIn ? logoDarkBg : logoWhiteBg"
-               alt="{{ appName }}" />
-          <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''"
-               class="navbar-brand-name">{{ appName }}</span>
-        </a>
+    <a routerLink="/" class="navbar-brand" role="link">
+      <img *ngIf="iconDarkBg && iconDarkBg !== ''" [class]="productBuild ? 'navbar-brand-icon product' : 'navbar-brand-icon'" [src]="loggedIn ? iconDarkBg : iconWhiteBg"
+        alt="" />
+      <img *ngIf="logoDarkBg" [class]="productBuild ? 'navbar-brand-name product' : 'navbar-brand-name'" [src]="loggedIn ? logoDarkBg : logoWhiteBg"
+        alt="{{ appName }}" />
+      <span *ngIf="logoDarkBg === '' && logoWhiteBg === ''" class="navbar-brand-name">{{ appName }}</span>
+    </a>
   </ng-template>
 
   <header *ngIf="!firstTime" role="banner">
 
     <!-- Navbar: Logged Out -->
-    <nav class="navbar navbar-fixed-top navbar-light loggedOut"
-          role="navigation"
-          *ngIf="!loggedIn">
+    <nav class="navbar navbar-fixed-top navbar-light loggedOut" role="navigation" *ngIf="!loggedIn">
       <!-- Logo -->
       <ng-container *ngTemplateOutlet="brandTemplate"></ng-container>
     </nav>
 
     <!-- Navbar: Logged In -->
-    <div *ngIf="loggedIn"
-          class="navbar navbar-pf-vertical">
+    <div *ngIf="loggedIn" class="navbar navbar-pf-vertical">
       <div class="navbar-header">
 
         <!-- Toggle Sidebar-->
-        <button type="button"
-                class="navbar-toggle">
+        <button type="button" class="navbar-toggle">
           <span class="sr-only">{{ 'menu.navbartoggle' | synI18n }}</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -58,23 +45,13 @@
 
           <!-- Help Navbar -->
 
-          <li dropdown
-              class="dropdown help">
-            <a dropdownToggle
-                class="dropdown-toggle nav-item-iconic"
-                id="helpDropdown"
-                aria-haspopup="true"
-                aria-label="Help Dropdown"
-                aria-controls="helpDropdownMenu"
-                role="link"
-                aria-expanded="true">
-              <span title="Help"
-                    class="pficon pficon-help"></span>
+          <li dropdown class="dropdown help">
+            <a dropdownToggle class="dropdown-toggle nav-item-iconic" id="helpDropdown" aria-haspopup="true" aria-label="Help Dropdown"
+              aria-controls="helpDropdownMenu" role="link" aria-expanded="true">
+              <span title="Help" class="pficon pficon-help"></span>
               <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu"
-                id="helpDropdownMenu"
-                aria-labelledby="helpDropdown">
+            <ul class="dropdown-menu" id="helpDropdownMenu" aria-labelledby="helpDropdown">
               <li>
                 <a [attr.href]="'links.tutorial' | synI18n"
                     rel="nofollow"
@@ -90,10 +67,10 @@
                 <a routerLink="/support" role="link">{{ 'support' | synI18n }}</a>
               </li>
               <li>
-                <a href="mailto:fuse-ignite-tech-preview@redhat.com"
-                   rel="nofollow"
-                   role="link"
-                   target="_blank">{{ 'contactus' | synI18n }}</a>
+                <a href="mailto:{{ 'email' | synI18n }}"
+                rel="nofollow"
+                role="link"
+                target="_blank">{{ 'contactus' | synI18n }}</a>
               </li>
             </ul>
           </li>
@@ -124,10 +101,7 @@
               <span class="username">{{ ( user$ | async)?.username }}</span>
               <span class="caret"></span>
             </a>
-            <ul *dropdownMenu
-                class="dropdown-menu"
-                id="userDropdownMenu"
-                aria-labelledby="userDropdown">
+            <ul *dropdownMenu class="dropdown-menu" id="userDropdownMenu" aria-labelledby="userDropdown">
               <li>
                 <a (click)="logout()" role="link">{{ 'header.usermenu.logout' | synI18n }}</a>
               </li>
@@ -152,52 +126,35 @@
   </header>
 
   <!-- Sidebar -->
-  <nav class="nav-pf-vertical hidden-icons-pf"
-       role="navigation"
-       *ngIf="loggedIn">
+  <nav class="nav-pf-vertical hidden-icons-pf" role="navigation" *ngIf="loggedIn">
     <ul class="list-group" role="list">
-      <li class="list-group-item"
-          routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <li class="list-group-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
         <a routerLink="/" role="link">
-          <span class="fa fa-tachometer"
-                data-toggle="tooltip"
-                title="Dashboard"></span>
+          <span class="fa fa-tachometer" data-toggle="tooltip" title="Dashboard"></span>
           <span class="list-group-item-value">{{ 'menu.home' | synI18n }}</span>
         </a>
       </li>
-      <li class="list-group-item"
-          routerLinkActive="active">
+      <li class="list-group-item" routerLinkActive="active">
         <a routerLink="integrations" role="link">
-          <span class="pficon pficon-topology"
-                data-toggle="tooltip"
-                title="Integrations"></span>
+          <span class="pficon pficon-topology" data-toggle="tooltip" title="Integrations"></span>
           <span class="list-group-item-value">{{ 'menu.integrations' | synI18n }}</span>
         </a>
       </li>
-      <li class="list-group-item"
-          routerLinkActive="active">
+      <li class="list-group-item" routerLinkActive="active">
         <a routerLink="connections" role="link">
-          <span class="pficon pficon-network"
-                data-toggle="tooltip"
-                title="Connections"></span>
+          <span class="pficon pficon-network" data-toggle="tooltip" title="Connections"></span>
           <span class="list-group-item-value">{{ 'menu.connections' | synI18n }}</span>
         </a>
       </li>
-      <li class="list-group-item"
-          routerLinkActive="active">
+      <li class="list-group-item" routerLinkActive="active">
         <a routerLink="customizations" role="link">
-          <span class="pficon pficon-network"
-                data-toggle="tooltip"
-                title="Customizations"></span>
+          <span class="pficon pficon-network" data-toggle="tooltip" title="Customizations"></span>
           <span class="list-group-item-value">{{ 'menu.customizations' | synI18n }}</span>
         </a>
       </li>
-      <li class="list-group-item"
-          routerLinkActive="active">
+      <li class="list-group-item" routerLinkActive="active">
         <a routerLink="settings" role="link">
-          <span class="fa fa-lock"
-                data-toggle="tooltip"
-                title="Settings"></span>
+          <span class="fa fa-lock" data-toggle="tooltip" title="Settings"></span>
           <span class="list-group-item-value">{{ 'menu.settings' | synI18n }}</span>
         </a>
       </li>
@@ -222,7 +179,7 @@
                 class="list-group-item-value">{{ 'header.helpmenu.sampletutorials' | synI18n }}</a>
             </li>
             <li class="list-group-item">
-              <a [attr.href]="'links.userguide' | synI18n:''"
+              <a [attr.href]="'links.userguide' | synI18n:' '"
                 rel="nofollow"
                 role="link"
                 target="_blank"
@@ -232,7 +189,7 @@
               <a routerLink="/support" role="link"  class="list-group-item-value">{{ 'support' | synI18n }}</a>
             </li>
             <li class="list-group-item">
-              <a href="mailto:fuse-ignite-tech-preview@redhat.com"
+              <a href="mailto:{{ 'email' | synI18n }}"
                 rel="nofollow"
                 role="link"
                 target="_blank"
@@ -264,21 +221,14 @@
       </li>
     </ul>
   </nav>
-  <main role="main"
-        class="container-fluid container-pf-nav-pf-vertical"
-        *ngIf="loggedIn">
+  <main role="main" class="container-fluid container-pf-nav-pf-vertical" *ngIf="loggedIn">
     <router-outlet></router-outlet>
   </main>
 
-  <syndesis-modal id="importDb"
-                  title="Import Selection"
-                  [body]="importDbModal">
-    <ng-template #importDbModal
-                 let-modal="modal">
-      {{ 'import-db-txt' | synI18n }}
-      <input type="file"
-             id="file-import"
-             (change)="importDB($event, modal)">
+  <syndesis-modal id="importDb" title="Import Selection" [body]="importDbModal">
+    <ng-template #importDbModal let-modal="modal">
+        {{ 'import-db-txt' | synI18n }}
+      <input type="file" id="file-import" (change)="importDB($event, modal)">
     </ng-template>
   </syndesis-modal>
 
