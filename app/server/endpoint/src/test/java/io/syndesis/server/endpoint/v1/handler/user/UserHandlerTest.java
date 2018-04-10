@@ -50,31 +50,6 @@ public class UserHandlerTest {
     }
 
     @Test
-    public void successfulWhoAmI() {
-
-        SecurityContext sec = mock(SecurityContext.class);
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn("testuser");
-        when(sec.getUserPrincipal()).thenReturn(principal);
-
-        NamespacedOpenShiftClient client = mock(NamespacedOpenShiftClient.class);
-        @SuppressWarnings("unchecked")
-        Resource<User,DoneableUser> user = mock(Resource.class);
-        when(user.get()).thenReturn(new UserBuilder().withFullName("Test User").withNewMetadata().withName("testuser").and().build());
-        @SuppressWarnings("unchecked")
-        NonNamespaceOperation<User, UserList, DoneableUser, Resource<User, DoneableUser>> users = mock(NonNamespaceOperation.class);
-        when(users.withName("testuser")).thenReturn(user);
-        when(client.users()).thenReturn(users);
-
-        SecurityContextHolder.getContext().setAuthentication(new PreAuthenticatedAuthenticationToken("testuser", "doesn'tmatter"));
-
-        UserHandler userHandler = new UserHandler(null, new OpenShiftServiceImpl(client, null));
-        io.syndesis.common.model.user.User whoAmI = userHandler.whoAmI(sec);
-        Assertions.assertThat(whoAmI).isNotNull();
-        Assertions.assertThat(whoAmI.getUsername()).isEqualTo("testuser");
-        Assertions.assertThat(whoAmI.getFullName()).isNotEmpty().hasValue("Test User");
-    }
-    @Test
     public void successfulWhoAmIWithoutFullName() {
 
         SecurityContext sec = mock(SecurityContext.class);
