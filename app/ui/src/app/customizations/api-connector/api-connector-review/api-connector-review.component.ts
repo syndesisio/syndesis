@@ -15,7 +15,7 @@ export class ApiConnectorReviewComponent {
   @Input() showNextButton: boolean;
   @Input() set apiConnectorData(value: ApiConnectorData) {
     this.validation = value;
-    const actionCountByTags = value.actionsSummary.actionCountByTags;
+    const actionCountByTags = value.actionsSummary.actionCountByTags || {};
     this.importedActions = Object.keys(actionCountByTags).map(key => ({
       tag: key,
       count: +actionCountByTags[key]
