@@ -24,6 +24,8 @@ import java.util.concurrent.TimeoutException;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.openshift.api.model.User;
+import io.fabric8.openshift.api.model.UserBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,8 +157,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     @Override
     public User whoAmI(String username) {
-        return openShiftClient.users().withName(username).get();
-    };
+        return new UserBuilder().withNewMetadata().withName(username).and().build();
+    }
 
     private int nullSafe(Integer nr) {
         return nr != null ? nr : 0;
