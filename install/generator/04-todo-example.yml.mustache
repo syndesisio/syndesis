@@ -26,9 +26,6 @@
     path: /
     port:
       targetPort: 8080
-    tls:
-      insecureEdgeTerminationPolicy: Redirect
-      termination: edge
     to:
       kind: Service
       name: todo
