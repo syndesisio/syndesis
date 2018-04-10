@@ -15,8 +15,6 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -25,6 +23,8 @@ import org.apache.camel.AsyncProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.DefaultExchangeFormatter;
 import org.apache.camel.util.AsyncProcessorHelper;
+
+import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
 
 /**
  * Processor used to track the end of a Syndesis step.
@@ -47,7 +47,7 @@ public class StepDoneTracker implements AsyncProcessor {
 
     @SuppressWarnings("PMD")
     public static void done(Exchange exchange) {
-        StepStartTracker startTracker = (StepStartTracker) exchange.removeProperty(StepStartTracker.STEP_START_TRACKER);
+        StepStartTracker startTracker = (StepStartTracker) exchange.removeProperty(IntegrationLoggingConstants.STEP_START_TRACKER);
         if (startTracker != null) {
             long duration = System.nanoTime() - startTracker.getStartedAt();
             System.out.println(toJsonObject(
