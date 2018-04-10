@@ -109,8 +109,7 @@
   </rule>
   <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
     <properties>
-      <property name="methodReportLevel" value="20" />
-      <property name="classReportLevel" value="100" />
+      <property name="reportLevel" value="20" />
     </properties>
     <priority>3</priority>
   </rule>
@@ -384,7 +383,7 @@
       <property name="minimum" value="3" />
     </properties>
   </rule>
-  <rule ref="rulesets/java/naming.xml/MIsLeadingVariableName">
+  <rule ref="rulesets/java/naming.xml/MisleadingVariableName">
     <priority>4</priority>
   </rule>
   <rule ref="rulesets/java/empty.xml/EmptyTryBlock">
