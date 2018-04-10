@@ -20,9 +20,6 @@ import { SlugifyPipe } from '@syndesis/ui/common/slugify.pipe';
           <span class="wizard-pf-step-title">
             {{ steps[index] }}
           </span>
-          <span class="wizard-pf-step-number">
-          {{ index + 1 }}
-        </span>
         </a>
       </li>
     </ul>
