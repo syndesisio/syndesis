@@ -15,7 +15,9 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,13 +38,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action;
+import io.syndesis.common.model.action.ActionDescriptor;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
@@ -365,9 +375,17 @@ public class IntegrationHandler extends BaseHandler
         // We also need to update the related action
         if  (action.isPresent() && action.get().hasId()) {
             if (connection.isPresent() && connection.get().getConnector().isPresent()) {
-                action = connection.get().getConnector().get().findActionById(action.get().getId().get());
+                final Action oldAction = action.get();
+
+                action = connection.get().getConnector().get().findActionById(action.get().getId().get()).map(
+                    newAction -> merge(oldAction, newAction)
+                );
             } else if (extension.isPresent()) {
-                action = extension.get().findActionById(action.get().getId().get());
+                final Action oldAction = action.get();
+
+                action = extension.get().findActionById(action.get().getId().get()).map(
+                    newAction -> merge(oldAction, newAction)
+                );
             }
         }
 
@@ -377,5 +395,123 @@ public class IntegrationHandler extends BaseHandler
             .connection(connection)
             .extension(extension)
             .build();
+    }
+
+    /*
+     * https://github.com/syndesisio/syndesis/issues/2247
+     *
+     * When the UI ask for an integration its component (connector, extensions,
+     * etc) are updated and moved to their latest version and this work just
+     * fine for static actions. For dynamic action (for which metadata is retrieved
+     * from thr syndesis-meta service), this is problematic as the action is
+     * replaced with its latest version thus all the enriched data are lost.
+     *
+     * This _ UGLY _ hack tries to merge old and new actions but it does not take
+     * into account properties that may have updated, so if a new property has
+     * i.e. new default values, the new default is not taken into account and the
+     * old ConfigurationProperty is left untouched.
+     */
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
+    public Action merge(Action oldAction, Action newAction) {
+        if (newAction instanceof ConnectorAction) {
+            // to real type
+            final ConnectorAction oldConnectorAction = (ConnectorAction)oldAction;
+            final ConnectorAction newConnectorAction = (ConnectorAction)newAction;
+
+            // descriptor
+            ConnectorDescriptor.Builder descriptorBuilder = new ConnectorDescriptor.Builder().createFrom(newAction.getDescriptor());
+
+            // reset properties
+            descriptorBuilder.propertyDefinitionSteps(Collections.emptyList());
+
+            // data shapes
+            oldAction.getDescriptor().getInputDataShape().ifPresent(descriptorBuilder::inputDataShape);
+            oldAction.getDescriptor().getOutputDataShape().ifPresent(descriptorBuilder::outputDataShape);
+
+            Map<String, ActionDescriptor.ActionDescriptorStep> oldDefinitions = oldConnectorAction.getDescriptor().getPropertyDefinitionStepsAsMap();
+            Map<String, ActionDescriptor.ActionDescriptorStep> newDefinitions = newConnectorAction.getDescriptor().getPropertyDefinitionStepsAsMap();
+
+            for (Map.Entry<String, ActionDescriptor.ActionDescriptorStep> entry: newDefinitions.entrySet()) {
+                ActionDescriptor.ActionDescriptorStep newDefinition = entry.getValue();
+                ActionDescriptor.ActionDescriptorStep oldDefinition = oldDefinitions.get(entry.getKey());
+
+                ActionDescriptor.ActionDescriptorStep.Builder b;
+
+                if (oldDefinition != null) {
+                    b = new ActionDescriptor.ActionDescriptorStep.Builder();
+                    b.name(oldDefinition.getName());
+                    b.configuredProperties(oldDefinition.getConfiguredProperties());
+
+                    Map<String, ConfigurationProperty> oldProperties = oldDefinition.getProperties();
+                    Map<String, ConfigurationProperty> newProperties = newDefinition.getProperties();
+
+                    // Add new or properties in common
+                    MapDifference<String, ConfigurationProperty> diff = Maps.difference(oldProperties, newProperties);
+                    diff.entriesInCommon().forEach(b::putProperty);
+                    diff.entriesDiffering().forEach((k, v) -> b.putProperty(k, v.leftValue()));
+                    diff.entriesOnlyOnRight().forEach(b::putProperty);
+                } else {
+                    b = new ActionDescriptor.ActionDescriptorStep.Builder().createFrom(newDefinition);
+                }
+
+                descriptorBuilder.addPropertyDefinitionStep(b.build());
+            }
+
+            return new ConnectorAction.Builder()
+                .createFrom(newAction)
+                .descriptor(descriptorBuilder.build())
+                .build();
+        }
+
+        if (newAction instanceof StepAction) {
+            // to real type
+            final StepAction oldStepAction = (StepAction)oldAction;
+            final StepAction newStepAction = (StepAction)newAction;
+
+            // descriptor
+            StepDescriptor.Builder descriptorBuilder = new StepDescriptor.Builder().createFrom(newAction.getDescriptor());
+
+            // reset properties
+            descriptorBuilder.propertyDefinitionSteps(Collections.emptyList());
+
+            // data shapes
+            oldAction.getDescriptor().getInputDataShape().ifPresent(descriptorBuilder::inputDataShape);
+            oldAction.getDescriptor().getOutputDataShape().ifPresent(descriptorBuilder::outputDataShape);
+
+            Map<String, ActionDescriptor.ActionDescriptorStep> oldDefinitions = oldStepAction.getDescriptor().getPropertyDefinitionStepsAsMap();
+            Map<String, ActionDescriptor.ActionDescriptorStep> newDefinitions = newStepAction.getDescriptor().getPropertyDefinitionStepsAsMap();
+
+            for (Map.Entry<String, ActionDescriptor.ActionDescriptorStep> entry: newDefinitions.entrySet()) {
+                ActionDescriptor.ActionDescriptorStep newDefinition = entry.getValue();
+                ActionDescriptor.ActionDescriptorStep oldDefinition = oldDefinitions.get(entry.getKey());
+
+                ActionDescriptor.ActionDescriptorStep.Builder b;
+
+                if (oldDefinition != null) {
+                    b = new ActionDescriptor.ActionDescriptorStep.Builder();
+                    b.name(oldDefinition.getName());
+                    b.configuredProperties(oldDefinition.getConfiguredProperties());
+
+                    Map<String, ConfigurationProperty> oldProperties = oldDefinition.getProperties();
+                    Map<String, ConfigurationProperty> newProperties = newDefinition.getProperties();
+
+                    // Add new or properties in common
+                    MapDifference<String, ConfigurationProperty> diff = Maps.difference(oldProperties, newProperties);
+                    diff.entriesInCommon().forEach(b::putProperty);
+                    diff.entriesOnlyOnRight().forEach(b::putProperty);
+                } else {
+                    b = new ActionDescriptor.ActionDescriptorStep.Builder().createFrom(newDefinition);
+                }
+
+                descriptorBuilder.addPropertyDefinitionStep(b.build());
+            }
+
+            return new StepAction.Builder()
+                .createFrom(newAction)
+                .descriptor(descriptorBuilder.build())
+                .build();
+        }
+
+        return newAction;
     }
 }
