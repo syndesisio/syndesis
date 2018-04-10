@@ -29,9 +29,10 @@ public class IntegrationLoggingListener implements LogListener {
     public String onLog(Exchange exchange, CamelLogger camelLogger, String message) {
         final Marker marker = camelLogger.getMarker();
         final String step = marker != null ? marker.getName() : "null";
+        final String exchangeId = exchange.getProperty(IntegrationLoggingConstants.EXCHANGE_ID, exchange.getExchangeId(), String.class);
 
         System.out.println(toJsonObject(
-            "exchange", exchange.getExchangeId(),
+            "exchange", exchangeId,
             "step", step,
             "id", KeyGenerator.createKey(),
             "message", message)

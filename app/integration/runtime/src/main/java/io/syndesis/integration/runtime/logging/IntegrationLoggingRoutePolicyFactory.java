@@ -36,6 +36,8 @@ public class IntegrationLoggingRoutePolicyFactory implements RoutePolicyFactory 
         return new DefaultRoutePolicy() {
             @Override
             public void onExchangeBegin(Route route, Exchange exchange) {
+                exchange.setProperty(IntegrationLoggingConstants.EXCHANGE_ID, exchange.getExchangeId());
+
                 System.out.println(toJsonObject(
                     "exchange", exchange.getExchangeId(),
                     "status", "begin"));

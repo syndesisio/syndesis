@@ -26,8 +26,6 @@ import io.syndesis.common.util.KeyGenerator;
  * Used to track the start of a syndesis step.
  */
 public class StepStartTracker implements AsyncProcessor {
-    public static final String STEP_START_TRACKER = "Syndesis.STEP_START_TRACKER";
-
     private final String step;
     private String id;
     private long startedAt;
@@ -46,7 +44,7 @@ public class StepStartTracker implements AsyncProcessor {
     public boolean process(Exchange exchange, AsyncCallback callback) {
         this.setId(KeyGenerator.createKey());
         this.setStartedAt(System.nanoTime());
-        exchange.setProperty(STEP_START_TRACKER, this);
+        exchange.setProperty(IntegrationLoggingConstants.STEP_START_TRACKER, this);
         return true;
     }
 
