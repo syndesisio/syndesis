@@ -693,7 +693,7 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "producer",
-      "required": false,
+      "required": true,
       "secret": false,
       "type": "string"
     },
@@ -707,7 +707,7 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "producer",
-      "required": false,
+      "required": true,
       "secret": false,
       "type": "string"
     },
@@ -841,7 +841,7 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "producer",
-      "required": false,
+      "required": true,
       "secret": false,
       "type": "hidden",
       "tags": [
