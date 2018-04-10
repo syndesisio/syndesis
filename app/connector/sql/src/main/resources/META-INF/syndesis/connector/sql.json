@@ -30,7 +30,8 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "labelHint": "JDBC URL of the database."
+      "labelHint": "JDBC URL of the database.",
+      "order": "1"
     },
     "user": {
       "kind": "property",
@@ -44,7 +45,8 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "labelHint": "Username for the database connection."
+      "labelHint": "Username for the database connection.",
+      "order": "2"
     },
     "password": {
       "kind": "property",
@@ -58,7 +60,8 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "labelHint": "Password for the database connection."
+      "labelHint": "Password for the database connection.",
+      "order": "3"
     },
     "schema": {
       "kind": "property",
@@ -72,7 +75,8 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "labelHint": "Database schema."
+      "labelHint": "Database schema.",
+      "order": "4"
     }
   },
   "connectorCustomizers": [
