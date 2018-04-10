@@ -41,7 +41,7 @@ export class IntegrationActivityComponent implements OnInit {
 
     if (step) {
       const { name, action } = step;
-      stepName = name || action && action.name ? action.name : stepName;
+      stepName = name || ( action && action.name ? action.name : stepName );
     }
 
     return stepName;
