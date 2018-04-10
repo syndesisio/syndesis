@@ -18,6 +18,7 @@ package io.syndesis.server.connector.generator.swagger;
 import java.io.IOException;
 import java.util.Optional;
 
+import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
@@ -28,6 +29,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorSummary;
+import io.syndesis.server.connector.generator.swagger.util.SwaggerHelper;
 
 import org.junit.Test;
 
@@ -90,6 +92,34 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     }
 
     @Test
+    public void shouldDetermineConnectorDescription() {
+        final Swagger swagger = new Swagger();
+
+        assertThat(generator.determineConnectorDescription(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+
+        final Info info = new Info();
+        swagger.info(info);
+        assertThat(generator.determineConnectorDescription(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+
+        info.description("description");
+        assertThat(generator.determineConnectorDescription(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("description");
+    }
+
+    @Test
+    public void shouldDetermineConnectorName() {
+        final Swagger swagger = new Swagger();
+
+        assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+
+        final Info info = new Info();
+        swagger.info(info);
+        assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+
+        info.title("title");
+        assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("title");
+    }
+
+    @Test
     public void shouldIncorporateGivenConfiguredProperties() throws IOException {
         final String specification = resource("/swagger/reverb.swagger.yaml");
 
@@ -143,4 +173,9 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         assertThat(summary.getWarnings()).isEmpty();
     }
 
+    private static ConnectorSettings createSettingsFrom(final Swagger swagger) {
+        return new ConnectorSettings.Builder()//
+            .putConfiguredProperty("specification", SwaggerHelper.serialize(swagger))//
+            .build();
+    }
 }
