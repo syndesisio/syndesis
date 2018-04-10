@@ -51,8 +51,7 @@ export class I18NProviderService extends I18NService {
     }
 
     let translation = this.getTranslatedTerm(this.dictionary, ...translateKeys);
-
-    if (translation !== fallbackValue)  {
+    if (translation !== fallbackValue) {
       translation = this.replaceLabelPlaceholders(translation, args);
       translation = this.replaceIndexPlaceholders(translation, args);
     }
@@ -77,8 +76,7 @@ export class I18NProviderService extends I18NService {
   getValue(dictionaryKey: string, args?: any[]): Observable<string> {
     return this.platformStore
       .select(selectI18NState)
-      .delay(0)
-      .switchMap(() => this.localize(dictionaryKey, args));
+      .map(() => this.localize(dictionaryKey, args));
   }
 
   private getTranslatedTerm(dictionary: DictionaryEntry, ...keys: string[]): string {
@@ -87,6 +85,7 @@ export class I18NProviderService extends I18NService {
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       translationMatch = translationMatch[key];
+
       if (!translationMatch) {
         return fallbackValue;
       }

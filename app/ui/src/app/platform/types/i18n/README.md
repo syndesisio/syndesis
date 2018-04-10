@@ -292,7 +292,7 @@ By doing the above we can handle as many links as we wish from inside a single c
 ## Using i18n values programmatically
 Up to now we've seen how we handle I18N features from within the templates and how we can edit the dictionary files. However, in our daily practice we might need to access a particular dictionary entry from within our code. This is more of an edge case, though.
 
-If you ever need to access specific keys from the I18N store, you can either subscribe to the store slice or use the `getValue(dictionaryKey: string, args?: any[]): Observable<string>` method available at the `I18NService` injectable class. Such method will return an observable string which will issue values every time the active locale is changed.
+If you ever need to access specific keys from the I18N store, you can leverage the `I18NService.getValue(dictionaryKey: string, args?: any[]): Observable<string>` method available at the `I18NService` injectable class. Such method will return an observable string which will issue values every time the active locale is changed.
 
 ### Switching to another I18N locale programmatically
 You can swap the active dictionary by triggering the `I18NFetch` action, properly populated with the locale you want to enable. Eg:
