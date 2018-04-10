@@ -25,12 +25,37 @@ data:
       "version": "1.0.0",
       "description": "Technical Preview 1",
       "template": "syndesis-restricted-1.0",
-      "oauthclient": "syndesis-oauthclient-1.0",
-      "default": true
+      "oauthclient": "syndesis-oauthclient-1.0"
     },
     {
       "version": "1.1.1",
       "description": "Technical Preview 2",
       "template": "syndesis-restricted-1.1",
       "oauthclient": "syndesis-oauthclient-1.1"
+    },
+    {
+      "version": "1.3.4",
+      "description": "Technical Preview 4",
+      "template": "syndesis-fuse-ignite-1.3",
+      "oauthclient": "syndesis-oauthclient-1.2",
+      "default": true
     }]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: syndesis
+  name: syndesis-oauthclient-1.2
+data:
+  oauthclient: |-
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: syndesis-oauth-client
+      labels:
+        app: syndesis
+      annotations:
+        serviceaccounts.openshift.io/oauth-redirecturi.local: https://localhost:4200
+        serviceaccounts.openshift.io/oauth-redirecturi.route: https://
+        serviceaccounts.openshift.io/oauth-redirectreference.route: '{"kind": "OAuthRedirectReference", "apiVersion": "v1", "reference": {"kind": "Route","name": "syndesis"}}'
