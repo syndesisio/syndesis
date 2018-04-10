@@ -52,8 +52,8 @@ public final class TestHelper {
 
         final Map<?, ?> tree = Json.reader().forType(Map.class).readValue(json);
 
-        return Json.copyObjectMapperConfiguration().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true).writerWithDefaultPrettyPrinter()
-            .writeValueAsString(tree);
+        return Json.copyObjectMapperConfiguration().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+            .writerWithDefaultPrettyPrinter().writeValueAsString(tree);
     }
 
     static String resource(final String path, final String alternative) throws IOException {

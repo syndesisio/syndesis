@@ -136,6 +136,27 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     }
 
     @Test
+    public void shouldNotFailOnEmptySwagger() {
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
+            .putConfiguredProperty("specification", "{}")//
+            .build();
+
+        final ConnectorSummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        assertThat(summary).isNotNull();
+    }
+
+    @Test
+    public void shouldNotFailOnTrivialyEmptyOperations() {
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
+            .putConfiguredProperty("specification",
+                "{\"swagger\": \"2.0\",\"info\": {\"version\": \"0.0.0\",\"title\": \"title\",\"description\": \"description\"},\"paths\": {\"/operation\": {\"get\": {\"responses\": {\"200\": {\"description\": \"OK\"}}}}}}")//
+            .build();
+
+        final ConnectorSummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        assertThat(summary).isNotNull();
+    }
+
+    @Test
     public void shouldProvideInfoFromPetstoreSwagger() throws IOException {
         final String specification = resource("/swagger/petstore.swagger.json");
 
@@ -170,7 +191,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         final ConnectorSummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(summary.getErrors()).hasSize(1);
-        assertThat(summary.getWarnings()).isEmpty();
+        assertThat(summary.getWarnings()).hasSize(1);
     }
 
     private static ConnectorSettings createSettingsFrom(final Swagger swagger) {

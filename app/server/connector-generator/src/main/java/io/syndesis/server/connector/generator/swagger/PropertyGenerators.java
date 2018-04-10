@@ -25,8 +25,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
-
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.AbstractSecuritySchemeDefinition;
@@ -161,31 +159,32 @@ enum PropertyGenerators {
         final URI specificationUrl = (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
 
         final List<Scheme> schemes = swagger.getSchemes();
+        final boolean noSchemes = schemes == null || schemes.isEmpty();
+        if (noSchemes && specificationUrl == null) {
+            return null;
+        }
+
         final String schemeToUse;
-        if (schemes == null || schemes.isEmpty()) {
-            schemeToUse = requireNonNull(specificationUrl,
-                "Swagger specification does not provide a `schemes` definition "
-                    + "and the Swagger specification was uploaded so the originating URL is lost to determine the scheme to use")
-                        .getScheme();
-        } else if (schemes.size() == 1) {
-            final Scheme scheme = schemes.get(0);
-            schemeToUse = scheme.toValue();
+        if (noSchemes && specificationUrl != null) {
+            schemeToUse = specificationUrl.getScheme();
         } else if (schemes.contains(Scheme.HTTPS)) {
             schemeToUse = "https";
         } else {
             schemeToUse = schemes.stream()//
                 .filter(s -> s.toValue().startsWith("http"))//
+                .map(s -> s.toValue())//
                 .findFirst()//
-                .orElseThrow(() -> new IllegalArgumentException(
-                    "Unable to find a supported scheme within the schemes given in the Swagger specification: " + schemes))//
-                .toValue();
+                .orElse(null);
         }
 
         final String host = swagger.getHost();
+        if (StringUtils.isEmpty(host) && specificationUrl == null) {
+            return null;
+        }
+
         String hostToUse;
-        if (StringUtils.isEmpty(host)) {
-            hostToUse = requireNonNull(specificationUrl, "Swagger specification does not provide a `host` definition "
-                + "and the Swagger specification was uploaded so it is impossible to determine the originating URL").getHost();
+        if (StringUtils.isEmpty(host) && specificationUrl != null) {
+            hostToUse = specificationUrl.getHost();
         } else {
             hostToUse = swagger.getHost();
         }

@@ -17,8 +17,8 @@ package io.syndesis.server.connector.generator.swagger;
 
 import java.util.List;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.common.util.Json;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
