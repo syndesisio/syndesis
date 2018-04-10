@@ -49,9 +49,11 @@ public class StepDoneTracker implements AsyncProcessor {
     public static void done(Exchange exchange) {
         StepStartTracker startTracker = (StepStartTracker) exchange.removeProperty(IntegrationLoggingConstants.STEP_START_TRACKER);
         if (startTracker != null) {
-            long duration = System.nanoTime() - startTracker.getStartedAt();
+            final long duration = System.nanoTime() - startTracker.getStartedAt();
+            final String exchangeId = exchange.getProperty(IntegrationLoggingConstants.EXCHANGE_ID, exchange.getExchangeId(), String.class);
+
             System.out.println(toJsonObject(
-                "exchange", exchange.getExchangeId(),
+                "exchange", exchangeId,
                 "step", startTracker.getStep(),
                 "id", startTracker.getId(),
                 "duration", duration,
