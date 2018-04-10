@@ -117,6 +117,6 @@ public interface OpenShiftService {
      * Returns the currently logged in user.
      * @return The currently logged in user.
      */
-    User whoAmI(String token);
+    User whoAmI(String username);
 
 }

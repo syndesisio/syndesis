@@ -76,7 +76,7 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public User whoAmI(String openShiftToken) {
+    public User whoAmI(String username) {
         return new UserBuilder().withNewMetadata().withName("openshift_noop").and().withFullName("OpenShift NoOp").build();
     }
 

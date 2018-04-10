@@ -23,14 +23,16 @@ import io.syndesis.server.openshift.OpenShiftService;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.Optional;
 
 @Path("/users")
@@ -53,9 +55,9 @@ public class UserHandler extends BaseHandler implements Lister<User>, Getter<Use
     @Path("~")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public User whoAmI() {
-        String token = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getCredentials());
-        io.fabric8.openshift.api.model.User openShiftUser = this.openShiftService.whoAmI(token);
+    public User whoAmI(@Context SecurityContext sec) {
+        String username = sec.getUserPrincipal().getName();
+        io.fabric8.openshift.api.model.User openShiftUser = this.openShiftService.whoAmI(username);
         Assert.notNull(openShiftUser, "A valid user is required");
         return new User.Builder()
             .username(openShiftUser.getMetadata().getName())

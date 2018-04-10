@@ -24,18 +24,18 @@ import java.util.concurrent.TimeoutException;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.openshift.api.model.User;
+import io.fabric8.openshift.api.model.UserBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.Quantity;
-import io.fabric8.kubernetes.client.RequestConfigBuilder;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.OpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 
@@ -156,11 +156,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public User whoAmI(String openShiftToken) {
-        return openShiftClient.withRequestConfig(
-            new RequestConfigBuilder().withOauthToken(openShiftToken).build()
-        ).call(OpenShiftClient::currentUser);
-    };
+    public User whoAmI(String username) {
+        return new UserBuilder().withNewMetadata().withName(username).and().build();
+    }
 
     private int nullSafe(Integer nr) {
         return nr != null ? nr : 0;
