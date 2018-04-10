@@ -1,0 +1,16 @@
+[id='connecting-to-mqtt']
+= Connecting to MQTT
+
+MQ Telemetry Transport (MQTT) is a lightweight,
+machine-to-machine, internet of things, connectivity protocol. 
+In an integration, you can obtain messages from or publish messages to
+an MQTT broker. To do this, create a connection to the MQTT broker
+of interest and then add that connection to an integration.
+Details are in the following topics:
+
+* <<creating-mqtt-connections>>
+* <<adding-mqtt-connections>>
+
+include::creating_mqtt_connections.adoc[leveloffset=+1]
+
+include::adding_mqtt_connections.adoc[leveloffset=+1]

@@ -1,16 +1,19 @@
 [id='connecting-to-amqp']
 = Connecting to AMQP
 
-Advanced Message Queue Protocol (AMQP) defines communication 
-between clients and message brokers. Use the AMQP connector to create a 
-connection to one of the following broker types:
+In an integration, you can obtain messages from or publish messages
+to an Advanced Message Queue Protocol (AMQP) broker. AMQP defines communication 
+between clients and message brokers. To communicate with the following 
+broker types, use the AMQP connector to create a connection to the
+broker of interest:
 
 * Apache ActiveMQ broker that supports AMQP
 * Apache ActiveMQ Artemis 
 * AMQ 7 broker
 * EnMasse, which is an open source messaging platform
 
-To connect to one of the following broker types, use the AMQ connector:
+To communicate with one of the following broker types, use the AMQ connector 
+to create a connection to the broker of interest:
 
 * Apache ActiveMQ broker that does not support AMQP
 * AMQ 6 broker

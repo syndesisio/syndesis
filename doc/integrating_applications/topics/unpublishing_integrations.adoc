@@ -5,7 +5,7 @@ Each integration can have exactly one version that is running. A running
 version is in the *Published* state. To stop
 running an integration, you unpublish it.
 
-To unpublish and integration:
+To unpublish an integration:
 
 . In the left {prodname} panel, click *Integrations*.
 . In the list of integrations, identify the entry for the integration that you

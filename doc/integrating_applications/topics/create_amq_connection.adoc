@@ -35,7 +35,7 @@ details as needed and try again.
 . If validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, for an AMQ connection, you might enter `AMQ 1`.
+For example, you might enter `AMQ 1`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample AMQ connection

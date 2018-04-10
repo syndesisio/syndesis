@@ -1,14 +1,18 @@
 [id='connecting-to-amq']
 = Connecting to AMQ
 
-Apache ActiveMQ (AMQ) uses the OpenWire protocol for communication
-between clients and message brokers. Use the AMQ connector to create a 
-connection to one of the following broker types:
+In an integration, you can obtain messages from an 
+ApacheMQ (AMQ) broker or publish messages to 
+an AMQ broker. AMQ uses the OpenWire protocol for communication
+between clients and message brokers. To communicate with the following 
+broker types, use the AMQ connector to create a connection to the
+broker of interest:
 
 * Apache ActiveMQ broker that does not support AMQP
 * AMQ 6 broker
 
-To connect to one of the following broker types, use the AMQP connector:
+To communicate with one of the following broker types, use the AMQP connector 
+to create a connection to the broker of interest:
 
 * Apache ActiveMQ broker that supports AMQP
 * Apache ActiveMQ Artemis 
