@@ -29,8 +29,3 @@ information for.  You view {prodname} information for a log step in the
 same way that you view {prodname} information for any other step. 
 
 To add a log step, see <<add-log-step>>.
-
-You can also view log information for an integration in the
-OpenShift console. At the top of the *Activity* tab, click
-*View Log in OpenShift* to view the log of the last pod that ran the
-integration.

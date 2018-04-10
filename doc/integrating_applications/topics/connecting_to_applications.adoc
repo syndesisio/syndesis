@@ -13,6 +13,7 @@ creating connections and adding them to integrations:
 * <<connecting-to-dropbox>>
 * <<connecting-to-ftp>>
 * <<connecting-to-http>>
+* <<connecting-to-mqtt>>
 * <<connecting-to-rest-apis>>
 * <<connecting-to-sf>>
 * <<connecting-to-slack>>
@@ -34,6 +35,8 @@ include::connecting_to_dropbox.adoc[leveloffset=+1]
 include::connecting_to_ftp.adoc[leveloffset=+1]
 
 include::connecting_to_http.adoc[leveloffset=+1]
+
+include::connecting_to_mqtt.adoc[leveloffset=+1]
 
 include::connecting_to_rest_apis.adoc[leveloffset=+1]
 

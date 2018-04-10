@@ -1,8 +1,9 @@
 [id='adding-slack-connections']
 = Adding a Slack connection to an integration
 
-In an integration, to connect to an instance of Slack, first create
-a Slack connection. You then add that connection to an integration. 
+In an integration, to send a message to a Slack channel or user, first create
+a Slack connection. You can then add that connection to any number
+of integrations. 
 
 To add a Slack connection to an integration, you must be creating or
 editing an integration. If you are creating an integration, then
@@ -19,7 +20,7 @@ To add a Slack connection:
 * Click *Username* to send a message to one user. To configure this action,
 in the *Username* field, specify the name of the user to send the message
 to.
-* Click *Channel* to publish a message on a spcific channel. To configure
+* Click *Channel* to publish a message on a specific channel. To configure
 this action, in the *Channel* field, specify the channel to publish 
 the message to. 
 

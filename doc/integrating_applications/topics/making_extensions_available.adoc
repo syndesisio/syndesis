@@ -43,5 +43,8 @@ older driver, {prodname} automatically uses the new driver instead.
 . Click *Import Extension*. {prodname} makes the custom connector or 
 custom step(s) available and displays the extension's details page. 
 
-See also: <<creating-connections-from-custom-connectors>>,
-<<add-custom-step>>, <<connecting-to-proprietary-databases>>.
+See also: 
+
+* <<creating-connections-from-custom-connectors>>
+* <<add-custom-step>>
+* <<connecting-to-proprietary-databases>>

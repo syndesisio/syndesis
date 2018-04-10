@@ -1,0 +1,18 @@
+[id='adding-mqtt-connections']
+= Adding an MQTT connection to an integration
+
+You must create an MQTT connection before you can add it to an
+integration. If you did not already create an MQTT connection, 
+see <<creating-mqtt-connections>>. 
+
+The procedure for adding an MQTT connection to an integration varies
+according to whether you want to use the MQTT connection to 
+obtain a message or publish a message. 
+See the following topics:
+
+* <<adding-mqtt-connection-start>>
+* <<adding-mqtt-connection-finish-middle>>
+
+include::adding_mqtt_connection_start.adoc[leveloffset=+1]
+
+include::adding_mqtt_connection_finish_middle.adoc[leveloffset=+1]

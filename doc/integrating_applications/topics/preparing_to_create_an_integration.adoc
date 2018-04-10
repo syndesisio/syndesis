@@ -2,7 +2,7 @@
 = Preparing to create an integration
 
 Preparation for creating an integration starts with answers to the
-questions listing in <<planning>>. After you have a plan for the
+questions listed in <<planning>>. After you have a plan for the
 integration, you need to do the following before you can create the
 integration:
 

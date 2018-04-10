@@ -2,7 +2,8 @@
 = Connecting to HTTP and HTTPS endpoints
 
 In an integration, you can connect to HTTP and HTTPS endpoints to execute
-the GET, PUT, POST, DELETE, HEAD, OPTIONS, TRACE, or PATCH method. Create
+the `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, 
+or `PATCH` method. To do this, create 
 an HTTP or HTTPS connection and then add it to an integration. 
 The following topics provide details:
 
