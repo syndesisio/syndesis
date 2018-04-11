@@ -2,7 +2,12 @@
 = Connecting to Slack
 
 In an integration, you can connect to an instance of Slack and deliver
-a message to a particular user or to a channel. To do this, create a Slack 
+a message to a particular user or to a channel. For example, this is
+useful when an integration downloads a file from an FTP server and 
+processes it in some way. You can finish an integration by 
+notifying a Slack channel or user that the process was successful.
+
+To connect to Slack in an integration, create a Slack 
 connection. You can then add that same connection to any number of
 integrations. Details are in the following topics:
 

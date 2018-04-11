@@ -12,10 +12,16 @@ display any available connections.
 Slack instance to send messages to.
 . In the *Sending user name for messages* field, enter the user name that 
 the bot has when it sends messages to Slack.
-. In the *Message avatar emoji* field, specify the emoji that the bot
-uses for the message avatar.  
-. In the *Message avatar icon URL* field, specify the URL of 
-the emjoi avatar that the bot uses when it sends messages to Slack. 
+. Specify one of the following:
+.. In the *Message avatar emoji* field, specify the emoji that the bot
+uses as the message avatar when it sends a message.  
+.. In the *Message avatar icon URL* field, specify the URL of 
+the avatar that the bot uses when it sends messages to Slack. 
+
++
+If you specify a value in each field, the integration uses the
+icon URL. 
+
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
 validation is successful. If validation fails, revise the

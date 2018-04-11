@@ -2,7 +2,13 @@
 = Obtain a message from an MQTT broker
 
 To trigger execution of an integration based on receiving a message
-from an MQTT broker, add an MQTT connection as the start connection:
+from an MQTT broker, add an MQTT connection as the start connection. When 
+you publish the integration, the MQTT connection continuously watches for messages
+on the MQTT queue or topic that you specify. When the connection finds a 
+message, it passes it to the next step in the integration. An MQTT 
+connection handles one message at a time. 
+
+To start an integration when a message from an MQTT broker is found:
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
@@ -11,5 +17,5 @@ you want to use to start the integration.
 . On the *Choose an Action* page, click the *Subscribe* action
 to receive messages from the queue or topic you specify. 
 . In the *MQTT queue/topic name* field, enter the name of the queue or topic 
-to receive data from. 
+to subscribe to in order to receive data. 
 . Click *Done* to add the start connection. 
