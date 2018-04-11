@@ -1,3 +1,4 @@
+import { CoreModule } from './core/core.module';
 import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CollapseModule, ModalModule } from 'ngx-bootstrap';
@@ -13,6 +14,7 @@ import { ConfigService } from './config.service';
 import { SyndesisStoreModule } from './store/store.module';
 import { TestSupportService } from './store/test-support.service';
 import { platformReducer } from './platform';
+import { ERROR_HANDLER_PROVIDERS } from './error-handler';
 
 describe('AppComponent', () => {
   const APP_NAME = 'Syndesis';
@@ -24,6 +26,7 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
+        CoreModule.forRoot(),
         SyndesisStoreModule,
         SyndesisCommonModule.forRoot(),
         ModalModule.forRoot(),
@@ -34,6 +37,7 @@ describe('AppComponent', () => {
         NgRxStoreModule.forRoot(platformReducer),
       ],
       providers: [
+        ERROR_HANDLER_PROVIDERS,
         ConfigService,
         UserService,
         TestSupportService,
