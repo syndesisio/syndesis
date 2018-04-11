@@ -17,6 +17,8 @@ import {
 import { IntegrationStore } from '@syndesis/ui/store';
 import { environment } from '../../../../environments/environment';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
+import {NotificationType} from "patternfly-ng";
+import {NotificationService} from "@syndesis/ui/common";
 
 @Component({
   selector: 'syndesis-import-integration-component',
@@ -41,6 +43,7 @@ export class IntegrationImportComponent implements OnInit {
   constructor(private integrationSupportService: IntegrationSupportService,
               private integrationStore: IntegrationStore,
               private router: Router,
+              public notificationService: NotificationService,
               private tokenExtractor: HttpXsrfTokenExtractor) {
     // Do stuff here!
   }
@@ -100,6 +103,13 @@ export class IntegrationImportComponent implements OnInit {
     });
 
     this.uploader.onWhenAddingFileFailed = (item: FileLikeObject, filter: any, options: any): any => {
+      this.notificationService.popNotification({
+        type: NotificationType.DANGER,
+        header: 'Import Failed',
+        message: 'There was an issue importing your integration.',
+        isPersistent: true,
+      });
+
       this.error = this.getFileTypeError();
       this.fileSelect.nativeElement['value'] = '';
       this.uploader.clearQueue();
@@ -110,6 +120,13 @@ export class IntegrationImportComponent implements OnInit {
                                     status: number) => {
       if (status === 200) {
         this.fetchImportedIntegrations(JSON.parse(response));
+
+        this.notificationService.popNotification({
+          type: NotificationType.SUCCESS,
+          header: 'Successfully Imported',
+          message: 'Your integration has been imported',
+          isPersistent: true,
+        });
       }
     };
   }
