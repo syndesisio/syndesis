@@ -55,11 +55,11 @@ The designs covers the following user interactions:
 
 #### Kebab menu
 
-![kebab menu](img/integration_details_page_3.14_kebab.png)
+![kebab menu](img/integration_details_page_4.11_kebab.png)
 
 1. Breadcrumb & toolbar level kebab, users are able to:
 
-  - Stop Integration
+  - Unpublish
   - Replace Draft
   - Delete Integration (all versions)
 
@@ -68,7 +68,7 @@ The designs covers the following user interactions:
 2. For the active version row, kebab menu includes:
 
   - Replace Draft
-  - Stop integration
+  - Unpublish
 
 3. For inactive version row, kebab menu includes:
 
@@ -80,7 +80,7 @@ The designs covers the following user interactions:
 
 ![confirm delete](img/integration_details_page_3.14_confirm_delete.png)
 
-Once users click on “Delete Integration (all versions)”, display a modal to notify users and to confrim the delete action. Use destructive button style for the delete button. 
+Once users click on “Delete Integration (all versions)”, display a modal to notify users and to confrim the delete action. Use destructive button style for the delete button.
 
 ![replace draft modal](img/integration_details_page_3.14_replacedraft.png)
 
