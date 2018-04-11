@@ -107,3 +107,59 @@ body.cards-pf {
     }
   }
 }
+
+
+// Improve layout/responsiveness of default wizard status bar
+.wizard-pf-steps-indicator {
+  height: auto;
+  padding: $gutter;
+
+  li {
+    padding-bottom: 50px;
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      content: counter(section);
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border-radius: 50%;
+      border: solid 2px #bbb;
+      color: #bbb;
+      font-size: 12px;
+      font-weight: 700;
+      height: 25px;
+      position: absolute;
+      width: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &.active::after {
+      cursor: default;
+      background-color: #39a5dc;
+      border-color: #39a5dc;
+      color: #fff;
+    }
+
+    &::before {
+      top: auto;
+      bottom: 23px;
+    }
+
+    a {
+      margin: 0;
+      padding: 0 10px;
+    }
+  }
+
+  .wizard-pf-step-title {
+    margin-bottom: 1em;
+    line-height: 1.4;
+  }
+}
