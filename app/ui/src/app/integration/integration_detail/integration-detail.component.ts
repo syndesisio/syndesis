@@ -36,8 +36,8 @@ const replaceDraft = {
 } as PFAction;
 const stopIntegration = {
   id: STOP_INTEGRATION,
-  title: 'Stop Integration',
-  tooltip: 'Stop this integration'
+  title: 'Unpublish',
+  tooltip: 'Unpublish this integration'
 } as PFAction;
 const createDraft = {
   id: CREATE_DRAFT,
