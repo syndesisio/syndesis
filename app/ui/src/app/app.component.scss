@@ -20,6 +20,7 @@ main {
         margin-top: -10px;
         margin-bottom: -10px;
       }
+
       li {
         border: 0;
 
@@ -74,19 +75,7 @@ main {
           border: 0;
         }
       }
-
-      .user {
-        margin-right: 20px;
-
-        .username {
-          margin: 0 5px;
-        }
-      }
     }
-  }
-
-  // <div> container when sidebar is collapsed
-  .nav-pf-vertical.hidden-icons-pf.collapsed {
   }
 
   .nav-pf-vertical .list-group-item > a,
