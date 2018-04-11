@@ -43,11 +43,10 @@ not enter an error state.
 ** *Ignore* does not upload the file. The integration continues running
 under the assumption that everything is okay.
 ** *Move* renames one of the files. 
-** *TryRename* creates a temporary version of the file being uploaded, 
-uploads that temporary version, 
-and then assigns the uploaded file to have the name of the file that is 
-already on the server. 
-
+** *TryRename* uploads the file with a temporary name and renames the
+file to the desired name. This operation does not check for the 
+existence of a file with the desired name, which makes the operation
+faster on most servers than when existence checks are done. 
 . In the *Temporary file prefix while copying* field, specify a string. 
 The connection prepends this string to the name of a file while it is
 being uploaded. 
