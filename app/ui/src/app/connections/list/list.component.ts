@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 
 import { NotificationType } from 'patternfly-ng';
-
 import { Connections, Connection } from '@syndesis/ui/platform';
 import { ModalService } from '../../common/modal/modal.service';
 import { ConnectionStore } from '../../store/connection/connection.store';

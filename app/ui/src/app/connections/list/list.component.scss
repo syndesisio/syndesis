@@ -2,14 +2,7 @@
 
 .connections-list {
   .cards {
-    .card {
-      &.new-connection {
-        .card-pf-view {
-          background: inherit;
-          box-shadow: none;
-        }
-      }
-
+    ::ng-deep .card {
       .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
         cursor: pointer;
 
@@ -87,6 +80,12 @@
               margin-right: 10px;
             }
           }
+        }
+      }
+
+      &.empty-state-card {
+        .card-pf-icon-large {
+          color: $color-pf-blue-300;
         }
       }
     }

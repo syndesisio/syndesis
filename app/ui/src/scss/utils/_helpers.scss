@@ -99,6 +99,7 @@
   }
 }
 
+/// Drag & drop upload
 .syn-drop-zone {
   border: 2px dashed $color-pf-black-300;
   padding: $gutter;
@@ -114,6 +115,7 @@
   }
 }
 
+/// Transparent toolbar
 .syn-toolbar--inverted {
   .toolbar-pf {
     @include toolbar;

@@ -1,0 +1,20 @@
+@import 'syndesis-sass';
+
+:host {
+  display: block;
+
+  .card-pf {
+    background: transparent;
+    padding-bottom: 1px;
+    padding-top: 1px;
+
+    &,
+    &:hover {
+      box-shadow: none;
+    }
+
+    &-view {
+      border: 1px dashed $color-pf-black-500;
+    }
+  }
+}
