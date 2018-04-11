@@ -83,6 +83,14 @@
       }
     },
     "import-db-txt": "Please select the data file to import:",
+    "errors": {
+      "youareonline": "You're back online",
+      "youareoffline": "You went offline",
+      "networkonline": "Your internet connection has been restored",
+      "networkoffline": "Your internet connection has been interrupted",
+      "httperror": "The server returned an error",
+      "httperrordefaultmsg": "Your request could not be completed. Please try again."
+    },
     "shared": {
       "loading": "loading",
       "project": {

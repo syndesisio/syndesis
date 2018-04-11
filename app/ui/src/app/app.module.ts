@@ -15,6 +15,7 @@ import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { SyndesisStoreModule } from './store/store.module';
 import { platformEndpoints, PlatformModule } from './platform';
+import { ERROR_HANDLER_PROVIDERS } from './error-handler';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import { platformEndpoints, PlatformModule } from './platform';
     NotificationModule,
   ],
   providers: [
+    ERROR_HANDLER_PROVIDERS,
     ConfigService,
     {
       provide: APP_INITIALIZER,
