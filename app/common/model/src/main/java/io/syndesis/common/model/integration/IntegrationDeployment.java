@@ -71,6 +71,12 @@ public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId
         return builder().targetState(state).build();
     }
 
+    default IntegrationDeployment unpublished() {
+        Map<String, String> stepsDone = new HashMap<>(getStepsDone());
+        stepsDone.remove("deploy");
+        return builder().currentState(IntegrationDeploymentState.Unpublished).stepsDone(stepsDone).build();
+    }
+
     default IntegrationDeployment unpublishing() {
         Map<String, String> stepsDone = new HashMap<>(getStepsDone());
         stepsDone.remove("deploy");
