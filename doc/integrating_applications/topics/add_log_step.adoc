@@ -9,9 +9,10 @@ To log additional information between any two steps, add a log step to the
 integration. For each message that it receives, a log step can provide
 one or more of the following:
 
-* The message's header
-* The message's body
-* Text that you specify
+* The message's header, which provides metadata about the message.
+* The message's body, which provides the content of the message.
+* Text that you specify or an 
+http://camel.apache.org/simple.html[Apache Camel Simple language] expression. 
 
 To add a log step, you must be creating a new integration or
 editing the draft of an integration. The integration must already have
