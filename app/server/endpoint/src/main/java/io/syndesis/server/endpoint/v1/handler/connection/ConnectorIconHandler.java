@@ -159,9 +159,9 @@ public final class ConnectorIconHandler extends BaseHandler {
 
             if (extensionIcon.isPresent()) {
                 final StreamingOutput streamingOutput = (out) -> {
-                    final BufferedSink sink = Okio.buffer(Okio.sink(out));
-                    sink.writeAll(Okio.source(extensionIcon.get()));
-                    sink.close();
+                    try (BufferedSink sink = Okio.buffer(Okio.sink(out)); InputStream iconStream = extensionIcon.get()) {
+                        sink.writeAll(Okio.source(iconStream));
+                    }
                 };
                 return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
             } else {
