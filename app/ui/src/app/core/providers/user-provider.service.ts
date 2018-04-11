@@ -17,9 +17,8 @@ export class UserProviderService extends UserService {
 
   get user(): Observable<User> {
     if (!this.user$) {
-      this.user$ = this.apiHttpService.setEndpointUrl('/users').get<User>();
+      this.user$ = this.apiHttpService.setEndpointUrl('/users/~').get<User>();
     }
-
     return this.user$;
   }
 
