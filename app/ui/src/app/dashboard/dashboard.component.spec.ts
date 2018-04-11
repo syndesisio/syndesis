@@ -14,7 +14,6 @@ import { IntegrationListModule } from '@syndesis/ui/integration';
 import { SyndesisStoreModule } from '@syndesis/ui/store';
 
 import { DashboardComponent } from './dashboard.component';
-import { DashboardEmptyComponent } from './dashboard_empty';
 import { DashboardConnectionsComponent } from './dashboard_connections';
 import { DashboardIntegrationsComponent } from './dashboard_integrations';
 import { DashboardMetricsComponent } from './dashboard_metrics';
@@ -47,7 +46,6 @@ xdescribe('DashboardComponent', () => {
         declarations: [
           DashboardMetricsComponent,
           DashboardComponent,
-          DashboardEmptyComponent,
           DashboardConnectionsComponent,
           DashboardIntegrationsComponent
         ],

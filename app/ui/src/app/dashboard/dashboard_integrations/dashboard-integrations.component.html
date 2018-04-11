@@ -5,10 +5,10 @@
       <div class="blank-slate-pf-icon">
         <span class="pficon pficon pficon-add-circle-o"></span>
       </div>
-      <h1>Create an Integration</h1>
-      <p>There are currently no integrations available. Please click on the button below to create one.</p>
+      <h1>{{ 'dashboard.integrations.heading' | synI18n }}</h1>
+      <p>{{ 'dashboard.integrations.empty-state-txt' | synI18n }}</p>
       <button class="btn btn-primary"
-              [routerLink]="['/integrations/create']">Create Integration</button>
+              [routerLink]="['/integrations/create']">{{ 'dashboard.integrations.create-btn-txt' | synI18n }}</button>
     </div>
 
     <!-- Integrations Row not empty state -->
@@ -19,9 +19,17 @@
         <div class="col-md-7 top-integrations">
           <div class="card-pf">
             <div class="card-pf-heading">
-              <p class="card-pf-heading-details">Last 30 days</p>
+              <p class="card-pf-heading-details">
+                {{ 'last-n-items' | synI18n: [
+                  ('30' | synI18n),
+                  (('days' | synI18n) | lowercase)
+                ] }}
+              </p>
               <h2 class="card-pf-title">
-                Top 5 Integrations
+                {{ 'top-n-items' | synI18n: [
+                  ('5' | synI18n),
+                  ('integrations.integrations' | synI18n)
+                ] }}
               </h2>
             </div>
             <div class="card-pf-body">
@@ -35,7 +43,7 @@
           <div class="card-pf integration-board">
             <div class="card-pf-heading">
               <h2 class="card-pf-title">
-                Integration Board
+                {{ 'dashboard.integrations.integration-board-heading' | synI18n }}
               </h2>
             </div>
             <div class="card-pf-body">
@@ -50,7 +58,7 @@
           <div class="card-pf recent-updates">
             <div class="card-pf-heading">
               <h2 class="card-pf-title">
-                Recent Updates
+                {{ 'dashboard.integrations.recent-updates-heading' | synI18n }}
               </h2>
             </div>
             <div class="card-pf-body">

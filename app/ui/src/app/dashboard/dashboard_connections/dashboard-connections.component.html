@@ -1,10 +1,10 @@
 <!-- Connections Header & Toolbar -->
 <div class="container-fluid">
   <div class="row syndesis-dashboard__header">
-      <h1 class="col-sm-6 syndesis-dashboard__title">Connections</h1>
+      <h1 class="col-sm-6 syndesis-dashboard__title">{{ 'dashboard.connections.heading' | synI18n }}</h1>
       <div class="col-sm-6 syndesis-dashboard__actions text-right" *ngIf="connections?.length">
-        <a [routerLink]="['/connections']" class="syndesis-dashboard__view-all">View All Connections</a>&nbsp;&nbsp;
-        <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
+        <a [routerLink]="['/connections']" class="syndesis-dashboard__view-all">{{ 'viewall' | synI18n: ('connections.connections' | synI18n) }}</a>&nbsp;&nbsp;
+        <button class="btn btn-primary" [routerLink]="['/connections/create']">{{ 'dashboard.connections.create-btn-txt' | synI18n }}</button>
       </div>
   </div>
 </div>
@@ -17,9 +17,9 @@
         <div class="blank-slate-pf-icon">
           <span class="pficon pficon pficon-add-circle-o"></span>
         </div>
-        <h1>Create a Connection</h1>
-        <p>There are currently no connections available.  Please click on the button below to create one.</p>
-        <button class="btn btn-primary" [routerLink]="['/connections/create']">Create Connection</button>
+        <h1>{{ 'dashboard.connections.empty-state-create-header' | synI18n }}</h1>
+        <p>{{ 'dashboard.connections.empty-state-txt' | synI18n }}</p>
+        <button class="btn btn-primary" [routerLink]="['/connections/create']">{{ 'dashboard.connections.create-btn-txt' | synI18n }}</button>
       </div>
     </ng-container>
 

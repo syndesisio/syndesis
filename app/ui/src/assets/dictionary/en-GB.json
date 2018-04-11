@@ -5,12 +5,34 @@
       "integration": "Integration",
       "integrations": "Integrations"
     },
+    "connections": {
+      "connection": "Connection",
+      "connections": "Connections"
+    },
     "dashboard": {
-      "header": "Dashboard",
+      "heading": "Dashboard",
       "metrics": {
         "sysmetrics": "System Metrics",
-        "uptime": "Uptime",
-        "integrationsheader": "{{0}} {{integrations.integrations}}"
+        "integrationsheader": "{{0}} {{integrations.integrations}}",
+        "totalmessages": "Total Messages",
+        "uptime": {
+          "uptime": "Uptime",
+          "since": "Since {{0}}"
+        },
+        "create": "{{create}} {{integrations.integration}}"
+      },
+      "connections": {
+        "heading": "{{connections.connections}}",
+        "create-btn-txt": "{{create}} {{connections.connection}}",
+        "empty-state-create-header": "{{create}} a {{connections.connection}}",
+        "empty-state-txt": "There are currently no connections available.  Please click on the button below to create one."
+      },
+      "integrations": {
+        "heading": "{{create}} an {{integrations.integration}}",
+        "empty-state-txt": "There are currently no {{integrations.integrations}} available. Please click on the button below to create one.",
+        "create-btn-txt": "{{create}} {{integrations.integration}}",
+        "integration-board-heading": "Integration Board",
+        "recent-updates-heading": "Recent Updates"
       }
     },
     "menu": {
@@ -21,14 +43,68 @@
       "settings": "Settings"
     },
     "links": {
-      "userguide": "https://access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/integrating_applications_with_ignite/{{0}}",
-      "tutorial": "https://access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/"
+      "userguide": "//access.redhat.com/documentation/en-us/red_hat_jboss_fuse/7.0-tp/html-single/integrating_applications_with_ignite/#obtaining-authorization-to-access-applications",
+      "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/7.0/html-single/ignite_sample_integration_tutorials/"
     },
+    "header": {
+      "navbartoggle": "Toggle navigation",
+      "helpmenu": {
+        "sampletutorials": "Sample {{integrations.integration}} Tutorials",
+        "userguide": "User Guide"
+      },
+      "usermenu": {
+        "logout": "Logout"
+      }
+    },
+    "settings": {
+      "oauth-apps": {
+        "heading": "OAuth Application Management",
+        "description": "To connect to an application that uses the OAuth protocol, obtain a client ID and a client secret from the application. See the {{0}} for help.",
+        "documentation-link": "<a href=\"{{links.userguide}}\" rel=\"nofollow\">documentation</a>",
+        "registration-instruction": "During registration, enter this callback URL: {{0}}",
+        "list": {
+          "item": {
+            "description": "Client ID and client secret not configured.",
+            "remove-btn-modal": "Are you sure you want to clear the credentials for '{{0}}'?"
+          }
+        },
+        "form": {
+          "success": {
+            "msg": "Registration successful!",
+            "action": {
+              "msg": "You can validate these values when {{0}} to {{1}}.",
+              "link": "<a href=\"{{0}}\">creating a connection</a>"
+            }
+          },
+          "warning": {
+            "msg": "Error saving OAuth app settings"
+          }
+        }
+      }
+    },
+    "import-db-txt": "Please select the data file to import:",
     "shared": {
       "loading": "loading",
       "project": {
         "name": "Syndesis"
-      }
+      },
+      "ok": "Ok",
+      "save": "Save",
+      "cancel": "Cancel",
+      "register": "Register",
+      "edit": "Edit",
+      "remove": "Remove",
+      "create": "Create",
+      "help": "Help",
+      "support": "Support",
+      "contactus": "Contact Us",
+      "viewall": "View All {{0}}",
+      "top-n-items": "Top {{0}} {{1}}",
+      "last-n-items": "Last {{0}} {{1}}",
+      "5": "5",
+      "30": "30",
+      "days": "Days",
+      "user": "User"
     }
   }
 }

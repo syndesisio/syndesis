@@ -80,7 +80,7 @@ Which will render the following:
 > **Please note:** The `I18NPipe` is part of the `SyndesisCommonModule`. As such, said module needs to be imported in the NgModule whose components need to harness the power of I18N bindings.
 
 ### The dictionary file syntax
-Our custom i18n dictionary parser provides support for advanced text composition within the dictionary entries themselves, by means of our custom syntax, which provides support for _indexed placeholders_ and _reference keys_. Let's see their main differences and use cases. 
+Our custom i18n dictionary parser provides support for advanced text composition within the dictionary entries themselves, by means of our custom syntax, which provides support for _indexed placeholders_ and _reference keys_. Let's see their main differences and use cases.
 
 #### Indexed placeholder syntax
 

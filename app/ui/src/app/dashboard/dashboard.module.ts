@@ -9,7 +9,6 @@ import { SyndesisCommonModule } from '@syndesis/ui/common';
 import { IntegrationListModule } from '@syndesis/ui/integration';
 
 import { DashboardComponent } from './dashboard.component';
-import { DashboardEmptyComponent } from './dashboard_empty';
 import { DashboardConnectionsComponent } from './dashboard_connections';
 import { DashboardIntegrationsComponent } from './dashboard_integrations';
 import { DashboardMetricsComponent } from './dashboard_metrics';
@@ -31,7 +30,6 @@ const routes: Routes = [
     DashboardMetricsComponent,
     DashboardConnectionsComponent,
     DashboardIntegrationsComponent,
-    DashboardEmptyComponent,
     DashboardComponent,
   ]
 })

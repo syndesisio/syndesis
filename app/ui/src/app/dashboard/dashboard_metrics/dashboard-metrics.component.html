@@ -5,9 +5,9 @@
         {{ 'dashboard.metrics.sysmetrics' | synI18n }}
       </h1>
       <div class="col-sm-6 syndesis-dashboard__actions text-right" *ngIf="integrationState.collection?.length > 0">
-        <a routerLink="/integrations" class="syndesis-dashboard__view-all">View All Integrations</a>&nbsp;&nbsp;
+        <a routerLink="/integrations" class="syndesis-dashboard__view-all">{{ 'viewall' | synI18n: ('integrations.integrations' | synI18n) }}</a>&nbsp;&nbsp;
         <button class="btn btn-primary" routerLink="/integrations/create">
-          Create Integration
+          {{ 'dashboard.metrics.create' | synI18n }}
         </button>
       </div>
     </div>
@@ -20,7 +20,7 @@
             <span class="card-pf-aggregate-status-count">
               {{ integrations.length | number }}
             </span>
-            Integrations
+            {{ 'integrations.integrations' | synI18n }}
           </h2>
           <div class="card-pf-body">
               <p class="card-pf-aggregate-status-notifications">
@@ -42,7 +42,7 @@
               <span class="card-pf-aggregate-status-count">
                 {{ connections.length | number }}
               </span>
-              Connections
+              {{ 'connections.connections' | synI18n }}
           </h2>
         </div>
       </div>
@@ -52,7 +52,7 @@
               <span class="card-pf-aggregate-status-count">
                 {{ integrationMetrics.messages | number }}
               </span>
-              Total Messages
+              {{ 'dashboard.metrics.totalmessages' | synI18n }}
             </h2>
             <div class="card-pf-body">
                 <p class="card-pf-aggregate-status-notifications">
@@ -72,10 +72,10 @@
         <div class="card-pf card-pf-accented card-pf-aggregate-status">
           <div class="card-pf-title">
             <h3 class="metrics__uptime-header metrics__uptime-label">
-              Uptime
+              {{ 'dashboard.metrics.uptime.uptime' | synI18n }}
             </h3>
             <h3 class="metrics__uptime-header metrics__uptime-kickoff">
-              Since {{ uptimeStart }}
+              {{ 'dashboard.metrics.uptime.since' | synI18n: uptimeStart }}
             </h3>
           </div>
           <div class="card-pf-body">
