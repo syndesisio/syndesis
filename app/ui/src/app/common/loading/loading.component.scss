@@ -1,10 +1,12 @@
-@import 'patternfly-sass/assets/stylesheets/patternfly/variables';
+.syn-loading{
+  display: block;
+  min-height: 30px;
+  position: relative;
 
-.loading {
-  position: absolute;
-  z-index: 9999999999;
-  top: 50%;
-  left: 50%;
-  margin-left: -1.25 * $font-size-base;
-  margin-top: -1.25 * $font-size-base;
+  .loading {
+    position: absolute;
+    z-index: 9999999999;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+  }
 }
