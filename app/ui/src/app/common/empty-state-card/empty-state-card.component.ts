@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     <div class="card-pf card-pf-view card-pf-view-select card-pf-view-single-select">
       <div class="card-pf-body">
         <div class="card-pf-top-element">
-          <ng-content select=".empty-state-card__header"></ng-content>
+          <span class="card-pf-icon-large pficon pficon-add-circle-o"></span>
         </div>
         <div class="card-pf-info text-center">
           <ng-content select=".empty-state-card__body"></ng-content>
