@@ -37,12 +37,6 @@ import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.parameters.RefParameter;
-import io.syndesis.server.connector.generator.ConnectorGenerator;
-import io.syndesis.server.connector.generator.swagger.util.JsonSchemaHelper;
-import io.syndesis.server.connector.generator.swagger.util.OperationDescription;
-import io.syndesis.server.connector.generator.swagger.util.SwaggerHelper;
-import io.syndesis.server.connector.generator.util.ActionComparator;
-import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
@@ -55,6 +49,12 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorSummary;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.connector.generator.ConnectorGenerator;
+import io.syndesis.server.connector.generator.swagger.util.JsonSchemaHelper;
+import io.syndesis.server.connector.generator.swagger.util.OperationDescription;
+import io.syndesis.server.connector.generator.swagger.util.SwaggerHelper;
+import io.syndesis.server.connector.generator.util.ActionComparator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +103,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             final Map<String, Integer> tagCounts = paths.entrySet().stream()//
                 .flatMap(p -> p.getValue().getOperations().stream())//
                 .peek(o -> total.incrementAndGet())//
-                .flatMap(o -> o.getTags().stream().distinct())//
+                .flatMap(o -> ofNullable(o.getTags()).orElse(Collections.emptyList()).stream().distinct())//
                 .collect(//
                     Collectors.groupingBy(//
                         Function.identity(), //

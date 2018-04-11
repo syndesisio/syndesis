@@ -26,7 +26,6 @@ import static io.syndesis.server.connector.generator.swagger.PropertyGenerators.
 import static io.syndesis.server.connector.generator.swagger.PropertyGenerators.determineHost;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class PropertyGeneratorsTest {
 
@@ -56,19 +55,14 @@ public class PropertyGeneratorsTest {
     }
 
     @Test
-    public void shouldFailIfNoHttpSchemesFound() {
-        assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> determineHost(new Swagger().scheme(Scheme.WS).scheme(Scheme.WSS)))
-            .withMessageStartingWith("Unable to find a supported scheme");
+    public void shouldReturnNullIfNoHostGivenAnywhere() {
+        assertThat(determineHost(new Swagger())).isNull();
+        assertThat(determineHost(new Swagger().scheme(Scheme.HTTP))).isNull();
+        assertThat(determineHost(new Swagger().host("host"))).isNull();
     }
 
     @Test
-    public void shouldFailToDetermineIfNoHostGivenAnywhere() {
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> determineHost(new Swagger()))
-            .withMessageStartingWith("Swagger specification does not provide");
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> determineHost(new Swagger().scheme(Scheme.HTTP)))
-            .withMessageStartingWith("Swagger specification does not provide");
-        assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> determineHost(new Swagger().host("host")))
-            .withMessageStartingWith("Swagger specification does not provide");
+    public void shouldReturnNullIfNoHttpSchemesFound() {
+        assertThat(determineHost(new Swagger().scheme(Scheme.WS).scheme(Scheme.WSS))).isNull();
     }
 }

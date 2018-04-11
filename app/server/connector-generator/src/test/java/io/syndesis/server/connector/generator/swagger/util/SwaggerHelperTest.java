@@ -59,10 +59,13 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         final SwaggerModelInfo info = SwaggerHelper.parse(specification, true);
 
         assertThat(info.getErrors()).hasSize(1);
-        assertThat(info.getWarnings()).isEmpty();
+        assertThat(info.getWarnings()).hasSize(1);
         assertThat(info.getErrors().get(0).message()).startsWith("instance value (\"httpz\") not found in enum");
         assertThat(info.getErrors().get(0).property()).contains("/schemes/0");
         assertThat(info.getErrors().get(0).error()).contains("validation");
+        assertThat(info.getWarnings().get(0).message()).startsWith("Unable to determine the scheme");
+        assertThat(info.getWarnings().get(0).property()).contains("/schemes");
+        assertThat(info.getWarnings().get(0).error()).contains("missing-schemes");
     }
 
     @Test

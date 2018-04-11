@@ -15,14 +15,17 @@
  */
 package io.syndesis.server.connector.generator.swagger;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
@@ -30,6 +33,8 @@ import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
+import io.swagger.models.Scheme;
+import io.swagger.models.Swagger;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
@@ -50,6 +55,7 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
     private SyndesisSwaggerValidationRules() {
         rules.add(this::validateResponses);
         rules.add(this::validateAuthTypes);
+        rules.add(this::validateScheme);
     }
 
     @Override
@@ -142,6 +148,45 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
         return withWarnings.build();
     }
 
+    private SwaggerModelInfo validateScheme(final SwaggerModelInfo info) {
+        final Swagger swagger = info.getModel();
+        if (swagger == null) {
+            return info;
+        }
+
+        final SwaggerModelInfo.Builder withWarnings = new SwaggerModelInfo.Builder().createFrom(info);
+
+        final URI specificationUrl = specificationUriFrom(swagger);
+
+        final List<Scheme> schemes = swagger.getSchemes();
+        if (schemes == null || schemes.isEmpty()) {
+            if (specificationUrl == null) {
+                withWarnings.addWarning(new Violation.Builder()//
+                    .property("/schemes")//
+                    .error("missing-schemes")
+                    .message("Unable to determine the scheme to use: Swagger specification does not provide a `schemes` definition "
+                        + "and the Swagger specification was uploaded so the originating URL is lost.")
+                    .build());
+            }
+        } else {
+            final boolean hasHttpSchemes = schemes.stream()//
+                .filter(s -> s.toValue().startsWith("http"))//
+                .findFirst().isPresent();
+            if (!hasHttpSchemes) {
+                withWarnings.addWarning(new Violation.Builder()//
+                    .property("/schemes")//
+                    .error("missing-schemes")
+                    .message("Unable to determine the scheme to use: no supported scheme found within the Swagger specification. "
+                        + "Schemes given in the Swagger specification: "
+                        + schemes.stream().map(s -> s.toValue()).collect(Collectors.joining(", ")))
+                    .build());
+            }
+
+        }
+
+        return withWarnings.build();
+    }
+
     public static SyndesisSwaggerValidationRules getInstance() {
         return INSTANCE;
     }
@@ -170,6 +215,11 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
         final boolean noReference = schema.getReference() == null;
 
         return noProperties && noReference;
+    }
+
+    private static URI specificationUriFrom(final Swagger swagger) {
+        final Map<String, Object> vendorExtensions = Optional.ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
+        return (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
     }
 
 }
