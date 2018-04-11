@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule, InjectionToken } from '@angular/core';
+import { APP_INITIALIZER, NgModule, InjectionToken, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
@@ -15,6 +15,7 @@ import { SyndesisCommonModule } from './common';
 import { appConfigInitializer, ConfigService } from './config.service';
 import { SyndesisStoreModule } from './store/store.module';
 import { platformEndpoints, PlatformModule } from './platform';
+import { ERROR_HANDLER_PROVIDERS } from './error-handler';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import { platformEndpoints, PlatformModule } from './platform';
     NotificationModule,
   ],
   providers: [
+    ERROR_HANDLER_PROVIDERS,
     ConfigService,
     {
       provide: APP_INITIALIZER,

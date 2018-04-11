@@ -20,6 +20,7 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 
 const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack strace';
+const PROPAGATE_EXCEPTIONS = false;
 
 @Injectable()
 export class ApiHttpProviderService extends ApiHttpService {
@@ -69,7 +70,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
       .get(url, options)
-      .catch(error => Observable.throw(this.catchError(error)));
+      .catch(error => this.handleError(error));
   }
 
   post<T>(endpoint: string | any[], body?: any, options?: ApiRequestOptions | any): Observable<T> {
@@ -77,7 +78,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
       .post<T>(url, body, options)
-      .catch(error => Observable.throw(this.catchError(error)));
+      .catch(error => this.handleError(error));
   }
 
   put<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
@@ -85,7 +86,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
       .put<T>(url, body, options)
-      .catch(error => Observable.throw(this.catchError(error)));
+      .catch(error => this.handleError(error));
   }
 
   patch<T>(endpoint: string | any[], body: any, options?: ApiRequestOptions | any): Observable<T> {
@@ -93,7 +94,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
       .patch<T>(url, body, options)
-      .catch(error => Observable.throw(this.catchError(error)));
+      .catch(error => this.handleError(error));
   }
 
   delete<T>(endpoint: string | any[], options?: ApiRequestOptions | any): Observable<T> {
@@ -101,7 +102,7 @@ export class ApiHttpProviderService extends ApiHttpService {
     const url = this.getEndpointUrl(endpointKey, ...endpointParams);
     return this.httpClient
       .delete<T>(url, options)
-      .catch(error => Observable.throw(this.catchError(error)));
+      .catch(error => this.handleError(error));
   }
 
   get uploadProgressEvent$(): Observable<ApiRequestProgress> {
@@ -150,7 +151,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       .filter(requestEvent => requestEvent.type === HttpEventType.Response)
       .map(requestEvent => requestEvent as HttpResponse<T>)
       .map(requestEvent => requestEvent.body)
-      .catch(error => Observable.throw(this.catchError(JSON.parse(error.error))));
+      .catch(error => this.handleError(JSON.parse(error.error)));
   }
 
   private emitProgressEvent(httpProgressEvent?: HttpProgressEvent): void {
@@ -228,6 +229,11 @@ export class ApiHttpProviderService extends ApiHttpService {
       return endpointTemplate.replace(/\{(\d*?)\}/g, params.toString());
     }
     return endpointTemplate;
+  }
+
+  private handleError(error: any): Observable<any> {
+    const httpError = this.catchError(error);
+    return PROPAGATE_EXCEPTIONS ? Observable.throw(httpError) : Observable.of(httpError);
   }
 
   private catchError(response): ActionReducerError {
