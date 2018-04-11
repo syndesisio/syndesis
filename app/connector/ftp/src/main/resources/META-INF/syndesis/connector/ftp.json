@@ -27,7 +27,7 @@
             "deprecated": false,
             "secret": false,
             "labelHint": "User name for connecting to the FTP server",
-            "order": "3"
+            "order": "2"
         },
         "host": {
             "kind": "path",
@@ -52,7 +52,7 @@
             "secret": false,
             "defaultValue": "21",
             "labelHint": "FTP port",
-            "order": "2"
+            "order": "4"
         },
         "password": {
             "kind": "parameter",
@@ -65,7 +65,7 @@
             "secret": true,
             "raw": true,
             "labelHint": "Password for connecting to the FTP server",
-            "order": "4"
+            "order": "3"
         },
         "timeout": {
             "kind": "parameter",
