@@ -663,7 +663,21 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules combine.children="append">
+            <evaluateBeanshell>
+              <message>The Java Virtual Machine running this Maven build is enforcing limited cryptography, please either install Unlimited Strength Jurisdiction Policy Files to this JVM or use a JVM that doesn't enforce this limit</message>
+              <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES") > 128</condition>
+            </evaluateBeanshell>
+          </rules>
+        </configuration>
+      </plugin>
+
     </plugins>
+
 
   </build>
 
