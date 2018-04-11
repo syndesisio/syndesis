@@ -151,7 +151,7 @@ export class ApiHttpProviderService extends ApiHttpService {
       .filter(requestEvent => requestEvent.type === HttpEventType.Response)
       .map(requestEvent => requestEvent as HttpResponse<T>)
       .map(requestEvent => requestEvent.body)
-      .catch(error => this.handleError(JSON.parse(error.error)));
+      .catch(error => this.handleError(error.error));
   }
 
   private emitProgressEvent(httpProgressEvent?: HttpProgressEvent): void {

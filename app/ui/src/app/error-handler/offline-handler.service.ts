@@ -1,17 +1,26 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { NotificationType } from 'patternfly-ng';
 
 import { NotificationService } from '@syndesis/ui/common';
+import { I18NService } from '@syndesis/ui/platform';
 
 @Injectable()
 export class OfflineHandlerService {
   online$: Observable<boolean>;
+  private errorMessages: {
+    youAreOnline: string;
+    youAreOffline: string;
+    networkOnline: string;
+    networkOffline: string;
+  };
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private i18NService: I18NService
   ) { }
 
   initialize(enablePopNotifications: boolean): Promise<any> {
@@ -21,6 +30,15 @@ export class OfflineHandlerService {
           Observable.fromEvent(window, 'offline').map(() => false),
           Observable.fromEvent(window, 'online').map(() => true),
         );
+
+        combineLatest(
+          this.i18NService.getValue('errors.youareonline'),
+          this.i18NService.getValue('errors.youareoffline'),
+          this.i18NService.getValue('errors.networkonline'),
+          this.i18NService.getValue('errors.networkoffline')
+        ).subscribe(([youAreOnline, youAreOffline, networkOnline, networkOffline]) => {
+          this.errorMessages = { youAreOnline, youAreOffline, networkOnline, networkOffline };
+        });
 
         if (enablePopNotifications) {
           this.initializePopNotifications();
@@ -35,8 +53,8 @@ export class OfflineHandlerService {
     this.online$.subscribe(isOnline => {
       this.notificationService.popNotification({
         type: isOnline ? NotificationType.SUCCESS : NotificationType.DANGER,
-        header: isOnline ? 'You\'re back online' : 'You went offline',
-        message: isOnline ? 'Your internet connection has been restored' : 'Your internet connection has been interrupted'
+        header: isOnline ? this.errorMessages.youAreOnline : this.errorMessages.youAreOffline,
+        message: isOnline ? this.errorMessages.networkOnline : this.errorMessages.networkOffline
       });
     });
   }
