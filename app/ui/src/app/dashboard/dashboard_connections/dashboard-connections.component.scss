@@ -1,6 +1,7 @@
 .syndesis-dashboard-connections {
-  .card {
+  position: relative;
 
+  .card {
     //----- Same as .card-pf-icon-circle except without the blue circle ----------------->>
     .card-pf-view .card-pf-top-element .card-pf-icon-large {
       display: block;
