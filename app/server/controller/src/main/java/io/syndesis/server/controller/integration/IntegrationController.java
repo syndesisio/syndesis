@@ -76,6 +76,7 @@ public class IntegrationController {
     }
 
     @PostConstruct
+    @SuppressWarnings("FutureReturnValueIgnored")
     public void start() {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
         scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
@@ -257,7 +258,9 @@ public class IntegrationController {
         } else if (openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1)) {
             return IntegrationDeploymentState.Published;
         }
-        else return IntegrationDeploymentState.Pending;
+        else {
+          return IntegrationDeploymentState.Pending;
+        }
     }
 
 
