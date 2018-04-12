@@ -1,58 +1,48 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Support</h1>
-    <p>To obtain support, download diagnostic information through this page. If the downloaded zip file is less than 0.5 GB, attach it to an email message that requests help and send the message to <a class="text-nowrap" href="mailto:fuse-online-tech-preview@redhat.com">fuse-online-tech-preview@redhat.com</a>. If the downloaded zip file is larger than 0.5 GB, send an email message that requests help, but do not attach the file, and indicate that the zip file is too large to attach. Technical support will provide instructions for sending the zip file.</p>
+    <p>To obtain support, download diagnostic information through this page. If the downloaded zip file is less than 0.5 GB,
+      attach it to an email message that requests help and send the message to
+      <a class="text-nowrap" href="mailto:{{ 'email' | synI18n }}">{{ 'email' | synI18n }}</a>. 
+      If the downloaded zip file is larger than 0.5 GB, send an email message that requests
+      help, but do not attach the file, and indicate that the zip file is too large to attach. Technical support will provide
+      instructions for sending the zip file.</p>
 
     <h2>Version</h2>
-    <p id="productVersion"><strong>Syndesis:</strong> v1.0</p>
+    <p id="productVersion">
+      <strong>Syndesis:</strong> v1.0</p>
 
-    <h2>Download Troubleshooting Diagnostics</h2>
-    <p>System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames and passwords are not present in the downloaded zip file.</p>
+    <h2>Download Trobuleshooting Diagnostics</h2>
+    <p>System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames
+      and passwords are not present in the downloaded zip file.</p>
 
     <div class="panel panel-default">
       <div class="panel-body">
-        <pfng-inline-notification
-          [header]="'Unable to download diagnostics.'"
-          [message]="'Try download again.'"
-          [dismissable]="true"
-          [type]="notificationType"
-          [hidden]="notificationHidden">
-      </pfng-inline-notification>
+        <pfng-inline-notification [header]="'Unable to download diagnostics.'" [message]="'Try download again.'" [dismissable]="true"
+          [type]="notificationType" [hidden]="notificationHidden">
+        </pfng-inline-notification>
         <p>Select the integrations to capture diagnostics for:</p>
         <form novalidatef>
           <fieldset>
             <div class="syn-form-input-list">
               <div class="syn-form-input-list__option">
                 <label>
-                  <input type="radio"
-                        id="alllogs"
-                        name="logs"
-                        [value]="true"
-                        [(ngModel)]="allLogsSelected"
-                        (click)="deselectAll()">
-                  All integrations
+                  <input type="radio" id="alllogs" name="logs" [value]="true" [(ngModel)]="allLogsSelected" (click)="deselectAll()"> All integrations
                 </label>
               </div>
               <div class="syn-form-input-list__option">
                 <label>
-                  <input type="radio"
-                        id="specificlogs"
-                        name="logs"
-                        [value]="false"
-                        [(ngModel)]="allLogsSelected">
-                  Specific integrations
+                  <input type="radio" id="specificlogs" name="logs" [value]="false" [(ngModel)]="allLogsSelected"> Specific integrations
                 </label>
               </div>
               <!-- Toolbar -->
               <div *ngIf="!allLogsSelected" class="container-fluid">
-                <pfng-toolbar [config]="toolbarConfig"
-                              (onFilterChange)="filterChanged($event)"
-                              (onSortChange)="sortChanged($event)"
-                              [viewTemplate]="viewTemplate">
+                <pfng-toolbar [config]="toolbarConfig" (onFilterChange)="filterChanged($event)" (onSortChange)="sortChanged($event)" [viewTemplate]="viewTemplate">
                   <ng-template #viewTemplate>
                     <div class="toolbar-pf-action-right">
                       <div class="form-group">
-                        <strong>{{ selectedItems() }}</strong> of <strong>{{ totalItems() }}</strong> Items
+                        <strong>{{ selectedItems() }}</strong> of
+                        <strong>{{ totalItems() }}</strong> Items
                       </div>
                       <div class="form-group" *ngIf="filtersText">
                         <a role="button" (click)="selectAllMatchingFiler(pfnglist)">Select All</a>
@@ -62,22 +52,15 @@
                 </pfng-toolbar>
                 <div class="row">
                   <!-- List displayed here -->
-                  <syndesis-loading >
-                    <pfng-list [items]="itemsInPage"
-                            [config]="listConfig"
-                            [itemTemplate]="listItemMain"
-                            (onSelectionChange)="handleSelectionChange($event)"
-                            #pfnglist>
+                  <syndesis-loading>
+                    <pfng-list [items]="itemsInPage" [config]="listConfig" [itemTemplate]="listItemMain" (onSelectionChange)="handleSelectionChange($event)"
+                      #pfnglist>
                     </pfng-list>
-                    <pfng-pagination
-                      [config]="paginationConfig"
-                      (onPageSizeChange)="handlePageSize($event)"
-                      (onPageNumberChange)="handlePageNumber($event)">
+                    <pfng-pagination [config]="paginationConfig" (onPageSizeChange)="handlePageSize($event)" (onPageNumberChange)="handlePageNumber($event)">
                     </pfng-pagination>
                   </syndesis-loading>
                   <!-- One list item, main row -->
-                  <ng-template #listItemMain
-                            let-item="item">
+                  <ng-template #listItemMain let-item="item">
                     <div class="list-pf-content list-pf-content-flex">
                       <div class="list-pf-content-wrapper">
                         <div class="list-pf-main-content">

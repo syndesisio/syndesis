@@ -93,6 +93,7 @@
     },
     "shared": {
       "loading": "loading",
+      "email": "fuse-online-tech-preview@redhat.com",
       "project": {
         "name": "Syndesis"
       },
