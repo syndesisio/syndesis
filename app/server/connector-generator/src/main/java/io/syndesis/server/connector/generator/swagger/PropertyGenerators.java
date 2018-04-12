@@ -25,6 +25,9 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
+
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.AbstractSecuritySchemeDefinition;
@@ -78,6 +81,12 @@ enum PropertyGenerators {
             return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getAuthorizationUrl);
         }
     },
+    authorizeUsingParameters {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return (swagger, template) -> oauthVendorProperty(swagger, template, "x-authorize-using-parameters");
+        }
+    },
     basePath {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
@@ -127,6 +136,12 @@ enum PropertyGenerators {
             return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getTokenUrl);
         }
     },
+    tokenStrategy {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return (swagger, template) -> oauthVendorProperty(swagger, template, "x-token-strategy");
+        }
+    },
     username {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
@@ -155,7 +170,7 @@ enum PropertyGenerators {
     }
 
     static String determineHost(final Swagger swagger) {
-        final Map<String, Object> vendorExtensions = Optional.ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
+        final Map<String, Object> vendorExtensions = ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
         final URI specificationUrl = (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
 
         final List<Scheme> schemes = swagger.getSchemes();
@@ -213,7 +228,7 @@ enum PropertyGenerators {
             return Optional.of(template);
         }
 
-        return Optional.empty();
+        return empty();
     }
 
     private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,
@@ -222,14 +237,38 @@ enum PropertyGenerators {
             .createFrom(template).defaultValue(defaultValueExtractor.apply(definition)).build());
     }
 
+    private static Optional<ConfigurationProperty> oauthVendorProperty(final Swagger swagger, final ConfigurationProperty template,
+        final String name) {
+        return securityDefinition(swagger, OAuth2Definition.class).map(definition -> vendorExtension(definition, template, name))
+            .orElse(empty());
+    }
+
     private static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final Class<T> type) {
         final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
 
         if (securityDefinitions == null) {
-            return Optional.empty();
+            return empty();
         }
 
         return securityDefinitions.values().stream().filter(type::isInstance).map(type::cast).findFirst();
+    }
+
+    private static Optional<ConfigurationProperty> vendorExtension(final SecuritySchemeDefinition definition,
+        final ConfigurationProperty template, final String name) {
+        final Map<String, Object> vendorExtensions = definition.getVendorExtensions();
+        if (vendorExtensions == null) {
+            return empty();
+        }
+
+        final Object value = vendorExtensions.get(name);
+        if (value == null) {
+            return empty();
+        }
+
+        final ConfigurationProperty property = new ConfigurationProperty.Builder().createFrom(template).defaultValue(String.valueOf(value))
+            .build();
+
+        return Optional.of(property);
     }
 
     private static BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>>

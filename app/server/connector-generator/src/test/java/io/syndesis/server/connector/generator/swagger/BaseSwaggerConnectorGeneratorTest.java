@@ -73,6 +73,25 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     }
 
     @Test
+    public void shouldCreateSecurityConfigurationFromConcurSwagger() throws IOException {
+        final String specification = resource("/swagger/concur.swagger.json");
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
+            .name("Concur List API")//
+            .description("Invokes Concur List API")//
+            .icon("fa-globe")//
+            .putConfiguredProperty("specification", specification)//
+            .build();
+
+        final Connector generated = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
+            "clientSecret", "tokenStrategy", "authorizeUsingParameters");
+        assertThat(generated.getProperties().get("tokenStrategy").getDefaultValue()).isEqualTo("AUTHORIZATION_HEADER");
+        assertThat(generated.getProperties().get("authorizeUsingParameters").getDefaultValue()).isEqualTo("true");
+    }
+
+    @Test
     public void shouldCreateSecurityConfigurationFromReverbSwagger() throws IOException {
         final String specification = resource("/swagger/reverb.swagger.yaml");
 

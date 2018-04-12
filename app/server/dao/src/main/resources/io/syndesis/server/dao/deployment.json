@@ -281,6 +281,36 @@
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token"
         },
+        "tokenStrategy": {
+          "kind": "property",
+          "displayName": "OAuth Token strategy",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "hidden",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-token-strategy"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true
+        },
+        "authorizeUsingParameters": {
+          "kind": "property",
+          "displayName": "OAuth Token strategy",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "hidden",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-authorize-using-parameters"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true
+        },
         "specification": {
           "kind": "property",
           "displayName": "Specification",

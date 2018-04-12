@@ -412,5 +412,18 @@
     "Void": {
       "properties": {}
     }
+  },
+  "securityDefinitions": {
+    "concur_oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://us-impl.api.concursolutions.com/oauth2/v0/authorize",
+      "tokenUrl": "https://us-impl.api.concursolutions.com/oauth2/v0/token",
+      "scopes": {
+        "LIST": "Access List API"
+      },
+      "x-token-strategy": "AUTHORIZATION_HEADER",
+      "x-authorize-using-parameters": true
+    }
   }
 }
