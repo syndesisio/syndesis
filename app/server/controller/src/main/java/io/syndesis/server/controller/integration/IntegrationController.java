@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import io.syndesis.server.openshift.OpenShiftService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,6 +54,7 @@ public class IntegrationController {
     private static final String EVENT_BUS_ID = "integration-deployment-controller";
     private static final long SCHEDULE_INTERVAL_IN_SECONDS = 60;
 
+    private final OpenShiftService openShiftService;
     private final DataManager dataManager;
     private final EventBus eventBus;
     private final ConcurrentHashMap<IntegrationDeploymentState, StateChangeHandler> handlers = new ConcurrentHashMap<>();
@@ -62,7 +64,8 @@ public class IntegrationController {
     private ScheduledExecutorService scheduler;
 
     @Autowired
-    public IntegrationController(DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory) {
+    public IntegrationController(OpenShiftService openShiftService,DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory) {
+        this.openShiftService = openShiftService;
         this.dataManager = dataManager;
         this.eventBus = eventBus;
         for (StateChangeHandler handler : handlerFactory.getStatusChangeHandlers()) {
@@ -73,11 +76,12 @@ public class IntegrationController {
     }
 
     @PostConstruct
+    @SuppressWarnings("FutureReturnValueIgnored")
     public void start() {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
-        scheduler = Executors.newScheduledThreadPool(1, threadFactory("Integration Controller Scheduler"));
-        scanIntegrationsForWork();
+        scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
 
+        scheduler.scheduleAtFixedRate(this::scanIntegrationsForWork, 0, 1, TimeUnit.MINUTES);
         eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
     }
 
@@ -138,10 +142,9 @@ public class IntegrationController {
 
     private void scanIntegrationsForWork() {
         executor.execute(() -> {
-            dataManager.fetchAll(IntegrationDeployment.class).forEach(integration -> {
+            dataManager.fetchIds(IntegrationDeployment.class).forEach(id -> {
                 LOG.info("Checking integrations for their status.");
-                checkIntegrationStatus(integration);
-            });
+                checkIntegrationStatusIfNotAlreadyInProgress(id);});
         });
     }
 
@@ -149,19 +152,23 @@ public class IntegrationController {
         if (integrationDeployment == null) {
             return;
         }
-        IntegrationDeploymentState desiredState = integrationDeployment.getTargetState();
-        IntegrationDeploymentState currentState = integrationDeployment.getCurrentState();
+        IntegrationDeployment reconciled = reconcileDeployment(integrationDeployment);
+        IntegrationDeploymentState desiredState = reconciled.getTargetState();
+        IntegrationDeploymentState currentState = reconciled.getCurrentState();
         if (!currentState.equals(desiredState)) {
-                integrationDeployment.getId().ifPresent(integrationDeploymentId -> {
+                reconciled.getId().ifPresent(integrationDeploymentId -> {
                     StateChangeHandler statusChangeHandler = handlers.get(desiredState);
                     if (statusChangeHandler != null) {
                         LOG.info("Integration {} : Desired status \"{}\" != current status \"{}\" --> calling status change handler",
                             integrationDeploymentId, desiredState.toString(), currentState);
-                        callStateChangeHandler(statusChangeHandler, integrationDeploymentId);
+                        callStateChangeHandler(statusChangeHandler, reconciled);
                     }
                 });
+        } else if (reconciled.getCurrentState() !=  integrationDeployment.getCurrentState()) {
+          dataManager.update(reconciled);
+          scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
         } else {
-            scheduledChecks.remove(getIntegrationMarkerKey(integrationDeployment));
+          scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
         }
     }
 
@@ -169,9 +176,9 @@ public class IntegrationController {
         return "Integration " + integrationDeployment.getIntegrationId().orElse("[none]");
     }
 
-    void callStateChangeHandler(StateChangeHandler handler, String integrationDeploymentId) {
+    void callStateChangeHandler(StateChangeHandler handler, IntegrationDeployment integrationDeployment) {
+        String integrationDeploymentId = integrationDeployment.getId().get();
         executor.execute(() -> {
-            IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
             String checkKey = getIntegrationMarkerKey(integrationDeployment);
             scheduledChecks.add(checkKey);
 
@@ -246,5 +253,36 @@ public class IntegrationController {
 
         IntegrationDeploymentState desiredState = integrationDeployment.getTargetState();
         return desiredState.equals(integrationDeployment.getCurrentState());
+    }
+
+    private IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment) {
+        if (!openShiftService.exists(integrationDeployment.getSpec().getName()) || !openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1)) {
+            return IntegrationDeploymentState.Unpublished;
+        } else if (openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1)) {
+            return IntegrationDeploymentState.Published;
+        }
+        else {
+          return IntegrationDeploymentState.Pending;
+        }
+    }
+
+
+    /**
+     * Re-conciliates the state of the deployment between the database and Openshift.
+     * This is mostly needed for cases where an active integration has been tampered with external tools.
+     * For example: Deleted or Scaled down DeploymentConfig.
+     */
+    private IntegrationDeployment reconcileDeployment(IntegrationDeployment integrationDeployment) {
+        LOG.info("Reconciling integration:{}", integrationDeployment.getSpec().getName());
+        IntegrationDeploymentState actualState = determineState(integrationDeployment);
+        if (actualState == integrationDeployment.getCurrentState()) {
+            return integrationDeployment;
+        }
+
+        if (actualState == IntegrationDeploymentState.Unpublished) {
+            return integrationDeployment.unpublished();
+        }
+
+        return integrationDeployment;
     }
 }
