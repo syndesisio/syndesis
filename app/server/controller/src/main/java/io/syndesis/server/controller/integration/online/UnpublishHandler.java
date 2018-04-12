@@ -55,17 +55,16 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
 
         List<DeploymentConfig> deployments = openShiftService().getDeploymentsByLabel(labels);
         List<DeploymentConfig> undeploying = deployments.stream().filter(d -> d.getSpec().getReplicas() == 0).collect(Collectors.toList());
+        if (!undeploying.isEmpty()) {
+          try {
+             openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
+           } catch (InterruptedException e) {
+             Thread.currentThread().interrupt();
+             return new StateUpdate(currentState, stepsDone);
+           }
+         }
+
         List<DeploymentConfig> deployed = deployments.stream().filter(d -> d.getStatus().getAvailableReplicas() != 0).collect(Collectors.toList());
-
-       if (!undeploying.isEmpty()) {
-         try {
-            openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return new StateUpdate(currentState, stepsDone);
-          }
-        }
-
         if(deployed.isEmpty()){
            currentState = IntegrationDeploymentState.Unpublished;
         }
