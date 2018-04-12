@@ -17,7 +17,10 @@ package io.syndesis.server.update.controller.bulletin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.validation.Validator;
 
 import io.syndesis.common.model.ChangeEvent;
@@ -67,7 +70,7 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
         return boards;
     }
 
-    private ConnectionBulletinBoard computeBoard(Connection connection, Connector oldConnector, Connector newConnector) {
+    ConnectionBulletinBoard computeBoard(Connection connection, Connector oldConnector, Connector newConnector) {
         final DataManager dataManager = getDataManager();
         final String id = connection.getId().get();
         final ConnectionBulletinBoard board = dataManager.fetchByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id).orElse(null);
@@ -88,7 +91,7 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
         List<LeveledMessage> messages = new ArrayList<>();
         messages.addAll(computeValidatorMessages(LeveledMessage.Builder::new, connection));
         messages.addAll(computePropertiesDiffMessages(LeveledMessage.Builder::new, oldConnector.getProperties(), newConnector.getProperties()));
-        messages.addAll(computeMissingMandatoryPropertiesMessages(LeveledMessage.Builder::new, newConnector.getProperties(), connection.getConfiguredProperties()));
+        messages.addAll(computeMissingMandatoryPropertiesMessages(LeveledMessage.Builder::new, newConnector.getProperties(), merge(newConnector.getConfiguredProperties(), connection.getConfiguredProperties())));
         messages.addAll(computeSecretsUpdateMessages(LeveledMessage.Builder::new, newConnector.getProperties(), connection.getConfiguredProperties()));
 
         builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
@@ -100,5 +103,21 @@ public class ConnectionUpdateHandler extends AbstractResourceUpdateHandler<Conne
         builder.messages(messages);
 
         return builder.build();
+    }
+
+    private static Map<String, String> merge(final Map<String, String> one, final Map<String, String> two) {
+        if (one == null || one.isEmpty()) {
+            return two;
+        }
+
+        if (two == null || two.isEmpty()) {
+            return one;
+        }
+
+        final Map<String, String> merged = new HashMap<>(one.size() + two.size());
+        merged.putAll(one);
+        merged.putAll(two);
+
+        return merged;
     }
 }
