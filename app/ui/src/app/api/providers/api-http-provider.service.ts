@@ -20,7 +20,7 @@ import {
 import { ConfigService } from '@syndesis/ui/config.service';
 
 const DEFAULT_ERROR_MSG = 'An unexpected HTTP error occured. Please check stack strace';
-const PROPAGATE_EXCEPTIONS = false;
+const PROPAGATE_EXCEPTIONS = true;
 
 @Injectable()
 export class ApiHttpProviderService extends ApiHttpService {
