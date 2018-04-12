@@ -79,6 +79,20 @@ public class SwaggerConnectorComponentTest {
     }
 
     @Test
+    public void shouldSetBasicAuthorizationHeader() {
+        final SwaggerConnectorComponent component = new SwaggerConnectorComponent();
+
+        component.setAuthenticationType(AuthenticationType.basic);
+        component.setUsername("username");
+        component.setPassword("dolphins");
+
+        final HashMap<String, Object> headers = new HashMap<>();
+        component.addAuthenticationHeadersTo(headers);
+
+        assertThat(headers).containsEntry("Authorization", "Basic dXNlcm5hbWU6ZG9scGhpbnM=");
+    }
+
+    @Test
     public void shouldSetOAuth2AuthorizationHeader() {
         final SwaggerConnectorComponent component = new SwaggerConnectorComponent();
 

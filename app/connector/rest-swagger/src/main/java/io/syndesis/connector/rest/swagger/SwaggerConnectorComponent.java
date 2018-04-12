@@ -106,7 +106,9 @@ public final class SwaggerConnectorComponent extends DefaultConnectorComponent {
             headers.put("Authorization", "Bearer " + accessToken);
         } else if (authenticationType == AuthenticationType.basic) {
             final String usernameAndPassword = username + ":" + password;
-            headers.put("Authorization", "Basic " + Base64.getEncoder().encode(usernameAndPassword.getBytes(StandardCharsets.UTF_8)));
+            final String usernameAndPasswordEncoded = Base64.getEncoder()
+                .encodeToString(usernameAndPassword.getBytes(StandardCharsets.UTF_8));
+            headers.put("Authorization", "Basic " + usernameAndPasswordEncoded);
         }
     }
 
