@@ -16,6 +16,7 @@
 package io.syndesis.connector.sql.common;
 
 import java.io.IOException;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,8 @@ public final class JSONBeanUtil {
         final Map<String,SqlParameterValue> ret = new HashMap<>();
         for (String key : parsed.keySet()) {
             Object value = parsed.get(key);
-            SqlParameterValue sqlParam = new SqlParameterValue(jdbcTypeMap.get(key), value);
+            Integer jdbcType = (jdbcType = jdbcTypeMap.get(key)) != null ? jdbcType : Types.VARCHAR;
+            SqlParameterValue sqlParam = new SqlParameterValue(jdbcType, value);
             ret.put(key,sqlParam);
         }
         return ret;
