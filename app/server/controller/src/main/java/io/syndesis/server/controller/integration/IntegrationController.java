@@ -164,8 +164,11 @@ public class IntegrationController {
                         callStateChangeHandler(statusChangeHandler, reconciled);
                     }
                 });
+        } else if (reconciled.getCurrentState() !=  integrationDeployment.getCurrentState()) {
+          dataManager.update(reconciled);
+          scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
         } else {
-            scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
+          scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
         }
     }
 
