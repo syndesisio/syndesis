@@ -24,6 +24,7 @@ import io.syndesis.common.model.integration.StepKind;
 import org.apache.camel.Expression;
 import org.apache.camel.builder.Builder;
 import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.processor.aggregate.UseOriginalAggregationStrategy;
 import org.apache.camel.spi.Language;
 import org.apache.camel.util.ObjectHelper;
 
@@ -59,7 +60,7 @@ public class SplitStepHandler implements IntegrationStepHandler {
             final Language language = builder.getContext().resolveLanguage(languageName);
             final Expression expression = language.createExpression(expressionDefinition);
 
-            route = route.split(expression);
+            route = route.split(expression).aggregationStrategy(new UseOriginalAggregationStrategy(null, false));
         }
 
         return Optional.of(route);

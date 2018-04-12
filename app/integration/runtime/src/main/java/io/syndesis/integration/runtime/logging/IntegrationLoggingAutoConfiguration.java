@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import org.apache.camel.spi.RoutePolicyFactory;
+import org.apache.camel.spi.EventNotifier;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -37,7 +37,7 @@ public class IntegrationLoggingAutoConfiguration {
     }
 
     @Bean
-    public RoutePolicyFactory integrationLoggingRoutePolicyFactory() {
-        return new IntegrationLoggingRoutePolicyFactory();
+    public EventNotifier integrationActivityEventHandler() {
+        return new IntegrationActivityEventHandler();
     }
 }

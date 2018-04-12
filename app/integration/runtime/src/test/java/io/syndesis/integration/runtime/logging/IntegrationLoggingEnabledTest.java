@@ -56,9 +56,4 @@ public class IntegrationLoggingEnabledTest {
         assertThat(camelContext.getLogListeners()).hasAtLeastOneElementOfType(IntegrationLoggingListener.class);
         assertThat(camelContext.getUuidGenerator()).isNotInstanceOf(DefaultUuidGenerator.class);
     }
-
-    @Test
-    public void testLoggingRoutePolicyFactory() {
-        assertThat(camelContext.getRoutePolicyFactories()).hasAtLeastOneElementOfType(IntegrationLoggingRoutePolicyFactory.class);
-    }
 }

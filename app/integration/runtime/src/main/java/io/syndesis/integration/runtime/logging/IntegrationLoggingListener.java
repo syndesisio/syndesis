@@ -27,16 +27,19 @@ public class IntegrationLoggingListener implements LogListener {
     @SuppressWarnings("PMD.SystemPrintln")
     @Override
     public String onLog(Exchange exchange, CamelLogger camelLogger, String message) {
-        final Marker marker = camelLogger.getMarker();
-        final String step = marker != null ? marker.getName() : "null";
-        final String exchangeId = exchange.getProperty(IntegrationLoggingConstants.EXCHANGE_ID, exchange.getExchangeId(), String.class);
+        final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
 
-        System.out.println(toJsonObject(
-            "exchange", exchangeId,
-            "step", step,
-            "id", KeyGenerator.createKey(),
-            "message", message)
-        );
+        if (activityId != null) {
+            final Marker marker = camelLogger.getMarker();
+            final String step = marker != null ? marker.getName() : "null";
+
+            System.out.println(toJsonObject(
+                "exchange", activityId,
+                "step", step,
+                "id", KeyGenerator.createKey(),
+                "message", message)
+            );
+        }
 
         return message;
     }

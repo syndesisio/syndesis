@@ -20,7 +20,6 @@ import java.util.Map;
 import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultUuidGenerator;
-import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spi.LogListener;
 import org.apache.camel.spi.RoutePolicyFactory;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
@@ -80,7 +79,7 @@ public class IntegrationLoggingDisabledTest {
         assertThat(camelContext.getRoutePolicyFactories()).have(new Condition<RoutePolicyFactory>() {
             @Override
             public boolean matches(RoutePolicyFactory value) {
-                return !(value instanceof IntegrationLoggingRoutePolicyFactory);
+                return !(value instanceof IntegrationActivityPolicy);
             }
         });
     }
