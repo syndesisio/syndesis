@@ -198,8 +198,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
 
         this.onRefreshMetrics(integrationId);
 
-        const integration$ = this.integrationStore.resource;
-        this.integrationSubscription = integration$.subscribe((integration: IntegrationOverview) => {
+        this.integrationSubscription = this.integrationStore.resource.subscribe((integration: IntegrationOverview) => {
           this.loading = false;
           this.integration = integration;
           this.deploymentActionConfigs = {};
@@ -226,6 +225,7 @@ export class IntegrationDetailComponent implements OnInit, OnDestroy {
             this.deploymentActionConfigs[deployment.id] = actionConfig;
           }
         });
+        this.loading = true;
         this.integrationStore.load(integrationId);
       });
   }
