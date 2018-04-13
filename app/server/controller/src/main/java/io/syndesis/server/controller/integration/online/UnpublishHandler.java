@@ -21,11 +21,8 @@ import io.syndesis.common.util.Labels;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
 import io.syndesis.server.openshift.OpenShiftService;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import java.util.stream.Collectors;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -53,20 +50,15 @@ public class UnpublishHandler extends BaseHandler implements StateChangeHandler 
         labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
         labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
 
-        List<DeploymentConfig> deployments = openShiftService().getDeploymentsByLabel(labels);
-        List<DeploymentConfig> undeploying = deployments.stream().filter(d -> d.getSpec().getReplicas() == 0).collect(Collectors.toList());
-        if (!undeploying.isEmpty()) {
-          try {
-             openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
-           } catch (InterruptedException e) {
-             Thread.currentThread().interrupt();
-             return new StateUpdate(currentState, stepsDone);
-           }
-         }
-
-        List<DeploymentConfig> deployed = deployments.stream().filter(d -> d.getStatus().getAvailableReplicas() != 0).collect(Collectors.toList());
-        if(deployed.isEmpty()){
-           currentState = IntegrationDeploymentState.Unpublished;
+        if (!openShiftService().getDeploymentsByLabel(labels).isEmpty()) {
+            try {
+                openShiftService().scale(integrationDeployment.getSpec().getName(), labels, 0, 1, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return new StateUpdate(currentState, stepsDone);
+            }
+        } else  {
+            currentState = IntegrationDeploymentState.Unpublished;
         }
 
         return new StateUpdate(currentState, stepsDone);
