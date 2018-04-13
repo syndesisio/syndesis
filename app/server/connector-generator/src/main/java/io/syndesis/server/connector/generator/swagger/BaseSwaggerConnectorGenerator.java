@@ -60,6 +60,8 @@ import io.syndesis.server.connector.generator.util.ActionComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
@@ -129,7 +131,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    abstract ConnectorDescriptor.Builder createDescriptor(String specification, Swagger swagger, Operation operation);
+    abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Swagger swagger, Operation operation);
 
     protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Swagger swagger = parseSpecification(connectorSettings, false).getModel();
@@ -209,7 +211,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     }
                 }
 
-                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedSpecification(), swagger, operation)//
+                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), swagger, operation)//
                     .camelConnectorGAV(connectorGav)//
                     .camelConnectorPrefix(connectorScheme)//
                     .connectorId(connectorId)//

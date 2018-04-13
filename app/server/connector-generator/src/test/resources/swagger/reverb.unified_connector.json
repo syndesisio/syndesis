@@ -11,7 +11,7 @@
       "description": "Send GET request to /articles",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -35,7 +35,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -46,7 +46,7 @@
       "description": "Full taxonomy tree of categories including middle categories",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -70,7 +70,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -81,7 +81,7 @@
       "description": "Send GET request to /categories/flat",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -105,7 +105,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -116,7 +116,7 @@
       "description": "Get category details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -140,7 +140,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -151,7 +151,7 @@
       "description": "Get subcategory details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -175,7 +175,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -186,7 +186,7 @@
       "description": "List of supported product categories",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -210,7 +210,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -221,7 +221,7 @@
       "description": "Send GET request to /comparison_shopping_pages/{id}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -245,7 +245,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -256,7 +256,7 @@
       "description": "Return new or used listings for a comparison shopping page",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -280,7 +280,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -291,7 +291,7 @@
       "description": "Returns a set of comparison shopping pages based on the current params",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -315,7 +315,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -326,7 +326,7 @@
       "description": "Show comparison shopping page",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -350,7 +350,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -361,7 +361,7 @@
       "description": "View reviews of a comparison shopping page",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -385,7 +385,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -396,7 +396,7 @@
       "description": "Make an offer to the other participant in the conversation",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -420,7 +420,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -431,7 +431,7 @@
       "description": "Retrieve a list of country codes with corresponding subregions",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -455,7 +455,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -466,7 +466,7 @@
       "description": "Send GET request to /curated_sets/{slug}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -490,7 +490,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -501,7 +501,7 @@
       "description": "List of supported display currencies for browsing listings",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -525,7 +525,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -536,7 +536,7 @@
       "description": "List of supported listing currencies for shops",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -560,7 +560,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -571,7 +571,7 @@
       "description": "Feedback details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -595,7 +595,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -606,7 +606,7 @@
       "description": "Get results from a handpicked collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -630,7 +630,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -641,7 +641,7 @@
       "description": "List of supported product conditions",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -665,7 +665,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -676,7 +676,7 @@
       "description": "All listings including used, handmade, and brand new",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -700,7 +700,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -711,7 +711,7 @@
       "description": "Bump a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -735,7 +735,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -746,7 +746,7 @@
       "description": "Create a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -770,7 +770,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -781,7 +781,7 @@
       "description": "Create a review for a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -805,7 +805,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -816,7 +816,7 @@
       "description": "Default search of listings includes only used & handmade. Add a filter to view all listings or use the /listings/all endpoint.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -840,7 +840,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -851,7 +851,7 @@
       "description": "Delete a draft listing. Cannot be used on non-drafts.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -875,7 +875,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -886,7 +886,7 @@
       "description": "Delete an image from a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -910,7 +910,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -921,7 +921,7 @@
       "description": "Edit listing.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -945,7 +945,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -956,7 +956,7 @@
       "description": "Find a product bundle attached to a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -980,7 +980,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -991,7 +991,7 @@
       "description": "Flag a listing for inappropriate content or fraud",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1015,7 +1015,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1026,7 +1026,7 @@
       "description": "Individual facets",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1050,7 +1050,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1061,7 +1061,7 @@
       "description": "Listing details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1085,7 +1085,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1096,7 +1096,7 @@
       "description": "Listing details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1120,7 +1120,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1131,7 +1131,7 @@
       "description": "Make an offer to the seller of a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1155,7 +1155,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1166,7 +1166,7 @@
       "description": "Returns the latest negotiation for the requesting user given a listing id",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1190,7 +1190,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1201,7 +1201,7 @@
       "description": "See all sales that include a listing.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1225,7 +1225,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1236,7 +1236,7 @@
       "description": "Start a conversation with a seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1260,7 +1260,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1271,7 +1271,7 @@
       "description": "Update a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1295,7 +1295,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1306,7 +1306,7 @@
       "description": "View available bump tiers and stats for a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1330,7 +1330,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1341,7 +1341,7 @@
       "description": "View reviews of a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1365,7 +1365,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1376,7 +1376,7 @@
       "description": "View the images associated with a particular listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1400,7 +1400,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1411,7 +1411,7 @@
       "description": "Accept an offer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1435,7 +1435,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1446,7 +1446,7 @@
       "description": "Add a listing to your wishlist",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1470,7 +1470,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1481,7 +1481,7 @@
       "description": "Counter an offer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1505,7 +1505,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1516,7 +1516,7 @@
       "description": "Create a new address in your address book",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1540,7 +1540,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1551,7 +1551,7 @@
       "description": "Send DELETE request to /my/curated_set/product/{product_id}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1575,7 +1575,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1586,7 +1586,7 @@
       "description": "Send DELETE request to /my/follows/{follow_id}/alert",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1610,7 +1610,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1621,7 +1621,7 @@
       "description": "Decline an offer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1645,7 +1645,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1656,7 +1656,7 @@
       "description": "Delete a follow",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1680,7 +1680,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1691,7 +1691,7 @@
       "description": "Delete an existing address in your address book",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1715,7 +1715,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1726,7 +1726,7 @@
       "description": "Display conversation details with messages in natural time order (oldest to newest)",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1750,7 +1750,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1761,7 +1761,7 @@
       "description": "End a listing",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1785,7 +1785,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1796,7 +1796,7 @@
       "description": "Follow a brand",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1820,7 +1820,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1831,7 +1831,7 @@
       "description": "Follow a category",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1855,7 +1855,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1866,7 +1866,7 @@
       "description": "Follow a collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1890,7 +1890,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1901,7 +1901,7 @@
       "description": "Follow a handpicked collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1925,7 +1925,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1936,7 +1936,7 @@
       "description": "Follow a search",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1960,7 +1960,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -1971,7 +1971,7 @@
       "description": "Follow a shop",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -1995,7 +1995,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2006,7 +2006,7 @@
       "description": "Follow a subcategory",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2030,7 +2030,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2041,7 +2041,7 @@
       "description": "Follow status for a brand",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2065,7 +2065,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2076,7 +2076,7 @@
       "description": "Follow status for a category",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2100,7 +2100,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2111,7 +2111,7 @@
       "description": "Follow status for a collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2135,7 +2135,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2146,7 +2146,7 @@
       "description": "Follow status for a handpicked collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2170,7 +2170,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2181,7 +2181,7 @@
       "description": "Follow status for a search",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2205,7 +2205,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2216,7 +2216,7 @@
       "description": "Follow status for a shop",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2240,7 +2240,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2251,7 +2251,7 @@
       "description": "Follow status for a subcategory",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2275,7 +2275,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2286,7 +2286,7 @@
       "description": "Get a list of active negotiations as a buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2310,7 +2310,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2321,7 +2321,7 @@
       "description": "Get a list of active negotiations as a seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2345,7 +2345,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2356,7 +2356,7 @@
       "description": "Get a list of payouts",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2380,7 +2380,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2391,7 +2391,7 @@
       "description": "Get a list of refund requests as a seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2415,7 +2415,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2426,7 +2426,7 @@
       "description": "Get a list of wishlisted items",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2450,7 +2450,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2461,7 +2461,7 @@
       "description": "Get a list of your conversations",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2485,7 +2485,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2496,7 +2496,7 @@
       "description": "Get a list of your lists (wishlist, watch list, etc)",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2520,7 +2520,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2531,7 +2531,7 @@
       "description": "Get a list of your recently viewed listings.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2555,7 +2555,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2566,7 +2566,7 @@
       "description": "Get account details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2590,7 +2590,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2601,7 +2601,7 @@
       "description": "Get all seller orders, newest first.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2625,7 +2625,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2636,7 +2636,7 @@
       "description": "Get listings from your feed",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2660,7 +2660,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2671,7 +2671,7 @@
       "description": "Get offer details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2695,7 +2695,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2706,7 +2706,7 @@
       "description": "Get payment",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2730,7 +2730,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2741,7 +2741,7 @@
       "description": "Get payments",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2765,7 +2765,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2776,7 +2776,7 @@
       "description": "Get seller orders awaiting shipment, newest first.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2800,7 +2800,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2811,7 +2811,7 @@
       "description": "Get unpaid seller orders, newest first.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2835,7 +2835,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2846,7 +2846,7 @@
       "description": "Get your actionable status counts",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2870,7 +2870,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2881,7 +2881,7 @@
       "description": "Initiate a refund for a sold order",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2905,7 +2905,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2916,7 +2916,7 @@
       "description": "List of orders that need feedback",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2940,7 +2940,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2951,7 +2951,7 @@
       "description": "List of received feedback",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -2975,7 +2975,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -2986,7 +2986,7 @@
       "description": "List of sent feedback",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3010,7 +3010,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3021,7 +3021,7 @@
       "description": "Mark a conversation read/unread",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3045,7 +3045,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3056,7 +3056,7 @@
       "description": "Marks an order as picked up",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3080,7 +3080,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3091,7 +3091,7 @@
       "description": "Marks an order as received by the buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3115,7 +3115,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3126,7 +3126,7 @@
       "description": "Marks an order as shipped",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3150,7 +3150,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3161,7 +3161,7 @@
       "description": "Send POST request to /my/curated_set/product/{product_id}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3185,7 +3185,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3196,7 +3196,7 @@
       "description": "Send POST request to /my/follows/{follow_id}/alert",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3220,7 +3220,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3231,7 +3231,7 @@
       "description": "Read the line items of a payout",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3255,7 +3255,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3266,7 +3266,7 @@
       "description": "Remove a listing from your wishlist",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3290,7 +3290,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3301,7 +3301,7 @@
       "description": "Retrieve a list of live listings for the seller. To search all listings specify state=all",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3325,7 +3325,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3336,7 +3336,7 @@
       "description": "Retrieve a list your draft listings",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3360,7 +3360,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3371,7 +3371,7 @@
       "description": "Returns a user's ArticleCategoryFollows",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3395,7 +3395,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3406,7 +3406,7 @@
       "description": "Returns all orders, newest first.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3430,7 +3430,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3441,7 +3441,7 @@
       "description": "Returns order details for a buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3465,7 +3465,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3476,7 +3476,7 @@
       "description": "Returns order details for a seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3500,7 +3500,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3511,7 +3511,7 @@
       "description": "Returns unpaid orders, newest first.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3535,7 +3535,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3546,7 +3546,7 @@
       "description": "See all addresses in your address book",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3570,7 +3570,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3581,7 +3581,7 @@
       "description": "See previous orders from buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3605,7 +3605,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3616,7 +3616,7 @@
       "description": "See what the user is following",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3640,7 +3640,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3651,7 +3651,7 @@
       "description": "Send a message",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3675,7 +3675,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3686,7 +3686,7 @@
       "description": "Set a user's ArticleCategoryFollows",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3710,7 +3710,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3721,7 +3721,7 @@
       "description": "Start a conversation",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3745,7 +3745,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3756,7 +3756,7 @@
       "description": "Unfollow a brand",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3780,7 +3780,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3791,7 +3791,7 @@
       "description": "Unfollow a category",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3815,7 +3815,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3826,7 +3826,7 @@
       "description": "Unfollow a collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3850,7 +3850,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3861,7 +3861,7 @@
       "description": "Unfollow a handpicked collection",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3885,7 +3885,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3896,7 +3896,7 @@
       "description": "Unfollow a shop",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3920,7 +3920,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3931,7 +3931,7 @@
       "description": "Unfollow a subcategory",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3955,7 +3955,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -3966,7 +3966,7 @@
       "description": "Update a refund request for a sold order",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -3990,7 +3990,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4001,7 +4001,7 @@
       "description": "Update account details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4025,7 +4025,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4036,7 +4036,7 @@
       "description": "Update an existing address in your address book",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4060,7 +4060,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4071,7 +4071,7 @@
       "description": "get your feed",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4095,7 +4095,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4106,7 +4106,7 @@
       "description": "get your feed customization options",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4130,7 +4130,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4141,7 +4141,7 @@
       "description": "Add feedback about an order's buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4165,7 +4165,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4176,7 +4176,7 @@
       "description": "Add feedback about an order's seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4200,7 +4200,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4211,7 +4211,7 @@
       "description": "Feedback details for an order's buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4235,7 +4235,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4246,7 +4246,7 @@
       "description": "Feedback details for an order's seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4270,7 +4270,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4281,7 +4281,7 @@
       "description": "Get list of payment methods",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4305,7 +4305,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4316,7 +4316,7 @@
       "description": "Get a list of paginated transactions for a price guide.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4340,7 +4340,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4351,7 +4351,7 @@
       "description": "Get a summary of transactions for a given price guide",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4375,7 +4375,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4386,7 +4386,7 @@
       "description": "Retrieve a Price Guide",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4410,7 +4410,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4421,7 +4421,7 @@
       "description": "Create a review for a product",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4445,7 +4445,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4456,7 +4456,7 @@
       "description": "Update a review",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4480,7 +4480,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4491,7 +4491,7 @@
       "description": "View a review",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4515,7 +4515,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4526,7 +4526,7 @@
       "description": "View reviews of a comparison shopping page",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4550,7 +4550,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4561,7 +4561,7 @@
       "description": "Add listings to a sale",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4585,7 +4585,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4596,7 +4596,7 @@
       "description": "Send GET request to /sales/{slug}",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4620,7 +4620,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4631,7 +4631,7 @@
       "description": "Remove a listing from a sale",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4655,7 +4655,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4666,7 +4666,7 @@
       "description": "View upcoming and live Reverb official sales.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4690,7 +4690,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4701,7 +4701,7 @@
       "description": "View your created sales.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4725,7 +4725,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4736,7 +4736,7 @@
       "description": "Send GET request to /shipping/regions",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4760,7 +4760,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4771,7 +4771,7 @@
       "description": "List of supported shipping providers",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4795,7 +4795,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4806,7 +4806,7 @@
       "description": "Disable vacation mode. All listings will be re-enabled.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4830,7 +4830,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4841,7 +4841,7 @@
       "description": "Enable vacation mode. All listings will be unavailable until vacation mode is turned off.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4865,7 +4865,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4876,7 +4876,7 @@
       "description": "Get accepted payment methods",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4900,7 +4900,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4911,7 +4911,7 @@
       "description": "Get your own shop details",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4935,7 +4935,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4946,7 +4946,7 @@
       "description": "List of supported product conditions",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -4970,7 +4970,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -4981,7 +4981,7 @@
       "description": "Returns shop vacation status",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5005,7 +5005,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5016,7 +5016,7 @@
       "description": "Update your shop profile",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5040,7 +5040,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5051,7 +5051,7 @@
       "description": "Get details on a shop.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5075,7 +5075,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5086,7 +5086,7 @@
       "description": "Get seller's feedback",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5110,7 +5110,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5121,7 +5121,7 @@
       "description": "Get seller's feedback as a buyer",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5145,7 +5145,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5156,7 +5156,7 @@
       "description": "Get seller's feedback as a seller",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5180,7 +5180,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5191,7 +5191,7 @@
       "description": "List of shipping profiles for your shop",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5215,7 +5215,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5226,7 +5226,7 @@
       "description": "A list of wanted items by the user",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5250,7 +5250,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5261,7 +5261,7 @@
       "description": "Mark an item wanted. Returns 200 on success or 422 on failure.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5285,7 +5285,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5296,7 +5296,7 @@
       "description": "Unmark an item wanted.",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5320,7 +5320,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5331,7 +5331,7 @@
       "description": "Get details of a webhook registration",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5355,7 +5355,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5366,7 +5366,7 @@
       "description": "Get webhook registrations",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5390,7 +5390,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5401,7 +5401,7 @@
       "description": "Register a webhook",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5425,7 +5425,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"
@@ -5436,7 +5436,7 @@
       "description": "Remove a webhook",
       "descriptor": {
         "connectorId": "-L2zJ-vC2AeqDvkcOlH5",
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
         "camelConnectorPrefix": "swagger-operation",
         "connectorCustomizers": [],
         "inputDataShape": {
@@ -5460,7 +5460,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.2-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@"
         }
       ],
       "pattern": "To"

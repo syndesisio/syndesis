@@ -36,6 +36,8 @@ import io.syndesis.server.connector.generator.swagger.util.SwaggerHelper;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import static io.syndesis.server.connector.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +46,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
     private final BaseSwaggerConnectorGenerator generator = new BaseSwaggerConnectorGenerator() {
         @Override
-        ConnectorDescriptor.Builder createDescriptor(final String specification, final Swagger swagger, final Operation operation) {
+        ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
             return new ConnectorDescriptor.Builder();
         }
     };

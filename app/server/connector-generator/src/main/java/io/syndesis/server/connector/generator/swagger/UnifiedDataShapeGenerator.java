@@ -21,6 +21,8 @@ import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public final class UnifiedDataShapeGenerator implements DataShapeGenerator {
 
     private static final String APPLICATION_JSON = "application/json";
@@ -32,28 +34,28 @@ public final class UnifiedDataShapeGenerator implements DataShapeGenerator {
     private static final DataShapeGenerator XML = new UnifiedXmlDataShapeGenerator();
 
     @Override
-    public DataShape createShapeFromRequest(final String specification, final Swagger swagger, final Operation operation) {
+    public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
         if (supports(APPLICATION_JSON, swagger.getConsumes(), operation.getConsumes())) {
-            return JSON.createShapeFromRequest(specification, swagger, operation);
+            return JSON.createShapeFromRequest(json, swagger, operation);
         } else if (supports(APPLICATION_XML, swagger.getConsumes(), operation.getConsumes())) {
-            return XML.createShapeFromRequest(specification, swagger, operation);
+            return XML.createShapeFromRequest(json, swagger, operation);
         } else {
             // most likely a body-less request, i.e. only with parameters, we'll
             // use JSON to define those parameters
-            return JSON.createShapeFromRequest(specification, swagger, operation);
+            return JSON.createShapeFromRequest(json, swagger, operation);
         }
     }
 
     @Override
-    public DataShape createShapeFromResponse(final String specification, final Swagger swagger, final Operation operation) {
+    public DataShape createShapeFromResponse(final ObjectNode json, final Swagger swagger, final Operation operation) {
         if (supports(APPLICATION_JSON, swagger.getProduces(), operation.getProduces())) {
-            return JSON.createShapeFromResponse(specification, swagger, operation);
+            return JSON.createShapeFromResponse(json, swagger, operation);
         } else if (supports(APPLICATION_XML, swagger.getProduces(), operation.getProduces())) {
-            return XML.createShapeFromResponse(specification, swagger, operation);
+            return XML.createShapeFromResponse(json, swagger, operation);
         } else {
             // most likely a body-less request, i.e. only with parameters, we'll
             // use JSON to define those parameters
-            return JSON.createShapeFromResponse(specification, swagger, operation);
+            return JSON.createShapeFromResponse(json, swagger, operation);
         }
     }
 

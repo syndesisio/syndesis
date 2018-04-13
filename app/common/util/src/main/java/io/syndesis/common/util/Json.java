@@ -107,4 +107,8 @@ public final class Json {
         }
         return rc;
     }
+
+    public static <T> T convertValue(final Object fromValue, final Class<T> toValueType) {
+        return OBJECT_MAPPER.convertValue(fromValue, toValueType);
+    }
 }

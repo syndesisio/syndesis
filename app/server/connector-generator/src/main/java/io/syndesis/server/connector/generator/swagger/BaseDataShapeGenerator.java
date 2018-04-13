@@ -33,6 +33,6 @@ abstract class BaseDataShapeGenerator implements DataShapeGenerator {
     }
 
     static Optional<Response> findResponse(final Operation operation) {
-        return operation.getResponses().values().stream().filter(r -> r.getSchema() != null).findFirst();
+        return operation.getResponses().values().stream().filter(r -> r.getResponseSchema() != null).findFirst();
     }
 }

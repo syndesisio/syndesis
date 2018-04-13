@@ -20,6 +20,8 @@ import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConnectorGenerator {
 
     private final DataShapeGenerator dataShapeGenerator;
@@ -29,13 +31,13 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
     }
 
     @Override
-    ConnectorDescriptor.Builder createDescriptor(final String specification, final Swagger swagger, final Operation operation) {
+    ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
         final ConnectorDescriptor.Builder actionDescriptor = new ConnectorDescriptor.Builder();
 
-        final DataShape inputDataShape = dataShapeGenerator.createShapeFromRequest(specification, swagger, operation);
+        final DataShape inputDataShape = dataShapeGenerator.createShapeFromRequest(json, swagger, operation);
         actionDescriptor.inputDataShape(inputDataShape);
 
-        final DataShape outputDataShape = dataShapeGenerator.createShapeFromResponse(specification, swagger, operation);
+        final DataShape outputDataShape = dataShapeGenerator.createShapeFromResponse(json, swagger, operation);
         actionDescriptor.outputDataShape(outputDataShape);
 
         actionDescriptor.putConfiguredProperty("operationId", operation.getOperationId());
