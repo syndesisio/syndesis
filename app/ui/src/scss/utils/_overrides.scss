@@ -128,7 +128,7 @@ body.cards-pf {
       transform: translate(-50%, -50%);
       background-color: #fff;
       border-radius: 50%;
-      border: solid 2px #bbb;
+      border: solid 2px #39a5dc;
       color: #bbb;
       font-size: 12px;
       font-weight: 700;
@@ -140,11 +140,17 @@ body.cards-pf {
       justify-content: center;
     }
 
-    &.active::after {
-      cursor: default;
-      background-color: #39a5dc;
-      border-color: #39a5dc;
-      color: #fff;
+    &.active {
+      &::after {
+        cursor: default;
+        background-color: #39a5dc;
+        border-color: #39a5dc;
+        color: #fff;
+      }
+
+      & ~ li::after {
+        border-color: #bbb;
+      }
     }
 
     &::before {
