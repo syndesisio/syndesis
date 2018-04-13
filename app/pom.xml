@@ -550,6 +550,7 @@
               <exclude>connector/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
               <exclude>meta/**/run-env.sh</exclude>
               <exclude>server/syndesis-builder-image-generator/image/**</exclude><!-- auto generated without headers -->
+              <exclude>**/src/main/resources/banner.txt</exclude>
             </excludes>
           </configuration>
           <dependencies>
