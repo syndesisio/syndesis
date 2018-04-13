@@ -1,12 +1,10 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import { getCategory, log } from '@syndesis/ui/logging';
+import { ConfiguredConfigurationProperty, Connection } from '@syndesis/ui/platform';
+import { ConnectionStore, ConnectorStore } from '@syndesis/ui/store';
 import { Observable } from 'rxjs/Observable';
-
-import { Connection, Connector, Connections, Connectors, ConfiguredConfigurationProperty } from '@syndesis/ui/platform';
-import { log, getCategory } from '@syndesis/ui/logging';
-import { ConnectionStore } from '../../store/connection/connection.store';
-import { ConnectorStore } from '../../store/connector/connector.store';
+import { Subscription } from 'rxjs/Subscription';
 
 const category = getCategory('CurrentConnectionService');
 
@@ -54,7 +52,7 @@ export class CurrentConnectionService {
   }
 
   handleEvent(event: ConnectionEvent) {
-    log.infoc(() => 'connection event: ' + JSON.stringify(event), category);
+    // log.infoc(() => 'connection event: ' + JSON.stringify(event), category);
     switch (event.kind) {
       case 'connection-check-connector':
         if (!this.fetchConnector(this._connection.connectorId)) {
@@ -260,10 +258,6 @@ export class CurrentConnectionService {
     connection.connector.properties = properties;
     const sub = this.store.updateOrCreate(connection).subscribe(
       (c: Connection) => {
-        log.debugc(
-          () => 'Saved connection: ' + JSON.stringify(c, undefined, 2),
-          category
-        );
         const action = event['action'];
         if (action && typeof action === 'function') {
           action(c);
@@ -272,11 +266,6 @@ export class CurrentConnectionService {
         sub.unsubscribe();
       },
       (reason: any) => {
-        log.debugc(
-          () =>
-            'Error saving connection: ' + JSON.stringify(reason, undefined, 2),
-          category
-        );
         const errorAction = event['error'];
         if (errorAction && typeof errorAction === 'function') {
           errorAction(reason);
