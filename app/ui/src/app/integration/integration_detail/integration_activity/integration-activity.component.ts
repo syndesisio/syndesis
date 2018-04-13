@@ -1,11 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { forkJoin } from 'rxjs/observable/forkJoin';
-import { PaginationConfig } from 'patternfly-ng';
-
-import { log } from '@syndesis/ui/logging';
-import { Integration, IntegrationSupportService, Activity, Step, IntegrationDeployment } from '@syndesis/ui/platform';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ConfigService } from '@syndesis/ui/config.service';
+import { log } from '@syndesis/ui/logging';
+import { Activity, Integration, IntegrationDeployment, IntegrationSupportService, Step } from '@syndesis/ui/platform';
+import { PaginationConfig } from 'patternfly-ng';
+import { Subscription } from 'rxjs/Subscription';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'syndesis-integration-activity',
@@ -13,7 +12,8 @@ import { ConfigService } from '@syndesis/ui/config.service';
   styleUrls: ['./integration-activity.component.scss'],
   exportAs: 'integrationActivity'
 })
-export class IntegrationActivityComponent implements OnInit {
+export class IntegrationActivityComponent implements OnInit, OnDestroy {
+  subscription: Subscription;
   @Input() integration: Integration;
   activities: Activity[] = [];
   onRefresh: boolean;
@@ -36,6 +36,12 @@ export class IntegrationActivityComponent implements OnInit {
     this.fetchActivities();
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   fetchStepName(step: Step): string {
     let stepName = 'n/a';
 
@@ -48,13 +54,19 @@ export class IntegrationActivityComponent implements OnInit {
   }
 
   fetchActivities(): void {
+    if (!this.integration && !this.integration.id) {
+      return;
+    }
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.onRefresh = true;
     this.onError = false;
 
     const activities$ = this.integrationSupportService.requestIntegrationActivity(this.integration.id);
     const integrationDeployments$ = this.integrationSupportService.getDeployments(this.integration.id);
 
-    forkJoin<[Activity[], IntegrationDeployment[]]>([activities$, integrationDeployments$]).map(results => {
+    this.subscription = forkJoin<[Activity[], IntegrationDeployment[]]>([activities$, integrationDeployments$]).map(results => {
       const activitities = results[0];
       const integrationDeployments = results[1];
 
