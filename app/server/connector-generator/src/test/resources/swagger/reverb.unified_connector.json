@@ -5483,7 +5483,8 @@
       "tags": [
         "oauth-access-token"
       ],
-      "enum": []
+      "enum": [],
+      "order": 4
     },
     "authenticationType": {
       "componentProperty": true,
@@ -5506,7 +5507,8 @@
           "label": "OAuth 2.0",
           "value": "oauth2"
         }
-      ]
+      ],
+      "order": 1
     },
     "authorizationEndpoint": {
       "componentProperty": true,
@@ -5523,7 +5525,8 @@
       "tags": [
         "oauth-authorization-url"
       ],
-      "enum": []
+      "enum": [],
+      "order": 5
     },
     "basePath": {
       "componentProperty": true,
@@ -5539,7 +5542,8 @@
       "secret": false,
       "type": "string",
       "tags": [],
-      "enum": []
+      "enum": [],
+      "order": 11
     },
     "clientId": {
       "componentProperty": true,
@@ -5556,7 +5560,8 @@
       "tags": [
         "oauth-client-id"
       ],
-      "enum": []
+      "enum": [],
+      "order": 2
     },
     "clientSecret": {
       "componentProperty": true,
@@ -5573,7 +5578,8 @@
       "tags": [
         "oauth-client-secret"
       ],
-      "enum": []
+      "enum": [],
+      "order": 3
     },
     "host": {
       "componentProperty": true,
@@ -5589,7 +5595,8 @@
       "secret": false,
       "type": "string",
       "tags": [],
-      "enum": []
+      "enum": [],
+      "order": 10
     },
     "oauthScopes": {
       "componentProperty": true,
@@ -5607,7 +5614,8 @@
       "tags": [
         "oauth-scope"
       ],
-      "enum": []
+      "enum": [],
+      "order": 7
     },
     "specification": {
       "componentProperty": true,
@@ -5643,7 +5651,8 @@
       "tags": [
         "oauth-access-token-url"
       ],
-      "enum": []
+      "enum": [],
+      "order": 6
     },
     "version": {
       "componentProperty": false,
