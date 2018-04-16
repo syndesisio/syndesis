@@ -39,10 +39,11 @@
 </div>
 
 <!-- Wizard Progress Bar-->
-<syndesis-wizard-progress-bar class="has-half-width"
+<syndesis-wizard-progress-bar
   [steps]="['Select Connector', 'Configure Connection', 'Name Connection']"
   stepUrlPrefix="connections/create/"
-  [stepUrls]="['connection-basics', 'configure-fields', 'review']">
+  [stepUrls]="['connection-basics', 'configure-fields', 'review']"
+  [selectedStep]="currentActiveStep">
 </syndesis-wizard-progress-bar>
 
 <!-- debug section -->
