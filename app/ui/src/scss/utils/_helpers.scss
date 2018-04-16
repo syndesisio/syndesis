@@ -129,3 +129,8 @@
     @include truncate(ellipsis);
   }
 }
+
+// Shared style rules
+.no-overflow {
+  overflow: hidden;
+}
