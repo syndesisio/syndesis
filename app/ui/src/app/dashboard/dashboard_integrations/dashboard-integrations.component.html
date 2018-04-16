@@ -47,8 +47,7 @@
               </h2>
             </div>
             <div class="card-pf-body">
-              <div class="col-xs-12"
-                   *ngIf="!loading">
+              <div *ngIf="!loading">
                 <pfng-chart-donut [chartData]="integrationChartData" [config]="integrationsChartConfig"></pfng-chart-donut>
               </div>
             </div>
