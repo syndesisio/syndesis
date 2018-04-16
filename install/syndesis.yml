@@ -256,6 +256,38 @@ objects:
     clientStateAuthenticationKey: ${CLIENT_STATE_AUTHENTICATION_KEY}
     clientStateEncryptionKey: ${CLIENT_STATE_ENCRYPTION_KEY}
 - apiVersion: v1
+  kind: Secret
+  metadata:
+    name: syndesis-global-config
+    labels:
+      app: syndesis
+  stringData:
+    syndesis: "latest"
+    postgresql: "9.5"
+    oauthproxy: "v1.1.0"
+    prometheus: "v2.1.0"
+    params: |-
+      ROUTE_HOSTNAME=${ROUTE_HOSTNAME}
+      OPENSHIFT_MASTER=${OPENSHIFT_MASTER}
+      OPENSHIFT_PROJECT=${OPENSHIFT_PROJECT}
+      OPENSHIFT_OAUTH_CLIENT_SECRET=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+      POSTGRESQL_MEMORY_LIMIT=${POSTGRESQL_MEMORY_LIMIT}
+      POSTGRESQL_IMAGE_STREAM_NAMESPACE=${POSTGRESQL_IMAGE_STREAM_NAMESPACE}
+      POSTGRESQL_USER=${POSTGRESQL_USER}
+      POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+      POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
+      POSTGRESQL_VOLUME_CAPACITY=${POSTGRESQL_VOLUME_CAPACITY}
+      POSTGRESQL_SAMPLEDB_PASSWORD=${POSTGRESQL_SAMPLEDB_PASSWORD}
+      TEST_SUPPORT_ENABLED=${TEST_SUPPORT_ENABLED}
+      DEMO_DATA_ENABLED=${DEMO_DATA_ENABLED}
+      SYNDESIS_REGISTRY=${SYNDESIS_REGISTRY}
+      CONTROLLERS_INTEGRATION_ENABLED=${CONTROLLERS_INTEGRATION_ENABLED}
+      IMAGE_STREAM_NAMESPACE=${IMAGE_STREAM_NAMESPACE}
+      OAUTH_COOKIE_SECRET=${OAUTH_COOKIE_SECRET}
+      SYNDESIS_ENCRYPT_KEY=${SYNDESIS_ENCRYPT_KEY}
+      PROMETHEUS_MEMORY_LIMIT=${PROMETHEUS_MEMORY_LIMIT}
+      PROMETHEUS_VOLUME_CAPACITY=${PROMETHEUS_VOLUME_CAPACITY}
+- apiVersion: v1
   kind: Service
   metadata:
     name: syndesis-ui
@@ -993,6 +1025,8 @@ objects:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
+    annotations:
+      io.syndesis/upgrade-mode: keep
     labels:
       app: syndesis
       component: syndesis-server
@@ -1409,3 +1443,64 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
+- apiVersion: v1
+  kind: Template
+  metadata:
+    labels:
+      app: syndesis
+    name: syndesis-upgrade
+    annotations:
+      openshift.io/display-name: "Syndesis Upgrade"
+      description: |-
+        This is the upgrade application for Syndesis.
+      openshift.io/long-description: |-
+        When this template is applied then an upgrade to a new Syndesis version is performed.
+        Only the infrastructure components are updated, no running integration is touched.
+        Before doing the upgrade a backup is performed and restored in case of a rollback.
+      tags: "syndesis,upgrade"
+      iconClass: icon-rh-integration
+      openshift.io/provider-display-name: "Red Hat, Inc."
+      openshift.io/documentation-url: "https://syndesis.io"
+      openshift.io/support-url: "https://access.redhat.com"
+  parameters:
+  - name: OC_LOGIN
+    description: '"oc login" command to connect to syndesis. Paste the login line from "Command Line Tools" section in you OpenShift console'
+    required: true
+  - name: SYNDESIS_VERSION
+    description: 'The version to upgrade to or "latest" for the newest version'
+    value: latest
+    required: true
+  message: |-
+    Syndesis upgrade process started
+  objects:
+  - apiVersion: v1
+    kind: Pod
+    metadata:
+      name: syndesis-upgrade-${SYNDESIS_VERSION}
+    spec:
+      containers:
+      - name: upgrade
+        image: syndesis/syndesis-upgrade:${SYNDESIS_VERSION}
+        env:
+          - name: SYNDESIS_UPGRADE_PROJECT
+            valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+        imagePullPolicy: IfNotPresent
+        args:
+          - "--backup"
+          - "/opt/backup"
+          - "--oc-login"
+          - "${OC_LOGIN}"
+          # Temporary for demo:
+          - "--wait"
+          - "3600"
+        volumeMounts:
+        - mountPath: /opt/backup
+          subPath: backup
+          name: backup-dir
+      volumes:
+      - name: backup-dir
+        persistentVolumeClaim:
+          claimName: syndesis-db
+      restartPolicy: Never

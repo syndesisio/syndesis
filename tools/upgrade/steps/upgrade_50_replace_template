@@ -1,0 +1,25 @@
+#!/bin/bash
+
+replace_template::label() {
+  echo "Replace template"
+}
+
+replace_template::doc() {
+  cat <<EOT
+Replace the Syndesis template with the new template for this version
+
+.Rollback
+Replace the Syndesis template with the original template which has been backuped in this <<step-backup-stateful-resources, step>>
+EOT
+}
+replace_template::run() {
+  sleep 3
+}
+
+replace_template::rollback() {
+    local backupdir=${1}
+    local workdir=${2}
+    local cleanup=${3:-}
+
+    sleep 1
+}

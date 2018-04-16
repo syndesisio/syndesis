@@ -149,6 +149,8 @@
 - apiVersion: v1
   kind: ConfigMap
   metadata:
+    annotations:
+      io.syndesis/upgrade-mode: keep
     labels:
       app: syndesis
       component: syndesis-server

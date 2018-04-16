@@ -56,7 +56,7 @@ install::run() {
     create_and_apply_template "$route" "$console" "$(select_template $(hasflag --dev))"
 
     if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
-        wait_for_syndesis_to_be_ready
+        wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
     fi
 
     if [ $(hasflag --dev) ]; then

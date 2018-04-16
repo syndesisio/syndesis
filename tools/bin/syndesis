@@ -14,7 +14,7 @@ set -o pipefail
 set -eu
 
 # Save global script args
-ARGS="$@"
+ARGS=("$@")
 
 # Display a help message.
 display_help() {
@@ -106,7 +106,7 @@ appdir() {
 # Checks if a flag is present in the arguments.
 hasflag() {
     filters="$@"
-    for var in $ARGS; do
+    for var in "${ARGS[@]}"; do
         for filter in $filters; do
           if [ "$var" = "$filter" ]; then
               echo 'true'
@@ -120,7 +120,7 @@ hasflag() {
 readopt() {
     filters="$@"
     next=false
-    for var in $ARGS; do
+    for var in "${ARGS[@]}"; do
         if $next; then
             echo $var
             break;
@@ -252,4 +252,4 @@ if [ $(hasflag --verbose) ]; then
     set -x
 fi
 
-run $@
+run "$@"

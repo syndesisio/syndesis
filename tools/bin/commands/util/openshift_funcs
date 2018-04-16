@@ -73,7 +73,7 @@ select_template() {
 }
 
 create_oauthclient() {
-    local tag=${1:-master}
+    local tag=${1:-}
     local use_local_resource=${2:-}
 
     create_openshift_resource \
@@ -173,21 +173,38 @@ create_openshift_resource() {
     fi
 }
 
-wait_for_syndesis_to_be_ready() {
-    # Wait a bit to start image fetching
-    # Patch imagestreams from "DockerImage" to "ImageStreamTag"
-    oc get pods -w &
-    watch_pid=$!
-    for dc in "syndesis-server" "syndesis-ui" "syndesis-meta"; do
-        echo "Waiting for $dc to be started"
-        local replicas="$(oc get dc $dc -o jsonpath='{.status.availableReplicas}')"
-        while [ "$replicas" -lt 1 ]; do
-            echo "Sleeping 10s ..."
-            sleep 10
-            replicas=$(oc get dc $dc -o jsonpath="{.status.availableReplicas}")
-        done
-    done
-    kill $watch_pid
+scale_deployments() {
+  local replicas=$1
+  shift
+  local dcs="$@"
+  for dc in $dcs; do
+    oc scale dc $dc --replicas=$replicas
+  done
+  wait_for_deployments $replicas $dcs
+}
+
+wait_for_deployments() {
+  local replicas_desired=$1
+  shift
+  local dcs="$@"
+
+  oc get pods -w &
+  watch_pid=$!
+  for dc in $dcs; do
+      echo "Waiting for $dc to be scaled to ${replicas_desired}"
+      local replicas=$(get_replicas $dc)
+      while [ "$replicas" -ne $replicas_desired ]; do
+          echo "Sleeping 10s ..."
+          sleep 10
+          replicas=$(get_replicas $dc)
+      done
+  done
+  kill $watch_pid
+}
+
+get_replicas() {
+  local dc=${1}
+  oc get dc $dc -o jsonpath="{.status.availableReplicas}"
 }
 
 patch_imagestreams_for_initial_image() {
@@ -223,4 +240,18 @@ guess_route() {
         exit 1
     fi
     echo "${project}.${domain#*.}"
+}
+
+pod() {
+  local dc=${1}
+  local ret=$(oc get pod -o name | grep "$dc" | sed -e "s/^pods\///")
+  local nr_pods=$(echo $ret | wc -l | awk '$1=$1')
+  if [ $nr_pods != "1" ]; then
+      echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
+  fi
+  echo $ret
+}
+
+syndesis_deployments() {
+  oc get dc -l app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
 }
