@@ -286,7 +286,7 @@
                     "group": "scheduler",
                     "label": "consumer,scheduler",
                     "required": false,
-                    "type": "integer",
+                    "type": "duration",
                     "javaType": "long",
                     "optionalPrefix": "consumer.",
                     "deprecated": false,
