@@ -26,15 +26,22 @@ import org.springframework.stereotype.Component;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 
-@CacheFor(value=1, unit=HOURS)
+@CacheFor(value = 1, unit = HOURS)
 @Path("/version")
 @Component
 public class VersionEndpoint {
 
     @GET
+    @Produces("application/json")
+    @ApiOperation(value = "Get the version as JSON specification")
+    public Response doGetJson() {
+        return Response.ok(Version.getDetailed()).build();
+    }
+
+    @GET
     @Produces("text/plain")
     @ApiOperation(value = "Get the version")
-    public Response doGet() {
+    public Response doGetPlain() {
         return Response.ok(Version.getVersion()).build();
     }
 }
