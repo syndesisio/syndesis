@@ -79,11 +79,10 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy, Aft
     } else {
       data = this.formGroup ? this.formGroup.value : {};
     }
-    const properties = this.formFactory.supressNullValues({ ...data });
     this.currentFlowService.events.emit({
       kind: 'integration-set-properties',
       position: this.position,
-      properties: data,
+      properties: this.formFactory.supressNullValues({ ...data }),
       onSave: () => {
         this.router.navigate(['save-or-add-step'], {
           queryParams: { validate: true },
