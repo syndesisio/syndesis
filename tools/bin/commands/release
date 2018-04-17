@@ -170,7 +170,7 @@ calc_timestamp_version() {
         echo "ERROR: Cannot extract version from app/pom.xml"
         exit 1
     fi
-    local patch_level=$(git tag | grep ^$pom_version | sed -e s/${pom_version}.// | sort -n -r | head -1)
+    local patch_level=$(git tag | grep ^$pom_version | grep -v '-' | sed -e s/${pom_version}.// | sort -n -r | head -1)
     echo "${pom_version}.$((patch_level+1))-$(date '+%Y%m%d')"
 }
 
