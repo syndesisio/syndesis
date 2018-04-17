@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-6535-gd070fcd54,</span>
+<span id="revnumber">version 1.1.3-6539-g5ec201c1b,</span>
 <span id="revdate">2018-04-17</span>
 </div>
 <div id="toc" class="toc2">
@@ -1463,6 +1463,8 @@ Options for release:
 -n  --dry-run                 Dry run, which performs the whole build but does no tagging,
                               artefact upload or pushing Docker images
     --release-version &lt;ver&gt;   Version to release (e.g. "1.2.1"). This is a mandatory argument.
+    --daily-timestamp-version Calculate a daily timestamp version automatically
+
     --dev-version &lt;version&gt;   Next development version. If not given, set to
                               "&lt;major&gt;.&lt;minor&gt;-SNAPSHOT" as calculated from
                               --release-version (e.g. "1.2-SNAPSHOT")
@@ -1473,6 +1475,9 @@ Options for release:
                               If not given, then a new
                               temporary directory will be used
                               (and removed after the release)
+    --no-maven-release        Don't release the Maven artefacts to Sonatype,
+                              useful for daily snapshots builds to
+                              not trash Maven central
     --docker-user &lt;user&gt;      Docker user for Docker Hub
     --docker-password &lt;pwd&gt;   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
@@ -3060,8 +3065,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-6535-gd070fcd54<br>
-Last updated 2018-04-17 08:35:17 UTC
+Version 1.1.3-6539-g5ec201c1b<br>
+Last updated 2018-04-17 09:59:03 UTC
 </div>
 </div>
 </body>
