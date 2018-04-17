@@ -5,7 +5,7 @@ import * as fileSaver from 'file-saver';
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
 import { ObjectPropertySortConfig } from '../common/object-property-sort.pipe';
 
-import { Integrations, Integration, IntegrationSupportService } from '@syndesis/ui/platform';
+import { Integrations, Integration, IntegrationSupportService, ApiHttpService } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import { IntegrationStore } from '@syndesis/ui/store';
 
@@ -46,9 +46,12 @@ export class SupportComponent implements OnInit {
   notificationType: NotificationType = NotificationType.DANGER;
   notificationHidden = true;
 
+  version = Observable.of('unknown');
+
   constructor(
     public store: IntegrationStore,
     public integrationSupportService: IntegrationSupportService,
+    private apiHttpService: ApiHttpService
   ) {}
 
   buildData(data: any = {}): void {
@@ -264,5 +267,8 @@ export class SupportComponent implements OnInit {
       this.updateItems();
     });
     this.store.loadAll();
+    this.version = this.apiHttpService.get('/version', {
+      responseType: 'text'
+    });
   }
 }
