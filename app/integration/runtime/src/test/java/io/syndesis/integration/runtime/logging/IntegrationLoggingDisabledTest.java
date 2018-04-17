@@ -15,13 +15,13 @@
  */
 package io.syndesis.integration.runtime.logging;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Map;
 
-import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultUuidGenerator;
 import org.apache.camel.spi.LogListener;
-import org.apache.camel.spi.RoutePolicyFactory;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.assertj.core.api.Condition;
@@ -33,7 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.integration.runtime.IntegrationRuntimeAutoConfiguration;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -74,13 +74,4 @@ public class IntegrationLoggingDisabledTest {
         assertThat(camelContext.getUuidGenerator()).isInstanceOf(DefaultUuidGenerator.class);
     }
 
-    @Test
-    public void testDisabledLoggingRoutePolicyFactory() {
-        assertThat(camelContext.getRoutePolicyFactories()).have(new Condition<RoutePolicyFactory>() {
-            @Override
-            public boolean matches(RoutePolicyFactory value) {
-                return !(value instanceof IntegrationActivityPolicy);
-            }
-        });
-    }
 }

@@ -20,47 +20,56 @@ import java.util.Objects;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.management.event.ExchangeCompletedEvent;
+import org.apache.camel.management.event.ExchangeCreatedEvent;
 import org.apache.camel.management.event.ExchangeFailedEvent;
 import org.apache.camel.support.EventNotifierSupport;
 
 import static io.syndesis.integration.runtime.util.JsonSupport.toJsonObject;
 
 public class IntegrationActivityEventHandler extends EventNotifierSupport {
+
+    @Override
+    public boolean isEnabled(EventObject event) {
+        return event instanceof ExchangeCompletedEvent
+            || event instanceof ExchangeFailedEvent
+            || event instanceof ExchangeCreatedEvent;
+    }
+
     @Override
     public void notify(EventObject event) throws Exception {
         if (event instanceof ExchangeCompletedEvent) {
             onExchangeCompletedEvent((ExchangeCompletedEvent)event);
         } else if (event instanceof ExchangeFailedEvent) {
             onExchangeFailedEvent((ExchangeFailedEvent)event);
+        } else if (event instanceof ExchangeCreatedEvent) {
+            onExchangeCreatedEvent((ExchangeCreatedEvent)event);
         }
     }
 
-    @Override
-    public boolean isEnabled(EventObject event) {
-        return event instanceof ExchangeCompletedEvent || event instanceof ExchangeFailedEvent;
+    @SuppressWarnings("PMD.SystemPrintln")
+    private void onExchangeCreatedEvent(ExchangeCreatedEvent event) {
+        Exchange exchange = event.getExchange();
+        if (activityId(exchange) ==null) {
+            exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_ID, exchange.getExchangeId());
+            System.out.println(toJsonObject(
+                "exchange", exchange.getExchangeId(),
+                "status", "begin"));
+        }
     }
 
-    @SuppressWarnings("PMD.SystemPrintln")
     private void onExchangeCompletedEvent(ExchangeCompletedEvent event) {
-        StepDoneTracker.done(event.getExchange());
+        done(event.getExchange());
+    }
 
-        final Exchange exchange = event.getExchange();
-        final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
-
-        if (Objects.equals(activityId, exchange.getExchangeId())) {
-            System.out.println(toJsonObject(
-                "exchange", activityId,
-                "status", "done",
-                "failed", exchange.isFailed()));
-        }
+    private void onExchangeFailedEvent(ExchangeFailedEvent event) {
+        done(event.getExchange());
     }
 
     @SuppressWarnings("PMD.SystemPrintln")
-    private void onExchangeFailedEvent(ExchangeFailedEvent event) {
-        StepDoneTracker.done(event.getExchange());
+    private static void done(Exchange exchange) {
+        StepDoneTracker.done(exchange);
 
-        final Exchange exchange = event.getExchange();
-        final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
+        final String activityId = activityId(exchange);
 
         if (Objects.equals(activityId, exchange.getExchangeId())) {
             System.out.println(toJsonObject(
@@ -69,4 +78,9 @@ public class IntegrationActivityEventHandler extends EventNotifierSupport {
                 "failed", exchange.isFailed()));
         }
     }
+
+    private static String activityId(Exchange exchange) {
+        return exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
+    }
+
 }

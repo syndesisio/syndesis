@@ -28,6 +28,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.ResourceHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.syndesis.common.model.Split;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -47,20 +59,8 @@ import io.syndesis.integration.runtime.handlers.LogStepHandler;
 import io.syndesis.integration.runtime.handlers.RuleFilterStepHandler;
 import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
 import io.syndesis.integration.runtime.handlers.SplitStepHandler;
-import io.syndesis.integration.runtime.logging.IntegrationActivityPolicy;
 import io.syndesis.integration.runtime.logging.StepDoneTracker;
 import io.syndesis.integration.runtime.logging.StepStartTracker;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.RoutesDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.ResourceHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
@@ -178,11 +178,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
         }
 
-        if (loggingEnabled) {
-            for (RouteDefinition definition: getRouteCollection().getRoutes()) {
-                definition.routePolicy(new IntegrationActivityPolicy());
-            }
-        }
     }
 
     // Visibility changed for test purpose.
