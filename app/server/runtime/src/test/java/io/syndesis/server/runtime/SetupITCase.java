@@ -57,7 +57,7 @@ public class SetupITCase extends BaseITCase {
         OAuthAppHandler.OAuthApp twitter = apps.stream().filter(x -> "twitter".equals(x.id)).findFirst().get();
         assertThat(twitter.id).isEqualTo("twitter");
         assertThat(twitter.name).isEqualTo("Twitter");
-        assertThat(twitter.icon).isEqualTo("fa-twitter");
+        assertThat(twitter.icon).startsWith("data:image/svg+xml;base64");
         assertThat(twitter.clientId).isNull();
         assertThat(twitter.clientSecret).isNull();
 
@@ -83,7 +83,7 @@ public class SetupITCase extends BaseITCase {
         twitter = apps.stream().filter(x -> "twitter".equals(x.id)).findFirst().get();
         assertThat(twitter.id).isEqualTo("twitter");
         assertThat(twitter.name).isEqualTo("Twitter");
-        assertThat(twitter.icon).isEqualTo("fa-twitter");
+        assertThat(twitter.icon).startsWith("data:image/svg+xml;base64");
         assertThat(twitter.clientId).isEqualTo("test-id");
         assertThat(twitter.clientSecret).isEqualTo("test-secret");
 
