@@ -164,7 +164,7 @@ create_templates_for_minor_version() {
 calc_timestamp_version() {
     local topdir=$1
     cd $topdir/app
-    local pom_version=$(mvn -N help:evaluate -Dexpression="project.version" | grep -v '\[' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
+    local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep -v '\[' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
     local patch_level=$(git tag | grep ^$pom_version | sed -e s/${pom_version}.// | sort -n -r | head -1)
     echo "${pom_version}.$((patch_level+1))-$(date '+%Y%m%d')"
 }
