@@ -9,8 +9,22 @@
       instructions for sending the zip file.</p>
 
     <h2>Version</h2>
-    <p id="productVersion">
-      <strong>Syndesis:</strong> {{ version | async }}</p>
+    <syndesis-loading [loading]="!(version$ | async)">
+      <div *ngIf="version$ | async as versionInfo">
+        <dl class="dl-horizontal" *ngIf="versionInfo.version">
+          <dt>{{ 'shared.project.name' | synI18n }}:</dt>
+          <dd>{{ versionInfo.version }}</dd>
+        </dl>
+        <dl class="dl-horizontal" *ngIf="versionInfo['build-id']">
+          <dt>{{ 'support.buildid' | synI18n }}:</dt>
+          <dd>{{ versionInfo['build-id'] }}</dd>
+        </dl>
+        <dl class="dl-horizontal" *ngIf="versionInfo['commit-id']">
+          <dt>{{ 'support.commitid' | synI18n }}:</dt>
+          <dd>{{ versionInfo['commit-id'] }}</dd>
+        </dl>
+      </div>
+    </syndesis-loading>
 
     <h2>Download Trobuleshooting Diagnostics</h2>
     <p>System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames
