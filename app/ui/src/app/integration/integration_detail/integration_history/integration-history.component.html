@@ -36,7 +36,7 @@
     <dt>History:</dt>
     <dd>
       <pfng-list
-        [items]="integration?.deployments"
+        [items]="integration?.deployments | objectPropertySort:{ sortField: 'version', descending: true }"
         [config]="deploymentListConfig"
         [itemTemplate]="itemTemplate"
         [expandTemplate]="expandTemplate"
