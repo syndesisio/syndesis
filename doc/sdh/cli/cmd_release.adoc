@@ -29,6 +29,8 @@ Options for release:
 -n  --dry-run                 Dry run, which performs the whole build but does no tagging,
                               artefact upload or pushing Docker images
     --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
+    --daily-timestamp-version Calculate a daily timestamp version automatically
+
     --dev-version <version>   Next development version. If not given, set to
                               "<major>.<minor>-SNAPSHOT" as calculated from
                               --release-version (e.g. "1.2-SNAPSHOT")
@@ -39,6 +41,9 @@ Options for release:
                               If not given, then a new
                               temporary directory will be used
                               (and removed after the release)
+    --no-maven-release        Don't release the Maven artefacts to Sonatype,
+                              useful for daily snapshots builds to
+                              not trash Maven central
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
