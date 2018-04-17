@@ -164,8 +164,8 @@ create_templates_for_minor_version() {
 calc_timestamp_version() {
     local topdir=$1
     cd $topdir/app
-    ./mvnw -N help:evaluate -Dexpression="project.version"
-    local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep  '^\d[^\s]*$' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
+    # ./mvnw -N help:evaluate -Dexpression="project.version"
+    local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep  -e '^\d[^\s]*$' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
     if [ -z "${pom_version}" ]; then
         echo "ERROR: Cannot extract version from app/pom.xml"
         exit 1
