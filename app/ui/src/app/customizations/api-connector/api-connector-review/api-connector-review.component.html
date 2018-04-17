@@ -12,7 +12,7 @@
       <li><strong>{{ actionsSummary.totalActions }}</strong> operations</li>
       <ol class="connector-actions__operations">
         <li *ngFor="let importedAction of importedActions">
-          <strong>{{ importedAction.count }}</strong> dealing with {{ importedAction.tag }}
+          <strong>{{ importedAction.count }}</strong> tagged {{ importedAction.tag }}
         </li>
       </ol>
     </ol>

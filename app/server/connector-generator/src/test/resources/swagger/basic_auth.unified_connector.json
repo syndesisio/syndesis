@@ -33,7 +33,8 @@
           "label": "HTTP Basic Authentication"
         }
       ],
-      "description": "Type of authentication used to connect to the API"
+      "description": "Type of authentication used to connect to the API",
+      "order": 1
     },
     "specification": {
       "kind": "property",
@@ -65,7 +66,8 @@
       "secret": false,
       "componentProperty": true,
       "defaultValue": "/api",
-      "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification."
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in Swagger specification.",
+      "order": 11
     },
     "host": {
       "kind": "property",
@@ -80,7 +82,8 @@
       "secret": false,
       "componentProperty": true,
       "defaultValue": "http://sample.io",
-      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration."
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port. Can be configured at the endpoint component or in the correspoding REST configuration in the Camel Context. If you give this component a name (e.g. petstore) that REST configuration is consulted first rest-swagger next and global configuration last. If set overrides any value found in the Swagger specification RestConfiguration. Can be overriden in endpoint configuration.",
+      "order": 10
     },
     "username": {
       "kind": "property",
@@ -93,7 +96,8 @@
       "deprecated": false,
       "secret": false,
       "componentProperty": true,
-      "description": "Username to authenticate with"
+      "description": "Username to authenticate with",
+      "order": 2
     },
     "password": {
       "kind": "property",
@@ -106,7 +110,8 @@
       "deprecated": false,
       "secret": true,
       "componentProperty": true,
-      "description": "Password to authenticate with"
+      "description": "Password to authenticate with",
+      "order": 3
     }
   },
   "actions": [

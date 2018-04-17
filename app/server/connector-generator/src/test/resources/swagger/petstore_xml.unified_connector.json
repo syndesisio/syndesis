@@ -695,7 +695,8 @@
       "label": "producer",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "string",
+      "order": 10
     },
     "basePath": {
       "componentProperty": true,
@@ -709,7 +710,8 @@
       "label": "producer",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "string",
+      "order": 11
     },
     "authenticationType": {
       "componentProperty": true,
@@ -732,7 +734,8 @@
           "label": "OAuth 2.0",
           "value": "oauth2"
         }
-      ]
+      ],
+      "order": 1
     },
     "clientId": {
       "componentProperty": true,
@@ -748,7 +751,8 @@
       "type": "string",
       "tags": [
         "oauth-client-id"
-      ]
+      ],
+      "order": 2
     },
     "clientSecret": {
       "componentProperty": true,
@@ -764,7 +768,8 @@
       "type": "string",
       "tags": [
         "oauth-client-secret"
-      ]
+      ],
+      "order": 3
     },
     "accessToken": {
       "componentProperty": true,
@@ -780,7 +785,8 @@
       "type": "string",
       "tags": [
         "oauth-access-token"
-      ]
+      ],
+      "order": 4
     },
     "authorizationEndpoint": {
       "componentProperty": true,
@@ -797,7 +803,8 @@
       "type": "string",
       "tags": [
         "oauth-authorization-url"
-      ]
+      ],
+      "order": 5
     },
     "tokenEndpoint": {
       "componentProperty": true,
@@ -813,7 +820,8 @@
       "type": "string",
       "tags": [
         "oauth-access-token-url"
-      ]
+      ],
+      "order": 6
     },
     "oauthScopes": {
       "componentProperty": true,
@@ -830,7 +838,8 @@
       "type": "string",
       "tags": [
         "oauth-scope"
-      ]
+      ],
+      "order": 7
     },
     "specification": {
       "componentProperty": true,

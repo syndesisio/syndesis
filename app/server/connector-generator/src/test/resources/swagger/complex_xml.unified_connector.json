@@ -59,7 +59,8 @@
           "label": "No Security"
         }
       ],
-      "description": "Type of authentication used to connect to the API"
+      "description": "Type of authentication used to connect to the API",
+      "order": 1
     },
     "host": {
       "componentProperty": true,
@@ -73,7 +74,8 @@
       "label": "producer",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "string",
+      "order": 10
     },
     "basePath": {
       "componentProperty": true,
@@ -87,7 +89,8 @@
       "label": "producer",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "string",
+      "order": 11
     },
     "specification": {
       "componentProperty": true,
