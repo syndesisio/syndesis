@@ -29,9 +29,9 @@ process_template::run() {
     local workdir=$2
     local tag=$3
 
-    local syndesis_version=$(read_config syndesis)
+    local syndesis_version=$(read_global_config syndesis)
     echo "      - Current Syndesis version \"$syndesis_version\""
-    read_config params > ${workdir}/template_params.props
+    read_global_config params > ${workdir}/template_params.props
     local new_template=$(template_path)
 
     [ -d ${workdir}/resources ] || mkdir -p ${workdir}/resources
@@ -62,9 +62,4 @@ process_template::rollback() {
 
         remove_resource_backup $backupdir "secret"
     fi
-}
-
-read_config() {
-    local key=$1
-    oc get secret syndesis-global-config -o jsonpath={.data.${key}} | base64 --decode
 }

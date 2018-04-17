@@ -12,4 +12,4 @@ cd $(dirname "${BASH_SOURCE[0]}")
 # Copy syndesis.yml
 cp ../../install/syndesis.yml .
 
-docker build -t syndesis/syndesis-upgrade:${tag} .
+docker build --build-arg version=${tag} -t syndesis/syndesis-upgrade:${tag} .
