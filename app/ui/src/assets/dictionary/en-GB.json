@@ -82,6 +82,10 @@
         }
       }
     },
+    "support": {
+      "buildid": "Build ID",
+      "commitid": "Commit ID"
+    },
     "import-db-txt": "Please select the data file to import:",
     "errors": {
       "youareonline": "You're back online",

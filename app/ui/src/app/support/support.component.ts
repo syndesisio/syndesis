@@ -1,5 +1,6 @@
 import { Component,  Input,  ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 import * as fileSaver from 'file-saver';
 
 import { ObjectPropertyFilterConfig } from '../common/object-property-filter.pipe';
@@ -46,7 +47,7 @@ export class SupportComponent implements OnInit {
   notificationType: NotificationType = NotificationType.DANGER;
   notificationHidden = true;
 
-  version = Observable.of('unknown');
+  version$: Observable<any>;
 
   constructor(
     public store: IntegrationStore,
@@ -267,8 +268,6 @@ export class SupportComponent implements OnInit {
       this.updateItems();
     });
     this.store.loadAll();
-    this.version = this.apiHttpService.get('/version', {
-      responseType: 'text'
-    });
+    this.version$ = this.apiHttpService.get('/version');
   }
 }
