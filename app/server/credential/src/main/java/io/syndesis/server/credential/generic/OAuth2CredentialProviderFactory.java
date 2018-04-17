@@ -52,6 +52,10 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
         final OAuth2Applicator applicator = new OAuth2Applicator(properties);
         applicator.setAccessTokenProperty("accessToken");
 
+        applicator.setRefreshTokenProperty("refreshToken");
+        applicator.setClientIdProperty("clientId");
+        applicator.setClientSecretProperty("clientSecret");
+
         return new OAuth2CredentialProvider<>("oauth2", connectionFactory, applicator);
     }
 

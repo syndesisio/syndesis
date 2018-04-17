@@ -5486,6 +5486,23 @@
       "enum": [],
       "order": 4
     },
+    "refreshToken": {
+      "kind": "property",
+      "displayName": "OAuth Refresh token",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-refresh-token"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "OAuth Refresh token",
+      "order": 5
+    },
     "authenticationType": {
       "componentProperty": true,
       "defaultValue": "oauth2",
@@ -5526,7 +5543,7 @@
         "oauth-authorization-url"
       ],
       "enum": [],
-      "order": 5
+      "order": 6
     },
     "basePath": {
       "componentProperty": true,
@@ -5615,7 +5632,7 @@
         "oauth-scope"
       ],
       "enum": [],
-      "order": 7
+      "order": 8
     },
     "specification": {
       "componentProperty": true,
@@ -5652,7 +5669,7 @@
         "oauth-access-token-url"
       ],
       "enum": [],
-      "order": 6
+      "order": 7
     },
     "version": {
       "componentProperty": false,

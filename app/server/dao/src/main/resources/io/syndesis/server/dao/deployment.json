@@ -27,7 +27,7 @@
       "icon": "fa-link",
       "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesis.version@",
       "camelConnectorPrefix": "swagger-operation",
-      "connectorGroup" : {
+      "connectorGroup": {
         "id": "swagger-connector-template"
       },
       "properties": {
@@ -239,6 +239,23 @@
           "description": "OAuth Access token",
           "order": 4
         },
+        "refreshToken": {
+          "kind": "property",
+          "displayName": "OAuth Refresh token",
+          "group": "producer",
+          "label": "producer",
+          "required": false,
+          "type": "string",
+          "javaType": "java.lang.String",
+          "tags": [
+            "oauth-refresh-token"
+          ],
+          "deprecated": false,
+          "secret": true,
+          "componentProperty": true,
+          "description": "OAuth Refresh token",
+          "order": 5
+        },
         "authorizationEndpoint": {
           "kind": "property",
           "displayName": "OAuth Authorization Endpoint URL",
@@ -254,7 +271,7 @@
           "secret": false,
           "componentProperty": true,
           "description": "URL for the start of the OAuth flow",
-          "order": 5
+          "order": 6
         },
         "tokenEndpoint": {
           "kind": "property",
@@ -271,7 +288,7 @@
           "secret": false,
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token",
-          "order": 6
+          "order": 7
         },
         "oauthScopes": {
           "kind": "property",
@@ -288,7 +305,7 @@
           "secret": false,
           "componentProperty": true,
           "description": "URL to fetch the OAuth Access token",
-          "order": 7
+          "order": 8
         },
         "tokenStrategy": {
           "kind": "property",
@@ -307,7 +324,7 @@
         },
         "authorizeUsingParameters": {
           "kind": "property",
-          "displayName": "OAuth Token strategy",
+          "displayName": "Should the implementation send client id and client secret when performing OAuth flow",
           "group": "producer",
           "label": "producer",
           "required": false,
@@ -319,6 +336,23 @@
           "deprecated": false,
           "secret": false,
           "componentProperty": true
+        },
+        "refreshTokenRetryStatuses": {
+          "kind": "property",
+          "displayName": "Specification",
+          "group": "producer",
+          "label": "producer",
+          "required": true,
+          "type": "hidden",
+          "javaType": "java.lang.String",
+          "tags": [
+            "upload",
+            "url"
+          ],
+          "deprecated": false,
+          "secret": false,
+          "componentProperty": true,
+          "description": "Swagger specification of the service"
         },
         "specification": {
           "kind": "property",

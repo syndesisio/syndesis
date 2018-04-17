@@ -39,6 +39,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 
 import org.apache.commons.lang3.StringUtils;
 
+@SuppressWarnings("PMD.GodClass")
 enum PropertyGenerators {
 
     accessToken {
@@ -122,6 +123,18 @@ enum PropertyGenerators {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
             return PropertyGenerators::ifHasBasicSecurityDefinition;
+        }
+    },
+    refreshToken {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return PropertyGenerators::ifHasOAuthSecurityDefinition;
+        }
+    },
+    refreshTokenRetryStatuses {
+        @Override
+        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+            return (swagger, template) -> oauthVendorProperty(swagger, template, "x-refresh-token-retry-statuses");
         }
     },
     specification {

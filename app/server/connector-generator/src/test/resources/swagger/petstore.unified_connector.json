@@ -89,6 +89,23 @@
       "description": "OAuth Access token",
       "order": 4
     },
+    "refreshToken": {
+      "kind": "property",
+      "displayName": "OAuth Refresh token",
+      "group": "producer",
+      "label": "producer",
+      "required": false,
+      "type": "string",
+      "javaType": "java.lang.String",
+      "tags": [
+        "oauth-refresh-token"
+      ],
+      "deprecated": false,
+      "secret": true,
+      "componentProperty": true,
+      "description": "OAuth Refresh token",
+      "order": 5
+    },
     "authorizationEndpoint": {
       "kind": "property",
       "defaultValue": "http://petstore.swagger.io/oauth/dialog",
@@ -105,7 +122,7 @@
       "secret": false,
       "componentProperty": true,
       "description": "URL for the start of the OAuth flow",
-      "order": 5
+      "order": 6
     },
     "tokenEndpoint": {
       "kind": "property",
@@ -122,7 +139,7 @@
       "secret": false,
       "componentProperty": true,
       "description": "URL to fetch the OAuth Access token",
-      "order": 6
+      "order": 7
     },
     "oauthScopes": {
       "kind": "property",
@@ -140,7 +157,7 @@
       "secret": false,
       "componentProperty": true,
       "description": "URL to fetch the OAuth Access token",
-      "order": 7
+      "order": 8
     },
     "specification": {
       "kind": "property",
