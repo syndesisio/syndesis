@@ -1,10 +1,14 @@
 FROM centos:7
 
+ARG version=latest
+
 WORKDIR /opt
 
 LABEL maintainer="dev@syndesis.io"
 
-ENV KUBECONFIG=/opt/kube-config
+ENV KUBECONFIG=/opt/kube-config \
+    SYNDESIS_VERSION=${version}
+
 # Install jq & oc
 RUN yum install -y tree \
  && curl -L https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/local/bin/jq \

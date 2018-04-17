@@ -66,6 +66,16 @@ run() {
     oc_login=$(readopt --oc-login)
     if [ -n "${oc_login}" ]; then
         $oc_login --insecure-skip-tls-verify
+    else
+        # Check whether we have a connection
+        set +e
+        oc status >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo "No connection to OpenShift cluster exists for upgrading"
+            echo "Please use --oc-login or connect to the cluster before calling this script"
+            exit 1
+        fi
+        set -e
     fi
 
     # Switch to project if env variable is set
@@ -85,8 +95,12 @@ run() {
     local migrationdir=$(readopt --migration)
     echo $time > ${base_backupdir}/LATEST
 
+    # Preflight check
+    source $basedir/migration/preflight.sh
+    preflight_version_check "$(read_global_config syndesis)" "$tag"
+
     echo "============================================="
-    echo "===== STARTING UPGRADE TO SYNDESIS $tag "
+    echo "=== STARTING UPGRADE TO SYNDESIS $tag "
     echo "============================================="
     echo
 
@@ -299,6 +313,12 @@ scale_deployments() {
     oc scale dc $dc --replicas=$replicas
   done
   wait_for_deployments $replicas $dcs
+}
+
+# Read from global config
+read_global_config() {
+    local key=$1
+    oc get secret syndesis-global-config -o jsonpath={.data.${key}} | base64 --decode
 }
 
 wait_for_deployments() {

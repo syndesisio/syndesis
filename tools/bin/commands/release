@@ -17,7 +17,8 @@ release::usage() {
     cat - <<EOT
 -n  --dry-run                 Dry run, which performs the whole build but does no tagging, artefact
                               upload or pushing Docker images
-    --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
+    --release-version <ver>   Version to release (e.g. "1.2.1"). One version arg is mandatory
+    --daily-timestamp-version Calculate a daily timestamp version automatically
     --dev-version <version>   Next development version. If not given, set to "<major>.<minor>-SNAPSHOT"
                               as calculated from --release-version (e.g. "1.2-SNAPSHOT")
     --settings <file>         Path to a custom settings.xml to use for the release.
@@ -25,6 +26,8 @@ release::usage() {
                               By default ~/.m2/settings.xml is used.
     --local-maven-repo <dir>  Local dir for holding the local Maven repo cache. If not given, then a new
                               temporary directory will be used (and removed after the release)
+    --no-maven-release        Don't release the Maven artefacts to Sonatype, useful for daily snapshot
+                              builds to save some bandwidth
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
     --product-templates       Create templates for the productised version only and tag
@@ -42,14 +45,19 @@ release::run() {
     # Main application directory
     local topdir=$(appdir ".")
 
-    # Validate release versions
+    # Validate release versions. Release versions have the foramt "1.3.4"
     local release_version=$(readopt --release-version)
     if [ -z "${release_version}" ]; then
-        echo "Please specify --release-version"
-        exit 1
+        if [ $(hasflag --daily-timestamp-version) ]; then
+            release_version="$(calc_timestamp_version "$topdir")"
+            check_error $release_version
+        else
+            echo "Please specify --release-version"
+            exit 1
+        fi
     fi
 
-    # Get the Syndesis minor version
+    # Get the Syndesis minor version (e.g. "1.3")
     local syndesis_tag=$(extract_minor_version $release_version)
     check_error $syndesis_tag
 
@@ -59,7 +67,7 @@ release::run() {
         exit 0
     fi
 
-    # Write to logfile if requestes
+    # Write to logfile if requested
     if [ $(readopt --log) ]; then
         local logfile=$(readopt --log)
         touch $logfile
@@ -98,7 +106,10 @@ release::run() {
 
     # Build all Docker Images
     docker_login
-    create_docker_images "$topdir" "$maven_opts"
+    create_syndesis_docker_images "$topdir" "$maven_opts"
+
+    # Create the image for the upgrade
+    create_upgrade_docker_image "$topdir" "$release_version"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
@@ -150,6 +161,14 @@ create_templates_for_minor_version() {
 # ===================================================================================================
 # Prep actions:
 
+calc_timestamp_version() {
+    local topdir=$1
+    cd $topdir/app
+    local pom_version=$(mvn -N help:evaluate -Dexpression="project.version" | grep -v '\[' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
+    local patch_level=$(git tag | grep ^$pom_version | sed -e s/${pom_version}.// | sort -n -r | head -1)
+    echo "${pom_version}.$((patch_level+1))-$(date '+%Y%m%d')"
+}
+
 check_git_clean() {
     local topdir=$1
 
@@ -198,6 +217,11 @@ stage_artefacts() {
     local topdir="$1"
     local maven_opts="$2"
 
+    if [ $(hasflag --no-maven-release) ]; then
+        echo "==== Skipping Maven staging to Sonatype (--no-maven-release)"
+        return
+    fi
+
     echo "==== Staging Maven artefacts to Sonatype"
     cd $topdir/app
     ./mvnw ${maven_opts} -Prelease clean deploy -DstagingDescription="Staging Syndesis for $(readopt --release-version)"
@@ -211,7 +235,7 @@ docker_login() {
     fi
 }
 
-create_docker_images() {
+create_syndesis_docker_images() {
     local topdir=$1
     local maven_opts="$2"
 
@@ -221,6 +245,20 @@ create_docker_images() {
         # -Pimage binds to fabric8:build
         ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -f $module package
     done
+}
+
+create_upgrade_docker_image() {
+    local topdir=$1
+    local release_version="$2"
+
+    echo "==== Creating upgrade image syndesis/syndesis-upgrade:$release_version"
+    cd $topdir/tools/upgrade
+
+    # Copy syndesis.yml
+    cp $topdir/install/syndesis.yml .
+
+    # Create the image
+    docker build -t syndesis/syndesis-upgrade:${release_version} --build-arg version=${release_version} .
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -237,11 +275,20 @@ docker_push() {
         docker push "$image:$release_version"
         docker push "$image:$syndesis_tag"
     done
+
+    # Push out upgrade image
+    docker tag "syndesis/syndesis-upgrade:$release_version" "syndesis/syndesis-upgrade:$syndesis_tag"
+    docker push "syndesis/syndesis-upgrade:$release_version"
+    docker push "syndesis/syndesis-upgrade:$syndesis_tag"
 }
 
 release_staging_repo() {
     local topdir="$1"
     local maven_opts="$2"
+
+    if [ $(hasflag --no-maven-release) ]; then
+        return
+    fi
 
     echo "==== Releasing Sonatype staging repo"
     cd $topdir/app
@@ -316,6 +363,10 @@ do_product_templates() {
 drop_staging_repo() {
     local topdir="$1"
     local maven_opts="$2"
+
+    if [ $(hasflag --no-maven-release) ]; then
+        return
+    fi
 
     echo "==== Dropping Sonatype staging repo"
     cd $topdir/app
