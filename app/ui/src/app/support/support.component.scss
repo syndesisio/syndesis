@@ -1,6 +1,6 @@
 @import 'syndesis-sass';
 
-::ng-deep .toolbar-pf {
+:host ::ng-deep .toolbar-pf {
   border: none;
   box-shadow: none;
 

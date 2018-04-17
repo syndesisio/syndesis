@@ -1,4 +1,4 @@
-::ng-deep .card {
+:host ::ng-deep .card {
   .card-pf.card-pf-view.card-pf-view-xs.card-pf-view-select.card-pf-view-single-select {
     cursor: pointer !important;
   }
